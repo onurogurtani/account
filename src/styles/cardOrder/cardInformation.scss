@@ -1,0 +1,74 @@
+.step-btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 37px;
+
+  .cancel-btn {
+    background-color: transparent;
+    color: #3f4957;
+    border-radius: unset;
+    border: unset;
+    font-family: UbuntuMedium, sans-serif;
+    font-size: 16px;
+    line-height: 20px;
+    text-decoration: underline;
+    box-shadow: unset;
+    padding: 0;
+
+    span {
+      text-decoration: underline;
+    }
+
+    &:disabled {
+      background: transparent;
+    }
+  }
+
+  .draft-btn {
+    background-color: transparent;
+    color: #4d5868;
+    width: 233px;
+    height: 48px;
+    border-radius: 6px;
+    border: solid 1px #6C757D;
+    font-family: UbuntuMedium, sans-serif;
+    font-size: 16px;
+    line-height: 20px;
+    margin-left: 24px;
+  }
+
+  .next-btn {
+    background-color: #f66301;
+    color: #fff;
+    width: 202px;
+    height: 48px;
+    border-radius: 6px;
+    font-family: UbuntuMedium, sans-serif;
+    font-size: 16px;
+    line-height: 20px;
+    margin-left: 23px;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .step-btn-container {
+    flex-direction: column;
+    margin-top: 0;
+
+    .cancel-btn {
+      margin-bottom: 24px;
+    }
+
+    .draft-btn {
+      height: 44px;
+      margin-left: 0;
+      margin-bottom: 24px;
+    }
+
+    .next-btn {
+      height: 44px;
+      margin-left: 0;
+    }
+  }
+}

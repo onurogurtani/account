@@ -1,0 +1,384 @@
+.my-profile {
+  /*Profile List Styles*/
+  .profile-list {
+    width: 254px;
+    height: 283px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px 0 rgba(96, 97, 112, 0.16), 0 0 1px 0 rgba(40, 41, 61, 0.04);
+    margin-right: 25px;
+    padding: 27px 0 19px;
+
+    h4 {
+      margin: 0 8px 23px 24px;
+      font-family: UbuntuRegular, sans-serif;
+      font-size: 18px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      color: #1d2228;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        padding: 0 10px 0 0;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+        font-weight: 500;
+        border: solid 1px #eaecef;
+
+        a,span {
+          display: flex;
+          color: #989ea6;
+          width: 100%;
+          text-decoration: none;
+
+          img {
+            margin-left: 24px;
+            margin-right: 15px;
+          }
+        }
+      }
+
+      li.active {
+        background-color: #e9ecef;
+        border-left: solid 4px #344e75;
+        font-size: 14px;
+        font-weight: bold;
+        color: #1d2228;
+
+        a {
+          color: #1d2228;
+        }
+
+        img{
+          margin-left: 21px;
+        }
+      }
+
+      li:hover a, li:hover span {
+        color: #1d2228;
+      }
+
+      //li.active {
+      //  background-color: #e9ecef;
+      //  border-left: solid 4px #344e75;
+      //  font-size: 14px;
+      //  font-weight: bold;
+      //  color: #1d2228;
+      //}
+
+      //li.active a,li a.active span {
+      // color: #1d2228;
+      // }
+    }
+  }
+
+  /*Profile Detail Content Styles*/
+  .profile-detail-content {
+    flex: 1;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px 0 rgb(96 97 112 / 16%), 0 0 1px 0 rgb(40 41 61 / 4%);
+    background-color: #fff;
+
+    .header-content {
+      border-bottom: solid 1px #d5d8de;
+
+      h4 {
+        font-family: UbuntuRegular, sans-serif;
+        font-size: 24px;
+        font-weight: bold;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        color: #050505;
+        margin: 21px 0 21.5px 24px;
+      }
+    }
+
+    .personal-information-form {
+      margin: 23.5px 24px 32px 25px;
+
+      .custom-alert-warning {
+        padding: 13px 24px 15px 18px;
+        border-radius: 6px;
+        background: #ffc008;
+        font-size: 14px;
+        font-family: UbuntuRegular, sans-serif;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        color: #1d2228;
+
+        .alert-message-contain {
+          display: flex;
+          align-items: center;
+        }
+
+        img {
+          margin-right: 13px;
+        }
+
+        .ant-alert-close-icon {
+          svg {
+            width: 24px;
+            height: 22px;
+          }
+        }
+      }
+
+      .personal-form {
+        margin-top: 25px;
+
+        .custom-form-item {
+          margin-bottom: 27px;
+          padding-bottom: 0;
+        }
+
+        .checkbox-item-label {
+          font-size: 14px;
+          font-family: UbuntuRegular, sans-serif;
+          color: #6b7789;
+        }
+
+        .custom-form-footer {
+          .ant-form-item-control-input-content {
+            display: flex;
+            justify-content: flex-end;
+
+            .custom-btn-primary {
+              padding: 14px 36px;
+              border-radius: 6px;
+              background-color: #162056;
+              color: #fff;
+              font-size: 16px;
+              font-weight: 500;
+              font-stretch: normal;
+              font-style: normal;
+              line-height: 1.25;
+              letter-spacing: normal;
+              text-align: center;
+              outline: none;
+              box-shadow: none;
+              margin-left: 36px;
+              width: unset;
+              height: 48px !important;
+            }
+
+            .custom-btn-cancel {
+              font-size: 16px;
+              font-weight: 500;
+              font-stretch: normal;
+              font-style: normal;
+              letter-spacing: normal;
+              box-shadow: none;
+              outline: none;
+              color: #3f4957;
+              width: unset;
+              height: 48px !important;
+              border: unset;
+              span {
+                text-decoration: underline;
+              }
+            }
+
+          }
+        }
+
+        .password-information-info {
+          list-style: none;
+          position: relative;
+          padding-left: 15px;
+
+          li {
+            color: #3f4957;
+            font-family: UbuntuRegular, sans-serif;
+            font-size: 14px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.57;
+            letter-spacing: normal;
+          }
+
+          li:last-child {
+            margin-top: 6px;
+          }
+
+          li:first-child:before {
+            // content: "*" !important;
+            width: unset;
+            height: unset;
+            background: unset;
+            color: #f72717;
+            font-size: 15px;
+            font-weight: bold;
+            line-height: 7px;
+          }
+
+          li:last-child:before {
+            content: "";
+            width: unset;
+            height: unset;
+          }
+
+          li:before {
+            content: " ";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #3f4957;
+            position: absolute;
+            left: 0;
+            margin-top: 10px;
+          }
+        }
+      }
+      .communication-form {
+        padding-left: 10px;
+      }
+    }
+  }
+}
+
+/*Mobile*/
+@media (max-width: 767.98px) {
+
+  .my-profile {
+    flex-wrap: wrap !important;
+
+    .ant-collapse-header {
+      padding: 0 !important;
+
+      img {
+        top: unset !important;
+        transform: translateY(0px) !important;
+      }
+      .open-close {
+        width: 15.6px !important;
+        height: 15.6px !important;
+        right: 26px !important;
+      }
+      .open-icon {
+        width: 20px !important;
+        height: 10px !important;
+      }
+    }
+
+    .ant-collapse-content-box {
+      padding: 0 !important;
+    }
+
+    .ant-collapse-item-active {
+      h4 {
+        margin: 0 23px 23px 24px !important;
+      }
+    }
+
+    .profile-list {
+      width: 100% !important;
+      margin-bottom: 18px;
+      margin-right: unset !important;
+      border-radius: 4px;
+      padding: 18px 0 15px !important;
+      height: unset !important;
+      h4 {
+        font-size: 14px !important;
+        margin: 0 23px 6px 24px;
+      }
+    }
+
+    .profile-detail-content {
+      width: 100% !important;
+
+      .header-content {
+        h4 {
+          font-size: 16px !important;
+          margin: 12px 0 12px 24px !important;
+        }
+      }
+
+      .personal-information-form {
+        margin: 12px 24px 24px 24px !important;
+        .custom-alert-warning {
+          padding: 7px 8px 12px 12px !important;
+
+          .alert-message-contain {
+            display: flex !important;
+            font-size: 12px !important;
+            align-items: center;
+            img {
+              width: 27px !important;
+              height: 25px !important;
+            }
+          }
+
+          .ant-alert-close-icon {
+            overflow: unset !important;
+            svg {
+              width: 11px !important;
+              height: 12px !important;
+              margin-left: 15px !important;
+              margin-top: -22px !important;
+            }
+          }
+        }
+
+        .personal-form {
+          margin-top: 12px !important;
+
+          .custom-form-item {
+            margin-bottom: 0 !important;
+          }
+        }
+
+        .password-information-info {
+          li {
+            font-size: 12px !important;
+          }
+
+          li:before {
+            margin-top: 6px !important;
+          }
+
+          li:last-child {
+            margin-top: 2px !important;
+          }
+        }
+      }
+    }
+  }
+
+  .custom-form-footer {
+    margin-top: 32px !important;
+    .ant-form-item-control-input-content {
+      display: flex !important;
+      justify-content: space-between !important;
+    }
+
+    .custom-btn-cancel {
+      padding: 9px 24px 13px 0 !important;
+      height: 44px !important;
+      font-size: 14px !important;
+      font-weight: bold !important;
+    }
+
+    .custom-btn-primary {
+      padding: 9px 24px 13px !important;
+      margin-left: unset !important;
+      height: 44px !important;
+    }
+  }
+}

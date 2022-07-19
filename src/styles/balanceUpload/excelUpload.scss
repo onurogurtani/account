@@ -1,0 +1,289 @@
+.excel-upload-card {
+
+  .header-btn {
+    display: flex;
+    align-items: center;
+    column-gap: 16px;
+
+    span {
+      font-family: UbuntuRegular, sans-serif;
+      font-size: 14px;
+      line-height: 16px;
+      color: #1d2228;
+      letter-spacing: 0;
+    }
+
+    .download-btn {
+      width: 276px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      border: 1px solid #6b7789;
+      box-shadow: none;
+      border-radius: 6px;
+
+      span {
+        color: #152056;
+        font-family: UbuntuMedium, sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+      }
+
+      &:disabled {
+        background-color: #adb5bd;
+      }
+
+      img {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  hr {
+    color: #eaecef;
+    margin: 20px 0 23px 0 !important;
+  }
+
+  .ant-collapse-item {
+    .ant-collapse-content {
+      padding: 22px 48px 32px 24px;
+
+      .info-text {
+        font-family: UbuntuRegular, sans-serif;
+        font-size: 14px;
+        line-height: 16px;
+        letter-spacing: 0;
+        color: #1d2228;
+        margin-bottom: 16px;
+      }
+
+      .excel-upload-container {
+        display: flex;
+        column-gap: 48px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+
+        .excel-upload-form {
+          .ant-form-item {
+            column-gap: 24px;
+            margin-bottom: 16px;
+            align-items: center;
+
+            .ant-form-item-label {
+              width: 127px;
+
+              label {
+                font-size: 14px;
+                margin-bottom: 0;
+                margin-right: 0;
+                color: #1d2228;
+                font-family: UbuntuMedium, sans-serif;
+                line-height: 26px;
+                letter-spacing: 0;
+              }
+
+              :after {
+                content: '';
+              }
+            }
+
+            .ant-form-item-control {
+              width: unset;
+
+              .ant-form-item-control-input {
+                .ant-form-item-control-input-content {
+                  .ant-select {
+                    width: 171px;
+                    font-size: 14px;
+
+                    .ant-select-selector {
+                      width: 171px;
+                      padding: 1px 13px !important;
+                    }
+
+                  }
+                }
+              }
+            }
+          }
+
+          .load-amount-form-item {
+            margin-bottom: 0;
+          }
+
+          .check-form-item {
+            margin-bottom: 24px;
+
+            .ant-form-item-control {
+              .ant-form-item-control-input {
+                .ant-form-item-control-input-content {
+                  .custom-checkbox {
+                    span:nth-child(2) {
+                      padding-left: 12px !important;
+                    }
+                  }
+                }
+              }
+            }
+
+          }
+        }
+
+        .file-uploader {
+          border: 2px dashed #c9c9c9;
+          background-color: #f8f9fa;
+          display: grid;
+          justify-items: center;
+          flex: 1;
+          height: 195px;
+
+          &.error {
+            border-color: #f72717;
+          }
+
+          img {
+            margin-top: 15px;
+          }
+
+          h5 {
+            font-family: UbuntuMedium, sans-serif;
+            font-size: 16px;
+            color: #050505;
+            font-weight: 500;
+            margin-bottom: 10px;
+            margin-top: 14px;
+            text-align: center;
+          }
+
+          .mute-text {
+            font-family: UbuntuLight, sans-serif;
+            font-size: 14px;
+            color: #ababab;
+          }
+
+          .action-btn {
+            margin-top: 13px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+
+            .ant-upload-picture-card-wrapper {
+              .ant-upload {
+                width: unset;
+                height: unset;
+                margin: 0;
+              }
+            }
+
+            .add-btn {
+              font-family: UbuntuMedium, sans-serif;
+              font-size: 14px;
+              line-height: 20px;
+              width: 112px;
+              height: 42px;
+              color: #fff;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              padding: 0;
+              background-color: #162056;
+              border-radius: 6px;
+            }
+          }
+
+          .ant-upload {
+            border: none;
+          }
+        }
+
+      }
+    }
+  }
+
+}
+
+@media (max-width: 1015.98px) {
+  .excel-upload-card {
+    .header-btn {
+      flex-direction: column;
+      align-items: flex-start;
+      row-gap: 16px;
+
+      span {
+        font-family: UbuntuRegular, sans-serif;
+        font-size: 14px;
+        line-height: 16px;
+        color: #1d2228;
+        letter-spacing: 0;
+      }
+
+      .download-btn {
+        height: 44px;
+      }
+    }
+
+    hr {
+      margin: 16px 0 15px 0 !important;
+    }
+
+    .ant-collapse-item {
+      .ant-collapse-content {
+        padding: 12px 18px 16px 18px;
+
+        .excel-upload-container {
+          row-gap: 33px;
+
+          .excel-upload-form {
+            width: 100%;
+
+            .ant-form-item {
+              column-gap: 16px;
+              width: 97px;
+              flex-wrap: nowrap;
+
+              .ant-form-item-label {
+                width: 97px;
+                overflow: unset;
+                text-align: left;
+                line-height: 6px;
+
+                label {
+                  white-space: break-spaces;
+                  line-height: 16px;
+                  width: 97px;
+                }
+              }
+
+              .ant-form-item-control {
+                .ant-form-item-control-input {
+                  .ant-form-item-control-input-content {
+                    .ant-select {
+                      width: 178px;
+
+                      .ant-select-selector {
+                        width: 178px;
+                      }
+
+                      .ant-select-arrow {
+                        right: 15px !important;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
+            .check-form-item {
+              width: 100% !important;
+            }
+          }
+
+        }
+      }
+    }
+
+  }
+}

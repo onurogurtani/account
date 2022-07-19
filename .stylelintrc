@@ -1,0 +1,14 @@
+{
+  "extends": "stylelint-config-sass-guidelines",
+  "rules": {
+    "indentation": 4,
+    "max-nesting-depth": 10,
+    "selector-max-compound-selectors": 10,
+    "selector-max-id": 10,
+    "string-quotes": "double",
+    "selector-no-qualifying-type": [
+      true,
+      { "ignore": ["attribute", "class", "id"]}
+    ]
+  }
+}

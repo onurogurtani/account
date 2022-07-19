@@ -1,0 +1,61 @@
+.custom-modal {
+  //top: 35%;
+  padding: 0 14px;
+
+  .ant-modal-content {
+    border-radius: 10px;
+
+    .ant-modal-close {
+      .ant-modal-close-x {
+        display: unset !important;
+        margin: 16px 24px;
+      }
+    }
+
+    .ant-modal-header {
+      height: 56px;
+      background: #efefef;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      padding: 13px 0 20px 24px;
+
+      .ant-modal-title {
+        font-family: UbuntuMedium, sans-serif;
+        font-weight: 500;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        font-size: 20px;
+        color: #162056;
+      }
+    }
+
+    .ant-modal-body {
+      padding: 27px 28px 42px 24px;
+    }
+
+    @media (max-width: 767.98px) {
+      .ant-modal-header {
+        height: 47px;
+        padding: 17px 0 9px 18px;
+
+        .ant-modal-title {
+          font-size: 16px;
+        }
+      }
+
+      .ant-modal-close {
+        .ant-modal-close-x {
+          height: 47px;
+          line-height: 47px;
+          margin: 16px 18px;
+        }
+      }
+
+      .ant-modal-body {
+        padding: 20px 18px 32px 18px;
+      }
+    }
+  }
+}

@@ -1,0 +1,204 @@
+.session-custom-dialog {
+  top: 35%;
+  padding: 0 14px;
+
+  .dialog-header {
+    height: 56px;
+    padding: 13px 24px 8px 24px;
+    background-color: #efefef;
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .title-content {
+      display: flex;
+      align-items: center;
+
+      .image-warning {
+        width: 32px;
+        height: 28px;
+      }
+
+      .title {
+        margin: 0 0 0 12px;
+        font-size: 18px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        color: #162056;
+      }
+    }
+
+    .close-image {
+      justify-content: end;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      float: right;
+    }
+
+    @media (max-width: 767.98px) {
+      height: 48px;
+      padding: 13px 18px 8px 18px;
+      .title-content {
+        .title {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  .dialog-content {
+    display: flex;
+    justify-content: center;
+    padding: 24px 24px 32px 24px;
+
+    .message {
+      min-height: 20px;
+      font-size: 16px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 20px;
+      letter-spacing: normal;
+      color: #1d2228;
+      font-family: UbuntuRegular, sans-serif;
+    }
+
+    @media (max-width: 767.98px) {
+      padding: 24px 18px 32px 18px;
+
+      .message {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .ant-modal-body {
+    padding: 0 !important;
+  }
+
+  .ant-modal-content {
+    border-radius: 10px;
+  }
+
+  .ant-modal-header {
+    border: 0;
+    padding: 0;
+    background: none;
+  }
+
+  .ant-modal-confirm-btns {
+    float: inherit;
+    text-align: center;
+    margin-top: 0;
+  }
+
+  .ant-modal-confirm-btns .ant-btn.ant-btn-primary {
+    height: 48px;
+    margin: 0 0 32px 0;
+    padding: 11px 42px 17px;
+    border-radius: 6px;
+    background-color: #162056;
+    color: #fff;
+  }
+
+  .ant-modal-confirm-btns .ant-btn {
+    height: 48px;
+    margin: 0 50px 43px 0;
+    padding: 11px 30px 17px;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #162056;
+    border: 1px solid #162056;
+    font-weight: bold;
+  }
+
+  .ant-btn > span {
+    height: 20px;
+    font-family: UbuntuRegular, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    text-align: center;
+    color: #fff;
+  }
+
+  .ant-modal-confirm-body .ant-modal-confirm-content {
+    margin-top: 0;
+  }
+
+  .ant-modal-footer {
+    font-family: UbuntuRegular, sans-serif;
+    float: inherit;
+    text-align: center;
+    margin-top: 0;
+    border-top: none;
+    padding: 0;
+
+    .ant-btn.ant-btn-primary {
+      height: 48px;
+      margin: 0 0 32px 0;
+      padding: 11px 42px 17px;
+      border-radius: 6px;
+      background-color: #162056;
+      color: #fff;
+
+      @media (max-width: 767.98px) {
+        margin: 0;
+        padding: 11px 20px 17px;
+      }
+
+      @media (max-width: 321px) {
+        margin: 0;
+        padding: 5px 10px 8px;
+      }
+
+      @media (max-width: 281px) {
+        margin: 0;
+        padding: 5px 5px 5px;
+      }
+    }
+
+    .session-dialog-cancel-button {
+      height: 48px;
+      margin: 0 30px 32px 0;
+      padding: 11px 40px 17px;
+      border-radius: 6px;
+      background-color: #fff;
+      border: 1px solid #162056;
+
+      span {
+        color: #162056;
+        font-weight: bold;
+      }
+
+      @media (max-width: 767.98px) {
+        margin: 0 20px 20px 0;
+        padding: 11px 10px 17px;
+      }
+
+      @media (max-width: 321px) {
+        margin: 0 7px 20px 0;
+        padding: 11px 10px 17px;
+      }
+
+      @media (max-width: 281px) {
+        margin: 0 7px 20px 0;
+        padding: 2px 2px 2px;
+      }
+    }
+  }
+}
+
+.session-dialog-custom-warning {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}

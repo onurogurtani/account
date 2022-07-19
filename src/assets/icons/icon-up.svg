@@ -1,0 +1,14 @@
+<svg version="1.2" baseProfile="tiny-ps" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+	<title>icon-up-svg</title>
+	<style>
+		tspan { white-space:pre }
+		.s0 { fill: #ffffff } 
+		.s1 { fill: none;stroke: #3f4957;stroke-linecap:round;stroke-linejoin:round;stroke-width: 2 } 
+	</style>
+	<g id="Layer">
+		<path id="Layer" class="s0" d="m12 24c-6.64 0-12-5.36-12-12c0-6.64 5.36-12 12-12c6.64 0 12 5.36 12 12c0 6.64-5.36 12-12 12z" />
+		<g id="Layer">
+			<path id="Layer" class="s1" d="m18 15l-6-6m0 0l-6 6" />
+		</g>
+	</g>
+</svg>

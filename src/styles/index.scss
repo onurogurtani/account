@@ -1,0 +1,23 @@
+@import "~bootstrap/scss/bootstrap";
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+
+  #root {
+    width: 100%;
+  }
+}
+
+.ant-select-focused, .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector, .ant-input-affix-wrapper:focus, .ant-input-affix-wrapper-focused, {
+  border-color: #0d6efd !important;
+  box-shadow: 0 0 8px 1px rgba(22, 32, 86, 0.08) !important;
+}
+
+.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover {
+  border-color: #0d6efd !important;
+}

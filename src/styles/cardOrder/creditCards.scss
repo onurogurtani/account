@@ -1,0 +1,66 @@
+.credit-card-item {
+  width: 196px;
+  height: 127px;
+  box-shadow: 0 2px 4px 0 rgba(96, 97, 112, 0.16), 0 0 1px 0 rgba(40, 41, 61, 0.04);
+  border-radius: 10px;
+  border: solid 1px #f4f4f4;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 15px 16px 6px;
+
+  .bank-card-logo {
+    width: 79px;
+    height: 14px;
+    margin-left: 8px;
+  }
+
+  .bank-credit-card-logo {
+    width: 82px;
+    height: 21px;
+    margin-top: 9px;
+  }
+
+  .card-number {
+    font-family: UbuntuMedium, sans-serif;
+    color: #6b7789;
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 23px;
+    display: flex;
+    align-items: center;
+    word-spacing: 11px;
+    margin-top: 8px;
+    margin-left: 8px;
+    margin-bottom: 6px;
+
+    .hidden-number {
+      width: 5px;
+      height: 5px;
+      background-color: #6b7789;
+      border-radius: 50%;
+      display: inline-flex;
+      margin: 0 4px;
+    }
+  }
+
+  .card-info {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 8px;
+    align-items: center;
+    height: 16px;
+
+    .user-name {
+      font-size: 10px;
+      font-family: UbuntuMedium, sans-serif;
+      color: #6b7789;
+      line-height: 23px;
+    }
+
+    .card-type-logo {
+      width: 21px;
+      height: 16px;
+    }
+  }
+}

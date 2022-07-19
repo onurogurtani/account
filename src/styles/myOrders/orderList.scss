@@ -1,0 +1,126 @@
+.order-list-card {
+  .ant-collapse-item {
+    .ant-collapse-content {
+      padding: 32px 0px 32px 0px;
+
+      .order-list-table {
+        table {
+          .table-action-content {
+            column-gap: 24px;
+            display: flex;
+            align-items: center;
+
+            span {
+              font-family: UbuntuMedium, sans-serif;
+              font-size: 14px;
+              line-height: 20px;
+              text-decoration: underline;
+              cursor: pointer;
+              //width: 81px;
+              word-break: break-word;
+              display: inline-flex;
+              min-width: 52px;
+              text-align: left;
+
+              &.copy-btn {
+                color: #3f4957;
+              }
+
+              &.print-btn {
+                color: #5480c1;
+              }
+
+              &.download-btn {
+                color: #6f9029;
+              }
+
+              &.rule-btn {
+                color: #4d5868;
+              }
+
+              &.payment-btn {
+                color: #8668ab;
+              }
+
+              &.detail-btn {
+                color: #2d9580;
+              }
+
+              &.check-btn {
+                color: #5579af;
+              }
+
+              &.delete-btn {
+                color: #f72717;
+              }
+            }
+          }
+
+          .cell-tooltip {
+            margin-left: 5px;
+          }
+
+          .cell-detail {
+            span {
+              cursor: pointer;
+              color: #00a483;
+              font-family: UbuntuRegular, sans-serif;
+              font-size: 14px;
+
+            }
+          }
+        }
+      }
+
+      .order-list-footer {
+        display: flex;
+        justify-content: space-between;
+        padding: 24px 16px 0 16px;
+        align-items: center;
+
+        .total-orders-number {
+          display: flex;
+          justify-content: flex-end;
+          //padding: 17px 24px 17px;
+          align-items: center;
+
+          .order-count-title {
+            font-family: UbuntuRegular, sans-serif;
+            font-size: 14px;
+            color: #3f4957;
+            line-height: 14px;
+            margin-left: 12px;
+
+            span {
+              font-family: UbuntuBold, sans-serif;
+              font-size: 14px;
+              line-height: 14px;
+              color: #f72717;
+            }
+          }
+
+        }
+
+      }
+
+    }
+  }
+}
+
+
+@media (max-width: 1200px) {
+  .order-list-card {
+    .ant-collapse-item {
+      .ant-collapse-content {
+        .order-list-footer {
+          flex-direction: column;
+          align-items: center;
+
+          .total-orders-number {
+            padding: 25px 24px 17px;
+          }
+        }
+      }
+    }
+  }
+}

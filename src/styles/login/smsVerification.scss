@@ -1,0 +1,96 @@
+.smsVerification {
+  @media (max-width: 767.98px) {
+    .rightSideMain {
+      height: calc(100vh - 150px);
+    }
+  }
+
+  @media (min-width: 767.98px) and (max-width: 991.98px) {
+    .rightSideMain {
+      height: calc(100vh - 260px);
+    }
+  }
+
+  .labelExplanation {
+    font-family: UbuntuRegular, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #495057;
+    margin-bottom: 0;
+  }
+
+  .labelPhone {
+    margin: 23px 12px 12px 0;
+    font-family: UbuntuMedium, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #162056;
+
+    .phoneValue {
+      margin: 0 0 13px 12px;
+      font-family: UbuntuMedium, sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      color: #3485fd;
+    }
+  }
+
+  .labelRemainingTime {
+    font-family: UbuntuMedium, sans-serif;
+    font-size: 16px !important;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #162056;
+    width: 100%;
+    margin: 6px 0 24px 0;
+
+    .time {
+      font-family: UbuntuRegular, sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      color: #00a483;
+      padding-left: 17px;
+    }
+
+    .sendAgain {
+      font-family: UbuntuRegular, sans-serif;
+      font-size: 14px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.71;
+      letter-spacing: -0.22px;
+      color: #495057;
+      float: right;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .sendAgain:active, .sendAgain:hover {
+      color: #7caadc;
+    }
+
+    .disabled {
+      pointer-events: none;
+    }
+  }
+}

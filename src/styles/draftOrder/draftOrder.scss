@@ -1,0 +1,50 @@
+
+.draft-order-btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 22px;
+
+  .back-btn {
+    background: transparent;
+    border: unset;
+    font-family: UbuntuRegular, sans-serif;
+    font-size: 14px;
+    line-height: 24px;
+    color: #162056;
+    box-shadow: unset;
+    padding: 0;
+
+    img {
+      margin-right: 10px;
+    }
+  }
+
+  .next-btn {
+    background-color: #f67301;
+    color: #fff;
+    width: 202px;
+    height: 48px;
+    border-radius: 6px;
+    font-family: UbuntuMedium, sans-serif;
+    font-size: 16px;
+    line-height: 20px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .draft-order-btn-container {
+    padding-left: 0;
+
+    .back-btn {
+      display: none;
+    }
+
+    .next-btn {
+      width: 100%;
+      height: 44px;
+      background-color: #f66301;
+      border-color: #f66301;
+    }
+  }
+}

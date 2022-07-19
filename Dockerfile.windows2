@@ -1,0 +1,32 @@
+FROM mcr.microsoft.com/windows/servercore:1809 as final
+
+ENV http_proxy "http://webdefence.global.blackspider.com:80"
+ENV https_proxy "http://webdefence.global.blackspider.com:80"
+ENV no_proxy "dev-consul,integration,ocelot,sener,sercan,localhost"
+
+
+COPY ./certificates ./certificates
+
+RUN certutil.exe -addstore root C:/certificates/edenred1.cer
+RUN certutil.exe -addstore root C:/certificates/edenred2.cer
+RUN certutil.exe -addstore root C:/certificates/edenredRootCA.cer
+RUN certutil.exe -addstore root C:/certificates/edenredRootCA2.cer
+RUN certutil.exe -addstore root C:/certificates/edenredRootCA3.cer
+RUN certutil.exe -addstore root C:/certificates/edenredRootCA4.cer
+RUN certutil.exe -addstore root C:/certificates/edenredRootCA5.cer
+RUN certutil.exe -addstore root C:/certificates/Forcepoint.cer
+
+COPY nginx-1.20.2.zip .
+
+RUN mkdir c:\build\nginx\source &&\
+  #powershell -Command "wget -uri 'http://nginx.org/download/nginx-1.20.2.zip' -OutFile 'nginx-1.20.2.zip' -e use_proxy=yes " &&\
+  powershell -Command "Expand-Archive -Path nginx-1.20.2.zip -DestinationPath C:\nginx -Force" &&\
+  del nginx-1.20.2.zip
+
+COPY build /nginx/nginx-1.20.2/html/
+
+COPY nginx.conf /nginx/nginx-1.20.2/conf
+
+WORKDIR /nginx/nginx-1.20.2
+EXPOSE 80
+ENTRYPOINT ["nginx.exe"]

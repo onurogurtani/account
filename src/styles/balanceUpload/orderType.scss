@@ -1,0 +1,435 @@
+.balance-upload-content {
+
+  .order-type-card {
+    .ant-collapse-content {
+      padding: 0;
+
+      .order-type-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .card-checkbox-content {
+          background-color: #e9ecef;
+          padding: 32px 0 33px 0;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          box-shadow: 0 2px 4px 0 rgba(96, 97, 112, 0.16), 0 0 1px 0 rgba(40, 41, 61, 0.04);
+
+          .custom-radio-input-credit-card {
+            width: 100%;
+
+            > div {
+              display: grid;
+              grid-template-columns: auto auto auto auto;
+              column-gap: 24px;
+            }
+
+            .card-radio {
+              width: 200px;
+              height: 160px;
+              border-radius: 10px;
+              box-shadow: 0 2px 4px 0 rgba(96, 97, 112, 0.16), 0 0 1px 0 rgba(40, 41, 61, 0.04);
+            }
+
+            label:first-child {
+              margin-left: 0;
+            }
+
+            label:nth-child(4) {
+              span:nth-child(2) {
+                .card-label {
+                  padding-left: 61px;
+                }
+              }
+            }
+
+            .ant-radio-wrapper {
+              display: inline-flex;
+              align-items: center;
+              margin-right: 0;
+              padding: 0;
+
+              .ant-radio {
+                position: absolute;
+                left: 16px;
+                top: 32px;
+
+                .ant-radio-inner {
+                  width: 24px;
+                  height: 24px;
+                  background: #f8f8f8;
+                  border: solid 2px #4d5868;
+                }
+
+                .ant-radio-inner:after {
+                  width: 14px;
+                  height: 14px;
+                  background-color: #6b7789;
+                }
+              }
+
+              span {
+                padding-right: 0;
+                padding-left: 0;
+              }
+
+              span:nth-child(2) {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+
+                .card-label {
+                  font-size: 16px;
+                  font-family: UbuntuRegular, sans-serif;
+                  color: #152056;
+                  letter-spacing: 0;
+                  line-height: normal;
+                  height: 80px;
+                  background-color: #fff;
+                  border-top-right-radius: 10px;
+                  border-top-left-radius: 10px;
+                  padding-top: 4px;
+                  padding-left: 57px;
+                  display: flex;
+                  align-items: center;
+                }
+
+                p {
+                  flex: 1;
+                  margin-bottom: 0;
+                  background-color: #f2f5f7;
+                  font-size: 12px;
+                  font-family: UbuntuRegular, sans-serif;
+                  line-height: 16px;
+                  color: #6b7789;
+                  border-bottom-right-radius: 10px;
+                  border-bottom-left-radius: 10px;
+                  padding-left: 17px;
+                  padding-top: 17px;
+                  padding-right: 8px;
+                }
+              }
+
+            }
+
+            .ant-radio-wrapper-checked {
+              border: solid 2px #00a483;
+              transition: 150ms all;
+            }
+          }
+        }
+
+        .amount-type-content {
+          padding: 32px 24px 0 24px;
+          width: 100%;
+
+          .custom-radio-input-content {
+            display: grid;
+            grid-template-columns: auto auto;
+            column-gap: 67px;
+            justify-content: center;
+            border-bottom: solid 1px #eaecef;
+            padding-bottom: 31.5px;
+
+            label:nth-child(1) {
+              margin-right: 0;
+            }
+
+
+            .ant-radio-wrapper {
+              align-items: flex-start;
+
+              .ant-radio {
+                top: 0;
+                margin-right: 16px;
+              }
+
+              span:nth-child(2) {
+                .amount-type-text-content {
+                  width: 170px;
+
+                  span {
+                    font-size: 18px;
+                    font-family: UbuntuMedium, sans-serif;
+                    line-height: 23px;
+                    color: #3f4957;
+                    letter-spacing: 0;
+                  }
+
+                  p {
+                    font-family: UbuntuRegular, sans-serif;
+                    font-size: 14px;
+                    line-height: 16px;
+                    color: #6b7789;
+                    letter-spacing: 0;
+                    margin-bottom: 0;
+                    margin-top: 4px;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        .excel-action-btn-content {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          column-gap: 24px;
+          padding: 31.5px 0 32px 0;
+
+          .download-btn {
+            width: 276px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: UbuntuMedium, sans-serif;
+            font-size: 14px;
+            line-height: 20px;
+            background-color: #162056;
+            box-shadow: none;
+            border-radius: 6px;
+
+            &:disabled {
+              background-color: #adb5bd;
+            }
+
+            img {
+              margin-right: 10px;
+            }
+          }
+
+          .upload-btn {
+            width: 282px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: UbuntuMedium, sans-serif;
+            font-size: 14px;
+            line-height: 20px;
+            background-color: #00a483;
+            box-shadow: none;
+            border-radius: 6px;
+
+            &:disabled {
+              background-color: #adb5bd;
+            }
+
+            .upload-icon {
+              margin-right: 7px;
+            }
+
+            .excel-icon {
+              margin-left: 12px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media(min-width: 1032px) and (max-width: 1255.98px) {
+  .balance-upload-content {
+
+    .order-type-card {
+      .ant-collapse-content {
+        .order-type-container {
+          .card-checkbox-content {
+            .custom-radio-input-credit-card {
+              > div {
+                grid-template-columns: auto auto auto;
+                row-gap: 10px;
+                column-gap: 24px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1031.98px) {
+  .balance-upload-content {
+
+    .order-type-card {
+      .ant-collapse-content {
+        .order-type-container {
+          .card-checkbox-content {
+            .custom-radio-input-credit-card {
+              > div {
+                grid-template-columns: auto auto;
+                row-gap: 10px;
+                column-gap: 24px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 991.98px) {
+  .balance-upload-content {
+    .order-type-card {
+      .ant-collapse-content {
+        .order-type-container {
+          .card-checkbox-content {
+            padding: 6px 0 24px 0;
+
+            .custom-radio-input-credit-card {
+              > div {
+                display: grid;
+                grid-template-columns: auto auto;
+                row-gap: 16px;
+                column-gap: 16px;
+              }
+
+              .card-radio {
+                width: 148px;
+                height: 170px;
+              }
+
+              label:nth-child(4) {
+                span:nth-child(2) {
+                  .card-label {
+                    justify-content: center;
+                    padding-top: 22px;
+                    padding-left: 0;
+                  }
+                }
+              }
+
+              .ant-radio-wrapper {
+                display: inline-flex;
+                align-items: center;
+                margin-right: 0;
+                padding: 0;
+
+                .ant-radio {
+                  top: 27px !important;
+                  left: 50%;
+                  -webkit-transform: translateX(-50%) translateY(-50%);
+                  -moz-transform: translateX(-50%) translateY(-50%);
+                  transform: translateX(-50%) translateY(-50%);
+                }
+
+                span:nth-child(2) {
+                  .card-label {
+                    height: 90px;
+                    font-size: 14px !important;
+                    padding-left: 2px;
+                    padding-top: 42px;
+                    padding-bottom: 0;
+                    text-align: center;
+                  }
+
+                  p {
+                    font-size: 12px;
+                    padding-left: 12px;
+                    padding-top: 11px;
+                    padding-right: 12px;
+                    line-height: normal;
+                  }
+                }
+              }
+            }
+          }
+
+          .amount-type-content {
+            padding: 24px 0 0 0;
+
+            .custom-radio-input-content {
+              column-gap: 26px;
+              padding-bottom: 0;
+
+              .ant-radio-wrapper {
+                align-items: center;
+                flex-direction: column;
+
+                .ant-radio {
+                  top: 0;
+                  margin-right: 0;
+                  left: 7px;
+                }
+
+                span:nth-child(2) {
+                  .amount-type-text-content {
+                    width: 145px;
+                    margin-top: 12px;
+
+                    span {
+                      font-size: 16px;
+                      padding-left: 7px;
+                    }
+
+                    p {
+                      font-size: 12px;
+                      line-height: normal;
+                      margin-top: 12px;
+                      text-align: left;
+                      padding-left: 5px;
+                    }
+                  }
+                }
+              }
+
+              label:nth-child(2) {
+                span:nth-child(2) {
+                  .amount-type-text-content {
+                    span {
+                      padding-left: 21px;
+                    }
+
+                    p {
+                      padding-left: 10px;
+                    }
+                  }
+                }
+              }
+
+            }
+          }
+
+          .excel-action-btn-content {
+            row-gap: 24px;
+            flex-direction: column;
+
+            .download-btn {
+              height: 44px;
+              line-height: 20px;
+
+              img {
+                margin-right: 10px;
+              }
+            }
+
+            .upload-btn {
+              height: 44px;
+              line-height: 20px;
+
+              .upload-icon {
+                margin-right: 7px;
+              }
+
+              .excel-icon {
+                margin-left: 12px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+}

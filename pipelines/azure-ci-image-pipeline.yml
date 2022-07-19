@@ -1,0 +1,51 @@
+name: $(solutionName) $(major).$(minor).$(revision).$(build)
+trigger: none
+pool:
+  #vmImage: ubuntu-latest
+  name: Default
+  demands: 
+  - agent.name -equals VS2022
+resources:
+  repositories:
+  - repository: ApplicationStack
+    type: git
+    name: Application Stack/Application Stack
+variables:
+- template: variable.yml  
+- group: VariableGroupForAllRepositories
+- group: TicketOnlineUI
+steps:  
+  - task: PowerShell@2
+    inputs: 
+      targetType: inline
+      workingDirectory: $(Build.SourcesDirectory)
+      script: |
+        dir
+        Copy-Item -Path "C:\\edenred\\certificates" -Destination "." -recurse -Force
+        copy c:\\edenred\\nodejs.zip .
+        copy c:\\edenred\\nginx-1.20.2.zip .
+        copy c:\\edenred\\nginx-ui.conf .\\nginx.conf        
+        yarn install
+        yarn build:$(Build.SourceBranchName)
+  - task: Docker@2
+    displayName: Build Image
+    inputs:
+      repository: $(imageName)_$(Build.SourceBranchName)
+      command: build
+      dockerfile: Dockerfile.windows2
+      tags: |
+        $(major).$(minor).$(revision).$(build)
+        latest        
+      buildContext: $(Build.SourcesDirectory)
+      containerRegistry: $(containerRegistry)
+      arguments: '-t $(imageName)_$(Build.SourceBranchName) --build-arg core_env=$(Build.SourceBranchName)'
+  - task: Docker@2
+    displayName: Push Image
+    inputs:
+      repository: $(imageName)_$(Build.SourceBranchName)
+      command: push
+      tags: |
+        $(major).$(minor).$(revision).$(build)
+        latest        
+      buildContext: $(Build.SourcesDirectory)
+      containerRegistry: $(containerRegistry)

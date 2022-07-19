@@ -1,0 +1,61 @@
+.blocked-card-list-card {
+  .ant-collapse-item {
+    .ant-collapse-content {
+      padding: 24px 0 0 0;
+
+      .action-btn-content {
+        display: flex;
+        justify-content: center;
+
+        .blocked-btn {
+          width: 116px;
+          height: 36px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 4px;
+          color: #fff;
+          background-color: #f66301;
+          font-family: UbuntuMedium, sans-serif;
+          font-size: 12px;
+          line-height: 12px;
+          box-shadow: none;
+        }
+      }
+
+
+      .card-list-table-footer {
+        padding: 19px 24px 31px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+      }
+
+    }
+  }
+}
+
+
+@media (max-width: 991.98px) {
+
+  .blocked-card-list-card {
+    .ant-collapse-item {
+      .ant-collapse-content {
+        padding: 16px 0 0 0;
+
+        .card-list-table-footer {
+          padding: 16px 0 24px 0;
+          flex-direction: column;
+          align-items: center;
+
+          .custom-pagination {
+            justify-content: center;
+          }
+        }
+      }
+    }
+  }
+
+
+}

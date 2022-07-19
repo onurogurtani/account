@@ -1,0 +1,6 @@
+{
+  "PUBLIC_HOST_API": "https://test-sirius.ticket.com.tr/api",
+  "PORT": 3000,
+  "SESSION_MINUTES": 15,
+  "PAYMENT_URL": " https://test-sirius.ticket.com.tr/"
+}

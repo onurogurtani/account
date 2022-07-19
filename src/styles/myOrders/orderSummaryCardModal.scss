@@ -1,0 +1,285 @@
+.order-summary-card-modal {
+
+  .ant-modal-content {
+    .ant-modal-header {
+      height: 48px;
+    }
+
+    .ant-modal-body {
+      padding: 7px 7px 43px 0;
+
+
+      .summary-info-container {
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        max-height: 600px;
+
+        .summary-info-content {
+          display: flex;
+          padding: 26px 24px 6px 0;
+          column-gap: 24px;
+          justify-content: flex-end;
+          flex-wrap: wrap;
+          width: 100%;
+
+          .summary-info {
+            width: 307px;
+            padding: 0 19px 13px 19px;
+
+            p {
+              font-family: UbuntuMedium, sans-serif;
+              font-size: 14px;
+              color: #1d2228;
+              margin-bottom: 11px;
+              line-height: normal;
+
+              span {
+                font-family: UbuntuLight, sans-serif;
+                font-size: 14px;
+              }
+            }
+
+            p:nth-child(2) {
+              span {
+                display: block;
+              }
+            }
+          }
+
+          .summary-info-box {
+            width: 307px;
+            height: 87px;
+            border-radius: 10px;
+            background-color: #e9ecef;
+            margin-top: 5px;
+
+
+            p {
+              font-family: UbuntuMedium, sans-serif;
+              font-size: 16px;
+              color: #1d2228;
+              margin-bottom: 5px;
+            }
+
+            h5 {
+              font-family: UbuntuMedium, sans-serif;
+              font-size: 25px;
+              color: #f72717;
+              font-weight: 500;
+            }
+          }
+
+          .box-1 {
+            padding: 15px 0 13px 24px;
+          }
+
+          .box-2 {
+            padding: 13px 0 14px 24px;
+          }
+
+        }
+
+        .summary-list-content {
+          flex: 1;
+          padding-right: 9px;
+
+          .card-list-table {
+            .red-color {
+              color: #f72717;
+            }
+          }
+        }
+
+        .order-summary-table-footer {
+          padding: 22.5px 19px 11px 28px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .custom-pagination {
+            .ant-pagination-jump-next {
+              display: block;
+            }
+          }
+
+          .footer-info-container {
+            display: flex;
+            align-items: center;
+
+            .footer-info-content {
+              font-size: 14px;
+              line-height: 14px;
+              font-family: UbuntuRegular, sans-serif;
+              color: #3f4957;
+              margin-right: 34px;
+
+              img {
+                margin-right: 14px;
+              }
+
+              span {
+                font-family: UbuntuBold, sans-serif;
+                color: #f72717;
+              }
+            }
+
+            .total-amount-title {
+              font-family: UbuntuBold, sans-serif;
+              font-size: 12px;
+              line-height: 14px;
+              color: #3f4957;
+
+              span {
+                font-family: UbuntuRegular, sans-serif;
+                font-size: 14px;
+                color: #3f4957;
+                line-height: 14px;
+                margin-left: 17px;
+              }
+            }
+          }
+        }
+
+      }
+
+      .summary-info-container::-webkit-scrollbar-track {
+        background-color: #dee2e6;
+        border-radius: 4px;
+      }
+
+      .summary-info-container::-webkit-scrollbar {
+        width: 19px;
+        background-color: #dee2e6;
+        border-radius: 4px;
+      }
+
+      .summary-info-container::-webkit-scrollbar-thumb {
+        background-color: #6b7789;
+        border: 5px solid #dee2e6;
+        height: 100px;
+        border-radius: 8px;
+      }
+
+    }
+
+  }
+}
+
+@media (max-width: 991.98px) {
+  .order-summary-card-modal {
+
+    padding: 0 16px !important;
+
+    .ant-modal-content {
+      .ant-modal-body {
+        padding: 0 0 41px 0;
+
+        .summary-info-container {
+          display: flex;
+          flex-direction: column;
+
+          .summary-info-content {
+            display: flex;
+            padding: 16px 18px 16px 18px;
+            width: 100%;
+            row-gap: 12px;
+
+            .summary-info {
+              width: 100%;
+              padding: 0;
+              display: flex;
+              flex-wrap: wrap;
+
+              p {
+                width: 100%;
+                font-family: UbuntuBold, sans-serif;
+                font-size: 14px;
+                line-height: 16px;
+                color: #3f4957;
+                margin-bottom: 16px;
+
+                span {
+                  display: block;
+                  font-family: UbuntuRegular, sans-serif;
+                  font-size: 12px;
+                  line-height: 16px;
+                  margin-top: 5px;
+                }
+              }
+
+              p:last-child {
+                margin-bottom: 0;
+              }
+            }
+
+            .summary-info-box {
+              width: 100%;
+              border-radius: 6px;
+              background-color: #e9ecef;
+              margin-top: 0 !important;
+
+              p {
+                font-family: UbuntuBold, sans-serif;
+                font-size: 14px;
+                color: #3f4957;
+                margin-bottom: 0;
+              }
+
+              h5 {
+                font-size: 18px !important;
+                line-height: 16px !important;
+                color: #e25563 !important;
+                letter-spacing: 0 !important;
+              }
+            }
+
+            .box-1 {
+              padding: 12px 0 13px 13px;
+              height: 61px;
+            }
+
+            .box-2 {
+              padding: 11px 0 18px 13px;
+              height: 72px;
+            }
+
+          }
+
+          .summary-list-content {
+            padding-right: 0;
+          }
+
+
+          .order-summary-table-footer {
+            padding: 19px 11px 3px 20px;
+            flex-direction: column;
+            align-items: center;
+
+            div:first-child {
+              flex-direction: column;
+              width: 100%;
+              align-items: center;
+
+              .custom-pagination {
+                justify-content: center;
+                margin-top: 10px;
+              }
+            }
+
+            .footer-info-container {
+              flex-direction: column;
+              margin-top: 24px;
+
+              .footer-info-content {
+                margin-right: 0;
+                margin-bottom: 25px;
+                text-align: center;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+<svg width="17" height="18" viewBox="0 0 17 18" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(1 1)" stroke="#1D2228" stroke-width="1.231" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <ellipse cx="7.5" cy="4" rx="3.944" ry="4"/>
+        <path d="M15 16c-1.045-3.306-4.077-5.549-7.5-5.549S1.045 12.694 0 16h15z"/>
+    </g>
+</svg>

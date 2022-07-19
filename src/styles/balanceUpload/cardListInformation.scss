@@ -1,0 +1,416 @@
+.filter-container {
+  padding: 16px 24px 16px 24px;
+
+  .filter-collapse-card {
+    .ant-collapse-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      box-shadow: unset;
+
+      .ant-collapse-header {
+        width: 192px;
+        height: 48px;
+        font-size: 14px;
+        font-family: UbuntuMedium, sans-serif;
+        color: #3f4957;
+        padding: 15px 24px 6px 24px;
+        background-color: #eceef0;
+        display: flex;
+
+        .icon-filter {
+          margin-right: 10px;
+        }
+      }
+
+      .ant-collapse-content {
+        width: 100%;
+        background-color: #eceef0;
+        border-radius: 10px 0 10px 10px;
+        padding: 0;
+
+        .ant-collapse-content-box {
+
+          .filter-form {
+            .form-item {
+              display: flex;
+              column-gap: 24px;
+              flex-wrap: wrap;
+              padding: 24px 24px 19px 28px;
+
+              .ant-form-item {
+                flex-wrap: nowrap;
+                align-items: center;
+                margin-bottom: 24px;
+
+                .ant-form-item-label {
+                  label {
+                    font-size: 14px;
+                    margin-bottom: 0;
+                    margin-right: 0;
+                    color: #3f4957;
+                    width: 74px;
+                    height: 36px;
+                    justify-content: flex-end;
+                    white-space: break-spaces;
+                    overflow: unset;
+                  }
+
+                  label::after {
+                    content: '';
+                  }
+                }
+
+                .ant-form-item-control {
+                  .ant-form-item-control-input {
+                    .ant-form-item-control-input-content {
+                      display: flex;
+                      align-items: center;
+
+                      input {
+                        width: 242px;
+                        font-size: 14px;
+                      }
+                    }
+                  }
+                }
+
+              }
+
+              .ant-form-item:nth-child(7) {
+                margin-bottom: 16px;
+              }
+
+              .delivery-code-form-item {
+                .ant-form-item-control {
+                  .ant-form-item-control-input {
+                    .ant-form-item-control-input-content {
+                      input {
+                        width: 234px;
+                      }
+                    }
+                  }
+                }
+              }
+
+              .delivery-address-form-item {
+                .ant-form-item-control {
+                  .ant-form-item-control-input-content {
+                    .ant-select {
+                      width: 585px;
+                      max-width: 585px;
+
+                      .ant-select-selector {
+                        padding: 1px 16px !important;
+                        font-size: 14px;
+
+                        .ant-select-selection-search {
+                          input {
+                            width: 100%;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+
+              .form-footer {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                align-items: center;
+
+                .footer-form-item {
+                  margin-bottom: 0;
+                  padding-left: 62px;
+                  height: 48px;
+                  align-items: self-start;
+
+                  .ant-form-item-control {
+                    .ant-form-item-control-input {
+                      .ant-form-item-control-input-content {
+                        .only-amount-check {
+                          display: flex;
+                          align-items: center;
+
+                          .ant-checkbox {
+                            top: 0 !important;
+                          }
+
+                          span:nth-child(2) {
+                            padding-left: 16px !important;
+                            font-family: UbuntuRegular, sans-serif;
+                            font-size: 14px;
+                            color: #3f4957;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+
+                .action-buttons {
+                  .clear-btn {
+                    background: none;
+                    border: none;
+                    box-shadow: none;
+                    font-size: 16px;
+                    line-height: 20px;
+                    font-family: UbuntuMedium, sans-serif;
+                    text-decoration: underline !important;
+                    display: inline-flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 58px;
+                    height: 48px;
+                    margin-right: 24px;
+                    color: #3f4957;
+                  }
+
+                  .search-btn {
+                    width: 127px;
+                    height: 48px;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: #6b7789;
+                    color: #fff;
+                    font-size: 14px;
+                    line-height: 20px;
+                    font-family: UbuntuMedium, sans-serif;
+                    border-radius: 10px;
+
+                    .icon-search {
+                      margin-right: 15px;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.ant-table-selection-column {
+  padding-left: 8px;
+
+  .ant-checkbox-wrapper {
+    .ant-checkbox {
+      // top: 0.5em !important;
+    }
+
+    .ant-checkbox + span {
+      padding-left: 18px !important;
+    }
+
+    .ant-checkbox-inner {
+      position: relative;
+      top: 0;
+      left: 0;
+      display: block;
+      width: 24px;
+      height: 24px;
+      direction: ltr;
+      background-color: #f8f8f8;
+      border: 1px solid #a8a8a8;
+      border-radius: 4px;
+      border-collapse: separate;
+      transition: all 0.3s;
+    }
+
+    .ant-checkbox-checked .ant-checkbox-inner {
+      background-color: #f8f8f8;
+      border-color: #4d5868;
+    }
+
+    .ant-checkbox-wrapper-checked {
+      .checkbox-item-label {
+        color: #3f4957;
+      }
+    }
+
+    .ant-checkbox-checked .ant-checkbox-inner::after {
+      position: absolute;
+      display: table;
+      border: 2px solid #000;
+      border-top: 0;
+      border-left: 0;
+      transform: rotate(45deg) scale(1) translate(-50%, -50%);
+      opacity: 1;
+      transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
+      content: ' ';
+      height: 12px;
+    }
+  }
+}
+
+.ant-table-row-selected > td {
+  background: transparent !important;
+}
+
+.balance-list-information-table-footer {
+  .footer-info-container {
+
+    .footer-info-content {
+      span{
+        font-family: UbuntuBold, sans-serif;
+        color: #f72717;
+      }
+    }
+    .total-amount-title {
+      span {
+        font-family: UbuntuMedium, sans-serif;
+        font-size: 16px;
+        color: #f72717;
+      }
+    }
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1124.98px) {
+  .filter-container {
+    .filter-collapse-card {
+      .ant-collapse-item {
+        .ant-collapse-content {
+          .filter-form {
+            .form-item {
+              .delivery-address-form-item {
+                width: 100% !important;
+
+                .ant-form-item-control {
+                  .ant-form-item-control-input-content {
+                    .ant-select {
+                      width: 100% !important;
+                      max-width: 100% !important;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+@media (max-width: 991.98px) {
+  .filter-container {
+    padding: 20px 8px 16px 8px;
+
+    .filter-collapse-card {
+      .ant-collapse-item {
+        align-items: center;
+
+        .ant-collapse-header {
+          height: 44px;
+          padding: 10px 24px 6px 24px !important;
+
+          img {
+            top: 48% !important;
+          }
+        }
+
+        .ant-collapse-content {
+          padding: 0;
+
+          .filter-form {
+            .form-item {
+              column-gap: 24px;
+              flex-direction: column;
+              padding: 16px 16px 32px 16px !important;
+
+              .ant-form-item {
+                flex-wrap: wrap !important;
+                align-items: flex-start !important;
+                flex-direction: column;
+                width: 100%;
+
+                .ant-form-item-label {
+                  label {
+                    width: 100% !important;
+                    height: unset !important;
+                    justify-content: flex-start;
+                    white-space: break-spaces;
+                    overflow: unset;
+                  }
+                }
+
+                .ant-form-item-control {
+                  width: 100%;
+
+                  .ant-form-item-control-input {
+                    .ant-form-item-control-input-content {
+                      input {
+                        width: 100% !important;
+                      }
+                    }
+                  }
+                }
+
+              }
+
+              .ant-form-item:nth-child(3) {
+                display: none;
+              }
+
+              .delivery-code-form-item {
+                .ant-form-item-control {
+                  .ant-form-item-control-input {
+                    .ant-form-item-control-input-content {
+                      input {
+                        width: 100% !important;
+                      }
+                    }
+                  }
+                }
+              }
+
+              .delivery-address-form-item {
+                .ant-form-item-control {
+                  .ant-form-item-control-input-content {
+                    .ant-select {
+                      width: 100% !important;
+                      max-width: 100% !important;
+                    }
+                  }
+                }
+              }
+
+              .form-footer {
+                flex-direction: column;
+
+                .footer-form-item {
+                  padding-left: 0 !important;
+
+                  .ant-form-item-control {
+                    .ant-form-item-control-input {
+                      .ant-form-item-control-input-content {
+                        .only-amount-check {
+                          span:nth-child(2) {
+                            padding-left: 12px !important;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+
+                .action-buttons {
+                  display: flex;
+                  align-items: center;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,126 @@
+/*Header Stlyes*/
+.custom-header-content {
+  margin-bottom: 27px;
+
+  .action-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 18.5px;
+    border-bottom: solid 1px #b8bbc1;
+    margin-bottom: 17.5px;
+    position: relative;
+
+    .custom-title-text {
+      font-size: 32px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      color: #1d2228;
+      width: unset !important;
+      margin-bottom: 0 !important;
+      -webkit-user-select: none; /* Safari */
+      -ms-user-select: none; /* IE 10 and IE 11 */
+      user-select: none; /* Standard syntax */
+
+      img {
+        display: none;
+      }
+    }
+
+    .custom-btn-success {
+      width: unset !important;
+      background: #699a00 !important;
+      padding: 14px 30px;
+      height: 48px;
+      font-family: UbuntuRegular, sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      letter-spacing: normal;
+      text-align: center;
+      color: #fff;
+      border-radius: 6px;
+
+      img {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .action-buttons:before {
+    content: "";
+    position: absolute;
+    width: 48px;
+    border-bottom: solid 1px #b8bbc1;
+    left: -48px;
+    bottom: -1px;
+  }
+
+  .custom-breadcrumb {
+    display: flex;
+    align-items: center;
+    font-family: UbuntuRegular, sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    margin-right: 0;
+    margin-left: 0;
+
+    span {
+      width: unset !important;
+    }
+
+    .page-title {
+      color: #6b7789;
+      padding-right: 0 !important;
+      padding-left: 0 !important;
+      cursor: default;
+    }
+
+    .current-page-title {
+      padding-left: 0 !important;
+      color: #3485fd;
+      cursor: default;
+    }
+  }
+}
+
+/*Mobile*/
+@media (max-width: 767.98px) {
+  .action-buttons {
+    .custom-title-text {
+      font-size: 22px !important;
+      display: flex;
+      align-items: center;
+
+      img {
+        display: inline-block !important;
+        margin-right: 12px;
+      }
+    }
+
+    .custom-btn-success {
+      padding: 5px 18px 7px !important;
+      height: 32px !important;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+
+      img {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+
+  .custom-breadcrumb {
+    display: none !important;
+  }
+}

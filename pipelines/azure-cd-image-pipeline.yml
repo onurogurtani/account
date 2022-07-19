@@ -1,0 +1,79 @@
+name: $(solutionName) $(major).$(minor).$(revision).$(build)
+trigger: none
+variables:
+- template: variable.yml  
+- group: VariableGroupForAllRepositories
+- group: TicketOnlineUI
+stages:
+  - stage: dev
+    condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/dev'))
+    variables:
+    - group: TicketOnlineUI-dev
+    jobs:
+      - deployment: DevDeployment
+        environment: 
+          name: dev
+          tags: dev-internal
+          resourceType: VirtualMachine 
+        workspace:
+          clean: all
+        strategy: 
+          runOnce:
+            deploy:
+              steps:
+                - task: PowerShell@2
+                  inputs: 
+                    targetType: inline
+                    workingDirectory: $(Build.SourcesDirectory)
+                    script: |
+                      docker login -u 9ef18d01-c132-4d4c-907d-fa56bdfd7a39 -p o4k7Q~RWixBtMLkPrtPH-FKfkOi6oMwatuCs4 etrtolacrd.azurecr.io
+                      docker pull etrtolacrd.azurecr.io/tol_ui_dev:latest
+                      docker service update --image etrtolacrd.azurecr.io/tol_ui_dev --with-registry-auth  sercan
+  - stage: qa
+    condition: eq(variables['build.sourceBranch'], 'refs/heads/qa')
+    variables:
+    - group: TicketOnlineUI-qa
+    jobs:
+      - deployment: QADeployment
+        environment: 
+          name: qa
+          tags: qa-public
+          resourceType: VirtualMachine 
+        workspace:
+          clean: all
+        strategy: 
+          runOnce:
+            deploy:
+              steps:
+                - task: PowerShell@2
+                  inputs: 
+                    targetType: inline
+                    workingDirectory: $(Build.SourcesDirectory)
+                    script: |
+                      docker login -u 9ef18d01-c132-4d4c-907d-fa56bdfd7a39 -p o4k7Q~RWixBtMLkPrtPH-FKfkOi6oMwatuCs4 etrtolacrd.azurecr.io
+                      docker pull etrtolacrd.azurecr.io/tol_ui_qa:latest
+                      docker service update --image etrtolacrd.azurecr.io/tol_ui_qa --with-registry-auth  sercan
+  - stage: prod
+    condition: eq(variables['build.sourceBranch'], 'refs/heads/master')
+    variables:
+    - group: TicketOnlineUI-prod
+    jobs:
+      - deployment: ProdDeployment
+        environment: 
+          name: prod
+          tags: swarm
+          resourceType: VirtualMachine 
+        workspace:
+          clean: all
+        strategy: 
+          runOnce:
+            deploy:
+              steps:
+                - task: PowerShell@2
+                  inputs: 
+                    targetType: inline
+                    workingDirectory: $(Build.SourcesDirectory)
+                    script: |
+                      docker login -u 9ef18d01-c132-4d4c-907d-fa56bdfd7a39 -p o4k7Q~RWixBtMLkPrtPH-FKfkOi6oMwatuCs4 etrtolacrd.azurecr.io
+                      docker pull etrtolacrd.azurecr.io/tol_ui_master:latest
+                      docker service update --image etrtolacrd.azurecr.io/tol_ui_master --with-registry-auth  sercan

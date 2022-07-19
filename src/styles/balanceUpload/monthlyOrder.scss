@@ -1,0 +1,298 @@
+.monthly-order-card {
+  .ant-collapse-item {
+    .ant-collapse-content {
+      padding: 26px 24px 16px 24px;
+
+      .monthly-order-container {
+        .monthly-order-form {
+          .form-item {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+
+            .monthly-amount-content {
+              display: flex;
+              align-items: baseline;
+
+              .info-text {
+                font-family: UbuntuRegular, sans-serif;
+                font-size: 14px;
+                line-height: 16px;
+                color: #3f4957;
+                margin-left: 8px;
+              }
+            }
+
+            .ant-form-item {
+              flex-wrap: nowrap;
+              align-items: center;
+
+              .ant-form-item-label {
+                label {
+                  font-size: 14px;
+                  margin-bottom: 0;
+                  margin-right: 17px;
+                  color: #3f4957;
+                }
+              }
+            }
+
+            .ant-form-item:nth-child(1) {
+              .ant-form-item-label {
+                label {
+                  margin-right: 3px;
+                }
+              }
+            }
+
+            .ant-form-item:nth-child(2) {
+              .ant-form-item-label {
+                label {
+                  margin-right: 0;
+                }
+              }
+            }
+
+            .monthly-amount-form-item {
+              .ant-form-item-control {
+                .ant-form-item-control-input {
+                  .ant-form-item-control-input-content {
+                    input {
+                      width: 101px;
+                      padding: 8px 10px 10px 19px;
+                      text-align: right;
+                      font-size: 14px;
+                    }
+                  }
+                }
+              }
+            }
+
+            .order-month-form-item {
+              .ant-form-item-control {
+                width: unset;
+
+                .ant-form-item-control-input {
+                  .ant-form-item-control-input-content {
+                    .ant-select {
+                      width: 103px;
+                      font-size: 14px;
+
+                      .ant-select-selector {
+                        width: 103px;
+                        padding: 1px 7px !important;
+                      }
+
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        .custom-alert-warning {
+          padding: 13px 16px 15px 18px;
+          border-radius: 6px;
+          background: #ffc008;
+          color: #1d2228;
+          margin-bottom: 15.5px;
+
+          .alert-message-contain {
+            display: flex;
+            align-items: center;
+
+            .description {
+              font-family: UbuntuRegular, sans-serif;
+              font-size: 14px;
+              color: #1d2228;
+              font-weight: normal;
+              font-stretch: normal;
+              font-style: normal;
+              line-height: normal;
+              letter-spacing: normal;
+
+              span {
+                font-family: UbuntuBold, sans-serif;
+              }
+            }
+          }
+
+          img {
+            margin-right: 13px;
+          }
+
+          .ant-alert-close-icon {
+            svg {
+              width: 14px;
+              height: 15px;
+            }
+
+            span {
+              color: #3f4957;
+            }
+          }
+        }
+
+
+        hr {
+          margin: 15.5px 0 13px 0;
+          background-color: #eaecef;
+        }
+
+        .action-buttons {
+          display: flex;
+          justify-content: center;
+          column-gap: 24px;
+
+          button {
+            width: 186px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #162056;
+            line-height: 20px;
+            border-radius: 6px;
+          }
+
+          .cancel-btn {
+            border: solid 1px #162056;
+          }
+
+          .primary-btn {
+            background-color: #162056;
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1016px) and (max-width: 1254.98px) {
+  .monthly-order-card {
+    .ant-collapse-item {
+      .ant-collapse-content {
+
+        .monthly-order-container {
+          .monthly-order-form {
+            .form-item {
+              grid-template-columns: auto auto;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1015.98px) {
+  .monthly-order-card {
+    .ant-collapse-item {
+      .ant-collapse-content {
+        padding: 11px 16px 24px 16px;
+
+        .monthly-order-container {
+          .monthly-order-form {
+            margin-bottom: 15.5px;
+            border-bottom: solid 1px #eaecef;
+
+            .form-item {
+              grid-template-columns: auto;
+
+              .monthly-amount-content {
+                .info-text {
+                  margin-left: 14px !important;
+                }
+              }
+
+              .ant-form-item {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-bottom: 13.5px;
+
+                .ant-form-item-label {
+                  flex: none;
+
+                  label {
+                    margin-bottom: 12px;
+                    margin-right: 0;
+                  }
+
+                  .ant-form-item-control {
+                    .ant-form-item-control-input-content {
+
+                    }
+                  }
+                }
+              }
+
+              .ant-form-item:nth-child(1) {
+                .ant-form-item-label {
+                  label {
+                    margin-right: 0;
+                  }
+                }
+              }
+            }
+          }
+
+          .custom-alert-warning {
+            padding: 11px 13px 12px 12px !important;
+
+            .alert-message-contain {
+              display: flex !important;
+              font-size: 12px !important;
+              align-items: flex-start;
+
+              img {
+                width: 27px !important;
+                height: 25px !important;
+              }
+
+              .description {
+                font-size: 12px;
+                line-height: 14px;
+                color: #1d2228;
+
+                span {
+                  font-family: UbuntuBold, sans-serif;
+                  font-size: 12px;
+                  line-height: 14px;
+                }
+              }
+            }
+
+            .ant-alert-close-icon {
+              overflow: unset !important;
+
+              svg {
+                width: 11px !important;
+                height: 12px !important;
+                margin-left: 0 !important;
+                margin-top: 0 !important;
+              }
+            }
+          }
+
+          hr {
+            display: none;
+          }
+
+          .action-buttons {
+            flex-direction: column;
+            align-items: center;
+            row-gap: 16px;
+
+            button {
+              height: 44px;
+            }
+          }
+
+        }
+      }
+    }
+  }
+}

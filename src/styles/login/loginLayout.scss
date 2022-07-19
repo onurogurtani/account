@@ -1,0 +1,40 @@
+.login-main {
+  height: 100%;
+  min-height: 100vh;
+  background: #f2f3f6;
+
+  .ant-form-item {
+    padding-bottom: 6px;
+  }
+}
+
+.leftSideMain {
+  height: 100vh;
+  max-width: 500px;
+  padding-left: 20px;
+  padding-right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rightSideLoginFormTitle {
+  font-size: 26px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #162056;
+  margin: 0 27px 24px 0;
+  padding: 0;
+  width: 100%;
+}
+
+.rightSideMainChild img {
+  height: 100vh;
+  width: 100%;
+  object-fit: cover;
+}

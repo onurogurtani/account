@@ -1,0 +1,31 @@
+.delivery-address-choose-text-content {
+  display: grid;
+  justify-items: center;
+
+  span {
+    padding: 20px;
+    font-family: UbuntuRegular, sans-serif;
+    font-size: 16px;
+    color:#1d2228;
+  }
+}
+
+.delivery-address-add-form-item {
+  .ant-form-item-label > label {
+    color: #1d2228 !important;
+  }
+}
+
+.all-card-use-check {
+  .custom-checkbox .ant-checkbox + span {
+    padding-left: 12px;
+    font-family: UbuntuRegular, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    color: #1d2228;
+  }
+}

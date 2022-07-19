@@ -1,0 +1,144 @@
+.draft-list-card {
+
+  .number-registered-drafts {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 17px 24px 17px;
+
+    .add-btn {
+      width: 217px !important;
+      background: #00a483 !important;
+      height: 36px;
+      font-size: 14px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      letter-spacing: normal;
+      text-align: center;
+      color: #fff;
+      border-radius: 6px;
+      line-height: 0.86;
+      padding: 9px 16px;
+
+      img {
+        margin-right: 10px;
+      }
+    }
+
+    .drafts-count-title {
+      font-family: UbuntuRegular, sans-serif;
+      font-size: 14px;
+      color: #3f4957;
+      line-height: 14px;
+
+      img {
+        margin-right: 12px;
+
+      }
+
+      span {
+        font-family: UbuntuBold, sans-serif;
+        font-size: 14px;
+        line-height: 14px;
+      }
+    }
+
+  }
+
+
+  .action-btns {
+    display: flex;
+    justify-content: center;
+
+    .detail-btn {
+      width: 105px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: UbuntuMedium, sans-serif;
+      font-size: 12px;
+      line-height: 12px;
+      border-radius: 4px;
+      box-shadow: none;
+      background-color: #3f4957;
+    }
+
+    .delete-btn {
+      width: 33px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: UbuntuMedium, sans-serif;
+      font-size: 12px;
+      line-height: 12px;
+      border-radius: 4px;
+      box-shadow: none;
+      background-color: #f72717;
+    }
+
+    .save-btn {
+      width: 105px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: UbuntuMedium, sans-serif;
+      font-size: 12px;
+      line-height: 12px;
+      border-radius: 4px;
+      box-shadow: none;
+      background-color: #00A483;
+    }
+
+    .remove-btn {
+      width: 105px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: UbuntuMedium, sans-serif;
+      font-size: 12px;
+      line-height: 12px;
+      border-radius: 4px;
+      box-shadow: none;
+      background-color: #f72717;
+    }
+  }
+  .draft-list-table-box {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+  }
+  .draft-list-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 17px 29px 2px 28px;
+    align-items: center;
+  }
+}
+
+@media (max-width: 1200px) {
+  .draft-list-card {
+    .number-registered-drafts {
+      justify-content: flex-start;
+      flex-direction: column;
+      row-gap: 19px;
+    }
+
+    .draft-list-footer {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  .draft-list-table-box {
+    flex-direction: column;
+  }
+}

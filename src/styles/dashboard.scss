@@ -1,0 +1,58 @@
+.customer-list-popover {
+  padding-top: 0 !important;
+
+  .ant-popover-inner-content {
+    box-shadow: 0 2px 4px 0 rgba(96, 97, 112, 0.16), 0 0 1px 0 rgba(40, 41, 61, 0.04), 0 -3px 16px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  .ant-popover-arrow {
+    display: none;
+  }
+
+  .customer-list-popover-content {
+    min-width: 344px;
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+
+      li {
+        border-bottom: 1px solid #dee2e6;
+        padding: 12px 0;
+        cursor: pointer;
+
+        span:first-child {
+          height: 24px;
+          margin: 0 12px 12px 21px;
+          font-family: UbuntuRegular, sans-serif;
+          font-size: 14px;
+          font-weight: normal;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: 1.71;
+          letter-spacing: -0.22px;
+          text-align: right;
+          color: #343a40;
+        }
+
+        span:last-child {
+          height: 24px;
+          margin: 0 17px 12px 12px;
+          font-family: UbuntuMedium, sans-serif;
+          font-size: 14px;
+          font-weight: 500;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: 1.71;
+          letter-spacing: -0.22px;
+          color: #343a40;
+        }
+      }
+
+      .active {
+        height: 48px;
+        background-color: #e9ecef;
+      }
+    }
+  }
+}

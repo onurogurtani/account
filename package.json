@@ -1,0 +1,120 @@
+{
+  "name": "edenred-ui",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ant-design/icons": "^4.7.0",
+    "@reduxjs/toolkit": "^1.7.1",
+    "antd": "4.16.13",
+    "axios": "^0.21.4",
+    "bootstrap": "^5.1.2",
+    "dayjs": "^1.10.7",
+    "js-file-download": "^0.4.12",
+    "qs": "^6.10.3",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-google-recaptcha": "^2.1.0",
+    "react-idle-timer": "^4.6.4",
+    "react-input-mask": "^2.0.4",
+    "react-number-format": "^4.9.3",
+    "react-redux": "^7.2.6",
+    "react-responsive": "^9.0.0-beta.4",
+    "react-router-dom": "^5.3.0",
+    "react-timer-hook": "^1.0.0",
+    "redux": "^4.1.2",
+    "redux-persist": "^6.0.0",
+    "redux-persist-transform-encrypt": "^3.0.1",
+    "styled-components": "^5.3.1",
+    "swiper": "6.8.2",
+    "web-vitals": "^1.0.1",
+    "xlsx": "^0.17.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.16.0",
+    "@craco/craco": "^6.3.0",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/react-hooks": "^8.0.0",
+    "@testing-library/user-event": "^12.1.10",
+    "antd-dayjs-webpack-plugin": "^1.0.6",
+    "craco-less": "^1.20.0",
+    "cross-env": "^7.0.3",
+    "dotenv-webpack": "^7.0.3",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "history": "^5.1.0",
+    "husky": "^7.0.2",
+    "jest-sonar-reporter": "^2.0.0",
+    "lint-staged": "^11.1.2",
+    "prettier": "^2.4.1",
+    "react-scripts": "4.0.3",
+    "sass": "^1.42.1",
+    "stylelint": "^13.13.1",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-sass-guidelines": "^8.0.0"
+  },
+  "scripts": {
+    "start:local": "yarn set:conf:local && craco start",
+    "start:dev": "yarn set:conf:dev && cross-env NODE_ENV=dev && craco start",
+    "start:qa": "yarn set:conf:qa && cross-env NODE_ENV=dev && craco start",
+    "start:master": "yarn set:conf:master && cross-env NODE_ENV=dev && craco start",
+    "build:local": "yarn set:conf:local && cross-env NODE_ENV=test && craco build",
+    "build:dev": "yarn set:conf:dev && cross-env NODE_ENV=production && craco build",
+    "build:qa": "yarn set:conf:qa && cross-env NODE_ENV=production && craco build",
+    "build:master": "yarn set:conf:master && cross-env NODE_ENV=production && craco build",
+    "test": "craco test",
+    "test-coverage": "craco test --coverage --watchAll=false",
+    "test-sonar": "craco test --env=jsdom --coverage --testResultsProcessor jest-sonar-reporter --watchAll=false",
+    "set:conf:local": "cross-env ENV_NAME=local node utils/configurator.js",
+    "set:conf:dev": "cross-env ENV_NAME=dev node utils/configurator.js",
+    "set:conf:qa": "cross-env ENV_NAME=qa node utils/configurator.js",
+    "set:conf:master": "cross-env ENV_NAME=master node utils/configurator.js",
+    "prettier": "prettier --write \"src/**/*.js\"",
+    "eslint:fix": "eslint src/ --fix"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ],
+    "plugins": [
+      "react-hooks"
+    ],
+    "rules": {
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn"
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "prettier --write \"src/**/*.js\"",
+      "eslint src/ --fix",
+      "git add"
+    ],
+    "src/**/*.scss": [
+      "stylelint --syntax scss --fix",
+      "git add"
+    ]
+  },
+  "jestSonar": {
+    "reportPath": "coverage",
+    "reportFile": "sonar-report.xml",
+    "indent": 4
+  }
+}
