@@ -32,6 +32,7 @@ import { autoUploadInstructionsSlice } from './slice/autoUploadInstructionsSlice
 import { appSettingsSlice } from './slice/appSettingsSlice';
 import { operationClaimsSlice } from './slice/operationClaimsSlice';
 import { groupsSlice } from './slice/groupsSlice';
+import { userListSlice } from './slice/userListSlice';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -52,7 +53,8 @@ const reducers = combineReducers({
   autoUploadInstructions: autoUploadInstructionsSlice.reducer,
   appSettings: appSettingsSlice.reducer,
   operationClaims: operationClaimsSlice.reducer,
-  groups: groupsSlice.reducer
+  groups: groupsSlice.reducer,
+  userList: userListSlice.reducer
 });
 
 const persistConfig = {

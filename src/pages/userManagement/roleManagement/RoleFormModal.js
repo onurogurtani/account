@@ -11,20 +11,25 @@ import {
     useText,
 } from '../../../components';
 import modalClose from '../../../assets/icons/icon-close.svg';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import '../../../styles/myOrders/paymentModal.scss';
 import { useDispatch } from 'react-redux';
 import { Form } from 'antd';
-import { addGroup } from '../../../store/slice/groupsSlice';
+import { addGroup, updateGroup } from '../../../store/slice/groupsSlice';
 
 const RoleFormModal = ({ modalVisible, handleModalVisible, selectedRole }) => {
     const dispatch = useDispatch();
     const [form] = Form.useForm();
 
+    const [isEdit, setIsEdit] = useState(false);
+
     useEffect(() => {
         if (modalVisible) {
             console.log('açıldı modal')
             form.setFieldsValue(selectedRole);
+            if (selectedRole) {
+                setIsEdit(true);
+            }
         }
     }, [modalVisible]);
 
@@ -35,13 +40,11 @@ const RoleFormModal = ({ modalVisible, handleModalVisible, selectedRole }) => {
 
 
     const onFinish = useCallback(
-        
         async (values) => {
             if (values?.groupName) {
                 const body = {
                     groupName: values?.groupName,
                 };
-
                 const action = await dispatch(addGroup(body));
                 if (addGroup.fulfilled.match(action)) {
                     successDialog({
@@ -67,6 +70,29 @@ const RoleFormModal = ({ modalVisible, handleModalVisible, selectedRole }) => {
         [dispatch, handleClose],
     );
 
+    const onFinishEdit = useCallback(async (values) => {
+        const data = {
+            id: selectedRole?.id,
+            groupName: values?.groupName,
+        }
+        const action = await dispatch(updateGroup(data))
+        if (updateGroup.fulfilled.match(action)) {
+            successDialog({
+                title: <Text t='success' />,
+                message: action?.payload?.message,
+                onOk: async () => {
+                    await handleClose();
+                },
+            });
+        } else {
+            errorDialog({
+                title: <Text t='error' />,
+                message: action?.payload?.message,
+            });
+        }
+        setIsEdit(false);
+    }, [handleClose, dispatch, selectedRole])
+
     return (
         <CustomModal
             className='payment-modal'
@@ -83,7 +109,7 @@ const RoleFormModal = ({ modalVisible, handleModalVisible, selectedRole }) => {
                     className='payment-link-form'
                     form={form}
                     initialValues={{}}
-                    onFinish={onFinish}
+                    onFinish={isEdit ? onFinishEdit : onFinish}
                     autoComplete='off'
                     layout={'horizontal'}
                 >

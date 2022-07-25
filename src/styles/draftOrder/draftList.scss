@@ -110,6 +110,36 @@
       box-shadow: none;
       background-color: #f72717;
     }
+
+    .passive-btn {
+      width: 105px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: UbuntuMedium, sans-serif;
+      font-size: 12px;
+      line-height: 12px;
+      border-radius: 4px;
+      box-shadow: none;
+      background-color: #6b7789;
+    }
+
+    .active-btn {
+      width: 105px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: UbuntuMedium, sans-serif;
+      font-size: 12px;
+      line-height: 12px;
+      border-radius: 4px;
+      box-shadow: none;
+      background-color: #f66301;
+    }
   }
   .draft-list-table-box {
     display: flex;
@@ -141,4 +171,14 @@
   .draft-list-table-box {
     flex-direction: column;
   }
+}
+
+.status-text-active {
+  color:#00a483;
+  font-weight: bold;
+}
+
+.status-text-passive {
+  color:#f72717;
+  font-weight: bold;
 }

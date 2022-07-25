@@ -18,10 +18,31 @@ const RoleOperationConnect = lazy(() =>
   })),
 );
 
+const UserListManagement = lazy(() =>
+  import('./userListManagement').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+
+const AddUser = lazy(() =>
+  import('./userListManagement/AddUser').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+
+const EditUser = lazy(() =>
+  import('./userListManagement/EditUser').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+
 const UserManagement = {
   RoleManagement,
   OperationManagement,
-  RoleOperationConnect
+  RoleOperationConnect,
+  UserListManagement,
+  AddUser,
+  EditUser
 };
 
 export default UserManagement;

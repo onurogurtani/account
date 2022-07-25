@@ -87,6 +87,21 @@ const App = () => {
                           Component={UserManagement?.RoleOperationConnect}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/user-list-management`}
+                          Component={UserManagement?.UserListManagement}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/add-user`}
+                          Component={UserManagement?.AddUser}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/edit-user`}
+                          Component={UserManagement?.EditUser}
+                          authority="dashboard"
+                        />
                         <Route
                           component={() => (
                             <Redirect

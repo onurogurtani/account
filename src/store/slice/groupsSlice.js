@@ -50,9 +50,10 @@ export const deleteGroup = createAsyncThunk(
 
 export const updateGroup = createAsyncThunk(
     'updateGroup',
-    async (data, { rejectWithValue }) => {
+    async (data, { dispatch, rejectWithValue }) => {
         try {
             const response = await groupsServices.updateGroup(data);
+            dispatch(getGroupsList());
             return response;
         } catch (error) {
             return rejectWithValue(error?.data);

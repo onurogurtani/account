@@ -39,9 +39,10 @@ export const deleteOperationClaims = createAsyncThunk(
 
 export const updateOperationClaims = createAsyncThunk(
     'updateOperationClaims',
-    async (data, { rejectWithValue }) => {
+    async (data, { dispatch, rejectWithValue }) => {
         try {
             const response = await operationClaimsServices.updateOperationClaims(data);
+            dispatch(getOperationClaimsList());
             return response;
         } catch (error) {
             return rejectWithValue(error?.data);

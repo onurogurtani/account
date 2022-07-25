@@ -3,22 +3,17 @@ import {
     CustomButton,
     CustomCollapseCard,
     CustomImage,
-    CustomPagination,
     CustomTable,
     errorDialog,
-    CustomForm,
-    CustomInput,
-    CustomFormItem,
     successDialog,
     Text,
 } from '../../../components';
 import { useEffect, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getOperationClaimsList, deleteOperationClaims, updateOperationClaims } from '../../../store/slice/operationClaimsSlice';
+import { getOperationClaimsList, deleteOperationClaims } from '../../../store/slice/operationClaimsSlice';
 import cardsRegistered from '../../../assets/icons/icon-cards-registered.svg';
 import OperationFormModal from './OperationFormModal';
 import '../../../styles/draftOrder/draftList.scss';
-import { Form } from 'antd';
 
 const OperationList = () => {
     const dispatch = useDispatch();
@@ -26,9 +21,6 @@ const OperationList = () => {
 
     const [roleFormModalVisible, setRoleFormModalVisible] = useState(false);
     const [selectedRole, setSelectedRole] = useState(false);
-
-    const [editingRow, setEditingRow] = useState(null);
-    const [form] = Form.useForm();
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -51,38 +43,6 @@ const OperationList = () => {
         setSelectedRole(false);
         setRoleFormModalVisible(true);
     };
-
-    const editOperationClaim = useCallback((record) => {
-        setEditingRow(record.id);
-        form.setFieldsValue({
-            name: record.name,
-        });
-    }, [form])
-
-    const onFinishEdit = useCallback(async (values) => {
-        const data = {
-            entity: {
-                id: editingRow,
-                name: values.name,
-            }
-        }
-        const action = await dispatch(updateOperationClaims(data))
-        if (updateOperationClaims.fulfilled.match(action)) {
-            successDialog({
-                title: <Text t='success' />,
-                message: action?.payload?.message,
-                onOk: () => {
-                    loadOperationClaimsList();
-                },
-            });
-        } else {
-            errorDialog({
-                title: <Text t='error' />,
-                message: action?.payload?.message,
-            });
-        }
-        setEditingRow(null);
-    }, [editingRow, dispatch])
 
     const deleteOperation = async (record) => {
         confirmDialog({
@@ -113,6 +73,11 @@ const OperationList = () => {
         });
     };
 
+    const editFormModal = (record) => {
+        setSelectedRole(record);
+        setRoleFormModalVisible(true);
+    };
+
     const columns = [
         {
             title: 'YETKİ ID',
@@ -126,28 +91,6 @@ const OperationList = () => {
             dataIndex: 'name',
             key: 'name',
             width: 400,
-            render: (text, record) => {
-                if (editingRow === record.id) {
-                    return (
-                        <CustomFormItem
-                            name="name"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Lütfen yetki adını giriniz",
-                                },
-                            ]}
-                            style={{
-                                paddingTop: "20px"
-                            }}
-                        >
-                            <CustomInput />
-                        </CustomFormItem>
-                    );
-                } else {
-                    return <div>{text}</div>;
-                }
-            }
         },
         {
             title: 'İŞLEMLER',
@@ -158,11 +101,7 @@ const OperationList = () => {
             render: (_, record) => {
                 return (
                     <div className='action-btns'>
-                        {
-                            editingRow === record.id
-                                ? <CustomButton className="save-btn" type="link" htmlType="submit">KAYDET</CustomButton>
-                                : <CustomButton className='detail-btn' onClick={() => editOperationClaim(record)}>DÜZENLE</CustomButton>
-                        }
+                        <CustomButton className='detail-btn' onClick={() => editFormModal(record)}>DÜZENLE</CustomButton>
                         <CustomButton className='delete-btn' onClick={() => deleteOperation(record)}>
                             SİL
                         </CustomButton>
@@ -187,16 +126,13 @@ const OperationList = () => {
                     Kayıtlı Yetki Sayısı: <span>{draftedTableProperty?.totalCount}</span>
                 </div>
             </div>
-            <CustomForm form={form} onFinish={onFinishEdit}>
-                <CustomTable
-                    pagination={true}
-                    dataSource={operationClaimsList}
-                    columns={columns}
-                    rowKey={(record) => `draft-list-new-order-${record?.id || record?.name}`}
-                    scroll={{ x: false }}
-                />
-            </CustomForm>
-
+            <CustomTable
+                pagination={true}
+                dataSource={operationClaimsList}
+                columns={columns}
+                rowKey={(record) => `draft-list-new-order-${record?.id || record?.name}`}
+                scroll={{ x: false }}
+            />
             <OperationFormModal
                 modalVisible={roleFormModalVisible}
                 handleModalVisible={setRoleFormModalVisible}
