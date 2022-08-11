@@ -21,6 +21,7 @@ import { getCurrentUser } from './store/slice/userSlice';
 import HomeLayout from './layout/HomeLayout';
 
 import UserManagement from './pages/userManagement';
+import SurveyManagement from './pages/userManagement/surveyManagement';
 
 const PrivateRoute = lazy(() =>
   import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -75,6 +76,11 @@ const App = () => {
                         <PrivateRoute
                           path={`${match?.path}/role-management`}
                           Component={UserManagement?.RoleManagement}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/survey-management`}
+                          Component={UserManagement?.SurveyManagement}
                           authority="dashboard"
                         />
                         <PrivateRoute

@@ -1,5 +1,11 @@
 import { lazy } from 'react';
 
+const SurveyManagement = lazy(() =>
+  import('./surveyManagement').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+
 const RoleManagement = lazy(() =>
   import('./roleManagement').then(({ default: Component }) => ({
     default: Component,
@@ -37,6 +43,7 @@ const EditUser = lazy(() =>
 );
 
 const UserManagement = {
+  SurveyManagement,
   RoleManagement,
   OperationManagement,
   RoleOperationConnect,

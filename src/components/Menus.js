@@ -218,6 +218,14 @@ const Menus = () => {
           </span>
         </MenuItemText>
       </CustomItem>
+      <CustomItem key="/user-management/survey-management">
+        <MenuItemText>
+          <CustomImage src={menuIcons} />
+          <span>
+            <Text t="Anket Yönetimi" />
+          </span>
+        </MenuItemText>
+      </CustomItem>
     </CustomMenu>
   );
 };
