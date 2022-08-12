@@ -11,6 +11,7 @@ import MultipleChoiseQuestion from '../questions/questiontypes/MultipleChoiseQue
 import FillInTheBlankQuestion from '../questions/questiontypes/FillInTheBlankQuestion'
 import LikertQuestion from '../questions/questiontypes/LikertQuestion'
 import { Form } from 'antd';
+import '../../../../styles/surveyManagement/surveyStyles.scss'
 
 const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType }) => {
     const [form] = Form.useForm();
@@ -26,7 +27,7 @@ const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType 
 
     return (
         <CustomModal
-            className='payment-modal'
+            className='survey-modal'
             maskClosable={false}
             footer={false}
             title={`${selectedQuestionType} Ekle`}
@@ -34,7 +35,7 @@ const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType 
             onCancel={handleClose}
             closeIcon={<CustomImage src={modalClose} />}
         >
-            <div className='payment-container'>
+            <div className='survey-container'>
                 {selectedQuestionType === "Açık Uçlu Soru" &&
                     <OpenEndedQuestion/>
                 }

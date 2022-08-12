@@ -1,0 +1,28 @@
+.survey-modal {
+    width: 1100px !important;
+
+    .survey-form {
+        display       : flex;
+        flex-direction: column;
+        width         : 1000px;
+
+        .survey-content {
+            display       : flex;
+            flex-direction: row;
+
+            .form-left-side {
+                width: 500px;
+            }
+
+            .form-right-side {
+                width         : 500px;
+                display       : flex;
+                flex-direction: column;
+                .answer-form-item{
+                    display: flex;
+                    flex-direction: row;
+                }
+            }
+        }
+    }
+}
