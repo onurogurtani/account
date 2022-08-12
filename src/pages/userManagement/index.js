@@ -42,6 +42,20 @@ const EditUser = lazy(() =>
   })),
 );
 
+const AvatarManagement = lazy(() =>
+  import('./avatarManagement').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+
+const SchoolManagement = lazy(() =>
+  import('./schoolManagement').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+
+
+
 const UserManagement = {
   SurveyManagement,
   RoleManagement,
@@ -49,7 +63,9 @@ const UserManagement = {
   RoleOperationConnect,
   UserListManagement,
   AddUser,
-  EditUser
+  EditUser,
+  AvatarManagement,
+  SchoolManagement
 };
 
 export default UserManagement;

@@ -108,6 +108,16 @@ const App = () => {
                           Component={UserManagement?.EditUser}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/avatar-management`}
+                          Component={UserManagement?.AvatarManagement}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/school-management`}
+                          Component={UserManagement?.SchoolManagement}
+                          authority="dashboard"
+                        />
                         <Route
                           component={() => (
                             <Redirect

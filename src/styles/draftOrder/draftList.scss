@@ -26,6 +26,25 @@
       }
     }
 
+    .upload-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 150px !important;
+      background: #0F733D !important;
+      height: 36px;
+      font-size: 14px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      letter-spacing: normal;
+      text-align: center;
+      color: #fff;
+      border-radius: 6px;
+      line-height: 0.86;
+      padding: 9px 16px;
+    }
+
     .drafts-count-title {
       font-family: UbuntuRegular, sans-serif;
       font-size: 14px;

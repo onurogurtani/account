@@ -52,7 +52,10 @@
             }
           }
 
-
+          .ant-tooltip {
+            visibility: hidden !important;
+        }
+        
           .submit-btn {
             background-color: #699a00;
             color: #fff;
@@ -68,6 +71,13 @@
             outline: 0;
             box-shadow: none;
             border: none;
+          }
+
+          .upload-error {
+            color: #f5222d;
+            font-size: 14px;
+            line-height: 14px;
+            margin-bottom: 5px;
           }
 
         }

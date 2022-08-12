@@ -33,6 +33,8 @@ import { appSettingsSlice } from './slice/appSettingsSlice';
 import { operationClaimsSlice } from './slice/operationClaimsSlice';
 import { groupsSlice } from './slice/groupsSlice';
 import { userListSlice } from './slice/userListSlice';
+import { avatarFilesSlice } from './slice/avatarSlice';
+import { schoolSlice } from './slice/schoolSlice';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -54,7 +56,9 @@ const reducers = combineReducers({
   appSettings: appSettingsSlice.reducer,
   operationClaims: operationClaimsSlice.reducer,
   groups: groupsSlice.reducer,
-  userList: userListSlice.reducer
+  userList: userListSlice.reducer,
+  avatarFiles: avatarFilesSlice.reducer,
+  school: schoolSlice.reducer,
 });
 
 const persistConfig = {
