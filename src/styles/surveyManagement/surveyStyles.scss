@@ -3,31 +3,54 @@
 
     .survey-form {
         .survey-content {
-            display       : grid;
+            display              : grid;
             grid-template-columns: 1fr 1fr;
-            align-items: flex-start;
-            grid-gap: 25px;
+            align-items          : flex-start;
+            grid-gap             : 25px;
+
             label {
                 min-width: 100px;
             }
+
             .form-right-side {
-                margin-l
-                .answer-form-item{
-                    display: flex;
+                margin-l .answer-form-item {
+                    display       : flex;
                     flex-direction: row;
                 }
             }
         }
+
         .form-buttons {
             text-align: right;
+
             button {
-              &:first-child {
-                  margin-right: 20px;
-              }
+                &:first-child {
+                    margin-right: 20px;
+                }
             }
-          }
-          .ql-container {
+        }
+
+        .ql-container {
             min-height: 100px;
-          }
+        }
+    }
+
+    .one-choice-question-link-form {
+        .answers-title {
+            margin-bottom: 25px;
+        }
+        .answers {
+            label {
+                min-width: 50px!important;
+            }
+            .ant-form-item-control-input-content {
+                display: grid;
+                grid-template-columns: 85% 15%;
+                grid-gap: 10px;
+            }
+            button {    
+                height: 36px;
+            }
+        }
     }
 }
