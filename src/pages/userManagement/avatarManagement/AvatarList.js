@@ -54,12 +54,12 @@ const AvatarList = () => {
                 if (deleteImage.fulfilled.match(action)) {
                     successDialog({
                         title: <Text t='successfullySent' />,
-                        message: action?.payload?.message,
+                        message: action?.payload
                     });
                 } else {
                     errorDialog({
                         title: <Text t='error' />,
-                        message: action?.payload?.message,
+                        message: action?.payload
                     });
                 }
             }
@@ -71,8 +71,8 @@ const AvatarList = () => {
         {
             title: 'Avatar',
             dataIndex: 'image',
-            render: (image) => {
-                return <img src={image} alt="avatar" width="100" />
+            render: (_, record) => {
+                return <img src={`data:${record?.contentType};base64,${record?.image}`} alt="avatar" width="100" />
             }
         },
         {
