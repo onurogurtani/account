@@ -14,7 +14,7 @@ import {
 import { Form } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
 
-const LikertQuestion = () => {
+const LikertQuestion = ({handleModalVisible}) => {
 
 
   const [form] = Form.useForm();
@@ -244,9 +244,11 @@ const LikertQuestion = () => {
           >
             <ReactQuill theme="snow" onChange={onQuestionChange} />
           </CustomFormItem>
-
-          <div>
+          <div className='answers-title'>
             <h5>Cevaplar</h5>
+          </div>
+          <div>
+
             {
               type === "faces" ?
                 <div></div> :
@@ -271,13 +273,20 @@ const LikertQuestion = () => {
         </div>
       </div>
 
-      <CustomFormItem className='footer-form-item'>
-        <CustomButton className='submit-btn' type='primary' htmlType='submit'>
-          <span className='submit'>
-            <Text t='Kaydet' />
-          </span>
-        </CustomButton>
-      </CustomFormItem>
+      <div className='form-buttons'>
+        <CustomFormItem className='footer-form-item'>
+          <CustomButton className='cancel-btn' type='danger' onClick={() => handleModalVisible(false)}>
+            <span className='cancel'>
+              <Text t='Vazgeç' />
+            </span>
+          </CustomButton>
+          <CustomButton className='submit-btn' type='primary' htmlType='submit'>
+            <span className='submit'>
+              <Text t='Kaydet' />
+            </span>
+          </CustomButton>
+        </CustomFormItem>
+      </div>
 
     </CustomForm>
   )

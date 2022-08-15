@@ -3,7 +3,7 @@ import {
     CustomModal
 } from '../../../../components';
 import modalClose from '../../../../assets/icons/icon-close.svg';
-import React, { useCallback} from 'react';
+import React, { useCallback } from 'react';
 import '../../../../styles/myOrders/paymentModal.scss';
 import OpenEndedQuestion from '../questions/questiontypes/OpenEndedQuestion'
 import OneChoiseQuestion from '../questions/questiontypes/OneChoiseQuestion'
@@ -38,28 +38,30 @@ const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType 
             <div className='survey-container'>
                 {selectedQuestionType === "Açık Uçlu Soru" &&
                     <OpenEndedQuestion
-                        handleModalVisible= {handleModalVisible}
+                        handleModalVisible={handleModalVisible}
                     />
                 }
-                { selectedQuestionType === "Tek Seçimli Soru" &&
+                {selectedQuestionType === "Tek Seçimli Soru" &&
                     <OneChoiseQuestion
-                    handleModalVisible= {handleModalVisible}
+                        handleModalVisible={handleModalVisible}
                     />
                 }
-                { selectedQuestionType === "Çok Seçimli Soru" &&
+                {selectedQuestionType === "Çok Seçimli Soru" &&
                     <MultipleChoiseQuestion
-                     handleModalVisible= {handleModalVisible}
+                        handleModalVisible={handleModalVisible}
                     />
                 }
-                { selectedQuestionType === "Boşluk Doldurma Sorusu" &&
+                {selectedQuestionType === "Boşluk Doldurma Sorusu" &&
                     <FillInTheBlankQuestion
-                        handleModalVisible= {handleModalVisible}
+                        handleModalVisible={handleModalVisible}
                     />
                 }
-                { selectedQuestionType === "Likert Tipi Soru" &&
-                    <LikertQuestion/>
+                {selectedQuestionType === "Likert Tipi Soru" &&
+                    <LikertQuestion
+                        handleModalVisible={handleModalVisible}
+                    />
                 }
-               
+
             </div>
         </CustomModal>
     );

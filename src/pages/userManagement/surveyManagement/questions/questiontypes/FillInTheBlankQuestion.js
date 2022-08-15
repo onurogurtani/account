@@ -14,7 +14,7 @@ import {
 import { Form } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
 
-const FillInTheBlankQuestion = ({handleModalVisible}) => {
+const FillInTheBlankQuestion = ({ handleModalVisible }) => {
 
   const [form] = Form.useForm();
 
@@ -39,64 +39,64 @@ const FillInTheBlankQuestion = ({handleModalVisible}) => {
   }
   return (
     <CustomForm
-    name='fillInTheBlankQuestionLinkForm'
-    className='fill-in-the-blank-question-link-form survey-form'
-    form={form}
-    initialValues={{}}
-    onFinish={onFinish}
-    autoComplete='off'
-    layout={'horizontal'}
-  >
-    <div className="survey-content">
-      <div className="form-left-side">
-        <CustomFormItem
-          label={<Text t='Soru Başlığı' />}
-          name='header'
-        >
-          <CustomInput
-            placeholder={useText('Soru Başlığı')}
-            height={36}
-          />
-        </CustomFormItem>
-        <CustomFormItem
-          label={<Text t='Etiket' />}
-          name='label'
-        >
-          <CustomInput
-            placeholder={useText('Etiket')}
-            height={36}
-          />
-        </CustomFormItem>
-        <CustomFormItem
-          label={<Text t='Durum' />}
-          name='status'
-        >
-          <CustomSelect
-            placeholder="Durum.."
-            optionFilterProp="children"
-            onChange={onChannelChange}
-            height={36}
+      name='fillInTheBlankQuestionLinkForm'
+      className='fill-in-the-blank-question-link-form survey-form'
+      form={form}
+      initialValues={{}}
+      onFinish={onFinish}
+      autoComplete='off'
+      layout={'horizontal'}
+    >
+      <div className="survey-content">
+        <div className="form-left-side">
+          <CustomFormItem
+            label={<Text t='Soru Başlığı' />}
+            name='header'
           >
-            <Option value={true}>Aktif</Option>
-            <Option value={false}>Pasif</Option>
-          </CustomSelect>
-        </CustomFormItem>
-      </div>
-      <div className="form-right-side">
-        <CustomFormItem
-          label={<Text t='Soru Metni' />}
-          name='question'
-        >
-          <ReactQuill 
-           theme="snow" 
-           onChange={onQuestionChange} 
-           
-           />
-        </CustomFormItem>
-      </div>
-    </div>
+            <CustomInput
+              placeholder={useText('Soru Başlığı')}
+              height={36}
+            />
+          </CustomFormItem>
+          <CustomFormItem
+            label={<Text t='Etiket' />}
+            name='label'
+          >
+            <CustomInput
+              placeholder={useText('Etiket')}
+              height={36}
+            />
+          </CustomFormItem>
+          <CustomFormItem
+            label={<Text t='Durum' />}
+            name='status'
+          >
+            <CustomSelect
+              placeholder="Durum.."
+              optionFilterProp="children"
+              onChange={onChannelChange}
+              height={36}
+            >
+              <Option value={true}>Aktif</Option>
+              <Option value={false}>Pasif</Option>
+            </CustomSelect>
+          </CustomFormItem>
+        </div>
+        <div className="form-right-side">
+          <CustomFormItem
+            label={<Text t='Soru Metni' />}
+            name='question'
+          >
+            <ReactQuill
+              theme="snow"
+              onChange={onQuestionChange}
 
-    <div className='form-buttons'>
+            />
+          </CustomFormItem>
+        </div>
+      </div>
+
+      <div className='form-buttons'>
         <CustomFormItem className='footer-form-item'>
           <CustomButton className='cancel-btn' type='danger' onClick={() => handleModalVisible(false)}>
             <span className='cancel'>
@@ -111,7 +111,7 @@ const FillInTheBlankQuestion = ({handleModalVisible}) => {
         </CustomFormItem>
       </div>
 
-  </CustomForm>
+    </CustomForm>
   )
 }
 
