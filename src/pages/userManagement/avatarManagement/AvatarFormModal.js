@@ -52,7 +52,7 @@ const AvatarFormModal = ({ modalVisible, handleModalVisible }) => {
             if (addImage.fulfilled.match(action)) {
                 successDialog({
                     title: <Text t='success' />,
-                    message: action?.payload.message,
+                    message: action?.payload,
                     onOk: async () => {
                         await handleClose();
                     }
@@ -60,7 +60,7 @@ const AvatarFormModal = ({ modalVisible, handleModalVisible }) => {
             } else {
                 errorDialog({
                     title: <Text t='error' />,
-                    message: action?.payload.message,
+                    message: action?.payload
                 });
             }
         },
@@ -87,7 +87,7 @@ const AvatarFormModal = ({ modalVisible, handleModalVisible }) => {
             setErrorList([]);
         }
 
-        const isLt2M = file.size / 1024 / 1024 < 0.1;
+        const isLt2M = file.size / 1024 / 1024 < 100;
         if (!isLt2M) {
             setErrorList((state) => [
                 {
