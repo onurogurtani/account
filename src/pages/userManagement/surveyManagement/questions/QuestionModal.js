@@ -42,7 +42,9 @@ const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType 
                     />
                 }
                 { selectedQuestionType === "Tek Seçimli Soru" &&
-                    <OneChoiseQuestion/>
+                    <OneChoiseQuestion
+                    handleModalVisible= {handleModalVisible}
+                    />
                 }
                 { selectedQuestionType === "Çok Seçimli Soru" &&
                     <MultipleChoiseQuestion/>
