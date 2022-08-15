@@ -52,7 +52,9 @@ const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType 
                     />
                 }
                 { selectedQuestionType === "Boşluk Doldurma Sorusu" &&
-                    <FillInTheBlankQuestion/>
+                    <FillInTheBlankQuestion
+                        handleModalVisible= {handleModalVisible}
+                    />
                 }
                 { selectedQuestionType === "Likert Tipi Soru" &&
                     <LikertQuestion/>

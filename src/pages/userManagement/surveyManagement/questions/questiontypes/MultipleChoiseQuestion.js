@@ -14,9 +14,9 @@ import {
 import { Form } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
 
-const MultipleChoiseQuestion = ({handleModalVisible}) => {
+const MultipleChoiseQuestion = ({ handleModalVisible }) => {
 
-  
+
   const [form] = Form.useForm();
 
   const onChannelChange = (value) => {
@@ -78,83 +78,83 @@ const MultipleChoiseQuestion = ({handleModalVisible}) => {
 
   return (
     <CustomForm
-    name='multipleChoiceQuestionLinkForm'
-    className='multiple-choice-question-link-form survey-form'
-    form={form}
-    initialValues={{}}
-    onFinish={onFinish}
-    autoComplete='off'
-    layout={'horizontal'}
-  >
-    <div className="survey-content">
-      <div className="form-left-side">
-        <CustomFormItem
-          label={<Text t='Soru Başlığı' />}
-          name='header'
-        >
-          <CustomInput
-            placeholder={useText('Soru Başlığı')}
-            height={36}
-          />
-        </CustomFormItem>
-        <CustomFormItem
-          label={<Text t='Etiket' />}
-          name='label'
-        >
-          <CustomInput
-            placeholder={useText('Etiket')}
-            height={36}
-          />
-        </CustomFormItem>
-        <CustomFormItem
-          label={<Text t='Durum' />}
-          name='status'
-        >
-          <CustomSelect
-            placeholder="Durum.."
-            optionFilterProp="children"
-            onChange={onChannelChange}
-            height={36}
+      name='multipleChoiceQuestionLinkForm'
+      className='multiple-choice-question-link-form survey-form'
+      form={form}
+      initialValues={{}}
+      onFinish={onFinish}
+      autoComplete='off'
+      layout={'horizontal'}
+    >
+      <div className="survey-content">
+        <div className="form-left-side">
+          <CustomFormItem
+            label={<Text t='Soru Başlığı' />}
+            name='header'
           >
-            <Option value={true}>Aktif</Option>
-            <Option value={false}>Pasif</Option>
-          </CustomSelect>
-        </CustomFormItem>
-      </div>
-      <div className="form-right-side">
-        <CustomFormItem
-          label={<Text t='Soru Metni' />}
-          name='question'
-        >
-          <ReactQuill theme="snow" onChange={onQuestionChange} />
-        </CustomFormItem>
-        <div className='answers-title'>
+            <CustomInput
+              placeholder={useText('Soru Başlığı')}
+              height={36}
+            />
+          </CustomFormItem>
+          <CustomFormItem
+            label={<Text t='Etiket' />}
+            name='label'
+          >
+            <CustomInput
+              placeholder={useText('Etiket')}
+              height={36}
+            />
+          </CustomFormItem>
+          <CustomFormItem
+            label={<Text t='Durum' />}
+            name='status'
+          >
+            <CustomSelect
+              placeholder="Durum.."
+              optionFilterProp="children"
+              onChange={onChannelChange}
+              height={36}
+            >
+              <Option value={true}>Aktif</Option>
+              <Option value={false}>Pasif</Option>
+            </CustomSelect>
+          </CustomFormItem>
+        </div>
+        <div className="form-right-side">
+          <CustomFormItem
+            label={<Text t='Soru Metni' />}
+            name='question'
+          >
+            <ReactQuill theme="snow" onChange={onQuestionChange} />
+          </CustomFormItem>
+          <div className='answers-title'>
             <h5>Cevaplar</h5>
           </div>
-        <div className='answers'>
-          {
-            answers.map((answer, idx) => {
-              return answer.active === true &&
-                <CustomFormItem
-                  key={idx}
-                  label={<Text t={answer.title} />}
-                  name={`answer-${answer.title}`}
-                  className="answer-form-item"
-                >
-                  <CustomInput
-                    height={36}
-                  />
-                  <CustomButton onClick={(idx) => setAnswers()}>Sil</CustomButton>
-                </CustomFormItem>
+          <div className='answers'>
+            {
+              answers.map((answer, idx) => {
+                return answer.active === true &&
+                  <CustomFormItem
+                    key={idx}
+                    label={<Text t={answer.title} />}
+                    name={`answer-${answer.title}`}
+                    className="answer-form-item"
+                  >
+                    <CustomInput
+                      height={36}
+                    />
+                    <CustomButton onClick={(idx) => setAnswers()}>Sil</CustomButton>
+                  </CustomFormItem>
 
-            })
-          }
-          <CustomButton onClick={addAnswer}>Cevap Şıkkı Ekle</CustomButton>
+              })
+            }
+            <CustomButton onClick={addAnswer}>Cevap Şıkkı Ekle</CustomButton>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div className='form-buttons'>
+      <div className='form-buttons'>
         <CustomFormItem className='footer-form-item'>
           <CustomButton className='cancel-btn' type='danger' onClick={() => handleModalVisible(false)}>
             <span className='cancel'>
@@ -169,7 +169,7 @@ const MultipleChoiseQuestion = ({handleModalVisible}) => {
         </CustomFormItem>
       </div>
 
-  </CustomForm>
+    </CustomForm>
   )
 }
 

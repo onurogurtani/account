@@ -14,7 +14,7 @@ import {
 import { Form } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
 
-const FillInTheBlankQuestion = () => {
+const FillInTheBlankQuestion = ({handleModalVisible}) => {
 
   const [form] = Form.useForm();
 
@@ -87,18 +87,29 @@ const FillInTheBlankQuestion = () => {
           label={<Text t='Soru Metni' />}
           name='question'
         >
-          <ReactQuill theme="snow" onChange={onQuestionChange} />
+          <ReactQuill 
+           theme="snow" 
+           onChange={onQuestionChange} 
+           
+           />
         </CustomFormItem>
       </div>
     </div>
 
-    <CustomFormItem className='footer-form-item'>
-      <CustomButton className='submit-btn' type='primary' htmlType='submit'>
-        <span className='submit'>
-          <Text t='Kaydet' />
-        </span>
-      </CustomButton>
-    </CustomFormItem>
+    <div className='form-buttons'>
+        <CustomFormItem className='footer-form-item'>
+          <CustomButton className='cancel-btn' type='danger' onClick={() => handleModalVisible(false)}>
+            <span className='cancel'>
+              <Text t='Vazgeç' />
+            </span>
+          </CustomButton>
+          <CustomButton className='submit-btn' type='primary' htmlType='submit'>
+            <span className='submit'>
+              <Text t='Kaydet' />
+            </span>
+          </CustomButton>
+        </CustomFormItem>
+      </div>
 
   </CustomForm>
   )
