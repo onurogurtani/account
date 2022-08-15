@@ -226,6 +226,22 @@ const Menus = () => {
           </span>
         </MenuItemText>
       </CustomItem>
+      <CustomItem key="/user-management/avatar-management">
+        <MenuItemText>
+          <CustomImage src={menuIcons} />
+          <span>
+            <Text t="Avatar Yönetimi" />
+          </span>
+        </MenuItemText>
+      </CustomItem>
+      <CustomItem key="/user-management/school-management">
+        <MenuItemText>
+          <CustomImage src={menuIcons} />
+          <span>
+            <Text t="Okul Yönetimi" />
+          </span>
+        </MenuItemText>
+      </CustomItem>
     </CustomMenu>
   );
 };

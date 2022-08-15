@@ -37,13 +37,19 @@ const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType 
         >
             <div className='survey-container'>
                 {selectedQuestionType === "Açık Uçlu Soru" &&
-                    <OpenEndedQuestion/>
+                    <OpenEndedQuestion
+                        handleModalVisible= {handleModalVisible}
+                    />
                 }
                 { selectedQuestionType === "Tek Seçimli Soru" &&
-                    <OneChoiseQuestion/>
+                    <OneChoiseQuestion
+                    handleModalVisible= {handleModalVisible}
+                    />
                 }
                 { selectedQuestionType === "Çok Seçimli Soru" &&
-                    <MultipleChoiseQuestion/>
+                    <MultipleChoiseQuestion
+                     handleModalVisible= {handleModalVisible}
+                    />
                 }
                 { selectedQuestionType === "Boşluk Doldurma Sorusu" &&
                     <FillInTheBlankQuestion/>

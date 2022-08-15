@@ -14,7 +14,7 @@ import {
 import { Form } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
 
-const OneChoiseQuestion = () => {
+const OneChoiseQuestion = ({handleModalVisible}) => {
 
   const [form] = Form.useForm();
 
@@ -126,9 +126,10 @@ const OneChoiseQuestion = () => {
           >
             <ReactQuill theme="snow" onChange={onQuestionChange} />
           </CustomFormItem>
-
-          <div>
+          <div className='answers-title'>
             <h5>Cevaplar</h5>
+          </div>
+          <div className='answers'>
             {
               answers.map((answer, idx) => {
                 return answer.active === true &&
@@ -136,28 +137,36 @@ const OneChoiseQuestion = () => {
                     key={idx}
                     label={<Text t={answer.title} />}
                     name={`answer-${answer.title}`}
-                    className="answer-form-item"
+                    className="answer-form-item answer-box"
                   >
                     <CustomInput
                       height={36}
                     />
-                    <CustomButton onClick={(idx) => setAnswers()}>Sil</CustomButton>
+                    <CustomButton className="delete-answer" onClick={(idx) => setAnswers()}>Sil</CustomButton>
                   </CustomFormItem>
-
               })
             }
-            <CustomButton onClick={addAnswer}>Cevap Şıkkı Ekle</CustomButton>
+          </div>
+          <div className='add-answer'>
+             <CustomButton onClick={addAnswer}>Cevap Şıkkı Ekle</CustomButton>
           </div>
         </div>
       </div>
 
-      <CustomFormItem className='footer-form-item'>
-        <CustomButton className='submit-btn' type='primary' htmlType='submit'>
-          <span className='submit'>
-            <Text t='Kaydet' />
-          </span>
-        </CustomButton>
-      </CustomFormItem>
+      <div className='form-buttons'>
+        <CustomFormItem className='footer-form-item'>
+          <CustomButton className='cancel-btn' type='danger' onClick={() => handleModalVisible(false)}>
+            <span className='cancel'>
+              <Text t='Vazgeç' />
+            </span>
+          </CustomButton>
+          <CustomButton className='submit-btn' type='primary' htmlType='submit'>
+            <span className='submit'>
+              <Text t='Kaydet' />
+            </span>
+          </CustomButton>
+        </CustomFormItem>
+      </div>
 
     </CustomForm>
   )

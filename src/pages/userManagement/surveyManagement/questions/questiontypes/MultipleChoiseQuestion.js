@@ -14,7 +14,7 @@ import {
 import { Form } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
 
-const MultipleChoiseQuestion = () => {
+const MultipleChoiseQuestion = ({handleModalVisible}) => {
 
   
   const [form] = Form.useForm();
@@ -128,9 +128,10 @@ const MultipleChoiseQuestion = () => {
         >
           <ReactQuill theme="snow" onChange={onQuestionChange} />
         </CustomFormItem>
-
-        <div>
-          <h5>Cevaplar</h5>
+        <div className='answers-title'>
+            <h5>Cevaplar</h5>
+          </div>
+        <div className='answers'>
           {
             answers.map((answer, idx) => {
               return answer.active === true &&
@@ -153,13 +154,20 @@ const MultipleChoiseQuestion = () => {
       </div>
     </div>
 
-    <CustomFormItem className='footer-form-item'>
-      <CustomButton className='submit-btn' type='primary' htmlType='submit'>
-        <span className='submit'>
-          <Text t='Kaydet' />
-        </span>
-      </CustomButton>
-    </CustomFormItem>
+    <div className='form-buttons'>
+        <CustomFormItem className='footer-form-item'>
+          <CustomButton className='cancel-btn' type='danger' onClick={() => handleModalVisible(false)}>
+            <span className='cancel'>
+              <Text t='Vazgeç' />
+            </span>
+          </CustomButton>
+          <CustomButton className='submit-btn' type='primary' htmlType='submit'>
+            <span className='submit'>
+              <Text t='Kaydet' />
+            </span>
+          </CustomButton>
+        </CustomFormItem>
+      </div>
 
   </CustomForm>
   )
