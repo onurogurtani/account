@@ -47,7 +47,9 @@ const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType 
                     />
                 }
                 { selectedQuestionType === "Çok Seçimli Soru" &&
-                    <MultipleChoiseQuestion/>
+                    <MultipleChoiseQuestion
+                     handleModalVisible= {handleModalVisible}
+                    />
                 }
                 { selectedQuestionType === "Boşluk Doldurma Sorusu" &&
                     <FillInTheBlankQuestion/>
