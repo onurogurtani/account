@@ -43,7 +43,7 @@ const QuestionsList = () => {
             key: 'answerchoise',
         },
         {
-            title: 'Oluşturulma Tarihi,',
+            title: 'Oluşturulma Tarihi',
             dataIndex: 'createddate',
             key: 'createddate',
         },
@@ -121,10 +121,6 @@ const QuestionsList = () => {
             >
                 {
                     <div className='number-registered-drafts'>
-                        <div className='drafts-count-title'>
-                            <CustomImage src={cardsRegistered} />
-                            Toplam Soru Sayısı: <span> 2 </span>
-                        </div>
                         <div className='operations-buttons'>
                             <div className='sort-btn'>
                                 <CustomButton type='secondary'>
@@ -150,6 +146,10 @@ const QuestionsList = () => {
                                     </Button>
                                 </Dropdown>
                             </div>
+                        </div>
+                        <div className='drafts-count-title'>
+                            <CustomImage src={cardsRegistered} />
+                            Toplam Soru Sayısı: <span> 2 </span>
                         </div>
                     </div>
                 }
