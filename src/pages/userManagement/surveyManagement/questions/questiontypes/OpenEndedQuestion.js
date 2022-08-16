@@ -66,7 +66,10 @@ const OpenEndedQuestion = ({ handleModalVisible }) => {
               height={36}
             />
           </CustomFormItem>
-          <Form.Item label="Durum:">
+          <Form.Item
+            label="Durum:"
+            name="status"
+            onChange={onChannelChange}>
             <Select>
               <Select.Option value={true}>Aktif</Select.Option>
               <Select.Option value={false}>Pasif</Select.Option>

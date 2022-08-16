@@ -11,10 +11,10 @@ import {
   useText,
   Option
 } from '../../../../../components';
-import { Form, Select} from 'antd';
+import { Form, Select } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
 
-const LikertQuestion = ({handleModalVisible}) => {
+const LikertQuestion = ({ handleModalVisible }) => {
 
 
   const [form] = Form.useForm();
@@ -203,9 +203,11 @@ const LikertQuestion = ({handleModalVisible}) => {
               height={36}
             />
           </CustomFormItem>
-          <Form.Item label="Likert Tipi:">
+          <Form.Item
+            label="Likert Tipi:"
+            name="likertType"
+            onChange={onSurveyTypeChanged}>
             <Select
-              onChange={onSurveyTypeChanged}
             >
               <Select.Option value={"three"}>3'lü Likert</Select.Option>
               <Select.Option value={"five"}>5'li Likert</Select.Option>
@@ -216,7 +218,10 @@ const LikertQuestion = ({handleModalVisible}) => {
             </Select>
           </Form.Item>
 
-          <Form.Item label="Durum:">
+          <Form.Item
+            label="Durum:"
+            name="status"
+            onChange={onChannelChange}>
             <Select>
               <Select.Option value={true}>Aktif</Select.Option>
               <Select.Option value={false}>Pasif</Select.Option>

@@ -85,7 +85,10 @@ const FillInTheBlankQuestion = ({ handleModalVisible }) => {
               height={36}
             />
           </CustomFormItem>
-          <Form.Item label="Durum:">
+          <Form.Item
+            label="Durum:"
+            name="status"
+            onChange={onChannelChange}>
             <Select>
               <Select.Option value={true}>Aktif</Select.Option>
               <Select.Option value={false}>Pasif</Select.Option>
@@ -102,7 +105,7 @@ const FillInTheBlankQuestion = ({ handleModalVisible }) => {
               theme="snow"
               onChange={onQuestionChange}
             />
-               <CustomButton className='add-blank-btn' type='secondary' onClick={addBlank}>
+            <CustomButton className='add-blank-btn' type='secondary' onClick={addBlank}>
               <span className='add-blank-text'>
                 <Text t='Buşluk Ekle' />
               </span>
