@@ -1,6 +1,7 @@
 import { Tabs } from 'antd';
 import React from 'react';
 import SurveyQuestions from './questions';
+import SurveyForms from './forms';
 const { TabPane } = Tabs;
 
 const  SurveyTabs = () => (
@@ -9,7 +10,7 @@ const  SurveyTabs = () => (
       <SurveyQuestions/>
     </TabPane>
     <TabPane tab="Formlar" key="2">
-      Formlar
+      <SurveyForms/>
     </TabPane>
   </Tabs>
 );
