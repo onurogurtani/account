@@ -14,7 +14,6 @@ import {
 import { Form, Select } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
 
-
 // İmages
 import emoji1 from '../../../../../assets/images/emoji/emoji1.png'
 import emoji2 from '../../../../../assets/images/emoji/emoji2.png'
@@ -51,6 +50,23 @@ const LikertQuestion = ({ handleModalVisible }) => {
     form.setFieldsValue({ question: value });
 
   };
+
+  const handleStars = (stars) => {
+    console.log("pwleqwp")
+    console.log(stars)
+    form.setFieldsValue({
+      starsanswer: stars
+    })
+  }
+
+  const handleEmoji = (emojitype) => {
+    console.log(emojitype)
+    form.setFieldsValue({
+      emojianswer: emojitype
+    })
+  }
+
+
 
   const onFinish = (values) => {
     console.log(values)
@@ -166,9 +182,7 @@ const LikertQuestion = ({ handleModalVisible }) => {
         title: "10",
         value: "Kesinlikle Katılıyorum"
       },
-    ],
-    faces: "0",
-    stars: "0"
+    ]
   }
 
   const deleteAnswer = (idx) => {
@@ -178,7 +192,6 @@ const LikertQuestion = ({ handleModalVisible }) => {
   const addAnswer = () => {
 
   }
-
 
 
   return (
@@ -211,7 +224,9 @@ const LikertQuestion = ({ handleModalVisible }) => {
               height={36}
             />
           </CustomFormItem>
-          <Form.Item label="Likert Tipi:">
+          <Form.Item
+            label="Likert Tipi:"
+            name="likertType">
             <Select
               onChange={onSurveyTypeChanged}
             >
@@ -224,7 +239,10 @@ const LikertQuestion = ({ handleModalVisible }) => {
             </Select>
           </Form.Item>
 
-          <Form.Item label="Durum:">
+          <Form.Item
+            label="Durum:"
+            name="status"
+            onChange={onChannelChange}>
             <Select>
               <Select.Option value={true}>Aktif</Select.Option>
               <Select.Option value={false}>Pasif</Select.Option>
@@ -243,40 +261,72 @@ const LikertQuestion = ({ handleModalVisible }) => {
           </div> */}
           {
             type === "faces" ?
+
               <div className='emoji-rating'>
-                <input type="radio" name="emoji" id="emoji1" />
-                <label for="emoji1">
-                  <img src={emoji1} alt='emoji1' />
-                </label>
+                <CustomFormItem
+                  name="emojianswer"
+                >
+                  <input type="radio" name="emoji" id="emoji1" onClick={() => handleEmoji("emoji1")} />
+                  <label htmlFor="emoji1">
+                    <img src={emoji1} alt='emoji1' />
+                  </label>
+                </CustomFormItem>
 
-                <input type="radio" name="emoji" id="emoji2" />
-                <label for="emoji2">
-                  <img src={emoji2} alt='emoji2' />
-                </label>
+                <CustomFormItem
+                  name="emojianswer"
+                >
+                  <input type="radio" name="emoji" id="emoji2" onClick={() => handleEmoji("emoji2")} />
+                  <label htmlFor="emoji2">
+                    <img src={emoji2} alt='emoji2' />
+                  </label>
+                </CustomFormItem>
 
-                <input type="radio" name="emoji" id="emoji3" />
-                <label for="emoji3">
-                  <img src={emoji3} alt='emoji3' />
-                </label>
+                <CustomFormItem
+                  name="emojianswer"
+                >
+                  <input type="radio" name="emoji" id="emoji3" onClick={() => handleEmoji("emoji3")} />
+                  <label htmlFor="emoji3">
+                    <img src={emoji3} alt='emoji3' />
+                  </label>
+                </CustomFormItem>
 
-                <input type="radio" name="emoji" id="emoji4" />
-                <label for="emoji4">
-                  <img src={emoji4} alt='emoji4' />
-                </label>
+                <CustomFormItem
+                  name="emojianswer">
+                  <input type="radio" name="emoji" id="emoji4" onClick={() => handleEmoji("emoji4")} />
+                  <label htmlFor="emoji4">
+                    <img src={emoji4} alt='emoji4' />
+                  </label>
+                </CustomFormItem> 
 
-                <input type="radio" name="emoji" id="emoji5" />
-                <label for="emoji5">
-                  <img src={emoji5} alt='emoji5' />
-                </label>
-                
-              </div> :
+                <CustomFormItem
+                  name="emojianswer">
+                  <input type="radio" name="emoji" id="emoji5" onClick={() => handleEmoji("emoji5")} />
+                  <label htmlFor="emoji5">
+                    <img src={emoji5} alt='emoji5' />
+                  </label>
+                </CustomFormItem>
+
+
+              </div>
+              :
               type === "stars" ?
-                <div class="star-rating">
-                  <input type="radio" id="star1" name="rating" value="1" /><label for="star1"></label>
-                  <input type="radio" id="star2" name="rating" value="2" /><label for="star2"></label>
-                  <input type="radio" id="star3" name="rating" value="3" /><label for="star3"></label>
-                  <input type="radio" id="star4" name="rating" value="4" /><label for="star4"></label>
-                  <input type="radio" id="star5" name="rating" value="5" /><label for="star5"></label>
+                <div className="star-rating">
+                  <CustomFormItem
+                    name="starsanswer"
+                    
+                  >
+                    <input type="radio" id="star5" name="rating" value="5" onClick={() => handleStars("5")}/><label htmlFor="star5"></label>
+                    <input type="radio" id="star4" name="rating" value="4" onClick={() => handleStars("4")}/><label htmlFor="star4"></label>
+                    <input type="radio" id="star3" name="rating" value="3" onClick={() => handleStars("3")}/><label htmlFor="star3"></label>
+                    <input type="radio" id="star2" name="rating" value="2" onClick={() => handleStars("2")}/><label htmlFor="star2"></label>
+                    <input type="radio" id="star1" name="rating" value="1" onClick={() => handleStars("1")}/><label htmlFor="star1"></label>
+
+                    {/* <input type="radio" id="star1" name="rating" value="1" onClick={() => handleStars("1")}/><label htmlFor="star1"></label>
+                    <input type="radio" id="star2" name="rating" value="2" onClick={() => handleStars("2")}/><label htmlFor="star2"></label>
+                    <input type="radio" id="star3" name="rating" value="3" /><label htmlFor="star3"></label>
+                    <input type="radio" id="star4" name="rating" value="4" /><label htmlFor="star4"></label>
+                    <input type="radio" id="star5" name="rating" value="5" /><label htmlFor="star5"></label> */}
+                  </CustomFormItem>
                 </div> :
                 likertTypes[type].map((answer, idx) => {
                   return <CustomFormItem
