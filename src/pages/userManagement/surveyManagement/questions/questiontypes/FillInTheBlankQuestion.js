@@ -95,7 +95,7 @@ const FillInTheBlankQuestion = ({ handleModalVisible }) => {
               <Text t='Vazgeç' />
             </span>
           </CustomButton>
-          <CustomButton className='submit-btn' type='primary' htmlType='submit'>
+          <CustomButton className='submit-btn' type='success' htmlType='submit'>
             <span className='submit'>
               <Text t='Kaydet' />
             </span>

@@ -203,15 +203,16 @@ const LikertQuestion = ({handleModalVisible}) => {
               height={36}
             />
           </CustomFormItem>
-          
           <Form.Item label="Likert Tipi:">
-            <Select>
-              <Select.Option value={"five"}>5'li Likert</Select.Option>
-              <Select.Option value={"faces"}>Yüz İfadeleri</Select.Option>
+            <Select
+              onChange={onSurveyTypeChanged}
+            >
               <Select.Option value={"three"}>3'lü Likert</Select.Option>
+              <Select.Option value={"five"}>5'li Likert</Select.Option>
               <Select.Option value={"seven"}>7'li Likert</Select.Option>
               <Select.Option value={"ten"}>10'lu Likert</Select.Option>
-              <Select.Option value={"stars"}>5'li Yıldızlı Likert</Select.Option>
+              <Select.Option value={"faces"}>Yüz İfadeleri</Select.Option>
+              <Select.Option value={"stars"}>5'li Yıldızlı Puanlama </Select.Option>
             </Select>
           </Form.Item>
 
