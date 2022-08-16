@@ -14,7 +14,7 @@ import {
 import { Form, Select } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
 
-const OneChoiseQuestion = ({handleModalVisible}) => {
+const OneChoiseQuestion = ({ handleModalVisible }) => {
 
   const [form] = Form.useForm();
 
@@ -67,10 +67,21 @@ const OneChoiseQuestion = ({handleModalVisible}) => {
   ])
 
   const deleteAnswer = (idx) => {
-
+    let newArr = [...answers]
+    newArr[idx].active = false
+    setAnswers(newArr)
   }
 
   const addAnswer = () => {
+
+    let idx = answers.indexOf(answers.find((answer) => {
+      return answer.active === false
+    }))
+    if (idx !== -1) {
+      let newArr = [...answers]
+      newArr[idx].active = true
+      setAnswers(newArr)
+    }
 
   }
 
@@ -134,13 +145,13 @@ const OneChoiseQuestion = ({handleModalVisible}) => {
                     <CustomInput
                       height={36}
                     />
-                    <CustomButton className="delete-answer" onClick={(idx) => setAnswers()}>Sil</CustomButton>
+                    <CustomButton className="delete-answer" onClick={()=>deleteAnswer(idx)}>Sil</CustomButton>
                   </CustomFormItem>
               })
             }
           </div>
           <div className='add-answer'>
-             <CustomButton onClick={addAnswer}>Cevap Şıkkı Ekle</CustomButton>
+            <CustomButton onClick={addAnswer}>Cevap Şıkkı Ekle</CustomButton>
           </div>
         </div>
       </div>

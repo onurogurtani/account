@@ -66,12 +66,22 @@ const MultipleChoiseQuestion = ({ handleModalVisible }) => {
       active: false
     },
   ])
-
   const deleteAnswer = (idx) => {
-
+    let newArr = [...answers]
+    newArr[idx].active = false
+    setAnswers(newArr)
   }
 
   const addAnswer = () => {
+
+    let idx = answers.indexOf(answers.find((answer) => {
+      return answer.active === false
+    }))
+    if (idx !== -1) {
+      let newArr = [...answers]
+      newArr[idx].active = true
+      setAnswers(newArr)
+    }
 
   }
 
@@ -136,7 +146,7 @@ const MultipleChoiseQuestion = ({ handleModalVisible }) => {
                     <CustomInput
                       height={36}
                     />
-                    <CustomButton onClick={(idx) => setAnswers()}>Sil</CustomButton>
+                    <CustomButton onClick={()=>deleteAnswer(idx)}>Sil</CustomButton>
                   </CustomFormItem>
 
               })
