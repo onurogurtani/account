@@ -11,10 +11,18 @@ import {
   useText,
   Option
 } from '../../../../../components';
-import { Form, Select} from 'antd';
+import { Form, Select } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
 
-const LikertQuestion = ({handleModalVisible}) => {
+
+// İmages
+import emoji1 from '../../../../../assets/images/emoji/emoji1.png'
+import emoji2 from '../../../../../assets/images/emoji/emoji2.png'
+import emoji3 from '../../../../../assets/images/emoji/emoji3.png'
+import emoji4 from '../../../../../assets/images/emoji/emoji4.png'
+import emoji5 from '../../../../../assets/images/emoji/emoji5.png'
+
+const LikertQuestion = ({ handleModalVisible }) => {
 
 
   const [form] = Form.useForm();
@@ -230,32 +238,61 @@ const LikertQuestion = ({handleModalVisible}) => {
           >
             <ReactQuill theme="snow" onChange={onQuestionChange} />
           </CustomFormItem>
-          <div className='answers-title'>
+          {/* <div className='answers-title'>
             <h5>Cevaplar</h5>
-          </div>
-          <div>
+          </div> */}
+          {
+            type === "faces" ?
+              <div className='emoji-rating'>
+                <input type="radio" name="emoji" id="emoji1" />
+                <label for="emoji1">
+                  <img src={emoji1} alt='emoji1' />
+                </label>
 
-            {
-              type === "faces" ?
-                <div></div> :
-                type === "stars" ?
-                  <div></div> :
-                  likertTypes[type].map((answer, idx) => {
-                    return <CustomFormItem
-                      key={idx}
-                      label={<Text t={answer.title} />}
-                      name={`answer-${answer.title}`}
-                      className="answer-form-item"
-                    >
-                      <CustomInput
-                        height={36}
-                        placeholder={answer.value}
-                      />
-                    </CustomFormItem>
+                <input type="radio" name="emoji" id="emoji2" />
+                <label for="emoji2">
+                  <img src={emoji2} alt='emoji2' />
+                </label>
 
-                  })
-            }
-          </div>
+                <input type="radio" name="emoji" id="emoji3" />
+                <label for="emoji3">
+                  <img src={emoji3} alt='emoji3' />
+                </label>
+
+                <input type="radio" name="emoji" id="emoji4" />
+                <label for="emoji4">
+                  <img src={emoji4} alt='emoji4' />
+                </label>
+
+                <input type="radio" name="emoji" id="emoji5" />
+                <label for="emoji5">
+                  <img src={emoji5} alt='emoji5' />
+                </label>
+                
+              </div> :
+              type === "stars" ?
+                <div class="star-rating">
+                  <input type="radio" id="star1" name="rating" value="1" /><label for="star1"></label>
+                  <input type="radio" id="star2" name="rating" value="2" /><label for="star2"></label>
+                  <input type="radio" id="star3" name="rating" value="3" /><label for="star3"></label>
+                  <input type="radio" id="star4" name="rating" value="4" /><label for="star4"></label>
+                  <input type="radio" id="star5" name="rating" value="5" /><label for="star5"></label>
+                </div> :
+                likertTypes[type].map((answer, idx) => {
+                  return <CustomFormItem
+                    key={idx}
+                    label={<Text t={answer.title} />}
+                    name={`answer-${answer.title}`}
+                    className="answer-form-item"
+                  >
+                    <CustomInput
+                      height={36}
+                      placeholder={answer.value}
+                    />
+                  </CustomFormItem>
+
+                })
+          }
         </div>
       </div>
 

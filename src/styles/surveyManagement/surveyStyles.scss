@@ -5,6 +5,7 @@
         display              : grid;
         grid-template-columns: 1fr 2fr;
         align-items          : center;
+
         .drafts-count-title {
             text-align: right;
         }
@@ -14,17 +15,19 @@
         display        : flex;
         justify-content: space-between;
         align-items    : center;
+
         button {
-            height: 33px;
+            height   : 33px;
             min-width: 120px;
         }
+
         .add-question {
             button {
-                font-weight: 600;
+                font-weight  : 600;
                 border-radius: 4px;
-                background: #00a483;
-                color: white;
-                border-color: #00a483;
+                background   : #00a483;
+                color        : white;
+                border-color : #00a483;
             }
         }
     }
@@ -54,6 +57,7 @@
     }
 }
 
+// Modal
 .survey-modal {
     width: 1100px !important;
 
@@ -87,13 +91,15 @@
 
             button {
                 height: 50px;
+
                 &:first-child {
                     margin-right: 20px;
                 }
+
                 &:last-child {
-                    background: #699a00;
-                    color: #fff;
-                    border-color:#699a00;
+                    background  : #699a00;
+                    color       : #fff;
+                    border-color: #699a00;
                 }
             }
         }
@@ -122,4 +128,77 @@
             border-radius: 4px;
         }
     }
+
+    // Likert Modal
+
+    // Star Rating
+    $stars         : 5;
+    $star-size     : 40px;
+    $star-spacing  : 2px;
+    $star-on-color : #F9DF4A;
+    $star-off-color: #CCCCCC;
+
+    .star-rating {
+        width : 100%;
+        height: 100px;
+        margin: 0 auto;
+
+        label {
+            float    : right !important;
+            position : relative !important;
+            width    : $star-size !important;
+            height   : $star-size !important;
+            cursor   : pointer !important;
+            min-width: auto !important;
+
+            &:not(:first-of-type) {
+                padding-right: $star-spacing;
+            }
+
+            &:before {
+                content    : "\2605";
+                font-size  : $star-size + 2px;
+                color      : $star-off-color;
+                line-height: 1;
+            }
+        }
+
+        input {
+            display: none;
+        }
+
+        input:checked~label:before,
+        &:not(:checked)>label:hover:before,
+        &:not(:checked)>label:hover~label:before {
+            color: $star-on-color;
+        }
+    }
+
+    // Emoji Rating
+    .emoji-rating {
+        position      : relative;
+        display       : flex;
+    }
+
+    .emoji-rating input {
+        display: none;
+    }
+
+    .emoji-rating label {
+        position: relative!important;
+        width   : 0!important;
+        height  : 128px!important;
+        cursor: pointer;
+        img {
+            width: 75px;
+            opacity: 0.2;
+            transition: all .5s ease;
+        }
+    }
+
+    .emoji-rating input:hover + label img,
+    .emoji-rating input:checked + label img {
+        opacity: 1;
+    }
+
 }
