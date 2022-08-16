@@ -11,7 +11,7 @@ import {
   useText,
   Option
 } from '../../../../../components';
-import { Form } from 'antd';
+import { Form, Select} from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
 
 const LikertQuestion = ({handleModalVisible}) => {
@@ -175,8 +175,8 @@ const LikertQuestion = ({handleModalVisible}) => {
 
   return (
     <CustomForm
-      name='multipleChoiceQuestionLinkForm'
-      className='multiple-choice-question-link-form survey-form'
+      name='likertQuestionLinkForm'
+      className='likert-choice-question-link-form survey-form'
       form={form}
       initialValues={{}}
       onFinish={onFinish}
@@ -203,39 +203,25 @@ const LikertQuestion = ({handleModalVisible}) => {
               height={36}
             />
           </CustomFormItem>
-          <CustomFormItem
-            label={<Text t='Likert Tipi' />}
-            name='likertType'
-          >
-            <CustomSelect
-              placeholder="Likert Tipi"
-              optionFilterProp="children"
+          <Form.Item label="Likert Tipi:">
+            <Select
               onChange={onSurveyTypeChanged}
-              height={36}
             >
-              <Option value={"five"}>5'li Likert</Option>
-              <Option value={"faces"}>Yüz İfadeleri</Option>
-              <Option value={"three"}>3'lü Likert</Option>
-              <Option value={"seven"}>7'li Likert</Option>
-              <Option value={"ten"}>10'lu Likert</Option>
-              <Option value={"stars"}>5'li Yıldızlı Likert</Option>
-            </CustomSelect>
-          </CustomFormItem>
+              <Select.Option value={"three"}>3'lü Likert</Select.Option>
+              <Select.Option value={"five"}>5'li Likert</Select.Option>
+              <Select.Option value={"seven"}>7'li Likert</Select.Option>
+              <Select.Option value={"ten"}>10'lu Likert</Select.Option>
+              <Select.Option value={"faces"}>Yüz İfadeleri</Select.Option>
+              <Select.Option value={"stars"}>5'li Yıldızlı Puanlama </Select.Option>
+            </Select>
+          </Form.Item>
 
-          <CustomFormItem
-            label={<Text t='Durum' />}
-            name='status'
-          >
-            <CustomSelect
-              placeholder="Durum.."
-              optionFilterProp="children"
-              onChange={onChannelChange}
-              height={36}
-            >
-              <Option value={true}>Aktif</Option>
-              <Option value={false}>Pasif</Option>
-            </CustomSelect>
-          </CustomFormItem>
+          <Form.Item label="Durum:">
+            <Select>
+              <Select.Option value={true}>Aktif</Select.Option>
+              <Select.Option value={false}>Pasif</Select.Option>
+            </Select>
+          </Form.Item>
         </div>
         <div className="form-right-side">
           <CustomFormItem

@@ -11,10 +11,10 @@ import {
   useText,
   Option
 } from '../../../../../components';
-import { Form } from 'antd';
+import { Form, Select } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
 
-const OneChoiseQuestion = ({handleModalVisible}) => {
+const OneChoiseQuestion = ({ handleModalVisible }) => {
 
   const [form] = Form.useForm();
 
@@ -67,10 +67,21 @@ const OneChoiseQuestion = ({handleModalVisible}) => {
   ])
 
   const deleteAnswer = (idx) => {
-
+    let newArr = [...answers]
+    newArr[idx].active = false
+    setAnswers(newArr)
   }
 
   const addAnswer = () => {
+
+    let idx = answers.indexOf(answers.find((answer) => {
+      return answer.active === false
+    }))
+    if (idx !== -1) {
+      let newArr = [...answers]
+      newArr[idx].active = true
+      setAnswers(newArr)
+    }
 
   }
 
@@ -104,20 +115,12 @@ const OneChoiseQuestion = ({handleModalVisible}) => {
               height={36}
             />
           </CustomFormItem>
-          <CustomFormItem
-            label={<Text t='Durum' />}
-            name='status'
-          >
-            <CustomSelect
-              placeholder="Durum.."
-              optionFilterProp="children"
-              onChange={onChannelChange}
-              height={36}
-            >
-              <Option value={true}>Aktif</Option>
-              <Option value={false}>Pasif</Option>
-            </CustomSelect>
-          </CustomFormItem>
+          <Form.Item label="Durum:">
+            <Select>
+              <Select.Option value={true}>Aktif</Select.Option>
+              <Select.Option value={false}>Pasif</Select.Option>
+            </Select>
+          </Form.Item>
         </div>
         <div className="form-right-side">
           <CustomFormItem
@@ -142,13 +145,13 @@ const OneChoiseQuestion = ({handleModalVisible}) => {
                     <CustomInput
                       height={36}
                     />
-                    <CustomButton className="delete-answer" onClick={(idx) => setAnswers()}>Sil</CustomButton>
+                    <CustomButton className="delete-answer" onClick={()=>deleteAnswer(idx)}>Sil</CustomButton>
                   </CustomFormItem>
               })
             }
           </div>
           <div className='add-answer'>
-             <CustomButton onClick={addAnswer}>Cevap Şıkkı Ekle</CustomButton>
+            <CustomButton onClick={addAnswer}>Cevap Şıkkı Ekle</CustomButton>
           </div>
         </div>
       </div>

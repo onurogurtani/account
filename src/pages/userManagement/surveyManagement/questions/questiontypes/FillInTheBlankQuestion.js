@@ -11,7 +11,7 @@ import {
   useText,
   Option
 } from '../../../../../components';
-import { Form } from 'antd';
+import { Form, Select } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
 
 const FillInTheBlankQuestion = ({ handleModalVisible }) => {
@@ -67,20 +67,12 @@ const FillInTheBlankQuestion = ({ handleModalVisible }) => {
               height={36}
             />
           </CustomFormItem>
-          <CustomFormItem
-            label={<Text t='Durum' />}
-            name='status'
-          >
-            <CustomSelect
-              placeholder="Durum.."
-              optionFilterProp="children"
-              onChange={onChannelChange}
-              height={36}
-            >
-              <Option value={true}>Aktif</Option>
-              <Option value={false}>Pasif</Option>
-            </CustomSelect>
-          </CustomFormItem>
+          <Form.Item label="Durum:">
+            <Select>
+              <Select.Option value={true}>Aktif</Select.Option>
+              <Select.Option value={false}>Pasif</Select.Option>
+            </Select>
+          </Form.Item>
         </div>
         <div className="form-right-side">
           <CustomFormItem
@@ -103,7 +95,7 @@ const FillInTheBlankQuestion = ({ handleModalVisible }) => {
               <Text t='Vazgeç' />
             </span>
           </CustomButton>
-          <CustomButton className='submit-btn' type='primary' htmlType='submit'>
+          <CustomButton className='submit-btn' type='success' htmlType='submit'>
             <span className='submit'>
               <Text t='Kaydet' />
             </span>

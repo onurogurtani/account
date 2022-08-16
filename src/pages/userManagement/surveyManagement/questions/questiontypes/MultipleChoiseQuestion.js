@@ -11,7 +11,7 @@ import {
   useText,
   Option
 } from '../../../../../components';
-import { Form } from 'antd';
+import { Form, Select } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
 
 const MultipleChoiseQuestion = ({ handleModalVisible }) => {
@@ -66,12 +66,22 @@ const MultipleChoiseQuestion = ({ handleModalVisible }) => {
       active: false
     },
   ])
-
   const deleteAnswer = (idx) => {
-
+    let newArr = [...answers]
+    newArr[idx].active = false
+    setAnswers(newArr)
   }
 
   const addAnswer = () => {
+
+    let idx = answers.indexOf(answers.find((answer) => {
+      return answer.active === false
+    }))
+    if (idx !== -1) {
+      let newArr = [...answers]
+      newArr[idx].active = true
+      setAnswers(newArr)
+    }
 
   }
 
@@ -106,20 +116,12 @@ const MultipleChoiseQuestion = ({ handleModalVisible }) => {
               height={36}
             />
           </CustomFormItem>
-          <CustomFormItem
-            label={<Text t='Durum' />}
-            name='status'
-          >
-            <CustomSelect
-              placeholder="Durum.."
-              optionFilterProp="children"
-              onChange={onChannelChange}
-              height={36}
-            >
-              <Option value={true}>Aktif</Option>
-              <Option value={false}>Pasif</Option>
-            </CustomSelect>
-          </CustomFormItem>
+          <Form.Item label="Durum:">
+            <Select>
+              <Select.Option value={true}>Aktif</Select.Option>
+              <Select.Option value={false}>Pasif</Select.Option>
+            </Select>
+          </Form.Item>
         </div>
         <div className="form-right-side">
           <CustomFormItem
@@ -144,7 +146,7 @@ const MultipleChoiseQuestion = ({ handleModalVisible }) => {
                     <CustomInput
                       height={36}
                     />
-                    <CustomButton onClick={(idx) => setAnswers()}>Sil</CustomButton>
+                    <CustomButton onClick={()=>deleteAnswer(idx)}>Sil</CustomButton>
                   </CustomFormItem>
 
               })
