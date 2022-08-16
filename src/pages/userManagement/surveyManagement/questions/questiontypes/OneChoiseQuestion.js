@@ -145,7 +145,7 @@ const OneChoiseQuestion = ({ handleModalVisible }) => {
                     <CustomInput
                       height={36}
                     />
-                    <CustomButton className="delete-answer" onClick={()=>deleteAnswer(idx)}>Sil</CustomButton>
+                    <CustomButton onClick={()=>deleteAnswer(idx)}>Sil</CustomButton>
                   </CustomFormItem>
               })
             }

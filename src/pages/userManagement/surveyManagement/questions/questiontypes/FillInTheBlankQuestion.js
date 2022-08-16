@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {
@@ -17,6 +17,17 @@ import "../../../../../styles/surveyManagement/surveyStyles.scss"
 const FillInTheBlankQuestion = ({ handleModalVisible }) => {
 
   const [form] = Form.useForm();
+  const quillRef = useRef(null)
+  const reactQuillRef = useRef(null)
+
+
+  useEffect(() => {
+    if (reactQuillRef !== null) {
+
+      quillRef.current = reactQuillRef.current.getEditor();
+    }
+  }, [reactQuillRef])
+
 
   const onChannelChange = (value) => {
     switch (value) {
@@ -36,6 +47,13 @@ const FillInTheBlankQuestion = ({ handleModalVisible }) => {
 
   const onFinish = (values) => {
     console.log(values)
+  }
+
+  const addBlank = () => {
+    const blankText = ' ........... '
+    let range = quillRef.current.getSelection();
+    let position = range ? range.index : 0;
+    quillRef.current.insertText(position, blankText);
   }
   return (
     <CustomForm
@@ -80,10 +98,15 @@ const FillInTheBlankQuestion = ({ handleModalVisible }) => {
             name='question'
           >
             <ReactQuill
+              ref={reactQuillRef}
               theme="snow"
               onChange={onQuestionChange}
-
             />
+               <CustomButton className='add-blank-btn' type='secondary' onClick={addBlank}>
+              <span className='add-blank-text'>
+                <Text t='Buşluk Ekle' />
+              </span>
+            </CustomButton>
           </CustomFormItem>
         </div>
       </div>

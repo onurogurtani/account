@@ -51,6 +51,12 @@
         button {
             height: 36px;
         }
+        
+    }
+    .add-answer{
+        button{
+            height: 36px;
+        }
     }
 }
 
@@ -120,6 +126,13 @@
             font-family  : UbuntuRegular;
             color        : #3f4957;
             border-radius: 4px;
+        }
+    }
+
+    .fill-in-the-blank-question-link-form {
+        .add-blank-btn {
+            margin-top: 15px;
+            height: 36px;
         }
     }
 }
