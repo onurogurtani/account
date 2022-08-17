@@ -14,7 +14,7 @@ import {
 import { Form, Select } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
 
-const OneChoiseQuestion = ({ handleModalVisible }) => {
+const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion }) => {
 
   const [form] = Form.useForm();
 
@@ -90,7 +90,7 @@ const OneChoiseQuestion = ({ handleModalVisible }) => {
       name='oneChoiceQuestionLinkForm'
       className='one-choice-question-link-form survey-form'
       form={form}
-      initialValues={{}}
+      initialValues={selectedQuestion ? selectedQuestion : {}}
       onFinish={onFinish}
       autoComplete='off'
       layout={'horizontal'}
@@ -99,7 +99,7 @@ const OneChoiseQuestion = ({ handleModalVisible }) => {
         <div className="form-left-side">
           <CustomFormItem
             label={<Text t='Soru Başlığı' />}
-            name='header'
+            name='questionTitle'
           >
             <CustomInput
               placeholder={useText('Soru Başlığı')}
@@ -128,7 +128,7 @@ const OneChoiseQuestion = ({ handleModalVisible }) => {
         <div className="form-right-side">
           <CustomFormItem
             label={<Text t='Soru Metni' />}
-            name='question'
+            name='questionText'
           >
             <ReactQuill theme="snow" onChange={onQuestionChange} />
           </CustomFormItem>

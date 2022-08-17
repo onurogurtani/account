@@ -13,7 +13,7 @@ import LikertQuestion from '../questions/questiontypes/LikertQuestion'
 import { Form } from 'antd';
 import '../../../../styles/surveyManagement/surveyStyles.scss'
 
-const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType }) => {
+const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType , selectedQuestion }) => {
     const [form] = Form.useForm();
 
     const handleClose = useCallback(() => {
@@ -39,26 +39,31 @@ const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType 
                 {selectedQuestionType === "Açık Uçlu Soru" &&
                     <OpenEndedQuestion
                         handleModalVisible={handleModalVisible}
+                        selectedQuestion={selectedQuestion}
                     />
                 }
                 {selectedQuestionType === "Tek Seçimli Soru" &&
                     <OneChoiseQuestion
                         handleModalVisible={handleModalVisible}
+                        selectedQuestion={selectedQuestion}
                     />
                 }
                 {selectedQuestionType === "Çok Seçimli Soru" &&
                     <MultipleChoiseQuestion
                         handleModalVisible={handleModalVisible}
+                        selectedQuestion={selectedQuestion}
                     />
                 }
                 {selectedQuestionType === "Boşluk Doldurma Sorusu" &&
                     <FillInTheBlankQuestion
                         handleModalVisible={handleModalVisible}
+                        selectedQuestion={selectedQuestion}
                     />
                 }
                 {selectedQuestionType === "Likert Tipi Soru" &&
                     <LikertQuestion
                         handleModalVisible={handleModalVisible}
+                        selectedQuestion={selectedQuestion}
                     />
                 }
 

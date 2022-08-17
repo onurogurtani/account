@@ -18,68 +18,170 @@ import "../../../../styles/surveyManagement/surveyStyles.scss"
 const QuestionsList = () => {
 
 
-    const columns = [
+    const menuList = [
+        {
+            key: "1",
+            name: "Güncelle",
+        },
+        {
+            key: "2",
+            name: "Sil",
+        },
+        {
+            key: "3",
+            name: "Kopyala",
+        },
+        {
+            key: "4",
+            name: "Pasif Et/Sonlandır",
+        },
+        {
+            key: "5",
+            name: "Aktif Et/Yayınla",
+        },
+        {
+            key: "6",
+            name: "İstatistikleri Göster",
+        },
+    ];
+    const columns = (action) => [
         {
             title: 'ID',
             dataIndex: 'id',
             key: 'id',
+            width: "50px",
+            fixed: 'left',
         },
         {
             title: 'Soru Başlığı',
-            dataIndex: 'questiontitle',
-            key: 'questiontitle',
+            dataIndex: 'questionTitle',
+            key: 'questionTitle',
+        },
+        {
+            title: 'Durum',
+            dataIndex: 'status',
+            key: 'status',
+            render: (status) => {
+                return status ? "Aktif" : "Pasif"
+            }
         },
         {
             title: 'Soru Tipi',
-            dataIndex: 'questiontype',
-            key: 'questiontype',
+            dataIndex: 'questionType',
+            key: 'questionType',
         },
         {
             title: 'Soru Metni',
-            dataIndex: 'questiontext',
-            key: 'questiontext',
+            dataIndex: 'questionText',
+            key: 'questionText',
         },
         {
             title: 'Cevap Şıkları',
-            dataIndex: 'answerchoise',
-            key: 'answerchoise',
+            dataIndex: 'answers',
+            key: 'answers',
+            render: (answer) => {
+                return `${answer.title} : ${answer.text}`
+            }
         },
         {
             title: 'Oluşturulma Tarihi',
-            dataIndex: 'createddate',
-            key: 'createddate',
+            dataIndex: 'createdDate',
+            key: 'createdDate',
         },
         {
             title: 'Oluşturan Kullanıcı',
-            dataIndex: 'createduser',
-            key: 'createduser',
+            dataIndex: 'createdUser',
+            key: 'createdUser',
         },
         {
             title: 'Güncellenme Tarihi',
-            dataIndex: 'updatedate',
-            key: 'updatedate',
+            dataIndex: 'updatedDate',
+            key: 'updatedDate',
         },
         {
             title: 'Güncelleyen Kullanıcı',
-            dataIndex: 'updateuser',
-            key: 'updateuser',
+            dataIndex: 'updatedUser',
+            key: 'updatedUser',
         },
         {
             title: 'Etiket',
-            dataIndex: 'ticket',
-            key: 'ticket',
+            dataIndex: 'label',
+            key: 'label',
         },
         {
-            title: 'İşlemler',
-            dataIndex: 'operations',
-            key: 'operations',
+            title: "İşlemler",
+            dataIndex: "draftDeleteAction",
+            key: "draftDeleteAction",
+            width: 100,
+            align: "center",
+            fixed: 'right',
+            render: (_, record) => {
+                const menu = (
+                    <Menu>
+                        {menuList.map(item => (
+                            <Menu.Item key={item.key}>
+                                <Button type="text" size={12} onClick={() => action(record, item?.name)} >
+                                    {item.name}
+                                </Button>
+                            </Menu.Item>
+                        ))}
+                    </Menu>
+                );
+
+                return (
+                    <Dropdown type="primary" overlay={menu}>
+                        <Button
+                            className="ant-dropdown-link userName"
+                        >
+                            İşlemler
+                            <DownOutlined />
+                        </Button>
+                    </Dropdown>
+                );
+            }
         }
     ];
+
+    const data = [{
+        id: 1,
+        questionTitle: "asdasd",
+        status: true,
+        questionType: "Açık Uçlu Soru",
+        questionText: "asdasdasd",
+        answers: [
+            {
+                title: "A",
+                text: "asdasd"
+            },
+            {
+                title: "B",
+                text: "asdasd"
+            },
+            {
+                title: "C",
+                text: "asdasd"
+            },
+            {
+                title: "D",
+                text: "asdasd"
+            },
+            {
+                title: "E",
+                text: "asdasd"
+            }
+        ],
+        createdUser: "admin",
+        createdDate: '2020-01-01',
+        updatedUser: "admin",
+        updatedDate: '2020-02-01',
+        label: "asd"
+    }]
 
     const [questionFormModalVisible, setQuestionFormModalVisible] = useState(false);
     const [sortModalVisible, setSortModalVisible] = useState(false);
     const [filterModalVisible, setFilterModalVisible] = useState(false);
     const [selectedQuestionType, setSelectedQuestionType] = useState('')
+    const [selectedQuestion, setSelectedQuestion] = useState('')
 
     const addFormModal = (questionType) => {
         console.log(questionType)
@@ -94,6 +196,21 @@ const QuestionsList = () => {
     const handleFilterButton = () => {
         setFilterModalVisible(true)
     }
+    const updateQuestion = (data) => {
+
+        setSelectedQuestionType(data.questionType)
+        setSelectedQuestion(data)
+        setQuestionFormModalVisible(true);
+    }
+    const action = (row, actionName) => {
+        console.log("row", row)
+        console.log("actionName", actionName)
+        if (actionName === "Güncelle") {
+            updateQuestion(row)
+        }
+    }
+
+
 
     const menu = (
         <Menu>
@@ -168,8 +285,9 @@ const QuestionsList = () => {
 
                 <CustomTable
                     pagination={true}
-                    dataSource={[]}
-                    columns={columns}
+                    dataSource={data}
+                    columns={columns(action)}
+                    rowKey={(record) => record.id}
                     scroll={{ x: false }}
                 />
             </CustomCollapseCard>
@@ -178,6 +296,7 @@ const QuestionsList = () => {
                 selectedQuestionType={selectedQuestionType}
                 modalVisible={questionFormModalVisible}
                 handleModalVisible={setQuestionFormModalVisible}
+                selectedQuestion={selectedQuestion}
             />
             <SortModal
                 modalVisible={sortModalVisible}

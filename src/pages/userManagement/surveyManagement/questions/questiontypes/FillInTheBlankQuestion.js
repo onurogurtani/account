@@ -14,7 +14,7 @@ import {
 import { Form, Select } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
 
-const FillInTheBlankQuestion = ({ handleModalVisible }) => {
+const FillInTheBlankQuestion = ({ handleModalVisible ,selectedQuestion}) => {
 
   const [form] = Form.useForm();
   const quillRef = useRef(null)
@@ -60,7 +60,7 @@ const FillInTheBlankQuestion = ({ handleModalVisible }) => {
       name='fillInTheBlankQuestionLinkForm'
       className='fill-in-the-blank-question-link-form survey-form'
       form={form}
-      initialValues={{}}
+      initialValues={selectedQuestion ? selectedQuestion : {}}
       onFinish={onFinish}
       autoComplete='off'
       layout={'horizontal'}
@@ -69,7 +69,7 @@ const FillInTheBlankQuestion = ({ handleModalVisible }) => {
         <div className="form-left-side">
           <CustomFormItem
             label={<Text t='Soru Başlığı' />}
-            name='header'
+            name='questionTitle'
           >
             <CustomInput
               placeholder={useText('Soru Başlığı')}
@@ -98,7 +98,7 @@ const FillInTheBlankQuestion = ({ handleModalVisible }) => {
         <div className="form-right-side">
           <CustomFormItem
             label={<Text t='Soru Metni' />}
-            name='question'
+            name='questionText'
           >
             <ReactQuill
               ref={reactQuillRef}

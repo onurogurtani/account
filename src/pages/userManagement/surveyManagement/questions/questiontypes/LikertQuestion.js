@@ -21,7 +21,7 @@ import emoji3 from '../../../../../assets/images/emoji/emoji3.png'
 import emoji4 from '../../../../../assets/images/emoji/emoji4.png'
 import emoji5 from '../../../../../assets/images/emoji/emoji5.png'
 
-const LikertQuestion = ({ handleModalVisible }) => {
+const LikertQuestion = ({ handleModalVisible, selectedQuestion }) => {
 
 
   const [form] = Form.useForm();
@@ -199,7 +199,7 @@ const LikertQuestion = ({ handleModalVisible }) => {
       name='likertQuestionLinkForm'
       className='likert-choice-question-link-form survey-form'
       form={form}
-      initialValues={{}}
+      initialValues={selectedQuestion ? selectedQuestion : {}}
       onFinish={onFinish}
       autoComplete='off'
       layout={'horizontal'}
@@ -208,7 +208,7 @@ const LikertQuestion = ({ handleModalVisible }) => {
         <div className="form-left-side">
           <CustomFormItem
             label={<Text t='Soru Başlığı' />}
-            name='header'
+            name='questionTitle'
           >
             <CustomInput
               placeholder={useText('Soru Başlığı')}
@@ -252,7 +252,7 @@ const LikertQuestion = ({ handleModalVisible }) => {
         <div className="form-right-side">
           <CustomFormItem
             label={<Text t='Soru Metni' />}
-            name='question'
+            name='questionText'
           >
             <ReactQuill theme="snow" onChange={onQuestionChange} />
           </CustomFormItem>
@@ -296,7 +296,7 @@ const LikertQuestion = ({ handleModalVisible }) => {
                   <label htmlFor="emoji4">
                     <img src={emoji4} alt='emoji4' />
                   </label>
-                </CustomFormItem> 
+                </CustomFormItem>
 
                 <CustomFormItem
                   name="emojianswer">
@@ -313,13 +313,13 @@ const LikertQuestion = ({ handleModalVisible }) => {
                 <div className="star-rating">
                   <CustomFormItem
                     name="starsanswer"
-                    
+
                   >
-                    <input type="radio" id="star5" name="rating" value="5" onClick={() => handleStars("5")}/><label htmlFor="star5"></label>
-                    <input type="radio" id="star4" name="rating" value="4" onClick={() => handleStars("4")}/><label htmlFor="star4"></label>
-                    <input type="radio" id="star3" name="rating" value="3" onClick={() => handleStars("3")}/><label htmlFor="star3"></label>
-                    <input type="radio" id="star2" name="rating" value="2" onClick={() => handleStars("2")}/><label htmlFor="star2"></label>
-                    <input type="radio" id="star1" name="rating" value="1" onClick={() => handleStars("1")}/><label htmlFor="star1"></label>
+                    <input type="radio" id="star5" name="rating" value="5" onClick={() => handleStars("5")} /><label htmlFor="star5"></label>
+                    <input type="radio" id="star4" name="rating" value="4" onClick={() => handleStars("4")} /><label htmlFor="star4"></label>
+                    <input type="radio" id="star3" name="rating" value="3" onClick={() => handleStars("3")} /><label htmlFor="star3"></label>
+                    <input type="radio" id="star2" name="rating" value="2" onClick={() => handleStars("2")} /><label htmlFor="star2"></label>
+                    <input type="radio" id="star1" name="rating" value="1" onClick={() => handleStars("1")} /><label htmlFor="star1"></label>
 
                     {/* <input type="radio" id="star1" name="rating" value="1" onClick={() => handleStars("1")}/><label htmlFor="star1"></label>
                     <input type="radio" id="star2" name="rating" value="2" onClick={() => handleStars("2")}/><label htmlFor="star2"></label>
