@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { Button, Dropdown, Menu } from 'antd';
 import { DownOutlined } from "@ant-design/icons";
 import QuestionModal from './QuestionModal';
+import SortModal from './SortModal';
 import "../../../../styles/surveyManagement/surveyStyles.scss"
 
 const QuestionsList = () => {
@@ -75,6 +76,7 @@ const QuestionsList = () => {
     ];
 
     const [questionFormModalVisible, setQuestionFormModalVisible] = useState(false);
+    const [sortModalVisible, setSortModalVisible] = useState(false);
     const [selectedQuestionType, setSelectedQuestionType] = useState('')
 
     const addFormModal = (questionType) => {
@@ -82,6 +84,10 @@ const QuestionsList = () => {
         setSelectedQuestionType(questionType)
         setQuestionFormModalVisible(true);
     };
+
+    const handleSortButton = () => {
+        setSortModalVisible(true)
+    }
 
     const menu = (
         <Menu>
@@ -123,7 +129,7 @@ const QuestionsList = () => {
                     <div className='number-registered-drafts'>
                         <div className='operations-buttons'>
                             <div className='sort-btn'>
-                                <CustomButton type='secondary'>
+                                <CustomButton type='secondary' onClick={handleSortButton}>
                                     <span className='sort'>
                                         <Text t='Sırala' />
                                     </span>
@@ -166,6 +172,10 @@ const QuestionsList = () => {
                 selectedQuestionType={selectedQuestionType}
                 modalVisible={questionFormModalVisible}
                 handleModalVisible={setQuestionFormModalVisible}
+            />
+            <SortModal
+                modalVisible={sortModalVisible}
+                handleModalVisible={setSortModalVisible}
             />
         </>
     )

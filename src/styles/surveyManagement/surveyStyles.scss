@@ -5,6 +5,7 @@
         display              : grid;
         grid-template-columns: 1fr 2fr;
         align-items          : center;
+
         .drafts-count-title {
             text-align: right;
         }
@@ -14,17 +15,19 @@
         display        : flex;
         justify-content: space-between;
         align-items    : center;
+
         button {
-            height: 33px;
+            height   : 33px;
             min-width: 120px;
         }
+
         .add-question {
             button {
-                font-weight: 600;
+                font-weight  : 600;
                 border-radius: 4px;
-                background: #00a483;
-                color: white;
-                border-color: #00a483;
+                background   : #00a483;
+                color        : white;
+                border-color : #00a483;
             }
         }
     }
@@ -51,10 +54,11 @@
         button {
             height: 36px;
         }
-        
+
     }
-    .add-answer{
-        button{
+
+    .add-answer {
+        button {
             height: 36px;
         }
     }
@@ -93,13 +97,15 @@
 
             button {
                 height: 50px;
+
                 &:first-child {
                     margin-right: 20px;
                 }
+
                 &:last-child {
-                    background: #699a00;
-                    color: #fff;
-                    border-color:#699a00;
+                    background  : #699a00;
+                    color       : #fff;
+                    border-color: #699a00;
                 }
             }
         }
@@ -132,7 +138,42 @@
     .fill-in-the-blank-question-link-form {
         .add-blank-btn {
             margin-top: 15px;
-            height: 36px;
+            height    : 36px;
+        }
+    }
+}
+
+.sort-modal {
+    .sort-list-container {
+        .sort-buttons {
+            display        : flex;
+            flex-direction : column;
+            justify-content: center;
+
+            .sort-btn {
+                margin-top: 10px;
+                height    : 36px;
+            }
+
+            .active {
+                background-color: #3f4957;
+                color           : #fff;
+            }
+        }
+
+        .form-buttons {
+            margin-top: 30px;
+            text-align: center;
+
+            button {
+                height: 50px;
+
+                &:first-child {
+                    margin-right: 20px;
+                }
+
+
+            }
         }
     }
 }
