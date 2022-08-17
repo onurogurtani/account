@@ -1,4 +1,5 @@
-import { CustomButton } from "../../../../components";
+import { Button, Dropdown, Menu } from 'antd';
+import { DownOutlined } from "@ant-design/icons";
 
 const data = [
     {
@@ -74,16 +75,83 @@ const data = [
     }
 ]
 
-const columns = [
+const menuList = [
+    {
+        key: "1",
+        name: "Güncelle",
+    },
+    {
+        key: "2",
+        name: "Sil",
+    },
+    {
+        key: "3",
+        name: "Kopyala",
+    },
+    {
+        key: "4",
+        name: "Pasif Et/Sonlandır",
+    },
+    {
+        key: "5",
+        name: "Aktif Et/Yayınla",
+    },
+    {
+        key: "6",
+        name: "İstatistikleri Göster",
+    },
+];
+
+const sortList = [
+    {
+        id: 1,
+        name: 'Oluşturulma tarihine göre en yakın'
+    },
+    {
+        id: 2,
+        name: 'Oluşturulma tarihine göre en uzak'
+    },
+    {
+        id: 3,
+        name: 'Güncelleme tarihine göre en yakın'
+    },
+    {
+        id: 4,
+        name: 'Güncelleme tarihine göre en uzak'
+    },
+    {
+        id: 5,
+        name: 'Anket Başlangıç Tarihine Göre En Yakın'
+    },
+    {
+        id: 6,
+        name: 'Anket Başlangıç Tarihine Göre En Uzak'
+    },
+    {
+        id: 7,
+        name: 'Anket Bitiş Tarihine Göre En Yakın'
+    },
+    {
+        id: 8,
+        name: 'Anket Bitiş Tarihine Göre En Uzak'
+    },
+]
+
+
+
+const columns = (action) => [
     {
         title: "ID",
         dataIndex: "id",
         key: "id",
+        width: "50px",
+        fixed: 'left',
     },
     {
         title: "Anket Adı",
         dataIndex: "name",
         key: "name",
+        fixed: 'left',
     },
     {
         title: "Durum",
@@ -153,16 +221,32 @@ const columns = [
         key: "draftDeleteAction",
         width: 100,
         align: "center",
-        render: (record) => {
+        fixed: 'right',
+        render: (_, record) => {
+            const menu = (
+                <Menu>
+                    {menuList.map(item => (
+                        <Menu.Item key={item.key}>
+                            <Button type="text" size={12} onClick={ () => action(record, item?.name)} >
+                                {item.name}
+                            </Button>
+                        </Menu.Item>
+                    ))}
+                </Menu>
+            );
+
             return (
-                <div className="action-btns">
-                    <CustomButton >
+                <Dropdown type="primary" overlay={menu}>
+                    <Button
+                        className="ant-dropdown-link userName"
+                    >
                         İşlemler
-                    </CustomButton>
-                </div>
+                        <DownOutlined />
+                    </Button>
+                </Dropdown>
             );
         }
     }
 ];
 
-export { data, columns };
+export { data, columns, sortList };

@@ -8,7 +8,9 @@ const SurveyForms = () => {
     }, []);
 
     return (
-        <FormsList />
+        <div className='survey-questions'>
+           <FormsList /> 
+        </div>
     );
 };
 
