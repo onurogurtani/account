@@ -64,6 +64,7 @@
     }
 }
 
+// Modal
 .survey-modal {
     width: 1100px !important;
 
@@ -133,6 +134,77 @@
             color        : #3f4957;
             border-radius: 4px;
         }
+    }
+
+    // Likert Modal
+
+    // Star Rating
+    $stars         : 5;
+    $star-size     : 40px;
+    $star-spacing  : 2px;
+    $star-on-color : #F9DF4A;
+    $star-off-color: #CCCCCC;
+
+    .star-rating {
+        width : 100%;
+        height: 100px;
+
+        label {
+            float    : right !important;
+            position : relative !important;
+            width    : $star-size !important;
+            height   : $star-size !important;
+            cursor   : pointer !important;
+            min-width: auto !important;
+
+            &:not(:first-of-type) {
+                padding-right: $star-spacing;
+            }
+
+            &:before {
+                content    : "\2605";
+                font-size  : $star-size + 2px;
+                color      : $star-off-color;
+                line-height: 1;
+            }
+        }
+
+        input {
+            display: none;
+        }
+
+        input:checked~label:before,
+        &:not(:checked)>label:hover:before,
+        &:not(:checked)>label:hover~label:before {
+            color: $star-on-color;
+        }
+    }
+
+    // Emoji Rating
+    .emoji-rating {
+        position      : relative;
+        display       : flex;
+    }
+
+    .emoji-rating input {
+        display: none;
+    }
+
+    .emoji-rating label {
+        position: relative!important;
+        width   : 0!important;
+        height  : 128px!important;
+        cursor: pointer;
+        img {
+            width: 75px;
+            opacity: 0.2;
+            transition: all .5s ease;
+        }
+    }
+
+    .emoji-rating input:hover + label img,
+    .emoji-rating input:checked + label img {
+        opacity: 1;
     }
 
     .fill-in-the-blank-question-link-form {
