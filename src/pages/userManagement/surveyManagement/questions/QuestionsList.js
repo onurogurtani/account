@@ -12,6 +12,7 @@ import { Button, Dropdown, Menu } from 'antd';
 import { DownOutlined } from "@ant-design/icons";
 import QuestionModal from './QuestionModal';
 import SortModal from './SortModal';
+import FilterModal from './FilterModal'
 import "../../../../styles/surveyManagement/surveyStyles.scss"
 
 const QuestionsList = () => {
@@ -77,6 +78,7 @@ const QuestionsList = () => {
 
     const [questionFormModalVisible, setQuestionFormModalVisible] = useState(false);
     const [sortModalVisible, setSortModalVisible] = useState(false);
+    const [filterModalVisible, setFilterModalVisible] = useState(false);
     const [selectedQuestionType, setSelectedQuestionType] = useState('')
 
     const addFormModal = (questionType) => {
@@ -87,6 +89,10 @@ const QuestionsList = () => {
 
     const handleSortButton = () => {
         setSortModalVisible(true)
+    }
+
+    const handleFilterButton = () => {
+        setFilterModalVisible(true)
     }
 
     const menu = (
@@ -136,7 +142,7 @@ const QuestionsList = () => {
                                 </CustomButton>
                             </div>
                             <div className='filter-btn'>
-                                <CustomButton type='secondary'>
+                                <CustomButton type='secondary' onClick={handleFilterButton}>
                                     <span className='filter-text'>
                                         <Text t='Filtrele' />
                                     </span>
@@ -176,6 +182,10 @@ const QuestionsList = () => {
             <SortModal
                 modalVisible={sortModalVisible}
                 handleModalVisible={setSortModalVisible}
+            />
+            <FilterModal
+                modalVisible={filterModalVisible}
+                handleModalVisible={setFilterModalVisible}
             />
         </>
     )
