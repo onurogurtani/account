@@ -14,9 +14,26 @@ import QuestionModal from './QuestionModal';
 import SortModal from './SortModal';
 import FilterModal from './FilterModal'
 import "../../../../styles/surveyManagement/surveyStyles.scss"
+import { useDispatch, useSelector } from 'react-redux';
+import {getQuestionsType, getQuestions} from '../../../../store/slice/questionSlice'
+import { useEffect } from 'react';
+
 
 const QuestionsList = () => {
 
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(getQuestionsType())
+
+    }, [dispatch])
+    
+    useEffect(() => {
+        console.log("aa")
+        dispatch(getQuestions())
+    }, [dispatch])
+
+    const questionType = useSelector(state => state.questions.questionType);
 
     const menuList = [
         {
@@ -210,35 +227,15 @@ const QuestionsList = () => {
         }
     }
 
-
-
     const menu = (
         <Menu>
-            <Menu.Item key={"openEndedQuestion"}>
-                <Button type="text" size={12} onClick={() => addFormModal("Açık Uçlu Soru")}>
-                    Açık Uçlu Soru
-                </Button>
-            </Menu.Item>
-            <Menu.Item key={"oneChoiseQuestion"}>
-                <Button type="text" size={12} onClick={() => addFormModal("Tek Seçimli Soru")}>
-                    Tek Seçimli Soru
-                </Button>
-            </Menu.Item>
-            <Menu.Item key={"multipleChoiseQuestion"}>
-                <Button type="text" size={12} onClick={() => addFormModal("Çok Seçimli Soru")}>
-                    Çok Seçimli Soru
-                </Button>
-            </Menu.Item>
-            <Menu.Item key={"FillInTheBlankQuestion"}>
-                <Button type="text" size={12} onClick={() => addFormModal("Boşluk Doldurma Sorusu")}>
-                    Boşluk Doldurma Sorusu
-                </Button>
-            </Menu.Item>
-            <Menu.Item key={"LikertQuestion"}>
-                <Button type="text" size={12} onClick={() => addFormModal("Likert Tipi Soru")}>
-                    Likert Tipi Soru
-                </Button>
-            </Menu.Item>
+            {questionType.map(questiontype => (
+                <Menu.Item key={questiontype.id}>
+                    <Button type="text" size={12} onClick={() => addFormModal(questiontype.name)}>
+                        {questiontype.name}
+                    </Button>
+                </Menu.Item>
+            ))}
         </Menu>
     );
 

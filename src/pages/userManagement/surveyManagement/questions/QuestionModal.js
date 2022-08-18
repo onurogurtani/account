@@ -12,6 +12,7 @@ import FillInTheBlankQuestion from '../questions/questiontypes/FillInTheBlankQue
 import LikertQuestion from '../questions/questiontypes/LikertQuestion'
 import { Form } from 'antd';
 import '../../../../styles/surveyManagement/surveyStyles.scss'
+import { addQuestions } from '../../../../store/slice/questionSlice';
 
 const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType , selectedQuestion }) => {
     const [form] = Form.useForm();
@@ -38,6 +39,7 @@ const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType 
             <div className='survey-container'>
                 {selectedQuestionType === "Açık Uçlu Soru" &&
                     <OpenEndedQuestion
+                        addQuestions={addQuestions}
                         handleModalVisible={handleModalVisible}
                         selectedQuestion={selectedQuestion}
                     />

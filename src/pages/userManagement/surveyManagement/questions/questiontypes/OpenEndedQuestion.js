@@ -13,9 +13,11 @@ import {
 } from '../../../../../components';
 import { Form, Select } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
+import { useDispatch } from 'react-redux';
 
-const OpenEndedQuestion = ({ handleModalVisible , selectedQuestion }) => {
+const OpenEndedQuestion = ({ handleModalVisible, selectedQuestion, addQuestions }) => {
   const [form] = Form.useForm();
+  const dispatch = useDispatch()
 
   const onChannelChange = (value) => {
     switch (value) {
@@ -28,14 +30,23 @@ const OpenEndedQuestion = ({ handleModalVisible , selectedQuestion }) => {
   };
 
   const onQuestionChange = (value) => {
-
     form.setFieldsValue({ question: value });
-
   };
 
   const onFinish = (values) => {
-    console.log(values)
+    const formvalues = {
+      "entity":
+      {
+        "headText": values.headText,
+        "isActive": values.isActive,
+        "questionTypeId": 1,
+        "tags": values.tags,
+        "text": values.text
+      }
+    }
+    dispatch(addQuestions(formvalues))
   }
+
   return (
     <CustomForm
       name='openEndedQuestionLinkForm'
@@ -50,7 +61,7 @@ const OpenEndedQuestion = ({ handleModalVisible , selectedQuestion }) => {
         <div className="form-left-side">
           <CustomFormItem
             label={<Text t='Soru Başlığı' />}
-            name='questionTitle'
+            name='headText'
           >
             <CustomInput
               placeholder={useText('Soru Başlığı')}
@@ -59,7 +70,7 @@ const OpenEndedQuestion = ({ handleModalVisible , selectedQuestion }) => {
           </CustomFormItem>
           <CustomFormItem
             label={<Text t='Etiket' />}
-            name='label'
+            name='tags'
           >
             <CustomInput
               placeholder={useText('Etiket')}
@@ -68,7 +79,7 @@ const OpenEndedQuestion = ({ handleModalVisible , selectedQuestion }) => {
           </CustomFormItem>
           <Form.Item
             label="Durum:"
-            name="status"
+            name="isActive"
             onChange={onChannelChange}>
             <Select>
               <Select.Option value={true}>Aktif</Select.Option>
@@ -79,7 +90,7 @@ const OpenEndedQuestion = ({ handleModalVisible , selectedQuestion }) => {
         <div className="form-right-side">
           <CustomFormItem
             label={<Text t='Soru Metni' />}
-            name='questionText'
+            name='text'
           >
             <ReactQuill theme="snow" onChange={onQuestionChange} />
           </CustomFormItem>
