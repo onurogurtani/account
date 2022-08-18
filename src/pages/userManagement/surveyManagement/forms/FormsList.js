@@ -12,12 +12,14 @@ import "../../../../styles/surveyManagement/surveyStyles.scss"
 import { data, columns } from './static';
 import FilterFormModal from './FilterModal';
 import SortFormModal from './SortModal';
+import AddFormModal from './FormModal';
 
 const FormsList = () => {
 
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [isVisible, setIsVisible] = useState(false);
     const [isSortVisible, setIsSortVisible] = useState(false);
+    const [isAddFormVisible, setIsAddFormVisible] = useState(false);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -59,7 +61,7 @@ const FormsList = () => {
                                 </span>
                             </CustomButton>
                         </div>
-                        <CustomButton className="add-btn" >
+                        <CustomButton className="add-btn" onClick={() => setIsAddFormVisible(true)} >
                             YENİ ANKET OLUŞTUR
                         </CustomButton>
                     </div>
@@ -111,6 +113,10 @@ const FormsList = () => {
                 <SortFormModal
                     modalVisible={isSortVisible}
                     handleModalVisible={setIsSortVisible}
+                />
+                <AddFormModal
+                    modalVisible={isAddFormVisible}
+                    handleModalVisible={setIsAddFormVisible}
                 />
 
             </CustomCollapseCard>

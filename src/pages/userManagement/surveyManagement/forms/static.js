@@ -105,19 +105,19 @@ const menuList = [
 const sortList = [
     {
         id: 1,
-        name: 'Oluşturulma tarihine göre en yakın'
+        name: 'Oluşturulma Tarihine Göre En Yakın'
     },
     {
         id: 2,
-        name: 'Oluşturulma tarihine göre en uzak'
+        name: 'Oluşturulma Tarihine Göre En Uzak'
     },
     {
         id: 3,
-        name: 'Güncelleme tarihine göre en yakın'
+        name: 'Güncelleme Tarihine Göre En Yakın'
     },
     {
         id: 4,
-        name: 'Güncelleme tarihine göre en uzak'
+        name: 'Güncelleme Tarihine Göre En Uzak'
     },
     {
         id: 5,
