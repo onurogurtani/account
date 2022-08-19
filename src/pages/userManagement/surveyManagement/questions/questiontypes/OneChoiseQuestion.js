@@ -13,10 +13,13 @@ import {
 } from '../../../../../components';
 import { Form, Select } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
+import { useDispatch } from 'react-redux';
 
-const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion }) => {
+
+const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion, addQuestions }) => {
 
   const [form] = Form.useForm();
+  const dispatch = useDispatch()
 
   const onChannelChange = (value) => {
     switch (value) {
@@ -35,33 +38,52 @@ const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion }) => {
   };
 
   const onFinish = (values) => {
-    console.log(values)
+    let newArr = answers.filter((answer) => (answer.text !== "" && answer.active === true))
+    let arrangedArr = []
+    newArr.forEach((el) => {
+      let newObj = { marker: el.marker, text: el.text }
+      arrangedArr.push(newObj)
+    })
+    values.choices = arrangedArr
+
+    const formvalues = {
+      "entity":
+      {
+        "headText": values.headText,
+        "isActive": values.isActive,
+        "questionTypeId": 7,
+        "tags": values.tags,
+        "text": values.text,
+        "choices": values.choices
+      }
+    }
+    dispatch(addQuestions(formvalues))
   }
 
   const [answers, setAnswers] = useState([
     {
-      title: 'A',
-      value: "",
+      marker: 'A',
+      text: "",
       active: true
     },
     {
-      title: 'B',
-      value: "",
+      marker: 'B',
+      text: "",
       active: true
     },
     {
-      title: 'C',
-      value: "",
+      marker: 'C',
+      text: "",
       active: false
     },
     {
-      title: 'D',
-      value: "",
+      marker: 'D',
+      text: "",
       active: false
     },
     {
-      title: 'E',
-      value: "",
+      marker: 'E',
+      text: "",
       active: false
     },
   ])
@@ -85,6 +107,12 @@ const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion }) => {
 
   }
 
+  const handleAnswers = (e, idx) => {
+    let newArr = [...answers]
+    newArr[idx].text = e.target.value
+    setAnswers(newArr)
+  }
+
   return (
     <CustomForm
       name='oneChoiceQuestionLinkForm'
@@ -99,7 +127,7 @@ const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion }) => {
         <div className="form-left-side">
           <CustomFormItem
             label={<Text t='Soru Başlığı' />}
-            name='questionTitle'
+            name='headText'
           >
             <CustomInput
               placeholder={useText('Soru Başlığı')}
@@ -108,7 +136,7 @@ const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion }) => {
           </CustomFormItem>
           <CustomFormItem
             label={<Text t='Etiket' />}
-            name='label'
+            name='tags'
           >
             <CustomInput
               placeholder={useText('Etiket')}
@@ -117,7 +145,7 @@ const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion }) => {
           </CustomFormItem>
           <Form.Item
             label="Durum:"
-            name="status"
+            name="isActive"
             onChange={onChannelChange}>
             <Select>
               <Select.Option value={true}>Aktif</Select.Option>
@@ -128,7 +156,7 @@ const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion }) => {
         <div className="form-right-side">
           <CustomFormItem
             label={<Text t='Soru Metni' />}
-            name='questionText'
+            name='text'
           >
             <ReactQuill theme="snow" onChange={onQuestionChange} />
           </CustomFormItem>
@@ -139,17 +167,22 @@ const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion }) => {
             {
               answers.map((answer, idx) => {
                 return answer.active === true &&
-                  <CustomFormItem
-                    key={idx}
-                    label={<Text t={answer.title} />}
-                    name={`answer-${answer.title}`}
-                    className="answer-form-item answer-box"
-                  >
+                  // <CustomFormItem
+                  //   key={idx}
+                  //   label={<Text t={answer.marker} />}
+                  //   name={`answer-${answer.marker}`}
+                  //   className="answer-form-item answer-box"
+                  // >
+                  <>
+                  
                     <CustomInput
                       height={36}
+                      value={answer.text}
+                      onChange={(e) => handleAnswers(e, idx)}
                     />
                     <CustomButton onClick={() => deleteAnswer(idx)}>Sil</CustomButton>
-                  </CustomFormItem>
+                  </>
+                // </CustomFormItem>
               })
             }
           </div>

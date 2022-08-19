@@ -14,17 +14,13 @@ import { Form } from 'antd';
 import '../../../../styles/surveyManagement/surveyStyles.scss'
 import { addQuestions } from '../../../../store/slice/questionSlice';
 
-const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType , selectedQuestion }) => {
+const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType, selectedQuestion }) => {
     const [form] = Form.useForm();
 
     const handleClose = useCallback(() => {
         form.resetFields();
         handleModalVisible(false);
     }, [handleModalVisible, form]);
-
-    // const onFinish =  ()  => {
-    //     console.log("selam")
-    // }
 
     return (
         <CustomModal
@@ -46,12 +42,14 @@ const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType 
                 }
                 {selectedQuestionType === "Tek Seçimli Soru" &&
                     <OneChoiseQuestion
+                        addQuestions={addQuestions}
                         handleModalVisible={handleModalVisible}
                         selectedQuestion={selectedQuestion}
                     />
                 }
                 {selectedQuestionType === "Çok Seçimli Soru" &&
                     <MultipleChoiseQuestion
+                    addQuestions={addQuestions}
                         handleModalVisible={handleModalVisible}
                         selectedQuestion={selectedQuestion}
                     />
@@ -64,6 +62,7 @@ const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType 
                 }
                 {selectedQuestionType === "Likert Tipi Soru" &&
                     <LikertQuestion
+                    addQuestions={addQuestions} 
                         handleModalVisible={handleModalVisible}
                         selectedQuestion={selectedQuestion}
                     />

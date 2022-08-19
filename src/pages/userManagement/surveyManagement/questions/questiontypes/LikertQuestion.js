@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {
@@ -13,6 +13,9 @@ import {
 } from '../../../../../components';
 import { Form, Select } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
+import { useDispatch, useSelector } from 'react-redux';
+import { getLikertType } from '../../../../../store/slice/questionSlice'
+
 
 // İmages
 import emoji1 from '../../../../../assets/images/emoji/emoji1.png'
@@ -21,12 +24,135 @@ import emoji3 from '../../../../../assets/images/emoji/emoji3.png'
 import emoji4 from '../../../../../assets/images/emoji/emoji4.png'
 import emoji5 from '../../../../../assets/images/emoji/emoji5.png'
 
-const LikertQuestion = ({ handleModalVisible, selectedQuestion }) => {
+const LikertQuestion = ({ handleModalVisible, selectedQuestion , addQuestions }) => {
 
+  const likertTypesChoices = {
+    1: [
+      {
+        marker: "1",
+        text: "Kesinlikle Katılmıyorum"
+      },
+      {
+        marker: "2",
+        text: "Katılmıyorum"
+      },
+      {
+        marker: "3",
+        text: "Kararsızım"
+      },
+      {
+        marker: "4",
+        text: " Katılıyorum"
+      },
+      {
+        marker: "5",
+        text: "Kesinlikle Katılıyorum"
+      },
+    ],
+    2: [
+
+      {
+        marker: "1",
+        text: "Katılmıyorum"
+      },
+      {
+        marker: "2",
+        text: "Kararsızım"
+      },
+      {
+        marker: "3",
+        text: " Katılıyorum"
+      },
+
+    ],
+    3: [
+      {
+        marker: "1",
+        text: "Kesinlikle Katılmıyorum"
+      },
+      {
+        marker: "2",
+        text: "Katılmıyorum"
+      },
+      {
+        marker: "3",
+        text: "Kararsızım"
+      },
+      {
+        marker: "4",
+        text: " Katılıyorum"
+      },
+      {
+        marker: "5",
+        text: "Kesinlikle Katılıyorum"
+      },
+      {
+        marker: "6",
+        text: "Kesinlikle Katılıyorum"
+      },
+      {
+        marker: "7",
+        text: "Kesinlikle Katılıyorum"
+      },
+    ],
+    4: [
+      {
+        marker: "1",
+        text: "Kesinlikle Katılmıyorum"
+      },
+      {
+        marker: "2",
+        text: "Katılmıyorum"
+      },
+      {
+        marker: "3",
+        text: "Kararsızım"
+      },
+      {
+        marker: "4",
+        text: " Katılıyorum"
+      },
+      {
+        marker: "5",
+        text: "Kesinlikle Katılıyorum"
+      },
+      {
+        marker: "6",
+        text: "Kesinlikle Katılıyorum"
+      },
+      {
+        marker: "7",
+        text: "Kesinlikle Katılıyorum"
+      },
+      {
+        marker: "8",
+        text: "Kesinlikle Katılıyorum"
+      },
+      {
+        marker: "9",
+        text: "Kesinlikle Katılıyorum"
+      },
+      {
+        marker: "10",
+        text: "Kesinlikle Katılıyorum"
+      },
+    ]
+  }
 
   const [form] = Form.useForm();
 
-  const [type, setTypes] = useState("five")
+  const [type, setTypes] = useState(1)
+  const [likertAnswers, setLikertAnswers] = useState(likertTypesChoices[1])
+  const dispatch = useDispatch()
+  
+
+  useEffect(() => {
+    if (type !== 6 && type !== 7)
+      setLikertAnswers(likertTypesChoices[type])
+  }, [type])
+
+
+  const likertTypes = useSelector(state => state.questions.likertTypes);
 
   const onChannelChange = (value) => {
     switch (value) {
@@ -41,7 +167,7 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion }) => {
   const onSurveyTypeChanged = (value) => {
     setTypes(value)
 
-    form.setFieldsValue({ likertType: value })
+    form.setFieldsValue({ likertTypeId: value })
   }
 
 
@@ -52,15 +178,12 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion }) => {
   };
 
   const handleStars = (stars) => {
-    console.log("pwleqwp")
-    console.log(stars)
     form.setFieldsValue({
       starsanswer: stars
     })
   }
 
   const handleEmoji = (emojitype) => {
-    console.log(emojitype)
     form.setFieldsValue({
       emojianswer: emojitype
     })
@@ -70,128 +193,32 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion }) => {
 
   const onFinish = (values) => {
     console.log(values)
+
+    let newArr = likertAnswers.filter((answer) => (answer.text !== ""))
+    values.choices = newArr
+
+        const formvalues = {
+          "entity":
+          {
+            "headText": values.headText,
+            "isActive": values.isActive,
+            "questionTypeId": 5,
+            "tags": values.tags,
+            "text": values.text,
+            "likertTypeId":values.likertTypeId,
+            "choices": values.choices
+          }
+        }
+    console.log(formvalues)
+    dispatch(addQuestions(formvalues))
   }
 
-  const likertTypes = {
-    five: [
-      {
-        title: "1",
-        value: "Kesinlikle Katılmıyorum"
-      },
-      {
-        title: "2",
-        value: "Katılmıyorum"
-      },
-      {
-        title: "3",
-        value: "Kararsızım"
-      },
-      {
-        title: "4",
-        value: " Katılıyorum"
-      },
-      {
-        title: "5",
-        value: "Kesinlikle Katılıyorum"
-      },
-    ],
-    three: [
-
-      {
-        title: "1",
-        value: "Katılmıyorum"
-      },
-      {
-        title: "2",
-        value: "Kararsızım"
-      },
-      {
-        title: "3",
-        value: " Katılıyorum"
-      },
-
-    ],
-    seven: [
-      {
-        title: "1",
-        value: "Kesinlikle Katılmıyorum"
-      },
-      {
-        title: "2",
-        value: "Katılmıyorum"
-      },
-      {
-        title: "3",
-        value: "Kararsızım"
-      },
-      {
-        title: "4",
-        value: " Katılıyorum"
-      },
-      {
-        title: "5",
-        value: "Kesinlikle Katılıyorum"
-      },
-      {
-        title: "6",
-        value: "Kesinlikle Katılıyorum"
-      },
-      {
-        title: "7",
-        value: "Kesinlikle Katılıyorum"
-      },
-    ],
-    ten: [
-      {
-        title: "1",
-        value: "Kesinlikle Katılmıyorum"
-      },
-      {
-        title: "2",
-        value: "Katılmıyorum"
-      },
-      {
-        title: "3",
-        value: "Kararsızım"
-      },
-      {
-        title: "4",
-        value: " Katılıyorum"
-      },
-      {
-        title: "5",
-        value: "Kesinlikle Katılıyorum"
-      },
-      {
-        title: "6",
-        value: "Kesinlikle Katılıyorum"
-      },
-      {
-        title: "7",
-        value: "Kesinlikle Katılıyorum"
-      },
-      {
-        title: "8",
-        value: "Kesinlikle Katılıyorum"
-      },
-      {
-        title: "9",
-        value: "Kesinlikle Katılıyorum"
-      },
-      {
-        title: "10",
-        value: "Kesinlikle Katılıyorum"
-      },
-    ]
+  const handleAnswers = (e, idx) => {
+    let newArr = [...likertAnswers]
+    newArr[idx].text = e.target.value
+    setLikertAnswers(newArr)
   }
 
-  const deleteAnswer = (idx) => {
-
-  }
-
-  const addAnswer = () => {
-
-  }
 
 
   return (
@@ -199,7 +226,7 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion }) => {
       name='likertQuestionLinkForm'
       className='likert-choice-question-link-form survey-form'
       form={form}
-      initialValues={selectedQuestion ? selectedQuestion : {}}
+      initialValues={selectedQuestion ? selectedQuestion : {likertTypeId: 1}}
       onFinish={onFinish}
       autoComplete='off'
       layout={'horizontal'}
@@ -208,7 +235,7 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion }) => {
         <div className="form-left-side">
           <CustomFormItem
             label={<Text t='Soru Başlığı' />}
-            name='questionTitle'
+            name='headText'
           >
             <CustomInput
               placeholder={useText('Soru Başlığı')}
@@ -217,7 +244,7 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion }) => {
           </CustomFormItem>
           <CustomFormItem
             label={<Text t='Etiket' />}
-            name='label'
+            name='tags'
           >
             <CustomInput
               placeholder={useText('Etiket')}
@@ -226,22 +253,21 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion }) => {
           </CustomFormItem>
           <Form.Item
             label="Likert Tipi:"
-            name="likertType">
+            name="likertTypeId">
             <Select
               onChange={onSurveyTypeChanged}
+              // defaultValue={1}
             >
-              <Select.Option value={"three"}>3'lü Likert</Select.Option>
-              <Select.Option value={"five"}>5'li Likert</Select.Option>
-              <Select.Option value={"seven"}>7'li Likert</Select.Option>
-              <Select.Option value={"ten"}>10'lu Likert</Select.Option>
-              <Select.Option value={"faces"}>Yüz İfadeleri</Select.Option>
-              <Select.Option value={"stars"}>5'li Yıldızlı Puanlama </Select.Option>
+              {likertTypes?.map((type) => {
+                return <Select.Option key={type.id} value={type.id}>{type.name}</Select.Option>
+
+              })}
             </Select>
           </Form.Item>
 
           <Form.Item
             label="Durum:"
-            name="status"
+            name="isActive"
             onChange={onChannelChange}>
             <Select>
               <Select.Option value={true}>Aktif</Select.Option>
@@ -252,15 +278,15 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion }) => {
         <div className="form-right-side">
           <CustomFormItem
             label={<Text t='Soru Metni' />}
-            name='questionText'
+            name='text'
           >
             <ReactQuill theme="snow" onChange={onQuestionChange} />
           </CustomFormItem>
-          {/* <div className='answers-title'>
+          <div className='answers-title'>
             <h5>Cevaplar</h5>
-          </div> */}
+          </div>
           {
-            type === "faces" ?
+            type === 6 ?
 
               <div className='emoji-rating'>
                 <CustomFormItem
@@ -309,11 +335,10 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion }) => {
 
               </div>
               :
-              type === "stars" ?
+              type === 7 ?
                 <div className="star-rating">
                   <CustomFormItem
                     name="starsanswer"
-
                   >
                     <input type="radio" id="star5" name="rating" value="5" onClick={() => handleStars("5")} /><label htmlFor="star5"></label>
                     <input type="radio" id="star4" name="rating" value="4" onClick={() => handleStars("4")} /><label htmlFor="star4"></label>
@@ -328,21 +353,16 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion }) => {
                     <input type="radio" id="star5" name="rating" value="5" /><label htmlFor="star5"></label> */}
                   </CustomFormItem>
                 </div> :
-                likertTypes[type].map((answer, idx) => {
-                  return <CustomFormItem
+                likertAnswers?.map((answer, idx) => {
+                  return <CustomInput
                     key={idx}
-                    label={<Text t={answer.title} />}
-                    name={`answer-${answer.title}`}
-                    className="answer-form-item"
-                  >
-                    <CustomInput
-                      height={36}
-                      placeholder={answer.value}
-                    />
-                  </CustomFormItem>
+                    height={36}
+                    value={answer.text}
+                    onChange={(e) => handleAnswers(e, idx)}
+                  />
 
-                })
-          }
+                })}
+
         </div>
       </div>
 

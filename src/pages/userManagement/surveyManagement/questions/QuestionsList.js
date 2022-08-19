@@ -18,7 +18,7 @@ import SortModal from './SortModal';
 import FilterModal from './FilterModal'
 import "../../../../styles/surveyManagement/surveyStyles.scss"
 import { useDispatch, useSelector } from 'react-redux';
-import { getQuestionsType, getQuestions, deleteQuestion, activeQuestion, passiveQuestion  } from '../../../../store/slice/questionSlice'
+import {getQuestionsType, getQuestions, deleteQuestion, activeQuestion, passiveQuestion, getLikertType  } from '../../../../store/slice/questionSlice'
 import { useEffect } from 'react';
 
 
@@ -27,8 +27,9 @@ const QuestionsList = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(getQuestionsType());
+        dispatch(getQuestionsType())
         dispatch(getQuestions())
+        dispatch(getLikertType())
     }, [dispatch])
 
     const { questionType, questionList } = useSelector(state => state?.questions);

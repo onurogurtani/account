@@ -13,11 +13,15 @@ import {
 } from '../../../../../components';
 import { Form, Select } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
+import { useDispatch } from 'react-redux';
 
-const MultipleChoiseQuestion = ({ handleModalVisible , selectedQuestion }) => {
+
+const MultipleChoiseQuestion = ({ handleModalVisible , selectedQuestion , addQuestions }) => {
 
 
   const [form] = Form.useForm();
+  const dispatch = useDispatch()
+
 
   const onChannelChange = (value) => {
     switch (value) {
@@ -36,7 +40,27 @@ const MultipleChoiseQuestion = ({ handleModalVisible , selectedQuestion }) => {
   };
 
   const onFinish = (values) => {
-    console.log(values)
+    let newArr = answers.filter((answer) => (answer.text !== "" && answer.active === true))
+    let arrangedArr = []
+    newArr.forEach((el) => {
+      let newObj = { marker: el.marker, text: el.text }
+      arrangedArr.push(newObj)
+    })
+    values.choices = arrangedArr
+
+    const formvalues = {
+      "entity":
+      {
+        "headText": values.headText,
+        "isActive": values.isActive,
+        "questionTypeId": 3,
+        "tags": values.tags,
+        "text": values.text,
+        "choices": values.choices
+      }
+    }
+console.log(formvalues)
+    dispatch(addQuestions(formvalues))
   }
 
   const [answers, setAnswers] = useState([
@@ -84,6 +108,11 @@ const MultipleChoiseQuestion = ({ handleModalVisible , selectedQuestion }) => {
     }
 
   }
+  const handleAnswers = (e, idx) => {
+    let newArr = [...answers]
+    newArr[idx].text = e.target.value
+    setAnswers(newArr)
+  }
 
 
   return (
@@ -100,7 +129,7 @@ const MultipleChoiseQuestion = ({ handleModalVisible , selectedQuestion }) => {
         <div className="form-left-side">
           <CustomFormItem
             label={<Text t='Soru Başlığı' />}
-            name='questionTitle'
+            name='headText'
           >
             <CustomInput
               placeholder={useText('Soru Başlığı')}
@@ -109,7 +138,7 @@ const MultipleChoiseQuestion = ({ handleModalVisible , selectedQuestion }) => {
           </CustomFormItem>
           <CustomFormItem
             label={<Text t='Etiket' />}
-            name='label'
+            name='tags'
           >
             <CustomInput
               placeholder={useText('Etiket')}
@@ -118,7 +147,7 @@ const MultipleChoiseQuestion = ({ handleModalVisible , selectedQuestion }) => {
           </CustomFormItem>
           <Form.Item
             label="Durum:"
-            name="status"
+            name="isActive"
             onChange={onChannelChange}>
             <Select>
               <Select.Option value={true}>Aktif</Select.Option>
@@ -129,7 +158,7 @@ const MultipleChoiseQuestion = ({ handleModalVisible , selectedQuestion }) => {
         <div className="form-right-side">
           <CustomFormItem
             label={<Text t='Soru Metni' />}
-            name='questionText'
+            name='text'
           >
             <ReactQuill theme="snow" onChange={onQuestionChange} />
           </CustomFormItem>
@@ -140,17 +169,21 @@ const MultipleChoiseQuestion = ({ handleModalVisible , selectedQuestion }) => {
             {
               answers.map((answer, idx) => {
                 return answer.active === true &&
-                  <CustomFormItem
-                    key={idx}
-                    label={<Text t={answer.title} />}
-                    name={`answer-${answer.title}`}
-                    className="answer-form-item"
-                  >
+                  // <CustomFormItem
+                  //   key={idx}
+                  //   label={<Text t={answer.title} />}
+                  //   name={`answer-${answer.title}`}
+                  //   className="answer-form-item"
+                  // >
+                  <>
                     <CustomInput
                       height={36}
+                      value={answer.text}
+                      onChange={(e) => handleAnswers(e, idx)}
                     />
                     <CustomButton onClick={() => deleteAnswer(idx)}>Sil</CustomButton>
-                  </CustomFormItem>
+                    </>
+                  // </CustomFormItem>
 
               })
             }

@@ -10,9 +10,14 @@ export const getQuestionsType = createAsyncThunk("question/getQuestionsType", as
 // Get Questions
 export const getQuestions = createAsyncThunk("question/getQuestions", 
     async (data) => {
-      console.log(data)
     const response = await questionServices.getQuestions(data);
     return response;
+});
+
+// Likert Type
+export const getLikertType = createAsyncThunk("question/getLikertType", async () => {
+  const response = await questionServices.getLikertType();
+  return response;
 });
 
 
@@ -53,7 +58,8 @@ export const passiveQuestion = createAsyncThunk( 'question/passiveQuestion', asy
 // Initial State
 const initialState = {
   questionType: [],
-  questionList: []
+  questionList: [],
+  likertTypes: [],
 };
 
 export const questionSlice = createSlice({
@@ -64,6 +70,9 @@ export const questionSlice = createSlice({
     builder.addCase(getQuestionsType.fulfilled, (state, action) => {
         state.questionType = action.payload.data.items
     });
+    builder.addCase(getLikertType.fulfilled, (state, action) => {
+      state.likertTypes = action.payload.data.items
+  });
 
     builder.addCase(getQuestions.fulfilled, (state, action) => {
         state.questionList = action.payload.data.items

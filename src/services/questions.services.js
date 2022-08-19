@@ -9,6 +9,15 @@ const getQuestionType = () => {
     });
 }
 
+//  Questios Type
+const getLikertType = (pageNumber = 1, pageSize = 10) => {
+    return api({
+        url: `LikertTypes/getList?PageNumber=${pageNumber}&PageSize=${pageSize}`,
+        method: 'POST',
+    });
+}
+
+
 
 // Questions with filter 
 const getQuestions = (data) => {
@@ -18,6 +27,7 @@ const getQuestions = (data) => {
         data,
     });
 }
+
 
 // Add Question
 const addQuestion = (data) => {
@@ -61,7 +71,8 @@ const questionServices = {
     addQuestion,
     questionActive,
     questionPassive,
-    questionDelete
+    questionDelete,
+    getLikertType
 };
 
 export default questionServices;
