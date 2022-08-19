@@ -18,7 +18,7 @@ import SortModal from './SortModal';
 import FilterModal from './FilterModal'
 import "../../../../styles/surveyManagement/surveyStyles.scss"
 import { useDispatch, useSelector } from 'react-redux';
-import {getQuestionsType, getQuestions, questionDelete} from '../../../../store/slice/questionSlice'
+import { getQuestionsType, getQuestions, deleteQuestion, activeQuestion, passiveQuestion  } from '../../../../store/slice/questionSlice'
 import { useEffect } from 'react';
 
 
@@ -30,8 +30,8 @@ const QuestionsList = () => {
         dispatch(getQuestionsType());
         dispatch(getQuestions())
     }, [dispatch])
-    
-    const {questionType, questionList} = useSelector(state => state?.questions);
+
+    const { questionType, questionList } = useSelector(state => state?.questions);
 
     const menuList = [
         {
@@ -138,11 +138,11 @@ const QuestionsList = () => {
                 const menu = (
                     <Menu>
                         {menuList.map(item => (
-                            <Menu.Item key={item.key}>
-                                <Button type="text" size={12} onClick={() => action(record, item?.name)} >
-                                    {item.name}
-                                </Button>
-                            </Menu.Item>
+                                <Menu.Item key={item.key}>
+                                    <Button type="text" size={12} onClick={() => action(record, item?.name)} >
+                                        {item.name}
+                                    </Button>
+                                </Menu.Item>
                         ))}
                     </Menu>
                 );
@@ -185,16 +185,15 @@ const QuestionsList = () => {
         setQuestionFormModalVisible(true);
     }
 
-    const handleDeleteQuestion = async (record) => {
-        console.log(record)
+    const handleDeleteQuestion = async (question) => {
         confirmDialog({
             title: <Text t='attention' />,
             message: 'Kaydı silmek istediğinizden emin misiniz?',
             okText: <Text t='delete' />,
             cancelText: 'Vazgeç',
             onOk: async () => {
-                const action = await dispatch(questionDelete(record.id));
-                if (questionDelete.fulfilled.match(action)) {
+                const action = await dispatch(deleteQuestion(question.id));
+                if (deleteQuestion.fulfilled.match(action)) {
                     successDialog({
                         title: <Text t='successfullySent' />,
                         //message: action?.payload
@@ -211,11 +210,27 @@ const QuestionsList = () => {
         });
     }
 
+    const handleActiveQuestion = (question) => {
+        dispatch(activeQuestion({
+            "ids": question.id
+          }))
+    }
+
+    const handlePassiveQuestion = (question) => {
+        dispatch(passiveQuestion({
+            "ids": question.id
+          }))
+    }
+
     const action = (row, actionName) => {
         if (actionName === "Güncelle") {
             updateQuestion(row)
-        } if (actionName === "Sil") {
+        } else if (actionName === "Sil") {
             handleDeleteQuestion(row)
+        } else if(actionName === "Aktif Et/Yayınla") {
+            handleActiveQuestion(row)
+        } else if(actionName === "Pasif Et/Yayınla") {
+            handlePassiveQuestion(row)
         }
     }
 
@@ -295,7 +310,7 @@ const QuestionsList = () => {
                 modalVisible={filterModalVisible}
                 handleModalVisible={setFilterModalVisible}
             />
-            
+
         </>
     )
 }

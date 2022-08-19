@@ -24,15 +24,32 @@ export const addQuestions = createAsyncThunk("question/addQuestions", async (dat
 
 
 // Delete Qeustion
-export const questionDelete = createAsyncThunk( 'question/deleteQuestion', async (data, {dispatch }) => {
+export const deleteQuestion = createAsyncThunk( 'question/deleteQuestion', async (data, {dispatch }) => {
       const response =  await questionServices.questionDelete(data);
       dispatch(getQuestions());
       return response;
   },
 );
 
+// Active Question
+export const activeQuestion = createAsyncThunk( 'question/activeQuestion', async (data, {dispatch }) => {
+  console.log(data)
+  const response =  await questionServices.questionActive(data);
+  dispatch(getQuestions());
+  return response;
+ },
+);
 
-// Inıtıal State
+
+// Passive Question
+export const passiveQuestion = createAsyncThunk( 'question/passiveQuestion', async (data, {dispatch }) => {
+  const response =  await questionServices.questionPassive(data);
+  dispatch(getQuestions());
+  return response;
+ },
+);
+
+// Initial State
 const initialState = {
   questionType: [],
   questionList: [],
