@@ -192,7 +192,8 @@ const QuestionsList = () => {
             okText: <Text t='delete' />,
             cancelText: 'Vazgeç',
             onOk: async () => {
-                const action = await dispatch(deleteQuestion(question.id));
+                let id = question.id;
+                const action = await dispatch(deleteQuestion({id}));
                 if (deleteQuestion.fulfilled.match(action)) {
                     successDialog({
                         title: <Text t='successfullySent' />,
@@ -218,7 +219,9 @@ const QuestionsList = () => {
 
     const handlePassiveQuestion = (question) => {
         dispatch(passiveQuestion({
-            "ids": question.id
+            "ids": [
+               question.id
+            ]
           }))
     }
 
@@ -229,7 +232,7 @@ const QuestionsList = () => {
             handleDeleteQuestion(row)
         } else if(actionName === "Aktif Et/Yayınla") {
             handleActiveQuestion(row)
-        } else if(actionName === "Pasif Et/Yayınla") {
+        } else if(actionName === "Pasif Et/Sonlandır") {
             handlePassiveQuestion(row)
         }
     }

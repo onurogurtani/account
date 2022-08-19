@@ -46,14 +46,12 @@ const questionPassive = () => {
 }
 
 // Question Delete
-const questionDelete = (data) => {
+const questionDelete = ({id}) => {
     return api({
-      url: `Questions`,
+      url: `Questions?id=${id}`,
       method: 'DELETE',
-      data,
     });
   };
-
 
 const questionServices = {
     getQuestionType,

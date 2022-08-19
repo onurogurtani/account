@@ -24,8 +24,8 @@ export const addQuestions = createAsyncThunk("question/addQuestions", async (dat
 
 
 // Delete Qeustion
-export const deleteQuestion = createAsyncThunk( 'question/deleteQuestion', async (data, {dispatch }) => {
-      const response =  await questionServices.questionDelete(data);
+export const deleteQuestion = createAsyncThunk( 'question/deleteQuestion', async ({ id }, {dispatch }) => {
+      const response =  await questionServices.questionDelete({ id });
       dispatch(getQuestions());
       return response;
   },
