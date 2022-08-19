@@ -166,6 +166,7 @@ const QuestionsList = () => {
     const [filterModalVisible, setFilterModalVisible] = useState(false);
     const [selectedQuestionType, setSelectedQuestionType] = useState('')
     const [selectedQuestion, setSelectedQuestion] = useState('')
+    const [idList, setIdList] = useState([])
 
     const addFormModal = (questionType) => {
         setSelectedQuestionType(questionType)
@@ -213,11 +214,14 @@ const QuestionsList = () => {
 
     const handleActiveQuestion = (question) => {
         dispatch(activeQuestion({
-            "ids": question.id
+            "ids": [
+               question.id
+            ]
           }))
     }
 
     const handlePassiveQuestion = (question) => {
+        console.log(question)
         dispatch(passiveQuestion({
             "ids": [
                question.id

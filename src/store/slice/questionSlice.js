@@ -10,6 +10,7 @@ export const getQuestionsType = createAsyncThunk("question/getQuestionsType", as
 // Get Questions
 export const getQuestions = createAsyncThunk("question/getQuestions", 
     async (data) => {
+      console.log(data)
     const response = await questionServices.getQuestions(data);
     return response;
 });
@@ -17,7 +18,6 @@ export const getQuestions = createAsyncThunk("question/getQuestions",
 
 // Add Question
 export const addQuestions = createAsyncThunk("question/addQuestions", async (data) => {
-    console.log(data)
     const response = await questionServices.addQuestion(data);
     return response;
 });
@@ -43,6 +43,7 @@ export const activeQuestion = createAsyncThunk( 'question/activeQuestion', async
 
 // Passive Question
 export const passiveQuestion = createAsyncThunk( 'question/passiveQuestion', async (data, {dispatch }) => {
+  console.log(data)
   const response =  await questionServices.questionPassive(data);
   dispatch(getQuestions());
   return response;
@@ -52,7 +53,7 @@ export const passiveQuestion = createAsyncThunk( 'question/passiveQuestion', asy
 // Initial State
 const initialState = {
   questionType: [],
-  questionList: [],
+  questionList: []
 };
 
 export const questionSlice = createSlice({

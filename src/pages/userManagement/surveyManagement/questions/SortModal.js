@@ -10,24 +10,35 @@ import {
     CustomFormItem,
     Text,
 } from '../../../../components';
+import { useDispatch } from 'react-redux';
+import {getQuestions} from '../../../../store/slice/questionSlice'
+
 const SortModal = ({ handleModalVisible, modalVisible }) => {
 
+    const dispatch = useDispatch()
+
+
+    
     const sortFields = [
         {
             title: "Oluşturulma tarihine göre en yakın",
-            active: false
+            active: false,
+            default: "insertASC"
         },
         {
             title: "Oluşturulma tarihine göre en uzak",
-            active: false
+            active: false,
+            default: "insertDESC"
         },
         {
             title: "Güncellenme tarihine göre en yakın",
-            active: false
+            active: false,
+            default: "updateDESC"
         },
         {
             title: "Güncellenme tarihine göre en uzak",
-            active: false
+            active: false,
+            default: "updateASC"
         }
     ]
 
@@ -43,12 +54,13 @@ const SortModal = ({ handleModalVisible, modalVisible }) => {
         if (sortOrder === field.title) {
             setSortOrder("")
             sortFields[index].active = false
+            dispatch(getQuestions(field.default))
         } else {
             setSortOrder(field.title)
             sortFields[index].active = true
         }
-
-        console.log(sortFields)
+        handleModalVisible(false);
+        console.log(field.default)
     }
 
     const onResetClick = () => {

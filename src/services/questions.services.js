@@ -30,18 +30,20 @@ const addQuestion = (data) => {
 }
 
 // Change Questions Status Active
-const questionActive = () => {
+const questionActive = (data) => {
     return api({
         url: `Questions/SetActiveQuestions`,
         method: 'POST',
+        data
     });
 }
 
 // Change Questions Status Passive
-const questionPassive = () => {
+const questionPassive = (data) => {
     return api({
         url: `Questions/SetPassiveQuestions`,
         method: 'POST',
+        data
     });
 }
 
