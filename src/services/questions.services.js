@@ -10,10 +10,10 @@ const getQuestionType = () => {
 }
 
 
-// Questions with filter
-const getQuestions = ({ data, pageNumber = 1, pageSize = 10 }) => {
+// Questions with filter 
+const getQuestions = (data) => {
     return api({
-        url: `Questions/GetByFilterPagedQuestions?QuestionDetailSearch.PageNumber=${pageNumber}&QuestionDetailSearch.PageSize=${pageSize}`,
+        url: `Questions/GetByFilterPagedQuestions?QuestionDetailSearch.PageNumber=1&QuestionDetailSearch.PageSize=10`,
         method: 'POST',
         data,
     });

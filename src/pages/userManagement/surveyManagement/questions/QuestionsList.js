@@ -24,16 +24,11 @@ const QuestionsList = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(getQuestionsType())
-
-    }, [dispatch])
-    
-    useEffect(() => {
-        console.log("aa")
+        dispatch(getQuestionsType());
         dispatch(getQuestions())
     }, [dispatch])
-
-    const questionType = useSelector(state => state.questions.questionType);
+    
+    const {questionType, questionList} = useSelector(state => state?.questions);
 
     const menuList = [
         {
@@ -71,33 +66,37 @@ const QuestionsList = () => {
         },
         {
             title: 'Soru Başlığı',
-            dataIndex: 'questionTitle',
-            key: 'questionTitle',
+            dataIndex: 'headText',
+            key: 'headText',
         },
         {
             title: 'Durum',
-            dataIndex: 'status',
-            key: 'status',
-            render: (status) => {
-                return status ? "Aktif" : "Pasif"
+            dataIndex: 'isActive',
+            key: 'isActive',
+            render: (isActive) => {
+                return isActive ? "Aktif" : "Pasif"
             }
         },
         {
             title: 'Soru Tipi',
-            dataIndex: 'questionType',
-            key: 'questionType',
+            dataIndex: 'questionTypeId',
+            key: 'questionTypeId',
         },
         {
             title: 'Soru Metni',
-            dataIndex: 'questionText',
-            key: 'questionText',
+            dataIndex: 'text',
+            key: 'text',
         },
         {
             title: 'Cevap Şıkları',
-            dataIndex: 'answers',
-            key: 'answers',
+            dataIndex: 'choices',
+            key: 'choices',
             render: (answer) => {
-                return `${answer.title} : ${answer.text}`
+                if (answer.length > 0) {
+                    return `${answer.text} : ${answer.marker} `
+                } else {
+                    return `-`
+                }
             }
         },
         {
@@ -107,8 +106,8 @@ const QuestionsList = () => {
         },
         {
             title: 'Oluşturan Kullanıcı',
-            dataIndex: 'createdUser',
-            key: 'createdUser',
+            dataIndex: 'insertUserFullName',
+            key: 'insertUserFullName',
         },
         {
             title: 'Güncellenme Tarihi',
@@ -117,13 +116,13 @@ const QuestionsList = () => {
         },
         {
             title: 'Güncelleyen Kullanıcı',
-            dataIndex: 'updatedUser',
-            key: 'updatedUser',
+            dataIndex: 'updateUserFullName',
+            key: 'updateUserFullName',
         },
         {
             title: 'Etiket',
-            dataIndex: 'label',
-            key: 'label',
+            dataIndex: 'tags',
+            key: 'tags',
         },
         {
             title: "İşlemler",
@@ -159,41 +158,6 @@ const QuestionsList = () => {
         }
     ];
 
-    const data = [{
-        id: 1,
-        questionTitle: "asdasd",
-        status: true,
-        questionType: "Açık Uçlu Soru",
-        questionText: "asdasdasd",
-        answers: [
-            {
-                title: "A",
-                text: "asdasd"
-            },
-            {
-                title: "B",
-                text: "asdasd"
-            },
-            {
-                title: "C",
-                text: "asdasd"
-            },
-            {
-                title: "D",
-                text: "asdasd"
-            },
-            {
-                title: "E",
-                text: "asdasd"
-            }
-        ],
-        createdUser: "admin",
-        createdDate: '2020-01-01',
-        updatedUser: "admin",
-        updatedDate: '2020-02-01',
-        label: "asd"
-    }]
-
     const [questionFormModalVisible, setQuestionFormModalVisible] = useState(false);
     const [sortModalVisible, setSortModalVisible] = useState(false);
     const [filterModalVisible, setFilterModalVisible] = useState(false);
@@ -201,7 +165,6 @@ const QuestionsList = () => {
     const [selectedQuestion, setSelectedQuestion] = useState('')
 
     const addFormModal = (questionType) => {
-        console.log(questionType)
         setSelectedQuestionType(questionType)
         setQuestionFormModalVisible(true);
     };
@@ -214,14 +177,11 @@ const QuestionsList = () => {
         setFilterModalVisible(true)
     }
     const updateQuestion = (data) => {
-
-        setSelectedQuestionType(data.questionType)
+        setSelectedQuestionType(data.questionType.name)
         setSelectedQuestion(data)
         setQuestionFormModalVisible(true);
     }
     const action = (row, actionName) => {
-        console.log("row", row)
-        console.log("actionName", actionName)
         if (actionName === "Güncelle") {
             updateQuestion(row)
         }
@@ -282,7 +242,7 @@ const QuestionsList = () => {
 
                 <CustomTable
                     pagination={true}
-                    dataSource={data}
+                    dataSource={questionList}
                     columns={columns(action)}
                     rowKey={(record) => record.id}
                     scroll={{ x: false }}

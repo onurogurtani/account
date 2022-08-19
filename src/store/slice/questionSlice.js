@@ -7,18 +7,22 @@ export const getQuestionsType = createAsyncThunk("question/getQuestionsType", as
         return response;
 });
 
-export const getQuestions = createAsyncThunk("question/getQuestions", async (data) => {
+// Get Questions
+export const getQuestions = createAsyncThunk("question/getQuestions", 
+    async (data) => {
     const response = await questionServices.getQuestions(data);
     return response;
 });
 
 
+// Add Questions
 export const addQuestions = createAsyncThunk("question/addQuestions", async (data) => {
     console.log(data)
     const response = await questionServices.addQuestion(data);
     return response;
 });
 
+// Inıtıal State
 const initialState = {
   questionType: [],
   questionList: [],
@@ -34,7 +38,7 @@ export const questionSlice = createSlice({
     });
 
     builder.addCase(getQuestions.fulfilled, (state, action) => {
-        state.questionList = action.payload
+        state.questionList = action.payload.data.items
     });
 
     builder.addCase(addQuestions.fulfilled, (state, action) => {
