@@ -15,12 +15,22 @@ export const getQuestions = createAsyncThunk("question/getQuestions",
 });
 
 
-// Add Questions
+// Add Question
 export const addQuestions = createAsyncThunk("question/addQuestions", async (data) => {
     console.log(data)
     const response = await questionServices.addQuestion(data);
     return response;
 });
+
+
+// Delete Qeustion
+export const questionDelete = createAsyncThunk( 'question/deleteQuestion', async (data, {dispatch }) => {
+      const response =  await questionServices.questionDelete(data);
+      dispatch(getQuestions());
+      return response;
+  },
+);
+
 
 // Inıtıal State
 const initialState = {

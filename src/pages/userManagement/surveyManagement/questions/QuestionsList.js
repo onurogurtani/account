@@ -1,5 +1,8 @@
 import {
     CustomCollapseCard,
+    confirmDialog,
+    errorDialog,
+    successDialog,
     CustomImage,
     CustomTable,
     CustomButton,
@@ -15,7 +18,7 @@ import SortModal from './SortModal';
 import FilterModal from './FilterModal'
 import "../../../../styles/surveyManagement/surveyStyles.scss"
 import { useDispatch, useSelector } from 'react-redux';
-import {getQuestionsType, getQuestions} from '../../../../store/slice/questionSlice'
+import {getQuestionsType, getQuestions, questionDelete} from '../../../../store/slice/questionSlice'
 import { useEffect } from 'react';
 
 
@@ -181,9 +184,38 @@ const QuestionsList = () => {
         setSelectedQuestion(data)
         setQuestionFormModalVisible(true);
     }
+
+    const handleDeleteQuestion = async (record) => {
+        console.log(record)
+        confirmDialog({
+            title: <Text t='attention' />,
+            message: 'Kaydı silmek istediğinizden emin misiniz?',
+            okText: <Text t='delete' />,
+            cancelText: 'Vazgeç',
+            onOk: async () => {
+                const action = await dispatch(questionDelete(record.id));
+                if (questionDelete.fulfilled.match(action)) {
+                    successDialog({
+                        title: <Text t='successfullySent' />,
+                        //message: action?.payload
+                        message: "Kayıt Başarı İle Silindi"
+                    });
+                } else {
+                    errorDialog({
+                        title: <Text t='error' />,
+                        // message: action?.payload
+                        message: "Kayıt Silinirken bir hata ile karşılaştı."
+                    });
+                }
+            }
+        });
+    }
+
     const action = (row, actionName) => {
         if (actionName === "Güncelle") {
             updateQuestion(row)
+        } if (actionName === "Sil") {
+            handleDeleteQuestion(row)
         }
     }
 
@@ -263,6 +295,7 @@ const QuestionsList = () => {
                 modalVisible={filterModalVisible}
                 handleModalVisible={setFilterModalVisible}
             />
+            
         </>
     )
 }
