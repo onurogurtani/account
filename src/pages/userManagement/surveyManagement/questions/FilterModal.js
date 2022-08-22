@@ -14,37 +14,35 @@ import {
     CustomInput
 } from '../../../../components';
 import { Form, Select } from 'antd';
+import { useDispatch } from 'react-redux';
+import { getQuestions } from '../../../../store/slice/questionSlice'
 
 
-const FilterModal = ({ handleModalVisible, modalVisible }) => {
+
+const FilterModal = ({ handleModalVisible, modalVisible, filterParams, setFilterParams ,emptyFilterObj}) => {
+
+    const dispatch = useDispatch()
+
     const [form] = Form.useForm();
     const { Option } = Select;
-    const questionType = [
-        <Option key={1}> Açık Uçlu Soru </Option>,
-        <Option key={2}> Tek Seçimli Soru </Option>,
-        <Option key={3}> Çok Seçimli Soru </Option>,
-        <Option key={4}> Boşluk Doldurma Sorusu </Option>,
-        <Option key={5}> Likert Tipi Soru </Option>
-    ];
-
-    const questionStatus = [
-        <Option key={1}> Aktif </Option>,
-        <Option key={2}> Pasif </Option>
-    ]
 
     const handleClose = useCallback(() => {
         handleModalVisible(false);
     }, [handleModalVisible]);
 
     const onFinish = (values) => {
-        console.log(values)
+        dispatch(getQuestions(values));
+        setFilterParams(values)
+
         handleClose()
     }
-    
-    const resetForm = () => {
-        form.resetFields()
-    }
 
+    const resetForm = () => {
+        dispatch(getQuestions(emptyFilterObj));
+        setFilterParams(emptyFilterObj)
+        handleClose()
+        form.setFieldsValue(emptyFilterObj)
+    }
     return (
         <CustomModal
             className='filter-modal'
@@ -53,22 +51,22 @@ const FilterModal = ({ handleModalVisible, modalVisible }) => {
             title={`Filtrele`}
             visible={modalVisible}
             onCancel={handleClose}
-            closeIcon={<CustomImage src={modalClose} onClick={resetForm}/>}
+            closeIcon={<CustomImage src={modalClose} onClick={resetForm} />}
         >
             <div className='filter-list-container'>
                 <CustomForm
                     name='dataFilterForm'
                     className='data-filter-form survey-form'
                     form={form}
-                    initialValues={{}}
+                    initialValues={filterParams}
                     onFinish={onFinish}
                     autoComplete='off'
                     layout={'horizontal'}
                 >
                     <div className="data-filter-form-content">
-                        <CustomFormItem
+                        <Form.Item
                             label={<Text t='Soru Tipi' />}
-                            name='questiontype'
+                            name='QuestionTypeId'
                         >
                             <Select
                                 mode="tags"
@@ -76,14 +74,17 @@ const FilterModal = ({ handleModalVisible, modalVisible }) => {
                                     width: '100%',
                                 }}
                                 placeholder="Soru Tipi"
-
                             >
-                                {questionType}
+                                <Option value={"1"}> Açık Uçlu Soru </Option>,
+                                <Option value={"7"}> Tek Seçimli Soru </Option>,
+                                <Option value={"3"}> Çok Seçimli Soru </Option>,
+                                <Option value={"4"}> Boşluk Doldurma Sorusu </Option>,
+                                <Option value={"5"}> Likert Tipi Soru </Option>
                             </Select>
-                        </CustomFormItem>
-                        <CustomFormItem
+                        </Form.Item>
+                        <Form.Item
                             label={<Text t='Durum' />}
-                            name='questionstatus'
+                            name='Status'
                         >
                             <Select
                                 mode="tags"
@@ -91,14 +92,14 @@ const FilterModal = ({ handleModalVisible, modalVisible }) => {
                                     width: '100%',
                                 }}
                                 placeholder="Durum"
- 
                             >
-                                {questionStatus}
+                                <Option value={"true"}> Aktif </Option>,
+                                <Option value={"false"}> Pasif </Option>
                             </Select>
-                        </CustomFormItem>
+                        </Form.Item>
                         <CustomFormItem
                             label={<Text t='Soru Başlığı' />}
-                            name='questiontitle'
+                            name='HeadText'
                         >
                             <CustomInput
                                 placeholder={useText('Soru Başlığı')}
@@ -108,7 +109,7 @@ const FilterModal = ({ handleModalVisible, modalVisible }) => {
 
                         <CustomFormItem
                             label={<Text t='Soru Metni' />}
-                            name='questiontext'
+                            name='Text'
                         >
                             <CustomInput
                                 placeholder={useText('Soru Metni')}
@@ -117,7 +118,7 @@ const FilterModal = ({ handleModalVisible, modalVisible }) => {
                         </CustomFormItem>
                         <CustomFormItem
                             label={<Text t='Etiket' />}
-                            name='questiontag'
+                            name='Tags'
                         >
                             <CustomInput
                                 placeholder={useText('Etiket')}
@@ -126,7 +127,7 @@ const FilterModal = ({ handleModalVisible, modalVisible }) => {
                         </CustomFormItem>
                         <CustomFormItem
                             label={<Text t='Cevap Şıkları' />}
-                            name='answerchoise'
+                            name='ChoiseText'
                         >
                             <CustomInput
                                 placeholder={useText('Cevap Şıkları')}
@@ -135,7 +136,7 @@ const FilterModal = ({ handleModalVisible, modalVisible }) => {
                         </CustomFormItem>
                         <CustomFormItem
                             label={<Text t='Oluşturan Kullanıcı' />}
-                            name='createduser'
+                            name='InsertUserName'
                         >
                             <CustomInput
                                 placeholder={useText('Oluşturan Kullanıcı')}
@@ -144,7 +145,7 @@ const FilterModal = ({ handleModalVisible, modalVisible }) => {
                         </CustomFormItem>
                         <CustomFormItem
                             label={<Text t='Güncelleyen Kullanıcı' />}
-                            name='updateduser'
+                            name='UpdateUserName'
                         >
                             <CustomInput
                                 placeholder={useText('Güncelleyen Kullanıcı')}

@@ -18,19 +18,13 @@ import SortModal from './SortModal';
 import FilterModal from './FilterModal'
 import "../../../../styles/surveyManagement/surveyStyles.scss"
 import { useDispatch, useSelector } from 'react-redux';
-import {getQuestionsType, getQuestions, deleteQuestion, activeQuestion, passiveQuestion, getLikertType  } from '../../../../store/slice/questionSlice'
+import { getQuestionsType, getQuestions, deleteQuestion, activeQuestion, passiveQuestion, getLikertType } from '../../../../store/slice/questionSlice'
 import { useEffect } from 'react';
 
 
 const QuestionsList = () => {
 
     const dispatch = useDispatch()
-
-    useEffect(() => {
-        dispatch(getQuestionsType())
-        dispatch(getQuestions())
-        dispatch(getLikertType())
-    }, [dispatch])
 
     const { questionType, questionList } = useSelector(state => state?.questions);
 
@@ -139,11 +133,11 @@ const QuestionsList = () => {
                 const menu = (
                     <Menu>
                         {menuList.map(item => (
-                                <Menu.Item key={item.key}>
-                                    <Button type="text" size={12} onClick={() => action(record, item?.name)} >
-                                        {item.name}
-                                    </Button>
-                                </Menu.Item>
+                            <Menu.Item key={item.key}>
+                                <Button type="text" size={12} onClick={() => action(record, item?.name)} >
+                                    {item.name}
+                                </Button>
+                            </Menu.Item>
                         ))}
                     </Menu>
                 );
@@ -161,13 +155,37 @@ const QuestionsList = () => {
             }
         }
     ];
-
+    const emptyFilterObj = {
+        HeadText: "",
+        Text: "",
+        ChoiseText: "",
+        UpdateUserName: "",
+        InsertUserName: "",
+        Tags: "",
+        QuestionTypeId: [],
+        Status: [],
+        UpdateStartDate: "",
+        UpdateEndDate: "",
+        InsertEndDate: "",
+        InsertStartDate: "",
+        OrderBy: "",
+        PageNumber: "",
+        PageSize: "",
+    }
     const [questionFormModalVisible, setQuestionFormModalVisible] = useState(false);
     const [sortModalVisible, setSortModalVisible] = useState(false);
     const [filterModalVisible, setFilterModalVisible] = useState(false);
     const [selectedQuestionType, setSelectedQuestionType] = useState('')
     const [selectedQuestion, setSelectedQuestion] = useState('')
     const [idList, setIdList] = useState([])
+    const [filterParams, setFilterParams] = useState(emptyFilterObj)
+
+    useEffect(() => {
+        dispatch(getQuestionsType())
+        dispatch(getQuestions(filterParams))
+        dispatch(getLikertType())
+    }, [dispatch])
+
 
     const addFormModal = (questionType) => {
         setSelectedQuestionType(questionType)
@@ -195,7 +213,7 @@ const QuestionsList = () => {
             cancelText: 'Vazgeç',
             onOk: async () => {
                 let id = question.id;
-                const action = await dispatch(deleteQuestion({id}));
+                const action = await dispatch(deleteQuestion({ id }));
                 if (deleteQuestion.fulfilled.match(action)) {
                     successDialog({
                         title: <Text t='successfullySent' />,
@@ -216,18 +234,18 @@ const QuestionsList = () => {
     const handleActiveQuestion = (question) => {
         dispatch(activeQuestion({
             "ids": [
-               question.id
+                question.id
             ]
-          }))
+        }))
     }
 
     const handlePassiveQuestion = (question) => {
         console.log(question)
         dispatch(passiveQuestion({
             "ids": [
-               question.id
+                question.id
             ]
-          }))
+        }))
     }
 
     const action = (row, actionName) => {
@@ -235,9 +253,9 @@ const QuestionsList = () => {
             updateQuestion(row)
         } else if (actionName === "Sil") {
             handleDeleteQuestion(row)
-        } else if(actionName === "Aktif Et/Yayınla") {
+        } else if (actionName === "Aktif Et/Yayınla") {
             handleActiveQuestion(row)
-        } else if(actionName === "Pasif Et/Sonlandır") {
+        } else if (actionName === "Pasif Et/Sonlandır") {
             handlePassiveQuestion(row)
         }
     }
@@ -290,14 +308,14 @@ const QuestionsList = () => {
                         </div>
                         <div className='drafts-count-title'>
                             <CustomImage src={cardsRegistered} />
-                            Toplam Soru Sayısı: <span> 2 </span>
+                            Toplam Soru Sayısı: <span> {questionList.pagedProperty?.totalCount} </span>
                         </div>
                     </div>
                 }
 
                 <CustomTable
                     pagination={true}
-                    dataSource={questionList}
+                    dataSource={questionList.items}
                     columns={columns(action)}
                     rowKey={(record) => record.id}
                     scroll={{ x: false }}
@@ -313,10 +331,16 @@ const QuestionsList = () => {
             <SortModal
                 modalVisible={sortModalVisible}
                 handleModalVisible={setSortModalVisible}
+                setFilterParams={setFilterParams}
+                filterParams={filterParams}
+                emptyFilterObj={emptyFilterObj}
             />
             <FilterModal
                 modalVisible={filterModalVisible}
                 handleModalVisible={setFilterModalVisible}
+                setFilterParams={setFilterParams}
+                filterParams={filterParams}
+                emptyFilterObj={emptyFilterObj}
             />
 
         </>

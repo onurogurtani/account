@@ -13,7 +13,7 @@ import {
 import { useDispatch } from 'react-redux';
 import {getQuestions} from '../../../../store/slice/questionSlice'
 
-const SortModal = ({ handleModalVisible, modalVisible }) => {
+const SortModal = ({ handleModalVisible, modalVisible , filterParams ,setFilterParams ,emptyFilterObj}) => {
 
     const dispatch = useDispatch()
 
@@ -50,21 +50,28 @@ const SortModal = ({ handleModalVisible, modalVisible }) => {
 
 
     const onSortClick = (field) => {
+        let newArr = {...filterParams}
+
         const index = sortFields.indexOf(field)
         if (sortOrder === field.title) {
             setSortOrder("")
             sortFields[index].active = false
-            dispatch(getQuestions(field.default))
+            newArr.orderBy = ""
         } else {
             setSortOrder(field.title)
+            newArr.orderBy = field.default
             sortFields[index].active = true
         }
+        dispatch(getQuestions(newArr));
+        setFilterParams(newArr)
         handleModalVisible(false);
-        console.log(field.default)
     }
 
     const onResetClick = () => {
+        setFilterParams(emptyFilterObj)
         setSortOrder("")
+        dispatch(getQuestions(emptyFilterObj));
+        handleClose()
     }
 
     return (

@@ -20,11 +20,10 @@ const getLikertType = (pageNumber = 1, pageSize = 10) => {
 
 
 // Questions with filter 
-const getQuestions = (data) => {
+const getQuestions = (urlString) => {
     return api({
-        url: `Questions/GetByFilterPagedQuestions?QuestionDetailSearch.PageNumber=1&QuestionDetailSearch.PageSize=10`,
+        url: `Questions/GetByFilterPagedQuestions?${urlString}`,
         method: 'POST',
-        data,
     });
 }
 
@@ -68,12 +67,12 @@ const questionPassive = (data) => {
 }
 
 // Question Delete
-const questionDelete = ({id}) => {
+const questionDelete = ({ id }) => {
     return api({
-      url: `Questions?id=${id}`,
-      method: 'DELETE',
+        url: `Questions?id=${id}`,
+        method: 'DELETE',
     });
-  };
+};
 
 const questionServices = {
     getQuestionType,
