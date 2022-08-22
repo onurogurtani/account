@@ -15,7 +15,7 @@ import { Form, Select } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
 import { useDispatch } from 'react-redux';
 
-const OpenEndedQuestion = ({ handleModalVisible, selectedQuestion, addQuestions }) => {
+const OpenEndedQuestion = ({ handleModalVisible, selectedQuestion, addQuestions ,updateQuestions }) => {
   const [form] = Form.useForm();
   const dispatch = useDispatch()
 
@@ -44,7 +44,14 @@ const OpenEndedQuestion = ({ handleModalVisible, selectedQuestion, addQuestions 
         "text": values.text
       }
     }
-    dispatch(addQuestions(formvalues))
+    if(selectedQuestion) {
+      formvalues.entity.id =selectedQuestion.id 
+      dispatch(updateQuestions(formvalues))
+    } else {
+      dispatch(addQuestions(formvalues))
+    }
+    handleModalVisible(false);
+
   }
 
   return (

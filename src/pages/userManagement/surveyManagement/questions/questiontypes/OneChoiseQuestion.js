@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {
@@ -16,49 +16,10 @@ import "../../../../../styles/surveyManagement/surveyStyles.scss"
 import { useDispatch } from 'react-redux';
 
 
-const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion, addQuestions }) => {
+const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, updateQuestions }) => {
 
   const [form] = Form.useForm();
   const dispatch = useDispatch()
-
-  const onChannelChange = (value) => {
-    switch (value) {
-      case 'true':
-        form.setFieldsValue({ status: true });
-        return;
-      case 'false':
-        form.setFieldsValue({ status: false });
-    }
-  };
-
-  const onQuestionChange = (value) => {
-
-    form.setFieldsValue({ question: value });
-
-  };
-
-  const onFinish = (values) => {
-    let newArr = answers.filter((answer) => (answer.text !== "" && answer.active === true))
-    let arrangedArr = []
-    newArr.forEach((el) => {
-      let newObj = { marker: el.marker, text: el.text }
-      arrangedArr.push(newObj)
-    })
-    values.choices = arrangedArr
-
-    const formvalues = {
-      "entity":
-      {
-        "headText": values.headText,
-        "isActive": values.isActive,
-        "questionTypeId": 7,
-        "tags": values.tags,
-        "text": values.text,
-        "choices": values.choices
-      }
-    }
-    dispatch(addQuestions(formvalues))
-  }
 
   const [answers, setAnswers] = useState([
     {
@@ -87,6 +48,65 @@ const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion, addQuestions 
       active: false
     },
   ])
+
+  useEffect(() => {
+    if (selectedQuestion) {
+      let newArr = [...answers]
+      selectedQuestion.choices?.forEach((el, idx) => {
+        newArr[idx].marker = el.marker
+        newArr[idx].text = el.text
+        newArr[idx].active = true
+      })
+      setAnswers(newArr)
+    }
+  }, [])
+
+
+  const onChannelChange = (value) => {
+    switch (value) {
+      case 'true':
+        form.setFieldsValue({ status: true });
+        return;
+      case 'false':
+        form.setFieldsValue({ status: false });
+    }
+  };
+
+  const onQuestionChange = (value) => {
+    form.setFieldsValue({ question: value });
+  };
+
+  const onFinish = (values) => {
+    let newArr = answers.filter((answer) => (answer.text !== "" && answer.active === true))
+    let arrangedArr = []
+    newArr.forEach((el) => {
+      let newObj = { marker: el.marker, text: el.text }
+      arrangedArr.push(newObj)
+    })
+    values.choices = arrangedArr
+
+    const formvalues = {
+      "entity":
+      {
+        "headText": values.headText,
+        "isActive": values.isActive,
+        "questionTypeId": 7,
+        "tags": values.tags,
+        "text": values.text,
+        "choices": values.choices
+      }
+    }
+    if (selectedQuestion) {
+      formvalues.entity.id = selectedQuestion.id
+      dispatch(updateQuestions(formvalues))
+    } else {
+      dispatch(addQuestions(formvalues))
+    }
+    handleModalVisible(false);
+
+  }
+
+
 
   const deleteAnswer = (idx) => {
     let newArr = [...answers]
@@ -174,7 +194,7 @@ const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion, addQuestions 
                   //   className="answer-form-item answer-box"
                   // >
                   <>
-                  
+
                     <CustomInput
                       height={36}
                       value={answer.text}

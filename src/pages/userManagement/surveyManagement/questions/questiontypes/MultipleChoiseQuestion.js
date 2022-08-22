@@ -16,7 +16,7 @@ import "../../../../../styles/surveyManagement/surveyStyles.scss"
 import { useDispatch } from 'react-redux';
 
 
-const MultipleChoiseQuestion = ({ handleModalVisible , selectedQuestion , addQuestions }) => {
+const MultipleChoiseQuestion = ({ handleModalVisible , selectedQuestion , addQuestions , updateQuestions }) => {
 
 
   const [form] = Form.useForm();
@@ -59,8 +59,14 @@ const MultipleChoiseQuestion = ({ handleModalVisible , selectedQuestion , addQue
         "choices": values.choices
       }
     }
-console.log(formvalues)
-    dispatch(addQuestions(formvalues))
+    if(selectedQuestion) {
+      formvalues.entity.id =selectedQuestion.id 
+      dispatch(updateQuestions(formvalues))
+    } else {
+      dispatch(addQuestions(formvalues))
+    }
+    handleModalVisible(false);
+
   }
 
   const [answers, setAnswers] = useState([
@@ -90,6 +96,7 @@ console.log(formvalues)
       active: false
     },
   ])
+
   const deleteAnswer = (idx) => {
     let newArr = [...answers]
     newArr[idx].active = false
@@ -106,14 +113,13 @@ console.log(formvalues)
       newArr[idx].active = true
       setAnswers(newArr)
     }
-
   }
+
   const handleAnswers = (e, idx) => {
     let newArr = [...answers]
     newArr[idx].text = e.target.value
     setAnswers(newArr)
   }
-
 
   return (
     <CustomForm

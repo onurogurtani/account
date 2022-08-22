@@ -12,7 +12,7 @@ import FillInTheBlankQuestion from '../questions/questiontypes/FillInTheBlankQue
 import LikertQuestion from '../questions/questiontypes/LikertQuestion'
 import { Form } from 'antd';
 import '../../../../styles/surveyManagement/surveyStyles.scss'
-import { addQuestions } from '../../../../store/slice/questionSlice';
+import { addQuestions, updateQuestions } from '../../../../store/slice/questionSlice';
 
 const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType, selectedQuestion }) => {
     const [form] = Form.useForm();
@@ -36,6 +36,7 @@ const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType,
                 {selectedQuestionType === "Açık Uçlu Soru" &&
                     <OpenEndedQuestion
                         addQuestions={addQuestions}
+                        updateQuestions={updateQuestions}
                         handleModalVisible={handleModalVisible}
                         selectedQuestion={selectedQuestion}
                     />
@@ -43,26 +44,31 @@ const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType,
                 {selectedQuestionType === "Tek Seçimli Soru" &&
                     <OneChoiseQuestion
                         addQuestions={addQuestions}
+                        updateQuestions={updateQuestions}
                         handleModalVisible={handleModalVisible}
                         selectedQuestion={selectedQuestion}
                     />
                 }
                 {selectedQuestionType === "Çok Seçimli Soru" &&
                     <MultipleChoiseQuestion
-                    addQuestions={addQuestions}
+                        addQuestions={addQuestions}
+                        updateQuestions={updateQuestions}
                         handleModalVisible={handleModalVisible}
                         selectedQuestion={selectedQuestion}
                     />
                 }
                 {selectedQuestionType === "Boşluk Doldurma Sorusu" &&
                     <FillInTheBlankQuestion
+                        addQuestions={addQuestions}
+                        updateQuestions={updateQuestions}
                         handleModalVisible={handleModalVisible}
                         selectedQuestion={selectedQuestion}
                     />
                 }
                 {selectedQuestionType === "Likert Tipi Soru" &&
                     <LikertQuestion
-                    addQuestions={addQuestions} 
+                        addQuestions={addQuestions}
+                        updateQuestions={updateQuestions}
                         handleModalVisible={handleModalVisible}
                         selectedQuestion={selectedQuestion}
                     />

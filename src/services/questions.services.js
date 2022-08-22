@@ -39,6 +39,16 @@ const addQuestion = (data) => {
     );
 }
 
+// Update Question
+const updateQuestion = (data) => {
+    return api({
+        url: `Questions`,
+        method: 'PUT',
+        data
+    }
+    );
+}
+
 // Change Questions Status Active
 const questionActive = (data) => {
     return api({
@@ -69,6 +79,7 @@ const questionServices = {
     getQuestionType,
     getQuestions,
     addQuestion,
+    updateQuestion,
     questionActive,
     questionPassive,
     questionDelete,

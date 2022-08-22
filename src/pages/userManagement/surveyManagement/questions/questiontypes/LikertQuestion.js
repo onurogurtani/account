@@ -24,7 +24,7 @@ import emoji3 from '../../../../../assets/images/emoji/emoji3.png'
 import emoji4 from '../../../../../assets/images/emoji/emoji4.png'
 import emoji5 from '../../../../../assets/images/emoji/emoji5.png'
 
-const LikertQuestion = ({ handleModalVisible, selectedQuestion , addQuestions }) => {
+const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, updateQuestions }) => {
 
   const likertTypesChoices = {
     1: [
@@ -144,7 +144,7 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion , addQuestions })
   const [type, setTypes] = useState(1)
   const [likertAnswers, setLikertAnswers] = useState(likertTypesChoices[1])
   const dispatch = useDispatch()
-  
+
 
   useEffect(() => {
     if (type !== 6 && type !== 7)
@@ -197,20 +197,26 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion , addQuestions })
     let newArr = likertAnswers.filter((answer) => (answer.text !== ""))
     values.choices = newArr
 
-        const formvalues = {
-          "entity":
-          {
-            "headText": values.headText,
-            "isActive": values.isActive,
-            "questionTypeId": 5,
-            "tags": values.tags,
-            "text": values.text,
-            "likertTypeId":values.likertTypeId,
-            "choices": values.choices
-          }
-        }
-    console.log(formvalues)
-    dispatch(addQuestions(formvalues))
+    const formvalues = {
+      "entity":
+      {
+        "headText": values.headText,
+        "isActive": values.isActive,
+        "questionTypeId": 5,
+        "tags": values.tags,
+        "text": values.text,
+        "likertTypeId": values.likertTypeId,
+        "choices": values.choices
+      }
+    }
+    if (selectedQuestion) {
+      formvalues.entity.id = selectedQuestion.id
+      dispatch(updateQuestions(formvalues))
+    } else {
+      dispatch(addQuestions(formvalues))
+    }
+    handleModalVisible(false);
+
   }
 
   const handleAnswers = (e, idx) => {
@@ -226,7 +232,7 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion , addQuestions })
       name='likertQuestionLinkForm'
       className='likert-choice-question-link-form survey-form'
       form={form}
-      initialValues={selectedQuestion ? selectedQuestion : {likertTypeId: 1}}
+      initialValues={selectedQuestion ? selectedQuestion : { likertTypeId: 1 }}
       onFinish={onFinish}
       autoComplete='off'
       layout={'horizontal'}
@@ -256,7 +262,7 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion , addQuestions })
             name="likertTypeId">
             <Select
               onChange={onSurveyTypeChanged}
-              // defaultValue={1}
+            // defaultValue={1}
             >
               {likertTypes?.map((type) => {
                 return <Select.Option key={type.id} value={type.id}>{type.name}</Select.Option>

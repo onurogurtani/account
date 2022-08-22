@@ -22,9 +22,17 @@ export const getLikertType = createAsyncThunk("question/getLikertType", async ()
 
 
 // Add Question
-export const addQuestions = createAsyncThunk("question/addQuestions", async (data) => {
+export const addQuestions = createAsyncThunk("question/addQuestions", async (data, {dispatch }) => {
     const response = await questionServices.addQuestion(data);
+    dispatch(getQuestions());
     return response;
+});
+
+// Update Question
+export const updateQuestions = createAsyncThunk("question/updateQuestions", async (data, {dispatch }) => {
+  const response = await questionServices.updateQuestion(data);
+  dispatch(getQuestions());
+  return response;
 });
 
 
@@ -81,6 +89,10 @@ export const questionSlice = createSlice({
     builder.addCase(addQuestions.fulfilled, (state, action) => {
         console.log("ss")
     });
+    builder.addCase(updateQuestions.fulfilled, (state, action) => {
+      console.log("aa")
+  });
+
 
   },
 });
