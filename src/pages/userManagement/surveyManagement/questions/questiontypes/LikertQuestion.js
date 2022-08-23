@@ -42,7 +42,7 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
       },
       {
         marker: "4",
-        text: " Katılıyorum"
+        text: "Katılıyorum"
       },
       {
         marker: "5",
@@ -80,7 +80,7 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
       },
       {
         marker: "4",
-        text: " Katılıyorum"
+        text: "Katılıyorum"
       },
       {
         marker: "5",
@@ -110,7 +110,7 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
       },
       {
         marker: "4",
-        text: " Katılıyorum"
+        text: "Katılıyorum"
       },
       {
         marker: "5",
@@ -136,7 +136,51 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
         marker: "10",
         text: "Kesinlikle Katılıyorum"
       },
-    ]
+    ],
+    6: [
+      {
+        marker: "1",
+        text: "1"
+      },
+      {
+        marker: "2",
+        text: "2"
+      },
+      {
+        marker: "3",
+        text: "3"
+      },
+      {
+        marker: "4",
+        text: "4"
+      },
+      {
+        marker: "5",
+        text: "5"
+      },
+    ],
+    7: [
+      {
+        marker: "1",
+        text: "1"
+      },
+      {
+        marker: "2",
+        text: "2"
+      },
+      {
+        marker: "3",
+        text: "3"
+      },
+      {
+        marker: "4",
+        text: "4"
+      },
+      {
+        marker: "5",
+        text: "5"
+      },
+    ],
   }
 
   const [form] = Form.useForm();
@@ -147,7 +191,7 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
 
 
   useEffect(() => {
-    if (type !== 6 && type !== 7)
+    // if (type !== 6 && type !== 7)
       setLikertAnswers(likertTypesChoices[type])
   }, [type])
 
@@ -201,9 +245,10 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
         "tags": values.tags,
         "text": values.text,
         "likertTypeId": values.likertTypeId,
-        "choices": (values.likertTypeId !== 7 || values.likertTypeId !== 6) && values.choices, // This line dont working
-        "starsanswer": values.likertTypeId === 7 && values.starsanswer,
-        "emojianswer": values.likertTypeId === 6 && values.emojianswer
+        // "choices": (values.likertTypeId !== 7 || values.likertTypeId !== 6) && values.choices, // This line dont working
+        // "starsanswer": values.likertTypeId === 7 && values.starsanswer,
+        // "emojianswer": values.likertTypeId === 6 && values.emojianswer
+        "choices": values.choices,
       }
     }
     if (selectedQuestion) {
@@ -293,7 +338,7 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
 
               <div className='emoji-rating'>
                 <CustomFormItem
-                  name="emojianswer"
+                  // name="emojianswer"
                 >
                   <input type="radio" name="emoji" id="emoji1" onClick={() => handleEmoji("1")} />
                   <label htmlFor="emoji1">
@@ -339,7 +384,7 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
               type === 7 ?
                 <div className="star-rating">
                   <CustomFormItem
-                    name="starsanswer"
+                    // name="starsanswer"
                   >
                     <input type="radio" id="star5" name="rating" value="5" onClick={() => handleStars("5")} /><label htmlFor="star5"></label>
                     <input type="radio" id="star4" name="rating" value="4" onClick={() => handleStars("4")} /><label htmlFor="star4"></label>
