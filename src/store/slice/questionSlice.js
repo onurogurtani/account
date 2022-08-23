@@ -10,29 +10,38 @@ export const getQuestionsType = createAsyncThunk("question/getQuestionsType", as
 // Get Questions
 export const getQuestions = createAsyncThunk("question/getQuestions",
   async (data) => {
-    let urlArr = []
-    for (let item in data) {
-      if (!!data[item]) {
-        if(item === "QuestionTypeId" || item === "Status" ) {
-          data[item]?.map((element ,idx) => {
-            let newStr = `QuestionDetailSearch.${item}=${data[item][idx]}`
+    let urlString;
+    if(data){
+      let urlArr = []
+      for (let item in data) {
+        if (!!data[item]) {
+          if(item === "QuestionTypeId" || item === "Status" ) {
+            data[item]?.map((element ,idx) => {
+              let newStr = `QuestionDetailSearch.${item}=${data[item][idx]}`
+              urlArr.push(newStr)
+            });
+          } else {
+            let newStr = `QuestionDetailSearch.${item}=${data[item]}`
             urlArr.push(newStr)
-          });
-        } else {
-          let newStr = `QuestionDetailSearch.${item}=${data[item]}`
-          urlArr.push(newStr)
+          }
         }
       }
+      if (!data.OrderBy) {
+        let newStr = `QuestionDetailSearch.OrderBy=insertDESC`
+        urlArr.push(newStr)
+      }
+        if (!data.PageNumber) {
+          let newStr = `QuestionDetailSearch.PageNumber=1`
+          urlArr.push(newStr)
+        }
+        if (!data.PageSize) {
+          let newStr = `QuestionDetailSearch.PageSize=10`
+          urlArr.push(newStr)
+        }
+      urlString = urlArr.join('&')
+    } else {
+      urlString="QuestionDetailSearch.OrderBy=insertDESC&QuestionDetailSearch.PageNumber=1&QuestionDetailSearch.PageSize=10"
     }
-      if (!data.PageNumber) {
-        let newStr = `QuestionDetailSearch.PageNumber=1`
-        urlArr.push(newStr)
-      }
-      if (!data.PageSize) {
-        let newStr = `QuestionDetailSearch.PageSize=10`
-        urlArr.push(newStr)
-      }
-    const urlString = urlArr.join('&')
     const response = await questionServices.getQuestions(urlString);
     return response;
   });

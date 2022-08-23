@@ -90,7 +90,7 @@ const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion, addQuestions,
       {
         "headText": values.headText,
         "isActive": values.isActive,
-        "questionTypeId": 7,
+        "questionTypeId": 2,
         "tags": values.tags,
         "text": values.text,
         "choices": values.choices
