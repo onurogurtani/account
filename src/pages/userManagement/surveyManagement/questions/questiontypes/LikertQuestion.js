@@ -166,15 +166,12 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
 
   const onSurveyTypeChanged = (value) => {
     setTypes(value)
-
     form.setFieldsValue({ likertTypeId: value })
   }
 
 
   const onQuestionChange = (value) => {
-
     form.setFieldsValue({ question: value });
-
   };
 
   const handleStars = (stars) => {
@@ -188,8 +185,6 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
       emojianswer: emojitype
     })
   }
-
-
 
   const onFinish = (values) => {
     console.log(values)
@@ -206,7 +201,9 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
         "tags": values.tags,
         "text": values.text,
         "likertTypeId": values.likertTypeId,
-        "choices": values.choices
+        "choices": (values.likertTypeId !== 7 || values.likertTypeId !== 6) && values.choices, // This line dont working
+        "starsanswer": values.likertTypeId === 7 && values.starsanswer,
+        "emojianswer": values.likertTypeId === 6 && values.emojianswer
       }
     }
     if (selectedQuestion) {
@@ -232,7 +229,7 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
       name='likertQuestionLinkForm'
       className='likert-choice-question-link-form survey-form'
       form={form}
-      initialValues={selectedQuestion ? selectedQuestion : { likertTypeId: 1 }}
+      initialValues={selectedQuestion ? selectedQuestion : { likertTypeId: 1, isActive: true }}
       onFinish={onFinish}
       autoComplete='off'
       layout={'horizontal'}
@@ -298,7 +295,7 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
                 <CustomFormItem
                   name="emojianswer"
                 >
-                  <input type="radio" name="emoji" id="emoji1" onClick={() => handleEmoji("emoji1")} />
+                  <input type="radio" name="emoji" id="emoji1" onClick={() => handleEmoji("1")} />
                   <label htmlFor="emoji1">
                     <img src={emoji1} alt='emoji1' />
                   </label>
@@ -307,7 +304,7 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
                 <CustomFormItem
                   name="emojianswer"
                 >
-                  <input type="radio" name="emoji" id="emoji2" onClick={() => handleEmoji("emoji2")} />
+                  <input type="radio" name="emoji" id="emoji2" onClick={() => handleEmoji("2")} />
                   <label htmlFor="emoji2">
                     <img src={emoji2} alt='emoji2' />
                   </label>
@@ -316,7 +313,7 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
                 <CustomFormItem
                   name="emojianswer"
                 >
-                  <input type="radio" name="emoji" id="emoji3" onClick={() => handleEmoji("emoji3")} />
+                  <input type="radio" name="emoji" id="emoji3" onClick={() => handleEmoji("3")} />
                   <label htmlFor="emoji3">
                     <img src={emoji3} alt='emoji3' />
                   </label>
@@ -324,7 +321,7 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
 
                 <CustomFormItem
                   name="emojianswer">
-                  <input type="radio" name="emoji" id="emoji4" onClick={() => handleEmoji("emoji4")} />
+                  <input type="radio" name="emoji" id="emoji4" onClick={() => handleEmoji("4")} />
                   <label htmlFor="emoji4">
                     <img src={emoji4} alt='emoji4' />
                   </label>
@@ -332,13 +329,11 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
 
                 <CustomFormItem
                   name="emojianswer">
-                  <input type="radio" name="emoji" id="emoji5" onClick={() => handleEmoji("emoji5")} />
+                  <input type="radio" name="emoji" id="emoji5" onClick={() => handleEmoji("5")} />
                   <label htmlFor="emoji5">
                     <img src={emoji5} alt='emoji5' />
                   </label>
                 </CustomFormItem>
-
-
               </div>
               :
               type === 7 ?
@@ -351,24 +346,17 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
                     <input type="radio" id="star3" name="rating" value="3" onClick={() => handleStars("3")} /><label htmlFor="star3"></label>
                     <input type="radio" id="star2" name="rating" value="2" onClick={() => handleStars("2")} /><label htmlFor="star2"></label>
                     <input type="radio" id="star1" name="rating" value="1" onClick={() => handleStars("1")} /><label htmlFor="star1"></label>
-
-                    {/* <input type="radio" id="star1" name="rating" value="1" onClick={() => handleStars("1")}/><label htmlFor="star1"></label>
-                    <input type="radio" id="star2" name="rating" value="2" onClick={() => handleStars("2")}/><label htmlFor="star2"></label>
-                    <input type="radio" id="star3" name="rating" value="3" /><label htmlFor="star3"></label>
-                    <input type="radio" id="star4" name="rating" value="4" /><label htmlFor="star4"></label>
-                    <input type="radio" id="star5" name="rating" value="5" /><label htmlFor="star5"></label> */}
                   </CustomFormItem>
                 </div> :
                 likertAnswers?.map((answer, idx) => {
                   return <CustomInput
+                  className="likert-input"
                     key={idx}
                     height={36}
                     value={answer.text}
                     onChange={(e) => handleAnswers(e, idx)}
                   />
-
                 })}
-
         </div>
       </div>
 

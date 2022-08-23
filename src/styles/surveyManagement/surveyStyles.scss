@@ -80,10 +80,11 @@
     }
 
     .answers {
-        label {
-            min-width: 50px !important;
+        input {
+            width: 80%;
+            margin-right: 10px;
+            margin-bottom: 20px;
         }
-
         .ant-form-item-control-input-content {
             display              : grid;
             grid-template-columns: 85% 15%;
@@ -153,6 +154,11 @@
         .ql-container {
             min-height: 100px;
         }
+        .likert-input {
+            width: 80%;
+            margin-right: 10px;
+            margin-bottom: 20px;
+        }
     }
 
     .one-choice-question-link-form,
@@ -172,6 +178,17 @@
             font-family  : UbuntuRegular;
             color        : #3f4957;
             border-radius: 4px;
+        }
+    }
+
+    .fill-in-the-blank-question-link-form {
+        .blank-add-buttons {
+            float: right;
+            margin-bottom: 25px;
+            .add-blank-btn  {
+                margin-right: 10px;
+                margin-top: 0;
+            }
         }
     }
 
