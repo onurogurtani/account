@@ -69,8 +69,8 @@ export const updateQuestions = createAsyncThunk("question/updateQuestions", asyn
 
 
 // Delete Qeustion
-export const deleteQuestion = createAsyncThunk('question/deleteQuestion', async ({ id }, { dispatch }) => {
-  const response = await questionServices.questionDelete({ id });
+export const deleteQuestion = createAsyncThunk('question/deleteQuestion', async (data, { dispatch }) => {
+  const response = await questionServices.questionDelete(data);
   dispatch(getQuestions());
   return response;
 },
@@ -78,7 +78,6 @@ export const deleteQuestion = createAsyncThunk('question/deleteQuestion', async 
 
 // Active Question
 export const activeQuestion = createAsyncThunk('question/activeQuestion', async (data, { dispatch }) => {
-  console.log(data)
   const response = await questionServices.questionActive(data);
   dispatch(getQuestions());
   return response;
@@ -124,7 +123,5 @@ export const questionSlice = createSlice({
     builder.addCase(updateQuestions.fulfilled, (state, action) => {
       console.log("aa")
     });
-
-
   },
 });

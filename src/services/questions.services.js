@@ -67,10 +67,11 @@ const questionPassive = (data) => {
 }
 
 // Question Delete
-const questionDelete = ({ id }) => {
+const questionDelete = (data) => {
     return api({
-        url: `Questions?id=${id}`,
+        url: `Questions/DeleteQuestions`,
         method: 'DELETE',
+        data
     });
 };
 

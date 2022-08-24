@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState , useEffect, useCallback } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {
@@ -9,6 +9,8 @@ import {
   CustomSelect,
   Text,
   useText,
+  successDialog,
+  errorDialog,
   Option
 } from '../../../../../components';
 import { Form, Select } from 'antd';
@@ -76,36 +78,64 @@ const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion, addQuestions,
     form.setFieldsValue({ question: value });
   };
 
-  const onFinish = (values) => {
-    let newArr = answers.filter((answer) => (answer.text !== "" && answer.active === true))
-    let arrangedArr = []
-    newArr.forEach((el) => {
-      let newObj = { marker: el.marker, text: el.text }
-      arrangedArr.push(newObj)
-    })
-    values.choices = arrangedArr
-
-    const formvalues = {
-      "entity":
-      {
-        "headText": values.headText,
-        "isActive": values.isActive,
-        "questionTypeId": 2,
-        "tags": values.tags,
-        "text": values.text,
-        "choices": values.choices
+  const onFinish = useCallback(
+    async (values) => {
+      let newArr = answers.filter((answer) => (answer.text !== "" && answer.active === true))
+      let arrangedArr = []
+      newArr.forEach((el) => {
+        let newObj = { marker: el.marker, text: el.text }
+        arrangedArr.push(newObj)
+      })
+      values.choices = arrangedArr
+      const formvalues = {
+        "entity":
+        {
+          "headText": values.headText,
+          "isActive": values.isActive,
+          "questionTypeId": 2,
+          "tags": values.tags,
+          "text": values.text,
+          "choices": values.choices
+        }
       }
-    }
-    if (selectedQuestion) {
-      formvalues.entity.id = selectedQuestion.id
-      dispatch(updateQuestions(formvalues))
-    } else {
-      dispatch(addQuestions(formvalues))
-    }
-    handleModalVisible(false);
-
-  }
-
+        if (
+          !!values.headText && 
+          !!values.tags && 
+          !!values.text && 
+          values.text !== "<p><br></p>" && 
+          !!values.choices && 
+          values.choices.length > 0)  {
+            const action = await dispatch(addQuestions(formvalues));
+            if (addQuestions.fulfilled.match(action)) {
+              if(selectedQuestion) {
+                formvalues.entity.id =selectedQuestion.id 
+                dispatch(updateQuestions(formvalues))
+              } else {
+                dispatch(addQuestions(formvalues))
+              }
+                successDialog({
+                    title: <Text t='success' />,
+                    message: action?.payload.message,
+                    onOk: async () => {
+                        await handleModalVisible(false);
+                        form.resetFields();
+                    },
+                });
+            } else {
+                errorDialog({
+                    title: <Text t='error' />,
+                    message: action?.payload.message,
+                });
+            }
+        } else {
+            errorDialog({
+                title: <Text t='error' />,
+                message: 'Lütfen tüm alanları doldurunuz.',
+            });
+        }
+    },
+    [dispatch, handleModalVisible],
+  );
 
 
   const deleteAnswer = (idx) => {

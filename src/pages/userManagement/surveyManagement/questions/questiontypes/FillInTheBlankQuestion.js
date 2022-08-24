@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {
@@ -9,6 +9,8 @@ import {
   CustomSelect,
   Text,
   useText,
+  successDialog,
+  errorDialog,
   Option
 } from '../../../../../components';
 import { Form, Select } from 'antd';
@@ -59,27 +61,54 @@ const FillInTheBlankQuestion = ({ handleModalVisible, selectedQuestion, addQuest
     }
   }
 
-
-  const onFinish = (values) => {
-
-    const formvalues = {
-      "entity":
-      {
-        "headText": values.headText,
-        "isActive": values.isActive,
-        "questionTypeId": 4,
-        "tags": values.tags,
-        "text": values.text
+  const onFinish = useCallback(
+    async (values) => {
+      const formvalues = {
+        "entity":
+        {
+          "headText": values.headText,
+          "isActive": values.isActive,
+          "questionTypeId": 1,
+          "tags": values.tags,
+          "text": values.text
+        }
       }
-    }
-    if(selectedQuestion) {
-      formvalues.entity.id = selectedQuestion.id 
-      dispatch(updateQuestions(formvalues))
-    } else {
-      dispatch(addQuestions(formvalues))
-    }
-    handleModalVisible(false);
-  }
+        if (!!values.headText && !!values.tags && !!values.text && values.text !== "<p><br></p>")  {
+            const action = await dispatch(addQuestions(formvalues));
+            if (addQuestions.fulfilled.match(action)) {
+              if(selectedQuestion) {
+                formvalues.entity.id =selectedQuestion.id 
+                dispatch(updateQuestions(formvalues))
+              } else {
+                dispatch(addQuestions(formvalues))
+              }
+                successDialog({
+                    title: <Text t='success' />,
+                    message: action?.payload.message,
+                    onOk: async () => {
+                        await handleModalVisible(false);
+                        form.resetFields();
+                    },
+                });
+            } else {
+                errorDialog({
+                    title: <Text t='error' />,
+                    message: action?.payload.message,
+                });
+            }
+        } else {
+            errorDialog({
+                title: <Text t='error' />,
+                message: 'Lütfen tüm alanları doldurunuz.',
+            });
+        }
+    },
+    [dispatch, handleModalVisible],
+  );
+
+
+
+  
 
 
   return (
