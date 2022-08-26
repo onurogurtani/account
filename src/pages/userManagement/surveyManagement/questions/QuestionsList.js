@@ -108,8 +108,12 @@ const QuestionsList = () => {
         },
         {
             title: 'Oluşturulma Tarihi',
-            dataIndex: 'createdDate',
-            key: 'createdDate',
+            dataIndex: 'insertTime',
+            key: 'insertTime',
+            render: (insertTime) => {
+                const date = insertTime.split("T")
+                return date[0]
+            }
         },
         {
             title: 'Oluşturan Kullanıcı',
