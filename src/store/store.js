@@ -36,6 +36,7 @@ import { userListSlice } from './slice/userListSlice';
 import { avatarFilesSlice } from './slice/avatarSlice';
 import { schoolSlice } from './slice/schoolSlice';
 import { questionSlice } from './slice/questionSlice';
+import { formsSlice } from './slice/formsSlice'
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -60,7 +61,8 @@ const reducers = combineReducers({
   userList: userListSlice.reducer,
   avatarFiles: avatarFilesSlice.reducer,
   school: schoolSlice.reducer,
-  questions: questionSlice.reducer
+  questions: questionSlice.reducer,
+  forms: formsSlice.reducer
 });
 
 const persistConfig = {
