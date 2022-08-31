@@ -26,7 +26,7 @@ import emoji3 from '../../../../../assets/images/emoji/emoji3.png'
 import emoji4 from '../../../../../assets/images/emoji/emoji4.png'
 import emoji5 from '../../../../../assets/images/emoji/emoji5.png'
 
-const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, updateQuestions }) => {
+const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, updateQuestions, setSelectedQuestion, isEdit, setIsEdit }) => {
 
   const likertTypesChoices = {
     1: [
@@ -184,40 +184,54 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
       },
     ],
   }
-
   const [form] = Form.useForm();
+  const emptyValues = {
+    "headText": "",
+    "isActive": true,
+    "questionTypeId": 5,
+    "tags": "",
+    "text": "",
+    "likertTypeId": 1,
+    "choices": likertTypesChoices[`${1}`],
+  }
 
-  const [type, setTypes] = useState(1)
-  const [likertAnswers, setLikertAnswers] = useState(likertTypesChoices[1])
+  const watchLikertTypeId = Form.useWatch('likertTypeId', form);
+
+  const [likertAnswers, setLikertAnswers] = useState(isEdit ? selectedQuestion.choices : likertTypesChoices[`${1}`])
+  const [initialValues, setInitialValues] = useState(emptyValues)
   const dispatch = useDispatch()
 
+  useEffect(() => {
+    if (isEdit === true) {
+      form.setFieldsValue({
+        "id": selectedQuestion.id,
+        "headText": selectedQuestion.headText,
+        "isActive": selectedQuestion.isActive,
+        "questionTypeId": 5,
+        "tags": selectedQuestion.tags,
+        "text": selectedQuestion.text,
+        "likertTypeId": selectedQuestion.likertTypeId,
+        "choices": selectedQuestion.choices,
+      })
+      setLikertAnswers(selectedQuestion.choices)
+    }
+
+  }, [selectedQuestion])
 
   useEffect(() => {
-    // if (type !== 6 && type !== 7)
-      setLikertAnswers(likertTypesChoices[type])
-  }, [type])
-
+    let newArr = likertTypesChoices[`${watchLikertTypeId}`]
+    setLikertAnswers(newArr)
+    form.setFieldsValue({ choices: newArr })
+  }, [watchLikertTypeId])
 
   const likertTypes = useSelector(state => state.questions.likertTypes);
 
-  const onChannelChange = (value) => {
-    switch (value) {
-      case 'true':
-        form.setFieldsValue({ status: true });
-        return;
-      case 'false':
-        form.setFieldsValue({ status: false });
-    }
-  };
-
-  const onSurveyTypeChanged = (value) => {
-    setTypes(value)
-    form.setFieldsValue({ likertTypeId: value })
-  }
-
-
-  const onQuestionChange = (value) => {
-    form.setFieldsValue({ question: value });
+  const handleClose = () => {
+    setIsEdit(false)
+    setSelectedQuestion("")
+    form.resetFields();
+    handleModalVisible(false);
+    setLikertAnswers(likertTypesChoices["1"])
   };
 
   const handleStars = (stars) => {
@@ -232,60 +246,65 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
     })
   }
 
-  const onFinish = useCallback(
-    async (values) => {
-      let newArr = likertAnswers.filter((answer) => (answer.text !== ""))
-      values.choices = newArr
-      const formvalues = {
-        "entity":
-        {
-          "headText": values.headText,
-          "isActive": values.isActive,
-          "questionTypeId": 5,
-          "tags": values.tags,
-          "text": values.text,
-          "likertTypeId": values.likertTypeId,
-          "choices": values.choices,
+  const onFinish = async (values) => {
+    const formvalues = {
+      "entity": { ...values, choices: likertAnswers, questionTypeId: 5 }
+    }
+    if (isEdit) {
+      formvalues.entity.id = selectedQuestion.id
+    }
+
+    if (
+      !!formvalues.entity.headText &&
+      !!formvalues.entity.tags &&
+      !!formvalues.entity.text &&
+      formvalues.entity.text !== "<p><br></p>" &&
+      !!formvalues.entity.choices &&
+      formvalues.entity.choices.length > 0) {
+      if (isEdit) {
+        const action1 = await dispatch(updateQuestions(formvalues));
+        if (updateQuestions.fulfilled.match(action1)) {
+          successDialog({
+            title: <Text t='success' />,
+            message: action1?.payload?.message,
+            onOk: async () => {
+              await handleClose();
+            },
+          })
+          handleClose()
+        } else {
+          errorDialog({
+            title: <Text t='error' />,
+            message: action1?.payload?.message,
+          });
+        }
+
+      } else {
+        const action = await dispatch(addQuestions(formvalues));
+        if (addQuestions.fulfilled.match(action)) {
+          successDialog({
+            title: <Text t='success' />,
+            message: action?.payload?.message,
+            onOk: async () => {
+              await handleClose();
+            },
+          })
+          handleClose()
+        } else {
+          errorDialog({
+            title: <Text t='error' />,
+            message: action?.payload?.message,
+          });
         }
       }
-        if (
-          !!values.headText && 
-          !!values.tags && 
-          !!values.text && 
-          values.text !== "<p><br></p>" && 
-          !!values.choices && 
-          values.choices.length > 0)  {
-            const action = await dispatch(addQuestions(formvalues));
-            if (addQuestions.fulfilled.match(action)) {
-              if(selectedQuestion) {
-                formvalues.entity.id =selectedQuestion.id 
-                dispatch(updateQuestions(formvalues))
-              } else {
-                dispatch(addQuestions(formvalues))
-              }
-                successDialog({
-                    title: <Text t='success' />,
-                    message: action?.payload.message,
-                    onOk: async () => {
-                        await handleModalVisible(false);
-                        form.resetFields();
-                    },
-                });
-            } else {
-                errorDialog({
-                    title: <Text t='error' />,
-                    message: action?.payload.message,
-                });
-            }
-        } else {
-            errorDialog({
-                title: <Text t='error' />,
-                message: 'Lütfen tüm alanları doldurunuz.',
-            });
-        }
-    },
-    [dispatch, handleModalVisible],
-  );
+    } else {
+      errorDialog({
+        title: <Text t='error' />,
+        message: 'Lütfen tüm alanları doldurunuz.',
+      });
+    }
+  
+  }
 
 
 
@@ -296,6 +315,10 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
     let newArr = [...likertAnswers]
     newArr[idx].text = e.target.value
     setLikertAnswers(newArr)
+    form.setFieldsValue({
+      choices: newArr
+    })
+
   }
 
 
@@ -305,7 +328,7 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
       name='likertQuestionLinkForm'
       className='likert-choice-question-link-form survey-form'
       form={form}
-      initialValues={selectedQuestion ? selectedQuestion : { likertTypeId: 1, isActive: true }}
+      initialValues={initialValues}
       onFinish={onFinish}
       autoComplete='off'
       layout={'horizontal'}
@@ -333,21 +356,16 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
           <Form.Item
             label="Likert Tipi:"
             name="likertTypeId">
-            <Select
-              onChange={onSurveyTypeChanged}
-            // defaultValue={1}
-            >
+            <Select>
               {likertTypes?.map((type) => {
                 return <Select.Option key={type.id} value={type.id}>{type.name}</Select.Option>
-
               })}
             </Select>
           </Form.Item>
 
           <Form.Item
             label="Durum:"
-            name="isActive"
-            onChange={onChannelChange}>
+            name="isActive">
             <Select>
               <Select.Option value={true}>Aktif</Select.Option>
               <Select.Option value={false}>Pasif</Select.Option>
@@ -359,17 +377,17 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
             label={<Text t='Soru Metni' />}
             name='text'
           >
-            <ReactQuill theme="snow" onChange={onQuestionChange} />
+            <ReactQuill theme="snow" />
           </CustomFormItem>
           <div className='answers-title'>
             <h5>Cevaplar</h5>
           </div>
           {
-            type === 6 ?
+            watchLikertTypeId === 6 ?
 
               <div className='emoji-rating'>
                 <CustomFormItem
-                  // name="emojianswer"
+                // name="emojianswer"
                 >
                   <input type="radio" name="emoji" id="emoji1" onClick={() => handleEmoji("1")} />
                   <label htmlFor="emoji1">
@@ -412,10 +430,10 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
                 </CustomFormItem>
               </div>
               :
-              type === 7 ?
+              watchLikertTypeId === 7 ?
                 <div className="star-rating">
                   <CustomFormItem
-                    // name="starsanswer"
+                  // name="starsanswer"
                   >
                     <input type="radio" id="star5" name="rating" value="5" onClick={() => handleStars("5")} /><label htmlFor="star5"></label>
                     <input type="radio" id="star4" name="rating" value="4" onClick={() => handleStars("4")} /><label htmlFor="star4"></label>
@@ -424,21 +442,23 @@ const LikertQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, up
                     <input type="radio" id="star1" name="rating" value="1" onClick={() => handleStars("1")} /><label htmlFor="star1"></label>
                   </CustomFormItem>
                 </div> :
+
                 likertAnswers?.map((answer, idx) => {
                   return <CustomInput
-                  className="likert-input"
+                    className="likert-input"
                     key={idx}
                     height={36}
                     value={answer.text}
                     onChange={(e) => handleAnswers(e, idx)}
                   />
-                })}
+                })
+          }
         </div>
       </div>
 
       <div className='form-buttons'>
         <CustomFormItem className='footer-form-item'>
-          <CustomButton className='cancel-btn' type='danger' onClick={() => handleModalVisible(false)}>
+          <CustomButton className='cancel-btn' type='danger' onClick={handleClose}>
             <span className='cancel'>
               <Text t='Vazgeç' />
             </span>
