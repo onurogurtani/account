@@ -13,12 +13,18 @@ import { Form, Select, Input, DatePicker, TimePicker } from 'antd';
 import moment from 'moment';
 const { TextArea } = Input;
 
-const AddFormModal = ({ modalVisible, handleModalVisible }) => {
+const AddFormModal = ({ modalVisible, handleModalVisible, setSelectedForm, selectedForm, isEdit, setIsEdit, forms }) => {
 
     const [form] = Form.useForm();
 
+    console.log(isEdit, selectedForm)
+
+    console.log(form.getFieldsValue())
+
     const handleClose = useCallback(() => {
+        setIsEdit(false)
         handleModalVisible(false);
+        setSelectedForm("")
     }, [handleModalVisible]);
 
     const onFinish = (values) => {
@@ -27,31 +33,31 @@ const AddFormModal = ({ modalVisible, handleModalVisible }) => {
 
     const onStatusChange = (value) => {
         form.setFieldsValue({
-            status: value
+            Status: value
         })
     }
 
     const onCategoryChange = (value) => {
         form.setFieldsValue({
-            category: value
+            CategoryId: value
         })
     }
 
     const onTargetGroupChange = (value) => {
         form.setFieldsValue({
-            targetGroup: value
+            TargetGroupId: value
         })
     }
 
     const onSurveyConstraintChange = (value) => {
         form.setFieldsValue({
-            surveyConstraint: value
+            SurveyConstraintId: value
         })
     }
 
     const onSurveyCompletionStatusChange = (value) => {
         form.setFieldsValue({
-            surveyCompletionStatus: value
+            surveyCompletionStatusId: value
         })
     }
 
@@ -61,6 +67,7 @@ const AddFormModal = ({ modalVisible, handleModalVisible }) => {
             maskClosable={false}
             footer={false}
             title={'Yeni Anket Oluştur'}
+            initialValues={isEdit ? selectedForm : {}}
             visible={modalVisible}
             onCancel={handleClose}
             closeIcon={<CustomImage src={modalClose} />}
@@ -78,8 +85,8 @@ const AddFormModal = ({ modalVisible, handleModalVisible }) => {
                         <div className="form-left-side">
                             <CustomFormItem
                                 label="Anket Başlığı"
-                                name="title"
-                               
+                                name="name"
+
                             >
                                 <Input
                                     placeholder="Anket Başlığı"
@@ -88,7 +95,7 @@ const AddFormModal = ({ modalVisible, handleModalVisible }) => {
                             </CustomFormItem>
                             <CustomFormItem
                                 label='Durum'
-                                name='status'
+                                name='isActive'
                             >
                                 <Select
                                     placeholder="Durum..."
@@ -100,56 +107,75 @@ const AddFormModal = ({ modalVisible, handleModalVisible }) => {
                             </CustomFormItem>
                             <CustomFormItem
                                 label="Kategori"
-                                name='category'
+                                name='categoryId'
                             >
                                 <Select
-                                    placeholder="Kategori..."
+                                    placeholder="Kategori Seçiniz..."
                                     onChange={onCategoryChange}
+                                    mode="multiple"
+                                    showArrow
+                                    height="40px"
                                 >
-                                    <Option value="Envanter Testi">Envanter Testi</Option>
+                                    {forms.formCategories.items?.map((categoryitems) => (
+                                        <Option key={categoryitems.id} value={categoryitems.id}>{categoryitems.name}</Option>
+                                    ))}
+                                    {/* <Option value="Envanter Testi">Envanter Testi</Option>
                                     <Option value="Deneme Sınavından Sonra">Deneme Sınavından Sonra</Option>
                                     <Option value="Koçluk Görüşmesinden Sonra">Koçluk Görüşmesinden Sonra</Option>
                                     <Option value="Genel Memnuniyet Anketi">Genel Memnuniyet Anketi</Option>
-                                    <Option value="Etkinlik Sonrası Anket">Etkinlik Sonrası Anket</Option>
+                                    <Option value="Etkinlik Sonrası Anket">Etkinlik Sonrası Anket</Option> */}
                                 </Select>
 
                             </CustomFormItem>
                             <CustomFormItem
                                 label='Hedef Kitle'
-                                name='targetGroup'
+                                name='TargetGroupId'
                             >
                                 <Select
-                                    placeholder="Hedef Kitle..."
+                                    placeholder="Hedef Kitle Seçiniz..."
                                     onChange={onTargetGroupChange}
+                                    mode="multiple"
+                                    showArrow
+                                    height="40px"
                                 >
-                                    <Option value="Veli">Veli</Option>
-                                    <Option value="Öğrenci">Öğrenci</Option>
-                                    <Option value="Koç">Koç</Option>
-                                    <Option value="Genel">Genel</Option>
+                                    {forms.formTargetGroup.items?.map((targetitems) => (
+                                        <Option key={targetitems.id} value={targetitems.id}>{targetitems.name}</Option>
+                                    ))}
+                                    {/* <Option value="Veli">Veli</Option>
+                        <Option value="Öğrenci">Öğrenci</Option>
+                        <Option value="Koç">Koç</Option>
+                        <Option value="Genel">Genel</Option> */}
                                 </Select>
                             </CustomFormItem>
 
                             <CustomFormItem
                                 label='Anket Kısıtı/Tipi'
-                                name='surveyConstraint'
+                                name='SurveyConstraintId'
                             >
                                 <Select
                                     placeholder="Anket Kısıtı/Tipi..."
                                     onChange={onSurveyConstraintChange}
+                                    mode="multiple"
+                                    showArrow
+                                    height="40px"
                                 >
-                                    <Option value="Veli Özelinde">Veli Özelinde</Option>
-                                    <Option value="Koç Özelinde">Koç Özelinde</Option>
-                                    <Option value="Genel">Genel</Option>
-                                    <Option value="Sınıf Özelinde">Sınıf Özelinde</Option>
-                                    <Option value="İl Bazında">İl Bazında</Option>
-                                    <Option value="Alan Bazında">Alan Bazında</Option>
-                                    <Option value="Okul Türü Bazında">Okul Türü Bazında</Option>
-                                    <Option value="Okul Bazında">Okul Bazında</Option>
+                                    {forms.surveyConstraint.items?.map((surveyconstraintitems) => (
+                                        <Option key={surveyconstraintitems.id} value={surveyconstraintitems.id}>{surveyconstraintitems.name}</Option>
+                                    ))}
+                                    {/* <Option value="Veli Özelinde">Veli Özelinde</Option>
+                        <Option value="Koç Özelinde">Koç Özelinde</Option>
+                        <Option value="Genel">Genel</Option>
+                        <Option value="Sınıf Özelinde">Sınıf Özelinde</Option>
+                        <Option value="İl Bazında">İl Bazında</Option>
+                        <Option value="Alan Bazında">Alan Bazında</Option>
+                        <Option value="Okul Türü Bazında">Okul Türü Bazında</Option>
+                        <Option value="Okul Bazında">Okul Bazında</Option> */}
                                 </Select>
                             </CustomFormItem>
+
                             <CustomFormItem
                                 label='Anket Tamamlama Durumu'
-                                name='surveyCompletionStatus'
+                                name='surveyCompletionStatusId'
                             >
                                 <Select
                                     placeholder="Anket Tamamlama Durumu..."
@@ -198,12 +224,12 @@ const AddFormModal = ({ modalVisible, handleModalVisible }) => {
                         </div>
                         <div className="form-right-side">
                             <p>
-                            Anket Ön Bilgilendirme Yazısı
-                            </p>  
+                                Anket Ön Bilgilendirme Yazısı
+                            </p>
                             <CustomFormItem
                                 name="description"
                             >
-                                <TextArea  rows={4} />
+                                <TextArea rows={4} />
                             </CustomFormItem>
                         </div>
                     </div>

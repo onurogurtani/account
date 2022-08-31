@@ -53,6 +53,8 @@ const FormsList = () => {
     const [isSortVisible, setIsSortVisible] = useState(false);
     const [isAddFormVisible, setIsAddFormVisible] = useState(false);
     const [filterParams, setFilterParams] = useState(emptyFilterObj)
+    const [isEdit, setIsEdit] = useState(false)
+    const [selectedForm, setSelectedForm] = useState({})
 
     const dispatch = useDispatch()
 
@@ -70,8 +72,6 @@ const FormsList = () => {
 
     const forms = useSelector(state => state?.forms);
 
-
-
     const onSelectChange = (newSelectedRowKeys, row) => {
         setSelectedRowKeys(newSelectedRowKeys);
     };
@@ -80,6 +80,12 @@ const FormsList = () => {
         selectedRowKeys,
         onChange: onSelectChange,
     };
+
+    const updateForm = (data) => {
+        setIsEdit(true)
+        setSelectedForm(data)
+        setIsAddFormVisible(true);
+    }
 
     const handleDeleteForm = async (question) => {
         confirmDialog({
@@ -148,11 +154,16 @@ const FormsList = () => {
     }
 
     const action = (row, actionName) => {
-         if (actionName === "Sil") {
+        if (actionName === "Güncelle") {
+            updateForm(row)
+        }
+        else if (actionName === "Sil") {
             handleDeleteForm(row)
-        } else if (actionName === "Aktif Et/Yayınla") {
+        } 
+        else if (actionName === "Aktif Et/Yayınla") {
             handleActiveForm(row)
-        }  else if (actionName === "Pasif Et/Sonlandır") {
+        }  
+        else if (actionName === "Pasif Et/Sonlandır") {
             handlePassiveForm(row)
         } 
     }
@@ -242,6 +253,11 @@ const FormsList = () => {
                 <AddFormModal
                     modalVisible={isAddFormVisible}
                     handleModalVisible={setIsAddFormVisible}
+                    setSelectedForm={setSelectedForm}
+                    selectedForm={selectedForm}
+                    isEdit={isEdit}
+                    setIsEdit={setIsEdit}
+                    forms={forms}
                 />
 
             </CustomCollapseCard>
