@@ -175,14 +175,14 @@ const FormsList = () => {
                                     </CustomButton>
                                 </div>
                                 <div className='remove-btn'>
-                                    <CustomButton type='secondary'>
+                                    <CustomButton type='secondary' onClick={handlePassiveForm}>
                                         <span className='filter-text'>
                                             <Text t='Seçilenleri Sonlandır/Yayından Kaldır' />
                                         </span>
                                     </CustomButton>
                                 </div>
                                 <div className='active-btn'>
-                                    <CustomButton type='secondary'>
+                                    <CustomButton type='secondary' onClick={handleActiveForm}>
                                         <span className='filter-text'>
                                             <Text t='Aktifleştir/Yayınla' />
                                         </span>
