@@ -1,4 +1,4 @@
-import React, { useState , useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {
@@ -18,10 +18,17 @@ import "../../../../../styles/surveyManagement/surveyStyles.scss"
 import { useDispatch } from 'react-redux';
 
 
-const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, updateQuestions }) => {
+const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, updateQuestions, setIsEdit, setSelectedQuestion , isEdit }) => {
 
   const [form] = Form.useForm();
   const dispatch = useDispatch()
+
+  const handleClose = () => {
+    setIsEdit(false)
+    setSelectedQuestion("")
+    form.resetFields();
+    handleModalVisible(false);
+  };
 
   const [answers, setAnswers] = useState([
     {
@@ -64,19 +71,6 @@ const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion, addQuestions,
   }, [])
 
 
-  const onChannelChange = (value) => {
-    switch (value) {
-      case 'true':
-        form.setFieldsValue({ status: true });
-        return;
-      case 'false':
-        form.setFieldsValue({ status: false });
-    }
-  };
-
-  const onQuestionChange = (value) => {
-    form.setFieldsValue({ question: value });
-  };
 
   const onFinish = useCallback(
     async (values) => {
@@ -98,41 +92,53 @@ const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion, addQuestions,
           "choices": values.choices
         }
       }
-        if (
-          !!values.headText && 
-          !!values.tags && 
-          !!values.text && 
-          values.text !== "<p><br></p>" && 
-          !!values.choices && 
-          values.choices.length > 0)  {
-            const action = await dispatch(addQuestions(formvalues));
-            if (addQuestions.fulfilled.match(action)) {
-              if(selectedQuestion) {
-                formvalues.entity.id =selectedQuestion.id 
-                dispatch(updateQuestions(formvalues))
-              } else {
-                dispatch(addQuestions(formvalues))
-              }
-                successDialog({
-                    title: <Text t='success' />,
-                    message: action?.payload.message,
-                    onOk: async () => {
-                        await handleModalVisible(false);
-                        form.resetFields();
-                    },
-                });
-            } else {
-                errorDialog({
-                    title: <Text t='error' />,
-                    message: action?.payload.message,
-                });
-            }
-        } else {
-            errorDialog({
-                title: <Text t='error' />,
-                message: 'Lütfen tüm alanları doldurunuz.',
+      if (
+        !!values.headText &&
+        !!values.tags &&
+        !!values.text &&
+        values.text !== "<p><br></p>" &&
+        !!values.choices &&
+        values.choices.length > 0) {
+        if (isEdit) {
+          formvalues.entity.id = selectedQuestion.id
+          const action1 = await dispatch(updateQuestions(formvalues));
+          if (updateQuestions.fulfilled.match(action1)) {
+            successDialog({
+              title: <Text t='success' />,
+              message: action1?.payload?.message,
+              onOk: async () => {
+                handleClose()
+              },
             });
+          } else {
+            errorDialog({
+              title: <Text t='error' />,
+              message: action1?.payload?.message,
+            });
+          }
+        } else {
+          const action = await dispatch(addQuestions(formvalues));
+          if (addQuestions.fulfilled.match(action)) {
+            successDialog({
+              title: <Text t='success' />,
+              message: action?.payload?.message,
+              onOk: async () => {
+                handleClose()
+              },
+            });
+          } else {
+            errorDialog({
+              title: <Text t='error' />,
+              message: action?.payload?.message,
+            });
+          }
         }
+      } else {
+        errorDialog({
+          title: <Text t='error' />,
+          message: 'Lütfen tüm alanları doldurunuz.',
+        });
+      }
     },
     [dispatch, handleModalVisible],
   );
@@ -168,7 +174,7 @@ const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion, addQuestions,
       name='oneChoiceQuestionLinkForm'
       className='one-choice-question-link-form survey-form'
       form={form}
-      initialValues={selectedQuestion ? selectedQuestion : {isActive: true}}
+      initialValues={isEdit ? selectedQuestion : { isActive: true }}
       onFinish={onFinish}
       autoComplete='off'
       layout={'horizontal'}
@@ -195,8 +201,7 @@ const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion, addQuestions,
           </CustomFormItem>
           <Form.Item
             label="Durum:"
-            name="isActive"
-            onChange={onChannelChange}>
+            name="isActive">
             <Select>
               <Select.Option value={true}>Aktif</Select.Option>
               <Select.Option value={false}>Pasif</Select.Option>
@@ -208,7 +213,7 @@ const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion, addQuestions,
             label={<Text t='Soru Metni' />}
             name='text'
           >
-            <ReactQuill theme="snow" onChange={onQuestionChange} />
+            <ReactQuill theme="snow"  />
           </CustomFormItem>
           <div className='answers-title'>
             <h5>Cevaplar</h5>
@@ -217,22 +222,14 @@ const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion, addQuestions,
             {
               answers.map((answer, idx) => {
                 return answer.active === true &&
-                  // <CustomFormItem
-                  //   key={idx}
-                  //   label={<Text t={answer.marker} />}
-                  //   name={`answer-${answer.marker}`}
-                  //   className="answer-form-item answer-box"
-                  // >
-                  <>
-
+                  <div key={idx}>
                     <CustomInput
                       height={36}
                       value={answer.text}
                       onChange={(e) => handleAnswers(e, idx)}
                     />
                     <CustomButton onClick={() => deleteAnswer(idx)}>Sil</CustomButton>
-                  </>
-                // </CustomFormItem>
+                  </div>
               })
             }
           </div>
@@ -244,7 +241,7 @@ const OneChoiseQuestion = ({ handleModalVisible, selectedQuestion, addQuestions,
 
       <div className='form-buttons'>
         <CustomFormItem className='footer-form-item'>
-          <CustomButton className='cancel-btn' type='danger' onClick={() => handleModalVisible(false)}>
+          <CustomButton className='cancel-btn' type='danger' onClick={handleClose}>
             <span className='cancel'>
               <Text t='Vazgeç' />
             </span>

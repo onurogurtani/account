@@ -42,6 +42,13 @@ import formServices from '../../services/forms.services';
 //   });
 
 
+// Get Form Static
+export const getFormsStatic = createAsyncThunk("forms/getFormsStatic", async (data, { dispatch }) => {
+  const response = await formServices.getFormsStatic(data);
+  return response;
+});
+
+
 // Add Form
 // export const addForm = createAsyncThunk("forms/addForms", async (data, { dispatch }) => {
 //   const response = await formServices.addForms(data);
@@ -57,30 +64,29 @@ import formServices from '../../services/forms.services';
 // });
 
 
-// // Delete Qeustion
-// export const deleteForm = createAsyncThunk('question/deleteForm', async (data, { dispatch }) => {
-//   const response = await formServices.formDelete(data);
-//   dispatch(getForms());
-//   return response;
-// },
-// );
+// Delete Form
+export const deleteForm = createAsyncThunk('question/deleteForm', async (data, { dispatch }) => {
+  const response = await formServices.formDelete(data);
+  dispatch(getFormsStatic());
+  return response;
+},
+);
 
-// // Active Question
-// export const activeForm= createAsyncThunk('question/activeForm', async (data, { dispatch }) => {
-//   const response = await formServices.formActive(data);
-//   dispatch(getForms());
-//   return response;
-// },
-// );
+// Active Question
+export const activeForm= createAsyncThunk('question/activeForm', async (data, { dispatch }) => {
+  const response = await formServices.formActive(data);
+  dispatch(getFormsStatic());
+  return response;
+},
+);
 
-
-// // Passive Question
-// export const passiveForm = createAsyncThunk('question/passiveForm', async (data, { dispatch }) => {
-//   const response = await formServices.formPassive(data);
-//   dispatch(getForms());
-//   return response;
-// },
-// );
+// Passive Question
+export const passiveForm = createAsyncThunk('question/passiveForm', async (data, { dispatch }) => {
+  const response = await formServices.formPassive(data);
+  dispatch(getFormsStatic());
+  return response;
+},
+);
 
 // Initial State
 const initialState = {
@@ -92,6 +98,9 @@ export const formsSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    builder.addCase(getFormsStatic.fulfilled, (state, action) => {
+      state.formList = action.payload.data
+    });
     // builder.addCase(getForms.fulfilled, (state, action) => {
     //   state.formList = action.payload.data
     // });

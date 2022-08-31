@@ -17,12 +17,20 @@ import { Form, Select } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
 import { useDispatch } from 'react-redux';
 
-const FillInTheBlankQuestion = ({ handleModalVisible, selectedQuestion, addQuestions , updateQuestions }) => {
+const FillInTheBlankQuestion = ({ handleModalVisible, selectedQuestion, addQuestions , updateQuestions, setIsEdit, setSelectedQuestion , isEdit  }) => {
 
   const [form] = Form.useForm();
   const quillRef = useRef(null)
   const reactQuillRef = useRef(null)
   const dispatch = useDispatch()
+
+  
+  const handleClose = () => {
+    setIsEdit(false)
+    setSelectedQuestion("")
+    form.resetFields();
+    handleModalVisible(false);
+  };
 
   useEffect(() => {
     if (reactQuillRef !== null) {
@@ -74,28 +82,40 @@ const FillInTheBlankQuestion = ({ handleModalVisible, selectedQuestion, addQuest
         }
       }
         if (!!values.headText && !!values.tags && !!values.text && values.text !== "<p><br></p>")  {
-            const action = await dispatch(addQuestions(formvalues));
-            if (addQuestions.fulfilled.match(action)) {
-              if(selectedQuestion) {
-                formvalues.entity.id =selectedQuestion.id 
-                dispatch(updateQuestions(formvalues))
-              } else {
-                dispatch(addQuestions(formvalues))
-              }
-                successDialog({
-                    title: <Text t='success' />,
-                    message: action?.payload.message,
-                    onOk: async () => {
-                        await handleModalVisible(false);
-                        form.resetFields();
-                    },
-                });
-            } else {
-                errorDialog({
-                    title: <Text t='error' />,
-                    message: action?.payload.message,
-                });
-            }
+         if(isEdit){
+          formvalues.entity.id =selectedQuestion.id 
+          const action1 = await dispatch(updateQuestions(formvalues));
+          if (updateQuestions.fulfilled.match(action1)) {
+              successDialog({
+                  title: <Text t='success' />,
+                  message: action1?.payload?.message,
+                  onOk: async () => {
+                    handleClose()
+                  },
+              });
+          } else {
+              errorDialog({
+                  title: <Text t='error' />,
+                  message: action1?.payload?.message,
+              });
+          }
+         }else {
+          const action = await dispatch(addQuestions(formvalues));
+          if (addQuestions.fulfilled.match(action)) {
+              successDialog({
+                  title: <Text t='success' />,
+                  message: action?.payload?.message,
+                  onOk: async () => {
+                    handleClose()
+                  },
+              });
+          } else {
+              errorDialog({
+                  title: <Text t='error' />,
+                  message: action?.payload?.message,
+              });
+          }
+         }
         } else {
             errorDialog({
                 title: <Text t='error' />,
@@ -106,17 +126,12 @@ const FillInTheBlankQuestion = ({ handleModalVisible, selectedQuestion, addQuest
     [dispatch, handleModalVisible],
   );
 
-
-
-  
-
-
   return (
     <CustomForm
       name='fillInTheBlankQuestionLinkForm'
       className='fill-in-the-blank-question-link-form survey-form'
       form={form}
-      initialValues={selectedQuestion ? selectedQuestion : {isActive: true}}
+      initialValues={isEdit ? selectedQuestion : {isActive: true}}
       onFinish={onFinish}
       autoComplete='off'
       layout={'horizontal'}
@@ -186,7 +201,7 @@ const FillInTheBlankQuestion = ({ handleModalVisible, selectedQuestion, addQuest
 
       <div className='form-buttons'>
         <CustomFormItem className='footer-form-item'>
-          <CustomButton className='cancel-btn' type='danger' onClick={() => handleModalVisible(false)}>
+          <CustomButton className='cancel-btn' type='danger' onClick={handleClose}>
             <span className='cancel'>
               <Text t='Vazgeç' />
             </span>

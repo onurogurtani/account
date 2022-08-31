@@ -8,6 +8,15 @@ const getForms = (urlString) => {
     });
 }
 
+// Forms with filter 
+const getFormsStatic = (data) => {
+    return api({
+        url: `Forms/GetByFilterPagedForms?FormDetailSearch.PageNumber=1&FormDetailSearch.PageSize=10`,
+        method: 'POST',
+        data
+    });
+}
+
 
 // Add Form
 const addForm = (data) => {
@@ -62,6 +71,7 @@ const formPassive = (data) => {
 
 const formServices = {
     getForms,
+    getFormsStatic,
     addForm,
     updateForm,
     formActive,

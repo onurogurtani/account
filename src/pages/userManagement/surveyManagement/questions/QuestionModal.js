@@ -14,13 +14,15 @@ import { Form } from 'antd';
 import '../../../../styles/surveyManagement/surveyStyles.scss'
 import { addQuestions, updateQuestions } from '../../../../store/slice/questionSlice';
 
-const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType, selectedQuestion }) => {
+const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType, selectedQuestion, setSelectedQuestion, isEdit ,setIsEdit }) => {
     const [form] = Form.useForm();
 
-    const handleClose = useCallback(() => {
+    const handleClose =() => {
+        setIsEdit(false)
+        setSelectedQuestion()
         form.resetFields();
         handleModalVisible(false);
-    }, [handleModalVisible, form]);
+    };
 
     return (
         <CustomModal
@@ -39,6 +41,9 @@ const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType,
                         updateQuestions={updateQuestions}
                         handleModalVisible={handleModalVisible}
                         selectedQuestion={selectedQuestion}
+                        isEdit={isEdit}
+                        setIsEdit={setIsEdit}
+                        setSelectedQuestion={setSelectedQuestion}
                     />
                 }
                 {selectedQuestionType === "Tek Seçimli Soru" &&
@@ -47,6 +52,9 @@ const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType,
                         updateQuestions={updateQuestions}
                         handleModalVisible={handleModalVisible}
                         selectedQuestion={selectedQuestion}
+                        isEdit={isEdit}
+                        setIsEdit={setIsEdit}
+                        setSelectedQuestion={setSelectedQuestion}
                     />
                 }
                 {selectedQuestionType === "Çok Seçimli Soru" &&
@@ -55,6 +63,9 @@ const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType,
                         updateQuestions={updateQuestions}
                         handleModalVisible={handleModalVisible}
                         selectedQuestion={selectedQuestion}
+                        isEdit={isEdit}
+                        setIsEdit={setIsEdit}
+                        setSelectedQuestion={setSelectedQuestion}
                     />
                 }
                 {selectedQuestionType === "Boşluk Doldurma Sorusu" &&
@@ -63,14 +74,20 @@ const QuestionModal = ({ modalVisible, handleModalVisible, selectedQuestionType,
                         updateQuestions={updateQuestions}
                         handleModalVisible={handleModalVisible}
                         selectedQuestion={selectedQuestion}
+                        setIsEdit={setIsEdit}
+                        setSelectedQuestion={setSelectedQuestion}
                     />
                 }
                 {selectedQuestionType === "Likert Tipi Soru" &&
                     <LikertQuestion
+                        form={form}
                         addQuestions={addQuestions}
                         updateQuestions={updateQuestions}
                         handleModalVisible={handleModalVisible}
                         selectedQuestion={selectedQuestion}
+                        setSelectedQuestion={setSelectedQuestion}
+                        isEdit={isEdit}
+                        setIsEdit={setIsEdit}
                     />
                 }
 

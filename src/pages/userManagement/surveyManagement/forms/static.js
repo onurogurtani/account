@@ -137,8 +137,6 @@ const sortList = [
     },
 ]
 
-
-
 const columns = (action) => [
     {
         title: "ID",
@@ -226,6 +224,7 @@ const columns = (action) => [
             const menu = (
                 <Menu>
                     {menuList.map(item => (
+                        (!(item.key === "4" && record.isActive === false) && !((item.key === "5" || item.key === "2") && record.isActive === true)) && 
                         <Menu.Item key={item.key}>
                             <Button type="text" size={12} onClick={ () => action(record, item?.name)} >
                                 {item.name}

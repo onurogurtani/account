@@ -190,7 +190,8 @@ const QuestionsList = () => {
     const [sortModalVisible, setSortModalVisible] = useState(false);
     const [filterModalVisible, setFilterModalVisible] = useState(false);
     const [selectedQuestionType, setSelectedQuestionType] = useState('')
-    const [selectedQuestion, setSelectedQuestion] = useState('')
+    const [selectedQuestion, setSelectedQuestion] = useState({})
+    const [isEdit, setIsEdit] = useState(false)
     const [idList, setIdList] = useState([])
     const [filterParams, setFilterParams] = useState(emptyFilterObj)
 
@@ -202,6 +203,8 @@ const QuestionsList = () => {
 
 
     const addFormModal = (questionType) => {
+        setIsEdit(false)
+        setSelectedQuestion({})
         setSelectedQuestionType(questionType)
         setQuestionFormModalVisible(true);
     };
@@ -214,6 +217,7 @@ const QuestionsList = () => {
         setFilterModalVisible(true)
     }
     const updateQuestion = (data) => {
+        setIsEdit(true)
         setSelectedQuestionType(data.questionType.name)
         setSelectedQuestion(data)
         setQuestionFormModalVisible(true);
@@ -355,7 +359,7 @@ const QuestionsList = () => {
                         </div>
                         <div className='drafts-count-title'>
                             <CustomImage src={cardsRegistered} />
-                            Toplam Soru Sayısı: <span> {questionList.pagedProperty?.totalCount} </span>
+                            Toplam Soru Sayısı: <span> {questionList?.pagedProperty?.totalCount} </span>
                         </div>
                     </div>
                 }
@@ -408,6 +412,9 @@ const QuestionsList = () => {
                 modalVisible={questionFormModalVisible}
                 handleModalVisible={setQuestionFormModalVisible}
                 selectedQuestion={selectedQuestion}
+                setSelectedQuestion={setSelectedQuestion}
+                isEdit={isEdit}
+                setIsEdit={setIsEdit}
             />
             <SortModal
                 modalVisible={sortModalVisible}

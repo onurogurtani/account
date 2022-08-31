@@ -1,4 +1,4 @@
-import {useCallback} from 'react';
+import { useCallback } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {
@@ -17,23 +17,17 @@ import { Form, Select } from 'antd';
 import "../../../../../styles/surveyManagement/surveyStyles.scss"
 import { useDispatch } from 'react-redux';
 
-const OpenEndedQuestion = ({ handleModalVisible, selectedQuestion, addQuestions ,updateQuestions }) => {
+const OpenEndedQuestion = ({ handleModalVisible, selectedQuestion, addQuestions, updateQuestions, isEdit, setIsEdit, setSelectedQuestion }) => {
   const [form] = Form.useForm();
   const dispatch = useDispatch()
 
-  const onChannelChange = (value) => {
-    switch (value) {
-      case 'true':
-        form.setFieldsValue({ status: true });
-        return;
-      case 'false':
-        form.setFieldsValue({ status: false });
-    }
+  const handleClose = () => {
+    setIsEdit(false)
+    setSelectedQuestion("")
+    form.resetFields();
+    handleModalVisible(false);
   };
 
-  const onQuestionChange = (value) => {
-    form.setFieldsValue({ question: value });
-  };
 
   const onFinish = useCallback(
     async (values) => {
@@ -47,49 +41,58 @@ const OpenEndedQuestion = ({ handleModalVisible, selectedQuestion, addQuestions 
           "text": values.text
         }
       }
-        if (!!values.headText && !!values.tags && !!values.text && values.text !== "<p><br></p>")  {
-            const action = await dispatch(addQuestions(formvalues));
-            if (addQuestions.fulfilled.match(action)) {
-              if(selectedQuestion) {
-                formvalues.entity.id =selectedQuestion.id 
-                dispatch(updateQuestions(formvalues))
-              } else {
-                dispatch(addQuestions(formvalues))
-              }
-                successDialog({
-                    title: <Text t='success' />,
-                    message: action?.payload.message,
-                    onOk: async () => {
-                        await handleModalVisible(false);
-                        form.resetFields();
-                    },
-                });
-            } else {
-                errorDialog({
-                    title: <Text t='error' />,
-                    message: action?.payload.message,
-                });
-            }
-        } else {
-            errorDialog({
-                title: <Text t='error' />,
-                message: 'Lütfen tüm alanları doldurunuz.',
+      if (!!values.headText && !!values.tags && !!values.text && values.text !== "<p><br></p>") {
+        if (isEdit) {
+          formvalues.entity.id = selectedQuestion.id
+          const action1 = await dispatch(updateQuestions(formvalues));
+          if (updateQuestions.fulfilled.match(action1)) {
+            successDialog({
+              title: <Text t='success' />,
+              message: action1?.payload?.message,
+              onOk: async () => {
+                handleClose()
+              },
             });
+          } else {
+            errorDialog({
+              title: <Text t='error' />,
+              message: action1?.payload?.message,
+            });
+          }
         }
+        else {
+          const action = await dispatch(addQuestions(formvalues));
+          if (addQuestions.fulfilled.match(action)) {
+            successDialog({
+              title: <Text t='success' />,
+              message: action?.payload.message,
+              onOk: async () => {
+                handleClose()
+              },
+            });
+          } else {
+            errorDialog({
+              title: <Text t='error' />,
+              message: action?.payload.message,
+            });
+          }
+        }
+      } else {
+        errorDialog({
+          title: <Text t='error' />,
+          message: 'Lütfen tüm alanları doldurunuz.',
+        });
+      }
     },
     [dispatch, handleModalVisible],
   );
-
-
-
-
 
   return (
     <CustomForm
       name='openEndedQuestionLinkForm'
       className='open-ended-question-link-form survey-form'
       form={form}
-      initialValues={selectedQuestion ? selectedQuestion : {isActive: true}}
+      initialValues={isEdit ? selectedQuestion : { isActive: true }}
       onFinish={onFinish}
       autoComplete='off'
       layout={'horizontal'}
@@ -117,7 +120,7 @@ const OpenEndedQuestion = ({ handleModalVisible, selectedQuestion, addQuestions 
           <Form.Item
             label="Durum:"
             name="isActive"
-            onChange={onChannelChange}>
+          >
             <Select>
               <Select.Option value={true}>Aktif</Select.Option>
               <Select.Option value={false}>Pasif</Select.Option>
@@ -129,14 +132,16 @@ const OpenEndedQuestion = ({ handleModalVisible, selectedQuestion, addQuestions 
             label={<Text t='Soru Metni' />}
             name='text'
           >
-            <ReactQuill theme="snow" onChange={onQuestionChange} />
+            <ReactQuill theme="snow"
+            //  onChange={onQuestionChange}
+            />
           </CustomFormItem>
         </div>
       </div>
 
       <div className='form-buttons'>
         <CustomFormItem className='footer-form-item'>
-          <CustomButton className='cancel-btn' type='danger' onClick={() => handleModalVisible(false)}>
+          <CustomButton className='cancel-btn' type='danger' onClick={handleClose}>
             <span className='cancel'>
               <Text t='Vazgeç' />
             </span>
