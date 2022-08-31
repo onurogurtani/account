@@ -4,15 +4,20 @@ import {
     CustomImage,
     CustomButton,
     Text,
-    CustomTable
+    CustomTable,
+    successDialog,
+    confirmDialog,
+    errorDialog
 } from '../../../../components';
 import cardsRegistered from '../../../../assets/icons/icon-cards-registered.svg';
 import '../../../../styles/draftOrder/draftList.scss';
 import "../../../../styles/surveyManagement/surveyStyles.scss"
-import { data, columns } from './static';
+import { columns } from './static';
 import FilterFormModal from './FilterModal';
 import SortFormModal from './SortModal';
 import AddFormModal from './FormModal';
+import { useDispatch, useSelector } from 'react-redux';
+import {getFormsStatic, deleteForm, activeForm, passiveForm} from '../../../../store/slice/formsSlice'
 
 const FormsList = () => {
 
@@ -21,9 +26,18 @@ const FormsList = () => {
     const [isSortVisible, setIsSortVisible] = useState(false);
     const [isAddFormVisible, setIsAddFormVisible] = useState(false);
 
+    const dispatch = useDispatch()
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
+
+    
+    useEffect(() => {
+        dispatch(getFormsStatic())
+    }, [dispatch])
+
+    const { items, pagedProperty } = useSelector(state => state?.forms.formList);
 
     const onSelectChange = (newSelectedRowKeys, row) => {
         setSelectedRowKeys(newSelectedRowKeys);
@@ -34,9 +48,80 @@ const FormsList = () => {
         onChange: onSelectChange,
     };
 
+    const handleDeleteForm = async (question) => {
+        confirmDialog({
+            title: <Text t='attention' />,
+            message: 'Kaydı silmek istediğinizden emin misiniz?',
+            okText: <Text t='delete' />,
+            cancelText: 'Vazgeç',
+            onOk: async () => {
+                const ids = selectedRowKeys.length > 0 ? selectedRowKeys : [question.id]
+                const action = await dispatch(deleteForm({ ids }));
+                if (deleteForm.fulfilled.match(action)) {
+                    successDialog({
+                        title: <Text t='successfullySent' />,
+                        //message: action?.payload
+                        message: "Kayıt Başarı İle Silindi"
+                    });
+                } else {
+                    errorDialog({
+                        title: <Text t='error' />,
+                        // message: action?.payload
+                        message: "Kayıt Silinirken bir hata ile karşılaştı."
+                    });
+                }
+            }
+        });
+    }
+
+    const handleActiveForm = (formitem) => {
+        confirmDialog({
+            title: <Text t='attention' />,
+            message: 'Seçilen formu aktifleştirmek istediğinizden emin misiniz?',
+            okText: <Text t='Evet' />,
+            cancelText: 'Hayır',
+            onOk: async () => {
+             const ids = selectedRowKeys.length > 0 ? {"ids": selectedRowKeys} :  {"ids": [formitem.id]}
+               dispatch(activeForm(ids))
+                if (activeForm.fulfilled) {
+                    successDialog({
+                        title: <Text t='successfullySent' />,
+                        //message: action?.payload
+                        message: "Kayıt başarı ile aktif edildi."
+                    });
+                }
+            }
+        });
+    }
+
+    const handlePassiveForm = (formitem) => {
+        confirmDialog({
+            title: <Text t='attention' />,
+            message: 'Seçilen formu pasifleştirmek istediğinizden emin misiniz?',
+            okText: <Text t='Evet' />,
+            cancelText: 'Hayır',
+            onOk: async () => {
+                const ids = selectedRowKeys.length > 0 ? {"ids": selectedRowKeys} :  {"ids": [formitem.id]}
+                dispatch(passiveForm(ids))
+                if (passiveForm.fulfilled) {
+                    successDialog({
+                        title: <Text t='successfullySent' />,
+                        //message: action?.payload
+                        message: "Kayıt başarı ile pasif edildi."
+                    });
+                }
+            }
+        });
+    }
+
     const action = (row, actionName) => {
-        console.log("row", row)
-        console.log("actionName", actionName)
+         if (actionName === "Sil") {
+            handleDeleteForm(row)
+        } else if (actionName === "Aktif Et/Yayınla") {
+            handleActiveForm(row)
+        }  else if (actionName === "Pasif Et/Sonlandır") {
+            handlePassiveForm(row)
+        } 
     }
 
     return (
@@ -67,11 +152,11 @@ const FormsList = () => {
                     </div>
                     <div className='drafts-count-title'>
                         <CustomImage src={cardsRegistered} />
-                        Kayıtlı Form Sayısı: <span>{data?.length}</span>
+                        Kayıtlı Form Sayısı: <span>{pagedProperty?.totalCount}</span>
                     </div>
                 </div>
                 <CustomTable
-                    dataSource={data}
+                    dataSource={items}
                     columns={columns(action)}
                     rowKey={(record) => record.id}
                     scroll={{
@@ -83,7 +168,7 @@ const FormsList = () => {
                         selectedRowKeys.length > 0 && (
                             <div className='footer-buttons'>
                                 <div className='delete-btn'>
-                                    <CustomButton type='secondary'>
+                                    <CustomButton type='secondary' onClick={handleDeleteForm}>
                                         <span className='sort'>
                                             <Text t='Seçilenleri Sil' />
                                         </span>
