@@ -17,14 +17,42 @@ import FilterFormModal from './FilterModal';
 import SortFormModal from './SortModal';
 import AddFormModal from './FormModal';
 import { useDispatch, useSelector } from 'react-redux';
-import {getFormsStatic, deleteForm, activeForm, passiveForm} from '../../../../store/slice/formsSlice'
+import {
+    getForms,
+    deleteForm,
+    activeForm,
+    passiveForm,
+    getFormCategories,
+    getTargetGroup,
+    getSurveyConstraint
+} from '../../../../store/slice/formsSlice'
 
 const FormsList = () => {
+
+
+    const emptyFilterObj = {
+        Name: "",
+        UpdateUserName: "",
+        InsertUserName: "",
+        SurveyCompletionStatusId: [],
+        SurveyConstraintId: [],
+        TargetGroupId: [],
+        CategoryId: [],
+        Status: [],
+        UpdateStartDate: "",
+        UpdateEndDate: "",
+        InsertEndDate: "",
+        InsertStartDate: "",
+        OrderBy: "",
+        PageNumber: "",
+        PageSize: "",
+    }
 
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [isVisible, setIsVisible] = useState(false);
     const [isSortVisible, setIsSortVisible] = useState(false);
     const [isAddFormVisible, setIsAddFormVisible] = useState(false);
+    const [filterParams, setFilterParams] = useState(emptyFilterObj)
 
     const dispatch = useDispatch()
 
@@ -34,10 +62,15 @@ const FormsList = () => {
 
     
     useEffect(() => {
-        dispatch(getFormsStatic())
+        dispatch(getForms(filterParams))
+        dispatch(getFormCategories())
+        dispatch(getTargetGroup())
+        dispatch(getSurveyConstraint())
     }, [dispatch])
 
-    const { items, pagedProperty } = useSelector(state => state?.forms.formList);
+    const forms = useSelector(state => state?.forms);
+
+
 
     const onSelectChange = (newSelectedRowKeys, row) => {
         setSelectedRowKeys(newSelectedRowKeys);
@@ -152,11 +185,11 @@ const FormsList = () => {
                     </div>
                     <div className='drafts-count-title'>
                         <CustomImage src={cardsRegistered} />
-                        Kayıtlı Form Sayısı: <span>{pagedProperty?.totalCount}</span>
+                        Kayıtlı Form Sayısı: <span>{forms.formList.pagedProperty?.totalCount}</span>
                     </div>
                 </div>
                 <CustomTable
-                    dataSource={items}
+                    dataSource={forms.formList.items}
                     columns={columns(action)}
                     rowKey={(record) => record.id}
                     scroll={{
@@ -194,6 +227,10 @@ const FormsList = () => {
                 <FilterFormModal
                     modalVisible={isVisible}
                     handleModalVisible={setIsVisible}
+                    setFilterParams={setFilterParams}
+                    filterParams={filterParams}
+                    emptyFilterObj={emptyFilterObj}
+                    forms = {forms}
                 />
                 <SortFormModal
                     modalVisible={isSortVisible}

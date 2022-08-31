@@ -8,10 +8,28 @@ const getForms = (urlString) => {
     });
 }
 
-// Forms with filter 
-const getFormsStatic = (data) => {
+// Forms categories
+const getFormCategories = (data) => {
     return api({
-        url: `Forms/GetByFilterPagedForms?FormDetailSearch.PageNumber=1&FormDetailSearch.PageSize=10`,
+        url: `Categorys/getList?PageNumber=1&PageSize=50`,
+        method: 'POST',
+        data
+    });
+}
+
+// Forms targetgroup
+const getTargetGroup = (data) => {
+    return api({
+        url: `TargetGroups/getList?PageNumber=1&PageSize=50`,
+        method: 'POST',
+        data
+    });
+}
+
+// Forms anket kısıtı
+const getSurveyConstraint = (data) => {
+    return api({
+        url: `SurveyConstraints/getList?PageNumber=1&PageSize=50`,
         method: 'POST',
         data
     });
@@ -71,7 +89,9 @@ const formPassive = (data) => {
 
 const formServices = {
     getForms,
-    getFormsStatic,
+    getFormCategories,
+    getTargetGroup,
+    getSurveyConstraint,
     addForm,
     updateForm,
     formActive,

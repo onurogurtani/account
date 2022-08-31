@@ -33,7 +33,6 @@ const FilterModal = ({ handleModalVisible, modalVisible, filterParams, setFilter
     const onFinish = (values) => {
         dispatch(getQuestions(values));
         setFilterParams(values)
-
         handleClose()
     }
 
@@ -43,6 +42,7 @@ const FilterModal = ({ handleModalVisible, modalVisible, filterParams, setFilter
         handleClose()
         form.setFieldsValue(emptyFilterObj)
     }
+    
     return (
         <CustomModal
             className='filter-modal'
