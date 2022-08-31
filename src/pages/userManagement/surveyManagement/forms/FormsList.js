@@ -165,17 +165,17 @@ const FormsList = () => {
             >
                 <div className='number-registered-drafts'>
                     <div className='operations-buttons'>
+                         <div className='sort-btn'>
+                            <CustomButton type='secondary' onClick={() => setIsSortVisible(true)}>
+                                <span className='sort'>
+                                    <Text t='Sırala' />
+                                </span>
+                            </CustomButton>
+                        </div>
                         <div className='filter-btn'>
                             <CustomButton type='secondary' onClick={() => setIsVisible(true)}>
                                 <span className='filter-text'>
                                     <Text t='Filtrele' />
-                                </span>
-                            </CustomButton>
-                        </div>
-                        <div className='sort-btn'>
-                            <CustomButton type='secondary' onClick={() => setIsSortVisible(true)}>
-                                <span className='sort'>
-                                    <Text t='Sırala' />
                                 </span>
                             </CustomButton>
                         </div>
@@ -235,6 +235,9 @@ const FormsList = () => {
                 <SortFormModal
                     modalVisible={isSortVisible}
                     handleModalVisible={setIsSortVisible}
+                    setFilterParams={setFilterParams}
+                    filterParams={filterParams}
+                    emptyFilterObj={emptyFilterObj}
                 />
                 <AddFormModal
                     modalVisible={isAddFormVisible}

@@ -105,35 +105,43 @@ const menuList = [
 const sortList = [
     {
         id: 1,
-        name: 'Oluşturulma Tarihine Göre En Yakın'
+        name: 'Oluşturulma Tarihine Göre En Yakın',
+        default: "insertASC"
     },
     {
         id: 2,
-        name: 'Oluşturulma Tarihine Göre En Uzak'
+        name: 'Oluşturulma Tarihine Göre En Uzak',
+        default: "insertDESC"
     },
     {
         id: 3,
-        name: 'Güncelleme Tarihine Göre En Yakın'
+        name: 'Güncelleme Tarihine Göre En Yakın',
+        default: "updateASC"
     },
     {
         id: 4,
-        name: 'Güncelleme Tarihine Göre En Uzak'
+        name: 'Güncelleme Tarihine Göre En Uzak',
+        default: "updateDESC"
     },
     {
         id: 5,
-        name: 'Anket Başlangıç Tarihine Göre En Yakın'
+        name: 'Anket Başlangıç Tarihine Göre En Yakın',
+        default: "updateASC"
     },
     {
         id: 6,
-        name: 'Anket Başlangıç Tarihine Göre En Uzak'
+        name: 'Anket Başlangıç Tarihine Göre En Uzak',
+        default: "updateASC"
     },
     {
         id: 7,
-        name: 'Anket Bitiş Tarihine Göre En Yakın'
+        name: 'Anket Bitiş Tarihine Göre En Yakın',
+        default: "updateASC"
     },
     {
         id: 8,
-        name: 'Anket Bitiş Tarihine Göre En Uzak'
+        name: 'Anket Bitiş Tarihine Göre En Uzak',
+        default: "updateASC"
     },
 ]
 
