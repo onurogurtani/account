@@ -33,12 +33,12 @@ const SortModal = ({ handleModalVisible, modalVisible , filterParams ,setFilterP
         {
             title: "Güncellenme tarihine göre en yakın",
             active: false,
-            default: "updateDESC"
+            default: "updateASC"
         },
         {
             title: "Güncellenme tarihine göre en uzak",
             active: false,
-            default: "updateASC"
+            default: "updateDESC"
         }
     ]
 
