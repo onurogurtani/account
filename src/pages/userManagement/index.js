@@ -54,7 +54,26 @@ const SchoolManagement = lazy(() =>
   })),
 );
 
-
+const AnnouncementManagement = lazy(() =>
+  import('./announcementManagement').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+const AddAnnouncement = lazy(() =>
+  import('./announcementManagement/addAnnouncement').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+const ShowAnnouncement = lazy(() =>
+  import('./announcementManagement/showAnnouncement').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+const EditAnnouncement = lazy(() =>
+  import('./announcementManagement/editAnnouncement').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 
 const UserManagement = {
   SurveyManagement,
@@ -65,7 +84,11 @@ const UserManagement = {
   AddUser,
   EditUser,
   AvatarManagement,
-  SchoolManagement
+  SchoolManagement,
+  AnnouncementManagement,
+  AddAnnouncement,
+  ShowAnnouncement,
+  EditAnnouncement,
 };
 
 export default UserManagement;

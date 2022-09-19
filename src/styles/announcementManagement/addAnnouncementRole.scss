@@ -1,0 +1,104 @@
+.footer-role {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding-right: 15px;
+  .submit-btn {
+    background-color: #699a00;
+    color: #fff;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: UbuntuMedium, sans-serif;
+    font-size: 14px;
+    line-height: 12px;
+    border-radius: 4px;
+    outline: 0;
+    box-shadow: none;
+    border: none;
+  }
+
+  .cancel-btn {
+    background-color: grey;
+    color: #fff;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: UbuntuMedium, sans-serif;
+    font-size: 14px;
+    line-height: 12px;
+    border-radius: 4px;
+    outline: 0;
+    box-shadow: none;
+    border: none;
+  }
+  .back-btn {
+    background-color: #162056;
+    color: #fff;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: UbuntuMedium, sans-serif;
+    font-size: 14px;
+    line-height: 12px;
+    border-radius: 4px;
+    outline: 0;
+    box-shadow: none;
+    border: none;
+  }
+}
+.add-announcement-role-card {
+  .action-btns {
+    display: flex;
+    justify-content: center;
+
+    .detail-btn {
+      width: 105px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: UbuntuMedium, sans-serif;
+      font-size: 12px;
+      line-height: 12px;
+      border-radius: 4px;
+      box-shadow: none;
+      background-color: #3f4957;
+    }
+
+    .remove-btn {
+      width: 105px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: UbuntuMedium, sans-serif;
+      font-size: 12px;
+      line-height: 12px;
+      border-radius: 4px;
+      box-shadow: none;
+      background-color: #f72717;
+    }
+  }
+  .add-announcement-role-table-box {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+  }
+}
+
+@media (max-width: 1200px) {
+  // .add-announcement-role-card {
+  // }
+
+  .add-announcement-role-table-box {
+    flex-direction: column;
+  }
+}

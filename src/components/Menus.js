@@ -242,6 +242,14 @@ const Menus = () => {
           </span>
         </MenuItemText>
       </CustomItem>
+      <CustomItem key="/user-management/announcement-management">
+        <MenuItemText>
+          <CustomImage src={menuIcons} />
+          <span>
+            <Text t="Duyuru Yönetimi" />
+          </span>
+        </MenuItemText>
+      </CustomItem>
     </CustomMenu>
   );
 };

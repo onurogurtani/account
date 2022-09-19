@@ -1,0 +1,60 @@
+.announcement-show {
+  padding: 16px 45px 0 45px;
+  font-family: UbuntuRegular, sans-serif;
+  li {
+    height: 22px;
+    margin: 0 0 28px 0;
+    font-weight: bold;
+    letter-spacing: normal;
+    color: #050505;
+    list-style: none;
+
+    span {
+      color: #6b7789;
+    }
+    .status-text-active {
+      color: #00a483;
+      font-weight: bold;
+    }
+
+    .status-text-passive {
+      color: #f72717;
+      font-weight: bold;
+    }
+  }
+  li:last-child {
+    margin-bottom: 0;
+  }
+}
+.announcement-show-footer {
+  font-family: UbuntuRegular, sans-serif;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  list-style: none;
+  color: #3485fd;
+  span {
+    color: #6b7789;
+  }
+  padding-left: 0;
+}
+.announcement-show-role {
+  padding: 10px 20px;
+  flex-wrap: wrap;
+  display: flex;
+  gap: 10px;
+}
+.btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  button {
+    border: none;
+  }
+  .shared-btn {
+    background-color: #00a483;
+  }
+  .edit-btn {
+    background-color: #d5b803;
+  }
+}

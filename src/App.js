@@ -118,6 +118,27 @@ const App = () => {
                           Component={UserManagement?.SchoolManagement}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/announcement-management`}
+                          Component={UserManagement?.AnnouncementManagement}
+                          authority="dashboard"
+                          exact
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/announcement-management/add`}
+                          Component={UserManagement?.AddAnnouncement}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/announcement-management/show`}
+                          Component={UserManagement?.ShowAnnouncement}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/announcement-management/edit`}
+                          Component={UserManagement?.EditAnnouncement}
+                          authority="dashboard"
+                        />
                         <Route
                           component={() => (
                             <Redirect

@@ -21,6 +21,7 @@ import CustomPageHeader from './CustomPageHeader';
 import CustomTable from './table/index';
 import CustomCollapseCard from './CustomCollapseCard';
 import CustomDatePicker from './CustomDatePicker';
+import CustomTimePicker from './CustomTimePicker';
 import { EditableCell } from './table/EditableCell';
 import { EditableRow } from './table/EditableRow';
 import { InlineEditableCell } from './table/InlineEditableCell';
@@ -65,4 +66,5 @@ export {
   Option,
   CustomPagination,
   CustomMoneyInput,
+  CustomTimePicker,
 };

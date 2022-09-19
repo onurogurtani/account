@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 export const formStringMatching = (form, fieldName, message) => ({
   validator(field, value) {
     try {
@@ -50,11 +52,34 @@ export const formCreditCardRegex = async (field, value) => {
   }
 };
 
+export const reactQuillValidator = async (field, value) => {
+  try {
+    if (!value || value !== '<p><br></p>') {
+      return Promise.resolve();
+    }
+    return Promise.reject(new Error());
+  } catch (e) {
+    return Promise.reject(new Error());
+  }
+};
+
+export const dateValidator = async (field, value) => {
+  try {
+    if (!value || dayjs() < dayjs(value).add(1, 'day')) {
+      return Promise.resolve();
+    }
+    return Promise.reject(new Error());
+  } catch (e) {
+    return Promise.reject(new Error());
+  }
+};
+
 const rule = {
   formStringMatching,
   formPhoneRegex,
   formMailRegex,
   formCreditCardRegex,
+  dateValidator,
 };
 
 export default rule;
