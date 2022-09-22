@@ -1,5 +1,5 @@
-import React, { useCallback } from 'react'
-import {  useHistory } from "react-router-dom";
+import React, { useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   CustomButton,
   CustomForm,
@@ -14,60 +14,67 @@ import {
   errorDialog,
   Text,
   useText,
-  Option
+  Option,
 } from '../../../components';
 import { Form } from 'antd';
-import { formPhoneRegex, formMailRegex } from "../../../utils/formRule"
-import "../../../styles/userInfo/userInfo.scss"
+import { formPhoneRegex, formMailRegex } from '../../../utils/formRule';
+import '../../../styles/userInfo/userInfo.scss';
 import { addUserList } from '../../../store/slice/userListSlice';
 import { useDispatch } from 'react-redux';
 
 const AddUser = () => {
   const dispatch = useDispatch();
-  const history = useHistory()
+  const history = useHistory();
 
   const [form] = Form.useForm();
 
-  const onFinish = useCallback(async (values) => {
-
-    const data = {
-      entity: {
-        name: values.name,
-        surName: values.surName,
-        userName: values.userName,
-        citizenId: values.citizenId,
-        email: values.email,
-        mobilePhones: values.mobilePhones,
-        status: values.status,
-        birthDate: "2022-07-19T10:35:12.410Z",
-        gender: 0,
-        recordDate: "2022-07-19T10:35:12.410Z",
-        address: "string",
-        notes: "string",
-        updateContactDate: "2022-07-19T10:35:12.410Z",
-        contactBySMS: true,
-        contactByMail: true,
-        contactByCall: true,
-        userCode: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        authenticationProviderType: "string"
-      }
-    }
-    const action = await dispatch(addUserList(data))
-    if (addUserList.fulfilled.match(action)) {
-      successDialog({
-        title: <Text t='success' />,
-        message: action?.payload?.message,
-        onOk: () => {
-          history.push('/user-management/user-list-management')
+  const onFinish = useCallback(
+    async (values) => {
+      const data = {
+        entity: {
+          name: values.name.trim(),
+          surName: values.surName.trim(),
+          userName: values.userName,
+          citizenId: values.citizenId,
+          email: values.email,
+          mobilePhones: values.mobilePhones
+            .replace(/\)/g, '')
+            .replace(/\(/g, '')
+            .replace(/-/g, '')
+            .replace(/ /g, '')
+            .replace(/\+90/g, ''),
+          status: values.status,
+          birthDate: '2022-07-19T10:35:12.410Z',
+          gender: '',
+          recordDate: '2022-07-19T10:35:12.410Z',
+          address: 'string',
+          notes: 'string',
+          updateContactDate: '2022-07-19T10:35:12.410Z',
+          contactBySMS: true,
+          contactByMail: true,
+          contactByCall: true,
+          userCode: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+          authenticationProviderType: 'string',
         },
-      });
-    } else {
-      errorDialog({
-        title: <Text t='error' />,
-        message: action?.payload?.message,
-      });
-    }
-  }, [dispatch]);
+      };
+      const action = await dispatch(addUserList(data));
+      if (addUserList.fulfilled.match(action)) {
+        successDialog({
+          title: <Text t="success" />,
+          message: action?.payload?.message,
+          onOk: () => {
+            history.push('/user-management/user-list-management');
+          },
+        });
+      } else {
+        errorDialog({
+          title: <Text t="error" />,
+          message: action?.payload?.message,
+        });
+      }
+    },
+    [dispatch],
+  );
 
   const onchannelChange = (value) => {
     switch (value) {
@@ -79,12 +86,12 @@ const AddUser = () => {
     }
   };
   return (
-    <CustomPageHeader title={<Text t='Kullanıcı Yönetimi' />} showBreadCrumb showHelpButton>
-      <CustomCollapseCard className='edit-user-card' cardTitle={<Text t='Kullanıcı Ekleme' />}>
-        <div className='userInfo-container'>
+    <CustomPageHeader title={<Text t="Kullanıcı Yönetimi" />} showBreadCrumb showHelpButton>
+      <CustomCollapseCard className="edit-user-card" cardTitle={<Text t="Kullanıcı Ekleme" />}>
+        <div className="userInfo-container">
           <CustomForm
             name="studentInfo"
-            className='userInfo-link-form'
+            className="userInfo-link-form"
             form={form}
             initialValues={{}}
             onFinish={onFinish}
@@ -94,34 +101,38 @@ const AddUser = () => {
             <CustomFormItem
               label={<Text t="Adı" />}
               name="name"
-              rules={[{ required: true, message: <Text t="Bilgilerinizi kontrol ediniz." /> }]}
+              rules={[
+                { required: true, message: <Text t="Bilgilerinizi kontrol ediniz." /> },
+                { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+              ]}
             >
-              <CustomInput
-                height="40px"
-                placeholder={useText('Adı')}
-              />
+              <CustomInput height="40px" placeholder={useText('Adı')} />
             </CustomFormItem>
 
             <CustomFormItem
               label={<Text t="Soyadı" />}
               name="surName"
-              rules={[{ required: true, message: <Text t="Bilgilerinizi kontrol ediniz." /> }]}
+              rules={[
+                { required: true, message: <Text t="Bilgilerinizi kontrol ediniz." /> },
+                { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+              ]}
             >
-              <CustomInput
-                height="40px"
-                placeholder={useText('Soyadı')}
-              />
+              <CustomInput height="40px" placeholder={useText('Soyadı')} />
             </CustomFormItem>
 
             <CustomFormItem
               label={<Text t="Kullanıcı Adı" />}
               name="userName"
-              rules={[{ required: true, message: <Text t="Kullanıcı adı giriniz." /> }]}
+              rules={[
+                { required: true, message: <Text t="Kullanıcı adı giriniz." /> },
+                { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+                {
+                  pattern: new RegExp('^[a-zA-Z0-9!@#$%^&*]+$'),
+                  message: 'Seçtiğiniz Kullanıcı Adı uygun değil.',
+                },
+              ]}
             >
-              <CustomInput
-                height="40px"
-                placeholder={useText('Kullanıcı Adı')}
-              />
+              <CustomInput height="40px" placeholder={useText('Kullanıcı Adı')} />
             </CustomFormItem>
 
             <CustomFormItem
@@ -129,11 +140,13 @@ const AddUser = () => {
               name="citizenId"
               rules={[
                 { required: true, message: <Text t="TC Kimlik numaranızı kontrol ediniz." /> },
+                { type: 'number', min: 1000000000, message: <Text t="11 karakter olmalı" /> },
               ]}
             >
               <CustomNumberInput
                 autoComplete="off"
                 height="40px"
+                maxLength={11}
                 placeholder={useText('TCKN')}
               />
             </CustomFormItem>
@@ -141,13 +154,12 @@ const AddUser = () => {
             <CustomFormItem
               label={<Text t="E-posta adresi" />}
               name="email"
-              rules={[{ required: true, message: <Text t="checkEposta" /> },
-              { validator: formMailRegex, message: <Text t="enterValidEmail" /> },
+              rules={[
+                { required: true, message: <Text t="checkEposta" /> },
+                { validator: formMailRegex, message: <Text t="enterValidEmail" /> },
               ]}
             >
-              <CustomInput
-                height="40px"
-                placeholder={useText('E-posta adresi Giriniz')} />
+              <CustomInput height="40px" placeholder={useText('E-posta adresi Giriniz')} />
             </CustomFormItem>
 
             <CustomFormItem
@@ -179,11 +191,14 @@ const AddUser = () => {
               </CustomSelect>
             </CustomFormItem>
 
-            <CustomFormItem className='footer-form-item'>
-              <CustomButton className='back-btn' onClick={() => history.push('/user-management/user-list-management')}>
+            <CustomFormItem className="footer-form-item">
+              <CustomButton
+                className="back-btn"
+                onClick={() => history.push('/user-management/user-list-management')}
+              >
                 İptal
               </CustomButton>
-              <CustomButton type="primary" htmlType="submit" className='submit-btn'>
+              <CustomButton type="primary" htmlType="submit" className="submit-btn">
                 Kaydet
               </CustomButton>
             </CustomFormItem>
@@ -191,7 +206,7 @@ const AddUser = () => {
         </div>
       </CustomCollapseCard>
     </CustomPageHeader>
-  )
-}
+  );
+};
 
-export default AddUser
+export default AddUser;

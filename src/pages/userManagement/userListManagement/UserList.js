@@ -16,8 +16,7 @@ import { useHistory } from 'react-router-dom';
 import cardsRegistered from '../../../assets/icons/icon-cards-registered.svg';
 
 const UserList = () => {
-
-  const history = useHistory()
+  const history = useHistory();
 
   const dispatch = useDispatch();
   const { usersList } = useSelector((state) => state?.userList);
@@ -28,63 +27,61 @@ const UserList = () => {
     })();
   }, []);
 
-  const loadUserList = useCallback(
-    async () => {
-      dispatch(getUserList());
+  const loadUserList = useCallback(async () => {
+    dispatch(getUserList());
+  }, [dispatch]);
+
+  const editUser = (record) => {
+    console.log(record);
+    history.push({
+      pathname: '/user-management/edit-user',
+      state: { data: record },
+    });
+  };
+
+  const addUser = () => {
+    history.push('/user-management/add-user');
+  };
+
+  const handleStatus = useCallback(
+    async (status, record) => {
+      const data = {
+        entity: {
+          id: record?.id,
+          status,
+        },
+      };
+      const action = await dispatch(updateUserList(data));
+      if (updateUserList.fulfilled.match(action)) {
+        successDialog({
+          title: <Text t="success" />,
+          message: action?.payload?.message,
+          onOk: () => {
+            loadUserList();
+          },
+        });
+      } else {
+        errorDialog({
+          title: <Text t="error" />,
+          message: action?.payload?.message,
+        });
+      }
     },
     [dispatch],
   );
 
-
-  const editUser = (record) => {
-    history.push({
-      pathname: '/user-management/edit-user',
-      state: { data: record }
-    });
-  }
-
-  const addUser = () => {
-    history.push('/user-management/add-user');
-  }
-
-  const handleStatus = useCallback(async (status, record) => {
-    const data = {
-      entity: {
-        id: record?.id,
-        status
-      }
-    }
-    const action = await dispatch(updateUserList(data))
-    if (updateUserList.fulfilled.match(action)) {
-      successDialog({
-        title: <Text t='success' />,
-        message: action?.payload?.message,
-        onOk: () => {
-          loadUserList()
-        },
-      });
-    } else {
-      errorDialog({
-        title: <Text t='error' />,
-        message: action?.payload?.message,
-      });
-    }
-  }, [dispatch])
-
-
-
   const handleDeleteRole = async (record) => {
     confirmDialog({
-      title: <Text t='attention' />,
+      title: <Text t="attention" />,
       message: 'Kaydı silmek istediğinizden emin misiniz?',
-      okText: <Text t='delete' />,
+      okText: <Text t="delete" />,
       cancelText: 'Vazgeç',
       onOk: async () => {
-        let id = record.id
+        let id = record.id;
         const action = await dispatch(deleteUserList({ id }));
         if (deleteUserList.fulfilled.match(action)) {
           successDialog({
-            title: <Text t='successfullySent' />,
+            title: <Text t="successfullySent" />,
             message: action?.payload?.message,
             onOk: () => {
               loadUserList();
@@ -93,7 +90,7 @@ const UserList = () => {
         } else {
           if (action?.payload?.message) {
             errorDialog({
-              title: <Text t='error' />,
+              title: <Text t="error" />,
               message: action?.payload?.message,
             });
           }
@@ -140,14 +137,16 @@ const UserList = () => {
       dataIndex: 'status',
       key: 'status',
       render: (text, record) => {
-        return <div>
-          {
-            record.status ?
-              <span className='status-text-active '>Aktif</span>
-              : <span className='status-text-passive '>Pasif</span>
-          }
-        </div>
-      }
+        return (
+          <div>
+            {record.status ? (
+              <span className="status-text-active ">Aktif</span>
+            ) : (
+              <span className="status-text-passive ">Pasif</span>
+            )}
+          </div>
+        );
+      },
     },
     {
       title: 'İŞLEMLER',
@@ -157,45 +156,40 @@ const UserList = () => {
       align: 'center',
       render: (_, record) => {
         return (
-          <div className='action-btns'>
-            {
-              record.status ?
-                <CustomButton onClick={() => handleStatus(false, record)} className="passive-btn">
-                  PASİF ET
-                </CustomButton>
-                :
-                <CustomButton onClick={() => handleStatus(true, record)} className="active-btn">
-                  AKTİF ET
-                </CustomButton>
-            }
-            <CustomButton className="detail-btn" onClick={() => editUser(record)}>DÜZENLE</CustomButton>
-            <CustomButton className='delete-btn' onClick={() => handleDeleteRole(record)}>
+          <div className="action-btns">
+            {record.status ? (
+              <CustomButton onClick={() => handleStatus(false, record)} className="passive-btn">
+                PASİF ET
+              </CustomButton>
+            ) : (
+              <CustomButton onClick={() => handleStatus(true, record)} className="active-btn">
+                AKTİF ET
+              </CustomButton>
+            )}
+            <CustomButton className="detail-btn" onClick={() => editUser(record)}>
+              DÜZENLE
+            </CustomButton>
+            <CustomButton className="delete-btn" onClick={() => handleDeleteRole(record)}>
               SİL
             </CustomButton>
           </div>
         );
       },
     },
-
   ];
 
   return (
-    <CustomCollapseCard
-      className='draft-list-card'
-      cardTitle={<Text t='Kullanıcı Listesi' />}
-    >
+    <CustomCollapseCard className="draft-list-card" cardTitle={<Text t="Kullanıcı Listesi" />}>
       {
-
-        <div className='number-registered-drafts'>
+        <div className="number-registered-drafts">
           <CustomButton className="add-btn" onClick={addUser}>
             YENİ KULLANICI EKLE
           </CustomButton>
-          <div className='drafts-count-title'>
+          <div className="drafts-count-title">
             <CustomImage src={cardsRegistered} />
             Kayıtlı Kullanıcı Sayısı: <span>{usersList?.length}</span>
           </div>
         </div>
-
       }
 
       <CustomTable
@@ -206,7 +200,7 @@ const UserList = () => {
         scroll={{ x: false }}
       />
     </CustomCollapseCard>
-  )
-}
+  );
+};
 
-export default UserList
+export default UserList;

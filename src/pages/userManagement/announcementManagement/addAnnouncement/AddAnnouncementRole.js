@@ -50,7 +50,7 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
     });
   };
   const loadGroupsList = useCallback(async () => {
-    dispatch(getGroupsList());
+    await dispatch(getGroupsList());
   }, [dispatch]);
 
   const columnsRole = [

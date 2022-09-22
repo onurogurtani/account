@@ -1,5 +1,5 @@
-import React, { useCallback } from 'react'
-import { useLocation, useHistory } from "react-router-dom";
+import React, { useCallback } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
 import {
   CustomButton,
   CustomForm,
@@ -14,51 +14,58 @@ import {
   errorDialog,
   Text,
   useText,
-  Option
+  Option,
 } from '../../../components';
 import { Form } from 'antd';
-import { formPhoneRegex, formMailRegex } from "../../../utils/formRule"
-import "../../../styles/userInfo/userInfo.scss"
+import { formPhoneRegex, formMailRegex } from '../../../utils/formRule';
+import '../../../styles/userInfo/userInfo.scss';
 import { updateUserList } from '../../../store/slice/userListSlice';
 import { useDispatch } from 'react-redux';
 
 const EditUser = () => {
-
   const dispatch = useDispatch();
   const location = useLocation();
-  const history = useHistory()
+  const history = useHistory();
 
   const [form] = Form.useForm();
 
-  const onFinish = useCallback( async (values) => {
+  const onFinish = useCallback(
+    async (values) => {
       const data = {
         entity: {
           id: location?.state?.data?.id,
-          name: values.name,
-          surName: values.surName,
+          name: values.name.trim(),
+          surName: values.surName.trim(),
           userName: values.userName,
           citizenId: values.citizenId,
           email: values.email,
-          mobilePhones: values.mobilePhones,
-          status: values.status
-        }
-      }
-      const action = await dispatch(updateUserList(data))
+          mobilePhones: values.mobilePhones
+            .replace(/\)/g, '')
+            .replace(/\(/g, '')
+            .replace(/-/g, '')
+            .replace(/ /g, '')
+            .replace(/\+90/g, ''),
+          status: values.status,
+        },
+      };
+      const action = await dispatch(updateUserList(data));
       if (updateUserList.fulfilled.match(action)) {
         successDialog({
-          title: <Text t='success' />,
+          title: <Text t="success" />,
           message: action?.payload?.message,
           onOk: () => {
-            history.push('/user-management/user-list-management')
+            history.push('/user-management/user-list-management');
           },
         });
       } else {
         errorDialog({
-          title: <Text t='error' />,
+          title: <Text t="error" />,
           message: action?.payload?.message,
         });
       }
-    },[dispatch]);
+    },
+    [dispatch],
+  );
 
   const onchannelChange = (value) => {
     switch (value) {
@@ -69,16 +76,19 @@ const EditUser = () => {
         form.setFieldsValue({ status: false });
     }
   };
-
+  console.log(location?.state?.data.mobilePhones.replace(/^/, '+90'));
   return (
-    <CustomPageHeader title={<Text t='Kullanıcı Yönetimi' />} showBreadCrumb showHelpButton>
-      <CustomCollapseCard className='edit-user-card' cardTitle={<Text t='Kullanıcı Düzenleme' />}>
-        <div className='userInfo-container'>
+    <CustomPageHeader title={<Text t="Kullanıcı Yönetimi" />} showBreadCrumb showHelpButton>
+      <CustomCollapseCard className="edit-user-card" cardTitle={<Text t="Kullanıcı Düzenleme" />}>
+        <div className="userInfo-container">
           <CustomForm
             name="studentInfo"
-            className='userInfo-link-form'
+            className="userInfo-link-form"
             form={form}
-            initialValues={location?.state?.data}
+            initialValues={{
+              ...location?.state?.data,
+              mobilePhones: location?.state?.data?.mobilePhones.replace(/^/, '+90'),
+            }}
             onFinish={onFinish}
             autoComplete="off"
             layout={'horizontal'}
@@ -88,10 +98,7 @@ const EditUser = () => {
               name="name"
               rules={[{ required: true, message: <Text t="Bilgilerinizi kontrol ediniz." /> }]}
             >
-              <CustomInput
-                height="40px"
-                placeholder={useText('Adı')}
-              />
+              <CustomInput height="40px" placeholder={useText('Adı')} />
             </CustomFormItem>
 
             <CustomFormItem
@@ -99,21 +106,21 @@ const EditUser = () => {
               name="surName"
               rules={[{ required: true, message: <Text t="Bilgilerinizi kontrol ediniz." /> }]}
             >
-              <CustomInput
-                height="40px"
-                placeholder={useText('Soyadı')}
-              />
+              <CustomInput height="40px" placeholder={useText('Soyadı')} />
             </CustomFormItem>
 
             <CustomFormItem
               label={<Text t="Kullanıcı Adı" />}
               name="userName"
-              rules={[{ required: true, message: <Text t="Kullanıcı adı giriniz." /> }]}
+              rules={[
+                { required: true, message: <Text t="Kullanıcı adı giriniz." /> },
+                {
+                  pattern: new RegExp('^[a-zA-Z0-9!@#$%^&*]+$'),
+                  message: 'Seçtiğiniz Kullanıcı Adı uygun değil.',
+                },
+              ]}
             >
-              <CustomInput
-                height="40px"
-                placeholder={useText('Kullanıcı Adı')}
-              />
+              <CustomInput height="40px" placeholder={useText('Kullanıcı Adı')} />
             </CustomFormItem>
 
             <CustomFormItem
@@ -121,9 +128,11 @@ const EditUser = () => {
               name="citizenId"
               rules={[
                 { required: true, message: <Text t="TC Kimlik numaranızı kontrol ediniz." /> },
+                { type: 'number', min: 1000000000, message: <Text t="11 karakter olmalı" /> },
               ]}
             >
               <CustomNumberInput
+                maxLength={11}
                 autoComplete="off"
                 height="40px"
                 placeholder={useText('TCKN')}
@@ -133,13 +142,12 @@ const EditUser = () => {
             <CustomFormItem
               label={<Text t="E-posta adresi" />}
               name="email"
-              rules={[{ required: true, message: <Text t="checkEposta" /> },
-              { validator: formMailRegex, message: <Text t="enterValidEmail" /> },
+              rules={[
+                { required: true, message: <Text t="checkEposta" /> },
+                { validator: formMailRegex, message: <Text t="enterValidEmail" /> },
               ]}
             >
-              <CustomInput
-                height="40px"
-                placeholder={useText('E-posta adresi Giriniz')} />
+              <CustomInput height="40px" placeholder={useText('E-posta adresi Giriniz')} />
             </CustomFormItem>
 
             <CustomFormItem
@@ -172,11 +180,14 @@ const EditUser = () => {
               </CustomSelect>
             </CustomFormItem>
 
-            <CustomFormItem className='footer-form-item'>
-              <CustomButton className='back-btn' onClick={() => history.push('/user-management/user-list-management')}>
+            <CustomFormItem className="footer-form-item">
+              <CustomButton
+                className="back-btn"
+                onClick={() => history.push('/user-management/user-list-management')}
+              >
                 İptal
               </CustomButton>
-              <CustomButton type="primary" htmlType="submit" className='submit-btn'>
+              <CustomButton type="primary" htmlType="submit" className="submit-btn">
                 Kaydet
               </CustomButton>
             </CustomFormItem>
@@ -184,9 +195,7 @@ const EditUser = () => {
         </div>
       </CustomCollapseCard>
     </CustomPageHeader>
+  );
+};
 
-
-  )
-}
-
-export default EditUser
+export default EditUser;
