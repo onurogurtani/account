@@ -1,7 +1,10 @@
 import { useEffect, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getGroupsList } from '../../../../store/slice/groupsSlice';
-import { addAnnouncement, addAnnouncementRole } from '../../../../store/slice/announcementSlice';
+import {
+  addAnnouncement,
+  createOrUpdateAnnouncementRole,
+} from '../../../../store/slice/announcementSlice';
 
 import '../../../../styles/announcementManagement/addAnnouncementRole.scss';
 import {
@@ -134,20 +137,20 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
       return;
     }
     const action = await dispatch(addAnnouncement(announcementInfoData));
-    const actionAddAnnouncementRole = await dispatch(
-      addAnnouncementRole({
-        entity: {
-          announcementId: action?.payload?.data?.id,
-          groupId: 14,
-        },
-      }),
-      //TODO:Api düzeltilince düzenlenecek
-    );
+
     if (addAnnouncement.fulfilled.match(action)) {
-      if (addAnnouncementRole.fulfilled.match(actionAddAnnouncementRole)) {
+      let groupIds = selectedRole.map((d) => d.id);
+      const actioncreateOrUpdateAnnouncementRole = await dispatch(
+        createOrUpdateAnnouncementRole({
+          announcementId: action?.payload?.data?.id,
+          groupIds: groupIds,
+        }),
+      );
+
+      if (createOrUpdateAnnouncementRole.fulfilled.match(actioncreateOrUpdateAnnouncementRole)) {
         successDialog({
           title: <Text t="success" />,
-          message: actionAddAnnouncementRole?.payload?.message,
+          message: actioncreateOrUpdateAnnouncementRole?.payload?.message,
           onOk: () => {
             history.push('/user-management/announcement-management');
           },
@@ -155,7 +158,7 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
       } else {
         errorDialog({
           title: <Text t="error" />,
-          message: actionAddAnnouncementRole?.payload?.message,
+          message: actioncreateOrUpdateAnnouncementRole?.payload?.message,
         });
       }
     } else {

@@ -61,11 +61,11 @@ export const addAnnouncement = createAsyncThunk(
     }
   },
 );
-export const addAnnouncementRole = createAsyncThunk(
-  'addAnnouncementRole',
+export const createOrUpdateAnnouncementRole = createAsyncThunk(
+  'createOrUpdateAnnouncementRole',
   async (data, { dispatch, rejectWithValue }) => {
     try {
-      const response = await announcementServices.addAnnouncementRole(data);
+      const response = await announcementServices.createOrUpdateAnnouncementRole(data);
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);

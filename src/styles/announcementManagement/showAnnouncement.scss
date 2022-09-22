@@ -1,7 +1,7 @@
 .announcement-show {
   padding: 16px 45px 0 45px;
   font-family: UbuntuRegular, sans-serif;
-  li {
+  > li {
     height: 22px;
     margin: 0 0 28px 0;
     font-weight: bold;
@@ -9,7 +9,7 @@
     color: #050505;
     list-style: none;
 
-    span {
+    > span {
       color: #6b7789;
     }
     .status-text-active {
@@ -21,8 +21,10 @@
       color: #f72717;
       font-weight: bold;
     }
+    .announcement-content-text {
+    }
   }
-  li:last-child {
+  > li:last-child {
     margin-bottom: 0;
   }
 }

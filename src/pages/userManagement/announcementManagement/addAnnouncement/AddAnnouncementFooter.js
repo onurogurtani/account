@@ -26,7 +26,7 @@ const AddAnnouncementFooter = ({
         : undefined;
       const data = {
         entity: {
-          headText: values.headText,
+          headText: values.headText.trim(),
           text: values.text,
           startDate: startDate + 'T' + startHour + '.000Z',
           endDate: endDate + 'T' + endHour + '.000Z',

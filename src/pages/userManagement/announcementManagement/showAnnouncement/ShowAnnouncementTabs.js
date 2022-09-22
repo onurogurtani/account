@@ -15,8 +15,12 @@ const AddAnnouncementTabs = ({ showData }) => {
             <li>
               <Text t="Başlık" /> : <span>{showData?.headText}</span>
             </li>
-            <li>
-              <Text t="İçerik" /> : <span>{showData?.text}</span>
+            <li style={{ display: 'flex', height: 'auto' }}>
+              <Text t="İçerik" /> :{' '}
+              <div
+                className="announcement-content-text"
+                dangerouslySetInnerHTML={{ __html: showData?.text }}
+              ></div>
             </li>
             <li>
               <Text t="Başlangıç Tarihi" /> :{' '}

@@ -67,8 +67,8 @@ const EditAnnouncementRole = ({
       width: 300,
     },
     {
-      dataIndex: 'addAnnouncementRoleDeleteAction',
-      key: 'addAnnouncementRoleDeleteAction',
+      dataIndex: 'editAnnouncementRoleDeleteAction',
+      key: 'editAnnouncementRoleDeleteAction',
       width: 100,
       align: 'center',
       render: (_, record) => {
@@ -92,8 +92,8 @@ const EditAnnouncementRole = ({
       width: 300,
     },
     {
-      dataIndex: 'addAnnouncementRoleDeleteAction',
-      key: 'addAnnouncementRoleDeleteAction',
+      dataIndex: 'editAnnouncementRoleDeleteAction',
+      key: 'editAnnouncementRoleDeleteAction',
       width: 100,
       align: 'center',
       render: (_, record) => {

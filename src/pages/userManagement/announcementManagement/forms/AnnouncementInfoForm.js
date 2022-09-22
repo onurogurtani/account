@@ -81,7 +81,10 @@ const AnnouncementInfoForm = ({
       <CustomFormItem
         label={<Text t="Başlık" />}
         name="headText"
-        rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}
+        rules={[
+          { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+          { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+        ]}
       >
         <CustomInput disabled={justDateEdit && true} height="40px" placeholder={'Başlık'} />
       </CustomFormItem>

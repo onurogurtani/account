@@ -20,9 +20,9 @@ const addAnnouncement = (data) => {
     data,
   });
 };
-const addAnnouncementRole = (data) => {
+const createOrUpdateAnnouncementRole = (data) => {
   return api({
-    url: `AnnouncementGroupss`,
+    url: `AnnouncementGroupss/CreateUpdateAnnouncementGroups`,
     method: 'POST',
     data,
   });
@@ -58,7 +58,7 @@ const announcementServices = {
   announcementGetList,
   getByFilterPagedAnnouncements,
   addAnnouncement,
-  addAnnouncementRole,
+  createOrUpdateAnnouncementRole,
   editAnnouncement,
   deleteAnnouncement,
   setPublishedAnnouncements,

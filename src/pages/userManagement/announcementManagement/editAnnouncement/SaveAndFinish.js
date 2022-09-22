@@ -2,7 +2,10 @@ import dayjs from 'dayjs';
 import React, { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { CustomButton, CustomImage, CustomModal, errorDialog, Text } from '../../../../components';
-import { addAnnouncementRole, editAnnouncement } from '../../../../store/slice/announcementSlice';
+import {
+  createOrUpdateAnnouncementRole,
+  editAnnouncement,
+} from '../../../../store/slice/announcementSlice';
 import modalSuccessIcon from '../../../../assets/icons/icon-modal-success.svg';
 import '../../../../styles/announcementManagement/saveAndFinish.scss';
 
@@ -37,7 +40,7 @@ const SaveAndFinish = ({
       const data = {
         entity: {
           id: currentId,
-          headText: values.headText,
+          headText: values.headText.trim(),
           text: values.text,
           startDate: startDate + 'T' + startHour + '.000Z',
           endDate: endDate + 'T' + endHour + '.000Z',
@@ -61,21 +64,20 @@ const SaveAndFinish = ({
       setCurrentAnnouncement({ ...data.entity, groups: [...selectedRole] });
       const action = await dispatch(editAnnouncement(data));
       if (editAnnouncement.fulfilled.match(action)) {
-        const actionAddAnnouncementRole = await dispatch(
-          addAnnouncementRole({
-            entity: {
-              announcementId: action?.payload?.data?.id,
-              groupId: 14,
-            },
+        let groupIds = selectedRole.map((d) => d.id);
+        const actioncreateOrUpdateAnnouncementRole = await dispatch(
+          createOrUpdateAnnouncementRole({
+            announcementId: action?.payload?.data?.id,
+            groupIds: groupIds,
           }),
-          //TODO:Api düzeltilince düzenlenecek
         );
-        if (addAnnouncementRole.fulfilled.match(actionAddAnnouncementRole)) {
+
+        if (createOrUpdateAnnouncementRole.fulfilled.match(actioncreateOrUpdateAnnouncementRole)) {
           setIsVisible(true);
         } else {
           errorDialog({
             title: <Text t="error" />,
-            message: actionAddAnnouncementRole?.payload?.message,
+            message: actioncreateOrUpdateAnnouncementRole?.payload?.message,
           });
         }
       } else {
