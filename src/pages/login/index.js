@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../store/slice/authSlice';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { loginApplicationLink, ReCAPTCHAKeys } from '../../utils/keys';
-import fastLoginImg from "../../assets/images/login/fastLoginImg.png"
+import fastLoginImg from '../../assets/images/login/fastLoginImg.png';
 
 const Login = ({ history }) => {
   const dispatch = useDispatch();
@@ -34,7 +34,7 @@ const Login = ({ history }) => {
   const onFinish = useCallback(
     async (values) => {
       const body = {
-        userName: values?.userName,
+        Email: values?.Email,
         password: values?.password,
         captchaKey: values?.captchaKey,
       };
@@ -67,7 +67,7 @@ const Login = ({ history }) => {
       >
         <CustomFormItem
           label={<Text t="loginUserName" />}
-          name="userName"
+          name="Email"
           rules={[
             {
               required: true,
@@ -101,12 +101,12 @@ const Login = ({ history }) => {
           </CustomButton>
         </CustomFormItem>
 
-        <div className='fastLogin'>
-          <CustomButton type="link" onClick={() => console.log("Hızlı Giriş")}>
+        <div className="fastLogin">
+          <CustomButton type="link" onClick={() => console.log('Hızlı Giriş')}>
             <CustomImage src={fastLoginImg} />
           </CustomButton>
         </div>
-        
+
         <CustomFormItem
           label={false}
           name="captchaKey"
