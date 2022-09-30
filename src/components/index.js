@@ -29,6 +29,7 @@ import CustomCheckbox from './CustomCheckbox';
 import CustomModal from './CustomModal';
 import CustomPagination from './CustomPagination';
 import CustomSelect, { Option } from './CustomSelect';
+import CustomAutoComplete, { AutoCompleteOption } from './CustomAutoComplete';
 import CustomMoneyInput from './CustomMoneyInput';
 
 export {
@@ -67,4 +68,6 @@ export {
   CustomPagination,
   CustomMoneyInput,
   CustomTimePicker,
+  CustomAutoComplete,
+  AutoCompleteOption,
 };

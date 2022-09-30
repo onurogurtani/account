@@ -1,11 +1,9 @@
 import styled from 'styled-components';
-import { Select } from 'antd';
-import { CustomImage } from './index';
-import selectDown from '../assets/icons/icon-select-down.svg';
+import { AutoComplete } from 'antd';
 
-export const { Option } = Select;
+export const AutoCompleteOption = AutoComplete.Option;
 
-const CustomSelectContent = styled(Select)(
+const CustomAutoCompleteContent = styled(AutoComplete)(
   ({ height }) => ` 
   font-size: 16px;
   font-family: UbuntuRegular;
@@ -26,7 +24,6 @@ const CustomSelectContent = styled(Select)(
      height: ${height || '58'}px !important;
      padding: 14px 16px !important;
      border-radius: 4px !important;
-     align-items:center;
    
     :focus{
       border-color: #0d6efd !important;
@@ -43,21 +40,20 @@ const CustomSelectContent = styled(Select)(
   
   .ant-select-selection-placeholder {
     color: #6b7789;
+    padding: 1px 6px !important;
   }
   .ant-select-selection-search {
+    top:-1px !important;
     .ant-select-selection-search-input{
-        padding: 0 5px !important;
+        padding: 0 6px !important;
         height: ${height || '58'}px !important;
     }
   }  
-  .ant-select-arrow{
-    right: 24px !important;
-  }
 `,
 );
 
-const CustomSelect = ({ ...props }) => {
-  return <CustomSelectContent {...props} suffixIcon={<CustomImage src={selectDown} />} />;
+const CustomAutoComplete = ({ ...props }) => {
+  return <CustomAutoCompleteContent {...props} />;
 };
 
-export default CustomSelect;
+export default CustomAutoComplete;

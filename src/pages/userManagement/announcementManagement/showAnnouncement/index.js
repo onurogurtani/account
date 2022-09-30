@@ -10,11 +10,12 @@ import {
 } from '../../../../components';
 import ShowAnnouncementTabs from './ShowAnnouncementTabs';
 import '../../../../styles/announcementManagement/showAnnouncement.scss';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   deleteAnnouncement,
   setPublishedAnnouncements,
   setArchiveAnnouncements,
+  getByFilterPagedAnnouncements,
 } from '../../../../store/slice/announcementSlice';
 import dayjs from 'dayjs';
 const ShowAnnouncement = () => {
@@ -23,6 +24,7 @@ const ShowAnnouncement = () => {
   }, []);
   const history = useHistory();
   const location = useLocation();
+  const { filterObject } = useSelector((state) => state?.announcement);
   const showData = location?.state?.data;
   console.log(showData);
   const dispatch = useDispatch();
@@ -98,6 +100,12 @@ const ShowAnnouncement = () => {
         let id = showData.id;
         const action = await dispatch(setArchiveAnnouncements({ id }));
         if (setArchiveAnnouncements.fulfilled.match(action)) {
+          await dispatch(
+            getByFilterPagedAnnouncements({
+              ...filterObject,
+              IsActive: false,
+            }),
+          );
           history.push({
             pathname: '/user-management/announcement-management',
             state: { data: { isPassiveRecord: true } },

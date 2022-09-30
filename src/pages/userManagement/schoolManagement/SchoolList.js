@@ -15,92 +15,104 @@ import React, { useCallback, useEffect, useState } from 'react';
 import '../../../styles/draftOrder/draftList.scss';
 import SchoolFormModal from './SchoolFormModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllSchools, deleteSchool } from '../../../store/slice/schoolSlice';
+import { getAllSchools, deleteSchool, getInstitutionTypes } from '../../../store/slice/schoolSlice';
 import { FileExcelOutlined } from '@ant-design/icons';
 
 const SchoolList = () => {
-
   const dispatch = useDispatch();
 
   const { schools } = useSelector((state) => state?.school);
 
-  const [selectedSchool, setSelectedSchool] = useState("Hepsi");
+  const [selectedSchool, setSelectedSchool] = useState('Hepsi');
   const [selectedRow, setSelectedRow] = useState(false);
   const [schoolFormModalVisible, setSchoolFormModalVisible] = useState(false);
   const [isExcel, setIsExcel] = useState(false);
+  const [institutionTypes, setInstitutionTypes] = useState([]);
 
   useEffect(() => {
     loadSchools();
   }, []);
 
+  const loadSchools = useCallback(async () => {
+    dispatch(getAllSchools());
+  });
 
-  const loadSchools = useCallback(
-    async () => {
-      dispatch(getAllSchools());
+  useEffect(() => {
+    loadInstitutionTypes();
+  }, []);
+
+  const loadInstitutionTypes = useCallback(async () => {
+    const action = await dispatch(getInstitutionTypes());
+    if (getInstitutionTypes.fulfilled.match(action)) {
+      const institutionTypes = action?.payload?.data?.items;
+
+      let obj = {};
+      for (let index = 0; index < institutionTypes.length; index++) {
+        const element = institutionTypes[index];
+        obj = { ...obj, [element.id]: element.name };
+      }
+
+      setInstitutionTypes(obj);
     }
-  );
+  }, [dispatch]);
 
   const handleDelete = async (record) => {
     confirmDialog({
-        title: <Text t='attention' />,
-        message: 'Kaydı silmek istediğinizden emin misiniz?',
-        okText: <Text t='delete' />,
-        cancelText: 'Vazgeç',
-        onOk: async () => {
-            let id = record.id;
-            const action = await dispatch(deleteSchool({id}));
-            if (deleteSchool.fulfilled.match(action)) {
-                successDialog({
-                    title: <Text t='successfullySent' />,
-                    message: action?.payload?.message,
-                    onOk: () => {},
-                });
-            } else {
-                if (action?.payload?.message) {
-                    errorDialog({
-                        title: <Text t='error' />,
-                        message: action?.payload?.message,
-                    });
-                }
-            }
-        },
+      title: <Text t="attention" />,
+      message: 'Kaydı silmek istediğinizden emin misiniz?',
+      okText: <Text t="delete" />,
+      cancelText: 'Vazgeç',
+      onOk: async () => {
+        let id = record.id;
+        const action = await dispatch(deleteSchool({ id }));
+        if (deleteSchool.fulfilled.match(action)) {
+          successDialog({
+            title: <Text t="successfullySent" />,
+            message: action?.payload?.message,
+            onOk: () => {},
+          });
+        } else {
+          if (action?.payload?.message) {
+            errorDialog({
+              title: <Text t="error" />,
+              message: action?.payload?.message,
+            });
+          }
+        }
+      },
     });
+  };
 
-};
-
-
-  const selectList = ["0", "1", "2", "Hepsi"];
+  const selectList = [
+    { value: 1, text: 'Aktif' },
+    { value: 0, text: 'Pasif' },
+    { value: 'Hepsi', text: 'Hepsi' },
+  ];
 
   const columns = [
     {
-      title: 'Kategori',
-      dataIndex: 'schoolType',
-      key: 'schoolType',
+      title: '#',
+      dataIndex: 'id',
+      key: 'id',
       render: (text, record) => {
-        return (
-          <div>{text}</div>
-        )
-      }
+        return <div>{text}</div>;
+      },
     },
     {
       title: 'Okul Adı',
       dataIndex: 'name',
       key: 'name',
       render: (text, record) => {
-        return (
-          <div>{text}</div>
-        )
-      }
+        return <div>{text}</div>;
+      },
     },
     {
-      title: 'Okul Kodu',
-      dataIndex: 'code',
-      key: 'code',
+      title: 'Okul Tipi',
+      dataIndex: 'institutionTypeId',
+      key: 'institutionTypeId',
       render: (text, record) => {
-        return (
-          <div>{text}</div>
-        )
-      }
+        return <div>{institutionTypes[record.institutionTypeId]}</div>;
+      },
     },
     {
       title: 'Durumu',
@@ -108,33 +120,40 @@ const SchoolList = () => {
       key: 'recordStatus',
       render: (text, record) => {
         return (
-          <div>{text}</div>
-        )
-      }
+          <div>
+            {record.recordStatus === 1 ? (
+              <span className="status-text-active">Aktif</span>
+            ) : (
+              <span className="status-text-passive">Pasif</span>
+            )}
+          </div>
+        );
+      },
     },
     {
       title: 'İşlemler',
-      dataIndex: 'draftDeleteAction',
-      key: 'draftDeleteAction',
+      dataIndex: 'schoolDeleteAction',
+      key: 'schoolDeleteAction',
       align: 'center',
       render: (text, record) => {
         return (
-          <div className='action-btns'>
-            <CustomButton className="detail-btn" onClick={() => editFormModal(record)}>DÜZENLE</CustomButton>
-            <CustomButton 
-            className='delete-btn'
-            onClick={() => handleDelete(record)}
-            >SİL</CustomButton>
+          <div className="action-btns">
+            <CustomButton className="detail-btn" onClick={() => editFormModal(record)}>
+              DÜZENLE
+            </CustomButton>
+            <CustomButton className="delete-btn" onClick={() => handleDelete(record)}>
+              SİL
+            </CustomButton>
           </div>
-        )
-      }
-    }
-  ]
+        );
+      },
+    },
+  ];
 
   const handleSelectChange = (value) => {
-    console.log("VALUE>>>", value)
-    setSelectedSchool(value)
-  }
+    console.log('VALUE>>>', value);
+    setSelectedSchool(value);
+  };
 
   const editFormModal = (record) => {
     setSelectedRow(record);
@@ -152,46 +171,48 @@ const SchoolList = () => {
     setIsExcel(true);
     setSelectedRow(false);
     setSchoolFormModalVisible(true);
-  }
+  };
 
-  const filteredSchool = schools.filter(school => {
-    if (selectedSchool === "Hepsi") {
+  const filteredSchool = schools.filter((school) => {
+    if (selectedSchool === 'Hepsi') {
       return true;
     } else {
-      return school.schoolType == selectedSchool;
+      return school.recordStatus === selectedSchool;
     }
-  })
+  });
 
   return (
-    <CustomCollapseCard
-      className='draft-list-card'
-      cardTitle={<Text t='Okul Yönetimi' />}
-    >
-      <div className='number-registered-drafts'>
+    <CustomCollapseCard className="draft-list-card" cardTitle={<Text t="Okul Yönetimi" />}>
+      <div className="number-registered-drafts">
         <CustomButton className="add-btn" onClick={addFormModal}>
           YENİ OKUL EKLE
         </CustomButton>
-        <div className='number-registered-drafts'>
-          <CustomSelect showSearch
+        <div className="number-registered-drafts">
+          <CustomSelect
+            showSearch
             style={{
-              width: 300,
+              width: 260,
             }}
             placeholder="Okul Seçiniz..."
             value={selectedSchool}
             optionFilterProp="children"
             onChange={handleSelectChange}
-            filterOption={(input, option) => option.children.toLocaleLowerCase().includes(input.toLocaleLowerCase())}
-          >
-            {
-              selectList?.map((item) => <Option value={item}>{item}</Option>)
+            filterOption={(input, option) =>
+              option.children.toLocaleLowerCase().includes(input.toLocaleLowerCase())
             }
+          >
+            {selectList?.map((item) => (
+              <Option key={item.value} value={item.value}>
+                {item.text}
+              </Option>
+            ))}
           </CustomSelect>
         </div>
-        <CustomButton className="upload-btn" onClick={uploadExcel} >
+        <CustomButton className="upload-btn" onClick={uploadExcel}>
           <FileExcelOutlined />
           Excel ile Ekle
         </CustomButton>
-        <div className='drafts-count-title'>
+        <div className="drafts-count-title">
           <CustomImage src={cardsRegistered} />
           Kayıtlı Okul Sayısı: <span>{filteredSchool?.length}</span>
         </div>
@@ -201,7 +222,7 @@ const SchoolList = () => {
         pagination={true}
         dataSource={filteredSchool}
         columns={columns}
-        rowKey={(record) => `draft-list-new-order-${record?.id || record?.name}`}
+        rowKey={(record) => `school-list-new-order-${record?.id || record?.name}`}
         scroll={{ x: false }}
       />
       <SchoolFormModal
@@ -211,7 +232,7 @@ const SchoolList = () => {
         isExcel={isExcel}
       />
     </CustomCollapseCard>
-  )
-}
+  );
+};
 
-export default SchoolList
+export default SchoolList;

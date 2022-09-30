@@ -1,109 +1,107 @@
 .userInfo-container {
-    align-items: center;
-    justify-content: center;
-    display: flex;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  width: 100%;
+
+  .userInfo-link-form {
+    border-radius: 5px;
+    //box-shadow: 0 2px 4px 0 rgba(96, 97, 112, 0.16), 0 0 1px 0 rgba(40, 41, 61, 0.04);
+    max-width: 700px;
     width: 100%;
+    margin: 0 1px 0 0;
+    padding: 15px 16px 26px;
+    background-color: #fff;
 
-    .userInfo-link-form {
-        border-radius: 5px;
-        //box-shadow: 0 2px 4px 0 rgba(96, 97, 112, 0.16), 0 0 1px 0 rgba(40, 41, 61, 0.04);
-        width: 700px;
-        min-width: 400px;
-        margin: 0 1px 0 0;
-        padding: 15px 16px 26px;
-        background-color: #fff;
+    .ant-form-item {
+      .ant-form-item-label {
+        width: 200px;
 
-        .ant-form-item {
-            .ant-form-item-label {
-                width: 200px;
+        label {
+          font-size: 14px;
+          margin-top: 7px;
+        }
+      }
 
-                label {
-                    font-size: 14px;
-                    margin-top: 7px;
-                }
+      .ant-form-item-control {
+        .ant-form-item-control-input {
+          .ant-form-item-control-input-content {
+            input {
+              font-size: 14px;
             }
 
-            .ant-form-item-control {
-                .ant-form-item-control-input {
-                    .ant-form-item-control-input-content {
-                        input {
-                            font-size: 14px;
-                        }
+            .ant-select {
+              font-size: 14px;
+              width: 100%;
+              max-width: 287px;
 
-                        .ant-select {
-                            font-size: 14px;
-                            width: 287px;
-
-                            .ant-select-selector {
-                                padding: 1px 10px !important;
-                            }
-                        }
-                    }
-                }
+              .ant-select-selector {
+                padding: 1px 10px !important;
+              }
             }
+          }
         }
-
-        .ant-tooltip {
-            visibility: hidden !important;
-        }
-
-        .footer-form-item {
-            margin-bottom: 0;
-
-            .ant-form-item-control {
-                .ant-form-item-control-input {
-                    .ant-form-item-control-input-content {
-                        display: flex;
-                        justify-content: flex-end;
-                    }
-                }
-            }
-        }
-
-
-        .upload-btn {
-            font-size: 14px;
-            font-weight: normal;
-            font-family: UbuntuRegular;
-            color: #6b7789;
-            &:hover{
-                border-color: #0d6efd;
-            }
-        }
-
-        .submit-btn {
-            background-color: #699a00;
-            color: #fff;
-            height: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: UbuntuMedium, sans-serif;
-            font-size: 14px;
-            line-height: 12px;
-            border-radius: 4px;
-            outline: 0;
-            box-shadow: none;
-            border: none;
-        }
-
-        .back-btn {
-            background-color: grey;
-            color: #fff;
-            height: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: UbuntuMedium, sans-serif;
-            font-size: 14px;
-            line-height: 12px;
-            border-radius: 4px;
-            outline: 0;
-            box-shadow: none;
-            border: none;
-            margin-right: 20px;
-        }
-
+      }
     }
 
+    .ant-tooltip {
+      visibility: hidden !important;
+    }
+
+    .footer-form-item {
+      margin-bottom: 0;
+
+      .ant-form-item-control {
+        .ant-form-item-control-input {
+          .ant-form-item-control-input-content {
+            display: flex;
+            justify-content: flex-end;
+          }
+        }
+      }
+    }
+
+    .upload-btn {
+      font-size: 14px;
+      font-weight: normal;
+      font-family: UbuntuRegular;
+      color: #6b7789;
+      &:hover {
+        border-color: #0d6efd;
+      }
+    }
+
+    .submit-btn {
+      background-color: #699a00;
+      color: #fff;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: UbuntuMedium, sans-serif;
+      font-size: 14px;
+      line-height: 12px;
+      border-radius: 4px;
+      outline: 0;
+      box-shadow: none;
+      border: none;
+    }
+
+    .back-btn {
+      background-color: grey;
+      color: #fff;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: UbuntuMedium, sans-serif;
+      font-size: 14px;
+      line-height: 12px;
+      border-radius: 4px;
+      outline: 0;
+      box-shadow: none;
+      border: none;
+      margin-right: 20px;
+    }
+  }
 }

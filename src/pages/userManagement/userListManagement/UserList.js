@@ -19,7 +19,7 @@ const UserList = () => {
   const history = useHistory();
 
   const dispatch = useDispatch();
-  const { usersList } = useSelector((state) => state?.userList);
+  const { usersList, tableProperty } = useSelector((state) => state?.userList);
 
   useEffect(() => {
     (async () => {
@@ -28,7 +28,7 @@ const UserList = () => {
   }, []);
 
   const loadUserList = useCallback(async () => {
-    dispatch(getUserList());
+    dispatch(getUserList({ pageNumber: 1, pageSize: 10 }));
   }, [dispatch]);
 
   const editUser = (record) => {
@@ -177,7 +177,9 @@ const UserList = () => {
       },
     },
   ];
-
+  const handleTableChange = async ({ pageSize, current }, filters, sorter) => {
+    await dispatch(getUserList({ pageNumber: current, pageSize }));
+  };
   return (
     <CustomCollapseCard className="draft-list-card" cardTitle={<Text t="Kullanıcı Listesi" />}>
       {
@@ -193,7 +195,13 @@ const UserList = () => {
       }
 
       <CustomTable
-        pagination={true}
+        pagination={{
+          current: tableProperty?.currentPage,
+          pageSize: tableProperty?.pageSize,
+          total: tableProperty?.totalCount,
+          showSizeChanger: true,
+        }}
+        onChange={handleTableChange}
         dataSource={usersList}
         columns={columns}
         rowKey={(record) => `draft-list-new-order-${record?.id || record?.name}`}

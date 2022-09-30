@@ -99,6 +99,11 @@ const AnnouncementInfoForm = ({
             validator: reactQuillValidator,
             message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
           },
+          {
+            type: 'string',
+            max: 2500,
+            message: 'En fazla 2500 karakter içermelidir.',
+          },
         ]}
       >
         <ReactQuill

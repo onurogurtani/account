@@ -25,26 +25,25 @@ const AnnouncementList = () => {
   const location = useLocation();
   const [announcementFilterIsShow, setAnnouncementFilterIsShow] = useState(false);
   const isPassiveRecord = location?.state?.data?.isPassiveRecord;
-  useEffect(() => {
-    isPassiveRecord && setFilterCombobox(false);
-    loadAnnouncements();
-  }, []);
 
   const { announcements, tableProperty, filterObject } = useSelector(
     (state) => state?.announcement,
   );
-  const [filterCombobox, setFilterCombobox] = useState(filterObject.IsActive);
+
+  useEffect(() => {
+    !isPassiveRecord && loadAnnouncements();
+  }, []);
 
   const loadAnnouncements = useCallback(async () => {
-    dispatch(
+    await dispatch(
       getByFilterPagedAnnouncements({
         ...filterObject,
         PageNumber: '1',
         OrderBy: 'idDESC',
-        IsActive: isPassiveRecord ? false : filterObject.IsActive,
       }),
     );
   });
+
   const paginationProps = {
     showSizeChanger: true,
     showQuickJumper: {
@@ -71,7 +70,7 @@ const AnnouncementList = () => {
               width: '100%',
             }}
             placeholder="Aktif Kayıtlar"
-            value={filterCombobox}
+            value={filterObject?.IsActive}
             optionFilterProp="children"
             onChange={handleSelectChange}
             filterOption={(input, option) =>
@@ -179,7 +178,6 @@ const AnnouncementList = () => {
       PageNumber: '1',
     };
     dispatch(getByFilterPagedAnnouncements(data));
-    setFilterCombobox(value);
   };
 
   const sortFields = [

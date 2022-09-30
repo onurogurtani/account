@@ -1,10 +1,9 @@
 import { api } from './api';
 
-const userGetList = (data) => {
+const userGetList = ({ pageNumber = 1, pageSize = 10 }) => {
   return api({
-    url: `Users/getList?PageNumber=1&PageSize=0`,
+    url: `Users/getList?PageNumber=${pageNumber}&PageSize=${pageSize}`,
     method: 'POST',
-    data,
   });
 };
 
@@ -24,19 +23,18 @@ const addUser = (data) => {
   });
 };
 
-const deleteUser = ({id}) => {
+const deleteUser = ({ id }) => {
   return api({
     url: `Users?id=${id}`,
     method: 'DELETE',
-  })
-}
-
+  });
+};
 
 const userServices = {
-    userGetList,
-    userUpdate,
-    addUser,
-    deleteUser
+  userGetList,
+  userUpdate,
+  addUser,
+  deleteUser,
 };
 
 export default userServices;

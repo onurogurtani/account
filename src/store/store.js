@@ -38,6 +38,7 @@ import { schoolSlice } from './slice/schoolSlice';
 import { questionSlice } from './slice/questionSlice';
 import { formsSlice } from './slice/formsSlice';
 import { announcementSlice } from './slice/announcementSlice';
+import { citysCountysSlice } from './slice/citysCountysSlice';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -65,6 +66,7 @@ const reducers = combineReducers({
   questions: questionSlice.reducer,
   forms: formsSlice.reducer,
   announcement: announcementSlice.reducer,
+  citysCountys: citysCountysSlice.reducer,
 });
 
 const persistConfig = {

@@ -106,7 +106,7 @@ const AddUser = () => {
                 { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
               ]}
             >
-              <CustomInput height="40px" placeholder={useText('Adı')} />
+              <CustomInput height="40" placeholder={useText('Adı')} />
             </CustomFormItem>
 
             <CustomFormItem
@@ -117,7 +117,7 @@ const AddUser = () => {
                 { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
               ]}
             >
-              <CustomInput height="40px" placeholder={useText('Soyadı')} />
+              <CustomInput height="40" placeholder={useText('Soyadı')} />
             </CustomFormItem>
 
             <CustomFormItem
@@ -132,7 +132,7 @@ const AddUser = () => {
                 },
               ]}
             >
-              <CustomInput height="40px" placeholder={useText('Kullanıcı Adı')} />
+              <CustomInput height="40" placeholder={useText('Kullanıcı Adı')} />
             </CustomFormItem>
 
             <CustomFormItem
@@ -145,7 +145,7 @@ const AddUser = () => {
             >
               <CustomNumberInput
                 autoComplete="off"
-                height="40px"
+                height="40"
                 maxLength={11}
                 placeholder={useText('TCKN')}
               />
@@ -159,7 +159,7 @@ const AddUser = () => {
                 { validator: formMailRegex, message: <Text t="enterValidEmail" /> },
               ]}
             >
-              <CustomInput height="40px" placeholder={useText('E-posta adresi Giriniz')} />
+              <CustomInput height="40" placeholder={useText('E-posta adresi Giriniz')} />
             </CustomFormItem>
 
             <CustomFormItem
@@ -171,7 +171,7 @@ const AddUser = () => {
               ]}
             >
               <CustomMaskInput mask={'+\\90 (999) 999 99 99'}>
-                <CustomInput height="40px" placeholder={useText('phoneNumber')} />
+                <CustomInput height="40" placeholder={useText('phoneNumber')} />
               </CustomMaskInput>
             </CustomFormItem>
 
@@ -184,7 +184,7 @@ const AddUser = () => {
                 placeholder="Durum seçiniz..."
                 optionFilterProp="children"
                 onChange={onchannelChange}
-                height="40px"
+                height="40"
               >
                 <Option value={true}>Aktif</Option>
                 <Option value={false}>Pasif</Option>
