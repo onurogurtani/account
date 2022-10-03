@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import DesktopHeader from './DesktopHeader';
 import MobilHeader from './MobilHeader';
 import { CustomImage } from '../index';
-import edenredDesktopIcon from '../../assets/icons/edenred-desktop-icon.svg';
+// import ddDesktopIcon from '../../assets/icons/dd-desktop-icon.svg';
 // import menuOpen from '../../assets/icons/icon-menu-open.svg';
 
 const { Header } = Layout;
@@ -79,9 +79,11 @@ const Headers = ({ collapsed, setCollapsed, isDesktop }) => {
             }}
           >
             <h1
-                style={{ cursor: 'pointer', marginTop: '-4px', width: '100px' }}
-                onClick={() => history.push('/dashboard')}
-            >Logo</h1>
+              style={{ cursor: 'pointer', marginTop: '-4px', width: '100px' }}
+              onClick={() => history.push('/dashboard')}
+            >
+              Logo
+            </h1>
           </div>
         </HeaderLeft>
       )}

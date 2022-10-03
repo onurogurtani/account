@@ -1,9 +1,9 @@
 export const ReCAPTCHAKeys = '6Lf2wFkUAAAAAF4FyKtWBiVzAOdQ3NVuzWEBwqXF';
 export const footerLink = {
   help: '/',
-  communication: 'https://www.edenred.com.tr/iletisim',
-  protectionOfPersonalData: 'https://www.edenred.com.tr/kisisel-verilerin-korunmasi',
-  cookiePolicy: 'https://www.edenred.com.tr/cerez-politikasi',
+  communication: 'https://www.dd.com.tr/iletisim',
+  protectionOfPersonalData: 'https://www.dd.com.tr/kisisel-verilerin-korunmasi',
+  cookiePolicy: 'https://www.dd.com.tr/cerez-politikasi',
   facebook: '/',
   instagram: '/',
   linkedin: '/',

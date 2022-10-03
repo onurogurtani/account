@@ -174,7 +174,8 @@ const Dashboard = () => {
       <NameContent>
         {!isMobil && (
           <span className={'current-user'}>
-            <Text t="hello" /> {`${currentUser?.name} ${currentUser?.surName}, `}
+            {/* <Text t="hello" /> {`${currentUser?.name} ${currentUser?.surName}, `} */}
+            <Text t="hello" /> {`${currentUser?.nameSurname}, `}
           </span>
         )}
       </NameContent>

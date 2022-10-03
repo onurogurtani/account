@@ -38,22 +38,22 @@
   }
 }
 
-.edenred-loading {
+.dd-loading {
   height: 100%;
 }
 
-.edenred-loading .ant-spin-container {
+.dd-loading .ant-spin-container {
   height: 100%;
 }
 
-.edenred-loading .ant-spin-blur {
+.dd-loading .ant-spin-blur {
   opacity: 1;
 }
 
-.edenred-loading .ant-spin-blur::after {
-  opacity: .43;
+.dd-loading .ant-spin-blur::after {
+  opacity: 0.43;
 }
 
-.edenred-loading .ant-spin-container::after {
+.dd-loading .ant-spin-container::after {
   background: #000000;
 }

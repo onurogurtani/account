@@ -75,7 +75,7 @@ const persistConfig = {
   whitelist: ['auth', 'user', 'menu', 'customer'], // only persist these keys,
   transforms: [
     encryptTransform({
-      secretKey: 'edenred-secret-key-for-redux-persist',
+      secretKey: 'dd-secret-key-for-redux-persist',
       onError: function (error) {
         throw new Error(error?.message);
       },

@@ -1,4 +1,4 @@
-# Getting Started with Edenred Ui Project
+# Getting Started with DD Ui Project
 
 ## Available Scripts
 
@@ -34,7 +34,6 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
-
 
 AppData\Roaming\npm\yarn.ps1 is not digitally signed. You cannot run this script on the current system. For more information about running scripts an
 d setting execution policy, see about_Execution_Policies at https:/go.microsoft.com/fwlink/?LinkID=135170.

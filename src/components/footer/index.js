@@ -38,7 +38,7 @@ const Footer = () => {
   }, [language, changeTitle, ticketOnlineOrderingPlatformLanguage]);
 
   return (
-    <div className={'edenred-footer'}>
+    <div className={'dd-footer'}>
       <div className="campaigns">
         <span className="title">
           <Text t="redClubCampaigns" />

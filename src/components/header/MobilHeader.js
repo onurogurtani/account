@@ -7,7 +7,7 @@ import menuOpen from '../../assets/icons/icon-menu-open.svg';
 import menuClose from '../../assets/icons/icon-menu-close.svg';
 import search from '../../assets/icons/icon-mobile-search.svg';
 import notification from '../../assets/icons/icon-mobile-notification.svg';
-import edenredMobilIcon from '../../assets/icons/edenred-mobil-icon.svg';
+// import ddMobilIcon from '../../assets/icons/dd-mobil-icon.svg';
 import fastAccess from '../../assets/icons/icon-fastaccess.svg';
 import avatar from '../../assets/icons/icon-mobile-account.svg';
 

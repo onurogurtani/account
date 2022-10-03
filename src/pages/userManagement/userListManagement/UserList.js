@@ -100,15 +100,25 @@ const UserList = () => {
   };
 
   const columns = [
+    // {
+    //   title: 'AD',
+    //   dataIndex: 'name',
+    //   key: 'name',
+    // },
+    // {
+    //   title: 'SOYAD',
+    //   dataIndex: 'surName',
+    //   key: 'surName',
+    // },
     {
-      title: 'AD',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'AD SOYAD',
+      dataIndex: 'nameSurname',
+      key: 'nameSurname',
     },
     {
-      title: 'SOYAD',
-      dataIndex: 'surName',
-      key: 'surName',
+      title: 'E-Mail',
+      dataIndex: 'email',
+      key: 'email',
     },
     {
       title: 'KULLANICI ADI',

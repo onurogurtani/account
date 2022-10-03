@@ -16,28 +16,3 @@
   font-family: "UbuntuBold";
   src: url("./fonts/Ubuntu-Bold.ttf");
 }
-
-@font-face {
-  font-family: "Edenred";
-  src: url("./fonts/edenred.otf") format("opentype");
-}
-
-@font-face {
-  font-family: "EdenredBold";
-  src: url("./fonts/edenred_bold.otf") format("opentype");
-}
-
-@font-face {
-  font-family: "EdenredBlack";
-  src: url("./fonts/edenred_black.otf") format("opentype");
-}
-
-@font-face {
-  font-family: "EdenredLight";
-  src: url("./fonts/edenred_light.otf") format("opentype");
-}
-
-@font-face {
-  font-family: "EdenredLighItalict";
-  src: url("./fonts/edenred_light_italic.otf") format("opentype");
-}

@@ -40,7 +40,7 @@ const Loading = (props) => {
   return (
     <CustomSpin
       {...props}
-      wrapperClassName={'edenred-loading'}
+      wrapperClassName={'dd-loading'}
       indicator={
         <LoadingContent>
           <LoadingGift />

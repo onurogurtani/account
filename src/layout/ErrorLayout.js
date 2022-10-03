@@ -1,5 +1,5 @@
 import { ResponseImage } from '../components';
-import logoMobile from '../assets/images/error/logo-edenred-mobile.svg';
+import logoMobile from '../assets/images/error/logo-dd-mobile.svg';
 import leftBackAction from '../assets/icons/icon-left-back.svg';
 import '../styles/components/errorLayout.scss';
 

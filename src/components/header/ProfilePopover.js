@@ -82,8 +82,9 @@ const ProfilePopover = ({ children, isProfilePopoverVisible, setIsProfilePopover
     <AvatarContent>
       <div className="content">
         <div className="name">
-          {`${currentUser?.name} ${currentUser?.surName}`}
-          <div className="user-name">{currentUser?.userName}</div>
+          {`${currentUser?.nameSurname}`}
+          {/* {`${currentUser?.name} ${currentUser?.surName}`} */}
+          {currentUser?.userName && <div className="user-name">{currentUser?.userName}</div>}
         </div>
         <CustomNavLink to={'/profile'} onClick={() => setIsProfilePopoverVisible(false)}>
           <div className="profile">
