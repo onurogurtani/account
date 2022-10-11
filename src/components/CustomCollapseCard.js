@@ -7,12 +7,19 @@ import iconUp from '../assets/icons/icon-up.svg';
 
 const { Panel } = Collapse;
 
-const CustomCollapseCard = ({ children, cardTitle, cardTitleAlign, bodyCenter, className }) => {
+const CustomCollapseCard = ({
+  children,
+  cardTitle,
+  cardTitleAlign,
+  bodyCenter,
+  className,
+  defaultActiveKey,
+}) => {
   const isMobil = useMediaQuery({ query: '(max-width: 1179.98px)' });
 
   return (
     <Collapse
-      defaultActiveKey={['1']}
+      defaultActiveKey={defaultActiveKey || ['1']}
       className={`${className || ''} custom-collapse-card`}
       ghost
       expandIconPosition="right"

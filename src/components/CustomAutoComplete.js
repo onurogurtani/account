@@ -21,7 +21,7 @@ const CustomAutoCompleteContent = styled(AutoComplete)(
   }
   
   .ant-select-selector{
-     height: ${height || '58'}px !important;
+     height: ${height || '48'}px !important;
      padding: 14px 16px !important;
      border-radius: 4px !important;
    
@@ -34,19 +34,19 @@ const CustomAutoCompleteContent = styled(AutoComplete)(
     }
     
     .ant-select-single:not(.ant-select-customize-input) .ant-select-selector .ant-select-selection-search-input{
-       height: ${height || '58'}px !important;
+       height: ${height || '48'}px !important;
     }
   }
   
   .ant-select-selection-placeholder {
     color: #6b7789;
-    padding: 1px 6px !important;
+    padding: 7px 6px !important;
   }
   .ant-select-selection-search {
     top:-1px !important;
     .ant-select-selection-search-input{
         padding: 0 6px !important;
-        height: ${height || '58'}px !important;
+        height: ${height || '48'}px !important;
     }
   }  
 `,

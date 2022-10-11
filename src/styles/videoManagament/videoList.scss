@@ -1,0 +1,21 @@
+.video-list {
+  .btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    padding: 30px 15px;
+    button {
+      border: none;
+      color: #fff;
+      border-radius: 6px;
+      line-height: 0.86;
+      padding: 9px 16px;
+    }
+    .shared-btn {
+      background-color: #38b634;
+    }
+    .disable-btn {
+      background-color: #8b8787;
+    }
+  }
+}

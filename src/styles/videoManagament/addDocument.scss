@@ -1,0 +1,30 @@
+.add-document-video {
+  .add-btn {
+    margin-top: 10px;
+    background-color: #00a483;
+    border: none;
+  }
+  .document-list {
+    margin-top: 25px;
+    .ant-list-item-meta {
+      .ant-list-item-meta-avatar {
+        span {
+          svg {
+            width: 32px;
+            height: 48px;
+          }
+        }
+      }
+    }
+    .ant-list-item-action {
+      .document-delete {
+        color: red;
+        text-decoration: none;
+      }
+      .document-edit {
+        color: #70b186;
+        text-decoration: none;
+      }
+    }
+  }
+}

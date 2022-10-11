@@ -3,7 +3,7 @@ import { Input } from 'antd';
 
 const CustomInputs = styled(Input)(
   ({ height }) => ` 
-  height: ${height || '58'}px;
+  height: ${height || '48'}px;
   font-size: 16px;
   padding: 10px 16px;
   font-family: UbuntuRegular;

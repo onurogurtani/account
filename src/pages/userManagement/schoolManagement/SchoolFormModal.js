@@ -101,7 +101,8 @@ const SchoolFormModal = ({ modalVisible, handleModalVisible, selectedRow, isExce
         return;
       }
       if (isExcel) {
-        const schoolData = values?.excelFile?.file?.originFileObj;
+        console.log(values);
+        const schoolData = values?.excelFile[0]?.originFileObj;
 
         const body = {
           FormFile: schoolData,
@@ -224,28 +225,28 @@ const SchoolFormModal = ({ modalVisible, handleModalVisible, selectedRow, isExce
       '.csv',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       'application/vnd.ms-excel',
-    ].includes(file.type);
+    ].includes(file.type.toLowerCase());
 
-    if (!isExcel) {
-      setErrorList((state) => [
-        ...state,
-        {
-          id: errorList.length,
-          message: 'Lütfen Excel yükleyiniz. Başka bir dosya yükleyemezsiniz.',
-        },
-      ]);
-    } else {
-      setErrorList([]);
-    }
     const isLt2M = file.size / 1024 / 1024 < 100;
-    if (!isLt2M) {
-      setErrorList((state) => [
-        ...state,
-        {
-          id: errorList.length,
-          message: 'Lütfen 100 MB ve altında bir Excel yükleyiniz.',
-        },
-      ]);
+    if (!isExcel || !isLt2M) {
+      if (!isLt2M) {
+        setErrorList((state) => [
+          ...state,
+          {
+            id: errorList.length,
+            message: 'Lütfen 100 MB ve altında bir Excel yükleyiniz.',
+          },
+        ]);
+      }
+      if (!isExcel) {
+        setErrorList((state) => [
+          ...state,
+          {
+            id: errorList.length,
+            message: 'Lütfen Excel yükleyiniz. Başka bir dosya yükleyemezsiniz.',
+          },
+        ]);
+      }
     } else {
       setErrorList([]);
     }
@@ -292,6 +293,13 @@ const SchoolFormModal = ({ modalVisible, handleModalVisible, selectedRow, isExce
       console.log(action);
     }
   };
+  const normFile = (e) => {
+    console.log('Upload event:', e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e?.fileList;
+  };
   return (
     <CustomModal
       className="payment-modal"
@@ -313,32 +321,36 @@ const SchoolFormModal = ({ modalVisible, handleModalVisible, selectedRow, isExce
           layout={'horizontal'}
         >
           {isExcel ? (
-            <CustomFormItem
-              name="excelFile"
-              style={{ marginBottom: '20px' }}
-              rules={[
-                {
-                  required: true,
-                  message: 'Lütfen dosya seçiniz.',
-                },
-              ]}
-            >
-              <Upload.Dragger
-                name="files"
-                listType="picture"
-                maxCount={1}
-                beforeUpload={beforeUpload}
-                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                customRequest={dummyRequest}
+            <CustomFormItem style={{ marginBottom: '20px' }}>
+              <CustomFormItem
+                rules={[
+                  {
+                    required: true,
+                    message: 'Lütfen dosya seçiniz.',
+                  },
+                ]}
+                name="excelFile"
+                valuePropName="fileList"
+                getValueFromEvent={normFile}
+                noStyle
               >
-                <p className="ant-upload-drag-icon">
-                  <InboxOutlined />
-                </p>
-                <p className="ant-upload-text">
-                  Dosya yüklemek için tıklayın veya dosyayı bu alana sürükleyin.
-                </p>
-                <p className="ant-upload-hint">Sadece bir adet dosya yükleyebilirsiniz.</p>
-              </Upload.Dragger>
+                <Upload.Dragger
+                  name="files"
+                  // listType="picture"
+                  maxCount={1}
+                  beforeUpload={beforeUpload}
+                  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                  customRequest={dummyRequest}
+                >
+                  <p className="ant-upload-drag-icon">
+                    <InboxOutlined />
+                  </p>
+                  <p className="ant-upload-text">
+                    Dosya yüklemek için tıklayın veya dosyayı bu alana sürükleyin.
+                  </p>
+                  <p className="ant-upload-hint">Sadece bir adet dosya yükleyebilirsiniz.</p>
+                </Upload.Dragger>
+              </CustomFormItem>
               <a onClick={ondownloadSchoolExcel} className="ant-upload-hint">
                 Örnek excel dosya desenini indirmek için tıklayınız.
               </a>
@@ -354,7 +366,6 @@ const SchoolFormModal = ({ modalVisible, handleModalVisible, selectedRow, isExce
                   placeholder="Kurum türü seçiniz..."
                   optionFilterProp="children"
                   onChange={onInstitutionIdChange}
-                  height="36"
                 >
                   <Option value={1}>Resmi Kurumlar</Option>
                   <Option value={2}>Özel Kurumlar</Option>
@@ -373,7 +384,6 @@ const SchoolFormModal = ({ modalVisible, handleModalVisible, selectedRow, isExce
                       placeholder="Seçiniz"
                       optionFilterProp="children"
                       onChange={onCityChange}
-                      height="36"
                     >
                       {citys?.map((item) => {
                         return (
@@ -393,7 +403,6 @@ const SchoolFormModal = ({ modalVisible, handleModalVisible, selectedRow, isExce
                       placeholder="Seçiniz"
                       optionFilterProp="children"
                       onChange={onTownChange}
-                      height="36"
                     >
                       {towns.map((item) => {
                         return (
@@ -415,7 +424,7 @@ const SchoolFormModal = ({ modalVisible, handleModalVisible, selectedRow, isExce
                   { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
                 ]}
               >
-                <CustomInput placeholder="Okul Adı" height={36} />
+                <CustomInput placeholder="Okul Adı" />
               </CustomFormItem>
               <CustomFormItem
                 rules={[{ whitespace: true, message: <Text t="Sadece Boşluk Olamaz." /> }]}
@@ -425,7 +434,6 @@ const SchoolFormModal = ({ modalVisible, handleModalVisible, selectedRow, isExce
                 <CustomAutoComplete
                   onChange={onschoolTypeChange}
                   placeholder="Okul Tipi"
-                  height={36}
                   filterOption={(inputValue, option) =>
                     option.value.toLocaleLowerCase().indexOf(inputValue.toLocaleLowerCase()) !== -1
                   }
@@ -446,7 +454,6 @@ const SchoolFormModal = ({ modalVisible, handleModalVisible, selectedRow, isExce
                   placeholder="Seçiniz"
                   optionFilterProp="children"
                   onChange={onrecordStatusChange}
-                  height="36"
                 >
                   <Option key={1} value={1}>
                     Aktif

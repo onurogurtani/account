@@ -1,5 +1,4 @@
 .draft-list-card {
-
   .number-registered-drafts {
     display: flex;
     justify-content: space-between;
@@ -9,8 +8,8 @@
     .add-btn {
       width: 217px !important;
       background: #00a483 !important;
-      height: 36px;
-      font-size: 14px;
+      // height: 36px;
+      // font-size: 14px;
       font-weight: 500;
       font-stretch: normal;
       font-style: normal;
@@ -31,9 +30,9 @@
       align-items: center;
       justify-content: center;
       width: 150px !important;
-      background: #0F733D !important;
-      height: 36px;
-      font-size: 14px;
+      background: #0f733d !important;
+      // height: 36px;
+      // font-size: 14px;
       font-weight: 500;
       font-stretch: normal;
       font-style: normal;
@@ -53,7 +52,6 @@
 
       img {
         margin-right: 12px;
-
       }
 
       span {
@@ -62,9 +60,7 @@
         line-height: 14px;
       }
     }
-
   }
-
 
   .action-btns {
     display: flex;
@@ -112,7 +108,7 @@
       line-height: 12px;
       border-radius: 4px;
       box-shadow: none;
-      background-color: #00A483;
+      background-color: #00a483;
     }
 
     .remove-btn {
@@ -193,11 +189,11 @@
 }
 
 .status-text-active {
-  color:#00a483;
+  color: #00a483;
   font-weight: bold;
 }
 
 .status-text-passive {
-  color:#f72717;
+  color: #f72717;
   font-weight: bold;
 }

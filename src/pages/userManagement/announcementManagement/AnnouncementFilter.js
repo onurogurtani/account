@@ -86,7 +86,7 @@ const AnnouncementFilter = () => {
             name="headText"
             className="name-form-item"
           >
-            <CustomInput autoComplete="off" placeholder={'Duyuru Başlığı'} height={36} />
+            <CustomInput autoComplete="off" placeholder={'Duyuru Başlığı'} />
           </CustomFormItem>
           <div className="form-date">
             <CustomFormItem

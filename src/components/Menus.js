@@ -250,6 +250,14 @@ const Menus = () => {
           </span>
         </MenuItemText>
       </CustomItem>
+      <CustomItem key="/video-management/list">
+        <MenuItemText>
+          <CustomImage src={menuIcons} />
+          <span>
+            <Text t="Video Yönetimi" />
+          </span>
+        </MenuItemText>
+      </CustomItem>
     </CustomMenu>
   );
 };

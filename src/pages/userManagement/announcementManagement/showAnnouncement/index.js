@@ -130,26 +130,13 @@ const ShowAnnouncement = () => {
         routes={['Kullanıcı Yönetimi', 'Duyurular']}
       ></CustomPageHeader>
       <div className="btn-group">
-        <CustomButton
-          height={50}
-          type="primary"
-          htmlType="submit"
-          className="submit-btn"
-          onClick={handleBack}
-        >
+        <CustomButton type="primary" htmlType="submit" className="submit-btn" onClick={handleBack}>
           Geri
         </CustomButton>
-        <CustomButton
-          height={50}
-          type="primary"
-          htmlType="submit"
-          className="edit-btn"
-          onClick={handleEdit}
-        >
+        <CustomButton type="primary" htmlType="submit" className="edit-btn" onClick={handleEdit}>
           Düzenle
         </CustomButton>
         <CustomButton
-          height={50}
           type="primary"
           htmlType="submit"
           className="submit-btn"
@@ -158,17 +145,10 @@ const ShowAnnouncement = () => {
         >
           Sil
         </CustomButton>
-        <CustomButton
-          height={50}
-          type="primary"
-          htmlType="submit"
-          className="shared-btn"
-          onClick={onShared}
-        >
+        <CustomButton type="primary" htmlType="submit" className="shared-btn" onClick={onShared}>
           Yayınla
         </CustomButton>
         <CustomButton
-          height={50}
           type="primary"
           htmlType="submit"
           className="submit-btn"

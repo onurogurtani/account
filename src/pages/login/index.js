@@ -76,7 +76,7 @@ const Login = ({ history }) => {
             { type: 'string', max: 50 },
           ]}
         >
-          <CustomInput placeholder={useText('loginUsernameInput')} maxLength={50} />
+          <CustomInput height="58" placeholder={useText('loginUsernameInput')} maxLength={50} />
         </CustomFormItem>
 
         <CustomFormItem
@@ -94,7 +94,7 @@ const Login = ({ history }) => {
         </CustomFormItem>
 
         <CustomFormItem>
-          <CustomButton type="primary" htmlType="submit" style={{ width: '100%' }}>
+          <CustomButton height="58" type="primary" htmlType="submit" style={{ width: '100%' }}>
             <span className="submit">
               <Text t="loginBtn" />
             </span>

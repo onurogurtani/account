@@ -1,0 +1,29 @@
+.addVideo-wrapper {
+  p {
+    margin: 0;
+  }
+
+  .ant-tabs-tab {
+    cursor: no-drop;
+  }
+
+  .ant-tabs-tab-active {
+    .ant-tabs-tab-btn {
+      color: #1890ff;
+    }
+  }
+
+  .ant-tabs-card .ant-tabs-content {
+    margin-top: -16px;
+    .ant-tabs-tabpane {
+      padding: 16px 32px;
+      background: #fff;
+    }
+  }
+
+  .ant-tabs-card {
+    .ant-tabs-nav::before {
+      display: none;
+    }
+  }
+}

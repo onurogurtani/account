@@ -44,7 +44,9 @@ export const CustomFormItem = styled(Form.Item)`
     font-weight: bold;
   }
 `;
-
+export const CustomFormList = styled(Form.List)`
+  // padding-bottom: 6px;
+`;
 const CustomForms = styled(Form)`
   .ant-form-vertical .ant-form-item-label,
   .ant-col-24.ant-form-item-label,

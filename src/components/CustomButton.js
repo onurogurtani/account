@@ -4,7 +4,7 @@ import styled from 'styled-components';
 //width: ${width || '100%'} ;
 const CustomButtons = styled(Button)(
   ({ height, width }) => ` 
-  height: ${height || '58'}px;
+  height: ${height || '48'}px;
   border-radius: 4px;
   font-family: UbuntuMedium, sans-serif;
   font-size: 16px;
@@ -14,6 +14,9 @@ const CustomButtons = styled(Button)(
   line-height: 1.25;
   letter-spacing: normal;
   text-align: center;
+  .anticon {
+    vertical-align: text-bottom;
+  }
 `,
 );
 //color: #fff;

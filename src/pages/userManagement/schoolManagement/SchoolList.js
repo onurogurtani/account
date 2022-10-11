@@ -21,9 +21,8 @@ import { FileExcelOutlined } from '@ant-design/icons';
 const SchoolList = () => {
   const dispatch = useDispatch();
 
-  const { schools } = useSelector((state) => state?.school);
+  const { schools, filterObject, tableProperty } = useSelector((state) => state?.school);
 
-  const [selectedSchool, setSelectedSchool] = useState('Hepsi');
   const [selectedRow, setSelectedRow] = useState(false);
   const [schoolFormModalVisible, setSchoolFormModalVisible] = useState(false);
   const [isExcel, setIsExcel] = useState(false);
@@ -34,7 +33,7 @@ const SchoolList = () => {
   }, []);
 
   const loadSchools = useCallback(async () => {
-    dispatch(getAllSchools());
+    dispatch(getAllSchools(filterObject));
   });
 
   useEffect(() => {
@@ -84,9 +83,9 @@ const SchoolList = () => {
   };
 
   const selectList = [
-    { value: 1, text: 'Aktif' },
-    { value: 0, text: 'Pasif' },
-    { value: 'Hepsi', text: 'Hepsi' },
+    { value: true, text: 'Aktif' },
+    { value: false, text: 'Pasif' },
+    { value: 0, text: 'Hepsi' },
   ];
 
   const columns = [
@@ -150,9 +149,21 @@ const SchoolList = () => {
     },
   ];
 
-  const handleSelectChange = (value) => {
-    console.log('VALUE>>>', value);
-    setSelectedSchool(value);
+  const handleSelectChange = async (value) => {
+    if (value === 0) {
+      await dispatch(
+        getAllSchools({
+          ...filterObject,
+          recordStatus: undefined,
+          allRecords: true,
+          pageNumber: 1,
+        }),
+      );
+      return;
+    }
+    await dispatch(
+      getAllSchools({ ...filterObject, allRecords: undefined, recordStatus: value, pageNumber: 1 }),
+    );
   };
 
   const editFormModal = (record) => {
@@ -173,14 +184,9 @@ const SchoolList = () => {
     setSchoolFormModalVisible(true);
   };
 
-  const filteredSchool = schools.filter((school) => {
-    if (selectedSchool === 'Hepsi') {
-      return true;
-    } else {
-      return school.recordStatus === selectedSchool;
-    }
-  });
-
+  const handleTableChange = async ({ pageSize, current }, filters, sorter) => {
+    await dispatch(getAllSchools({ ...filterObject, pageNumber: current, pageSize }));
+  };
   return (
     <CustomCollapseCard className="draft-list-card" cardTitle={<Text t="Okul Yönetimi" />}>
       <div className="number-registered-drafts">
@@ -189,12 +195,11 @@ const SchoolList = () => {
         </CustomButton>
         <div className="number-registered-drafts">
           <CustomSelect
-            showSearch
             style={{
               width: 260,
             }}
-            placeholder="Okul Seçiniz..."
-            value={selectedSchool}
+            placeholder="Seçiniz..."
+            value={filterObject?.allRecords ? 0 : filterObject?.recordStatus}
             optionFilterProp="children"
             onChange={handleSelectChange}
             filterOption={(input, option) =>
@@ -214,13 +219,19 @@ const SchoolList = () => {
         </CustomButton>
         <div className="drafts-count-title">
           <CustomImage src={cardsRegistered} />
-          Kayıtlı Okul Sayısı: <span>{filteredSchool?.length}</span>
+          Kayıtlı Okul Sayısı: <span>{tableProperty?.totalCount}</span>
         </div>
       </div>
 
       <CustomTable
-        pagination={true}
-        dataSource={filteredSchool}
+        pagination={{
+          current: tableProperty?.currentPage,
+          pageSize: tableProperty?.pageSize,
+          total: tableProperty?.totalCount,
+          showSizeChanger: true,
+        }}
+        onChange={handleTableChange}
+        dataSource={schools}
         columns={columns}
         rowKey={(record) => `school-list-new-order-${record?.id || record?.name}`}
         scroll={{ x: false }}

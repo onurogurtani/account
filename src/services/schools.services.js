@@ -8,10 +8,11 @@ const loadSchools = (data) => {
   });
 };
 
-const getSchools = () => {
+const getSchools = (data) => {
   return api({
-    url: `Schools/getList`,
+    url: `Schools/getPagedList?PageNumber=${data.pageNumber}&PageSize=${data.pageSize}`,
     method: 'POST',
+    data,
   });
 };
 

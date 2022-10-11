@@ -2,10 +2,12 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import schoolServices from '../../services/schools.services';
 
 export const getAllSchools = createAsyncThunk(
-  'getAllSchools',
-  async (body, { rejectWithValue }) => {
+  'getSchools',
+  async (body, { dispatch, rejectWithValue }) => {
     try {
-      return await schoolServices.getSchools();
+      const response = await schoolServices.getSchools(body);
+      dispatch(setFilterObject(body));
+      return response;
     } catch (error) {
       return rejectWithValue(error?.data);
     }
@@ -28,7 +30,7 @@ export const addSchool = createAsyncThunk(
   async (data, { dispatch, rejectWithValue }) => {
     try {
       const response = await schoolServices.addSchool(data);
-      dispatch(getAllSchools());
+      dispatch(getAllSchools({ allRecords: true, pageNumber: 1, pageSize: 10 }));
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -41,7 +43,7 @@ export const updateSchool = createAsyncThunk(
   async (data, { dispatch, rejectWithValue }) => {
     try {
       const response = await schoolServices.updateSchool(data);
-      dispatch(getAllSchools());
+      dispatch(getAllSchools({ allRecords: true, pageNumber: 1, pageSize: 10 }));
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -54,7 +56,7 @@ export const deleteSchool = createAsyncThunk(
   async ({ id }, { dispatch, rejectWithValue }) => {
     try {
       const response = await schoolServices.deleteSchool({ id });
-      dispatch(getAllSchools());
+      dispatch(getAllSchools({ allRecords: true, pageNumber: 1, pageSize: 10 }));
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -69,7 +71,7 @@ export const loadSchools = createAsyncThunk(
       const data = new FormData();
       data.append('FormFile', body?.FormFile);
       const response = await schoolServices.loadSchools(data);
-      dispatch(getAllSchools());
+      dispatch(getAllSchools({ allRecords: true, pageNumber: 1, pageSize: 10 }));
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -101,30 +103,35 @@ export const downloadSchoolExcel = createAsyncThunk(
 
 const initialState = {
   schools: [],
-  draftedTableProperty: {
+  tableProperty: {
     currentPage: 1,
     page: 1,
     pageSize: 10,
     totalCount: 0,
+  },
+  filterObject: {
+    recordStatus: true,
+    pageNumber: 1,
+    pageSize: 10,
   },
 };
 
 export const schoolSlice = createSlice({
   name: 'school',
   initialState,
+  reducers: {
+    setFilterObject: (state, action) => {
+      state.filterObject = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getAllSchools.fulfilled, (state, action) => {
       state.schools = action?.payload?.data?.items;
-      state.draftedTableProperty = {
-        currentPage: 1,
-        page: 1,
-        pageSize: 10,
-        totalCount: action?.payload?.data?.items?.length,
-      };
+      state.tableProperty = action?.payload?.data?.pagedProperty || {};
     });
     builder.addCase(getAllSchools.rejected, (state, action) => {
       state.schools = [];
-      state.draftedTableProperty = {
+      state.tableProperty = {
         currentPage: 1,
         page: 1,
         pageSize: 10,
@@ -133,3 +140,4 @@ export const schoolSlice = createSlice({
     });
   },
 });
+export const { setFilterObject } = schoolSlice.actions;

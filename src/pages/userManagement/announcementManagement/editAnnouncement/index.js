@@ -23,7 +23,6 @@ const EditAnnouncement = () => {
         routes={['Kullanıcı Yönetimi', 'Duyurular']}
       ></CustomPageHeader>
       <CustomButton
-        height={50}
         type="primary"
         htmlType="submit"
         className="submit-btn"

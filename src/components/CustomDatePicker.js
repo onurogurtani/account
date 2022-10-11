@@ -12,7 +12,7 @@ dayjs.extend(localeData);
 
 const DatePickerComponent = styled(DatePicker)(
   ({ height }) => `
-  height: ${height || '58'}px;
+  height: ${height || '48'}px;
   width: 100%;
   font-family: UbuntuRegular;
   font-size: 16px;
@@ -26,6 +26,12 @@ const DatePickerComponent = styled(DatePicker)(
   
   ::placeholder {
     color: #6b7789;
+
+  }
+  .ant-picker-input {
+    input {
+      font-size:16px;
+    }
   }
   
   :focus, .ant-picker-focused{

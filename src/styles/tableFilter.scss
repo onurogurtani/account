@@ -1,23 +1,19 @@
-.announcement-filter-card {
+.table-filter {
   background-color: #eceef0;
   .filter-form {
     .form-item {
-      display: flex;
+      display: grid;
+      align-items: center;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       column-gap: 24px;
-      flex-wrap: wrap;
       padding: 26px 24px 12px 48px;
-      justify-content: space-between;
-      .form-date {
-        display: flex;
-        column-gap: 20px;
-      }
+
       .ant-form-item {
         flex-wrap: nowrap;
         margin-bottom: 24px;
 
         .ant-form-item-label {
           label {
-            // font-size: 14px;
             margin-bottom: 0;
             margin-right: 0;
             color: #3f4957;
@@ -29,64 +25,6 @@
 
           label::after {
             content: '';
-          }
-        }
-
-        .ant-form-item-control {
-          .ant-form-item-control-input {
-            .ant-form-item-control-input-content {
-              display: flex;
-              align-items: center;
-
-              input {
-                width: 340px;
-                // font-size: 14px;
-              }
-            }
-          }
-        }
-      }
-
-      .start-date-form-item {
-        .ant-form-item-control {
-          .ant-form-item-control-input-content {
-            .ant-picker {
-              width: 152px;
-              // height: 36px;
-
-              .ant-select-selector {
-                padding: 1px 16px !important;
-                // font-size: 14px;
-
-                .ant-select-selection-search {
-                  input {
-                    width: 100%;
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      .end-date-form-item {
-        .ant-form-item-control {
-          .ant-form-item-control-input-content {
-            .ant-picker {
-              width: 152px;
-              // height: 36px;
-
-              .ant-select-selector {
-                padding: 1px 16px !important;
-                // font-size: 14px;
-
-                .ant-select-selection-search {
-                  input {
-                    width: 100%;
-                  }
-                }
-              }
-            }
           }
         }
       }
@@ -112,28 +50,24 @@
             box-shadow: none;
             font-size: 16px;
             line-height: 20px;
-            font-family: UbuntuMedium, sans-serif;
             text-decoration: underline !important;
             display: inline-flex;
             justify-content: center;
             align-items: center;
             width: 58px;
-            // height: 48px;
+
             margin-right: 24px;
             color: #3f4957;
           }
 
           .search-btn {
             width: 127px;
-            height: 48px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             background-color: #3f4957;
             color: #fff;
-            // font-size: 14px;
             line-height: 20px;
-            font-family: UbuntuMedium, sans-serif;
             border-radius: 10px;
 
             .icon-search {
@@ -145,9 +79,8 @@
     }
   }
 }
-
-@media (max-width: 991.98px) {
-  .announcement-filter-card {
+@media (max-width: 577.98px) {
+  .table-filter {
     padding: 0;
 
     .filter-form {
@@ -217,16 +150,7 @@
   }
 }
 @media (max-width: 578px) {
-  .announcement-filter-card {
+  .table-filter {
     padding: 0;
-    .filter-form {
-      .form-item {
-        .form-date {
-          display: flex;
-          flex-direction: column;
-          column-gap: 20px;
-        }
-      }
-    }
   }
 }

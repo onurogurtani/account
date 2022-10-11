@@ -110,6 +110,7 @@ const SmsVerification = ({ history }) => {
         >
           <CustomNumberInput
             autoComplete="off"
+            height="58"
             placeholder={useText('enterDigitVerifCode')}
             maxLength={6}
           />
@@ -124,7 +125,7 @@ const SmsVerification = ({ history }) => {
         </label>
 
         <CustomFormItem>
-          <CustomButton type="primary" htmlType="submit" style={{ width: '100%' }}>
+          <CustomButton height="58" type="primary" htmlType="submit" style={{ width: '100%' }}>
             <span className="submit">
               <Text t="loginBtn" />
             </span>

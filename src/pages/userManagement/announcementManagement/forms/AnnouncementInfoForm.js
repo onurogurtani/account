@@ -86,7 +86,7 @@ const AnnouncementInfoForm = ({
           { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
         ]}
       >
-        <CustomInput disabled={justDateEdit && true} height="40px" placeholder={'Başlık'} />
+        <CustomInput disabled={justDateEdit && true} placeholder={'Başlık'} />
       </CustomFormItem>
 
       <CustomFormItem
@@ -128,7 +128,6 @@ const AnnouncementInfoForm = ({
             <CustomDatePicker
               placeholder={'Tarih Seçiniz'}
               format="YYYY-MM-DD"
-              height="40px"
               disabledDate={disabledStartDate}
             />
           </CustomFormItem>
@@ -138,12 +137,7 @@ const AnnouncementInfoForm = ({
             name="startHour"
             rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}
           >
-            <CustomTimePicker
-              showNow={false}
-              format="HH:mm"
-              height="40px"
-              placeholder={'Başlangıç Saati'}
-            />
+            <CustomTimePicker showNow={false} format="HH:mm" placeholder={'Başlangıç Saati'} />
           </CustomFormItem>
         </Col>
       </Row>
@@ -165,7 +159,6 @@ const AnnouncementInfoForm = ({
           >
             <CustomDatePicker
               placeholder={'Tarih Seçiniz'}
-              height="40px"
               disabledDate={disabledEndDate}
               format="YYYY-MM-DD"
             />
@@ -176,12 +169,7 @@ const AnnouncementInfoForm = ({
             name="endHour"
             rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}
           >
-            <CustomTimePicker
-              showNow={false}
-              format="HH:mm"
-              height="40px"
-              placeholder={'Bitiş Saati'}
-            />
+            <CustomTimePicker showNow={false} format="HH:mm" placeholder={'Bitiş Saati'} />
           </CustomFormItem>
         </Col>
       </Row>

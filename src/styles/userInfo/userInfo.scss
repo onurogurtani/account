@@ -18,7 +18,7 @@
         width: 200px;
 
         label {
-          font-size: 14px;
+          // font-size: 14px;
           margin-top: 7px;
         }
       }
@@ -27,11 +27,11 @@
         .ant-form-item-control-input {
           .ant-form-item-control-input-content {
             input {
-              font-size: 14px;
+              // font-size: 14px;
             }
 
             .ant-select {
-              font-size: 14px;
+              // font-size: 14px;
               width: 100%;
               max-width: 287px;
 
@@ -62,7 +62,7 @@
     }
 
     .upload-btn {
-      font-size: 14px;
+      // font-size: 14px;
       font-weight: normal;
       font-family: UbuntuRegular;
       color: #6b7789;
@@ -74,12 +74,12 @@
     .submit-btn {
       background-color: #699a00;
       color: #fff;
-      height: 40px;
+      // height: 40px;
       display: flex;
       justify-content: center;
       align-items: center;
       font-family: UbuntuMedium, sans-serif;
-      font-size: 14px;
+      // font-size: 14px;
       line-height: 12px;
       border-radius: 4px;
       outline: 0;
@@ -90,12 +90,12 @@
     .back-btn {
       background-color: grey;
       color: #fff;
-      height: 40px;
+      // height: 40px;
       display: flex;
       justify-content: center;
       align-items: center;
       font-family: UbuntuMedium, sans-serif;
-      font-size: 14px;
+      // font-size: 14px;
       line-height: 12px;
       border-radius: 4px;
       outline: 0;

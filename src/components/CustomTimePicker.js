@@ -8,7 +8,7 @@ dayjs.extend(localeData);
 
 const TimePickerComponent = styled(TimePicker)(
   ({ height }) => `
-  height: ${height || '58'}px;
+  height: ${height || '48'}px;
   width: 100%;
   font-family: UbuntuRegular;
   font-size: 16px;
@@ -33,6 +33,11 @@ const TimePickerComponent = styled(TimePicker)(
   }
   .ant-picker-suffix {
     color: rgb(0 0 0 / 50%);
+  }
+  .ant-picker-input {
+    input {
+      font-size:16px;
+    }
   }
 `,
 );
