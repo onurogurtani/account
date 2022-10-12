@@ -7,6 +7,7 @@ import menuIcons from '../assets/icons/icon-menu-icons.svg';
 import { useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { menuChange } from '../store/slice/menuSlice';
+import { SettingOutlined } from '@ant-design/icons';
 
 const { SubMenu, ItemGroup, Item } = Menu;
 
@@ -37,7 +38,7 @@ const CustomMenu = styled(Menu)`
 const CustomItem = styled(Item)`
   padding: 0 !important;
   margin: 0 !important;
-
+  background-color: #3f4957;
   :hover,
   :active {
     color: #ffffff !important;
@@ -46,13 +47,26 @@ const CustomItem = styled(Item)`
 
 const CustomSubMenu = styled(SubMenu)`
   // height: 48px;
+
+  .ant-menu-title-content {
+    color: #d5d8de;
+    font-family: UbuntuMedium, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    padding-left: 2px;
+  }
   .ant-menu-sub.ant-menu-inline {
     background: #3f4957 !important;
   }
 
   .ant-menu-submenu-title {
-    margin-top: 0 !important;
+    margin: 0 36px !important;
     padding: 0 !important;
+    box-shadow: inset 0px -1px 0 0 #4d5868;
 
     :hover,
     :active,
@@ -67,6 +81,7 @@ const CustomSubMenu = styled(SubMenu)`
     color: #d5d8de;
     width: 4px;
     height: 8px;
+    top: 58%;
   }
 
   :hover,
@@ -181,7 +196,7 @@ const Menus = () => {
     <CustomMenu
       data-testid="menus-test"
       onClick={handleClick}
-      mode="inline"
+      mode="vertical"
       selectedKeys={selectedKey}
     >
       <CustomItemGroup title={<Text t="Kullanıcı Yönetimi" />} color="#ffffff" />
@@ -258,6 +273,35 @@ const Menus = () => {
           </span>
         </MenuItemText>
       </CustomItem>
+
+      <CustomSubMenu key="SubMenu" title="Ayarlar" icon={<CustomImage src={menuIcons} />}>
+        <CustomItem key="/settings/categories">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Kategoriler" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+
+        <CustomItem key="/settings/packages">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Paketler" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+
+        <CustomItem key="/a">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Ders Tanım Bilgileri" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+      </CustomSubMenu>
     </CustomMenu>
   );
 };

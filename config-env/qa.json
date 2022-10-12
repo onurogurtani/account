@@ -1,6 +1,5 @@
 {
   "PUBLIC_HOST_API": "http://167.71.77.240:6001/api",
   "PORT": 3002,
-  "SESSION_MINUTES": 15,
-  "PAYMENT_URL": " https://test-sirius.ticket.com.tr/"
+  "SESSION_MINUTES": 15
 }

@@ -30,6 +30,32 @@
   }
 }
 
+.custom-pagination {
+  flex-wrap: wrap;
+  .ant-pagination-options-quick-jumper input {
+    margin-left: -20px;
+    margin-right: -40px;
+  }
+  .ant-pagination-options-quick-jumper .go-button {
+    background: #00a483 !important;
+    height: 24px;
+    font-size: 14px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    letter-spacing: normal;
+    text-align: center;
+    color: #fff;
+    border-radius: 6px;
+    line-height: 0.86;
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+  .ant-pagination-options {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+}
 @media (max-width: 360px) {
   .table-header {
     padding: 10px 4px;

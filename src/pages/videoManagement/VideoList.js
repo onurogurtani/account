@@ -10,7 +10,7 @@ import {
 } from '../../components';
 import VideoFilter from './VideoFilter';
 import iconFilter from '../../assets/icons/icon-filter.svg';
-import '../../styles/tableHeader.scss';
+import '../../styles/table.scss';
 import '../../styles/videoManagament/videoList.scss';
 
 let Video = [
