@@ -1,5 +1,5 @@
 import { Form, List, Progress, Upload } from 'antd';
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import {
   CustomButton,
@@ -10,11 +10,12 @@ import {
   CustomInput,
   CustomMaskInput,
   CustomSelect,
+  errorDialog,
   Option,
+  Text,
 } from '../../../components';
 import { reactQuillValidator } from '../../../utils/formRule';
 import axios, { CancelToken, isCancel } from 'axios';
-
 import '../../../styles/videoManagament/generalInformation.scss';
 import {
   DeleteOutlined,
@@ -26,6 +27,17 @@ import {
   PlusOutlined,
 } from '@ant-design/icons';
 import IntroVideoModal from './IntroVideoModal';
+import {
+  getLessons,
+  getUnits,
+  getLessonSubjects,
+  getLessonSubSubjects,
+} from '../../../store/slice/lessonsSlice';
+import { getKalturaSessionKey, getVideoCategoryList } from '../../../store/slice/videoSlice';
+import { getPackageList } from '../../../store/slice/packageSlice';
+
+import { useDispatch, useSelector } from 'react-redux';
+
 let title = [
   { id: '1', value: 'başlık1' },
   { id: '2', value: 'başlık2' },
@@ -44,29 +56,97 @@ const GeneralInformation = () => {
   const [introVideoFile, setIntroVideoFile] = useState();
   const [selectedSurveyOption, setSelectedSurveyOption] = useState([]);
   const [isErrorVideoUpload, setIsErrorVideoUpload] = useState();
+  const [videoCategoryList, setVideoCategoryList] = useState([]);
+
+  const [kalturaIntroVideoId, setKalturaIntroVideoId] = useState();
+
+  const [lessonId, setLessonId] = useState();
+  const [unitId, setUnitId] = useState();
+  const [lessonSubjectId, setLessonSubjectId] = useState();
+
+  const dispatch = useDispatch();
+  const { lessons, units, lessonSubjects, lessonSubSubjects } = useSelector(
+    (state) => state?.lessons,
+  );
+
+  useEffect(() => {
+    loadLessons();
+    loadVideoCategories();
+    loadPackages();
+    loadUnits();
+    loadLessonSubjects();
+    loadLessonSubSubjects();
+  }, []);
+
+  const onLessonChange = (value) => {
+    setLessonId(value);
+    parentForm.resetFields(['lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects']);
+  };
+
+  const onUnitChange = (value) => {
+    setUnitId(value);
+    parentForm.resetFields(['lessonSubjectId', 'lessonSubSubjects']);
+  };
+
+  const onLessonSubjects = (value) => {
+    setLessonSubjectId(value);
+    parentForm.resetFields(['lessonSubSubjects']);
+  };
+
+  const loadLessons = useCallback(async () => {
+    dispatch(getLessons());
+  }, [dispatch]);
+
+  const loadUnits = useCallback(async () => {
+    dispatch(getUnits());
+  }, [dispatch]);
+
+  const loadLessonSubjects = useCallback(async () => {
+    dispatch(getLessonSubjects());
+  }, [dispatch]);
+
+  const loadLessonSubSubjects = useCallback(async () => {
+    dispatch(getLessonSubSubjects());
+  }, [dispatch]);
+
+  const { packages } = useSelector((state) => state?.packages);
+  const loadPackages = useCallback(async () => {
+    dispatch(getPackageList());
+  }, [dispatch]);
+
+  const loadVideoCategories = useCallback(async () => {
+    const action = await dispatch(getVideoCategoryList());
+    if (getVideoCategoryList.fulfilled.match(action)) {
+      setVideoCategoryList(action?.payload?.data?.items);
+    } else {
+      setVideoCategoryList([]);
+    }
+  }, [dispatch]);
 
   const showAddIntroModal = () => {
     setOpen(true);
   };
 
   const onFinish = (values) => {
-    // console.log('Finish:', values);
-  };
+    values.lessonSubSubjects = values.lessonSubSubjects.map((item) => ({
+      lessonSubSubjectId: item,
+    }));
+    values.keyWords = values.keyWords.join();
+    values.packages = values.packages.map((item) => ({
+      packageId: item,
+    }));
+    values.beforeEducationSurvey = values?.survey === 'before' ? true : false;
+    values.afterEducationSurvey = values?.survey === 'after' ? true : false;
+    delete values.survey;
+    console.log(values);
 
-  const handleChangeTitle = (value) => {
-    console.log(`selected ${value}`);
-    // setSelectedTitle(value);
-  };
-  const selectBoxCountValidator = async (field, value) => {
-    try {
-      if (!value || value.length <= 3) {
-        return Promise.resolve();
-      }
-      return Promise.reject(new Error());
-    } catch (e) {
-      return Promise.reject(new Error());
+    const introVideoObj = parentForm.getFieldValue('introVideoObj');
+    console.log(introVideoObj);
+    if (!introVideoObj) {
+      setIsErrorProgressIntroVideo('Lütfen Intro Video Ekleyiniz.');
     }
   };
+
   const normFile = (e) => {
     if (Array.isArray(e)) {
       return e;
@@ -162,6 +242,16 @@ const GeneralInformation = () => {
   const uploadVideo = async (options) => {
     const { onSuccess, onError, file, onProgress } = options;
     setIsErrorVideoUpload();
+    // let ks;
+    // const action = await dispatch(getKalturaSessionKey());
+    // if (getKalturaSessionKey.fulfilled.match(action)) {
+    //   ks = Object.values(action?.payload.data).join('');
+    // } else {
+    //   errorDialog({
+    //     title: <Text t="error" />,
+    //     message: 'Kaltura Session Key Alınamadı.',
+    //   });
+    // }
     const fmData = new FormData();
     const config = {
       headers: { 'content-type': 'multipart/form-data' },
@@ -169,9 +259,13 @@ const GeneralInformation = () => {
         onProgress({ percent: (event.loaded / event.total) * 100 });
       },
     };
-    fmData.append('image', file);
+    fmData.append('fileData', file);
     try {
-      const res = await axios.post('https://jsonplaceholder.typicode.com/posts', fmData, config);
+      const res = await axios.post(
+        'http://kaltura.erstream.com/api_v3/service/uploadtoken/action/upload?ks=YjJmOWNlMWMyMjYxZDEzY2UwNjIzZDdjMGRhMmQ1YWM3OWMyNmNhMnwxMjU7MTI1OzE2NjYwNDAzMjY7MDsxNjY1OTUzOTI2LjMwNDk7Ozs7&format=1&resume=false&finalChunk=true&resumeAt=-1&uploadTokenId=0_833716e15833f10a23f96ffe436a21de',
+        fmData,
+        config,
+      );
       onSuccess('Ok');
       console.log('server res: ', res);
     } catch (err) {
@@ -182,14 +276,25 @@ const GeneralInformation = () => {
   return (
     <div className="general-information-wrapper">
       <Form.Provider
-        onFormFinish={(name, { forms, values }) => {
-          console.log(values);
-          console.log(form.getFieldsValue());
-          // if (name === 'introForm') {
-          //   const { parentForm } = forms;
-          //   // const videoname = parentForm.getFieldValue('deneme');
-          // }
-        }}
+      // onFormFinish={(name, { forms, values }) => {
+      //   values.lessonSubSubjects = values.lessonSubSubjects.map((item) => ({
+      //     lessonSubSubjectId: item,
+      //   }));
+      //   values.keyWords = values.keyWords.join();
+      //   values.packages = values.packages.map((item) => ({
+      //     packageId: item,
+      //   }));
+      //   values.beforeEducationSurvey = values?.survey === 'before' ? true : false;
+      //   values.afterEducationSurvey = values?.survey === 'after' ? true : false;
+      //   delete values.survey;
+      //   console.log(values);
+
+      //   const introVideoObj = parentForm.getFieldValue('introVideoObj');
+      //   console.log(introVideoObj);
+      //   if (!introVideoObj) {
+      //     setIsErrorProgressIntroVideo('Lütfen Intro Video Ekleyiniz.');
+      //   }
+      // }}
       >
         <CustomForm
           labelCol={{ flex: '150px' }}
@@ -210,27 +315,37 @@ const GeneralInformation = () => {
                   },
                 ]}
                 label="Video Kategorisi"
-                name="category"
+                name="videoCategoryId"
               >
                 <CustomSelect placeholder="Video Kategorisi">
-                  <Option key={1}>Konu Anlatım Videoları</Option>
-                  <Option key={2}>Soru Çözüm Videoları</Option>
+                  {videoCategoryList?.map((item) => {
+                    return (
+                      <Option key={item?.id} value={item?.id}>
+                        {item?.name}
+                      </Option>
+                    );
+                  })}
                 </CustomSelect>
               </CustomFormItem>
 
               <CustomFormItem
-                rules={[
-                  {
-                    required: true,
-                    message: 'Lütfen Zorunlu Alanları Doldurunuz.',
-                  },
-                ]}
+                // rules={[
+                //   {
+                //     required: true,
+                //     message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                //   },
+                // ]}
                 label="Bağlı Olduğu Paket"
-                name="relatedPacket"
+                name="packages"
               >
                 <CustomSelect showArrow mode="multiple" placeholder="Bağlı Olduğu Paket">
-                  <Option key={1}>4.Sınıf</Option>
-                  <Option key={2}>5.Sınıf</Option>
+                  {packages?.map((item) => {
+                    return (
+                      <Option key={item?.id} value={item?.id}>
+                        {item?.name}
+                      </Option>
+                    );
+                  })}
                 </CustomSelect>
               </CustomFormItem>
 
@@ -242,11 +357,18 @@ const GeneralInformation = () => {
                   },
                 ]}
                 label="Ders"
-                name="lesson"
+                name="lessonId"
               >
-                <CustomSelect placeholder="Ders">
-                  <Option key={1}>4.Sınıf</Option>
-                  <Option key={2}>5.Sınıf</Option>
+                <CustomSelect onChange={onLessonChange} placeholder="Ders">
+                  {lessons
+                    ?.filter((item) => item.isActive)
+                    .map((item) => {
+                      return (
+                        <Option key={item?.id} value={item?.id}>
+                          {item?.name}
+                        </Option>
+                      );
+                    })}
                 </CustomSelect>
               </CustomFormItem>
 
@@ -258,11 +380,18 @@ const GeneralInformation = () => {
                   },
                 ]}
                 label="Ünite"
-                name="unit"
+                name="lessonUnitId"
               >
-                <CustomSelect placeholder="Ünite">
-                  <Option key={1}>4.Sınıf</Option>
-                  <Option key={2}>5.Sınıf</Option>
+                <CustomSelect onChange={onUnitChange} placeholder="Ünite">
+                  {units
+                    ?.filter((item) => item.isActive && item.lessonId === lessonId)
+                    .map((item) => {
+                      return (
+                        <Option key={item?.id} value={item?.id}>
+                          {item?.name}
+                        </Option>
+                      );
+                    })}
                 </CustomSelect>
               </CustomFormItem>
 
@@ -274,34 +403,36 @@ const GeneralInformation = () => {
                   },
                 ]}
                 label="Konu"
-                name="subject"
+                name="lessonSubjectId"
               >
-                <CustomSelect placeholder="Konu">
-                  <Option key={1}>4.Sınıf</Option>
-                  <Option key={2}>5.Sınıf</Option>
+                <CustomSelect onChange={onLessonSubjects} placeholder="Konu">
+                  {lessonSubjects
+                    ?.filter((item) => item.isActive && item.lessonUnitId === unitId)
+                    .map((item) => {
+                      return (
+                        <Option key={item?.id} value={item?.id}>
+                          {item?.name}
+                        </Option>
+                      );
+                    })}
                 </CustomSelect>
               </CustomFormItem>
 
               <CustomFormItem
-                rules={[
-                  { required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
-                  {
-                    validator: selectBoxCountValidator,
-                    message: 'En fazla 15 adet alt başlık seçebilirsiniz.',
-                  },
-                ]}
+                rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
                 label="Alt Başlık"
-                name="subtitle"
+                name="lessonSubSubjects"
               >
-                <CustomSelect
-                  showArrow
-                  onChange={handleChangeTitle}
-                  mode="multiple"
-                  placeholder="Alt Başlık"
-                >
-                  {title.map((item) => (
-                    <Option key={item.value}>{item.value}</Option>
-                  ))}
+                <CustomSelect showArrow mode="multiple" placeholder="Alt Başlık">
+                  {lessonSubSubjects
+                    ?.filter((item) => item.isActive && item.lessonSubjectId === lessonSubjectId)
+                    .map((item) => {
+                      return (
+                        <Option key={item?.id} value={item?.id}>
+                          {item?.name}
+                        </Option>
+                      );
+                    })}
                 </CustomSelect>
               </CustomFormItem>
 
@@ -313,11 +444,15 @@ const GeneralInformation = () => {
                   },
                 ]}
                 label="Durum"
-                name="status"
+                name="isActive"
               >
                 <CustomSelect placeholder="Durum">
-                  <Option key={1}>4.Sınıf</Option>
-                  <Option key={2}>5.Sınıf</Option>
+                  <Option key={1} value={true}>
+                    Aktif
+                  </Option>
+                  <Option key={2} value={false}>
+                    Pasif
+                  </Option>
                 </CustomSelect>
               </CustomFormItem>
 
@@ -350,7 +485,7 @@ const GeneralInformation = () => {
                       message: 'Lütfen dosya seçiniz.',
                     },
                   ]}
-                  name="video"
+                  name="kalturaVideoId"
                   valuePropName="fileList"
                   getValueFromEvent={normFile}
                   noStyle
@@ -472,6 +607,11 @@ const GeneralInformation = () => {
                       <CustomButton type="primary" className="add-btn" onClick={showAddIntroModal}>
                         Video Ekle
                       </CustomButton>
+                      {isErrorProgressIntroVideo && (
+                        <div className="ant-form-item-explain-error">
+                          {isErrorProgressIntroVideo}
+                        </div>
+                      )}
                     </>
                   );
                 }}
@@ -479,25 +619,36 @@ const GeneralInformation = () => {
 
               <CustomFormList
                 initialValue={[
-                  { first: '', last: '' },
-                  { first: '', last: '' },
+                  { header: '', value: '' },
+                  { header: '', value: '' },
                 ]}
-                name="marks"
+                name="videoBrackets"
               >
-                {(fields, { add, remove }) => (
+                {(fields, { add, remove }, { errors }) => (
                   <>
                     <CustomFormItem label="Ayraç">
                       <CustomButton
                         type="dashed"
                         onClick={() => {
-                          if (fields.length <= 4) add();
+                          if (fields.length <= 4) {
+                            add();
+                            return;
+                          }
+                          parentForm.setFields([
+                            {
+                              name: 'videoBrackets',
+                              errors: ['Maximum 5 ayraç ekleyebilirsiniz.'],
+                            },
+                          ]);
                         }}
                         block
                         icon={<PlusOutlined />}
                       >
                         Ekle
                       </CustomButton>
+                      <Form.ErrorList errors={errors} />
                     </CustomFormItem>
+
                     <div className="header-mark">
                       <div className="title-mark">Başlık</div>
                       <div className="time-mark">Dakika</div>
@@ -506,7 +657,7 @@ const GeneralInformation = () => {
                       <div key={key} className="video-mark">
                         <CustomFormItem
                           {...restField}
-                          name={[name, 'first']}
+                          name={[name, 'header']}
                           style={{ flex: 2 }}
                           rules={[
                             {
@@ -519,7 +670,7 @@ const GeneralInformation = () => {
                         </CustomFormItem>
                         <CustomFormItem
                           {...restField}
-                          name={[name, 'last']}
+                          name={[name, 'value']}
                           style={{ flex: 1 }}
                           rules={[
                             {
@@ -535,6 +686,14 @@ const GeneralInformation = () => {
                         <MinusCircleOutlined
                           onClick={() => {
                             if (fields.length >= 3) remove(name);
+                            if (fields.length === 5) {
+                              parentForm.setFields([
+                                {
+                                  name: 'videoBrackets',
+                                  errors: [],
+                                },
+                              ]);
+                            }
                           }}
                         />
                       </div>
@@ -551,7 +710,7 @@ const GeneralInformation = () => {
                   },
                 ]}
                 label="Anahtar Kelimeler"
-                name="keyword"
+                name="keyWords"
               >
                 <CustomSelect mode="tags" placeholder="Anahtar Kelimeler"></CustomSelect>
               </CustomFormItem>
@@ -575,7 +734,12 @@ const GeneralInformation = () => {
             </div>
           </div>
           <div className="general-information-form-footer">
-            <CustomButton type="primary" htmlType="submit" className="submit-btn">
+            <CustomButton
+              type="primary"
+              // htmlType="submit"
+              onClick={() => parentForm.submit()}
+              className="submit-btn"
+            >
               İlerle
             </CustomButton>
           </div>

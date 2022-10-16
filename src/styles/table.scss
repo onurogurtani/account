@@ -56,6 +56,19 @@
     flex-direction: row-reverse;
   }
 }
+.action-btns {
+  .update-btn {
+    height: 36px;
+    color: #fff;
+    font-family: UbuntuMedium, sans-serif;
+    font-size: 14px;
+    line-height: 12px;
+    border-radius: 4px;
+    box-shadow: none;
+    background-color: #3f4957;
+  }
+}
+
 @media (max-width: 360px) {
   .table-header {
     padding: 10px 4px;

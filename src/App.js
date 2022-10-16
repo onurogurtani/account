@@ -203,6 +203,11 @@ const App = () => {
                           Component={Settings?.Packages}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/lessons`}
+                          Component={Settings?.Lessons}
+                          authority="dashboard"
+                        />
                         <Route
                           component={() => (
                             <Redirect

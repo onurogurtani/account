@@ -1,0 +1,27 @@
+.lessons-wrapper {
+  padding: 10px 20px;
+  .ant-collapse {
+    border: none;
+    background-color: #fff;
+    .ant-collapse-item {
+      margin-bottom: 15px;
+      .ant-collapse-header {
+        .ant-collapse-arrow {
+          font-size: 16px;
+          vertical-align: 1px;
+        }
+      }
+      .ant-collapse-content {
+        padding: 30px;
+      }
+    }
+  }
+  .upload-btn {
+    background: #0f733d !important;
+    color: #fff;
+    border: none;
+    display: block;
+    margin-left: auto;
+    margin-bottom: 20px;
+  }
+}

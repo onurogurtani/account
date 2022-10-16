@@ -8,7 +8,20 @@ import {
 import { Form, List, Upload } from 'antd';
 import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
-import { CustomButton, CustomForm, CustomFormItem, CustomModal } from '../../../components';
+import { useDispatch } from 'react-redux';
+import {
+  CustomButton,
+  CustomForm,
+  CustomFormItem,
+  CustomModal,
+  errorDialog,
+  successDialog,
+  Text,
+} from '../../../components';
+import {
+  addVideoQuestionsExcel,
+  downloadVideoQuestionsExcel,
+} from '../../../store/slice/videoSlice';
 import '../../../styles/videoManagament/questionVideo.scss';
 
 const VideoQuestion = () => {
@@ -18,6 +31,7 @@ const VideoQuestion = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [isExcel, setIsExcel] = useState(false);
   const [errorList, setErrorList] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (open) {
@@ -42,14 +56,33 @@ const VideoQuestion = () => {
     console.log(values);
     if (isExcel) {
       console.log(values);
-      setOpen(false);
+      const fileData = values?.excelFile[0]?.originFileObj;
+      const data = new FormData();
+      data.append('FormFile', fileData);
+      const action = await dispatch(addVideoQuestionsExcel(data));
+      if (addVideoQuestionsExcel.fulfilled.match(action)) {
+        const excelQuestions = action?.payload?.data.map((item) => ({
+          answer: item.answer,
+          text: item.text,
+        }));
+        console.log(excelQuestions);
+        setQuestionList((state) => [...state, ...excelQuestions]);
+        successDialog({
+          title: <Text t="success" />,
+          message: action?.payload?.message,
+        });
+        await form.resetFields();
+        setOpen(false);
+      } else {
+        errorDialog({
+          title: <Text t="error" />,
+          message: action?.payload?.message,
+        });
+      }
       return;
     }
     if (isEdit) {
-      questionList[selectedQuestion.key] = {
-        ...values,
-        key: selectedQuestion.key,
-      };
+      questionList[selectedQuestion.index] = values;
       setQuestionList(questionList);
       // alternative
       //   setQuestionList((list) =>
@@ -65,20 +98,24 @@ const VideoQuestion = () => {
       setIsEdit(false);
       setSelectedQuestion();
     } else {
-      setQuestionList((state) => [...state, { ...values, key: questionList.length }]);
+      setQuestionList((state) => [...state, values]);
+      console.log(questionList);
     }
     await form.resetFields();
     setOpen(false);
   };
-  const handleEdit = (item) => {
+  const handleEdit = (item, index) => {
     isExcel && setIsExcel(false);
-    setSelectedQuestion(item);
+    setSelectedQuestion({ ...item, index });
     setOpen(true);
   };
 
-  const handleDelete = (item) => {
-    console.log(item);
-    setQuestionList(questionList.filter((data) => data.key !== item.key));
+  // const handleDelete = (item) => {
+  //   console.log(item);
+  //   setQuestionList(questionList.filter((data) => data.key !== item.key));
+  // };
+  const handleDelete = (item, index) => {
+    setQuestionList([...questionList.slice(0, index), ...questionList.slice(index + 1)]);
   };
 
   const onCancelModal = async () => {
@@ -133,16 +170,16 @@ const VideoQuestion = () => {
   };
 
   const ondownloadExcel = async () => {
-    // const action = await dispatch(downloadSchoolExcel());
-    // if (downloadSchoolExcel.fulfilled.match(action)) {
-    //   const url = URL.createObjectURL(new Blob([action.payload]));
-    //   const link = document.createElement('a');
-    //   link.href = url;
-    //   link.setAttribute('download', `${Date.now()}.xlsx`);
-    //   document.body.appendChild(link);
-    //   link.click();
-    //   console.log(action);
-    // }
+    const action = await dispatch(downloadVideoQuestionsExcel());
+    if (downloadVideoQuestionsExcel.fulfilled.match(action)) {
+      const url = URL.createObjectURL(new Blob([action.payload]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `Soru Ekle Dosya Deseni ${Date.now()}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      console.log(action);
+    }
   };
   const uploadExcel = () => {
     setIsExcel(true);
@@ -192,7 +229,7 @@ const VideoQuestion = () => {
                   // listType="picture"
                   maxCount={1}
                   beforeUpload={beforeUpload}
-                  // accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                   customRequest={dummyRequest}
                 >
                   <p className="ant-upload-drag-icon">
@@ -210,7 +247,7 @@ const VideoQuestion = () => {
             </CustomFormItem>
           ) : (
             <>
-              <CustomFormItem label="Soru Metni" name="question">
+              <CustomFormItem label="Soru Metni" name="text">
                 <ReactQuill theme="snow" />
               </CustomFormItem>
 
@@ -233,14 +270,14 @@ const VideoQuestion = () => {
           itemLayout="horizontal"
           header={<h5>Soru Listesi</h5>}
           dataSource={questionList}
-          renderItem={(item) => (
+          renderItem={(item, index) => (
             <List.Item
               actions={[
                 <>
-                  <a className="question-edit" onClick={() => handleEdit(item)}>
+                  <a className="question-edit" onClick={() => handleEdit(item, index)}>
                     Düzenle
                   </a>{' '}
-                  <a className="question-delete" onClick={() => handleDelete(item)}>
+                  <a className="question-delete" onClick={() => handleDelete(item, index)}>
                     Sil
                   </a>
                 </>,
@@ -254,7 +291,7 @@ const VideoQuestion = () => {
                     <CheckCircleOutlined />
                     <div
                       className="question-answer"
-                      dangerouslySetInnerHTML={{ __html: item?.question }}
+                      dangerouslySetInnerHTML={{ __html: item?.text }}
                     />
                   </>
                 }

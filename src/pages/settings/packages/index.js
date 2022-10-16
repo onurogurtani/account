@@ -1,5 +1,6 @@
 import { Form } from 'antd';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   CustomButton,
   CustomCollapseCard,
@@ -7,35 +8,34 @@ import {
   CustomFormItem,
   CustomInput,
   CustomModal,
+  CustomPageHeader,
   CustomSelect,
   CustomTable,
+  errorDialog,
   Option,
+  successDialog,
+  Text,
 } from '../../../components';
 import '../../../styles/settings/packages.scss';
 import '../../../styles/table.scss';
+import { getPackageList, addPackage, updatePackage } from '../../../store/slice/packageSlice';
 
-let Pack = [
-  { id: 1, name: 'Ayşe 1' },
-  { id: 2, name: 'Mehmet 2' },
-  { id: 3, name: 'Şeyme 2' },
-  { id: 4, name: 'Burcu 2' },
-  { id: 5, name: 'Abidin 2' },
-  { id: 6, name: 'video 2' },
-  { id: 7, name: 'video 2' },
-  { id: 8, name: 'video 2' },
-  { id: 9, name: 'video 2' },
-  { id: 10, name: 'video 2' },
-  { id: 11, name: 'video 2' },
-  { id: 12, name: 'video 2' },
-  { id: 13, name: 'video 2' },
-  { id: 14, name: 'video 2' },
-  { id: 15, name: 'video 2' },
-];
 const Packages = () => {
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
-  const [selectedPackage, setSelectedPackage] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [selectedPackageId, setSelectedPackageId] = useState();
+  const { packages } = useSelector((state) => state?.packages);
+
+  useEffect(() => {
+    loadPackages();
+  }, []);
+
+  const loadPackages = useCallback(async () => {
+    dispatch(getPackageList());
+  }, [dispatch]);
 
   const columns = [
     {
@@ -49,11 +49,11 @@ const Packages = () => {
     },
     {
       title: 'Durumu',
-      dataIndex: 'status',
-      key: 'status',
-      sorter: (a, b) => a.status.localeCompare(b.status),
+      dataIndex: 'isActive',
+      key: 'isActive',
+      sorter: (a, b) => b.isActive - a.isActive,
       render: (text, record) => {
-        return <div>{text}</div>;
+        return <div>{text ? 'Aktif' : 'Pasif'}</div>;
       },
     },
     {
@@ -69,9 +69,9 @@ const Packages = () => {
       title: 'Sınav Türü',
       dataIndex: 'examType',
       key: 'examTypeme',
-      sorter: (a, b) => a.examType.localeCompare(b.examType),
+      sorter: (a, b) => a.examType - b.examType,
       render: (text, record) => {
-        return <div>{text}</div>;
+        return <div>{text === 10 ? 'LGS' : 'YKS'}</div>;
       },
     },
     {
@@ -82,7 +82,7 @@ const Packages = () => {
       render: (text, record) => {
         return (
           <div className="action-btns">
-            <CustomButton className="detail-btn" onClick={() => editPackage(record)}>
+            <CustomButton className="update-btn" onClick={() => editPackage(record)}>
               Güncelle
             </CustomButton>
           </div>
@@ -92,27 +92,80 @@ const Packages = () => {
   ];
 
   const editPackage = (record) => {
-    console.log(record);
-    setSelectedPackage(record);
+    setSelectedPackageId(record.id);
+    setIsEdit(true);
+    form.setFieldsValue(record);
     setOpen(true);
   };
 
-  const addPackage = (record) => {
-    setSelectedPackage(null);
+  const handleAddPackage = () => {
+    setSelectedPackageId();
+    setIsEdit(false);
+    form.resetFields();
     setOpen(true);
   };
+  const handleClose = () => {
+    form.resetFields();
+    setOpen(false);
+  };
+
+  const onFinish = async (values) => {
+    console.log(values);
+    const data = {
+      entity: {
+        name: values?.name,
+        isActive: values?.isActive,
+        examType: values?.examType,
+        id: isEdit ? selectedPackageId : undefined,
+      },
+    };
+    if (isEdit) {
+      const action = await dispatch(updatePackage(data));
+      if (updatePackage.fulfilled.match(action)) {
+        successDialog({
+          title: <Text t="success" />,
+          message: action?.payload.message,
+          onOk: async () => {
+            await handleClose();
+          },
+        });
+      } else {
+        errorDialog({
+          title: <Text t="error" />,
+          message: action?.payload.message,
+        });
+      }
+      return;
+    }
+
+    const action = await dispatch(addPackage(data));
+    if (addPackage.fulfilled.match(action)) {
+      successDialog({
+        title: <Text t="success" />,
+        message: action?.payload.message,
+        onOk: async () => {
+          await handleClose();
+        },
+      });
+    } else {
+      errorDialog({
+        title: <Text t="error" />,
+        message: action?.payload.message,
+      });
+    }
+  };
+
   return (
-    <>
-      <CustomCollapseCard className="Paketler" cardTitle="Paketler">
+    <CustomPageHeader title="Paketler" showBreadCrumb routes={['Ayarlar']}>
+      <CustomCollapseCard cardTitle="Paketler">
         <div className="table-header">
-          <CustomButton className="add-btn" onClick={addPackage}>
+          <CustomButton className="add-btn" onClick={handleAddPackage}>
             Yeni
           </CustomButton>
         </div>
         <CustomTable
-          dataSource={Pack}
+          dataSource={packages}
           //   onChange={handleSort}
-
           columns={columns}
           pagination={{
             showSizeChanger: true,
@@ -130,18 +183,13 @@ const Packages = () => {
         title="Paket Ekle"
         visible={open}
         onOk={() => form.submit()}
-        okText="Kaydet"
+        okText={isEdit ? 'Güncelle ve Kaydet' : 'Kaydet'}
         cancelText="Vazgeç"
         onCancel={() => setOpen(false)}
         bodyStyle={{ overflowY: 'auto', maxHeight: 'calc(100vh - 300px)' }}
         // width={600}
       >
-        <CustomForm
-          initialValues={selectedPackage ? selectedPackage : {}}
-          form={form}
-          layout="vertical"
-          name="form"
-        >
+        <CustomForm form={form} layout="vertical" name="form" onFinish={onFinish}>
           <CustomFormItem
             rules={[
               {
@@ -150,11 +198,15 @@ const Packages = () => {
               },
             ]}
             label="Sınav Türü"
-            name="status"
+            name="examType"
           >
             <CustomSelect placeholder="Sınav Türü">
-              <Option key={20}>YKS</Option>
-              <Option key={10}>LGS</Option>
+              <Option key={20} value={20}>
+                YKS
+              </Option>
+              <Option key={10} value={10}>
+                LGS
+              </Option>
             </CustomSelect>
           </CustomFormItem>
 
@@ -182,13 +234,17 @@ const Packages = () => {
             name="isActive"
           >
             <CustomSelect placeholder="Durumu">
-              <Option key={true}>Aktif</Option>
-              <Option key={false}>Pasif</Option>
+              <Option key={1} value={true}>
+                Aktif
+              </Option>
+              <Option key={2} value={false}>
+                Pasif
+              </Option>
             </CustomSelect>
           </CustomFormItem>
         </CustomForm>
       </CustomModal>
-    </>
+    </CustomPageHeader>
   );
 };
 

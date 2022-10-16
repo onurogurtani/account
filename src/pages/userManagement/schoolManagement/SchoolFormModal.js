@@ -126,12 +126,12 @@ const SchoolFormModal = ({ modalVisible, handleModalVisible, selectedRow, isExce
       } else {
         const body = {
           entity: {
-            name: values?.name.trim(),
+            name: values?.name?.trim(),
             recordStatus: values?.recordStatus,
             institutionTypeId: currentInstitutionTypeId ? Number(currentInstitutionTypeId) : 0,
             institutionType: {
               recordStatus: 1,
-              name: values?.institutionType.trim(),
+              name: values?.institutionType?.trim(),
             },
             institutionId: values?.institutionId,
             cityId: values?.cityId,
@@ -176,12 +176,12 @@ const SchoolFormModal = ({ modalVisible, handleModalVisible, selectedRow, isExce
       const body = {
         entity: {
           id: selectedRow.id,
-          name: values?.name.trim(),
+          name: values?.name?.trim(),
           recordStatus: values?.recordStatus,
           institutionTypeId: currentInstitutionTypeId ? Number(currentInstitutionTypeId) : 0,
           institutionType: {
             recordStatus: 1,
-            name: values?.institutionType.trim(),
+            name: values?.institutionType?.trim(),
           },
           institutionId: values?.institutionId,
           cityId: values?.cityId,

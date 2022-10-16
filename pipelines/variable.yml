@@ -1,9 +1,0 @@
-variables:  
-- name : major
-  value: 1
-- name : minor
-  value: 0
-- name : revision
-  value: 0
-- name : build
-  value: $[counter('',0)]

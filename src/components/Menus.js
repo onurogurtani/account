@@ -293,7 +293,7 @@ const Menus = () => {
           </MenuItemText>
         </CustomItem>
 
-        <CustomItem key="/a">
+        <CustomItem key="/settings/lessons">
           <MenuItemText>
             <CustomImage src={menuIcons} />
             <span>

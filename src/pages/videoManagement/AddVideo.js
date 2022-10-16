@@ -9,11 +9,11 @@ import '../../styles/videoManagament/addVideo.scss';
 
 const AddVideo = () => {
   const { TabPane } = Tabs;
-  const { activeKey } = useSelector((state) => state?.videoSlice);
+  const { activeKey } = useSelector((state) => state?.videos);
 
   useEffect(() => {
     return () => {
-      alert(2);
+      alert('uyarı');
     };
   }, []);
 
