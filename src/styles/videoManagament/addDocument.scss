@@ -17,13 +17,9 @@
       }
     }
     .ant-list-item-action {
-      .document-delete {
-        color: red;
-        text-decoration: none;
-      }
-      .document-edit {
-        color: #70b186;
-        text-decoration: none;
+      li {
+        display: flex;
+        align-items: center;
       }
     }
   }

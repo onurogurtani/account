@@ -40,6 +40,8 @@ import { formsSlice } from './slice/formsSlice';
 import { announcementSlice } from './slice/announcementSlice';
 import { citysCountysSlice } from './slice/citysCountysSlice';
 import { videoSlice } from './slice/videoSlice';
+import { lessonsSlice } from './slice/lessonsSlice';
+import { packageSlice } from './slice/packageSlice';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -68,7 +70,9 @@ const reducers = combineReducers({
   forms: formsSlice.reducer,
   announcement: announcementSlice.reducer,
   citysCountys: citysCountysSlice.reducer,
-  videoSlice: videoSlice.reducer,
+  videos: videoSlice.reducer,
+  lessons: lessonsSlice.reducer,
+  packages: packageSlice.reducer,
 });
 
 const persistConfig = {

@@ -23,6 +23,7 @@ import HomeLayout from './layout/HomeLayout';
 import UserManagement from './pages/userManagement';
 import SurveyManagement from './pages/userManagement/surveyManagement';
 import VideoManagement from './pages/videoManagement';
+import Settings from './pages/settings';
 
 const PrivateRoute = lazy(() =>
   import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -169,6 +170,42 @@ const App = () => {
                         <PrivateRoute
                           path={`${match?.path}/add`}
                           Component={VideoManagement?.AddVideo}
+                          authority="dashboard"
+                        />
+                        <Route
+                          component={() => (
+                            <Redirect
+                              to={{
+                                pathname: '/not-found',
+                                state: { status: 404 },
+                              }}
+                            />
+                          )}
+                        />
+                      </Switch>
+                    );
+                  }}
+                  authority="dashboard"
+                  isLayout={false}
+                />
+                <PrivateRoute
+                  path={'/settings'}
+                  Component={({ match }) => {
+                    return (
+                      <Switch>
+                        <PrivateRoute
+                          path={`${match?.path}/categories`}
+                          Component={Settings?.Categories}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/packages`}
+                          Component={Settings?.Packages}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/lessons`}
+                          Component={Settings?.Lessons}
                           authority="dashboard"
                         />
                         <Route
