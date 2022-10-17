@@ -10,8 +10,9 @@ const addVideoCategory = (data) => {
 
 const getVideoCategoryList = () => {
   return api({
-    url: `VideoCategorys/getList`,
+    url: `VideoCategorys/getList?PageSize=0`,
     method: 'POST',
+    data: null,
   });
 };
 
@@ -48,6 +49,16 @@ const getKalturaSessionKey = () => {
   });
 };
 
+// const uploadTokenAddKaltura = (sessionKey) => {
+//   return api({
+//     // url: `/uploadtoken/action/add?ks=${sessionKey}&format=1`,
+//     //TODO:Geliştirme ortamı taşınınca değiştir
+//     baseURL: process.env.KALTURA_URL,
+//     url: `/uploadtoken/action/add?ks=YjJmOWNlMWMyMjYxZDEzY2UwNjIzZDdjMGRhMmQ1YWM3OWMyNmNhMnwxMjU7MTI1OzE2NjYwNDAzMjY7MDsxNjY1OTUzOTI2LjMwNDk7Ozs7&format=1`,
+//     method: 'GET',
+//   });
+// };
+
 const videoServices = {
   addVideoCategory,
   getVideoCategoryList,
@@ -55,6 +66,7 @@ const videoServices = {
   addVideoQuestionsExcel,
   downloadVideoQuestionsExcel,
   getKalturaSessionKey,
+  // uploadTokenAddKaltura,
 };
 
 export default videoServices;

@@ -4,6 +4,7 @@ const announcementGetList = () => {
   return api({
     url: `Announcements/getList?PageNumber=0&PageSize=0`,
     method: 'POST',
+    data: null,
   });
 };
 // Announcements with filter

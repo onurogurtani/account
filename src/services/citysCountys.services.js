@@ -1,18 +1,18 @@
 import { api } from './api';
 
-const citysGetList = (data) => {
+const citysGetList = () => {
   return api({
-    url: `Citys/getList`,
+    url: `Citys/getList?PageSize=0`,
     method: 'POST',
-    data,
+    data: null,
   });
 };
 
-const countysGetList = (data) => {
+const countysGetList = () => {
   return api({
-    url: `Countys/getList`,
+    url: `Countys/getList?PageSize=0`,
     method: 'POST',
-    data,
+    data: null,
   });
 };
 

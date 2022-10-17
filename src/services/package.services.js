@@ -2,8 +2,9 @@ import { api } from './api';
 
 const getPackageList = () => {
   return api({
-    url: `Packages/getList`,
+    url: `Packages/getList?PageSize=0`,
     method: 'POST',
+    data: null,
   });
 };
 

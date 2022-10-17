@@ -4,6 +4,7 @@ const userGetList = ({ pageNumber = 1, pageSize = 10 }) => {
   return api({
     url: `Users/getList?PageNumber=${pageNumber}&PageSize=${pageSize}`,
     method: 'POST',
+    data: null,
   });
 };
 

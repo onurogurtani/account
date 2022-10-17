@@ -12,6 +12,7 @@ import VideoFilter from './VideoFilter';
 import iconFilter from '../../assets/icons/icon-filter.svg';
 import '../../styles/table.scss';
 import '../../styles/videoManagament/videoList.scss';
+import { useHistory } from 'react-router-dom';
 
 let Video = [
   { id: 1, name: 'video 1' },
@@ -19,6 +20,8 @@ let Video = [
 ];
 const VideoList = () => {
   const [isVideoFilter, setisVideoFilter] = useState(false);
+  const history = useHistory();
+
   const columns = [
     {
       title: '#',
@@ -62,7 +65,9 @@ const VideoList = () => {
       onOk: async () => {},
     });
   }, []);
-
+  const addVideo = () => {
+    history.push('/video-management/add');
+  };
   return (
     <CustomPageHeader
       title={<Text t="Videolar" />}
@@ -72,7 +77,9 @@ const VideoList = () => {
     >
       <CustomCollapseCard className="video-list" cardTitle={<Text t="Videolar" />}>
         <div className="table-header">
-          <CustomButton className="add-btn">YENİ VİDEO EKLE</CustomButton>
+          <CustomButton className="add-btn" onClick={addVideo}>
+            YENİ VİDEO EKLE
+          </CustomButton>
           <CustomButton
             data-testid="search"
             className="search-btn"

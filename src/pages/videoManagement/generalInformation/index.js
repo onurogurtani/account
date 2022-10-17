@@ -245,13 +245,26 @@ const GeneralInformation = () => {
     // let ks;
     // const action = await dispatch(getKalturaSessionKey());
     // if (getKalturaSessionKey.fulfilled.match(action)) {
-    //   ks = Object.values(action?.payload.data).join('');
+    //   ks = Object.values(action?.payload?.data).join('');
     // } else {
     //   errorDialog({
     //     title: <Text t="error" />,
     //     message: 'Kaltura Session Key Alınamadı.',
     //   });
     // }
+    let upload_token;
+    try {
+      const res = await axios.get(
+        `${process.env.KALTURA_URL}/uploadtoken/action/add?ks=YjJmOWNlMWMyMjYxZDEzY2UwNjIzZDdjMGRhMmQ1YWM3OWMyNmNhMnwxMjU7MTI1OzE2NjYwNDAzMjY7MDsxNjY1OTUzOTI2LjMwNDk7Ozs7&format=1`,
+      );
+      upload_token = res?.data?.id;
+    } catch (err) {
+      errorDialog({
+        title: <Text t="error" />,
+        message: 'Kaltura Token Id Alınamadı.',
+      });
+    }
+
     const fmData = new FormData();
     const config = {
       headers: { 'content-type': 'multipart/form-data' },
@@ -262,7 +275,7 @@ const GeneralInformation = () => {
     fmData.append('fileData', file);
     try {
       const res = await axios.post(
-        'http://kaltura.erstream.com/api_v3/service/uploadtoken/action/upload?ks=YjJmOWNlMWMyMjYxZDEzY2UwNjIzZDdjMGRhMmQ1YWM3OWMyNmNhMnwxMjU7MTI1OzE2NjYwNDAzMjY7MDsxNjY1OTUzOTI2LjMwNDk7Ozs7&format=1&resume=false&finalChunk=true&resumeAt=-1&uploadTokenId=0_833716e15833f10a23f96ffe436a21de',
+        `http://kaltura.erstream.com/api_v3/service/uploadtoken/action/upload?ks=YjJmOWNlMWMyMjYxZDEzY2UwNjIzZDdjMGRhMmQ1YWM3OWMyNmNhMnwxMjU7MTI1OzE2NjYwNDAzMjY7MDsxNjY1OTUzOTI2LjMwNDk7Ozs7&format=1&resume=false&finalChunk=true&resumeAt=-1&uploadTokenId=${upload_token}`,
         fmData,
         config,
       );
@@ -271,6 +284,36 @@ const GeneralInformation = () => {
     } catch (err) {
       setIsErrorVideoUpload('Dosya yüklenemedi yeniden deneyiniz');
       onError({ err });
+    }
+    let entryId;
+    try {
+      const res = await axios.post(
+        `${process.env.KALTURA_URL}/media/action/add?ks=YjJmOWNlMWMyMjYxZDEzY2UwNjIzZDdjMGRhMmQ1YWM3OWMyNmNhMnwxMjU7MTI1OzE2NjYwNDAzMjY7MDsxNjY1OTUzOTI2LjMwNDk7Ozs7&format=1`,
+        { entry: { name: 'dsfadfds', description: 'fsdafsadfsadfsd', mediaType: 1 } },
+      );
+      entryId = res?.data?.id;
+      console.log(res);
+    } catch (err) {
+      errorDialog({
+        title: <Text t="error" />,
+        message: 'Medya Oluşturulamadı.',
+      });
+    }
+
+    try {
+      const res = await axios.post(
+        `${process.env.KALTURA_URL}/media/action/addContent?ks=YjJmOWNlMWMyMjYxZDEzY2UwNjIzZDdjMGRhMmQ1YWM3OWMyNmNhMnwxMjU7MTI1OzE2NjYwNDAzMjY7MDsxNjY1OTUzOTI2LjMwNDk7Ozs7&format=1`,
+        {
+          resource: { objectType: 'KalturaUploadedFileTokenResource', token: upload_token },
+          entryId: entryId,
+        },
+      );
+      console.log(res);
+    } catch (err) {
+      errorDialog({
+        title: <Text t="error" />,
+        message: 'Yüklenen dosya entry eklenemedi.',
+      });
     }
   };
   return (

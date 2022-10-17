@@ -1,5 +1,6 @@
 {
   "PUBLIC_HOST_API": "http://167.71.77.240:6001/api",
   "PORT": 3002,
-  "SESSION_MINUTES": 15
+  "SESSION_MINUTES": 15,
+  "KALTURA_URL":"http://kaltura.erstream.com/api_v3/service"
 }
