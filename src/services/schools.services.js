@@ -47,8 +47,9 @@ const deleteSchool = ({ id }) => {
 };
 const getInstitutionTypes = () => {
   return api({
-    url: `InstitutionTypes/getList`,
+    url: `InstitutionTypes/getList?PageSize=0`,
     method: 'POST',
+    data: null,
   });
 };
 

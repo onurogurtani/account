@@ -2,8 +2,9 @@ import { api } from './api';
 
 const getOperationClaimsList = () => {
   return api({
-    url: `OperationClaims/getList`,
+    url: `OperationClaims/getList?PageSize=0`,
     method: 'POST',
+    data: null,
   });
 };
 
@@ -31,10 +32,10 @@ const deleteOperationClaims = ({ id }) => {
 };
 
 const operationClaimsServices = {
-    getOperationClaimsList,
-    addOperationClaims,
-    deleteOperationClaims,
-    updateOperationClaims
+  getOperationClaimsList,
+  addOperationClaims,
+  deleteOperationClaims,
+  updateOperationClaims,
 };
 
 export default operationClaimsServices;

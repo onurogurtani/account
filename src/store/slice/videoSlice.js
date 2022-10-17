@@ -73,6 +73,18 @@ export const getKalturaSessionKey = createAsyncThunk(
   },
 );
 
+// export const uploadTokenAddKaltura = createAsyncThunk(
+//   'uploadTokenAddKaltura',
+//   async (data, { dispatch, rejectWithValue }) => {
+//     try {
+//       const response = await videoServices.uploadTokenAddKaltura(data);
+//       return response;
+//     } catch (error) {
+//       return rejectWithValue(error?.data);
+//     }
+//   },
+// );
+
 const initialState = {
   activeKey: '0',
   values: {},
