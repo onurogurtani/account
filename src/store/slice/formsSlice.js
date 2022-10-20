@@ -3,7 +3,7 @@ import formServices from '../../services/forms.services';
 
 
 // Get Forms
-export const getForms = createAsyncThunk("forms/getForms",
+export const getFilteredPagedForms = createAsyncThunk("forms/getFilteredPagedForms",
   async (data) => {
     let urlString;
     console.log(data)
@@ -28,7 +28,7 @@ export const getForms = createAsyncThunk("forms/getForms",
         }
       }
       if (!data.OrderBy) {
-        let newStr = `FormDetailSearch.OrderBy=insertDESC`
+        let newStr = `FormDetailSearch.OrderBy=IdDESC`
         urlArr.push(newStr)
       }
         if (!data.PageNumber) {
@@ -41,9 +41,9 @@ export const getForms = createAsyncThunk("forms/getForms",
         }
       urlString = urlArr.join('&')
     } else {
-      urlString="FormDetailSearch.OrderBy=insertDESC&FormDetailSearch.PageNumber=1&FormDetailSearch.PageSize=10"
+      urlString="FormDetailSearch.OrderBy=IdDESC&FormDetailSearch.PageNumber=1&FormDetailSearch.PageSize=10"
     }
-    const response = await formServices.getForms(urlString);
+    const response = await formServices.getByFilterPagedForms(urlString);
     console.log(response)
     return response;
   });
@@ -52,7 +52,7 @@ export const getForms = createAsyncThunk("forms/getForms",
 // Get Categories
 export const getFormCategories = createAsyncThunk('form/getFormCategories', async (data, { dispatch }) => {
   const response = await formServices.getFormCategories(data);
-  dispatch(getForms());
+  dispatch(getFilteredPagedForms ());
   return response;
 },
 );
@@ -60,7 +60,7 @@ export const getFormCategories = createAsyncThunk('form/getFormCategories', asyn
 // Get TargetGroup
 export const getTargetGroup = createAsyncThunk('form/getTargetGroup', async (data, { dispatch }) => {
   const response = await formServices.getTargetGroup(data);
-  dispatch(getForms());
+  dispatch(getFilteredPagedForms ());
   return response;
 },
 );
@@ -68,30 +68,16 @@ export const getTargetGroup = createAsyncThunk('form/getTargetGroup', async (dat
 // Get SurveyConstraints
 export const getSurveyConstraint = createAsyncThunk('form/getSurveyConstraint', async (data, { dispatch }) => {
   const response = await formServices.getSurveyConstraint(data);
-  dispatch(getForms());
+  dispatch(getFilteredPagedForms ());
   return response;
 },
 );
-
-// Add Form
-// export const addForm = createAsyncThunk("forms/addForms", async (data, { dispatch }) => {
-//   const response = await formServices.addForms(data);
-//   dispatch(getForms());
-//   return response;
-// });
-
-// // Update Question
-// export const updateForm = createAsyncThunk("forms/updateForm", async (data, { dispatch }) => {
-//   const response = await formServices.updateForm(data);
-//   dispatch(getForms());
-//   return response;
-// });
 
 
 // Delete Form
 export const deleteForm = createAsyncThunk('form/deleteForm', async (data, { dispatch }) => {
   const response = await formServices.formDelete(data);
-  dispatch(getForms());
+  dispatch(getFilteredPagedForms ());
   return response;
 },
 );
@@ -99,7 +85,7 @@ export const deleteForm = createAsyncThunk('form/deleteForm', async (data, { dis
 // Active Question
 export const activeForm= createAsyncThunk('form/activeForm', async (data, { dispatch }) => {
   const response = await formServices.formActive(data);
-  dispatch(getForms());
+  dispatch(getFilteredPagedForms ());
   return response;
 },
 );
@@ -107,26 +93,66 @@ export const activeForm= createAsyncThunk('form/activeForm', async (data, { disp
 // Passive Question
 export const passiveForm = createAsyncThunk('form/passiveForm', async (data, { dispatch }) => {
   const response = await formServices.formPassive(data);
-  dispatch(getForms());
+  dispatch(getFilteredPagedForms ());
   return response;
 },
 );
-
-// Initial State
 const initialState = {
   formList: [],
+  tableProperty: {
+    currentPage: 1,
+    page: 1,
+    pageSize: 10,
+    totalCount: 0,
+  },
+  filterObject: {
+    Name: '',
+    UpdateUserName: '',
+    InsertUserName: '',
+    SurveyCompletionStatusId: [],
+    SurveyConstraintId: [],
+    TargetGroupId: [],
+    CategoryId: [],
+    Status: [],
+    UpdateStartDate: '',
+    UpdateEndDate: '',
+    InsertEndDate: '',
+    InsertStartDate: '',
+    OrderBy: '',
+    PageNumber: '1',
+    PageSize: '',
+  },
   formCategories: [],
   formTargetGroup: [],
-  surveyConstraint: []
+  surveyConstraint: [],
+  
 };
 
 export const formsSlice = createSlice({
   name: 'forms',
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder.addCase(getForms.fulfilled, (state, action) => {
-      state.formList = action.payload.data
+  reducers: {
+    setFormFilterObject: (state, action) => {
+      state.filterObject = action.payload;
+    },
+    setTableProperty: (state, action) => {
+      state.tableProperty = action.payload;
+    },
+  },
+  extraReducers: (builder) => {   
+    
+    builder.addCase(getFilteredPagedForms.fulfilled, (state, action) => {
+      state.formList = action?.payload?.data?.items || [];
+      state.tableProperty = action?.payload?.data?.pagedProperty || {};
+    });
+    builder.addCase(getFilteredPagedForms.rejected, (state, action) => {
+      state.formList = [];
+      state.tableProperty = {
+        currentPage: 1,
+        page: 1,
+        pageSize: 0,
+        totalCount: 0,
+      };
     });
 
     builder.addCase(getFormCategories.fulfilled, (state, action) => {
@@ -140,13 +166,7 @@ export const formsSlice = createSlice({
     builder.addCase(getSurveyConstraint.fulfilled, (state, action) => {
       state.surveyConstraint = action.payload.data
     });
-
-
-    // builder.addCase(addForm.fulfilled, (state, action) => {
-    //   console.log("ss")
-    // });
-    // builder.addCase(updateForm.fulfilled, (state, action) => {
-    //   console.log("aa")
-    // });
   },
 });
+
+export const {setFormFilterObject,setTableProperty } = formsSlice.actions;

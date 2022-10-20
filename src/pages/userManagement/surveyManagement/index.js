@@ -1,6 +1,6 @@
 import { CustomPageHeader, Text } from '../../../components';
 import { useEffect } from 'react';
-import SurveyTabs from './SurveyTabs';
+import Forms from './forms';
 
 const SurveyManagement = () => {
 
@@ -16,9 +16,9 @@ const SurveyManagement = () => {
             routes={['Kullanıcı Yönetimi']}
         >
         </CustomPageHeader>
-        <SurveyTabs/>
+        <Forms/>
         </>
     )
 }
 
-export default SurveyManagement
+export default SurveyManagement;

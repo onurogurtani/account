@@ -81,10 +81,16 @@ const App = () => {
                           authority="dashboard"
                         />
                         <PrivateRoute
+                          path={`${match?.path}/survey-management/add`}
+                          Component={UserManagement?.AddForm}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
                           path={`${match?.path}/survey-management`}
                           Component={UserManagement?.SurveyManagement}
                           authority="dashboard"
                         />
+                        
                         <PrivateRoute
                           path={`${match?.path}/operation-claims`}
                           Component={UserManagement?.OperationManagement}
