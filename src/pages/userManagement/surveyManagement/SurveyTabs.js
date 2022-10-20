@@ -15,4 +15,4 @@ const  SurveyTabs = () => (
   </Tabs>
 );
 
-export default SurveyTabs
+export default SurveyTabs;

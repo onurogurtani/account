@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import FormsList from './FormsList';
+import FormList from './FormList';
 
 const SurveyForms = () => {
 
@@ -9,7 +9,7 @@ const SurveyForms = () => {
 
     return (
         <div className='survey-questions'>
-           <FormsList /> 
+           <FormList /> 
         </div>
     );
 };
