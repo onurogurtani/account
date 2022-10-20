@@ -33,22 +33,26 @@ import {
   getLessonSubjects,
   getLessonSubSubjects,
 } from '../../../store/slice/lessonsSlice';
-import { getKalturaSessionKey, getVideoCategoryList } from '../../../store/slice/videoSlice';
+import {
+  getAllVideoKeyword,
+  getKalturaSessionKey,
+  getVideoCategoryList,
+  onChangeActiveKey,
+} from '../../../store/slice/videoSlice';
 import { getPackageList } from '../../../store/slice/packageSlice';
 
 import { useDispatch, useSelector } from 'react-redux';
+import kalturaServices from '../../../services/kaltura.services';
+import { useHistory } from 'react-router-dom';
 
-let title = [
-  { id: '1', value: 'başlık1' },
-  { id: '2', value: 'başlık2' },
-  { id: '3', value: 'başlık3' },
-  { id: '4', value: 'başlık4' },
-  { id: '5', value: 'başlık5' },
-];
-
-const GeneralInformation = () => {
+const GeneralInformation = ({
+  sendValue,
+  sendIntroVideoKalturaIdValue,
+  sendVideoKalturaIdValue,
+}) => {
   const [form] = Form.useForm();
   const [parentForm] = Form.useForm();
+  const history = useHistory();
   //   const [formIntro] = Form.useForm();
   const [open, setOpen] = useState(false);
   const [stepProgressIntroVideo, setStepProgressIntroVideo] = useState();
@@ -57,8 +61,13 @@ const GeneralInformation = () => {
   const [selectedSurveyOption, setSelectedSurveyOption] = useState([]);
   const [isErrorVideoUpload, setIsErrorVideoUpload] = useState();
   const [videoCategoryList, setVideoCategoryList] = useState([]);
+  const [kalturaSessionKey, setKalturaSessionKey] = useState();
 
   const [kalturaIntroVideoId, setKalturaIntroVideoId] = useState();
+  const [kalturaVideoId, setKalturaVideoId] = useState();
+
+  const [videoUploadToken, setVideoUploadToken] = useState();
+  const [introVideoUploadToken, setIntroVideoUploadToken] = useState();
 
   const [lessonId, setLessonId] = useState();
   const [unitId, setUnitId] = useState();
@@ -68,6 +77,7 @@ const GeneralInformation = () => {
   const { lessons, units, lessonSubjects, lessonSubSubjects } = useSelector(
     (state) => state?.lessons,
   );
+  const { keywords } = useSelector((state) => state?.videos);
 
   useEffect(() => {
     loadLessons();
@@ -76,7 +86,16 @@ const GeneralInformation = () => {
     loadUnits();
     loadLessonSubjects();
     loadLessonSubSubjects();
+    loadAllKeyword();
   }, []);
+
+  useEffect(() => {
+    sendIntroVideoKalturaIdValue(kalturaIntroVideoId);
+  }, [kalturaIntroVideoId]);
+
+  useEffect(() => {
+    sendVideoKalturaIdValue(kalturaVideoId);
+  }, [kalturaVideoId]);
 
   const onLessonChange = (value) => {
     setLessonId(value);
@@ -109,6 +128,10 @@ const GeneralInformation = () => {
     dispatch(getLessonSubSubjects());
   }, [dispatch]);
 
+  const loadAllKeyword = useCallback(async () => {
+    dispatch(getAllVideoKeyword());
+  }, [dispatch]);
+
   const { packages } = useSelector((state) => state?.packages);
   const loadPackages = useCallback(async () => {
     dispatch(getPackageList());
@@ -128,6 +151,13 @@ const GeneralInformation = () => {
   };
 
   const onFinish = (values) => {
+    const introVideoObj = parentForm.getFieldValue('introVideoObj');
+    console.log(introVideoObj);
+    if (!introVideoObj) {
+      setIsErrorProgressIntroVideo('Lütfen Intro Video Ekleyiniz.');
+      return;
+    }
+
     values.lessonSubSubjects = values.lessonSubSubjects.map((item) => ({
       lessonSubSubjectId: item,
     }));
@@ -140,11 +170,13 @@ const GeneralInformation = () => {
     delete values.survey;
     console.log(values);
 
-    const introVideoObj = parentForm.getFieldValue('introVideoObj');
-    console.log(introVideoObj);
-    if (!introVideoObj) {
-      setIsErrorProgressIntroVideo('Lütfen Intro Video Ekleyiniz.');
+    if (introVideoFile) {
+      values.introVideo = introVideoObj;
+    } else {
+      values.introVideoId = introVideoObj.id;
     }
+    sendValue(values);
+    dispatch(onChangeActiveKey('1'));
   };
 
   const normFile = (e) => {
@@ -162,7 +194,7 @@ const GeneralInformation = () => {
     setIsErrorProgressIntroVideo();
     setStepProgressIntroVideo();
     parentForm.setFieldsValue({
-      introVideoObj: { videoname: 'deneme' },
+      introVideoObj: { ...item },
     });
     setOpen(false);
   };
@@ -180,16 +212,31 @@ const GeneralInformation = () => {
       survey: e.target.value,
     });
   }
-  const cancelFileUpload = useRef(null);
+  const cancelIntroFileUpload = useRef(null);
+  const cancelVideoFileUpload = useRef(null);
+
   const introFormFinish = (values) => {
-    dummyRequest();
+    if (!stepProgressIntroVideo && !kalturaIntroVideoId) {
+      cancelIntroVideoUpload();
+      introVideoUpload();
+    }
     parentForm.setFieldsValue({
       introVideoObj: values,
     });
     setOpen(false);
   };
+  const beforeIntroVideoUpload = async (file) => {
+    cancelIntroVideoUpload();
+    setKalturaIntroVideoId();
+    setIntroVideoFile(file);
+    const ks = await getSessionKey();
+    if (!introVideoUploadToken) {
+      await getUploadToken(setIntroVideoUploadToken, ks);
+    }
+    return false;
+  };
 
-  const dummyRequest = async () => {
+  const introVideoUpload = async () => {
     setIsErrorProgressIntroVideo();
 
     const options = {
@@ -198,36 +245,38 @@ const GeneralInformation = () => {
         let percent = Math.floor((loaded * 100) / total);
         if (percent < 100) {
           setStepProgressIntroVideo(Math.round((loaded / total) * 100).toFixed(2));
-          // onProgress({ percent: Math.round((loaded / total) * 100).toFixed(2) }, file);
         }
       },
-      cancelToken: new CancelToken((cancel) => (cancelFileUpload.current = cancel)),
-      headers: {
-        authorization:
-          'Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjMiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3NlcmlhbG51bWJlciI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlBlcnNvbiIsIm5iZiI6MTY2NTA0OTY2MiwiZXhwIjoxNzI1MDQ5NjAyLCJpc3MiOiJ3d3cua2d0ZWtub2xvamkuY29tIiwiYXVkIjoid3d3LmtndGVrbm9sb2ppLmNvbSJ9.RcuOlH7q7pX1G9zMmjXTQRZ9eq13TMdyzhAZKLbY2qg',
-      },
+      cancelToken: new CancelToken((cancel) => (cancelIntroFileUpload.current = cancel)),
     };
     const formData = new FormData();
-    console.log(introVideoFile?.name);
-    formData.append(introVideoFile?.name, introVideoFile);
-    const action = 'http://167.71.77.240:6001/api/Schools/uploadSchoolExcel';
 
-    await axios
-      .post(action, formData, options)
-      .then(({ data: response }) => {
-        // onSuccess(response, file);
-        setStepProgressIntroVideo(100);
-      })
-      .catch((err) => {
-        // onError(err);
-        if (isCancel(err)) {
-          setIsErrorProgressIntroVideo();
-          setStepProgressIntroVideo();
-          return;
-        }
+    formData.append('fileData', introVideoFile);
+    try {
+      const res = await axios.post(
+        `${process.env.KALTURA_URL}/uploadtoken/action/upload?ks=${kalturaSessionKey}&format=1&resume=false&finalChunk=true&resumeAt=-1&uploadTokenId=${introVideoUploadToken}`,
+        formData,
+        options,
+      );
+      setStepProgressIntroVideo(100);
+      setTimeout(() => {
         setStepProgressIntroVideo();
-        setIsErrorProgressIntroVideo('Dosya yüklenemedi yeniden deneyiniz');
-      });
+      }, 1000);
+      const entryId = await newEntryKaltura(introVideoFile);
+      const kalturaIntroID = await attachKalturaEntry(entryId, introVideoUploadToken);
+      setIntroVideoUploadToken();
+      setKalturaIntroVideoId(kalturaIntroID?.data?.id);
+    } catch (err) {
+      if (isCancel(err)) {
+        setIsErrorProgressIntroVideo();
+        setStepProgressIntroVideo();
+        setKalturaIntroVideoId();
+        return;
+      }
+      setKalturaIntroVideoId();
+      setStepProgressIntroVideo();
+      setIsErrorProgressIntroVideo('Dosya yüklenemedi yeniden deneyiniz');
+    }
 
     return {
       abort() {
@@ -237,78 +286,79 @@ const GeneralInformation = () => {
   };
 
   const cancelIntroVideoUpload = () => {
-    if (cancelFileUpload.current) cancelFileUpload.current('User has canceled the file upload.');
+    if (cancelIntroFileUpload.current)
+      cancelIntroFileUpload.current('User has canceled the file upload.');
   };
-  const uploadVideo = async (options) => {
-    const { onSuccess, onError, file, onProgress } = options;
-    setIsErrorVideoUpload();
-    // let ks;
-    // const action = await dispatch(getKalturaSessionKey());
-    // if (getKalturaSessionKey.fulfilled.match(action)) {
-    //   ks = Object.values(action?.payload?.data).join('');
-    // } else {
-    //   errorDialog({
-    //     title: <Text t="error" />,
-    //     message: 'Kaltura Session Key Alınamadı.',
-    //   });
-    // }
-    let upload_token;
+  const cancelVideoUpload = () => {
+    if (cancelVideoFileUpload.current)
+      cancelVideoFileUpload.current('User has canceled the file upload.');
+  };
+
+  const getSessionKey = async () => {
+    if (!kalturaSessionKey) {
+      const action = await dispatch(getKalturaSessionKey());
+      if (getKalturaSessionKey.fulfilled.match(action)) {
+        const ks = Object.values(action?.payload?.data).join('');
+        setKalturaSessionKey(ks);
+        return ks;
+      } else {
+        errorDialog({
+          title: <Text t="error" />,
+          message: 'Kaltura Session Key Alınamadı.',
+        });
+        return;
+      }
+    }
+    return kalturaSessionKey;
+  };
+
+  const getUploadToken = async (setToken, ks) => {
     try {
-      const res = await axios.get(
-        `${process.env.KALTURA_URL}/uploadtoken/action/add?ks=YjJmOWNlMWMyMjYxZDEzY2UwNjIzZDdjMGRhMmQ1YWM3OWMyNmNhMnwxMjU7MTI1OzE2NjYwNDAzMjY7MDsxNjY1OTUzOTI2LjMwNDk7Ozs7&format=1`,
-      );
-      upload_token = res?.data?.id;
+      const res = await kalturaServices.getUploadToken(ks);
+      if (res?.data?.code === 'INVALID_KS') {
+        errorDialog({
+          title: <Text t="error" />,
+          message: 'Kaltura Token Id Alınamadı. INVALID_KS',
+        });
+        return;
+      }
+      const upload_token = res?.data?.id;
+      setToken(upload_token);
     } catch (err) {
       errorDialog({
         title: <Text t="error" />,
         message: 'Kaltura Token Id Alınamadı.',
       });
     }
+  };
 
-    const fmData = new FormData();
-    const config = {
-      headers: { 'content-type': 'multipart/form-data' },
-      onUploadProgress: (event) => {
-        onProgress({ percent: (event.loaded / event.total) * 100 });
-      },
-    };
-    fmData.append('fileData', file);
+  const newEntryKaltura = async (file) => {
     try {
-      const res = await axios.post(
-        `http://kaltura.erstream.com/api_v3/service/uploadtoken/action/upload?ks=YjJmOWNlMWMyMjYxZDEzY2UwNjIzZDdjMGRhMmQ1YWM3OWMyNmNhMnwxMjU7MTI1OzE2NjYwNDAzMjY7MDsxNjY1OTUzOTI2LjMwNDk7Ozs7&format=1&resume=false&finalChunk=true&resumeAt=-1&uploadTokenId=${upload_token}`,
-        fmData,
-        config,
-      );
-      onSuccess('Ok');
-      console.log('server res: ', res);
-    } catch (err) {
-      setIsErrorVideoUpload('Dosya yüklenemedi yeniden deneyiniz');
-      onError({ err });
-    }
-    let entryId;
-    try {
-      const res = await axios.post(
-        `${process.env.KALTURA_URL}/media/action/add?ks=YjJmOWNlMWMyMjYxZDEzY2UwNjIzZDdjMGRhMmQ1YWM3OWMyNmNhMnwxMjU7MTI1OzE2NjYwNDAzMjY7MDsxNjY1OTUzOTI2LjMwNDk7Ozs7&format=1`,
-        { entry: { name: 'dsfadfds', description: 'fsdafsadfsadfsd', mediaType: 1 } },
-      );
-      entryId = res?.data?.id;
-      console.log(res);
+      const body = {
+        entry: { name: file.name, description: file.name, mediaType: 1 },
+      };
+
+      const res = await kalturaServices.newEntryKaltura(body, kalturaSessionKey);
+      const entryId = res?.data?.id;
+      return entryId;
     } catch (err) {
       errorDialog({
         title: <Text t="error" />,
-        message: 'Medya Oluşturulamadı.',
+        message: 'Kaltura Medya Entry Oluşturulamadı.',
       });
     }
+  };
 
+  const attachKalturaEntry = async (entryId, token) => {
     try {
       const res = await axios.post(
-        `${process.env.KALTURA_URL}/media/action/addContent?ks=YjJmOWNlMWMyMjYxZDEzY2UwNjIzZDdjMGRhMmQ1YWM3OWMyNmNhMnwxMjU7MTI1OzE2NjYwNDAzMjY7MDsxNjY1OTUzOTI2LjMwNDk7Ozs7&format=1`,
+        `${process.env.KALTURA_URL}/media/action/addContent?ks=${kalturaSessionKey}&format=1`,
         {
-          resource: { objectType: 'KalturaUploadedFileTokenResource', token: upload_token },
+          resource: { objectType: 'KalturaUploadedFileTokenResource', token: token },
           entryId: entryId,
         },
       );
-      console.log(res);
+      return res;
     } catch (err) {
       errorDialog({
         title: <Text t="error" />,
@@ -316,29 +366,55 @@ const GeneralInformation = () => {
       });
     }
   };
+
+  const beforeVideoUpload = async (file) => {
+    cancelVideoUpload();
+    setKalturaVideoId();
+    const ks = await getSessionKey();
+    if (!videoUploadToken) {
+      await getUploadToken(setVideoUploadToken, ks);
+    }
+    return true;
+  };
+
+  const uploadVideo = async (options) => {
+    const { onSuccess, onError, file, onProgress } = options;
+    console.log(file);
+    setIsErrorVideoUpload();
+
+    console.log(kalturaSessionKey);
+    console.log(videoUploadToken);
+
+    const fmData = new FormData();
+    const config = {
+      headers: { 'content-type': 'multipart/form-data' },
+      onUploadProgress: (event) => {
+        onProgress({ percent: (event.loaded / event.total) * 100 });
+      },
+      cancelToken: new CancelToken((cancel) => (cancelVideoFileUpload.current = cancel)),
+    };
+    fmData.append('fileData', file);
+    try {
+      const res = await axios.post(
+        `${process.env.KALTURA_URL}/uploadtoken/action/upload?ks=${kalturaSessionKey}&format=1&resume=false&finalChunk=true&resumeAt=-1&uploadTokenId=${videoUploadToken}`,
+        fmData,
+        config,
+      );
+      onSuccess('Ok');
+      const entryId = await newEntryKaltura(file);
+      const kalturaID = await attachKalturaEntry(entryId, videoUploadToken);
+      setVideoUploadToken();
+      setKalturaVideoId(kalturaID?.data?.id);
+      console.log('server res: ', res);
+    } catch (err) {
+      setKalturaVideoId();
+      setIsErrorVideoUpload('Dosya yüklenemedi yeniden deneyiniz');
+      onError({ err });
+    }
+  };
   return (
     <div className="general-information-wrapper">
-      <Form.Provider
-      // onFormFinish={(name, { forms, values }) => {
-      //   values.lessonSubSubjects = values.lessonSubSubjects.map((item) => ({
-      //     lessonSubSubjectId: item,
-      //   }));
-      //   values.keyWords = values.keyWords.join();
-      //   values.packages = values.packages.map((item) => ({
-      //     packageId: item,
-      //   }));
-      //   values.beforeEducationSurvey = values?.survey === 'before' ? true : false;
-      //   values.afterEducationSurvey = values?.survey === 'after' ? true : false;
-      //   delete values.survey;
-      //   console.log(values);
-
-      //   const introVideoObj = parentForm.getFieldValue('introVideoObj');
-      //   console.log(introVideoObj);
-      //   if (!introVideoObj) {
-      //     setIsErrorProgressIntroVideo('Lütfen Intro Video Ekleyiniz.');
-      //   }
-      // }}
-      >
+      <Form.Provider>
         <CustomForm
           labelCol={{ flex: '150px' }}
           autoComplete="off"
@@ -372,12 +448,12 @@ const GeneralInformation = () => {
               </CustomFormItem>
 
               <CustomFormItem
-                // rules={[
-                //   {
-                //     required: true,
-                //     message: 'Lütfen Zorunlu Alanları Doldurunuz.',
-                //   },
-                // ]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                  },
+                ]}
                 label="Bağlı Olduğu Paket"
                 name="packages"
               >
@@ -551,9 +627,13 @@ const GeneralInformation = () => {
                     //   ]);
                     //   console.log('onError', err);
                     // }}
+                    showUploadList={{
+                      showRemoveIcon: true,
+                      removeIcon: <DeleteOutlined onClick={(e) => cancelVideoUpload()} />,
+                    }}
                     customRequest={uploadVideo}
-                    // beforeUpload={beforeUpload}
-                    // accept="video/*"
+                    beforeUpload={beforeVideoUpload}
+                    accept="video/*"
                     // customRequest={dummyRequest}
                   >
                     <p className="ant-upload-drag-icon">
@@ -603,19 +683,20 @@ const GeneralInformation = () => {
                                   color: isErrorProgressIntroVideo ? 'red' : 'rgba(0, 0, 0, 0.45)',
                                 }}
                               >
-                                {introVideoObj.videoname}
+                                {introVideoObj.name}
                               </span>
                               <span className="ant-upload-list-item-card-actions">
-                                <CustomButton
+                                {/* <CustomButton
                                   className="ant-btn ant-btn-text ant-btn-sm ant-btn-icon-only"
                                   onClick={showAddIntroModal}
                                 >
                                   <EditOutlined style={{ color: '#70b186' }} />
-                                </CustomButton>
+                                </CustomButton> */}
                                 <CustomButton
                                   className="ant-btn ant-btn-text ant-btn-sm ant-btn-icon-only"
                                   onClick={() => {
                                     cancelIntroVideoUpload();
+                                    setIsErrorProgressIntroVideo();
                                     setFieldsValue({
                                       introVideoObj: undefined,
                                     });
@@ -755,7 +836,15 @@ const GeneralInformation = () => {
                 label="Anahtar Kelimeler"
                 name="keyWords"
               >
-                <CustomSelect mode="tags" placeholder="Anahtar Kelimeler"></CustomSelect>
+                <CustomSelect mode="tags" placeholder="Anahtar Kelimeler">
+                  {keywords?.map((item) => {
+                    return (
+                      <Option key={item} value={item}>
+                        {item}
+                      </Option>
+                    );
+                  })}
+                </CustomSelect>
               </CustomFormItem>
 
               <CustomFormItem label="Anket" name="survey">
@@ -780,8 +869,17 @@ const GeneralInformation = () => {
             <CustomButton
               type="primary"
               // htmlType="submit"
+              onClick={() => history.push('/video-management/list')}
+              className="back-btn"
+            >
+              Geri
+            </CustomButton>
+
+            <CustomButton
+              type="primary"
+              // htmlType="submit"
               onClick={() => parentForm.submit()}
-              className="submit-btn"
+              className="next-btn"
             >
               İlerle
             </CustomButton>
@@ -795,7 +893,7 @@ const GeneralInformation = () => {
         form={form}
         selectRecordedIntroVideo={selectRecordedIntroVideo}
         introFormFinish={introFormFinish}
-        setIntroVideoFile={setIntroVideoFile}
+        beforeUpload={beforeIntroVideoUpload}
       />
     </div>
   );

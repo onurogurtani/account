@@ -1,6 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import videoServices from '../../services/video.services';
 
+export const addVideo = createAsyncThunk(
+  'addVideoCategory',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await videoServices.addVideo(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
 export const addVideoCategory = createAsyncThunk(
   'addVideoCategory',
   async (data, { dispatch, rejectWithValue }) => {
@@ -73,21 +85,35 @@ export const getKalturaSessionKey = createAsyncThunk(
   },
 );
 
-// export const uploadTokenAddKaltura = createAsyncThunk(
-//   'uploadTokenAddKaltura',
-//   async (data, { dispatch, rejectWithValue }) => {
-//     try {
-//       const response = await videoServices.uploadTokenAddKaltura(data);
-//       return response;
-//     } catch (error) {
-//       return rejectWithValue(error?.data);
-//     }
-//   },
-// );
+export const getAllIntroVideoList = createAsyncThunk(
+  'getAllIntroVideoList',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await videoServices.getAllIntroVideoList();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
+export const getAllVideoKeyword = createAsyncThunk(
+  'getAllVideoKeyword',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await videoServices.getAllVideoKeyword();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 
 const initialState = {
   activeKey: '0',
+  introVideos: [],
   values: {},
+  keywords: [],
 };
 
 export const videoSlice = createSlice({
@@ -98,11 +124,20 @@ export const videoSlice = createSlice({
       state.activeKey = action?.payload;
     },
   },
-  //   extraReducers: (builder) => {
-  //     builder.addCase(getAllImages.fulfilled, (state, action) => {
-  //       state.images = action?.payload?.data?.items;
-  //     });
-  //   },
+  extraReducers: (builder) => {
+    builder.addCase(getAllIntroVideoList.fulfilled, (state, action) => {
+      state.introVideos = action?.payload?.data?.items;
+    });
+    builder.addCase(getAllIntroVideoList.rejected, (state) => {
+      state.introVideos = [];
+    });
+    builder.addCase(getAllVideoKeyword.fulfilled, (state, action) => {
+      state.keywords = action?.payload?.data;
+    });
+    builder.addCase(getAllVideoKeyword.rejected, (state) => {
+      state.keywords = [];
+    });
+  },
 });
 
 export const { onChangeActiveKey } = videoSlice.actions;
