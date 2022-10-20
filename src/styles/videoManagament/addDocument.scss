@@ -23,4 +23,17 @@
       }
     }
   }
+  .btn-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    .next-btn {
+      background-color: #699a00;
+      border: none;
+    }
+    .back-btn {
+      background-color: gray;
+      border: none;
+    }
+  }
 }

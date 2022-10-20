@@ -17,6 +17,19 @@
         flex: 1;
       }
     }
+    .general-information-form-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 20px;
+      .next-btn {
+        background-color: #699a00;
+        border: none;
+      }
+      .back-btn {
+        background-color: gray;
+        border: none;
+      }
+    }
 
     .ant-form-item {
       // width: 50%;
@@ -101,19 +114,6 @@
   .add-intro-video-collapse {
     .ant-collapse-content {
       padding: 20px;
-    }
-  }
-}
-
-@media (max-width: 1199.98px) {
-  .general-information-wrapper {
-    .general-information-form {
-      height: unset;
-      max-width: 700px;
-      flex-wrap: nowrap;
-      .ant-form-item {
-        width: 100%;
-      }
     }
   }
 }

@@ -1,6 +1,7 @@
 import { CheckOutlined, FileOutlined, InboxOutlined } from '@ant-design/icons';
 import { List, Upload } from 'antd';
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   CustomButton,
   CustomCollapseCard,
@@ -11,14 +12,7 @@ import {
   CustomSelect,
   Option,
 } from '../../../components';
-const data = [
-  {
-    title: 'Ant Design Title 1',
-  },
-  {
-    title: 'Ant Design Title 2',
-  },
-];
+import { getAllIntroVideoList } from '../../../store/slice/videoSlice';
 
 const IntroVideoModal = ({
   open,
@@ -26,8 +20,18 @@ const IntroVideoModal = ({
   form,
   selectRecordedIntroVideo,
   introFormFinish,
-  setIntroVideoFile,
+  beforeUpload,
 }) => {
+  const { introVideos } = useSelector((state) => state?.videos);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    loadAllIntroVideo();
+  }, []);
+
+  const loadAllIntroVideo = useCallback(async () => {
+    await dispatch(getAllIntroVideoList());
+  }, [dispatch]);
+
   const normFile = (e) => {
     if (Array.isArray(e)) {
       return e;
@@ -50,7 +54,7 @@ const IntroVideoModal = ({
       <div className="intro-video-list">
         <List
           itemLayout="horizontal"
-          dataSource={data}
+          dataSource={introVideos}
           key="intro-video-list"
           renderItem={(item) => (
             <List.Item
@@ -68,8 +72,8 @@ const IntroVideoModal = ({
             >
               <List.Item.Meta
                 avatar={<FileOutlined style={{ fontSize: '32px' }} />}
-                title={item.title}
-                description="İntro video açıklama"
+                title={item.name}
+                // description="İntro video açıklama"
               />
             </List.Item>
           )}
@@ -89,7 +93,7 @@ const IntroVideoModal = ({
               },
             ]}
             label="Video Adı"
-            name="videoname"
+            name="name"
           >
             <CustomInput placeholder="Video Adı" />
           </CustomFormItem>
@@ -102,11 +106,15 @@ const IntroVideoModal = ({
               },
             ]}
             label="Video Türü"
-            name="introvideotype"
+            name="videoType"
           >
             <CustomSelect placeholder="Video Türü">
-              <Option key={1}>Canlı</Option>
-              <Option key={2}>Asenkron</Option>
+              <Option key={1} value={1}>
+                Canlı
+              </Option>
+              <Option key={2} value={1}>
+                Asenkron
+              </Option>
             </CustomSelect>
           </CustomFormItem>
 
@@ -118,31 +126,16 @@ const IntroVideoModal = ({
                   message: 'Lütfen dosya seçiniz.',
                 },
               ]}
-              name="introvideo"
+              name="kalturaIntroVideoId"
               valuePropName="fileList"
               getValueFromEvent={normFile}
               noStyle
             >
               <Upload.Dragger
                 name="filesintro"
-                // action="http://167.71.77.240:6001/api/Schools/uploadSchoolExcel"
-                // headers={{
-                //   authorization:
-                //     'Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjMiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3NlcmlhbG51bWJlciI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlBlcnNvbiIsIm5iZiI6MTY2NTA0OTY2MiwiZXhwIjoxNzI1MDQ5NjAyLCJpc3MiOiJ3d3cua2d0ZWtub2xvamkuY29tIiwiYXVkIjoid3d3LmtndGVrbm9sb2ppLmNvbSJ9.RcuOlH7q7pX1G9zMmjXTQRZ9eq13TMdyzhAZKLbY2qg',
-                // }}
-                // listType="picture"
                 maxCount={1}
-                beforeUpload={(file) => {
-                  setIntroVideoFile(file);
-                  return false;
-                }}
-                // beforeUpload={beforeUpload}
-                // accept="video/*"
-                // customRequest={dummyRequest}
-                // onProgress={(step, file) => {
-                //   setStepProgressIntroVideo(Math.round(step.percent));
-                //   console.log('onProgress', Math.round(step.percent), file.name);
-                // }}
+                accept="video/*"
+                beforeUpload={beforeUpload}
               >
                 <p className="ant-upload-drag-icon">
                   <InboxOutlined />

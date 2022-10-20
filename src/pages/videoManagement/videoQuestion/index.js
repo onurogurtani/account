@@ -21,10 +21,12 @@ import {
 import {
   addVideoQuestionsExcel,
   downloadVideoQuestionsExcel,
+  onChangeActiveKey,
 } from '../../../store/slice/videoSlice';
 import '../../../styles/videoManagament/questionVideo.scss';
+import { reactQuillValidator } from '../../../utils/formRule';
 
-const VideoQuestion = () => {
+const VideoQuestion = ({ sendValue }) => {
   const [open, setOpen] = useState(false);
   const [questionList, setQuestionList] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState();
@@ -39,16 +41,18 @@ const VideoQuestion = () => {
       if (selectedQuestion) {
         form.setFieldsValue(selectedQuestion);
         setIsEdit(true);
+      } else {
+        isEdit && setIsEdit(false);
       }
     }
   }, [open]);
+  const [form] = Form.useForm();
 
-  const showQuestionModal = () => {
+  const showQuestionModal = async () => {
     isExcel && setIsExcel(false);
     setOpen(true);
   };
 
-  const [form] = Form.useForm();
   const onOkModal = () => {
     form.submit();
   };
@@ -71,7 +75,6 @@ const VideoQuestion = () => {
           title: <Text t="success" />,
           message: action?.payload?.message,
         });
-        await form.resetFields();
         setOpen(false);
       } else {
         errorDialog({
@@ -101,7 +104,6 @@ const VideoQuestion = () => {
       setQuestionList((state) => [...state, values]);
       console.log(questionList);
     }
-    await form.resetFields();
     setOpen(false);
   };
   const handleEdit = (item, index) => {
@@ -119,7 +121,7 @@ const VideoQuestion = () => {
   };
 
   const onCancelModal = async () => {
-    await form.resetFields();
+    setSelectedQuestion();
     setOpen(false);
   };
 
@@ -185,6 +187,21 @@ const VideoQuestion = () => {
     setIsExcel(true);
     setOpen(true);
   };
+
+  const saveAndFinish = async () => {
+    if (questionList.length) {
+      const questionValue = questionList?.map((item) => ({
+        text: item.text,
+        answer: item.answer,
+      }));
+      sendValue(questionValue);
+      return;
+    }
+    errorDialog({
+      title: <Text t="error" />,
+      message: 'Lütfen en az 1 adet soru ekleyiniz.',
+    });
+  };
   return (
     <div className="question-video">
       <CustomButton icon={<FileExcelOutlined />} className="upload-btn" onClick={uploadExcel}>
@@ -203,6 +220,7 @@ const VideoQuestion = () => {
         title="Yeni Soru Ekle"
         visible={open}
         onOk={onOkModal}
+        afterClose={() => form.resetFields()}
         okText="Kaydet"
         cancelText="Vazgeç"
         onCancel={onCancelModal}
@@ -247,11 +265,38 @@ const VideoQuestion = () => {
             </CustomFormItem>
           ) : (
             <>
-              <CustomFormItem label="Soru Metni" name="text">
+              <CustomFormItem
+                rules={[
+                  {
+                    required: true,
+                    message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                  },
+                  {
+                    validator: reactQuillValidator,
+                    message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                  },
+                ]}
+                label="Soru Metni"
+                name="text"
+              >
                 <ReactQuill theme="snow" />
               </CustomFormItem>
 
-              <CustomFormItem className="editor" label="Cevap Metni" name="answer">
+              <CustomFormItem
+                rules={[
+                  {
+                    required: true,
+                    message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                  },
+                  {
+                    validator: reactQuillValidator,
+                    message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                  },
+                ]}
+                className="editor"
+                label="Cevap Metni"
+                name="answer"
+              >
                 <ReactQuill theme="snow" />
               </CustomFormItem>
             </>
@@ -285,13 +330,13 @@ const VideoQuestion = () => {
             >
               <List.Item.Meta
                 avatar={<QuestionCircleOutlined />}
-                title={<div dangerouslySetInnerHTML={{ __html: item?.answer }} />}
+                title={<div dangerouslySetInnerHTML={{ __html: item?.text }} />}
                 description={
                   <>
                     <CheckCircleOutlined />
                     <div
                       className="question-answer"
-                      dangerouslySetInnerHTML={{ __html: item?.text }}
+                      dangerouslySetInnerHTML={{ __html: item?.answer }}
                     />
                   </>
                 }
@@ -299,6 +344,24 @@ const VideoQuestion = () => {
             </List.Item>
           )}
         />
+        <div className="btn-group">
+          <CustomButton
+            type="primary"
+            // htmlType="submit"
+            onClick={() => dispatch(onChangeActiveKey('1'))}
+            className="back-btn"
+          >
+            Geri
+          </CustomButton>
+          <CustomButton
+            type="primary"
+            // htmlType="submit"
+            onClick={() => saveAndFinish()}
+            className="next-btn"
+          >
+            Kaydet ve Bitir
+          </CustomButton>
+        </div>
       </div>
     </div>
   );

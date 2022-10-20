@@ -1,5 +1,13 @@
 import { api } from './api';
 
+const addVideo = (data) => {
+  return api({
+    url: `Videos`,
+    method: 'POST',
+    data,
+  });
+};
+
 const addVideoCategory = (data) => {
   return api({
     url: `VideoCategorys`,
@@ -49,24 +57,31 @@ const getKalturaSessionKey = () => {
   });
 };
 
-// const uploadTokenAddKaltura = (sessionKey) => {
-//   return api({
-//     // url: `/uploadtoken/action/add?ks=${sessionKey}&format=1`,
-//     //TODO:Geliştirme ortamı taşınınca değiştir
-//     baseURL: process.env.KALTURA_URL,
-//     url: `/uploadtoken/action/add?ks=YjJmOWNlMWMyMjYxZDEzY2UwNjIzZDdjMGRhMmQ1YWM3OWMyNmNhMnwxMjU7MTI1OzE2NjYwNDAzMjY7MDsxNjY1OTUzOTI2LjMwNDk7Ozs7&format=1`,
-//     method: 'GET',
-//   });
-// };
+const getAllIntroVideoList = () => {
+  return api({
+    url: `IntroVideos/getList?PageSize=0`,
+    method: 'POST',
+    data: null,
+  });
+};
+
+const getAllVideoKeyword = () => {
+  return api({
+    url: `Videos/getVideoKeyWords`,
+    method: 'GET',
+  });
+};
 
 const videoServices = {
+  addVideo,
   addVideoCategory,
   getVideoCategoryList,
   deleteVideoDocumentFile,
   addVideoQuestionsExcel,
   downloadVideoQuestionsExcel,
   getKalturaSessionKey,
-  // uploadTokenAddKaltura,
+  getAllIntroVideoList,
+  getAllVideoKeyword,
 };
 
 export default videoServices;

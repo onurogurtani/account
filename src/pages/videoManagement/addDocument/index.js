@@ -16,9 +16,10 @@ import {
 import axios, { CancelToken, isCancel } from 'axios';
 import '../../../styles/videoManagament/addDocument.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteVideoDocumentFile } from '../../../store/slice/videoSlice';
+import { deleteVideoDocumentFile, onChangeActiveKey } from '../../../store/slice/videoSlice';
+import { reactQuillValidator } from '../../../utils/formRule';
 
-const AddDocument = () => {
+const AddDocument = ({ sendValue }) => {
   const [open, setOpen] = useState(false);
   const [errorList, setErrorList] = useState([]);
   const [errorUpload, setErrorUpload] = useState();
@@ -30,12 +31,6 @@ const AddDocument = () => {
   const [form] = Form.useForm();
   const cancelFileUpload = useRef(null);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    return () => {
-      alert(2);
-    };
-  }, []);
 
   const showAddDocumentModal = () => {
     setOpen(true);
@@ -116,7 +111,6 @@ const AddDocument = () => {
         setPercent();
         setErrorUpload();
         setDocumentList((state) => [...state, response.data]);
-        form.resetFields();
         setOpen(false);
       })
       .catch((err) => {
@@ -139,7 +133,7 @@ const AddDocument = () => {
       onOk: async () => {
         const action = await dispatch(deleteVideoDocumentFile({ id: item.id }));
         if (deleteVideoDocumentFile.fulfilled.match(action)) {
-          setDocumentList(documentList.filter((data) => data.key !== item.key));
+          setDocumentList(documentList.filter((data) => data.id !== item.id));
           successDialog({
             title: <Text t="success" />,
             message: action?.payload.message,
@@ -155,7 +149,6 @@ const AddDocument = () => {
   };
 
   const onCancelModal = async () => {
-    await form.resetFields();
     setPercent();
     cancelIntroVideoUpload();
     setErrorUpload();
@@ -164,6 +157,21 @@ const AddDocument = () => {
 
   const cancelIntroVideoUpload = () => {
     if (cancelFileUpload.current) cancelFileUpload.current('User has canceled the file upload.');
+  };
+
+  const handleStep3 = async () => {
+    if (documentList.length) {
+      const documentValue = documentList?.map((item) => ({
+        fileId: item.id,
+      }));
+      sendValue(documentValue);
+      dispatch(onChangeActiveKey('2'));
+      return;
+    }
+    errorDialog({
+      title: <Text t="error" />,
+      message: 'Lütfen en az 1 adet doküman ekleyiniz.',
+    });
   };
   return (
     <div className="add-document-video">
@@ -181,6 +189,8 @@ const AddDocument = () => {
         onOk={onOkModal}
         okText="Kaydet"
         cancelText="Vazgeç"
+        afterClose={() => form.resetFields()}
+        maskClosable={false}
         onCancel={onCancelModal}
         okButtonProps={{ disabled: isDisable }}
         bodyStyle={{ overflowY: 'auto' }}
@@ -203,7 +213,7 @@ const AddDocument = () => {
             label="Doküman Adı"
             name="documentName"
           >
-            <CustomInput placeholder="Doküman Adı" />
+            <CustomInput disabled={isDisable} placeholder="Doküman Adı" />
           </CustomFormItem>
 
           <CustomFormItem
@@ -212,12 +222,16 @@ const AddDocument = () => {
                 required: true,
                 message: 'Lütfen Zorunlu Alanları Doldurunuz.',
               },
+              {
+                validator: reactQuillValidator,
+                message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+              },
             ]}
             className="editor"
             label="Açıklama"
             name="text"
           >
-            <ReactQuill theme="snow" />
+            <ReactQuill readOnly={isDisable} theme="snow" />
           </CustomFormItem>
 
           <CustomFormItem label="Dosya">
@@ -235,6 +249,7 @@ const AddDocument = () => {
             >
               <Upload.Dragger
                 name="files"
+                disabled={isDisable}
                 maxCount={1}
                 showUploadList={{
                   showRemoveIcon: true,
@@ -289,6 +304,25 @@ const AddDocument = () => {
             </List.Item>
           )}
         />
+      </div>
+      <div className="btn-group">
+        <CustomButton
+          type="primary"
+          // htmlType="submit"
+          onClick={() => dispatch(onChangeActiveKey('0'))}
+          className="back-btn"
+        >
+          Geri
+        </CustomButton>
+
+        <CustomButton
+          type="primary"
+          // htmlType="submit"
+          onClick={() => handleStep3()}
+          className="next-btn"
+        >
+          İlerle
+        </CustomButton>
       </div>
     </div>
   );
