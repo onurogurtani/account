@@ -241,22 +241,7 @@ const Menus = () => {
           </span>
         </MenuItemText>
       </CustomItem>
-      <CustomItem key="/user-management/avatar-management">
-        <MenuItemText>
-          <CustomImage src={menuIcons} />
-          <span>
-            <Text t="Avatar Yönetimi" />
-          </span>
-        </MenuItemText>
-      </CustomItem>
-      <CustomItem key="/user-management/school-management">
-        <MenuItemText>
-          <CustomImage src={menuIcons} />
-          <span>
-            <Text t="Okul Yönetimi" />
-          </span>
-        </MenuItemText>
-      </CustomItem>
+
       <CustomItem key="/user-management/announcement-management">
         <MenuItemText>
           <CustomImage src={menuIcons} />
@@ -274,7 +259,25 @@ const Menus = () => {
         </MenuItemText>
       </CustomItem>
 
-      <CustomSubMenu key="SubMenu" title="Ayarlar" icon={<CustomImage src={menuIcons} />}>
+      <CustomSubMenu key="SubMenu" title="Tanımlamalar" icon={<CustomImage src={menuIcons} />}>
+        <CustomItem key="/user-management/school-management">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Okul Yönetimi" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+
+        <CustomItem key="/user-management/avatar-management">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Avatar Yönetimi" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+
         <CustomItem key="/settings/categories">
           <MenuItemText>
             <CustomImage src={menuIcons} />
