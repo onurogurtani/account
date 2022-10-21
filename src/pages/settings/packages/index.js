@@ -2,6 +2,7 @@ import { Form } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  confirmDialog,
   CustomButton,
   CustomCollapseCard,
   CustomForm,
@@ -92,10 +93,16 @@ const Packages = () => {
   ];
 
   const editPackage = (record) => {
-    setSelectedPackageId(record.id);
-    setIsEdit(true);
-    form.setFieldsValue(record);
-    setOpen(true);
+    confirmDialog({
+      title: 'Uyarı',
+      message: 'Seçtiğiniz Kayıt Üzerinde Değişiklik Yapılacaktır. Emin misiniz?',
+      onOk: () => {
+        setOpen(true);
+        setSelectedPackageId(record.id);
+        setIsEdit(true);
+        form.setFieldsValue(record);
+      },
+    });
   };
 
   const handleAddPackage = () => {
