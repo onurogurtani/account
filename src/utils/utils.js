@@ -28,7 +28,7 @@ export const responseJsonIgnore = (obj) => {
       if (Array.isArray(obj.data)) {
         return obj;
       } else {
-        const { insertTime, insertUserId, updateTime, updateUserId, ...currentObj } = obj?.data;
+        const { insertUserId, updateUserId, ...currentObj } = obj?.data;
         return {
           ...obj,
           data: {

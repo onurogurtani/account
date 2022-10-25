@@ -60,7 +60,6 @@ const GeneralInformation = ({
   const [introVideoFile, setIntroVideoFile] = useState();
   const [selectedSurveyOption, setSelectedSurveyOption] = useState([]);
   const [isErrorVideoUpload, setIsErrorVideoUpload] = useState();
-  const [videoCategoryList, setVideoCategoryList] = useState([]);
   const [kalturaSessionKey, setKalturaSessionKey] = useState();
 
   const [kalturaIntroVideoId, setKalturaIntroVideoId] = useState();
@@ -77,7 +76,7 @@ const GeneralInformation = ({
   const { lessons, units, lessonSubjects, lessonSubSubjects } = useSelector(
     (state) => state?.lessons,
   );
-  const { keywords } = useSelector((state) => state?.videos);
+  const { keywords, categories } = useSelector((state) => state?.videos);
 
   useEffect(() => {
     loadLessons();
@@ -117,34 +116,29 @@ const GeneralInformation = ({
   }, [dispatch]);
 
   const loadUnits = useCallback(async () => {
-    dispatch(getUnits());
+    await dispatch(getUnits());
   }, [dispatch]);
 
   const loadLessonSubjects = useCallback(async () => {
-    dispatch(getLessonSubjects());
+    await dispatch(getLessonSubjects());
   }, [dispatch]);
 
   const loadLessonSubSubjects = useCallback(async () => {
-    dispatch(getLessonSubSubjects());
+    await dispatch(getLessonSubSubjects());
   }, [dispatch]);
 
   const loadAllKeyword = useCallback(async () => {
-    dispatch(getAllVideoKeyword());
+    await dispatch(getAllVideoKeyword());
   }, [dispatch]);
 
   const { packages } = useSelector((state) => state?.packages);
   const loadPackages = useCallback(async () => {
-    dispatch(getPackageList());
+    await dispatch(getPackageList());
   }, [dispatch]);
 
   const loadVideoCategories = useCallback(async () => {
-    const action = await dispatch(getVideoCategoryList());
-    if (getVideoCategoryList.fulfilled.match(action)) {
-      setVideoCategoryList(action?.payload?.data?.items);
-    } else {
-      setVideoCategoryList([]);
-    }
-  }, [dispatch]);
+    await dispatch(getVideoCategoryList());
+  });
 
   const showAddIntroModal = () => {
     setOpen(true);
@@ -437,7 +431,7 @@ const GeneralInformation = ({
                 name="videoCategoryId"
               >
                 <CustomSelect placeholder="Video Kategorisi">
-                  {videoCategoryList?.map((item) => {
+                  {categories?.map((item) => {
                     return (
                       <Option key={item?.id} value={item?.id}>
                         {item?.name}
@@ -826,6 +820,23 @@ const GeneralInformation = ({
                 )}
               </CustomFormList>
 
+              <CustomFormItem label="Anket Ekle" name="survey">
+                <CustomCheckbox
+                  onChange={handleChangeSurveyOption}
+                  checked={selectedSurveyOption === 'before'}
+                  value="before"
+                >
+                  Eğitim Başında
+                </CustomCheckbox>
+                <CustomCheckbox
+                  onChange={handleChangeSurveyOption}
+                  checked={selectedSurveyOption === 'after'}
+                  value="after"
+                >
+                  Eğitim Sonunda
+                </CustomCheckbox>
+              </CustomFormItem>
+
               <CustomFormItem
                 rules={[
                   {
@@ -845,23 +856,6 @@ const GeneralInformation = ({
                     );
                   })}
                 </CustomSelect>
-              </CustomFormItem>
-
-              <CustomFormItem label="Anket" name="survey">
-                <CustomCheckbox
-                  onChange={handleChangeSurveyOption}
-                  checked={selectedSurveyOption === 'before'}
-                  value="before"
-                >
-                  Eğitim Öncesi
-                </CustomCheckbox>
-                <CustomCheckbox
-                  onChange={handleChangeSurveyOption}
-                  checked={selectedSurveyOption === 'after'}
-                  value="after"
-                >
-                  Eğitim Sonrası
-                </CustomCheckbox>
               </CustomFormItem>
             </div>
           </div>

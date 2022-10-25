@@ -90,7 +90,7 @@ const App = () => {
                           Component={UserManagement?.SurveyManagement}
                           authority="dashboard"
                         />
-                        
+
                         <PrivateRoute
                           path={`${match?.path}/operation-claims`}
                           Component={UserManagement?.OperationManagement}
@@ -176,6 +176,11 @@ const App = () => {
                         <PrivateRoute
                           path={`${match?.path}/add`}
                           Component={VideoManagement?.AddVideo}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/show/:id`}
+                          Component={VideoManagement?.ShowVideo}
                           authority="dashboard"
                         />
                         <Route

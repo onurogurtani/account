@@ -1,19 +1,101 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Form } from 'antd';
 import {
   CustomButton,
   CustomForm,
   CustomFormItem,
   CustomImage,
-  CustomInput,
   CustomSelect,
   Option,
 } from '../../components';
 import iconSearchWhite from '../../assets/icons/icon-white-search.svg';
 import '../../styles/tableFilter.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  getAllVideoKeyword,
+  getByFilterPagedVideos,
+  getVideoCategoryList,
+} from '../../store/slice/videoSlice';
+import { getPackageList } from '../../store/slice/packageSlice';
+import {
+  getLessons,
+  getLessonSubjects,
+  getLessonSubSubjects,
+  getUnits,
+} from '../../store/slice/lessonsSlice';
 
 const VideoFilter = () => {
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
+
+  const { categories, keywords, filterObject } = useSelector((state) => state?.videos);
+  const { packages } = useSelector((state) => state?.packages);
+  const { lessons, units, lessonSubjects, lessonSubSubjects } = useSelector(
+    (state) => state?.lessons,
+  );
+
+  useEffect(() => {
+    loadLessons();
+    loadVideoCategories();
+    loadPackages();
+    loadUnits();
+    loadLessonSubjects();
+    loadLessonSubSubjects();
+    loadAllKeyword();
+  }, []);
+
+  const loadVideoCategories = useCallback(async () => {
+    await dispatch(getVideoCategoryList());
+  }, [dispatch]);
+
+  const loadPackages = useCallback(async () => {
+    await dispatch(getPackageList());
+  }, [dispatch]);
+
+  const loadLessons = useCallback(async () => {
+    await dispatch(getLessons());
+  }, [dispatch]);
+
+  const loadUnits = useCallback(async () => {
+    await dispatch(getUnits());
+  }, [dispatch]);
+
+  const loadLessonSubjects = useCallback(async () => {
+    await dispatch(getLessonSubjects());
+  }, [dispatch]);
+
+  const loadLessonSubSubjects = useCallback(async () => {
+    await dispatch(getLessonSubSubjects());
+  }, [dispatch]);
+
+  const loadAllKeyword = useCallback(async () => {
+    await dispatch(getAllVideoKeyword());
+  }, [dispatch]);
+
+  const handleFilter = () => {
+    form.submit();
+  };
+
+  const onFinish = useCallback(
+    async (values) => {
+      try {
+        const body = {
+          ...filterObject,
+          ...values,
+          KeyWords: values.KeyWords?.toString(),
+          IsActive: values?.IsActive === 0 ? undefined : values?.IsActive,
+        };
+        await dispatch(getByFilterPagedVideos(body));
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    [dispatch, filterObject],
+  );
+
+  const handleReset = () => {
+    form.resetFields();
+  };
 
   return (
     <div className="table-filter">
@@ -23,66 +105,113 @@ const VideoFilter = () => {
         autoComplete="off"
         layout="vertical"
         form={form}
+        onFinish={onFinish}
       >
         <div className="form-item">
-          <CustomFormItem label="Video Kodu" name="videocode">
-            <CustomInput placeholder="Video Kodu" />
-          </CustomFormItem>
-
-          <CustomFormItem label="Kategori" name="category">
-            <CustomSelect
-              maxTagCount="responsive"
-              mode="multiple"
-              showArrow
-              showSearch={false}
-              placeholder="Kategori"
-            >
-              <Option key={1}>deneme</Option>
-              <Option key={2}>deneme2</Option>
-              <Option key={3}>deneme3</Option>
+          <CustomFormItem label="Video Kategorisi" name="CategoryIds">
+            <CustomSelect showArrow mode="multiple" placeholder="Video Kategorisi">
+              {categories?.map((item) => {
+                return (
+                  <Option key={item?.id} value={item?.id}>
+                    {item?.name}
+                  </Option>
+                );
+              })}
             </CustomSelect>
           </CustomFormItem>
 
-          <CustomFormItem label="Başlık" name="subject">
-            <CustomInput placeholder="Başlık" />
-          </CustomFormItem>
-
-          <CustomFormItem label="Sınıf Seviyesi" name="gradeLevel">
-            <CustomSelect placeholder="Sınıf Seviyesi">
-              <Option key={1}>deneme</Option>
-              <Option key={2}>deneme2</Option>
-              <Option key={3}>deneme3</Option>
+          <CustomFormItem label="Bağlı Olduğu Paket" name="PackageIds">
+            <CustomSelect showArrow mode="multiple" placeholder="Bağlı Olduğu Paket">
+              {packages?.map((item) => {
+                return (
+                  <Option key={item?.id} value={item?.id}>
+                    {item?.name}
+                  </Option>
+                );
+              })}
             </CustomSelect>
           </CustomFormItem>
 
-          <CustomFormItem label="Ders" name="lesson">
-            <CustomInput placeholder="Ders" />
+          <CustomFormItem label="Ders" name="LessonIds">
+            <CustomSelect showArrow mode="multiple" placeholder="Ders">
+              {lessons.map((item) => {
+                return (
+                  <Option key={item?.id} value={item?.id}>
+                    {item?.name}
+                  </Option>
+                );
+              })}
+            </CustomSelect>
           </CustomFormItem>
 
-          <CustomFormItem label="Ünite" name="unit">
-            <CustomInput placeholder="Ünite" />
+          <CustomFormItem label="Ünite" name="LessonUnitIds">
+            <CustomSelect showArrow mode="multiple" placeholder="Ünite">
+              {units?.map((item) => {
+                return (
+                  <Option key={item?.id} value={item?.id}>
+                    {item?.name}
+                  </Option>
+                );
+              })}
+            </CustomSelect>
           </CustomFormItem>
 
-          <CustomFormItem label="Durum" name="status">
+          <CustomFormItem label="Konu" name="LessonSubjectIds">
+            <CustomSelect showArrow mode="multiple" placeholder="Konu">
+              {lessonSubjects?.map((item) => {
+                return (
+                  <Option key={item?.id} value={item?.id}>
+                    {item?.name}
+                  </Option>
+                );
+              })}
+            </CustomSelect>
+          </CustomFormItem>
+
+          <CustomFormItem label="Alt Başlık" name="LessonSubSubjectIds">
+            <CustomSelect showArrow mode="multiple" placeholder="Alt Başlık">
+              {lessonSubSubjects.map((item) => {
+                return (
+                  <Option key={item?.id} value={item?.id}>
+                    {item?.name}
+                  </Option>
+                );
+              })}
+            </CustomSelect>
+          </CustomFormItem>
+
+          <CustomFormItem label="Durum" name="IsActive">
             <CustomSelect placeholder="Durum">
-              <Option key={1}>Aktif</Option>
-              <Option key={2}>Pasif</Option>
+              <Option key={0} value={0}>
+                Hepsi
+              </Option>
+              <Option key={1} value={true}>
+                Aktif
+              </Option>
+              <Option key={2} value={false}>
+                Pasif
+              </Option>
             </CustomSelect>
           </CustomFormItem>
 
-          <CustomFormItem label="Anahtar Kelime" name="keyword">
-            <CustomSelect
-              maxTagCount="responsive"
-              mode="tags"
-              tokenSeparators={[',']}
-              placeholder="Anahtar Kelime"
-            ></CustomSelect>
+          <CustomFormItem label="Anahtar Kelimeler" name="KeyWords">
+            <CustomSelect showArrow mode="multiple" placeholder="Anahtar Kelimeler">
+              {keywords?.map((item) => {
+                return (
+                  <Option key={item} value={item}>
+                    {item}
+                  </Option>
+                );
+              })}
+            </CustomSelect>
           </CustomFormItem>
 
           <div className="form-footer">
             <div className="action-buttons">
-              <CustomButton className="clear-btn">Temizle</CustomButton>
-              <CustomButton className="search-btn">
+              <CustomButton className="clear-btn" onClick={handleReset}>
+                Temizle
+              </CustomButton>
+              <CustomButton className="search-btn" onClick={handleFilter}>
                 <CustomImage className="icon-search" src={iconSearchWhite} />
                 Filtrele
               </CustomButton>
