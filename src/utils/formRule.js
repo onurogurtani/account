@@ -39,6 +39,19 @@ export const formMailRegex = async (field, value) => {
   }
 };
 
+export const tcknValidator = async (field, value) => {
+  try {
+    console.log(value);
+    const _value = value.toString().replaceAll('_', '');
+    if (!value || (_value.length === 11 && _value >= 10000000000)) {
+      return Promise.resolve();
+    }
+    return Promise.reject(new Error());
+  } catch (e) {
+    return Promise.reject(new Error());
+  }
+};
+
 export const formCreditCardRegex = async (field, value) => {
   try {
     const regex =

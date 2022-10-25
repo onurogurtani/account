@@ -17,7 +17,7 @@ import {
   Option,
 } from '../../../components';
 import { Form } from 'antd';
-import { formPhoneRegex, formMailRegex } from '../../../utils/formRule';
+import { formPhoneRegex, formMailRegex, tcknValidator } from '../../../utils/formRule';
 import '../../../styles/userInfo/userInfo.scss';
 import { addUserList } from '../../../store/slice/userListSlice';
 import { useDispatch } from 'react-redux';
@@ -32,10 +32,10 @@ const AddUser = () => {
     async (values) => {
       const data = {
         entity: {
-          name: values.name.trim(),
-          surName: values.surName.trim(),
+          nameSurname: values.nameSurname.trim(),
+          // surName: values.surName.trim(),
           userName: values.userName,
-          citizenId: values.citizenId,
+          citizenId: Number(values.citizenId),
           email: values.email,
           mobilePhones: values.mobilePhones
             .replace(/\)/g, '')
@@ -99,17 +99,17 @@ const AddUser = () => {
             layout={'horizontal'}
           >
             <CustomFormItem
-              label={<Text t="Adı" />}
-              name="name"
+              label={<Text t="Ad Soyad" />}
+              name="nameSurname"
               rules={[
                 { required: true, message: <Text t="Bilgilerinizi kontrol ediniz." /> },
                 { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
               ]}
             >
-              <CustomInput placeholder={useText('Adı')} />
+              <CustomInput placeholder="Ad Soyad" />
             </CustomFormItem>
 
-            <CustomFormItem
+            {/* <CustomFormItem
               label={<Text t="Soyadı" />}
               name="surName"
               rules={[
@@ -118,7 +118,7 @@ const AddUser = () => {
               ]}
             >
               <CustomInput placeholder={useText('Soyadı')} />
-            </CustomFormItem>
+            </CustomFormItem> */}
 
             <CustomFormItem
               label={<Text t="Kullanıcı Adı" />}
@@ -140,10 +140,12 @@ const AddUser = () => {
               name="citizenId"
               rules={[
                 { required: true, message: <Text t="TC Kimlik numaranızı kontrol ediniz." /> },
-                { type: 'number', min: 1000000000, message: <Text t="11 karakter olmalı" /> },
+                { validator: tcknValidator, message: <Text t="11 karakter olmalı" /> },
               ]}
             >
-              <CustomNumberInput autoComplete="off" maxLength={11} placeholder={useText('TCKN')} />
+              <CustomMaskInput maskPlaceholder={null} mask={'99999999999'}>
+                <CustomInput placeholder="TC Kimlik Numarası" />
+              </CustomMaskInput>
             </CustomFormItem>
 
             <CustomFormItem
