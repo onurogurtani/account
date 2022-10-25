@@ -1,4 +1,8 @@
 .video-list {
+  .video-table-list tbody tr {
+    cursor: pointer;
+  }
+
   .btn-group {
     display: flex;
     flex-wrap: wrap;

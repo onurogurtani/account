@@ -71,8 +71,29 @@ const getAllVideoKeyword = () => {
     method: 'GET',
   });
 };
+const getByVideoId = (id) => {
+  return api({
+    url: `Videos/getByVideo?Id=${id}`,
+    method: 'POST',
+  });
+};
+
+const getByFilterPagedVideos = (urlString) => {
+  return api({
+    url: `Videos/getByFilterPagedVideos?${urlString}`,
+    method: 'POST',
+  });
+};
+
+const deleteVideo = (id) => {
+  return api({
+    url: `Videos?id=${id}`,
+    method: 'DELETE',
+  });
+};
 
 const videoServices = {
+  getByFilterPagedVideos,
   addVideo,
   addVideoCategory,
   getVideoCategoryList,
@@ -81,7 +102,9 @@ const videoServices = {
   downloadVideoQuestionsExcel,
   getKalturaSessionKey,
   getAllIntroVideoList,
+  getByVideoId,
   getAllVideoKeyword,
+  deleteVideo,
 };
 
 export default videoServices;

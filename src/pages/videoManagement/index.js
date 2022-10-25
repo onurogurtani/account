@@ -12,9 +12,16 @@ const AddVideo = lazy(() =>
   })),
 );
 
+const ShowVideo = lazy(() =>
+  import('./showVideo/').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+
 const VideoManagement = {
   VideoList,
   AddVideo,
+  ShowVideo,
 };
 
 export default VideoManagement;

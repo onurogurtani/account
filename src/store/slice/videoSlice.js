@@ -1,8 +1,67 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import videoServices from '../../services/video.services';
 
+export const getByFilterPagedVideos = createAsyncThunk(
+  'videos/getByFilterPagedVideos',
+  async (data, { getState, dispatch, rejectWithValue }) => {
+    try {
+      let urlString;
+      if (data) {
+        let urlArr = [];
+        for (let item in data) {
+          if (data[item] !== undefined) {
+            if (Array.isArray(data[item])) {
+              data[item]?.map((element, idx) => {
+                let newStr = `VideoDetailSearch.${item}=${data[item][idx]}`;
+                urlArr.push(newStr);
+              });
+            } else {
+              let newStr = `VideoDetailSearch.${item}=${data[item]}`;
+              urlArr.push(newStr);
+            }
+          }
+        }
+        if (!data.OrderBy) {
+          let newStr = `VideoDetailSearch.OrderBy=UpdateTimeDESC`;
+          urlArr.push(newStr);
+        }
+        if (!data.PageNumber) {
+          let newStr = `VideoDetailSearch.PageNumber=1`;
+          urlArr.push(newStr);
+        }
+        if (!data.PageSize) {
+          let newStr = `VideoDetailSearch.PageSize=10`;
+          urlArr.push(newStr);
+        }
+        urlString = urlArr.join('&');
+      } else {
+        urlString =
+          'VideoDetailSearch.OrderBy=insertDESC&VideoDetailSearch.PageNumber=1&VideoDetailSearch.PageSize=10';
+      }
+      const response = await videoServices.getByFilterPagedVideos(urlString);
+      delete data?.PageNumber; // istek atarken göndermemiz yeterli
+      dispatch(setFilterObject(data));
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
+export const getByVideoId = createAsyncThunk(
+  'videos/getByVideoId',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await videoServices.getByVideoId(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
 export const addVideo = createAsyncThunk(
-  'addVideoCategory',
+  'videos/addVideo',
   async (data, { dispatch, rejectWithValue }) => {
     try {
       const response = await videoServices.addVideo(data);
@@ -14,7 +73,7 @@ export const addVideo = createAsyncThunk(
 );
 
 export const addVideoCategory = createAsyncThunk(
-  'addVideoCategory',
+  'videos/addVideoCategory',
   async (data, { dispatch, rejectWithValue }) => {
     try {
       const response = await videoServices.addVideoCategory(data);
@@ -26,7 +85,7 @@ export const addVideoCategory = createAsyncThunk(
 );
 
 export const getVideoCategoryList = createAsyncThunk(
-  'getVideoCategoryList',
+  'videos/getVideoCategoryList',
   async (data, { dispatch, rejectWithValue }) => {
     try {
       const response = await videoServices.getVideoCategoryList(data);
@@ -38,7 +97,7 @@ export const getVideoCategoryList = createAsyncThunk(
 );
 
 export const deleteVideoDocumentFile = createAsyncThunk(
-  'deleteVideoDocumentFile',
+  'videos/deleteVideoDocumentFile',
   async (data, { dispatch, rejectWithValue }) => {
     try {
       const response = await videoServices.deleteVideoDocumentFile(data);
@@ -50,7 +109,7 @@ export const deleteVideoDocumentFile = createAsyncThunk(
 );
 
 export const addVideoQuestionsExcel = createAsyncThunk(
-  'addVideoQuestionsExcel',
+  'videos/addVideoQuestionsExcel',
   async (data, { dispatch, rejectWithValue }) => {
     try {
       const response = await videoServices.addVideoQuestionsExcel(data);
@@ -62,7 +121,7 @@ export const addVideoQuestionsExcel = createAsyncThunk(
 );
 
 export const downloadVideoQuestionsExcel = createAsyncThunk(
-  'downloadVideoQuestionsExcel',
+  'videos/downloadVideoQuestionsExcel',
   async (data, { dispatch, rejectWithValue }) => {
     try {
       const response = await videoServices.downloadVideoQuestionsExcel();
@@ -74,7 +133,7 @@ export const downloadVideoQuestionsExcel = createAsyncThunk(
 );
 
 export const getKalturaSessionKey = createAsyncThunk(
-  'getKalturaSessionKey',
+  'videos/getKalturaSessionKey',
   async (data, { dispatch, rejectWithValue }) => {
     try {
       const response = await videoServices.getKalturaSessionKey();
@@ -86,7 +145,7 @@ export const getKalturaSessionKey = createAsyncThunk(
 );
 
 export const getAllIntroVideoList = createAsyncThunk(
-  'getAllIntroVideoList',
+  'videos/getAllIntroVideoList',
   async (data, { dispatch, rejectWithValue }) => {
     try {
       const response = await videoServices.getAllIntroVideoList();
@@ -98,7 +157,7 @@ export const getAllIntroVideoList = createAsyncThunk(
 );
 
 export const getAllVideoKeyword = createAsyncThunk(
-  'getAllVideoKeyword',
+  'videos/getAllVideoKeyword',
   async (data, { dispatch, rejectWithValue }) => {
     try {
       const response = await videoServices.getAllVideoKeyword();
@@ -109,11 +168,33 @@ export const getAllVideoKeyword = createAsyncThunk(
   },
 );
 
+export const deleteVideo = createAsyncThunk(
+  'videos/deleteVideo',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await videoServices.deleteVideo(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
 const initialState = {
   activeKey: '0',
   introVideos: [],
+  videos: [],
+  currentVideo: {},
   values: {},
   keywords: [],
+  categories: [],
+  filterObject: {},
+  tableProperty: {
+    currentPage: 1,
+    // page: 1,
+    pageSize: 10,
+    totalCount: 0,
+  },
 };
 
 export const videoSlice = createSlice({
@@ -123,8 +204,33 @@ export const videoSlice = createSlice({
     onChangeActiveKey: (state, action) => {
       state.activeKey = action?.payload;
     },
+    setFilterObject: (state, action) => {
+      state.filterObject = action.payload;
+    },
   },
   extraReducers: (builder) => {
+    builder.addCase(getByVideoId.fulfilled, (state, action) => {
+      state.currentVideo = action?.payload?.data;
+    });
+    builder.addCase(getByVideoId.rejected, (state) => {
+      state.currentVideo = {};
+    });
+
+    builder.addCase(getByFilterPagedVideos.fulfilled, (state, action) => {
+      state.videos = action?.payload?.data?.items;
+      state.tableProperty = action?.payload?.data?.pagedProperty;
+    });
+    builder.addCase(getByFilterPagedVideos.rejected, (state) => {
+      state.videos = [];
+      state.tableProperty = [];
+    });
+
+    builder.addCase(getVideoCategoryList.fulfilled, (state, action) => {
+      state.categories = action?.payload?.data?.items;
+    });
+    builder.addCase(getVideoCategoryList.rejected, (state) => {
+      state.categories = [];
+    });
     builder.addCase(getAllIntroVideoList.fulfilled, (state, action) => {
       state.introVideos = action?.payload?.data?.items;
     });
@@ -140,4 +246,4 @@ export const videoSlice = createSlice({
   },
 });
 
-export const { onChangeActiveKey } = videoSlice.actions;
+export const { onChangeActiveKey, setFilterObject } = videoSlice.actions;

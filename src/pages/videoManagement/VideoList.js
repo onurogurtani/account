@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
-  confirmDialog,
   CustomButton,
   CustomCollapseCard,
   CustomImage,
@@ -12,67 +12,69 @@ import VideoFilter from './VideoFilter';
 import iconFilter from '../../assets/icons/icon-filter.svg';
 import '../../styles/table.scss';
 import '../../styles/videoManagament/videoList.scss';
-import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getByFilterPagedVideos } from '../../store/slice/videoSlice';
+import { columns, sortFields } from './VideoListTableProperty';
 
-let Video = [
-  { id: 1, name: 'video 1' },
-  { id: 2, name: 'video 2' },
-];
 const VideoList = () => {
-  const [isVideoFilter, setisVideoFilter] = useState(false);
   const history = useHistory();
+  const dispatch = useDispatch();
 
-  const columns = [
-    {
-      title: '#',
-      dataIndex: 'id',
-      key: 'id',
-      sorter: true,
-      render: (text, record) => {
-        return <div>{text}</div>;
-      },
-    },
-    {
-      title: 'İsim',
-      dataIndex: 'name',
-      key: 'name',
-      sorter: true,
-      render: (text, record) => {
-        return <div>{text}</div>;
-      },
-    },
-  ];
-  const handleDelete = useCallback(() => {
-    confirmDialog({
-      title: <Text t="attention" />,
-      message: 'Seçilen Videoları Silmek İstediğinizden Emin Misiniz?',
-      onOk: async () => {},
-    });
+  const [isVideoFilter, setisVideoFilter] = useState(false);
+
+  const { videos, tableProperty, filterObject } = useSelector((state) => state?.videos);
+  useEffect(() => {
+    window.scrollTo(0, 0);
   }, []);
 
-  const handleDisable = useCallback(() => {
-    confirmDialog({
-      title: <Text t="attention" />,
-      message: 'Seçilen Videoları Yayından Kaldırmak Pasifleştirmek İstediğinizden Emin Misiniz?',
-      onOk: async () => {},
-    });
+  useEffect(() => {
+    loadVideos();
   }, []);
 
-  const handleActive = useCallback(() => {
-    confirmDialog({
-      title: <Text t="attention" />,
-      message: 'Seçilen Videoları Aktifleştirmek/Yayınlamak İstediğinizden Emin Misiniz?',
-      onOk: async () => {},
-    });
-  }, []);
+  const loadVideos = useCallback(async () => {
+    await dispatch(getByFilterPagedVideos());
+  }, [dispatch]);
+
   const addVideo = () => {
     history.push('/video-management/add');
+  };
+
+  const paginationProps = {
+    showSizeChanger: true,
+    showQuickJumper: {
+      goButton: <CustomButton className="go-button">Git</CustomButton>,
+    },
+    position: 'bottomRight',
+    total: tableProperty?.totalCount,
+    current: tableProperty?.currentPage,
+    pageSize: tableProperty?.pageSize,
+  };
+
+  const onChangeTable = (pagination, filters, sorter, extra) => {
+    const data = { ...filterObject };
+
+    if (extra?.action === 'paginate') {
+      data.PageNumber = pagination.current;
+      data.PageSize = pagination.pageSize;
+    }
+
+    if (sorter?.hasOwnProperty('column')) {
+      data.OrderBy = sortFields[sorter.columnKey][sorter.order];
+    }
+
+    dispatch(getByFilterPagedVideos(data));
+  };
+
+  const showVideo = (record) => {
+    history.push({
+      pathname: `/video-management/show/${record.id}`,
+    });
   };
   return (
     <CustomPageHeader
       title={<Text t="Videolar" />}
       showBreadCrumb
-      //   showHelpButton
+      showHelpButton
       routes={['Video Yönetimi']}
     >
       <CustomCollapseCard className="video-list" cardTitle={<Text t="Videolar" />}>
@@ -90,31 +92,19 @@ const VideoList = () => {
         </div>
         {isVideoFilter && <VideoFilter />}
         <CustomTable
-          dataSource={Video}
-          // onChange={handleSort}
-          rowSelection
+          dataSource={videos}
+          onChange={onChangeTable}
+          className="video-table-list"
           columns={columns}
-          // onRow={(record, rowIndex) => {
-          //   return {
-          //     onClick: (event) => showAnnouncement(record),
-          //   };
-          // }}
-          // footer={() => <TableFooter paginationProps={paginationProps} />}
-          pagination={false}
+          onRow={(record, rowIndex) => {
+            return {
+              onClick: (event) => showVideo(record),
+            };
+          }}
+          pagination={paginationProps}
           rowKey={(record) => `video-list-${record?.id || record?.headText}`}
           scroll={{ x: false }}
         />
-        <div className="btn-group">
-          <CustomButton danger type="primary" onClick={handleDelete}>
-            Seçilenleri Sil
-          </CustomButton>
-          <CustomButton className="disable-btn" type="primary" onClick={handleDisable}>
-            Seçilenleri yayından kaldır
-          </CustomButton>
-          <CustomButton className="shared-btn" type="primary" onClick={handleActive}>
-            Aktifleştir / Yayınla
-          </CustomButton>
-        </div>
       </CustomCollapseCard>
     </CustomPageHeader>
   );
