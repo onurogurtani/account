@@ -15,6 +15,7 @@ import {
   getAllVideoKeyword,
   getByFilterPagedVideos,
   getVideoCategoryList,
+  setIsFilter,
 } from '../../store/slice/videoSlice';
 import { getPackageList } from '../../store/slice/packageSlice';
 import {
@@ -28,7 +29,7 @@ const VideoFilter = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
 
-  const { categories, keywords, filterObject } = useSelector((state) => state?.videos);
+  const { categories, keywords, filterObject, isFilter } = useSelector((state) => state?.videos);
   const { packages } = useSelector((state) => state?.packages);
   const { lessons, units, lessonSubjects, lessonSubSubjects } = useSelector(
     (state) => state?.lessons,
@@ -42,6 +43,12 @@ const VideoFilter = () => {
     loadLessonSubjects();
     loadLessonSubSubjects();
     loadAllKeyword();
+  }, []);
+
+  useEffect(() => {
+    if (isFilter) {
+      form.setFieldsValue(filterObject);
+    }
   }, []);
 
   const loadVideoCategories = useCallback(async () => {
@@ -84,8 +91,10 @@ const VideoFilter = () => {
           ...values,
           KeyWords: values.KeyWords?.toString(),
           IsActive: values?.IsActive === 0 ? undefined : values?.IsActive,
+          PageNumber: 1,
         };
         await dispatch(getByFilterPagedVideos(body));
+        await dispatch(setIsFilter(true));
       } catch (e) {
         console.log(e);
       }
@@ -93,8 +102,12 @@ const VideoFilter = () => {
     [dispatch, filterObject],
   );
 
-  const handleReset = () => {
+  const handleReset = async () => {
     form.resetFields();
+    await dispatch(
+      getByFilterPagedVideos({ PageSize: filterObject.PageSize, OrderBy: filterObject.OrderBy }),
+    );
+    await dispatch(setIsFilter(false));
   };
 
   return (

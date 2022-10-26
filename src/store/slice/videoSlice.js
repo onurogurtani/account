@@ -39,7 +39,6 @@ export const getByFilterPagedVideos = createAsyncThunk(
           'VideoDetailSearch.OrderBy=insertDESC&VideoDetailSearch.PageNumber=1&VideoDetailSearch.PageSize=10';
       }
       const response = await videoServices.getByFilterPagedVideos(urlString);
-      delete data?.PageNumber; // istek atarken göndermemiz yeterli
       dispatch(setFilterObject(data));
       return response;
     } catch (error) {
@@ -184,11 +183,13 @@ const initialState = {
   activeKey: '0',
   introVideos: [],
   videos: [],
+  isFilter: false,
   currentVideo: {},
   values: {},
   keywords: [],
   categories: [],
   filterObject: {},
+  sorterObject: {},
   tableProperty: {
     currentPage: 1,
     // page: 1,
@@ -206,6 +207,12 @@ export const videoSlice = createSlice({
     },
     setFilterObject: (state, action) => {
       state.filterObject = action.payload;
+    },
+    setSorterObject: (state, action) => {
+      state.sorterObject = action.payload;
+    },
+    setIsFilter: (state, action) => {
+      state.isFilter = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -246,4 +253,5 @@ export const videoSlice = createSlice({
   },
 });
 
-export const { onChangeActiveKey, setFilterObject } = videoSlice.actions;
+export const { onChangeActiveKey, setFilterObject, setSorterObject, setIsFilter } =
+  videoSlice.actions;

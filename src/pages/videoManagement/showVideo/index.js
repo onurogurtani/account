@@ -81,7 +81,7 @@ const ShowVideo = () => {
           htmlType="submit"
           className="submit-btn"
           onClick={() => {
-            history.push('/video-management/list');
+            history.push('/video-management/list?filter=true');
           }}
         >
           Geri
