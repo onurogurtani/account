@@ -1,26 +1,62 @@
 import { Tabs } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CustomPageHeader, errorDialog, successDialog, Text } from '../../components';
-import GeneralInformation from './generalInformation';
-import AddDocument from './addDocument';
-import VideoQuestion from './videoQuestion';
-import '../../styles/videoManagament/addVideo.scss';
-import { addVideo, onChangeActiveKey } from '../../store/slice/videoSlice';
 import { useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { CustomPageHeader, errorDialog, successDialog, Text } from '../../../components';
+import {
+  editVideo,
+  getByVideoId,
+  onChangeActiveKey,
+  setKalturaIntroVideoId,
+} from '../../../store/slice/videoSlice';
+import '../../../styles/videoManagament/editVideo.scss';
+import EditDocument from './document';
+import EditGeneralInformation from './generalInformation';
+import EditVideoQuestion from './question';
 
-const AddVideo = () => {
+const EditVideo = () => {
   const { TabPane } = Tabs;
+
   const dispatch = useDispatch();
   const history = useHistory();
+  const { id } = useParams();
 
-  const { activeKey } = useSelector((state) => state?.videos);
+  const { currentVideo, activeKey, kalturaVideoId, kalturaIntroVideoId } = useSelector(
+    (state) => state?.videos,
+  );
+
   const [generalInformationData, setGeneralInformationData] = useState({});
   const [documentData, setDocumentData] = useState({});
   const [questionData, setQuestionData] = useState({});
 
-  const [introVideoKalturaId, setIntroVideoKalturaId] = useState();
-  const [videoKalturaId, setVideoKalturaId] = useState();
+  useEffect(() => {
+    return () => {
+      dispatch(onChangeActiveKey('0')); // video eklerkende kullanıldığı için sayfadan ayrılırsa sıfırlıyoruz
+    };
+  }, []);
+
+  useEffect(() => {
+    if (currentVideo.id !== Number(id)) {
+      loadVideo(id);
+    }
+  }, []);
+
+  const loadVideo = useCallback(
+    async (id) => {
+      const action = await dispatch(getByVideoId(id));
+      if (!getByVideoId.fulfilled.match(action)) {
+        if (action?.payload?.message) {
+          errorDialog({
+            title: <Text t="error" />,
+            message: action?.payload?.message,
+          });
+          history.push('/video-management/list');
+        }
+      }
+    },
+    [dispatch],
+  );
 
   useEffect(() => {
     if (Object.keys(questionData).length > 0) {
@@ -32,7 +68,7 @@ const AddVideo = () => {
     console.log('generalInformationData', generalInformationData);
     console.log('documentData', documentData);
     console.log('questionData', questionData);
-    if (!videoKalturaId) {
+    if (!kalturaVideoId) {
       errorDialog({
         title: <Text t="error" />,
         message: 'Video Henüz Yüklenmedi',
@@ -42,7 +78,7 @@ const AddVideo = () => {
       });
       return;
     }
-    if (generalInformationData.introVideo && !introVideoKalturaId) {
+    if (generalInformationData.introVideo && !kalturaIntroVideoId) {
       errorDialog({
         title: <Text t="error" />,
         message: 'Intro Video Henüz Yüklenmedi',
@@ -53,23 +89,28 @@ const AddVideo = () => {
       return;
     }
     if (generalInformationData.introVideo) {
-      generalInformationData.introVideo.kalturaIntroVideoId = introVideoKalturaId;
+      generalInformationData.introVideo.kalturaIntroVideoId = kalturaIntroVideoId;
     }
-    generalInformationData.kalturaVideoId = videoKalturaId;
+    generalInformationData.kalturaVideoId = kalturaVideoId;
+
     console.log({
       ...generalInformationData,
       videoFiles: documentData,
       videoQuestions: questionData,
     });
+
     const body = {
-      entity: {
+      //TODO: entity de olabilir net değil
+      video: {
         ...generalInformationData,
         videoFiles: documentData,
         videoQuestions: questionData,
+        id: Number(id),
       },
     };
-    const action = await dispatch(addVideo(body));
-    if (addVideo.fulfilled.match(action)) {
+    console.log(body);
+    const action = await dispatch(editVideo(body));
+    if (editVideo.fulfilled.match(action)) {
       successDialog({
         title: <Text t="success" />,
         message: action?.payload.message,
@@ -85,11 +126,6 @@ const AddVideo = () => {
       });
     }
   };
-  // useEffect(() => {
-  //   return () => {
-  //     alert('uyarı');
-  //   };
-  // }, []);
 
   const generalInformationValue = (value) => {
     console.log(value);
@@ -105,18 +141,10 @@ const AddVideo = () => {
     console.log(value);
     setQuestionData(value);
   };
-  const introVideoKalturaIdValue = (value) => {
-    console.log(value);
-    setIntroVideoKalturaId(value);
-  };
-  const videoKalturaIdValue = (value) => {
-    console.log(value);
-    setVideoKalturaId(value);
-  };
 
   return (
-    <CustomPageHeader title="Video Ekle" showBreadCrumb routes={['Video Yönetimi']}>
-      <div className="addVideo-wrapper">
+    <CustomPageHeader title="Video Düzenle" showBreadCrumb routes={['Video Yönetimi']}>
+      <div className="editVideo-wrapper">
         <Tabs
           type="card"
           activeKey={activeKey}
@@ -126,17 +154,13 @@ const AddVideo = () => {
           }}
         >
           <TabPane tab="Genel Bilgiler" key="0">
-            <GeneralInformation
-              sendValue={generalInformationValue}
-              sendIntroVideoKalturaIdValue={introVideoKalturaIdValue}
-              sendVideoKalturaIdValue={videoKalturaIdValue}
-            />
+            <EditGeneralInformation sendValue={generalInformationValue} />
           </TabPane>
           <TabPane tab="Doküman" key="1">
-            <AddDocument sendValue={documentValue} />
+            <EditDocument sendValue={documentValue} />
           </TabPane>
           <TabPane tab="Konu İle İlgili Tüm Sorular" key="2">
-            <VideoQuestion sendValue={questionValue} />
+            <EditVideoQuestion sendValue={questionValue} />
           </TabPane>
         </Tabs>
       </div>
@@ -144,4 +168,4 @@ const AddVideo = () => {
   );
 };
 
-export default AddVideo;
+export default EditVideo;

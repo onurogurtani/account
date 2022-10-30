@@ -16,16 +16,32 @@ import {
   Text,
 } from '../../../components';
 import '../../../styles/settings/categories.scss';
-import { addVideoCategory, getVideoCategoryList } from '../../../store/slice/videoSlice';
+import {
+  addVideoCategory,
+  editVideoCategory,
+  getVideoCategoryList,
+} from '../../../store/slice/videoSlice';
 
 const Categories = () => {
   const [form] = Form.useForm();
-  const [open, setOpen] = useState(false);
-  const [subCategryList, setSubCategryList] = useState([]);
+  const [parentForm] = Form.useForm();
   const dispatch = useDispatch();
 
+  const [open, setOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [categoryType, setCategoryType] = useState();
+  const [subCategryList, setSubCategryList] = useState([]);
+  const [selectedSubCategoryId, setSelectedSubCategoryId] = useState();
+
   const addSubCategory = () => {
+    setIsEdit(false);
     setOpen(true);
+  };
+  const editSubCategory = () => {
+    setOpen(true);
+    setIsEdit(true);
+    const selectedSubCategory = subCategryList?.filter((item) => item.id === selectedSubCategoryId);
+    form.setFieldsValue(selectedSubCategory[0]);
   };
 
   const handleClose = () => {
@@ -34,14 +50,37 @@ const Categories = () => {
   };
 
   const onFinish = async (values) => {
-    console.log(values);
-    if (values.categoryType === 1) {
+    if (categoryType === 1) {
       const data = {
         entity: {
           name: values?.name,
           isActive: values?.isActive,
         },
       };
+      if (isEdit) {
+        data.entity.id = selectedSubCategoryId;
+        const action = await dispatch(editVideoCategory(data));
+        if (editVideoCategory.fulfilled.match(action)) {
+          successDialog({
+            title: <Text t="success" />,
+            message: action?.payload.message,
+            onOk: async () => {
+              await handleClose();
+            },
+          });
+          handleChange(categoryType);
+          parentForm.setFieldsValue({
+            subCategoryName: data.entity.id,
+          });
+        } else {
+          errorDialog({
+            title: <Text t="error" />,
+            message: action?.payload.message,
+          });
+        }
+        return;
+      }
+
       const action = await dispatch(addVideoCategory(data));
       if (addVideoCategory.fulfilled.match(action)) {
         successDialog({
@@ -51,6 +90,7 @@ const Categories = () => {
             await handleClose();
           },
         });
+        handleChange(categoryType);
       } else {
         errorDialog({
           title: <Text t="error" />,
@@ -59,7 +99,9 @@ const Categories = () => {
       }
     }
   };
+
   const handleChange = async (value) => {
+    setCategoryType(value);
     if (value === 1) {
       const action = await dispatch(getVideoCategoryList());
       if (getVideoCategoryList.fulfilled.match(action)) {
@@ -69,11 +111,17 @@ const Categories = () => {
       }
     }
   };
+  const onSubCategoryChange = (value) => {
+    setSelectedSubCategoryId(value);
+  };
+  const onCategoryTypeChange = (value) => {
+    setCategoryType(value);
+  };
   return (
     <CustomPageHeader title="Kategoriler" showBreadCrumb routes={['Ayarlar']}>
       <CustomCollapseCard cardTitle="Kategoriler">
         <div className="categories-container">
-          <CustomForm layout="vertical" name="form">
+          <CustomForm form={parentForm} layout="vertical" name="form">
             <CustomFormItem label="Kategori Türü">
               <CustomSelect onChange={handleChange} placeholder="Kategori Türü">
                 <Option key={1} value={1}>
@@ -82,8 +130,8 @@ const Categories = () => {
               </CustomSelect>
             </CustomFormItem>
 
-            <CustomFormItem label="Alt Kategori Adı">
-              <CustomSelect placeholder="Alt Kategori Adı">
+            <CustomFormItem label="Alt Kategori Adı" name="subCategoryName">
+              <CustomSelect placeholder="Alt Kategori Adı" onChange={onSubCategoryChange}>
                 {subCategryList?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>
@@ -97,6 +145,11 @@ const Categories = () => {
               <CustomButton type="primary" onClick={addSubCategory}>
                 Alt Kategori Ekle
               </CustomButton>
+              {selectedSubCategoryId && (
+                <CustomButton type="secondary" onClick={editSubCategory}>
+                  Alt Kategori Düzenle
+                </CustomButton>
+              )}
             </div>
           </CustomForm>
         </div>
@@ -112,22 +165,24 @@ const Categories = () => {
           // width={600}
         >
           <CustomForm form={form} layout="vertical" name="form" onFinish={onFinish}>
-            <CustomFormItem
-              name="categoryType"
-              rules={[
-                {
-                  required: true,
-                  message: 'Lütfen Zorunlu Alanları Doldurunuz.',
-                },
-              ]}
-              label="Kategori Türü"
-            >
-              <CustomSelect placeholder="Kategori Türü">
-                <Option key="1" value={1}>
-                  Video Kategorileri
-                </Option>
-              </CustomSelect>
-            </CustomFormItem>
+            {!isEdit && (
+              <CustomFormItem
+                name="categoryType"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                  },
+                ]}
+                label="Kategori Türü"
+              >
+                <CustomSelect placeholder="Kategori Türü" onChange={onCategoryTypeChange}>
+                  <Option key="1" value={1}>
+                    Video Kategorileri
+                  </Option>
+                </CustomSelect>
+              </CustomFormItem>
+            )}
 
             <CustomFormItem
               rules={[

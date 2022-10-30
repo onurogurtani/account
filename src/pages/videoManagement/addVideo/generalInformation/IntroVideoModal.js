@@ -11,8 +11,8 @@ import {
   CustomModal,
   CustomSelect,
   Option,
-} from '../../../components';
-import { getAllIntroVideoList } from '../../../store/slice/videoSlice';
+} from '../../../../components';
+import { getAllIntroVideoList } from '../../../../store/slice/videoSlice';
 
 const IntroVideoModal = ({
   open,
