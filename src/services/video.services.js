@@ -10,8 +10,8 @@ const addVideo = (data) => {
 
 const editVideo = (data) => {
   return api({
-    url: `Videos`,
-    method: 'PUT',
+    url: `Videos/updateVideo`,
+    method: 'POST',
     data,
   });
 };

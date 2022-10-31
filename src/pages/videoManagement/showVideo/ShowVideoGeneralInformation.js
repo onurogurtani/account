@@ -95,7 +95,6 @@ const ShowVideoGeneralInformation = () => {
         <li>
           Anahtar Kelimeler:{' '}
           <span>
-            {console.log(currentVideo?.keyWords.split(','))}
             {currentVideo?.keyWords?.split(',').map((item, id) => {
               return (
                 <Tag className="m-1" color="cyan" key={id}>

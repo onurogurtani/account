@@ -51,7 +51,7 @@ const ShowVideo = () => {
       onOk: async () => {
         const action = await dispatch(deleteVideo(id));
         if (deleteVideo.fulfilled.match(action)) {
-          history.push('/video-management/list');
+          history.push('/video-management/list?filter=true');
         } else {
           if (action?.payload?.message) {
             errorDialog({

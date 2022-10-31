@@ -21,8 +21,10 @@ const EditGeneralInformation = ({ sendValue }) => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const history = useHistory();
+  const { id } = useParams();
 
   const [introVideoFile, setIntroVideoFile] = useState();
+  const [kalturaVideoName, setKalturaVideoName] = useState();
 
   const onFinish = (values) => {
     const introVideoObj = form.getFieldValue('introVideoObj');
@@ -54,6 +56,7 @@ const EditGeneralInformation = ({ sendValue }) => {
     } else {
       values.introVideoId = introVideoObj.id; //İntro video kayıtlılardan seçti ise
     }
+    values.kalturaVideoName = kalturaVideoName;
     sendValue(values);
     dispatch(onChangeActiveKey('1'));
   };
@@ -76,7 +79,11 @@ const EditGeneralInformation = ({ sendValue }) => {
             <StatusAndVideoTextSection form={form} />
           </div>
           <div className="right-form">
-            <VideoSection form={form} />
+            <VideoSection
+              form={form}
+              kalturaVideoName={kalturaVideoName}
+              setKalturaVideoName={setKalturaVideoName}
+            />
             <IntroVideoSection
               form={form}
               introVideoFile={introVideoFile}
@@ -90,7 +97,7 @@ const EditGeneralInformation = ({ sendValue }) => {
           <CustomButton
             type="primary"
             // htmlType="submit"
-            onClick={() => history.push('/video-management/list')}
+            onClick={() => history.push(`/video-management/show/${id}`)}
             className="back-btn"
           >
             Geri

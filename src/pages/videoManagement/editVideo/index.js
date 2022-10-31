@@ -3,7 +3,15 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
-import { CustomPageHeader, errorDialog, successDialog, Text } from '../../../components';
+import {
+  CustomButton,
+  CustomImage,
+  CustomModal,
+  CustomPageHeader,
+  errorDialog,
+  successDialog,
+  Text,
+} from '../../../components';
 import {
   editVideo,
   getByVideoId,
@@ -14,6 +22,7 @@ import '../../../styles/videoManagament/editVideo.scss';
 import EditDocument from './document';
 import EditGeneralInformation from './generalInformation';
 import EditVideoQuestion from './question';
+import modalSuccessIcon from '../../../assets/icons/icon-modal-success.svg';
 
 const EditVideo = () => {
   const { TabPane } = Tabs;
@@ -29,6 +38,11 @@ const EditVideo = () => {
   const [generalInformationData, setGeneralInformationData] = useState({});
   const [documentData, setDocumentData] = useState({});
   const [questionData, setQuestionData] = useState({});
+  const [open, setOpen] = useState();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -111,14 +125,7 @@ const EditVideo = () => {
     console.log(body);
     const action = await dispatch(editVideo(body));
     if (editVideo.fulfilled.match(action)) {
-      successDialog({
-        title: <Text t="success" />,
-        message: action?.payload.message,
-        onOk: async () => {
-          dispatch(onChangeActiveKey('0'));
-          history.push('/video-management/list');
-        },
-      });
+      setOpen(true);
     } else {
       errorDialog({
         title: <Text t="error" />,
@@ -164,6 +171,38 @@ const EditVideo = () => {
           </TabPane>
         </Tabs>
       </div>
+      <CustomModal
+        maskClosable={false}
+        footer={false}
+        title={
+          <>
+            <CustomImage src={modalSuccessIcon} /> <span>Kayıt Güncellendi</span>
+          </>
+        }
+        visible={open}
+        closable={false}
+        className="success-finish-update-video-modal"
+      >
+        <p>Şimdi Ne yapmak İstersin?</p>
+        <CustomButton
+          type="primary"
+          onClick={() =>
+            history.push({
+              pathname: `/video-management/show/${id}`,
+            })
+          }
+          className="submit-btn mb-2 mt-2"
+        >
+          Güncellenen Kaydı Görüntüle
+        </CustomButton>
+        <CustomButton
+          type="primary"
+          onClick={() => history.push('/video-management/list')}
+          className="submit-btn"
+        >
+          Tüm Kayıtları Görüntüle
+        </CustomButton>
+      </CustomModal>
     </CustomPageHeader>
   );
 };

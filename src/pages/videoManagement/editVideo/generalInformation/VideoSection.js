@@ -7,7 +7,7 @@ import { CustomButton, CustomFormItem, errorDialog, Text } from '../../../../com
 import kalturaServices from '../../../../services/kaltura.services';
 import { getKalturaSessionKey, setKalturaVideoId } from '../../../../store/slice/videoSlice';
 
-const VideoSection = ({ form }) => {
+const VideoSection = ({ form, setKalturaVideoName, kalturaVideoName }) => {
   const cancelVideoFileUpload = useRef(null);
   const dispatch = useDispatch();
 
@@ -16,7 +16,6 @@ const VideoSection = ({ form }) => {
   const [isError, setIsError] = useState();
   const [kalturaSessionKey, setKalturaSessionKey] = useState();
   const [videoUploadToken, setVideoUploadToken] = useState();
-  const [kalturaVideoName, setKalturaVideoName] = useState();
 
   useEffect(() => {
     return () => {
@@ -25,8 +24,7 @@ const VideoSection = ({ form }) => {
   }, []);
 
   useEffect(() => {
-    setKalturaVideoName(currentVideo?.kalturaVideoName || 'Dosya ismi api düzelince sil');
-    // TODO:Sil
+    setKalturaVideoName(currentVideo?.kalturaVideoName);
     dispatch(setKalturaVideoId(currentVideo?.kalturaVideoId));
   }, [currentVideo]);
 
@@ -49,7 +47,7 @@ const VideoSection = ({ form }) => {
           title: <Text t="error" />,
           message: 'Kaltura Token Id Alınamadı. INVALID_KS',
         });
-        return;
+        return false;
       }
       const upload_token = res?.data?.id;
       setVideoUploadToken(upload_token);
@@ -58,6 +56,8 @@ const VideoSection = ({ form }) => {
         title: <Text t="error" />,
         message: 'Kaltura Token Id Alınamadı.',
       });
+      setIsError('Kaltura Token Id Alınamadı.');
+      return false;
     }
   };
 
@@ -75,11 +75,15 @@ const VideoSection = ({ form }) => {
         title: <Text t="error" />,
         message: 'Kaltura Session Key Alınamadı.',
       });
-      return;
+      setIsError('Kaltura Session Key Alınamadı.');
+      return false;
     }
 
     if (!videoUploadToken) {
-      await getUploadToken(ks);
+      const getToken = await getUploadToken(ks);
+      if (!getToken) {
+        return false;
+      }
     }
   };
 
@@ -97,6 +101,8 @@ const VideoSection = ({ form }) => {
         title: <Text t="error" />,
         message: 'Kaltura Medya Entry Oluşturulamadı.',
       });
+      setIsError('Kaltura Medya Entry Oluşturulamadı.');
+      return false;
     }
   };
 
@@ -113,6 +119,8 @@ const VideoSection = ({ form }) => {
         title: <Text t="error" />,
         message: 'Yüklenen dosya entry eklenemedi.',
       });
+      setIsError('Yüklenen dosya entry eklenemedi.');
+      return false;
     }
   };
 
@@ -137,9 +145,16 @@ const VideoSection = ({ form }) => {
         videoUploadToken,
       );
       const entryId = await newEntryKaltura(file);
+      if (!entryId) {
+        return false;
+      }
       const kalturaID = await attachKalturaEntry(entryId);
+      if (!kalturaID) {
+        return false;
+      }
       setVideoUploadToken();
       dispatch(setKalturaVideoId(kalturaID?.data?.id));
+      setKalturaVideoName(file?.name);
       onSuccess('Ok');
     } catch (err) {
       if (isCancel(err)) {

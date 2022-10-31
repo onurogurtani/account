@@ -243,7 +243,7 @@ const IntroVideoSection = ({ form, introVideoFile, setIntroVideoFile }) => {
                     <span
                       className="ant-upload-list-item-name"
                       style={{
-                        color: isError ? 'red' : 'rgba(0, 0, 0, 0.45)',
+                        color: isError ? 'red' : 'rgba(0, 0, 0, 0.85)',
                       }}
                     >
                       {form.getFieldValue(['introVideoObj'])?.name}

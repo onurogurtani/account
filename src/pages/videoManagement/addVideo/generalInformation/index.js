@@ -18,6 +18,7 @@ const AddGeneralInformation = ({ sendValue }) => {
   const dispatch = useDispatch();
 
   const [introVideoFile, setIntroVideoFile] = useState();
+  const [kalturaVideoName, setKalturaVideoName] = useState();
 
   const onFinish = (values) => {
     const introVideoObj = form.getFieldValue('introVideoObj');
@@ -49,6 +50,7 @@ const AddGeneralInformation = ({ sendValue }) => {
     } else {
       values.introVideoId = introVideoObj.id; //İntro video kayıtlılardan seçti ise
     }
+    values.kalturaVideoName = kalturaVideoName;
     sendValue(values);
     dispatch(onChangeActiveKey('1'));
   };
@@ -71,7 +73,7 @@ const AddGeneralInformation = ({ sendValue }) => {
             <StatusAndVideoTextSection form={form} />
           </div>
           <div className="right-form">
-            <VideoSection form={form} />
+            <VideoSection form={form} setKalturaVideoName={setKalturaVideoName} />
             <IntroVideoSection
               form={form}
               introVideoFile={introVideoFile}
