@@ -8,7 +8,7 @@ import {
 import { Form, List, Upload } from 'antd';
 import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   CustomButton,
   CustomForm,
@@ -17,16 +17,16 @@ import {
   errorDialog,
   successDialog,
   Text,
-} from '../../../components';
+} from '../../../../components';
 import {
   addVideoQuestionsExcel,
   downloadVideoQuestionsExcel,
   onChangeActiveKey,
-} from '../../../store/slice/videoSlice';
-import '../../../styles/videoManagament/questionVideo.scss';
-import { reactQuillValidator } from '../../../utils/formRule';
+} from '../../../../store/slice/videoSlice';
+import '../../../../styles/videoManagament/questionVideo.scss';
+import { reactQuillValidator } from '../../../../utils/formRule';
 
-const VideoQuestion = ({ sendValue }) => {
+const EditVideoQuestion = ({ sendValue }) => {
   const [open, setOpen] = useState(false);
   const [questionList, setQuestionList] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState();
@@ -34,10 +34,15 @@ const VideoQuestion = ({ sendValue }) => {
   const [isExcel, setIsExcel] = useState(false);
   const [errorList, setErrorList] = useState([]);
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
+  const { currentVideo } = useSelector((state) => state?.videos);
+
+  useEffect(() => {
+    setQuestionList(currentVideo?.videoQuestions);
+  }, [currentVideo]);
 
   useEffect(() => {
     if (open) {
-      console.log('selectedQuestion', selectedQuestion);
       if (selectedQuestion) {
         form.setFieldsValue(selectedQuestion);
         setIsEdit(true);
@@ -46,7 +51,6 @@ const VideoQuestion = ({ sendValue }) => {
       }
     }
   }, [open]);
-  const [form] = Form.useForm();
 
   const showQuestionModal = async () => {
     isExcel && setIsExcel(false);
@@ -57,7 +61,6 @@ const VideoQuestion = ({ sendValue }) => {
     form.submit();
   };
   const onFinish = async (values) => {
-    console.log(values);
     if (isExcel) {
       console.log(values);
       const fileData = values?.excelFile[0]?.originFileObj;
@@ -172,17 +175,9 @@ const VideoQuestion = ({ sendValue }) => {
   };
 
   const ondownloadExcel = async () => {
-    const action = await dispatch(downloadVideoQuestionsExcel());
-    if (downloadVideoQuestionsExcel.fulfilled.match(action)) {
-      const url = URL.createObjectURL(new Blob([action.payload]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `Soru Ekle Dosya Deseni ${Date.now()}.xlsx`);
-      document.body.appendChild(link);
-      link.click();
-      console.log(action);
-    }
+    await dispatch(downloadVideoQuestionsExcel());
   };
+
   const uploadExcel = () => {
     setIsExcel(true);
     setOpen(true);
@@ -367,4 +362,4 @@ const VideoQuestion = ({ sendValue }) => {
   );
 };
 
-export default VideoQuestion;
+export default EditVideoQuestion;

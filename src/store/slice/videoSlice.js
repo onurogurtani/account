@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import videoServices from '../../services/video.services';
+import { saveAs } from 'file-saver';
 
 export const getByFilterPagedVideos = createAsyncThunk(
   'videos/getByFilterPagedVideos',
@@ -36,7 +37,7 @@ export const getByFilterPagedVideos = createAsyncThunk(
         urlString = urlArr.join('&');
       } else {
         urlString =
-          'VideoDetailSearch.OrderBy=insertDESC&VideoDetailSearch.PageNumber=1&VideoDetailSearch.PageSize=10';
+          'VideoDetailSearch.OrderBy=UpdateTimeDESC&VideoDetailSearch.PageNumber=1&VideoDetailSearch.PageSize=10';
       }
       const response = await videoServices.getByFilterPagedVideos(urlString);
       dispatch(setFilterObject(data));
@@ -71,11 +72,35 @@ export const addVideo = createAsyncThunk(
   },
 );
 
+export const editVideo = createAsyncThunk(
+  'videos/editVideo',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await videoServices.editVideo(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
 export const addVideoCategory = createAsyncThunk(
   'videos/addVideoCategory',
   async (data, { dispatch, rejectWithValue }) => {
     try {
       const response = await videoServices.addVideoCategory(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
+export const editVideoCategory = createAsyncThunk(
+  'videos/editVideoCategory',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await videoServices.editVideoCategory(data);
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -124,6 +149,7 @@ export const downloadVideoQuestionsExcel = createAsyncThunk(
   async (data, { dispatch, rejectWithValue }) => {
     try {
       const response = await videoServices.downloadVideoQuestionsExcel();
+      saveAs(response, `Soru Ekle Dosya Deseni ${Date.now()}.xlsx`);
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -181,6 +207,8 @@ export const deleteVideo = createAsyncThunk(
 
 const initialState = {
   activeKey: '0',
+  kalturaVideoId: null,
+  kalturaIntroVideoId: null,
   introVideos: [],
   videos: [],
   isFilter: false,
@@ -204,6 +232,12 @@ export const videoSlice = createSlice({
   reducers: {
     onChangeActiveKey: (state, action) => {
       state.activeKey = action?.payload;
+    },
+    setKalturaIntroVideoId: (state, action) => {
+      state.kalturaIntroVideoId = action.payload;
+    },
+    setKalturaVideoId: (state, action) => {
+      state.kalturaVideoId = action.payload;
     },
     setFilterObject: (state, action) => {
       state.filterObject = action.payload;
@@ -253,5 +287,11 @@ export const videoSlice = createSlice({
   },
 });
 
-export const { onChangeActiveKey, setFilterObject, setSorterObject, setIsFilter } =
-  videoSlice.actions;
+export const {
+  onChangeActiveKey,
+  setFilterObject,
+  setSorterObject,
+  setIsFilter,
+  setKalturaIntroVideoId,
+  setKalturaVideoId,
+} = videoSlice.actions;

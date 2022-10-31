@@ -1,6 +1,4 @@
 import axios from 'axios';
-let ks =
-  'M2MzOGM1ODE2OGEzYmNjZjg2NTE4ZjY3NDI3OGVkODk1NmY3NDZmN3wxMjU7MTI1OzE2NjYzMDI1MDc7MDsxNjY2MjE2MTA3LjAzMjk7Ozs7';
 
 const getUploadToken = (kalturaSessionKey) => {
   return axios({
@@ -8,9 +6,38 @@ const getUploadToken = (kalturaSessionKey) => {
     method: 'GET',
   });
 };
+
+const uploadFile = (
+  data,
+  onUploadProgress,
+  cancelToken,
+  kalturaSessionKey,
+  introVideoUploadToken,
+) => {
+  return axios.post(
+    `${process.env.KALTURA_URL}/uploadtoken/action/upload?ks=${kalturaSessionKey}&format=1&resume=false&finalChunk=true&resumeAt=-1&uploadTokenId=${introVideoUploadToken}`,
+    data,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress,
+      cancelToken,
+    },
+  );
+};
+
 const newEntryKaltura = (data, kalturaSessionKey) => {
   return axios({
-    url: `${process.env.KALTURA_URL}/media/action/add?ks=${ks}&format=1`,
+    url: `${process.env.KALTURA_URL}/media/action/add?ks=${kalturaSessionKey}&format=1`,
+    method: 'POST',
+    data,
+  });
+};
+
+const attachKalturaEntry = (data, kalturaSessionKey) => {
+  return axios({
+    url: `${process.env.KALTURA_URL}/media/action/addContent?ks=${kalturaSessionKey}&format=1`,
     method: 'POST',
     data,
   });
@@ -19,6 +46,8 @@ const newEntryKaltura = (data, kalturaSessionKey) => {
 const kalturaServices = {
   getUploadToken,
   newEntryKaltura,
+  uploadFile,
+  attachKalturaEntry,
 };
 
 export default kalturaServices;

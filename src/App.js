@@ -183,6 +183,11 @@ const App = () => {
                           Component={VideoManagement?.ShowVideo}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/edit/:id`}
+                          Component={VideoManagement?.EditVideo}
+                          authority="dashboard"
+                        />
                         <Route
                           component={() => (
                             <Redirect

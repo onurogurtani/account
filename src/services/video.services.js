@@ -8,10 +8,26 @@ const addVideo = (data) => {
   });
 };
 
+const editVideo = (data) => {
+  return api({
+    url: `Videos/updateVideo`,
+    method: 'POST',
+    data,
+  });
+};
+
 const addVideoCategory = (data) => {
   return api({
     url: `VideoCategorys`,
     method: 'POST',
+    data,
+  });
+};
+
+const editVideoCategory = (data) => {
+  return api({
+    url: `VideoCategorys`,
+    method: 'PUT',
     data,
   });
 };
@@ -41,12 +57,10 @@ const addVideoQuestionsExcel = (data) => {
 };
 
 const downloadVideoQuestionsExcel = () => {
-  const headers = { 'Content-Type': 'blob' };
   return api({
     url: `/Videos/downloadVideoQuestionExcel`,
     method: 'GET',
-    responseType: 'arraybuffer',
-    headers,
+    responseType: 'blob',
   });
 };
 
@@ -95,6 +109,7 @@ const deleteVideo = (id) => {
 const videoServices = {
   getByFilterPagedVideos,
   addVideo,
+  editVideo,
   addVideoCategory,
   getVideoCategoryList,
   deleteVideoDocumentFile,
@@ -105,6 +120,7 @@ const videoServices = {
   getByVideoId,
   getAllVideoKeyword,
   deleteVideo,
+  editVideoCategory,
 };
 
 export default videoServices;

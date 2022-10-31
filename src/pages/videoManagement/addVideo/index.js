@@ -1,26 +1,31 @@
 import { Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CustomPageHeader, errorDialog, successDialog, Text } from '../../components';
-import GeneralInformation from './generalInformation';
-import AddDocument from './addDocument';
-import VideoQuestion from './videoQuestion';
-import '../../styles/videoManagament/addVideo.scss';
-import { addVideo, onChangeActiveKey } from '../../store/slice/videoSlice';
+import { CustomPageHeader, errorDialog, successDialog, Text } from '../../../components';
+import { addVideo, onChangeActiveKey } from '../../../store/slice/videoSlice';
+import AddGeneralInformation from './generalInformation';
+import '../../../styles/videoManagament/addVideo.scss';
 import { useHistory } from 'react-router-dom';
+import AddDocument from './document';
+import AddVideoQuestion from './question';
 
 const AddVideo = () => {
   const { TabPane } = Tabs;
+
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const { activeKey } = useSelector((state) => state?.videos);
+  const { activeKey, kalturaVideoId, kalturaIntroVideoId } = useSelector((state) => state?.videos);
+
   const [generalInformationData, setGeneralInformationData] = useState({});
   const [documentData, setDocumentData] = useState({});
   const [questionData, setQuestionData] = useState({});
 
-  const [introVideoKalturaId, setIntroVideoKalturaId] = useState();
-  const [videoKalturaId, setVideoKalturaId] = useState();
+  useEffect(() => {
+    return () => {
+      dispatch(onChangeActiveKey('0')); // video editlerken kullanıldığı için sayfadan ayrılırsa sıfırlıyoruz
+    };
+  }, []);
 
   useEffect(() => {
     if (Object.keys(questionData).length > 0) {
@@ -32,7 +37,7 @@ const AddVideo = () => {
     console.log('generalInformationData', generalInformationData);
     console.log('documentData', documentData);
     console.log('questionData', questionData);
-    if (!videoKalturaId) {
+    if (!kalturaVideoId) {
       errorDialog({
         title: <Text t="error" />,
         message: 'Video Henüz Yüklenmedi',
@@ -42,7 +47,7 @@ const AddVideo = () => {
       });
       return;
     }
-    if (generalInformationData.introVideo && !introVideoKalturaId) {
+    if (generalInformationData.introVideo && !kalturaIntroVideoId) {
       errorDialog({
         title: <Text t="error" />,
         message: 'Intro Video Henüz Yüklenmedi',
@@ -53,14 +58,16 @@ const AddVideo = () => {
       return;
     }
     if (generalInformationData.introVideo) {
-      generalInformationData.introVideo.kalturaIntroVideoId = introVideoKalturaId;
+      generalInformationData.introVideo.kalturaIntroVideoId = kalturaIntroVideoId;
     }
-    generalInformationData.kalturaVideoId = videoKalturaId;
+    generalInformationData.kalturaVideoId = kalturaVideoId;
+
     console.log({
       ...generalInformationData,
       videoFiles: documentData,
       videoQuestions: questionData,
     });
+
     const body = {
       entity: {
         ...generalInformationData,
@@ -68,6 +75,7 @@ const AddVideo = () => {
         videoQuestions: questionData,
       },
     };
+    console.log(body);
     const action = await dispatch(addVideo(body));
     if (addVideo.fulfilled.match(action)) {
       successDialog({
@@ -85,11 +93,6 @@ const AddVideo = () => {
       });
     }
   };
-  // useEffect(() => {
-  //   return () => {
-  //     alert('uyarı');
-  //   };
-  // }, []);
 
   const generalInformationValue = (value) => {
     console.log(value);
@@ -105,14 +108,6 @@ const AddVideo = () => {
     console.log(value);
     setQuestionData(value);
   };
-  const introVideoKalturaIdValue = (value) => {
-    console.log(value);
-    setIntroVideoKalturaId(value);
-  };
-  const videoKalturaIdValue = (value) => {
-    console.log(value);
-    setVideoKalturaId(value);
-  };
 
   return (
     <CustomPageHeader title="Video Ekle" showBreadCrumb routes={['Video Yönetimi']}>
@@ -126,17 +121,13 @@ const AddVideo = () => {
           }}
         >
           <TabPane tab="Genel Bilgiler" key="0">
-            <GeneralInformation
-              sendValue={generalInformationValue}
-              sendIntroVideoKalturaIdValue={introVideoKalturaIdValue}
-              sendVideoKalturaIdValue={videoKalturaIdValue}
-            />
+            <AddGeneralInformation sendValue={generalInformationValue} />
           </TabPane>
           <TabPane tab="Doküman" key="1">
             <AddDocument sendValue={documentValue} />
           </TabPane>
           <TabPane tab="Konu İle İlgili Tüm Sorular" key="2">
-            <VideoQuestion sendValue={questionValue} />
+            <AddVideoQuestion sendValue={questionValue} />
           </TabPane>
         </Tabs>
       </div>

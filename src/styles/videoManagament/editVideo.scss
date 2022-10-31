@@ -1,4 +1,4 @@
-.addVideo-wrapper {
+.editVideo-wrapper {
   p {
     margin: 0;
   }
@@ -26,11 +26,12 @@
       display: none;
     }
   }
-  .general-information-add-form {
+
+  .general-information-edit-form {
     column-gap: 24px;
     width: 100%;
     padding-right: 12px;
-    .general-information-add-form-content {
+    .general-information-edit-form-content {
       display: flex;
       gap: 10px;
       .left-form {
@@ -100,7 +101,7 @@
       margin-left: 150px;
     }
   }
-  .general-information-add-form-footer {
+  .general-information-form-footer {
     display: flex;
     justify-content: flex-end;
     gap: 20px;
@@ -128,10 +129,27 @@
       padding: 20px;
     }
   }
-  .ant-upload-list-item-card-actions-btn {
-    opacity: 100;
-    .anticon-delete {
-      color: red;
+}
+.custom-modal.success-finish-update-video-modal {
+  .ant-modal-title {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 18px;
+
+    img {
+      width: 32px;
+      height: 28px;
+    }
+  }
+  .ant-modal-body {
+    p {
+      font-size: 18px;
+      font-weight: 500;
+    }
+    button {
+      width: 100%;
+      height: 45px;
     }
   }
 }

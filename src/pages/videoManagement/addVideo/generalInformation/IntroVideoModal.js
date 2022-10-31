@@ -11,8 +11,8 @@ import {
   CustomModal,
   CustomSelect,
   Option,
-} from '../../../components';
-import { getAllIntroVideoList } from '../../../store/slice/videoSlice';
+} from '../../../../components';
+import { getAllIntroVideoList } from '../../../../store/slice/videoSlice';
 
 const IntroVideoModal = ({
   open,
@@ -47,7 +47,10 @@ const IntroVideoModal = ({
       onOk={() => form.submit()}
       okText="Kaydet"
       cancelText="Vazgeç"
-      onCancel={() => setOpen(false)}
+      onCancel={() => {
+        form.resetFields();
+        setOpen(false);
+      }}
       bodyStyle={{ overflowY: 'auto', maxHeight: 'calc(100vh - 300px)' }}
       width={600}
     >

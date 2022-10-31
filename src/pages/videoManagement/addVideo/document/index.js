@@ -1,6 +1,6 @@
 import { DeleteOutlined, FileOutlined, InboxOutlined } from '@ant-design/icons';
 import { Form, List, Progress, Upload } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import {
   confirmDialog,
@@ -12,12 +12,13 @@ import {
   errorDialog,
   successDialog,
   Text,
-} from '../../../components';
-import axios, { CancelToken, isCancel } from 'axios';
-import '../../../styles/videoManagament/addDocument.scss';
+} from '../../../../components';
+import { CancelToken, isCancel } from 'axios';
+import '../../../../styles/videoManagament/addDocument.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteVideoDocumentFile, onChangeActiveKey } from '../../../store/slice/videoSlice';
-import { reactQuillValidator } from '../../../utils/formRule';
+import { deleteVideoDocumentFile, onChangeActiveKey } from '../../../../store/slice/videoSlice';
+import { reactQuillValidator } from '../../../../utils/formRule';
+import fileServices from '../../../../services/file.services';
 
 const AddDocument = ({ sendValue }) => {
   const [open, setOpen] = useState(false);
@@ -103,10 +104,9 @@ const AddDocument = ({ sendValue }) => {
         authorization: `Bearer ${token}`,
       },
     };
-    const action = `${process.env.PUBLIC_HOST_API}/Files`;
     setIsDisable(true);
-    await axios
-      .post(action, data, options)
+    await fileServices
+      .uploadFile(data, options)
       .then(({ data: response }) => {
         setPercent();
         setErrorUpload();
