@@ -24,6 +24,7 @@ import {
   getLessonSubSubjects,
   getUnits,
 } from '../../store/slice/lessonsSlice';
+import { turkishToLower } from '../../utils/utils';
 
 const VideoFilter = () => {
   const [form] = Form.useForm();
@@ -122,74 +123,128 @@ const VideoFilter = () => {
       >
         <div className="form-item">
           <CustomFormItem label="Video Kategorisi" name="CategoryIds">
-            <CustomSelect showArrow mode="multiple" placeholder="Video Kategorisi">
-              {categories?.map((item) => {
-                return (
-                  <Option key={item?.id} value={item?.id}>
-                    {item?.name}
-                  </Option>
-                );
-              })}
+            <CustomSelect
+              filterOption={(input, option) =>
+                turkishToLower(option.children).includes(turkishToLower(input))
+              }
+              showArrow
+              mode="multiple"
+              placeholder="Video Kategorisi"
+            >
+              {categories
+                ?.filter((item) => item.isActive)
+                ?.map((item) => {
+                  return (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.name}
+                    </Option>
+                  );
+                })}
             </CustomSelect>
           </CustomFormItem>
 
           <CustomFormItem label="Bağlı Olduğu Paket" name="PackageIds">
-            <CustomSelect showArrow mode="multiple" placeholder="Bağlı Olduğu Paket">
-              {packages?.map((item) => {
-                return (
-                  <Option key={item?.id} value={item?.id}>
-                    {item?.name}
-                  </Option>
-                );
-              })}
+            <CustomSelect
+              filterOption={(input, option) =>
+                turkishToLower(option.children).includes(turkishToLower(input))
+              }
+              showArrow
+              mode="multiple"
+              placeholder="Bağlı Olduğu Paket"
+            >
+              {packages
+                ?.filter((item) => item.isActive)
+                ?.map((item) => {
+                  return (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.name}
+                    </Option>
+                  );
+                })}
             </CustomSelect>
           </CustomFormItem>
 
           <CustomFormItem label="Ders" name="LessonIds">
-            <CustomSelect showArrow mode="multiple" placeholder="Ders">
-              {lessons.map((item) => {
-                return (
-                  <Option key={item?.id} value={item?.id}>
-                    {item?.name}
-                  </Option>
-                );
-              })}
+            <CustomSelect
+              filterOption={(input, option) =>
+                turkishToLower(option.children).includes(turkishToLower(input))
+              }
+              showArrow
+              mode="multiple"
+              placeholder="Ders"
+            >
+              {lessons
+                ?.filter((item) => item.isActive)
+                ?.map((item) => {
+                  return (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.name}
+                    </Option>
+                  );
+                })}
             </CustomSelect>
           </CustomFormItem>
 
           <CustomFormItem label="Ünite" name="LessonUnitIds">
-            <CustomSelect showArrow mode="multiple" placeholder="Ünite">
-              {units?.map((item) => {
-                return (
-                  <Option key={item?.id} value={item?.id}>
-                    {item?.name}
-                  </Option>
-                );
-              })}
+            <CustomSelect
+              filterOption={(input, option) =>
+                turkishToLower(option.children).includes(turkishToLower(input))
+              }
+              showArrow
+              mode="multiple"
+              placeholder="Ünite"
+            >
+              {units
+                ?.filter((item) => item.isActive)
+                ?.map((item) => {
+                  return (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.name}
+                    </Option>
+                  );
+                })}
             </CustomSelect>
           </CustomFormItem>
 
           <CustomFormItem label="Konu" name="LessonSubjectIds">
-            <CustomSelect showArrow mode="multiple" placeholder="Konu">
-              {lessonSubjects?.map((item) => {
-                return (
-                  <Option key={item?.id} value={item?.id}>
-                    {item?.name}
-                  </Option>
-                );
-              })}
+            <CustomSelect
+              filterOption={(input, option) =>
+                turkishToLower(option.children).includes(turkishToLower(input))
+              }
+              showArrow
+              mode="multiple"
+              placeholder="Konu"
+            >
+              {lessonSubjects
+                ?.filter((item) => item.isActive)
+                ?.map((item) => {
+                  return (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.name}
+                    </Option>
+                  );
+                })}
             </CustomSelect>
           </CustomFormItem>
 
           <CustomFormItem label="Alt Başlık" name="LessonSubSubjectIds">
-            <CustomSelect showArrow mode="multiple" placeholder="Alt Başlık">
-              {lessonSubSubjects.map((item) => {
-                return (
-                  <Option key={item?.id} value={item?.id}>
-                    {item?.name}
-                  </Option>
-                );
-              })}
+            <CustomSelect
+              filterOption={(input, option) =>
+                turkishToLower(option.children).includes(turkishToLower(input))
+              }
+              showArrow
+              mode="multiple"
+              placeholder="Alt Başlık"
+            >
+              {lessonSubSubjects
+                ?.filter((item) => item.isActive)
+                ?.map((item) => {
+                  return (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.name}
+                    </Option>
+                  );
+                })}
             </CustomSelect>
           </CustomFormItem>
 
