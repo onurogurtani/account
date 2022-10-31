@@ -93,16 +93,10 @@ const Packages = () => {
   ];
 
   const editPackage = (record) => {
-    confirmDialog({
-      title: 'Uyarı',
-      message: 'Seçtiğiniz Kayıt Üzerinde Değişiklik Yapılacaktır. Emin misiniz?',
-      onOk: () => {
-        setOpen(true);
-        setSelectedPackageId(record.id);
-        setIsEdit(true);
-        form.setFieldsValue(record);
-      },
-    });
+    setOpen(true);
+    setSelectedPackageId(record.id);
+    setIsEdit(true);
+    form.setFieldsValue(record);
   };
 
   const handleAddPackage = () => {
@@ -161,7 +155,19 @@ const Packages = () => {
       });
     }
   };
-
+  const onOk = () => {
+    if (!isEdit) {
+      form.submit();
+      return;
+    }
+    confirmDialog({
+      title: 'Uyarı',
+      message: 'Seçtiğiniz Kayıt Üzerinde Değişiklik Yapılacaktır. Emin misiniz?',
+      onOk: () => {
+        form.submit();
+      },
+    });
+  };
   return (
     <CustomPageHeader title="Paketler" showBreadCrumb routes={['Ayarlar']}>
       <CustomCollapseCard cardTitle="Paketler">
@@ -189,7 +195,7 @@ const Packages = () => {
       <CustomModal
         title="Paket Ekle"
         visible={open}
-        onOk={() => form.submit()}
+        onOk={onOk}
         okText={isEdit ? 'Güncelle ve Kaydet' : 'Kaydet'}
         cancelText="Vazgeç"
         onCancel={() => setOpen(false)}
