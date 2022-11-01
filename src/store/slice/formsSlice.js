@@ -28,7 +28,7 @@ export const getFilteredPagedForms = createAsyncThunk("forms/getFilteredPagedFor
         }
       }
       if (!data.OrderBy) {
-        let newStr = `FormDetailSearch.OrderBy=IdDESC`
+        let newStr = `FormDetailSearch.OrderBy=IdASC`
         urlArr.push(newStr)
       }
         if (!data.PageNumber) {
