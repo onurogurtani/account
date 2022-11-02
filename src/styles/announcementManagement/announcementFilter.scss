@@ -1,16 +1,42 @@
 .announcement-filter-card {
   background-color: #eceef0;
+  padding: 17px 0 17px;
+
   .filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    justify-content: space-around;
+    padding: 0;
+
+    .filter-item {
+      margin-right: 10px;
+      padding: 0;
+
+      width: 200px !important;
+      
+      display: flex;
+      justify-content: flex-start;
+      .form-filter-item {
+        display: block;
+        margin: 0;
+       
+        padding: 5px;
+      }
+      .filter-date {
+        margin-right: 24px;
+      }
+    }
+
     .form-item {
       display: flex;
       column-gap: 24px;
       flex-wrap: wrap;
       padding: 26px 24px 12px 48px;
       justify-content: space-between;
-      .form-date {
-        display: flex;
-        column-gap: 20px;
-      }
+
       .ant-form-item {
         flex-wrap: nowrap;
         margin-bottom: 24px;
@@ -46,114 +72,122 @@
           }
         }
       }
+    }
+  }
 
-      .start-date-form-item {
-        .ant-form-item-control {
-          .ant-form-item-control-input-content {
-            .ant-picker {
-              width: 152px;
-              // height: 36px;
+  .action-buttons {
+    box-sizing: border-box;
+    margin-top: 1rem;
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 10px 24px;
+    .clear-btn {
+      background: none;
+      border: none;
+      box-shadow: none;
+      font-size: 16px;
+      line-height: 20px;
+      font-family: UbuntuMedium, sans-serif;
+      text-decoration: underline !important;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 58px;
+      // height: 48px;
+      margin-right: 24px;
+      color: #3f4957;
+    }
 
-              .ant-select-selector {
-                padding: 1px 16px !important;
-                // font-size: 14px;
+    .search-btn {
+      width: 127px;
+      height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #3f4957;
+      color: #fff;
+      // font-size: 14px;
+      line-height: 20px;
+      font-family: UbuntuMedium, sans-serif;
+      border-radius: 10px;
 
-                .ant-select-selection-search {
-                  input {
-                    width: 100%;
-                  }
-                }
-              }
-            }
-          }
-        }
+      .icon-search {
+        margin-right: 15px;
       }
+    }
+  }
+}
+@media (min-width: 1500px) {
+  .announcement-filter-card {
+    .filter-form {
+      justify-content: space-around;
+      .filter-item {
+        margin-left: 10px !important;
 
-      .end-date-form-item {
-        .ant-form-item-control {
-          .ant-form-item-control-input-content {
-            .ant-picker {
-              width: 152px;
-              // height: 36px;
-
-              .ant-select-selector {
-                padding: 1px 16px !important;
-                // font-size: 14px;
-
-                .ant-select-selection-search {
-                  input {
-                    width: 100%;
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      .footer-form-item {
-        margin-bottom: 0;
-        height: 48px;
-        width: 100%;
-        align-items: self-start;
-      }
-
-      .form-footer {
-        width: 100%;
-        display: flex;
-        justify-content: flex-end;
-        flex-wrap: wrap;
-        align-items: center;
-
-        .action-buttons {
-          .clear-btn {
-            background: none;
-            border: none;
-            box-shadow: none;
-            font-size: 16px;
-            line-height: 20px;
-            font-family: UbuntuMedium, sans-serif;
-            text-decoration: underline !important;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            width: 58px;
-            // height: 48px;
-            margin-right: 24px;
-            color: #3f4957;
-          }
-
-          .search-btn {
-            width: 127px;
-            height: 48px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #3f4957;
-            color: #fff;
-            // font-size: 14px;
-            line-height: 20px;
-            font-family: UbuntuMedium, sans-serif;
-            border-radius: 10px;
-
-            .icon-search {
-              margin-right: 15px;
-            }
-          }
+        .form-filter-item {
+          width: 200px !important;
         }
       }
     }
   }
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 1300px) {
   .announcement-filter-card {
+    .filter-form {
+      justify-content: space-around;
+      .filter-item {
+        margin-left: 20px !important;
+
+        .form-filter-item {
+          width: 150px !important;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1000px) {
+  .form-filter-card {
+    .filter-form {
+      justify-content: space-around;
+      .filter-item {
+        margin-left: 20px !important;
+        .form-filter-item {
+          width: 250px !important;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .form-filter-card {
+    .filter-form {
+      justify-content: space-around;
+      .filter-item {
+        margin-left: 20px !important;
+      }
+
+      .form-filter-item {
+        width: 400px !important;
+      }
+    }
+  }
+}
+
+@media (max-width: 991.98px) {
+  .form-filter-card {
     padding: 0;
 
     .filter-form {
       .form-item {
         column-gap: 24px;
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: wrap;
         padding: 17px 24px 40px 24px !important;
 
         .ant-form-item {
@@ -217,7 +251,7 @@
   }
 }
 @media (max-width: 578px) {
-  .announcement-filter-card {
+  .form-filter-card {
     padding: 0;
     .filter-form {
       .form-item {

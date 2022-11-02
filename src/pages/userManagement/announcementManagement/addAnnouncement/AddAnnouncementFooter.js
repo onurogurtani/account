@@ -6,12 +6,14 @@ const AddAnnouncementFooter = ({
   form,
   setAnnouncementInfoData,
   setStep,
-  setIsErrorReactQuill,
+  // setIsErrorReactQuill,
   history,
 }) => {
   const onFinish = useCallback(async () => {
     try {
       const values = await form.validateFields();
+      console.log(values);
+      console.log(dayjs(values?.startDate)?.utc().format('YYYY-MM-DD'));
       const startDate = values?.startDate
         ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD')
         : undefined;
@@ -24,19 +26,21 @@ const AddAnnouncementFooter = ({
       const endHour = values?.endHour
         ? dayjs(values?.endHour)?.utc().format('HH:mm:ss')
         : undefined;
-      const data = {
-        entity: {
+        
+      const data = {     
+          announcementType:values.announcementType,
           headText: values.headText.trim(),
           text: values.text,
           startDate: startDate + 'T' + startHour + '.000Z',
           endDate: endDate + 'T' + endHour + '.000Z',
-          isActive: true,
-        },
+          isActive: true,     
       };
+      
       setAnnouncementInfoData(data);
       setStep('2');
-    } catch (e) {
-      !e.values.text && setIsErrorReactQuill(true);
+    } catch (error) {
+      console.log(error)
+      // e.values.text && setIsErrorReactQuill(true);
     }
   }, [form, setAnnouncementInfoData, setStep]);
 

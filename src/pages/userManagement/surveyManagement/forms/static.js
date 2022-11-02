@@ -2,6 +2,7 @@ import { Button } from 'antd';
 import {  RightOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
+// AŞAĞIDki data nın temizlenmesi gerekebilir: 
 const data = [
   {
     id: 1,

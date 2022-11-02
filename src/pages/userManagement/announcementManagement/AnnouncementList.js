@@ -2,6 +2,7 @@ import {
   CustomButton,
   CustomCollapseCard,
   CustomTable,
+  CustomFormItem,
   CustomSelect,
   Option,
   Text,
@@ -17,23 +18,23 @@ import { Col, Row, Tag } from 'antd';
 import AnnouncementFilter from './AnnouncementFilter';
 import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
 import dayjs from 'dayjs';
-import { useLocation } from 'react-router-dom';
+import FormItem from 'antd/lib/form/FormItem';
+//import { useLocation } from 'react-router-dom';
 
 const AnnouncementList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const location = useLocation();
+  //const location = useLocation();
   const [announcementFilterIsShow, setAnnouncementFilterIsShow] = useState(false);
-  const isPassiveRecord = location?.state?.data?.isPassiveRecord;
+  //const isPassiveRecord = location?.state?.data?.isPassiveRecord;
 
-  const { announcements, tableProperty, filterObject } = useSelector(
-    (state) => state?.announcement,
-  );
+ 
+
 
   useEffect(() => {
-    !isPassiveRecord && loadAnnouncements();
+    loadAnnouncements();
+    console.log(announcements)
   }, []);
-
   const loadAnnouncements = useCallback(async () => {
     await dispatch(
       getByFilterPagedAnnouncements({
@@ -41,8 +42,34 @@ const AnnouncementList = () => {
         PageNumber: '1',
         OrderBy: 'idDESC',
       }),
+      console.log(filterObject)
     );
   });
+
+  const { announcements, tableProperty, filterObject } = useSelector(
+    (state) => state?.announcement,
+  );
+
+  
+
+  const handleSelectChange = useCallback(
+    async (value) => {
+      
+      await dispatch(
+        getByFilterPagedAnnouncements({
+          ...filterObject,
+          IsActive: value,
+        }),
+      );
+      console.log(announcements)
+    },
+    [dispatch],
+  );
+  const activeEnum={
+    true: 'Aktif Kayıtlar',
+    false:'Arşiv Kayıtlar',
+    '': 'Seçiniz'
+  }
 
   const paginationProps = {
     showSizeChanger: true,
@@ -66,26 +93,26 @@ const AnnouncementList = () => {
       <Row justify="space-between">
         <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 8 }} lg={{ span: 6 }}>
           <CustomSelect
+            placeholder={'Seçiniz'}
+            defaultValue="Seçiniz"
             style={{
-              width: '100%',
+              width: 120,
             }}
-            placeholder="Aktif Kayıtlar"
-            value={filterObject?.IsActive}
-            optionFilterProp="children"
             onChange={handleSelectChange}
-            filterOption={(input, option) =>
-              option.children.toLocaleLowerCase().includes(input.toLocaleLowerCase())
-            }
+            value={activeEnum[filterObject.IsActive]}
+
+            
           >
-            {selectList?.map((item, id) => (
-              <Option key={id} value={item.value}>
-                {item.text}
+            {selectList?.map(({ text, value }, index) => (
+              <Option id={index} key={index} value={value}>
+                {text}
               </Option>
             ))}
           </CustomSelect>
         </Col>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 16 }} lg={{ span: 18 }}>
           <Row justify="end">
+            
             <CustomPagination className="custom-pagination" {...paginationProps} />
           </Row>
         </Col>
@@ -93,13 +120,13 @@ const AnnouncementList = () => {
     );
   };
   const selectList = [
-    { text: 'Aktif Kayıtlar', value: true },
-    { text: 'Arşiv Kayıtlar', value: false },
+    { text: 'Aktif Kayıtlar', value: 'true'},
+    { text: 'Arşiv Kayıtlar', value: 'false' }
   ];
 
   const columns = [
     {
-      title: '#',
+      title: 'No',
       dataIndex: 'id',
       key: 'id',
       sorter: true,
@@ -111,7 +138,17 @@ const AnnouncementList = () => {
       title: 'Duyuru Başlığı',
       dataIndex: 'headText',
       key: 'headText',
-      sorter: true,
+      // sorter: true,
+      render: (text, record) => {
+        return <div>{text}</div>;
+      },
+    },
+    {
+      title: 'Duyuru Tipi',
+      // dataIndex: 'announcementType'
+      dataIndex: 'headText',
+      key: 'headText',
+      // sorter: true,
       render: (text, record) => {
         return <div>{text}</div>;
       },
@@ -137,10 +174,12 @@ const AnnouncementList = () => {
         return date;
       },
     },
+    //BURADAKİ SORTER AKTİF EDİLECEK!!
     {
       title: 'Duyuru Rolleri',
       dataIndex: 'groups',
       key: 'groups',
+      // sorter: true,
       render: (_, record) => (
         <>
           {record.groups?.map((group, id) => {
@@ -157,40 +196,55 @@ const AnnouncementList = () => {
       title: 'Yayınlandı mı?',
       dataIndex: 'isPublished',
       key: 'isPublished',
-      render: (text, record) => {
-        return (
-          <div>
-            {record.isPublished ? (
-              <span className="status-text-active">Evet</span>
-            ) : (
-              <span className="status-text-passive">Hayır</span>
-            )}
-          </div>
+      render: (isPublished) => {
+        return isPublished ? (
+          <span
+            style={{
+              backgroundColor: '#00a483',
+              borderRadius: '5px',
+              boxShadow: '0 5px 5px 0',
+              padding: '5px',
+              width: '100px',
+              display: 'inline-block',
+              textAlign: 'center',
+            }}
+          >
+            Yayınlandı
+          </span>
+        ) : (
+          <span
+            style={{
+              backgroundColor: '#ff8c00',
+              borderRadius: '5px',
+              boxShadow: '0 5px 5px 0',
+              padding: '5px',
+              width: '100px',
+              display: 'inline-block',
+              textAlign: 'center',
+            }}
+          >
+            Yayınlanmadı
+          </span>
         );
       },
     },
   ];
 
-  const handleSelectChange = (value) => {
-    const data = {
-      ...filterObject,
-      IsActive: value,
-      PageNumber: '1',
-    };
-    dispatch(getByFilterPagedAnnouncements(data));
-  };
+ 
 
+  // "idDESC","endASC","endDESC","startASC","startDESC","headTextDESC","headTextASC"
   const sortFields = [
     {
       key: 'id',
       ascend: 'idASC',
       descend: 'idDESC',
     },
-    {
-      key: 'headText',
-      ascend: 'headTextASC',
-      descend: 'headTextDESC',
-    },
+    // bunun çıkarılması istendi
+    // {
+    //   key: 'headText',
+    //   ascend: 'headTextASC',
+    //   descend: 'headTextDESC',
+    // },
     {
       key: 'startDate',
       ascend: 'startASC',
@@ -201,9 +255,17 @@ const AnnouncementList = () => {
       ascend: 'endASC',
       descend: 'endDESC',
     },
+    //  Bu eklenecek :
+    //groups yerine roles şeklinde güncellenmesi daha güzel olur
+    // {
+    //   key: 'groupsName',
+    //   ascend: 'groupsASC',
+    //   descend: 'groupsDESC',
+    // },
   ];
 
   const handleSort = (pagination, filters, sorter) => {
+    console.log(sorter);
     const sortType = sortFields.filter((field) => field.key === sorter.columnKey);
     console.log(sortType);
     const data = {
@@ -249,7 +311,9 @@ const AnnouncementList = () => {
         }}
         footer={() => <TableFooter paginationProps={paginationProps} />}
         pagination={false}
-        rowKey={(record) => `draft-list-new-order-${record?.id || record?.headText}`}
+        rowKey={(record) => (record.id ? `${record?.id}` : `${record?.headText}`)}
+        // AŞAĞIDAKİ ŞEKİLDE YAZIMI HATALI:
+        // rowKey={(record) => `draft-list-new-order-${record?.id || record?.headText}`}
         scroll={{ x: false }}
       />
     </CustomCollapseCard>

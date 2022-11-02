@@ -50,8 +50,22 @@ export const getByFilterPagedAnnouncements = createAsyncThunk(
     }
   },
 );
+
+export const getByFilterPagedAnnouncementTypes = createAsyncThunk(
+  'announcement/GetByFilterPagedAnnouncementTypes',
+  async (data, { getState, dispatch, rejectWithValue }) => {
+    try{
+      let urlString= 'AnnouncementTypeDetailSearch.PageNumber=1&AnnouncementTypeDetailSearch.PageSize=1000'
+      const response = await announcementServices.getByFilterAnnouncementTypes(urlString);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
 export const addAnnouncement = createAsyncThunk(
-  'addAnnouncement',
+  'announcement/addAnnouncement',
   async (data, { dispatch, rejectWithValue }) => {
     try {
       const response = await announcementServices.addAnnouncement(data);
@@ -128,15 +142,18 @@ export const announcementSlice = createSlice({
     },
     filterObject: {
       HeadText: '',
-      Text: '',
-      IsActive: true,
-      IsPublished: '',
+      Text:'',
+      // Content: '', // düzelt diğer yerlerde de 
+      IsActive: '', // güncellenince null olarak yaz
+      IsPublished: '', // t/f ların hepsi null
       EndDate: '',
       StartDate: '',
       OrderBy: '',
       PageNumber: 1,
       PageSize: 10,
     },
+    announcementTypes:[], // gereksiz olabilir bu.
+    
   },
   reducers: {
     setFilterObject: (state, action) => {
@@ -144,10 +161,6 @@ export const announcementSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // builder.addCase(announcementGetList.fulfilled, (state, action) => {
-    //   state.announcements = action?.payload?.data?.items || [];
-    //   state.tableProperty = action?.payload?.data?.pagedProperty || {};
-    // });
     builder.addCase(getByFilterPagedAnnouncements.fulfilled, (state, action) => {
       state.announcements = action?.payload?.data?.items || [];
       state.tableProperty = action?.payload?.data?.pagedProperty || {};
@@ -161,6 +174,19 @@ export const announcementSlice = createSlice({
         totalCount: 0,
       };
     });
+    builder.addCase(getByFilterPagedAnnouncementTypes .fulfilled, (state, action) => {
+      state.announcementTypes = action?.payload?.data?.items || [];
+    });
+    builder.addCase(getByFilterPagedAnnouncementTypes.rejected, (state, action) => {
+      state.announcementTypes = [];
+      
+    });
+    builder.addCase(addAnnouncement.fulfilled, (state, action) => {
+      state.announcementData = [];
+      
+    });
+    
   },
 });
-export const { setFilterObject } = announcementSlice.actions;
+
+export const { setFilterObject, setAnnouncementData } = announcementSlice.actions;

@@ -26,8 +26,8 @@ const categoryList = [
 ];
 
 const situationList = [
-  { id: 1, key:'isActive' , value:'true', text:'Aktif' },
-  { id: 2, key:'isActive' , value:'false', text:'Pasif' },
+  { id: 1, key: 'isActive', value: 'true', text: 'Aktif' },
+  { id: 2, key: 'isActive', value: 'false', text: 'Pasif' },
 ];
 
 const FormFilter = () => {
@@ -60,8 +60,8 @@ const FormFilter = () => {
       const values = await form.validateFields();
       console.log(values);
 
-      if(values.status!= null || values.status!= undefined){
-        var Status=[values.status];
+      if (values.status != null || values.status != undefined) {
+        var Status = [values.status];
       }
       const body = {
         Name: values?.name || null,
@@ -73,8 +73,8 @@ const FormFilter = () => {
         EndDate: values?.endDate && dayjs(values?.endDate)?.format('YYYY-MM-DDT23:59:59'),
       };
 
-      console.log({...filterObject, ...body});
-      await dispatch(getFilteredPagedForms({...filterObject, ...body}));
+      console.log({ ...filterObject, ...body });
+      await dispatch(getFilteredPagedForms({ ...filterObject, ...body }));
     } catch (e) {
       console.log(e);
     }
@@ -108,24 +108,27 @@ const FormFilter = () => {
                 </div>
               }
               name="name"
-              className='filter-item'
+              className="filter-item"
             >
               <CustomSelect
-              showSearch
-              className='form-filter-item' 
-            
-              placeholder="Anket Adı Seçiniz..."
-              value={formList.Name}
-              optionFilterProp="children"
-              filterOption={(input, option) =>
-                option.children.toLocaleLowerCase().includes(input.toLocaleLowerCase())
-              }
-            >
-              {formList?.map((form) => (
-                <Option key={form.id} value={form.name}>{form.name}</Option>
-              ))}
-              <Option key={11111} value={null}>Hepsi</Option>
-            </CustomSelect>
+                showSearch
+                className="form-filter-item"
+                placeholder="Anket Adı Seçiniz..."
+                value={formList.Name}
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  option.children.toLocaleLowerCase().includes(input.toLocaleLowerCase())
+                }
+              >
+                {formList?.map((form) => (
+                  <Option key={form.id} value={form.name}>
+                    {form.name}
+                  </Option>
+                ))}
+                <Option key={11111} value={null}>
+                  Hepsi
+                </Option>
+              </CustomSelect>
             </CustomFormItem>
 
             <CustomFormItem
@@ -134,17 +137,12 @@ const FormFilter = () => {
                   <Text t="Durum" />
                   <span>:</span>
                 </div>
-                
               }
               name="status"
-              className='filter-item'
-              
+              className="filter-item"
             >
-              <CustomSelect
-                className='form-filter-item' 
-                placeholder={useText('Seçiniz')}
-              >
-                {situationList?.map(({ id, text,value, key }) => (
+              <CustomSelect className="form-filter-item" placeholder={useText('Seçiniz')}>
+                {situationList?.map(({ id, text, value, key }) => (
                   <Option id={id} key={key} value={value}>
                     {text}
                   </Option>
@@ -163,13 +161,9 @@ const FormFilter = () => {
                 </div>
               }
               name="categoryId"
-              className='filter-item'
-              
+              className="filter-item"
             >
-              <CustomSelect
-                className='form-filter-item' 
-                placeholder={useText('choose')}
-              >
+              <CustomSelect className="form-filter-item" placeholder={useText('choose')}>
                 {categoryList?.map(({ id, categoryName }) => (
                   <Option key={id} value={id}>
                     {categoryName}
@@ -188,11 +182,10 @@ const FormFilter = () => {
                 </div>
               }
               name="startDate"
-              className='filter-item filter-date'
-             
+              className="filter-item filter-date"
             >
               <CustomDatePicker
-                className='form-filter-item' 
+                className="form-filter-item"
                 placeholder={'Tarih Seçiniz'}
                 disabledDate={disabledStartDate}
               />
@@ -204,16 +197,14 @@ const FormFilter = () => {
                 </div>
               }
               name="endDate"
-              className='filter-item filter-date'
-            
+              className="filter-item filter-date"
             >
               <CustomDatePicker
-                 className='form-filter-item' 
+                className="form-filter-item"
                 placeholder={'Tarih Seçiniz'}
                 disabledDate={disabledEndDate}
               />
             </CustomFormItem>
-            
           </div>
 
           <div className="action-buttons">
