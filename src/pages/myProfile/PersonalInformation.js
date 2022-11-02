@@ -13,7 +13,7 @@ import {
 } from '../../components';
 import warning from '../../assets/icons/icon-profil-warning.svg';
 import { useCallback, useEffect, useState } from 'react';
-import { formMailRegex, formPhoneRegex } from '../../utils/formRule';
+import { formMailRegex, formPhoneRegex, nameSurnameValidator } from '../../utils/formRule';
 import { profileAlertKey } from '../../utils/keys';
 import { useSelector } from 'react-redux';
 
@@ -34,9 +34,10 @@ const PersonalInformation = ({ handleUpdate }) => {
       try {
         const body = {
           id: currentUser?.id,
-          name: values?.name,
-          surName: values?.surName,
+          // name: values?.name,
+          // surName: values?.surName,
           userName: values?.userName,
+          nameSurname: values?.nameSurname,
           mobilePhones: values.mobilePhones
             .replace(/\)/g, '')
             .replace(/\(/g, '')
@@ -58,8 +59,9 @@ const PersonalInformation = ({ handleUpdate }) => {
 
   const onCancel = useCallback(() => {
     form.setFieldsValue({
-      name: currentUser?.name,
-      surName: currentUser?.surName,
+      // name: currentUser?.name,
+      // surName: currentUser?.surName,
+      nameSurname: currentUser?.nameSurname,
       userName: currentUser?.userName,
       mobilePhones: currentUser?.mobilePhones,
       email: currentUser?.email,
@@ -102,8 +104,8 @@ const PersonalInformation = ({ handleUpdate }) => {
             onFinish={onFinish}
             form={form}
             initialValues={{
-              name: currentUser?.name,
-              surName: currentUser?.surName,
+              nameSurname: currentUser?.nameSurname,
+              // surName: currentUser?.surName,
               userName: currentUser?.userName,
               mobilePhones: currentUser?.mobilePhones,
               email: currentUser?.email,
@@ -114,23 +116,23 @@ const PersonalInformation = ({ handleUpdate }) => {
           >
             <div className="row ">
               <div className="col-md-6">
-                <CustomFormItem
+                {/* <CustomFormItem
                   label={<Text t="name" />}
                   name="name"
                   rules={[{ required: true, message: <Text t="pleaseEnterName" /> }]}
                 >
                   <CustomTextInput placeholder={useText('name')} />
-                </CustomFormItem>
+                </CustomFormItem> */}
               </div>
 
               <div className="col-md-6">
-                <CustomFormItem
+                {/* <CustomFormItem
                   label={<Text t="surname" />}
                   name="surName"
                   rules={[{ required: true, message: <Text t="pleaseEnterSurname" /> }]}
                 >
                   <CustomTextInput placeholder={useText('surname')} />
-                </CustomFormItem>
+                </CustomFormItem> */}
               </div>
             </div>
 
@@ -141,6 +143,24 @@ const PersonalInformation = ({ handleUpdate }) => {
                 </CustomFormItem>
               </div>
 
+              <div className="col-md-6">
+                <CustomFormItem
+                  label="Ad Soyad"
+                  name="nameSurname"
+                  rules={[
+                    { required: true, message: 'Lütfen Ad Soyad Giriniz.' },
+                    {
+                      validator: nameSurnameValidator,
+                      message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                    },
+                  ]}
+                >
+                  <CustomTextInput placeholder={useText('name')} />
+                </CustomFormItem>
+              </div>
+            </div>
+
+            <div className="row">
               <div className="col-md-6">
                 <CustomFormItem
                   label={<Text t="phoneNumber" />}
@@ -155,10 +175,7 @@ const PersonalInformation = ({ handleUpdate }) => {
                   </CustomMaskInput>
                 </CustomFormItem>
               </div>
-            </div>
-
-            <div className="row ">
-              <div className="col-md-12">
+              <div className="col-md-6">
                 <CustomFormItem
                   label={<Text t="emailAdress" />}
                   name="email"

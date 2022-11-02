@@ -48,7 +48,7 @@ export const packageSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getPackageList.fulfilled, (state, action) => {
-      state.packages = action?.payload?.data?.items;
+      state.packages = action?.payload?.data?.items.reverse();
     });
     builder.addCase(getPackageList.rejected, (state) => {
       state.packages = [];

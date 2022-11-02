@@ -87,12 +87,25 @@ export const dateValidator = async (field, value) => {
   }
 };
 
+export const nameSurnameValidator = async (field, value) => {
+  try {
+    const _value = value?.split(' ');
+    if (!value || _value[1].length > 0) {
+      return Promise.resolve();
+    }
+    return Promise.reject(new Error());
+  } catch (e) {
+    return Promise.reject(new Error());
+  }
+};
+
 const rule = {
   formStringMatching,
   formPhoneRegex,
   formMailRegex,
   formCreditCardRegex,
   dateValidator,
+  nameSurnameValidator,
 };
 
 export default rule;
