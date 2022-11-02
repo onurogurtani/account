@@ -14,9 +14,16 @@ const getByFilterPagedAnnouncements = (urlString) => {
     method: 'POST',
   });
 };
+
+const getByFilterAnnouncementTypes = (urlString) => {
+  return api({
+    url: `AnnouncementType/GetByFilterPagedAnnouncementTypes?${urlString}`,
+    method: 'POST',
+  });
+};
 const addAnnouncement = (data) => {
   return api({
-    url: `Announcements`,
+    url: `Announcements/Add`,
     method: 'POST',
     data,
   });
@@ -58,6 +65,7 @@ const setArchiveAnnouncements = (data) => {
 const announcementServices = {
   announcementGetList,
   getByFilterPagedAnnouncements,
+  getByFilterAnnouncementTypes ,
   addAnnouncement,
   createOrUpdateAnnouncementRole,
   editAnnouncement,

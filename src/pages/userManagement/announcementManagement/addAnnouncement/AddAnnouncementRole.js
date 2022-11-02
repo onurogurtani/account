@@ -20,6 +20,7 @@ import { DoubleRightOutlined, DoubleLeftOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 
 const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
+  console.log(announcementInfoData);
   const dispatch = useDispatch();
   const history = useHistory();
   const { groupsList } = useSelector((state) => state?.groups);
@@ -38,6 +39,7 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
 
   useEffect(() => {
     setRole(groupsList);
+    console.log(groupsList)
   }, [groupsList]);
 
   useEffect(() => {
@@ -108,6 +110,8 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
   const handleAddRole = (id) => {
     const data = role.filter((r) => r.id === id);
     setSelectedRole([...selectedRole, ...data]);
+    console.log(selectedRole);
+
   };
   const handleDeleteRole = (id) => {
     const data = selectedRole.filter((r) => r.id !== id);
@@ -136,6 +140,8 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
       });
       return;
     }
+
+    announcementInfoData.roles=selectedRole;
     const action = await dispatch(addAnnouncement(announcementInfoData));
 
     if (addAnnouncement.fulfilled.match(action)) {
