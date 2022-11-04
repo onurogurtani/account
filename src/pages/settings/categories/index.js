@@ -1,6 +1,6 @@
 import { Form } from 'antd';
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   CustomButton,
   CustomCollapseCard,
@@ -16,11 +16,8 @@ import {
   Text,
 } from '../../../components';
 import '../../../styles/settings/categories.scss';
-import {
-  addVideoCategory,
-  editVideoCategory,
-  getVideoCategoryList,
-} from '../../../store/slice/videoSlice';
+import { getByFilterPagedCategoriesQuery } from '../../../store/slice/categorySlice';
+import { getByFilterPagedSubCategories, addSubCategory, updateSubCategory } from '../../../store/slice/subCategorySlice ';
 
 const Categories = () => {
   const [form] = Form.useForm();
@@ -32,8 +29,9 @@ const Categories = () => {
   const [categoryType, setCategoryType] = useState();
   const [subCategryList, setSubCategryList] = useState([]);
   const [selectedSubCategoryId, setSelectedSubCategoryId] = useState();
+  const { categories } = useSelector((state) => state.category);
 
-  const addSubCategory = () => {
+  const addSubCategories = () => {
     setIsEdit(false);
     setOpen(true);
   };
@@ -49,40 +47,43 @@ const Categories = () => {
     setOpen(false);
   };
 
-  const onFinish = async (values) => {
-    if (categoryType === 1) {
-      const data = {
-        entity: {
-          name: values?.name,
-          isActive: values?.isActive,
-        },
-      };
-      if (isEdit) {
-        data.entity.id = selectedSubCategoryId;
-        const action = await dispatch(editVideoCategory(data));
-        if (editVideoCategory.fulfilled.match(action)) {
-          successDialog({
-            title: <Text t="success" />,
-            message: action?.payload.message,
-            onOk: async () => {
-              await handleClose();
-            },
-          });
-          handleChange(categoryType);
-          parentForm.setFieldsValue({
-            subCategoryName: data.entity.id,
-          });
-        } else {
-          errorDialog({
-            title: <Text t="error" />,
-            message: action?.payload.message,
-          });
-        }
-        return;
-      }
+  useEffect(() => {
+    dispatch(getByFilterPagedCategoriesQuery());
+  }, []);
 
-      const action = await dispatch(addVideoCategory(data));
-      if (addVideoCategory.fulfilled.match(action)) {
+  const onFinish = async (values) => {
+    const data = {
+      name: values?.name,
+      isActive: values?.isActive,
+    };
+    if (isEdit) {
+
+      data.categoryId = categoryType;
+      data.id = selectedSubCategoryId ;
+      const action = await dispatch(updateSubCategory(data));
+      if (updateSubCategory.fulfilled.match(action)) {
+        successDialog({
+          title: <Text t="success" />,
+          message: action?.payload.message,
+          onOk: async () => {
+            await handleClose();
+          },
+        });
+        handleChange(categoryType);
+        parentForm.setFieldsValue({
+          subCategoryName: data.id,
+        });
+      } else {
+        errorDialog({
+          title: <Text t="error" />,
+          message: action?.payload.message,
+        });
+      }
+      return;
+    } else {
+      data.categoryId = values?.categoryType;
+      const action = await dispatch(addSubCategory(data));
+      if (addSubCategory.fulfilled.match(action)) {
         successDialog({
           title: <Text t="success" />,
           message: action?.payload.message,
@@ -102,13 +103,12 @@ const Categories = () => {
 
   const handleChange = async (value) => {
     setCategoryType(value);
-    if (value === 1) {
-      const action = await dispatch(getVideoCategoryList());
-      if (getVideoCategoryList.fulfilled.match(action)) {
-        setSubCategryList(action?.payload?.data?.items);
-      } else {
-        setSubCategryList([]);
-      }
+    const action = await dispatch(getByFilterPagedSubCategories({ id: value }));
+    if (getByFilterPagedSubCategories.fulfilled.match(action)) {
+      console.log(action?.payload, 11);
+      setSubCategryList(action?.payload?.data?.items);
+    } else {
+      setSubCategryList([]);
     }
   };
   const onSubCategoryChange = (value) => {
@@ -124,9 +124,11 @@ const Categories = () => {
           <CustomForm form={parentForm} layout="vertical" name="form">
             <CustomFormItem label="Kategori Türü">
               <CustomSelect onChange={handleChange} placeholder="Kategori Türü">
-                <Option key={1} value={1}>
-                  Video Kategorileri
-                </Option>
+                {categories.map((item, i) => (
+                  <Option key={`categories-${item?.id}`} value={item?.id}>
+                    {item?.name}
+                  </Option>
+                ))}
               </CustomSelect>
             </CustomFormItem>
 
@@ -134,7 +136,7 @@ const Categories = () => {
               <CustomSelect placeholder="Alt Kategori Adı" onChange={onSubCategoryChange}>
                 {subCategryList?.map((item) => {
                   return (
-                    <Option key={item?.id} value={item?.id}>
+                    <Option key={`subCategories-${item?.id}`} value={item?.id}>
                       {item?.name}
                     </Option>
                   );
@@ -142,7 +144,7 @@ const Categories = () => {
               </CustomSelect>
             </CustomFormItem>
             <div className="btn-group">
-              <CustomButton type="primary" onClick={addSubCategory}>
+              <CustomButton type="primary" onClick={addSubCategories}>
                 Alt Kategori Ekle
               </CustomButton>
               {selectedSubCategoryId && (
@@ -171,15 +173,17 @@ const Categories = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                    message: 'Lütfen Zorunlu Alanları Doldurunuz.11',
                   },
                 ]}
                 label="Kategori Türü"
               >
                 <CustomSelect placeholder="Kategori Türü" onChange={onCategoryTypeChange}>
-                  <Option key="1" value={1}>
-                    Video Kategorileri
-                  </Option>
+                  {categories.map((item, i) => (
+                    <Option key={`categories-Add-${item?.id}`} value={item?.id}>
+                      {item?.name}
+                    </Option>
+                  ))}
                 </CustomSelect>
               </CustomFormItem>
             )}
@@ -188,7 +192,7 @@ const Categories = () => {
               rules={[
                 {
                   required: true,
-                  message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                  message: 'Lütfen Zorunlu Alanları Doldurunuz.22',
                 },
               ]}
               label="Alt Kategori Adı"
@@ -201,7 +205,7 @@ const Categories = () => {
               rules={[
                 {
                   required: true,
-                  message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                  message: 'Lütfen Zorunlu Alanları Doldurunuz.33',
                 },
               ]}
               label="Durumu"
