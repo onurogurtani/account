@@ -12,6 +12,7 @@ import {
   CustomSelect,
   Option,
   Text,
+  
 } from '../../../../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { dateValidator, reactQuillValidator } from '../../../../utils/formRule';
@@ -22,11 +23,14 @@ import { getByFilterPagedAnnouncementTypes } from '../../../../store/slice/annou
 const AnnouncementInfoForm = ({
   setAnnouncementInfoData,
   setStep,
+  goToRolesPage,
   history,
   initialValues,
   selectedRole,
   announcementInfoData,
   setFormData,
+  updated,
+  setUpdated,
 }) => {
   const [form] = Form.useForm();
   const location = useLocation();
@@ -34,19 +38,23 @@ const AnnouncementInfoForm = ({
   const dispatch = useDispatch();
   const [quillValue, setQuillValue] = useState('');
 
+  
+
   useEffect(() => {
     dispatch(getByFilterPagedAnnouncementTypes());
-    initialValues && setFormData(form);
-    initialValues && setAnnouncementInfoData(initialValues);
+    if(initialValues){
+      setFormData(form);
+      form.setFieldsValue({announcementType: initialValues.announcementType.name});
+      setAnnouncementInfoData(initialValues.id);
+    }
+    
   }, []);
 
   if (initialValues) {
     initialValues = {
       ...initialValues,
       endDate: dayjs(initialValues?.endDate),
-      endHour: dayjs(initialValues?.endDate),
       startDate: dayjs(initialValues?.startDate),
-      startHour: dayjs(initialValues?.startDate),
     };
   }
   const justDateEdit = location?.state?.justDateEdit;
@@ -63,57 +71,7 @@ const AnnouncementInfoForm = ({
     }
   }, [text]);
 
-  // const hoursArray= Array.from({length: 24}, (_, i) => i + 1)
-  // console.log(hoursArray);
-  // const minutesArray= Array.from({length: 60}, (_, i) => i)
-  // console.log(minutesArray);
-
-  // const disabledStartHour = (value) => {
-
-  //   if(endDate === startDate){
-  //     return value?.startOf('second') < endTime?.startOf('second')
-  //   }
-
-  //   // return (
-  //   //   value?.startOf('second') < startHour?.startOf('second') || value < dayjs().startOf('second')
-  //   // );
-  // };
-
-  const disabledStartDateTime = () => {
-    const { startHour } = form?.getFieldsValue(['startHour']);
-    const startTime = dayjs(startHour)?.format('HH:mm');
-    const { endHour } = form?.getFieldsValue(['endHour']);
-    const endTime = dayjs(endHour)?.format('HH:mm');
-    const { endDate } = form?.getFieldsValue(['endDate']);
-    const { startDate } = form?.getFieldsValue(['startDate']);
-    // const disabledHours= () => {
-    //   if (startDate == endDate){
-
-    //   }
-  };
-
-  // const disabledEndDateArea= ()=>{
-  //     if(form?.getFieldsValue(['startDate']== undefined )){
-  //       return disabled
-  //     } }
-
-  //   const disabledMinutes= () => {
-  //     return
-  //   }
-  // }
-
-  // const disabledEndHour = (value) => {
-  //   const { endHour } = form?.getFieldsValue(['endHour']);
-  //   return (
-  //     value?.startOf('second') > endHour?.startOf('second') || value < dayjs().startOf('second')
-  //   );
-  // };
-  // const dateHandler= ()=>{
-  //   const { startHour } = form?.getFieldsValue(['startHour'])
-  //   console.log(startHour);
-  //   let hnc= dayjs(startHour )?.format('HH:mm');
-  //   console.log(hnc);
-  // }
+  
 
   const disabledStartDate = (startValue) => {
     const { endDate } = form?.getFieldsValue(['endDate']);
@@ -147,6 +105,7 @@ const AnnouncementInfoForm = ({
           { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
           { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
         ]}
+        
       >
         <CustomSelect
           className="form-filter-item"
@@ -154,7 +113,7 @@ const AnnouncementInfoForm = ({
           style={{ width: '100%' }}
         >
           {announcementTypes?.map(({ id, name }, index) => (
-            <Option id={id} key={index} value={name}>
+            <Option id={id} key={id} value={name}>
               <Text t={name} />
             </Option>
           ))}
@@ -168,13 +127,13 @@ const AnnouncementInfoForm = ({
           { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
         ]}
       >
-        <CustomInput disabled={justDateEdit && true} placeholder={'Başlık'} />
+        <CustomInput placeholder={'Başlık'} />
       </CustomFormItem>
 
       <CustomFormItem
         className="editor"
         label={<Text t="İçerik" />}
-        name="text"
+        name="content"
         value={quillValue}
         rules={[
           { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
@@ -185,7 +144,7 @@ const AnnouncementInfoForm = ({
           {
             type: 'string',
             max: 2500,
-            message: 'En fazla 2500 karakter içermelidir.',
+            message: 'Duyurunuz En fazla 2500 Karakter İçerebilir.',
           },
         ]}
       >
@@ -198,7 +157,7 @@ const AnnouncementInfoForm = ({
 
       <CustomFormItem
         label={<Text t="Duyuru Anasayfa Metni" />}
-        name="mainPageText"
+        name="homePageContent"
         placeholder={
           'Bu alana girilen veri anasayfa, tüm duyurular sayfası ve pop-uplarda gösterilecek özet bilgi metnidir.'
         }
@@ -212,48 +171,29 @@ const AnnouncementInfoForm = ({
           placeholder={'Yeni duyurunuz ile ilgili özet metin'}
         />
       </CustomFormItem>
-      <Row
-        gutter={16}
-      >
-        <Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} lg={{ span: 16  }}>
+      <Row gutter={16}>
+        <Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} lg={{ span: 16 }}>
           <CustomFormItem
             label={<Text t="Başlangıç Tarihi" />}
             name="startDate"
             rules={[
               { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-              {
-                validator: dateValidator,
+              
+              { 
+                validator:dateValidator ,
                 message: <Text t="Girilen tarihleri kontrol ediniz" />,
               },
             ]}
           >
             <CustomDatePicker
               placeholder={'Tarih Seçiniz'}
-              //format="YYYY-MM-DD"
-              disabledDate={disabledStartDate}
+              disabledDate={!initialValues && disabledStartDate}
               format="YYYY-MM-DD HH:mm"
-              //disabledDate={disabledDate}
-              //disabledTime={disabledDateTime}
+             
               showTime={true}
             />
           </CustomFormItem>
         </Col>
-        {/* <Col xs={{ span: 24 }} sm={{ span: 6 }} md={{ span: 8 }} lg={{ span: 10 }}>
-          <CustomFormItem
-            name="startHour"
-            rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}
-          >
-            <CustomTimePicker
-              showNow={false}
-              format="HH:mm"
-              placeholder={'Başlangıç Saati'}
-              // disabledTime={disabledStartDateTime}
-              // disabledMinutes={minutesHandler}
-              // onChange={dateHandler}
-              // showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
-            />
-          </CustomFormItem>
-        </Col> */}
       </Row>
       <Row className="ant-form-item-extra">
         Başlangıç Tarihi Duyurunun, Arayüzünden görüntüleneceği tarihi belirlemenizi sağlar.
@@ -273,28 +213,13 @@ const AnnouncementInfoForm = ({
           >
             <CustomDatePicker
               placeholder={'Tarih Seçiniz'}
-              //format="YYYY-MM-DD"
-              disabledDate={disabledStartDate}
+              disabledDate={disabledEndDate}
               format="YYYY-MM-DD HH:mm"
-              //disabledDate={disabledDate}
-              //disabledTime={disabledDateTime}
+              hideDisabledOptions
               showTime={true}
             />
           </CustomFormItem>
         </Col>
-        {/* <Col xs={{ span: 24 }} sm={{ span: 6 }} md={{ span: 8 }} lg={{ span: 10 }}>
-          <CustomFormItem
-            name="endHour"
-            rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}
-          >
-            <CustomTimePicker
-              // disabledTime={disabledEndHour}
-              showNow={false}
-              format="HH:mm"
-              placeholder={'Bitiş Saati'}
-            />
-          </CustomFormItem>
-        </Col> */}
       </Row>
       <Row className="ant-form-item-extra">
         Bitiş Tarihi Duyurunun, Arayüzünden kaldırılacağı tarihi belirlemenizi sağlar.
@@ -312,11 +237,14 @@ const AnnouncementInfoForm = ({
           form={form}
           setAnnouncementInfoData={setAnnouncementInfoData}
           setStep={setStep}
+          goToRolesPage={goToRolesPage}
           setIsErrorReactQuill={setIsErrorReactQuill}
           history={history}
           selectedRole={selectedRole}
           announcementInfoData={announcementInfoData}
           currentId={initialValues.id}
+          updated={updated}
+          setUpdated={setUpdated}
         />
       )}
     </CustomForm>

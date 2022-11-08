@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import { CustomButton, CustomPageHeader, Text } from '../../../../components';
 import EditAnnouncementTabs from './EditAnnouncementTabs';
+import { CustomButton, Text, CustomPageHeader } from '../../../../components';
+import '../../../../styles/announcementManagement/saveAndFinish.scss';
 
 const EditAnnouncement = () => {
   const [step, setStep] = useState('1');
+  const [updated, setUpdated] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -31,7 +33,12 @@ const EditAnnouncement = () => {
         Geri
       </CustomButton>
 
-      <EditAnnouncementTabs step={step} setStep={setStep} />
+      <EditAnnouncementTabs
+        step={step}
+        setStep={setStep}
+        updated={updated}
+        setUpdated={setUpdated}
+      />
     </>
   );
 };

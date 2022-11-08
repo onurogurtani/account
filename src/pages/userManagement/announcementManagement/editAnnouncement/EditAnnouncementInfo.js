@@ -12,6 +12,8 @@ const AddAnnouncementInfo = ({
   selectedRole,
   announcementInfoData,
   setFormData,
+  updated,
+  setUpdated
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -32,6 +34,8 @@ const AddAnnouncementInfo = ({
           selectedRole={selectedRole}
           announcementInfoData={announcementInfoData}
           setFormData={setFormData}
+          updated={updated}
+          setUpdated={setUpdated}
         />
       </div>
     </CustomCollapseCard>

@@ -1,4 +1,6 @@
 import React, { useCallback } from 'react';
+import {errorDialog} from '../../../../components';
+import dayjs from 'dayjs';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { confirmDialog, CustomButton, CustomFormItem, Text } from '../../../../components';
@@ -15,6 +17,27 @@ const EditAnnouncementFooter = ({
 }) => {
   const location = useLocation();
   const justDateEdit = location?.state?.justDateEdit;
+
+  const goToRolesPage=async()=>{
+    const values = await form.validateFields();
+    if (dayjs(values.endDate).isBefore(dayjs(values.startDate))){
+      errorDialog({
+        title: <Text t="error" />,
+        message: 'Başlangıç Tarihi Bitiş Tarihinden Önce Olmalıdır',
+      });
+      return;
+    } else if (!dayjs().isBefore(dayjs(values.endDate))) {
+      errorDialog({
+        title: <Text t="error" />,
+        message: 'Duyuru Bitiş Tarihi Geçmiş Bir Tarih Olmamalıdır',
+      });
+      return;
+    }
+    else{
+      setStep('2');
+      
+    }
+  }
 
   const onCancel = () => {
     confirmDialog({
@@ -35,7 +58,10 @@ const EditAnnouncementFooter = ({
         </CustomButton>
 
         {!justDateEdit && (
-          <CustomButton className="back-btn" onClick={() => setStep('2')}>
+          <CustomButton
+            className="back-btn"
+            onClick={goToRolesPage}
+          >
             Roller Sayfasına Git
           </CustomButton>
         )}
