@@ -37,20 +37,28 @@ const createOrUpdateAnnouncementRole = (data) => {
 };
 const editAnnouncement = (data) => {
   return api({
-    url: `Announcements`,
+    url: `Announcements/Update`,
     method: 'PUT',
     data,
   });
 };
-const deleteAnnouncement = (id) => {
+const deleteAnnouncement = (data) => {
   return api({
-    url: `Announcements?id=${id}`,
+    url: `Announcements/delete`,
     method: 'DELETE',
+    data,
   });
 };
 const setPublishedAnnouncements = (data) => {
   return api({
     url: `Announcements/SetPublishedAnnouncements`,
+    method: 'POST',
+    data,
+  });
+};
+const setUnPublishedAnnouncements = (data) => {
+  return api({
+    url: `Announcements/SetUnPublishedAnnouncements`,
     method: 'POST',
     data,
   });
@@ -72,6 +80,7 @@ const announcementServices = {
   deleteAnnouncement,
   setPublishedAnnouncements,
   setArchiveAnnouncements,
+  setUnPublishedAnnouncements
 };
 
 export default announcementServices;

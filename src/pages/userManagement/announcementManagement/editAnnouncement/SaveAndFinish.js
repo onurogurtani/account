@@ -1,11 +1,16 @@
 import dayjs from 'dayjs';
 import React, { useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { CustomButton, CustomImage, CustomModal, errorDialog, Text } from '../../../../components';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import {
-  createOrUpdateAnnouncementRole,
-  editAnnouncement,
-} from '../../../../store/slice/announcementSlice';
+  CustomButton,
+  CustomImage,
+  CustomModal,
+  errorDialog,
+  Text,
+  successDialog,
+} from '../../../../components';
+import { editAnnouncement } from '../../../../store/slice/announcementSlice';
 import modalSuccessIcon from '../../../../assets/icons/icon-modal-success.svg';
 import '../../../../styles/announcementManagement/saveAndFinish.scss';
 
@@ -21,35 +26,62 @@ const SaveAndFinish = ({
   const dispatch = useDispatch();
   const [isVisible, setIsVisible] = useState(false);
   const [currentAnnouncement, setCurrentAnnouncement] = useState();
+  const { announcementTypes, updateAnnouncementObject } = useSelector(
+    (state) => state?.announcement,
+  );
+  const [updatedAnnouncement, setUpdatedAnnouncement]=useState({});
+  const location = useLocation();
+  const oldAnnouncement= location?.state?.data;
 
   const onFinish = useCallback(async () => {
+    // CONTROLLİNG START AND END DATE
+
+    const values = await form.validateFields();
+    const startOfAnnouncement = values?.startDate
+      ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD-HH-mm')
+      : undefined;
+
+    const endOfAnnouncement = values?.endDate
+      ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD-HH-mm')
+      : undefined;
+
+    if (startOfAnnouncement >= endOfAnnouncement) {
+      errorDialog({
+        title: <Text t="error" />,
+        message: 'Başlangıç Tarihi Bitiş Tarihinden Önce Olmalıdır',
+      });
+      return;
+    }
+    const type=values.announcementType;
+    const announcementObject= async(type) => {
+      const index=announcementTypes.findIndex(x => x.name === type);
+      return  announcementTypes[index];
+    };
+
     try {
-      const values = await form.validateFields();
       const startDate = values?.startDate
         ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD')
         : undefined;
       const startHour = values?.startDate
-        ? dayjs(values?.startHour)?.utc().format('HH:mm:ss')
+        ? dayjs(values?.startDate)?.utc().format('HH:mm:ss')
         : undefined;
       const endDate = values?.endDate
         ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD')
         : undefined;
-      const endHour = values?.endHour
-        ? dayjs(values?.endHour)?.utc().format('HH:mm:ss')
+      const endHour = values?.endDate
+        ? dayjs(values?.endDate)?.utc().format('HH:mm:ss')
         : undefined;
+      
+
       const data = {
-        entity: {
-          id: currentId,
-          headText: values.headText.trim(),
-          text: values.text,
-          startDate: startDate + 'T' + startHour + '.000Z',
-          endDate: endDate + 'T' + endHour + '.000Z',
-          isActive: true,
-        },
+        id: currentId,
+        announcementType: await announcementObject(type),
+        headText: values.headText.trim(),
+        content: values.content,
+        homePageContent: values.homePageContent,
+        startDate: startDate + 'T' + startHour + '.000Z',
+        endDate: endDate + 'T' + endHour + '.000Z',
       };
-      if (justDateEdit) {
-        data.entity.isPublished = true;
-      }
       if (selectedRole.length === 0) {
         errorDialog({
           title: <Text t="error" />,
@@ -61,34 +93,27 @@ const SaveAndFinish = ({
 
         return;
       }
-      setCurrentAnnouncement({ ...data.entity, groups: [...selectedRole] });
-      const action = await dispatch(editAnnouncement(data));
-      if (editAnnouncement.fulfilled.match(action)) {
-        let groupIds = selectedRole.map((d) => d.id);
-        const actioncreateOrUpdateAnnouncementRole = await dispatch(
-          createOrUpdateAnnouncementRole({
-            announcementId: action?.payload?.data?.id,
-            groupIds: groupIds,
-          }),
-        );
+      var newData = { ...data, roles: [...selectedRole] };
 
-        if (createOrUpdateAnnouncementRole.fulfilled.match(actioncreateOrUpdateAnnouncementRole)) {
-          setIsVisible(true);
-        } else {
-          errorDialog({
-            title: <Text t="error" />,
-            message: actioncreateOrUpdateAnnouncementRole?.payload?.message,
-          });
-        }
+      const action = await dispatch(editAnnouncement(newData));
+
+      if (editAnnouncement.fulfilled.match(action)) {
+        setIsVisible(true);
+        setUpdatedAnnouncement({...oldAnnouncement, ...newData});
+        
       } else {
         errorDialog({
           title: <Text t="error" />,
           message: action?.payload?.message,
         });
       }
-    } catch (e) {
-      !e.values.text && setIsErrorReactQuill(true);
+    } catch (error) {
+      // !e.values.text && setIsErrorReactQuill(true);
       setStep('1');
+      errorDialog({
+        title: <Text t="error" />,
+        message: error,
+      });
     }
   }, [form, setStep, selectedRole]);
 
@@ -109,11 +134,12 @@ const SaveAndFinish = ({
         <p>Şimdi Ne yapmak İstersin?</p>
         <CustomButton
           type="primary"
-          onClick={() =>
-            history.push({
+          onClick={
+            () =>  {
+              history.push({
               pathname: '/user-management/announcement-management/show',
-              state: { data: currentAnnouncement },
-            })
+              state: { data: updatedAnnouncement},
+            })}
           }
           className="submit-btn mb-2 mt-2"
         >

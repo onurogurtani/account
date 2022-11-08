@@ -6,11 +6,12 @@ import EditAnnouncementRole from './EditAnnouncementRole';
 
 const { TabPane } = Tabs;
 
-const EditAnnouncementTabs = ({ step, setStep }) => {
+const EditAnnouncementTabs = ({ step, setStep, setUpdated, updated }) => {
   const location = useLocation();
   const [announcementInfoData, setAnnouncementInfoData] = useState({});
   const [formData, setFormData] = useState(true);
-  const [selectedRole, setSelectedRole] = useState(location?.state?.data.groups);
+  const [selectedRole, setSelectedRole] = useState(location?.state?.data.roles);
+  const [updateId, setUpdateId] = useState('');
 
   return (
     <Tabs defaultActiveKey={'1'} activeKey={step} onChange={(key) => setStep(key)}>
@@ -21,6 +22,9 @@ const EditAnnouncementTabs = ({ step, setStep }) => {
           setAnnouncementInfoData={setAnnouncementInfoData}
           announcementInfoData={announcementInfoData}
           setFormData={setFormData}
+          setUpdateId={setUpdateId}
+          updated={updated}
+          setUpdated={setUpdated}
         />
       </TabPane>
       <TabPane tab="Roller" disabled={location?.state?.justDateEdit} key="2">
@@ -30,6 +34,8 @@ const EditAnnouncementTabs = ({ step, setStep }) => {
           setStep={setStep}
           announcementInfoData={announcementInfoData}
           formData={formData}
+          updated={updated}
+          setUpdated={setUpdated}
         />
       </TabPane>
     </Tabs>

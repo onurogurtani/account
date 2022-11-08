@@ -1,17 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import announcementServices from '../../services/announcement.services';
 
-// export const announcementGetList = createAsyncThunk(
-//   'announcement/getList',
-//   async (body, { rejectWithValue }) => {
-//     try {
-//       return await announcementServices.announcementGetList();
-//     } catch (error) {
-//       return rejectWithValue(error?.data);
-//     }
-//   },
-// );
-// Get filter announcements
+
 export const getByFilterPagedAnnouncements = createAsyncThunk(
   'announcement/GetByFilterPagedAnnouncements',
   async (data, { getState, dispatch, rejectWithValue }) => {
@@ -63,6 +53,18 @@ export const getByFilterPagedAnnouncementTypes = createAsyncThunk(
     }
   },
 );
+// export const getAllAnnouncements = createAsyncThunk(
+//   'announcement/GetAllAnnouncements',
+//   async (data, { getState, dispatch, rejectWithValue }) => {
+//     try{
+//       let urlString= 'AnnouncementTypeDetailSearch.PageNumber=1&AnnouncementTypeDetailSearch.PageSize=1000'
+//       const response = await announcementServices.getByFilterAnnouncementTypes(urlString);
+//       return response;
+//     } catch (error) {
+//       return rejectWithValue(error?.data);
+//     }
+//   },
+// );
 
 export const addAnnouncement = createAsyncThunk(
   'announcement/addAnnouncement',
@@ -101,18 +103,31 @@ export const deleteAnnouncement = createAsyncThunk(
   'deleteAnnouncement',
   async ({ id }, { rejectWithValue }) => {
     try {
-      const response = await announcementServices.deleteAnnouncement(id);
+
+      const data={id:id}
+      const response = await announcementServices.deleteAnnouncement(data);
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
     }
   },
 );
-export const setPublishedAnnouncements = createAsyncThunk(
+export const setPublishAnnouncements = createAsyncThunk(
   'setPublishedAnnouncements',
   async (data, { dispatch, rejectWithValue }) => {
     try {
       const response = await announcementServices.setPublishedAnnouncements(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+export const setUnPublishAnnouncements = createAsyncThunk(
+  'setUnPublishedAnnouncements',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await announcementServices.setUnPublishedAnnouncements(data);
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -143,22 +158,27 @@ export const announcementSlice = createSlice({
     filterObject: {
       HeadText: '',
       Text:'',
-      // Content: '', // düzelt diğer yerlerde de 
-      IsActive: '', // güncellenince null olarak yaz
-      IsPublished: '', // t/f ların hepsi null
+      IsActive: '', 
+      IsPublished: '', 
       EndDate: '',
       StartDate: '',
       OrderBy: '',
       PageNumber: 1,
       PageSize: 10,
     },
-    announcementTypes:[], // gereksiz olabilir bu.
+    announcementTypes:[],
+    updateAnnouncementObject:{},
+    allAnnouncements:[]
     
   },
   reducers: {
     setFilterObject: (state, action) => {
       state.filterObject = action.payload;
     },
+    setUpdateAnnouncementObject:(state, action)=>{
+      state.updateAnnouncementObject = action.payload;
+
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(getByFilterPagedAnnouncements.fulfilled, (state, action) => {
@@ -189,4 +209,4 @@ export const announcementSlice = createSlice({
   },
 });
 
-export const { setFilterObject, setAnnouncementData } = announcementSlice.actions;
+export const { setFilterObject, setAnnouncementData, setUpdateAnnouncementObject} = announcementSlice.actions;

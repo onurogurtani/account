@@ -20,7 +20,6 @@ import { DoubleRightOutlined, DoubleLeftOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 
 const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
-  console.log(announcementInfoData);
   const dispatch = useDispatch();
   const history = useHistory();
   const { groupsList } = useSelector((state) => state?.groups);
@@ -39,7 +38,6 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
 
   useEffect(() => {
     setRole(groupsList);
-    console.log(groupsList)
   }, [groupsList]);
 
   useEffect(() => {
@@ -110,7 +108,6 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
   const handleAddRole = (id) => {
     const data = role.filter((r) => r.id === id);
     setSelectedRole([...selectedRole, ...data]);
-    console.log(selectedRole);
 
   };
   const handleDeleteRole = (id) => {
@@ -145,34 +142,20 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
     const action = await dispatch(addAnnouncement(announcementInfoData));
 
     if (addAnnouncement.fulfilled.match(action)) {
-      let groupIds = selectedRole.map((d) => d.id);
-      const actioncreateOrUpdateAnnouncementRole = await dispatch(
-        createOrUpdateAnnouncementRole({
-          announcementId: action?.payload?.data?.id,
-          groupIds: groupIds,
-        }),
-      );
+      successDialog({
+              title: <Text t="success" />,
+              message: action.payload?.message,
+              onOk: () => {
+                history.push('/user-management/announcement-management');
+              },
+            });
+          } else {
+            errorDialog({
+              title: <Text t="error" />,
+              message: action?.payload?.message,
+            }) 
+          };
 
-      if (createOrUpdateAnnouncementRole.fulfilled.match(actioncreateOrUpdateAnnouncementRole)) {
-        successDialog({
-          title: <Text t="success" />,
-          message: actioncreateOrUpdateAnnouncementRole?.payload?.message,
-          onOk: () => {
-            history.push('/user-management/announcement-management');
-          },
-        });
-      } else {
-        errorDialog({
-          title: <Text t="error" />,
-          message: actioncreateOrUpdateAnnouncementRole?.payload?.message,
-        });
-      }
-    } else {
-      errorDialog({
-        title: <Text t="error" />,
-        message: action?.payload?.message,
-      });
-    }
   };
   return (
     <CustomCollapseCard className="add-announcement-role-card" cardTitle={<Text t="Roller" />}>

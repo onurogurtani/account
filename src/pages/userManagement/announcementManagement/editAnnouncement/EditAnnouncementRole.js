@@ -9,6 +9,8 @@ import {
   CustomCollapseCard,
   CustomTable,
   Text,
+  updated,
+  setUpdated,
 } from '../../../../components';
 import { DoubleRightOutlined, DoubleLeftOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
@@ -21,6 +23,8 @@ const EditAnnouncementRole = ({
   selectedRole,
   setSelectedRole,
   formData,
+  updated,
+  setUpdated,
 }) => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -168,6 +172,8 @@ const EditAnnouncementRole = ({
           selectedRole={selectedRole}
           setStep={setStep}
           history={history}
+          updated={updated}
+          setUpdated={setUpdated}
         />
       </div>
     </CustomCollapseCard>

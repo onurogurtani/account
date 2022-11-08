@@ -24,14 +24,13 @@ import { useEffect } from 'react';
 const AnnouncementFilter = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
-  const { filterObject, announcementTypes } = useSelector((state) => state?.announcement);
-  
+  const { filterObject, announcementTypes, announcements } = useSelector((state) => state?.announcement);
+
 
   useEffect(() => {
     form.resetFields();
-    dispatch(getByFilterPagedAnnouncementTypes());
-    
-  }, []);
+    dispatch(getByFilterPagedAnnouncementTypes());    
+  }, [dispatch]);
 
   const handleClear = useCallback(async () => {
     form.resetFields();
@@ -52,7 +51,6 @@ const AnnouncementFilter = () => {
   const handleSearch = useCallback(async () => {
     try {
       const values = await form.validateFields();
-      console.log(values);
 
       if (values.announcementType == null || values.announcementType == undefined) {
         var announcementType= null
@@ -67,11 +65,9 @@ const AnnouncementFilter = () => {
           : undefined,
         endDate: values?.endDate && dayjs(values?.endDate)?.format('YYYY-MM-DDT23:59:59'),
       };
-      console.log(body);
       await dispatch(getByFilterPagedAnnouncements({ ...filterObject, ...body }));
 
     } catch (e) {
-      console.log(e);
     }
   }, [dispatch, filterObject, form]);
 
@@ -95,7 +91,41 @@ const AnnouncementFilter = () => {
     <div className="announcement-filter-card">
       <CustomForm name="filterForm" autoComplete="off" layout={'vertical'} form={form}>
         <div className="filter-form">
-          <CustomFormItem
+        <CustomFormItem
+              label={
+                <div>
+                  <Text t="Duyuru Başlığı" />
+                </div>
+              }
+              name="headText"
+              className="filter-item"
+            >
+              <CustomSelect
+              className="form-filter-item"
+              placeholder={'Duyuru Adı Seçiniz...'}
+              style={{
+                width: '100%',
+              }}
+                showSearch
+               
+               
+                //value={announcements.Name}
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  option.children.toLocaleLowerCase().includes(input.toLocaleLowerCase())
+                }
+              >
+                {announcements?.map(({id, headText}) => (
+                  <Option key={id} value={headText}>
+                    {headText}
+                  </Option>
+                ))}
+                <Option key={11111} value={null}>
+                  Hepsi
+                </Option>
+              </CustomSelect>
+            </CustomFormItem>
+          {/* <CustomFormItem
             label={
               <div>
                 <Text t="Duyuru Başlığı" />
@@ -112,7 +142,7 @@ const AnnouncementFilter = () => {
               autoComplete="off"
               placeholder={'Duyuru Başlığı'}
             />
-          </CustomFormItem>
+          </CustomFormItem> */}
           <CustomFormItem
             label={
               <div>
@@ -121,6 +151,7 @@ const AnnouncementFilter = () => {
             }
             name="announcementType"
             className="filter-item"
+            onClick={ (value)=>{ return value==''; } }
           >
             <CustomSelect
               className="form-filter-item"

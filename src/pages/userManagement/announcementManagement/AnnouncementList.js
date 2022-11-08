@@ -13,12 +13,17 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import '../../../styles/announcementManagement/announcementList.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { getByFilterPagedAnnouncements } from '../../../store/slice/announcementSlice';
-import { Col, Row, Tag } from 'antd';
+import {
+  getByFilterPagedAnnouncements,
+  setUpdateAnnouncementObject,
+} from '../../../store/slice/announcementSlice';
+import { Col, Row, Tag, Button } from 'antd';
+import { NodeExpandOutlined, RightOutlined } from '@ant-design/icons';
 import AnnouncementFilter from './AnnouncementFilter';
 import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
 import dayjs from 'dayjs';
 import FormItem from 'antd/lib/form/FormItem';
+import cardOrderDetailsServices from '../../../services/cardOrderDetails.services';
 //import { useLocation } from 'react-router-dom';
 
 const AnnouncementList = () => {
@@ -27,13 +32,32 @@ const AnnouncementList = () => {
   //const location = useLocation();
   const [announcementFilterIsShow, setAnnouncementFilterIsShow] = useState(false);
   //const isPassiveRecord = location?.state?.data?.isPassiveRecord;
+  const { announcements, tableProperty, filterObject } = useSelector(
+    (state) => state?.announcement,
+  );
 
- 
+  const array = [
+    { name: 'Konu 1', isActive: true, lessonUnitId: 1, id: 1 },
+    { name: 'Tarih Bilimi ve Özellikleri', isActive: false, lessonUnitId: 14, id: 12 },
+    { name: 'Tarihe Yardımcı Bilimler', isActive: false, lessonUnitId: 14, id: 13 },
+    { name: 'Hız Problemleri', isActive: false, lessonUnitId: 15, id: 14 },
+    { name: 'Türkçe Konu', isActive: false, lessonUnitId: 16, id: 15 },
+    { name: 'string', isActive: true, lessonUnitId: 0, id: 16 },
+  ];
 
+  const listRoles = useCallback((record) => {
+    if (record.roles.length == 0) {
+      return null;
+    }
+    const newArray = record.roles.map((r) => {
+      return r.groupName;
+    });
+    const unifiedRoles = newArray.join(' , ');
+    return unifiedRoles;
+  }, []);
 
   useEffect(() => {
     loadAnnouncements();
-    console.log(announcements)
   }, []);
   const loadAnnouncements = useCallback(async () => {
     await dispatch(
@@ -42,34 +66,25 @@ const AnnouncementList = () => {
         PageNumber: '1',
         OrderBy: 'idDESC',
       }),
-      console.log(filterObject)
     );
   });
 
-  const { announcements, tableProperty, filterObject } = useSelector(
-    (state) => state?.announcement,
-  );
-
-  
-
   const handleSelectChange = useCallback(
     async (value) => {
-      
       await dispatch(
         getByFilterPagedAnnouncements({
           ...filterObject,
           IsActive: value,
         }),
       );
-      console.log(announcements)
     },
     [dispatch],
   );
-  const activeEnum={
+  const activeEnum = {
     true: 'Aktif Kayıtlar',
-    false:'Arşiv Kayıtlar',
-    '': 'Seçiniz'
-  }
+    false: 'Arşiv Kayıtlar',
+    '': 'Seçiniz',
+  };
 
   const paginationProps = {
     showSizeChanger: true,
@@ -100,8 +115,6 @@ const AnnouncementList = () => {
             }}
             onChange={handleSelectChange}
             value={activeEnum[filterObject.IsActive]}
-
-            
           >
             {selectList?.map(({ text, value }, index) => (
               <Option id={index} key={index} value={value}>
@@ -112,7 +125,6 @@ const AnnouncementList = () => {
         </Col>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 16 }} lg={{ span: 18 }}>
           <Row justify="end">
-            
             <CustomPagination className="custom-pagination" {...paginationProps} />
           </Row>
         </Col>
@@ -120,8 +132,8 @@ const AnnouncementList = () => {
     );
   };
   const selectList = [
-    { text: 'Aktif Kayıtlar', value: 'true'},
-    { text: 'Arşiv Kayıtlar', value: 'false' }
+    { text: 'Aktif Kayıtlar', value: 'true' },
+    { text: 'Arşiv Kayıtlar', value: 'false' },
   ];
 
   const columns = [
@@ -179,23 +191,24 @@ const AnnouncementList = () => {
       title: 'Duyuru Rolleri',
       dataIndex: 'groups',
       key: 'groups',
+      align: 'center',
       // sorter: true,
-      render: (_, record) => (
-        <>
-          {record.groups?.map((group, id) => {
-            return (
-              <Tag color={'green'} key={id}>
-                {group.groupName.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
+      render: (_, record) => listRoles(record),
+      // <div className="rolesContainer">
+      //   {record.roles?.map((role, index) => {
+      //     return (
+      //       <Tag color={'#3e90ed'} key={index} className="roleTags">
+      //         {role.groupName.toUpperCase()}
+      //       </Tag>
+      //     );
+      //   })}
+      // </div>
     },
     {
       title: 'Yayınlandı mı?',
       dataIndex: 'isPublished',
       key: 'isPublished',
+      align: 'center',
       render: (isPublished) => {
         return isPublished ? (
           <span
@@ -228,11 +241,31 @@ const AnnouncementList = () => {
         );
       },
     },
+    {
+      title: '',
+      dataIndex: '',
+      key: 'goToUpdateForm',
+      width: 30,
+      align: 'center',
+      bordered: false,
+      render: (_, record) => {
+        return (
+          <Button
+            style={{
+              padding: '0 5px',
+              border: 'none',
+            }}
+          >
+            <span style={{ margin: '0', marginTop: '-20px', fontSize: '25px', padding: '0' }}>
+              {' '}
+              <RightOutlined />
+            </span>
+          </Button>
+        );
+      },
+    },
   ];
 
- 
-
-  // "idDESC","endASC","endDESC","startASC","startDESC","headTextDESC","headTextASC"
   const sortFields = [
     {
       key: 'id',
@@ -255,7 +288,7 @@ const AnnouncementList = () => {
       ascend: 'endASC',
       descend: 'endDESC',
     },
-    //  Bu eklenecek :
+    //  Bu eklenecek : // SAÇMA OLDUĞU İÇİN EKLEMEDİK: SORMAK LAZIM
     //groups yerine roles şeklinde güncellenmesi daha güzel olur
     // {
     //   key: 'groupsName',
@@ -265,9 +298,7 @@ const AnnouncementList = () => {
   ];
 
   const handleSort = (pagination, filters, sorter) => {
-    console.log(sorter);
     const sortType = sortFields.filter((field) => field.key === sorter.columnKey);
-    console.log(sortType);
     const data = {
       ...filterObject,
       OrderBy: sortType.length ? sortType[0][sorter.order] : '',
@@ -279,6 +310,7 @@ const AnnouncementList = () => {
     history.push('/user-management/announcement-management/add');
   };
   const showAnnouncement = (record) => {
+    dispatch(setUpdateAnnouncementObject(record));
     history.push({
       pathname: '/user-management/announcement-management/show',
       state: { data: record },

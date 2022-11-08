@@ -7,13 +7,15 @@ import {
   CustomPageHeader,
   errorDialog,
   Text,
+  successDialog,
 } from '../../../../components';
 import ShowAnnouncementTabs from './ShowAnnouncementTabs';
 import '../../../../styles/announcementManagement/showAnnouncement.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   deleteAnnouncement,
-  setPublishedAnnouncements,
+  setPublishAnnouncements,
+  setUnPublishAnnouncements,
   setArchiveAnnouncements,
   getByFilterPagedAnnouncements,
 } from '../../../../store/slice/announcementSlice';
@@ -25,8 +27,9 @@ const ShowAnnouncement = () => {
   const history = useHistory();
   const location = useLocation();
   const { filterObject } = useSelector((state) => state?.announcement);
+
   const showData = location?.state?.data;
-  console.log(showData);
+
   const dispatch = useDispatch();
   const handleBack = () => {
     history.push('/user-management/announcement-management');
@@ -47,6 +50,10 @@ const ShowAnnouncement = () => {
         let id = showData.id;
         const action = await dispatch(deleteAnnouncement({ id }));
         if (deleteAnnouncement.fulfilled.match(action)) {
+          successDialog({
+            title: <Text t="success" />,
+            message: action.payload?.message,
+          });
           history.push('/user-management/announcement-management');
         } else {
           if (action?.payload?.message) {
@@ -59,7 +66,7 @@ const ShowAnnouncement = () => {
       },
     });
   };
-  const onShared = () => {
+  const publishAnnouncement = () => {
     confirmDialog({
       title: <Text t="attention" />,
       message: 'Duyuruyu yayınlamak istediğinizden emin misiniz?',
@@ -67,18 +74,26 @@ const ShowAnnouncement = () => {
       cancelText: 'Hayır',
       onOk: async () => {
         if (!dayjs().isBefore(dayjs(showData?.endDate))) {
-          //not share
-          history.push({
-            pathname: '/user-management/announcement-management/edit',
-            state: { data: showData, justDateEdit: true },
+          errorDialog({
+            title: <Text t="error" />,
+            message:
+              'Duyuru bitiş tarihi sona erdiğinden dolayı duyuruyu yayınlamak çin bitiş tarihini güncellemeniz gerekmektedir!',
           });
           return;
         }
 
         let id = showData.id;
-        const action = await dispatch(setPublishedAnnouncements({ id }));
-        if (setPublishedAnnouncements.fulfilled.match(action)) {
-          history.push('/user-management/announcement-management');
+        const action = await dispatch(setPublishAnnouncements({ id }));
+        if (setPublishAnnouncements.fulfilled.match(action)) {
+          history.push({
+            pathname: '/user-management/announcement-management/show',
+            state: { data: { ...showData, isPublished: true } },
+          });
+
+          successDialog({
+            title: <Text t="success" />,
+            message: action.payload?.message,
+          });
         } else {
           if (action?.payload?.message) {
             errorDialog({
@@ -90,7 +105,37 @@ const ShowAnnouncement = () => {
       },
     });
   };
-  const setArchive = () => {
+  const unPublishAnnouncement = () => {
+    confirmDialog({
+      title: <Text t="attention" />,
+      message: 'Duyuruyu Yayından Kaldırmak İstediğinizden Emin Misiniz?',
+      okText: <Text t="Evet" />,
+      cancelText: 'Hayır',
+      onOk: async () => {
+        let id = showData.id;
+        const action = await dispatch(setUnPublishAnnouncements({ id }));
+        if (setUnPublishAnnouncements.fulfilled.match(action)) {
+          history.push({
+            pathname: '/user-management/announcement-management/show',
+            state: { data: { ...showData, isPublished: false } },
+          });
+
+          successDialog({
+            title: <Text t="success" />,
+            message: action.payload?.message,
+          });
+        } else {
+          if (action?.payload?.message) {
+            errorDialog({
+              title: <Text t="error" />,
+              message: action?.payload?.message,
+            });
+          }
+        }
+      },
+    });
+  };
+  const archiveAnnouncement = () => {
     confirmDialog({
       title: <Text t="attention" />,
       message: 'Arşivlemek / Yayından Kaldırmak istediğinizden emin misiniz?',
@@ -100,15 +145,18 @@ const ShowAnnouncement = () => {
         let id = showData.id;
         const action = await dispatch(setArchiveAnnouncements({ id }));
         if (setArchiveAnnouncements.fulfilled.match(action)) {
+          history.push({
+            state: { data: { ...showData, isActive: false } },
+          });
           await dispatch(
             getByFilterPagedAnnouncements({
               ...filterObject,
               IsActive: false,
             }),
           );
-          history.push({
-            pathname: '/user-management/announcement-management',
-            state: { data: { isPassiveRecord: true } },
+          successDialog({
+            title: <Text t="success" />,
+            message: action.payload?.message,
           });
         } else {
           if (action?.payload?.message) {
@@ -145,18 +193,38 @@ const ShowAnnouncement = () => {
         >
           Sil
         </CustomButton>
-        <CustomButton type="primary" htmlType="submit" className="shared-btn" onClick={onShared}>
-          Yayınla
-        </CustomButton>
-        <CustomButton
-          type="primary"
-          htmlType="submit"
-          className="submit-btn"
-          onClick={setArchive}
-          ghost
-        >
-          Arşivle
-        </CustomButton>
+
+        {showData.isPublished ? (
+          <CustomButton
+            type="primary"
+            htmlType="submit"
+            className="shared-btn"
+            onClick={unPublishAnnouncement}
+          >
+            {'Yayından Kaldır'}
+          </CustomButton>
+        ) : (
+          <CustomButton
+            type="primary"
+            htmlType="submit"
+            className="shared-btn"
+            onClick={publishAnnouncement}
+          >
+            {'Yayınla'}
+          </CustomButton>
+        )}
+
+        {showData.isActive && !showData.isPublished && (
+          <CustomButton
+            type="primary"
+            htmlType="submit"
+            className="submit-btn"
+            onClick={archiveAnnouncement}
+            ghost
+          >
+            Arşivle
+          </CustomButton>
+        )}
       </div>
       <ShowAnnouncementTabs showData={showData} />
     </>

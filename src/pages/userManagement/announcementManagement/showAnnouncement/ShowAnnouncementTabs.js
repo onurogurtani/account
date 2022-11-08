@@ -6,7 +6,6 @@ import { CustomCollapseCard, Text } from '../../../../components';
 const { TabPane } = Tabs;
 
 const AddAnnouncementTabs = ({ showData }) => {
-  console.log(showData);
   return (
     <Tabs defaultActiveKey={'1'}>
       <TabPane tab="Genel Bilgiler" key="1">
@@ -15,11 +14,14 @@ const AddAnnouncementTabs = ({ showData }) => {
             <li>
               <Text t="Başlık" /> : <span>{showData?.headText}</span>
             </li>
-            <li style={{ height: 'auto' }}>
+            <li>
+              <Text t="Anasayfa Başlığı" /> : <span>{showData?.homePageContent}</span>
+            </li>
+            <li style={{ height: 'auto' }} className='content-text-container' >
               <Text t="İçerik" /> :
               <div
                 className="announcement-content-text"
-                dangerouslySetInnerHTML={{ __html: showData?.text }}
+                dangerouslySetInnerHTML={{ __html: showData?.content }}
               ></div>
             </li>
             <li>
@@ -40,9 +42,18 @@ const AddAnnouncementTabs = ({ showData }) => {
                 )}
               </span>
             </li>
+            <li>
+              <Text t="Aktif/ Arşiv" /> :{' '}
+              <span>
+                {showData?.isActive ? (
+                  <span className="status-text-active">Aktif</span>
+                ) : (
+                  <span className="status-text-passive">Arşiv</span>
+                )}
+              </span>
+            </li>
           </ul>
         </CustomCollapseCard>
-        {/* //TODO:Api düzelince bilgiler eklenecek announcement-show-footer*/}
         <ul className="announcement-show-footer">
           <li>
             <Text t="Oluşturma Tarihi" /> : <span>...</span>
@@ -60,14 +71,19 @@ const AddAnnouncementTabs = ({ showData }) => {
       </TabPane>
       <TabPane tab="Roller" key="2">
         <CustomCollapseCard cardTitle={<Text t="Roller" />}>
-          <div className="announcement-show-role">
-            {showData?.groups?.map((group, id) => {
-              return (
-                <Tag color={'green'} key={id}>
-                  {group.groupName.toUpperCase()}
-                </Tag>
-              );
-            })}
+          <div className="announcement-show">
+          <div className='roleListContainer'>
+                <Text t="Roller" /> :{' '}
+                {showData.roles && (
+                  <ul className="rolesList">
+                    {showData.roles.map((r) => (
+                      <li key={r.id} className="roles">
+                        {r.groupName}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
           </div>
         </CustomCollapseCard>
       </TabPane>
