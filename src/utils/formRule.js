@@ -78,7 +78,7 @@ export const reactQuillValidator = async (field, value) => {
 
 export const dateValidator = async (field, value) => {
   try {
-    if (!value || dayjs() < dayjs(value).add(1, 'day')) {
+    if (!value || dayjs().startOf('minute') < dayjs(value)) {
       return Promise.resolve();
     }
     return Promise.reject(new Error());

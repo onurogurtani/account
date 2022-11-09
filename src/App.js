@@ -24,6 +24,7 @@ import UserManagement from './pages/userManagement';
 import SurveyManagement from './pages/userManagement/surveyManagement';
 import VideoManagement from './pages/videoManagement';
 import Settings from './pages/settings';
+import EventManagement from './pages/eventManagement';
 
 const PrivateRoute = lazy(() =>
   import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -188,6 +189,47 @@ const App = () => {
                           Component={VideoManagement?.EditVideo}
                           authority="dashboard"
                         />
+                        <Route
+                          component={() => (
+                            <Redirect
+                              to={{
+                                pathname: '/not-found',
+                                state: { status: 404 },
+                              }}
+                            />
+                          )}
+                        />
+                      </Switch>
+                    );
+                  }}
+                  authority="dashboard"
+                  isLayout={false}
+                />
+                <PrivateRoute
+                  path={'/event-management'}
+                  Component={({ match }) => {
+                    return (
+                      <Switch>
+                        {/* <PrivateRoute
+                          path={`${match?.path}/list`}
+                          Component={VideoManagement?.VideoList}
+                          authority="dashboard"
+                        /> */}
+                        <PrivateRoute
+                          path={`${match?.path}/add`}
+                          Component={EventManagement?.AddEvent}
+                          authority="dashboard"
+                        />
+                        {/* <PrivateRoute
+                          path={`${match?.path}/show/:id`}
+                          Component={VideoManagement?.ShowVideo}
+                          authority="dashboard"
+                        /> */}
+                        {/* <PrivateRoute
+                          path={`${match?.path}/edit/:id`}
+                          Component={VideoManagement?.EditVideo}
+                          authority="dashboard"
+                        /> */}
                         <Route
                           component={() => (
                             <Redirect

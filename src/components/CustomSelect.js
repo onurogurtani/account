@@ -27,7 +27,8 @@ const CustomSelectContent = styled(Select)(
      padding: 0 16px !important;
      border-radius: 4px !important;
      align-items:center;
-   
+    
+     
     :focus{
       border-color: #0d6efd !important;
       box-shadow: 0 0 8px 1px rgba(22, 32, 86, 0.08) !important;
@@ -39,19 +40,32 @@ const CustomSelectContent = styled(Select)(
     .ant-select-single:not(.ant-select-customize-input) .ant-select-selector .ant-select-selection-search-input{
        height: ${height || '48'}px !important;
     }
+    
+    .ant-select-selection-search {
+      margin-inline-start: 0px;
+      top: 8px !important;
+      left: 16px !important;
+      // .ant-select-selection-search-input{
+      //     padding-bottom: 3px !important;
+      //     height: ${height || '48'}px !important;
+      // }
+    } 
+
+    .ant-select-selection-overflow {
+      max-width: 288px;
+      .ant-select-selection-search {
+        margin-inline-start: 0px;
+        top: 0px !important;
+        left: 0px !important;
+      } 
+    }
   }
   
   .ant-select-selection-placeholder {
     color: #6b7789;
     left: 16px;
   }
-  .ant-select-selection-search {
-    margin-inline-start: 0px;
-    // .ant-select-selection-search-input{
-    //     padding-bottom: 3px !important;
-    //     height: ${height || '48'}px !important;
-    // }
-  }  
+   
   .ant-select-arrow{
     right: 24px !important;
   }

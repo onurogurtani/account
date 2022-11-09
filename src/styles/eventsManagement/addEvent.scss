@@ -1,0 +1,27 @@
+.add-event-container {
+  padding: 20px 30px;
+  .add-event-form {
+    justify-content: center;
+    display: flex;
+    form {
+      min-width: 600px;
+    }
+  }
+  .add-event-footer {
+    display: flex;
+    justify-content: end;
+    gap: 20px;
+    .save-btn {
+      background-color: #699a00;
+      border: none;
+    }
+    .cancel-btn {
+      background-color: gray;
+      border: none;
+    }
+    .save-draft-btn {
+      background-color: #d5b803;
+      border: none;
+    }
+  }
+}
