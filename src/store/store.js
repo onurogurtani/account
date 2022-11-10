@@ -44,6 +44,7 @@ import { lessonsSlice } from './slice/lessonsSlice';
 import { packageSlice } from './slice/packageSlice';
 import { categorySlice } from './slice/categorySlice';
 import { subCategorySlice } from './slice/subCategorySlice ';
+import { eventTypeSlice } from './slice/eventTypeSlice';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -77,6 +78,7 @@ const reducers = combineReducers({
   packages: packageSlice.reducer,
   category: categorySlice.reducer,
   subCategory:subCategorySlice.reducer,
+  eventType:eventTypeSlice.reducer,
 });
 
 const persistConfig = {
