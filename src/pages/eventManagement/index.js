@@ -1,10 +1,10 @@
 import { lazy } from 'react';
 
-// const VideoList = lazy(() =>
-//   import('./VideoList').then(({ default: Component }) => ({
-//     default: Component,
-//   })),
-// );
+const EventList = lazy(() =>
+  import('./EventList').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 
 const AddEvent = lazy(() =>
   import('./addEvent/').then(({ default: Component }) => ({
@@ -26,7 +26,7 @@ const AddEvent = lazy(() =>
 
 const EventManagement = {
   AddEvent,
-  // VideoList,
+  EventList,
   // ShowVideo,
   // EditVideo,
 };

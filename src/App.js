@@ -211,11 +211,11 @@ const App = () => {
                   Component={({ match }) => {
                     return (
                       <Switch>
-                        {/* <PrivateRoute
+                        <PrivateRoute
                           path={`${match?.path}/list`}
-                          Component={VideoManagement?.VideoList}
+                          Component={EventManagement?.EventList}
                           authority="dashboard"
-                        /> */}
+                        />
                         <PrivateRoute
                           path={`${match?.path}/add`}
                           Component={EventManagement?.AddEvent}

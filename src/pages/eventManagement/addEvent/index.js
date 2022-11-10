@@ -44,8 +44,8 @@ const AddEvent = () => {
     values.participantGroups = values.participantGroups.map((item) => ({
       participantGroupId: item,
     }));
-    values.startDate = values?.startDate.utc().format();
-    values.endDate = values?.endDate.utc().format();
+    values.startDate = values?.startDate.utc();
+    values.endDate = values?.endDate.utc();
     if (!values.formId) {
       delete values?.subCategoryId;
     }

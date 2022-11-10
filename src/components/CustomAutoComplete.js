@@ -40,7 +40,9 @@ const CustomAutoCompleteContent = styled(AutoComplete)(
   
   .ant-select-selection-placeholder {
     color: #6b7789;
-    padding: 7px 6px !important;
+    padding: 7px 0px !important;
+    position:absolute;
+    top:2px;
   }
   .ant-select-selection-search {
     top:-1px !important;
