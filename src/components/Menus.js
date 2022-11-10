@@ -304,6 +304,15 @@ const Menus = () => {
             </span>
           </MenuItemText>
         </CustomItem>
+        <CustomItem key="/settings/activities">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Etkinlikler" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+
       </CustomSubMenu>
     </CustomMenu>
   );
