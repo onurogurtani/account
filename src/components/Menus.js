@@ -258,6 +258,14 @@ const Menus = () => {
           </span>
         </MenuItemText>
       </CustomItem>
+      <CustomItem key="/event-management/list">
+        <MenuItemText>
+          <CustomImage src={menuIcons} />
+          <span>
+            <Text t="Etkinlik Yönetimi" />
+          </span>
+        </MenuItemText>
+      </CustomItem>
 
       <CustomSubMenu key="SubMenu" title="Tanımlamalar" icon={<CustomImage src={menuIcons} />}>
         <CustomItem key="/user-management/school-management">

@@ -106,7 +106,7 @@ const VideoFilter = () => {
   const handleReset = async () => {
     form.resetFields();
     await dispatch(
-      getByFilterPagedVideos({ PageSize: filterObject.PageSize, OrderBy: filterObject.OrderBy }),
+      getByFilterPagedVideos({ PageSize: filterObject?.PageSize, OrderBy: filterObject?.OrderBy }),
     );
     await dispatch(setIsFilter(false));
   };

@@ -39,6 +39,7 @@ const EventForm = ({ form }) => {
     if (getSurveyWithFilterSurveyCategory.fulfilled.match(action)) {
       const surveyList = action?.payload?.data?.items;
       if (surveyList.length) {
+        !isSelectedSurveyCategory && setIsSelectedSurveyCategory(true);
         setSurveyList(surveyList);
       } else {
         setIsSelectedSurveyCategory(false);
@@ -55,8 +56,8 @@ const EventForm = ({ form }) => {
         message: action?.payload?.message,
       });
     }
-    !isSelectedSurveyCategory && setIsSelectedSurveyCategory(true);
   };
+
   return (
     <>
       <CustomFormItem
@@ -106,6 +107,9 @@ const EventForm = ({ form }) => {
           onChange={surveyCategroyChange}
           placeholder="Anket Kategorisi Seçiniz"
         >
+          <Option key={false} value={false}>
+            Anket Kategorisi Seçiniz
+          </Option>
           {subCategories
             ?.filter((item) => item.isActive)
             ?.map((item) => {
@@ -115,9 +119,6 @@ const EventForm = ({ form }) => {
                 </Option>
               );
             })}
-          <Option key={undefined} value={undefined}>
-            Yok
-          </Option>
         </CustomSelect>
       </CustomFormItem>
 
@@ -131,6 +132,9 @@ const EventForm = ({ form }) => {
           disabled={!isSelectedSurveyCategory}
           placeholder="Anket Seçiniz"
         >
+          <Option key={false} value={false}>
+            Anket Seçiniz
+          </Option>
           {surveyList
             // ?.filter((item) => item.isActive)
             ?.map((item) => {
