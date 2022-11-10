@@ -273,6 +273,11 @@ const App = () => {
                           Component={Settings?.Activities}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/classStages`}
+                          Component={Settings?.ClassStages}
+                          authority="dashboard"
+                        />
                         <Route
                           component={() => (
                             <Redirect

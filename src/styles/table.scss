@@ -78,3 +78,23 @@
   text-align: center;
   padding: 2px;
 }
+.delete-btn {
+  width: 33px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: UbuntuMedium, sans-serif;
+  font-size: 12px;
+  line-height: 12px;
+  border-radius: 4px;
+  box-shadow: none;
+  background-color: #f72717;
+}
+.delete-btn:hover{
+  border:1px solid darkblue !important;
+  color:white !important;
+  background-color: #f72717 !important;
+}
+

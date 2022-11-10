@@ -312,6 +312,14 @@ const Menus = () => {
             </span>
           </MenuItemText>
         </CustomItem>
+        <CustomItem key="/settings/classStages">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Sınıf Seviyesi" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
 
       </CustomSubMenu>
     </CustomMenu>
