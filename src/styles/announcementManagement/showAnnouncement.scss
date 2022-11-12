@@ -62,12 +62,6 @@
   }
   padding-left: 0;
 }
-// .announcement-show-role {
-//   padding: 10px 20px;
-//   flex-wrap: wrap;
-//   display: flex;
-//   gap: 10px;
-// }
 .btn-group {
   display: flex;
   flex-wrap: wrap;
@@ -81,6 +75,9 @@
   .edit-btn {
     background-color: #d5b803;
   }
+  .archieveButton{
+    background-color: #635b60;
+  }
 }
 
 .content-text-container{
@@ -89,18 +86,14 @@
   flex-wrap: wrap;
   align-content: space-between;
   justify-content:space-between;
-  // background-color: #3485fd;
   padding: 0;
 
   .announcement-content-text {
-    // background-color: #00a483;
     border: 1px solid gray;
-    // border-radius:7px;
     box-shadow:  1px 2px 0 0 gray;
     width: 70%;
     height:200px;
     margin:5px;
-    // margin-left: 0.5rem;
     margin-right: 15%;
     padding: 5px;
     word-wrap: break-word;

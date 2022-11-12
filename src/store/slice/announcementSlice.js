@@ -53,19 +53,6 @@ export const getByFilterPagedAnnouncementTypes = createAsyncThunk(
     }
   },
 );
-// export const getAllAnnouncements = createAsyncThunk(
-//   'announcement/GetAllAnnouncements',
-//   async (data, { getState, dispatch, rejectWithValue }) => {
-//     try{
-//       let urlString= 'AnnouncementTypeDetailSearch.PageNumber=1&AnnouncementTypeDetailSearch.PageSize=1000'
-//       const response = await announcementServices.getByFilterAnnouncementTypes(urlString);
-//       return response;
-//     } catch (error) {
-//       return rejectWithValue(error?.data);
-//     }
-//   },
-// );
-
 export const addAnnouncement = createAsyncThunk(
   'announcement/addAnnouncement',
   async (data, { dispatch, rejectWithValue }) => {
@@ -168,7 +155,6 @@ export const announcementSlice = createSlice({
     },
     announcementTypes:[],
     updateAnnouncementObject:{},
-    allAnnouncements:[]
     
   },
   reducers: {
@@ -194,16 +180,8 @@ export const announcementSlice = createSlice({
         totalCount: 0,
       };
     });
-    builder.addCase(getByFilterPagedAnnouncementTypes .fulfilled, (state, action) => {
-      state.announcementTypes = action?.payload?.data?.items || [];
-    });
-    builder.addCase(getByFilterPagedAnnouncementTypes.rejected, (state, action) => {
-      state.announcementTypes = [];
-      
-    });
-    builder.addCase(addAnnouncement.fulfilled, (state, action) => {
-      state.announcementData = [];
-      
+    builder.addCase(getByFilterPagedAnnouncementTypes.fulfilled, (state, action) => {
+      state.announcementTypes = action?.payload?.data?.items || state.announcementTypes;
     });
     
   },

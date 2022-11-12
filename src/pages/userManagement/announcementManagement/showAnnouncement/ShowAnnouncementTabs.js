@@ -42,7 +42,7 @@ const AddAnnouncementTabs = ({ showData }) => {
                 )}
               </span>
             </li>
-            <li>
+            {/* <li>
               <Text t="Aktif/ Arşiv" /> :{' '}
               <span>
                 {showData?.isActive ? (
@@ -51,7 +51,7 @@ const AddAnnouncementTabs = ({ showData }) => {
                   <span className="status-text-passive">Arşiv</span>
                 )}
               </span>
-            </li>
+            </li> */}
           </ul>
         </CustomCollapseCard>
         <ul className="announcement-show-footer">

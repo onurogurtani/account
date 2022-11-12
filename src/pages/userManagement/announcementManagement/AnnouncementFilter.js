@@ -15,6 +15,8 @@ import { Form } from 'antd';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  getAll,
+  setPublishAnnouncements,
   getByFilterPagedAnnouncements,
   getByFilterPagedAnnouncementTypes,
 } from '../../../store/slice/announcementSlice';
@@ -24,19 +26,19 @@ import { useEffect } from 'react';
 const AnnouncementFilter = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
-  const { filterObject, announcementTypes, announcements } = useSelector((state) => state?.announcement);
+  const {announcements ,filterObject, announcementTypes} = useSelector((state) => state?.announcement);
 
 
   useEffect(() => {
     form.resetFields();
-    dispatch(getByFilterPagedAnnouncementTypes());    
-  }, [dispatch]);
+    dispatch(getByFilterPagedAnnouncementTypes()); 
+  }, []);
 
   const handleClear = useCallback(async () => {
     form.resetFields();
     const body = {
       HeadText: '',
-      AnnouncementType: '', // BUNU DÜZELTMEM GEREKEBİLİR
+      AnnouncementType: '', 
       StartDate: '',
       EndDate: '',
     };
@@ -51,15 +53,11 @@ const AnnouncementFilter = () => {
   const handleSearch = useCallback(async () => {
     try {
       const values = await form.validateFields();
-
-      if (values.announcementType == null || values.announcementType == undefined) {
-        var announcementType= null
-      }else{
-        var announcementType = values.announcementType}
+      const type=values.announcementType;
 
       const body = {
+        AnnouncementTypeId: type,
         headText: values?.headText || undefined,
-        announcementType,
         startDate: values?.startDate
           ? dayjs(values?.startDate)?.format('YYYY-MM-DDT00:00:00')
           : undefined,
@@ -69,7 +67,8 @@ const AnnouncementFilter = () => {
 
     } catch (e) {
     }
-  }, [dispatch, filterObject, form]);
+    form.resetFields();
+  }, [dispatch, filterObject, form, announcementTypes]);
 
   const disabledStartDate = (startValue) => {
     const { endDate } = form?.getFieldsValue(['endDate']);
@@ -102,14 +101,11 @@ const AnnouncementFilter = () => {
             >
               <CustomSelect
               className="form-filter-item"
-              placeholder={'Duyuru Adı Seçiniz...'}
+              placeholder={'Seçiniz'}
               style={{
                 width: '100%',
               }}
                 showSearch
-               
-               
-                //value={announcements.Name}
                 optionFilterProp="children"
                 filterOption={(input, option) =>
                   option.children.toLocaleLowerCase().includes(input.toLocaleLowerCase())
@@ -125,24 +121,6 @@ const AnnouncementFilter = () => {
                 </Option>
               </CustomSelect>
             </CustomFormItem>
-          {/* <CustomFormItem
-            label={
-              <div>
-                <Text t="Duyuru Başlığı" />
-              </div>
-            }
-            name="headText"
-            className="filter-item"
-          >
-            <CustomInput
-              style={{
-                width: '100%',
-              }}
-              className="form-filter-item"
-              autoComplete="off"
-              placeholder={'Duyuru Başlığı'}
-            />
-          </CustomFormItem> */}
           <CustomFormItem
             label={
               <div>
