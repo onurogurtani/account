@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import {
@@ -10,6 +10,7 @@ import {
   successDialog,
 } from '../../../../components';
 import ShowAnnouncementTabs from './ShowAnnouncementTabs';
+import UpdateAnnouncementDate from './updateAnnouncementDate';
 import '../../../../styles/announcementManagement/showAnnouncement.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -21,14 +22,17 @@ import {
 } from '../../../../store/slice/announcementSlice';
 import dayjs from 'dayjs';
 const ShowAnnouncement = () => {
+  const location = useLocation();
+  const history = useHistory();
+  const { filterObject } = useSelector((state) => state?.announcement);
+  const [dateVisible, setDateVisible] = useState(false);
+  const showData = location?.state?.data;
+  const [currentAnnouncement, setCurrentAnnouncement] = useState(showData);
+
+
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
-  const history = useHistory();
-  const location = useLocation();
-  const { filterObject } = useSelector((state) => state?.announcement);
-
-  const showData = location?.state?.data;
+  }, [currentAnnouncement]);
 
   const dispatch = useDispatch();
   const handleBack = () => {
@@ -37,7 +41,7 @@ const ShowAnnouncement = () => {
   const handleEdit = () => {
     history.push({
       pathname: '/user-management/announcement-management/edit',
-      state: { data: showData },
+      state: { data: currentAnnouncement },
     });
   };
   const onDelete = () => {
@@ -47,7 +51,7 @@ const ShowAnnouncement = () => {
       okText: <Text t="Evet" />,
       cancelText: 'Hayır',
       onOk: async () => {
-        let id = showData.id;
+        let id = currentAnnouncement.id;
         const action = await dispatch(deleteAnnouncement({ id }));
         if (deleteAnnouncement.fulfilled.match(action)) {
           successDialog({
@@ -67,43 +71,39 @@ const ShowAnnouncement = () => {
     });
   };
   const publishAnnouncement = () => {
-    confirmDialog({
-      title: <Text t="attention" />,
-      message: 'Duyuruyu yayınlamak istediğinizden emin misiniz?',
-      okText: <Text t="Evet" />,
-      cancelText: 'Hayır',
-      onOk: async () => {
-        if (!dayjs().isBefore(dayjs(showData?.endDate))) {
-          errorDialog({
-            title: <Text t="error" />,
-            message:
-              'Duyuru bitiş tarihi sona erdiğinden dolayı duyuruyu yayınlamak çin bitiş tarihini güncellemeniz gerekmektedir!',
-          });
-          return;
-        }
-
-        let id = showData.id;
-        const action = await dispatch(setPublishAnnouncements({ id }));
-        if (setPublishAnnouncements.fulfilled.match(action)) {
-          history.push({
-            pathname: '/user-management/announcement-management/show',
-            state: { data: { ...showData, isPublished: true } },
-          });
-
-          successDialog({
-            title: <Text t="success" />,
-            message: action.payload?.message,
-          });
-        } else {
-          if (action?.payload?.message) {
-            errorDialog({
-              title: <Text t="error" />,
-              message: action?.payload?.message,
+    const id = currentAnnouncement.id;
+    if (!dayjs().isBefore(dayjs(currentAnnouncement?.endDate))) {
+      setDateVisible(true);
+    } else {
+      confirmDialog({
+        title: <Text t="attention" />,
+        message: 'Duyuruyu yayınlamak istediğinizden emin misiniz?',
+        okText: <Text t="Evet" />,
+        cancelText: 'Hayır',
+        onOk: async () => {
+          const action = await dispatch(setPublishAnnouncements({ id }));
+          if (setPublishAnnouncements.fulfilled.match(action)) {
+            history.push({
+              pathname: '/user-management/announcement-management/show',
+              state: { data: { ...currentAnnouncement, isPublished: true, isActive: true } },
             });
+            setCurrentAnnouncement({ ...currentAnnouncement, isPublished: true, isActive: true });
+
+            successDialog({
+              title: <Text t="success" />,
+              message: action.payload?.message,
+            });
+          } else {
+            if (action?.payload?.message) {
+              errorDialog({
+                title: <Text t="error" />,
+                message: action?.payload?.message,
+              });
+            }
           }
-        }
-      },
-    });
+        },
+      });
+    }
   };
   const unPublishAnnouncement = () => {
     confirmDialog({
@@ -112,13 +112,15 @@ const ShowAnnouncement = () => {
       okText: <Text t="Evet" />,
       cancelText: 'Hayır',
       onOk: async () => {
-        let id = showData.id;
+        let id = currentAnnouncement.id;
         const action = await dispatch(setUnPublishAnnouncements({ id }));
         if (setUnPublishAnnouncements.fulfilled.match(action)) {
           history.push({
             pathname: '/user-management/announcement-management/show',
-            state: { data: { ...showData, isPublished: false } },
+            state: { data: { ...currentAnnouncement, isPublished: false } },
           });
+
+          setCurrentAnnouncement({ ...currentAnnouncement, isPublished: false });
 
           successDialog({
             title: <Text t="success" />,
@@ -142,12 +144,14 @@ const ShowAnnouncement = () => {
       okText: <Text t="Evet" />,
       cancelText: 'Hayır',
       onOk: async () => {
-        let id = showData.id;
+        let id = currentAnnouncement.id;
         const action = await dispatch(setArchiveAnnouncements({ id }));
         if (setArchiveAnnouncements.fulfilled.match(action)) {
           history.push({
-            state: { data: { ...showData, isActive: false } },
+            pathname: '/user-management/announcement-management/show',
+            state: { data: { ...currentAnnouncement, isActive: false, isPublished: false } },
           });
+          setCurrentAnnouncement({ ...currentAnnouncement, isActive: false, isPublished: false });
           await dispatch(
             getByFilterPagedAnnouncements({
               ...filterObject,
@@ -194,7 +198,7 @@ const ShowAnnouncement = () => {
           Sil
         </CustomButton>
 
-        {showData.isPublished ? (
+        {currentAnnouncement.isPublished ? (
           <CustomButton
             type="primary"
             htmlType="submit"
@@ -214,19 +218,24 @@ const ShowAnnouncement = () => {
           </CustomButton>
         )}
 
-        {showData.isActive && !showData.isPublished && (
+        {currentAnnouncement.isActive && !currentAnnouncement.isPublished && (
           <CustomButton
             type="primary"
             htmlType="submit"
-            className="submit-btn"
+            className="archieveButton"
             onClick={archiveAnnouncement}
-            ghost
           >
             Arşivle
           </CustomButton>
         )}
       </div>
-      <ShowAnnouncementTabs showData={showData} />
+      <ShowAnnouncementTabs showData={currentAnnouncement} />
+      <UpdateAnnouncementDate
+        setCurrentAnnouncement={setCurrentAnnouncement}
+        currentAnnouncement={currentAnnouncement}
+        dateVisible={dateVisible}
+        setDateVisible={setDateVisible}
+      />
     </>
   );
 };

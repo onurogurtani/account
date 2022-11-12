@@ -24,26 +24,15 @@ import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
 import dayjs from 'dayjs';
 import FormItem from 'antd/lib/form/FormItem';
 import cardOrderDetailsServices from '../../../services/cardOrderDetails.services';
-//import { useLocation } from 'react-router-dom';
 
 const AnnouncementList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  //const location = useLocation();
   const [announcementFilterIsShow, setAnnouncementFilterIsShow] = useState(false);
-  //const isPassiveRecord = location?.state?.data?.isPassiveRecord;
+  const [activeValue, setActiveValue]=useState();
   const { announcements, tableProperty, filterObject } = useSelector(
     (state) => state?.announcement,
   );
-
-  const array = [
-    { name: 'Konu 1', isActive: true, lessonUnitId: 1, id: 1 },
-    { name: 'Tarih Bilimi ve Özellikleri', isActive: false, lessonUnitId: 14, id: 12 },
-    { name: 'Tarihe Yardımcı Bilimler', isActive: false, lessonUnitId: 14, id: 13 },
-    { name: 'Hız Problemleri', isActive: false, lessonUnitId: 15, id: 14 },
-    { name: 'Türkçe Konu', isActive: false, lessonUnitId: 16, id: 15 },
-    { name: 'string', isActive: true, lessonUnitId: 0, id: 16 },
-  ];
 
   const listRoles = useCallback((record) => {
     if (record.roles.length == 0) {
@@ -56,18 +45,11 @@ const AnnouncementList = () => {
     return unifiedRoles;
   }, []);
 
-  useEffect(() => {
-    loadAnnouncements();
-  }, []);
-  const loadAnnouncements = useCallback(async () => {
+  useEffect(async() => {
     await dispatch(
-      getByFilterPagedAnnouncements({
-        ...filterObject,
-        PageNumber: '1',
-        OrderBy: 'idDESC',
-      }),
+      getByFilterPagedAnnouncements(),
     );
-  });
+  }, []);
 
   const handleSelectChange = useCallback(
     async (value) => {
@@ -77,8 +59,8 @@ const AnnouncementList = () => {
           IsActive: value,
         }),
       );
-    },
-    [dispatch],
+      setActiveValue(activeEnum[value]);
+    }, [dispatch],
   );
   const activeEnum = {
     true: 'Aktif Kayıtlar',
@@ -114,7 +96,7 @@ const AnnouncementList = () => {
               width: 120,
             }}
             onChange={handleSelectChange}
-            value={activeEnum[filterObject.IsActive]}
+            value={activeValue}
           >
             {selectList?.map(({ text, value }, index) => (
               <Option id={index} key={index} value={value}>
@@ -150,19 +132,16 @@ const AnnouncementList = () => {
       title: 'Duyuru Başlığı',
       dataIndex: 'headText',
       key: 'headText',
-      // sorter: true,
       render: (text, record) => {
         return <div>{text}</div>;
       },
     },
     {
       title: 'Duyuru Tipi',
-      // dataIndex: 'announcementType'
-      dataIndex: 'headText',
-      key: 'headText',
-      // sorter: true,
-      render: (text, record) => {
-        return <div>{text}</div>;
+      dataIndex: 'announcementType',
+      key: 'announcementType',
+      render: (_, record) => {
+        return <div>{record.announcementType.name}</div>;
       },
     },
 
@@ -186,23 +165,12 @@ const AnnouncementList = () => {
         return date;
       },
     },
-    //BURADAKİ SORTER AKTİF EDİLECEK!!
     {
       title: 'Duyuru Rolleri',
       dataIndex: 'groups',
       key: 'groups',
       align: 'center',
-      // sorter: true,
       render: (_, record) => listRoles(record),
-      // <div className="rolesContainer">
-      //   {record.roles?.map((role, index) => {
-      //     return (
-      //       <Tag color={'#3e90ed'} key={index} className="roleTags">
-      //         {role.groupName.toUpperCase()}
-      //       </Tag>
-      //     );
-      //   })}
-      // </div>
     },
     {
       title: 'Yayınlandı mı?',
@@ -272,12 +240,6 @@ const AnnouncementList = () => {
       ascend: 'idASC',
       descend: 'idDESC',
     },
-    // bunun çıkarılması istendi
-    // {
-    //   key: 'headText',
-    //   ascend: 'headTextASC',
-    //   descend: 'headTextDESC',
-    // },
     {
       key: 'startDate',
       ascend: 'startASC',
@@ -288,13 +250,6 @@ const AnnouncementList = () => {
       ascend: 'endASC',
       descend: 'endDESC',
     },
-    //  Bu eklenecek : // SAÇMA OLDUĞU İÇİN EKLEMEDİK: SORMAK LAZIM
-    //groups yerine roles şeklinde güncellenmesi daha güzel olur
-    // {
-    //   key: 'groupsName',
-    //   ascend: 'groupsASC',
-    //   descend: 'groupsDESC',
-    // },
   ];
 
   const handleSort = (pagination, filters, sorter) => {
@@ -344,8 +299,6 @@ const AnnouncementList = () => {
         footer={() => <TableFooter paginationProps={paginationProps} />}
         pagination={false}
         rowKey={(record) => (record.id ? `${record?.id}` : `${record?.headText}`)}
-        // AŞAĞIDAKİ ŞEKİLDE YAZIMI HATALI:
-        // rowKey={(record) => `draft-list-new-order-${record?.id || record?.headText}`}
         scroll={{ x: false }}
       />
     </CustomCollapseCard>

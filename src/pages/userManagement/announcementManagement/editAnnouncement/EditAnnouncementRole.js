@@ -80,7 +80,7 @@ const EditAnnouncementRole = ({
           <div className="action-btns">
             <CustomButton className="remove-btn" onClick={() => handleDeleteRole(record?.id)}>
               <DoubleLeftOutlined />
-              ÇIKAR
+              SİL
             </CustomButton>
           </div>
         );
@@ -148,7 +148,7 @@ const EditAnnouncementRole = ({
         />
         <CustomTable
           pagination={false}
-          dataSource={selectedRole}
+          dataSource={selectedRole && selectedRole}
           columns={columnsRole}
           rowKey={(record) => `add-announcement-role-new-order-${record?.id || record?.name}`}
           scroll={{ x: false }}

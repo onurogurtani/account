@@ -29,12 +29,11 @@ const SaveAndFinish = ({
   const { announcementTypes, updateAnnouncementObject } = useSelector(
     (state) => state?.announcement,
   );
-  const [updatedAnnouncement, setUpdatedAnnouncement]=useState({});
+  const [updatedAnnouncement, setUpdatedAnnouncement] = useState({});
   const location = useLocation();
-  const oldAnnouncement= location?.state?.data;
+  const oldAnnouncement = location?.state?.data;
 
   const onFinish = useCallback(async () => {
-    // CONTROLLİNG START AND END DATE
 
     const values = await form.validateFields();
     const startOfAnnouncement = values?.startDate
@@ -52,11 +51,6 @@ const SaveAndFinish = ({
       });
       return;
     }
-    const type=values.announcementType;
-    const announcementObject= async(type) => {
-      const index=announcementTypes.findIndex(x => x.name === type);
-      return  announcementTypes[index];
-    };
 
     try {
       const startDate = values?.startDate
@@ -71,11 +65,18 @@ const SaveAndFinish = ({
       const endHour = values?.endDate
         ? dayjs(values?.endDate)?.utc().format('HH:mm:ss')
         : undefined;
-      
+      const typeName = values.announcementType;
+
+      const transFormedType= [];
+      for (let i = 0; i < announcementTypes.length; i++) {
+        if (announcementTypes[i].name == typeName) {
+          transFormedType.push(announcementTypes[i]);
+        }
+      }
 
       const data = {
         id: currentId,
-        announcementType: await announcementObject(type),
+        announcementType: transFormedType[0],
         headText: values.headText.trim(),
         content: values.content,
         homePageContent: values.homePageContent,
@@ -99,8 +100,7 @@ const SaveAndFinish = ({
 
       if (editAnnouncement.fulfilled.match(action)) {
         setIsVisible(true);
-        setUpdatedAnnouncement({...oldAnnouncement, ...newData});
-        
+        setUpdatedAnnouncement({ ...oldAnnouncement, ...newData });
       } else {
         errorDialog({
           title: <Text t="error" />,
@@ -108,14 +108,13 @@ const SaveAndFinish = ({
         });
       }
     } catch (error) {
-      // !e.values.text && setIsErrorReactQuill(true);
       setStep('1');
       errorDialog({
         title: <Text t="error" />,
         message: error,
       });
     }
-  }, [form, setStep, selectedRole]);
+  }, [form, setStep, selectedRole, announcementTypes]);
 
   return (
     <>
@@ -134,13 +133,12 @@ const SaveAndFinish = ({
         <p>Şimdi Ne yapmak İstersin?</p>
         <CustomButton
           type="primary"
-          onClick={
-            () =>  {
-              history.push({
+          onClick={() => {
+            history.push({
               pathname: '/user-management/announcement-management/show',
-              state: { data: updatedAnnouncement},
-            })}
-          }
+              state: { data: updatedAnnouncement },
+            });
+          }}
           className="submit-btn mb-2 mt-2"
         >
           Güncellenen Kaydı Görüntüle

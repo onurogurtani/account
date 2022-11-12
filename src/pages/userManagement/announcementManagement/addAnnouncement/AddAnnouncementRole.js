@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getGroupsList } from '../../../../store/slice/groupsSlice';
 import {
   addAnnouncement,
-  createOrUpdateAnnouncementRole,
+  getByFilterPagedAnnouncements,
 } from '../../../../store/slice/announcementSlice';
 
 import '../../../../styles/announcementManagement/addAnnouncementRole.scss';
@@ -30,6 +30,7 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  
   useEffect(() => {
     (async () => {
       await loadGroupsList();
@@ -73,7 +74,7 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
           <div className="action-btns">
             <CustomButton className="remove-btn" onClick={() => handleDeleteRole(record?.id)}>
               <DoubleLeftOutlined />
-              ÇIKAR
+              SİL
             </CustomButton>
           </div>
         );
@@ -169,7 +170,7 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
         />
         <CustomTable
           pagination={false}
-          dataSource={selectedRole}
+          dataSource={selectedRole && selectedRole}
           columns={columnsRole}
           rowKey={(record) => `add-announcement-role-new-order-${record?.id || record?.name}`}
           scroll={{ x: false }}

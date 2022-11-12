@@ -8,11 +8,9 @@ import {
   CustomForm,
   CustomFormItem,
   CustomInput,
-  CustomTimePicker,
   CustomSelect,
   Option,
   Text,
-  
 } from '../../../../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { dateValidator, reactQuillValidator } from '../../../../utils/formRule';
@@ -38,16 +36,13 @@ const AnnouncementInfoForm = ({
   const dispatch = useDispatch();
   const [quillValue, setQuillValue] = useState('');
 
-  
-
   useEffect(() => {
     dispatch(getByFilterPagedAnnouncementTypes());
-    if(initialValues){
+    if (initialValues) {
       setFormData(form);
-      form.setFieldsValue({announcementType: initialValues.announcementType.name});
+      form.setFieldsValue({ announcementType: initialValues.announcementType.name });
       setAnnouncementInfoData(initialValues.id);
     }
-    
   }, []);
 
   if (initialValues) {
@@ -57,10 +52,6 @@ const AnnouncementInfoForm = ({
       startDate: dayjs(initialValues?.startDate),
     };
   }
-  const justDateEdit = location?.state?.justDateEdit;
-  useEffect(() => {
-    justDateEdit && form.validateFields(['startDate', 'endDate']);
-  }, []);
   const [isErrorReactQuill, setIsErrorReactQuill] = useState(false);
   const text = Form.useWatch('text', form);
   useEffect(() => {
@@ -70,8 +61,6 @@ const AnnouncementInfoForm = ({
       setIsErrorReactQuill(false);
     }
   }, [text]);
-
-  
 
   const disabledStartDate = (startValue) => {
     const { endDate } = form?.getFieldsValue(['endDate']);
@@ -98,28 +87,6 @@ const AnnouncementInfoForm = ({
       layout={'horizontal'}
     >
       <CustomFormItem
-        label={<Text t="Duyuru Tipi" />}
-        name="announcementType"
-        style={{ width: '100%' }}
-        rules={[
-          { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-          { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-        ]}
-        
-      >
-        <CustomSelect
-          className="form-filter-item"
-          placeholder={'Seçiniz'}
-          style={{ width: '100%' }}
-        >
-          {announcementTypes?.map(({ id, name }, index) => (
-            <Option id={id} key={id} value={name}>
-              <Text t={name} />
-            </Option>
-          ))}
-        </CustomSelect>
-      </CustomFormItem>
-      <CustomFormItem
         label={<Text t="Başlık" />}
         name="headText"
         rules={[
@@ -128,6 +95,27 @@ const AnnouncementInfoForm = ({
         ]}
       >
         <CustomInput placeholder={'Başlık'} />
+      </CustomFormItem>
+      <CustomFormItem
+        label={<Text t="Duyuru Tipi" />}
+        name="announcementType"
+        style={{ width: '100%' }}
+        rules={[
+          { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+          { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+        ]}
+      >
+        <CustomSelect
+          className="form-filter-item"
+          placeholder={'Seçiniz'}
+          style={{ width: '100%' }}
+        >
+          {announcementTypes?.map(({ id, name }) => (
+            <Option id={id} key={id} value={name}>
+              <Text t={name} />
+            </Option>
+          ))}
+        </CustomSelect>
       </CustomFormItem>
 
       <CustomFormItem
@@ -149,7 +137,6 @@ const AnnouncementInfoForm = ({
         ]}
       >
         <ReactQuill
-          readOnly={justDateEdit && true}
           className={isErrorReactQuill ? 'quill-error' : ''}
           theme="snow"
         />
@@ -167,7 +154,6 @@ const AnnouncementInfoForm = ({
         ]}
       >
         <CustomInput
-          disabled={justDateEdit && true}
           placeholder={'Yeni duyurunuz ile ilgili özet metin'}
         />
       </CustomFormItem>
@@ -178,18 +164,17 @@ const AnnouncementInfoForm = ({
             name="startDate"
             rules={[
               { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-              
-              { 
-                validator:dateValidator ,
+
+              {
+                validator: dateValidator,
                 message: <Text t="Girilen tarihleri kontrol ediniz" />,
               },
             ]}
           >
             <CustomDatePicker
               placeholder={'Tarih Seçiniz'}
-              disabledDate={!initialValues && disabledStartDate}
+              disabledDate={disabledStartDate}
               format="YYYY-MM-DD HH:mm"
-             
               showTime={true}
             />
           </CustomFormItem>

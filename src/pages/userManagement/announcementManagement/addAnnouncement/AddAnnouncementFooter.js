@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   confirmDialog,
   CustomButton,
@@ -10,31 +10,13 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { getByFilterPagedAnnouncementTypes } from '../../../../store/slice/announcementSlice';
 
-const AddAnnouncementFooter = ({
-  form,
-  setAnnouncementInfoData,
-  setStep,
-  // setIsErrorReactQuill,
-  history,
-}) => {
+const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, history }) => {
   const dispatch = useDispatch();
   const { announcementTypes } = useSelector((state) => state?.announcement);
 
-  useEffect(() => {
-    dispatch(getByFilterPagedAnnouncementTypes());
-  }, []);
-
-  const handleFindType = useCallback(
-    (name) => {
-      const type = announcementTypes.filter((t) => t.name === name);
-      const selectedType = type[0];
-      return selectedType;
-    },
-    [form],
-  );
-
-  const onFinish = useCallback(async () => {
+  const onFinish = async () => {
     // CONTROLLİNG START AND END DATE
+    dispatch(getByFilterPagedAnnouncementTypes());
     const values = await form.validateFields();
     const startOfAnnouncement = values?.startDate
       ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD-HH-mm')
@@ -66,10 +48,17 @@ const AddAnnouncementFooter = ({
       const endHour = values?.endDate
         ? dayjs(values?.endDate)?.utc().format('HH:mm:ss')
         : undefined;
-      const type = handleFindType(values?.announcementType);
+      const typeName = values.announcementType;
+
+      const hop = [];
+      for (let i = 0; i < announcementTypes.length; i++) {
+        if (announcementTypes[i].name == typeName) {
+          hop.push(announcementTypes[i]);
+        }
+      }
 
       const data = {
-        announcementType: type,
+        announcementType: hop[0],
         headText: values.headText.trim(),
         content: values.content,
         homePageContent: values.homePageContent,
@@ -87,7 +76,7 @@ const AddAnnouncementFooter = ({
         message: 'error',
       });
     }
-  }, [form, setAnnouncementInfoData, setStep]);
+  };
 
   const onCancel = () => {
     confirmDialog({
