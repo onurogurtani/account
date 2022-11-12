@@ -1,7 +1,7 @@
 import { Form } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Col, Row, Tag, Button } from 'antd';
+import { Row } from 'antd';
 import {
   confirmDialog,
   CustomButton,
@@ -19,29 +19,32 @@ import {
   successDialog,
   Text,
 } from '../../../components';
-import { columns, sortFields } from './static';
-import '../../../styles/settings/packages.scss';
-import '../../../styles/table.scss';
+import classes from '../../../styles/settings/eventTypes.module.scss'
+import '../../../styles/settings/eventTypesPagination.scss'
 import { getEventTypes, addEventType, updateEventType } from '../../../store/slice/eventTypeSlice';
 
 const Activities = () => {
-  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getEventTypes());
-  }, []);
-  const [form] = Form.useForm();
-
+  },[])
   const [open, setOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [selectedPackageId, setSelectedPackageId] = useState();
   const { eventTypes, filterObject, tableProperty } = useSelector((state) => state?.eventType);
-  console.log(tableProperty);
+  const dispatch = useDispatch();
+
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+  }, [selectedPackageId, isEdit]);
+  console.log(selectedPackageId, isEdit);
+
   const columns = [
     {
       title: 'No',
       dataIndex: 'no',
       key: 'no',
-      width:90,
+      width: 90,
       sorter: true,
       render: (text, record) => {
         return <div>{text}</div>;
@@ -52,7 +55,7 @@ const Activities = () => {
       dataIndex: 'isActive',
       key: 'isActive',
       align: 'center',
-      width:170,
+      width: 170,
       sorter: true,
       render: (isPublished) => {
         return isPublished ? (
@@ -91,9 +94,9 @@ const Activities = () => {
       dataIndex: 'name',
       key: 'name',
       align: 'center',
-       sorter: true,
+      sorter: true,
       render: (text, record) => {
-        return <div className="eventDescriptionContainer">{text}</div>;
+        return <div className={classes["eventDescriptionContainer"]}>{text}</div>;
       },
     },
 
@@ -102,8 +105,9 @@ const Activities = () => {
       dataIndex: 'description',
       key: 'description',
       align: 'center',
+      sorter:true,
       render: (text, record) => {
-        return <div className="eventDescriptionContainer">{text}</div>;
+        return <div className={classes["eventDescriptionContainer"]}>{text}</div>;
       },
     },
     {
@@ -111,14 +115,14 @@ const Activities = () => {
       dataIndex: 'updateEventType',
       key: 'updateEventType',
       align: 'center',
-      width:170,
+      width: 170,
       render: (text, record) => {
         return (
-          <div className="action-btns">
+          <div className={classes["action-btns"]}>
             <CustomButton
-              className="update-btn"
+              className={classes["update-btn"]}
               onClick={() => {
-                console.log(record);
+                setSelectedPackageId(record.no);
                 editEventType(record);
               }}
             >
@@ -146,13 +150,28 @@ const Activities = () => {
       ascend: 'isActiveASC',
       descend: 'isActiveDESC',
     },
+    {
+      key: 'description',
+      ascend: 'descriptionASC',
+      descend: 'descriptionDESC',
+    }
   ];
 
   const editEventType = useCallback((record) => {
-    setOpen(true);
-    setSelectedPackageId(record.no);
-    setIsEdit(true);
-    form.setFieldsValue(record);
+    confirmDialog({
+      title: 'Uyarı',
+      message:'Seçtiğiniz kayıt üzerinde değişiklik yapmak istediğinize emin misiniz?',
+      okText: 'Evet',
+      cancelText: 'Hayır',
+      onOk: () => {
+        setOpen(true);
+        console.log()
+        setIsEdit(true);
+        form.setFieldsValue(record);
+      },
+    });
+
+   
   });
   const handleAddEventType = () => {
     setSelectedPackageId();
@@ -177,7 +196,7 @@ const Activities = () => {
         setOpen(false);
         successDialog({
           title: <Text t="success" />,
-          message: action?.payload.message,
+          message: 'Kayıt güncellenmiştir',
           onOk: () => {
             form.resetFields();
           },
@@ -210,19 +229,7 @@ const Activities = () => {
     }
   };
   const onOk = useCallback(() => {
-    {
-      !isEdit && onFinish();
-    }
-    {
-      isEdit &&
-        confirmDialog({
-          title: 'Uyarı',
-          message: 'Seçtiğiniz Kayıt Üzerinde Değişiklik Yapılacaktır. Emin misiniz?',
-          onOk: () => {
-            onFinish();
-          },
-        });
-    }
+    onFinish();
   }, [isEdit]);
 
   const onCancel = useCallback(() => {
@@ -230,6 +237,8 @@ const Activities = () => {
       confirmDialog({
         title: 'Uyarı',
         message: 'İşlemi İptal Etmek İstediğinizden Emin Misiniz?',
+        okText: 'Evet',
+        cancelText: 'Hayır',
         onOk: () => {
           form.resetFields();
           setOpen(false);
@@ -255,7 +264,7 @@ const Activities = () => {
   const paginationProps = {
     showSizeChanger: true,
     showQuickJumper: {
-      goButton: <CustomButton className="go-button">Git</CustomButton>,
+      goButton: <CustomButton className="go-button">Git</CustomButton>, 
     },
     total: tableProperty.totalCount,
     current: tableProperty.currentPage,
@@ -273,15 +282,15 @@ const Activities = () => {
   const TableFooter = ({ paginationProps }) => {
     return (
       <Row justify="end">
-        <CustomPagination className="custom-pagination" {...paginationProps} />
+        <CustomPagination className='custom-pagination' {...paginationProps} />
       </Row>
     );
   };
   return (
     <CustomPageHeader title="Etkinlikler" showBreadCrumb routes={['Ayarlar']}>
-      <CustomCollapseCard cardTitle="Etkinlikler">
-        <div className="table-header">
-          <CustomButton className="add-btn" onClick={handleAddEventType}>
+      <CustomCollapseCard cardTitle="Etkinlik Türü Tanımları">
+        <div className={classes["table-header"]}>
+          <CustomButton className={classes["add-btn"]} onClick={handleAddEventType}>
             Yeni
           </CustomButton>
         </div>
@@ -301,12 +310,11 @@ const Activities = () => {
       <CustomModal
         title={isEdit ? 'Etkinlik Türü Güncelle' : 'Etkinlik Türü Ekle'}
         visible={open}
-        okText={isEdit ? 'Güncelle ve Kaydet' : 'Kaydet'}
+        okText={isEdit ? 'Güncelle ve Kaydet' : 'Kaydet ve Bitir'}
         onOk={onOk}
-        cancelText="Vazgeç"
+        cancelText="İptal"
         onCancel={onCancel}
         bodyStyle={{ overflowY: 'auto', maxHeight: 'calc(100vh - 300px)' }}
-        // width={600}
       >
         <CustomForm form={form} layout="vertical" name="form" onFinish={onFinish}>
           <CustomFormItem
@@ -316,10 +324,10 @@ const Activities = () => {
                 message: 'Lütfen Zorunlu Alanları Doldurunuz.',
               },
             ]}
-            label="Etkinlik Adı"
+            label="Etkinlik Türü Adı"
             name="name"
           >
-            <CustomInput placeholder="Etkinlik Adı" />
+            <CustomInput placeholder="Etkinlik Türü Adı" />
           </CustomFormItem>
           <CustomFormItem
             rules={[
@@ -344,7 +352,7 @@ const Activities = () => {
             label="Durumu"
             name="isActive"
           >
-            <CustomSelect placeholder="Durumu">
+            <CustomSelect placeholder="Seçiniz">
               <Option key={1} value={true}>
                 Aktif
               </Option>
