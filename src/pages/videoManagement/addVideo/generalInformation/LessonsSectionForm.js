@@ -82,8 +82,8 @@ const LessonsSectionForm = ({ form }) => {
       >
         <CustomSelect onChange={onLessonChange} placeholder="Ders">
           {lessons
-            ?.filter((item) => item.isActive)
-            .map((item) => {
+            // ?.filter((item) => item.isActive)
+            ?.map((item) => {
               return (
                 <Option key={item?.id} value={item?.id}>
                   {item?.name}
@@ -105,8 +105,8 @@ const LessonsSectionForm = ({ form }) => {
       >
         <CustomSelect onChange={onUnitChange} placeholder="Ünite">
           {units
-            ?.filter((item) => item.isActive && item.lessonId === lessonId)
-            .map((item) => {
+            ?.filter((item) => item.lessonId === lessonId)
+            ?.map((item) => {
               return (
                 <Option key={item?.id} value={item?.id}>
                   {item?.name}
@@ -128,8 +128,8 @@ const LessonsSectionForm = ({ form }) => {
       >
         <CustomSelect onChange={onLessonSubjectsChange} placeholder="Konu">
           {lessonSubjects
-            ?.filter((item) => item.isActive && item.lessonUnitId === unitId)
-            .map((item) => {
+            ?.filter((item) => item.lessonUnitId === unitId)
+            ?.map((item) => {
               return (
                 <Option key={item?.id} value={item?.id}>
                   {item?.name}
@@ -146,8 +146,8 @@ const LessonsSectionForm = ({ form }) => {
       >
         <CustomSelect showArrow mode="multiple" placeholder="Alt Başlık">
           {lessonSubSubjects
-            ?.filter((item) => item.isActive && item.lessonSubjectId === lessonSubjectId)
-            .map((item) => {
+            ?.filter((item) => item.lessonSubjectId === lessonSubjectId)
+            ?.map((item) => {
               return (
                 <Option key={item?.id} value={item?.id}>
                   {item?.name}
