@@ -41,7 +41,7 @@ const CategoryAndPackageSection = ({ form }) => {
       >
         <CustomSelect placeholder="Video Kategorisi">
           {categories
-            ?.filter((item) => item.isActive)
+            // ?.filter((item) => item.isActive)
             ?.map((item) => {
               return (
                 <Option key={item?.id} value={item?.id}>
@@ -64,7 +64,7 @@ const CategoryAndPackageSection = ({ form }) => {
       >
         <CustomSelect showArrow mode="multiple" placeholder="Bağlı Olduğu Paket">
           {packages
-            ?.filter((item) => item.isActive)
+            // ?.filter((item) => item.isActive)
             ?.map((item) => {
               return (
                 <Option key={item?.id} value={item?.id}>

@@ -132,7 +132,7 @@ const VideoFilter = () => {
               placeholder="Video Kategorisi"
             >
               {categories
-                ?.filter((item) => item.isActive)
+                // ?.filter((item) => item.isActive)
                 ?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>
@@ -153,7 +153,7 @@ const VideoFilter = () => {
               placeholder="Bağlı Olduğu Paket"
             >
               {packages
-                ?.filter((item) => item.isActive)
+                // ?.filter((item) => item.isActive)
                 ?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>
@@ -174,7 +174,7 @@ const VideoFilter = () => {
               placeholder="Ders"
             >
               {lessons
-                ?.filter((item) => item.isActive)
+                // ?.filter((item) => item.isActive)
                 ?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>
@@ -195,7 +195,7 @@ const VideoFilter = () => {
               placeholder="Ünite"
             >
               {units
-                ?.filter((item) => item.isActive)
+                // ?.filter((item) => item.isActive)
                 ?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>
@@ -216,7 +216,7 @@ const VideoFilter = () => {
               placeholder="Konu"
             >
               {lessonSubjects
-                ?.filter((item) => item.isActive)
+                // ?.filter((item) => item.isActive)
                 ?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>
@@ -237,7 +237,7 @@ const VideoFilter = () => {
               placeholder="Alt Başlık"
             >
               {lessonSubSubjects
-                ?.filter((item) => item.isActive)
+                // ?.filter((item) => item.isActive)
                 ?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>
