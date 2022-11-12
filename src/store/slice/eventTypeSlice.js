@@ -13,12 +13,6 @@ export const getEventTypes = createAsyncThunk(
         let newStr = `EventTypeDetailSearch.${key}=${value}`;
         urlArr.push(newStr);
       }
-      console.log(urlArr);
-      if (!data.IsActive) {
-        //BUNU DA KALDIRMAM LAZIM..
-        let newStr = 'EventTypeDetailSearch.IsActive=true';
-        urlArr.push(newStr);
-      }
       if (!data.OrderBy) {
         let newStr = `EventTypeDetailSearch.OrderBy=IdDESC`;
         urlArr.push(newStr);
@@ -35,8 +29,7 @@ export const getEventTypes = createAsyncThunk(
       urlString = urlArr.join('&');
       console.log(urlString)
     } else {
-      urlString =
-        'EventTypeDetailSearch.IsActive=true&EventTypeDetailSearch.OrderBy=IdDesc&EventTypeDetailSearch.PageNumber=1&EventTypeDetailSearch.PageSize=10';
+      urlString ='EventTypeDetailSearch.OrderBy=IdDesc&EventTypeDetailSearch.PageNumber=1&EventTypeDetailSearch.PageSize=10';
     }
 
     try {
@@ -78,9 +71,6 @@ export const updateEventType = createAsyncThunk(
 const initialState = {
   eventTypes: [],
   filterObject:{
-
-    //bu değişken olmalı
-    IsActive:true,
     OrderBy:'idDESC',
     PageNumber:1,
     PageSize:10
