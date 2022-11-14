@@ -18,6 +18,7 @@ import {
   setPublishAnnouncements,
   setUnPublishAnnouncements,
   setArchiveAnnouncements,
+  setActiveAnnouncements,
   getByFilterPagedAnnouncements,
 } from '../../../../store/slice/announcementSlice';
 import dayjs from 'dayjs';
@@ -173,6 +174,42 @@ const ShowAnnouncement = () => {
       },
     });
   };
+  const activeAnnouncement = () => {
+    confirmDialog({
+      title: <Text t="attention" />,
+      message: 'Arşivden kaldırmak istediğinizden emin misiniz?',
+      okText: <Text t="Evet" />,
+      cancelText: 'Hayır',
+      onOk: async () => {
+        let id = currentAnnouncement.id;
+        const action = await dispatch(setActiveAnnouncements({ id }));
+        if (setActiveAnnouncements.fulfilled.match(action)) {
+          history.push({
+            pathname: '/user-management/announcement-management/show',
+            state: { data: { ...currentAnnouncement, isActive: true, isPublished: false } },
+          });
+          setCurrentAnnouncement({ ...currentAnnouncement, isActive: true, isPublished: false });
+          await dispatch(
+            getByFilterPagedAnnouncements({
+              ...filterObject,
+              IsActive: true,
+            }),
+          );
+          successDialog({
+            title: <Text t="success" />,
+            message: action.payload?.message,
+          });
+        } else {
+          if (action?.payload?.message) {
+            errorDialog({
+              title: <Text t="error" />,
+              message: action?.payload?.message,
+            });
+          }
+        }
+      },
+    });
+  };
   return (
     <>
       <CustomPageHeader
@@ -198,7 +235,7 @@ const ShowAnnouncement = () => {
           Sil
         </CustomButton>
 
-        {currentAnnouncement.isPublished ? (
+        {currentAnnouncement.isPublished && (
           <CustomButton
             type="primary"
             htmlType="submit"
@@ -207,7 +244,8 @@ const ShowAnnouncement = () => {
           >
             {'Yayından Kaldır'}
           </CustomButton>
-        ) : (
+        )} 
+         {!currentAnnouncement.isPublished && currentAnnouncement.isActive && (
           <CustomButton
             type="primary"
             htmlType="submit"
@@ -216,7 +254,7 @@ const ShowAnnouncement = () => {
           >
             {'Yayınla'}
           </CustomButton>
-        )}
+        )} 
 
         {currentAnnouncement.isActive && !currentAnnouncement.isPublished && (
           <CustomButton
@@ -227,7 +265,17 @@ const ShowAnnouncement = () => {
           >
             Arşivle
           </CustomButton>
-        )}
+        ) }
+         {!currentAnnouncement.isActive && !currentAnnouncement.isPublished && (
+          <CustomButton
+          type="primary"
+          htmlType="submit"
+          className="archieveButton"
+          onClick={activeAnnouncement}
+        >
+          Arşivden Kaldır
+        </CustomButton>
+        ) }
       </div>
       <ShowAnnouncementTabs showData={currentAnnouncement} />
       <UpdateAnnouncementDate
