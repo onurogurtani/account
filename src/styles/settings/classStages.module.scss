@@ -1,0 +1,74 @@
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 17px 24px 17px;
+  
+    .add-btn {
+      width: 217px !important;
+      background: #00a483 !important;
+      text-align: center;
+      color: #fff;
+      border-radius: 6px;
+      line-height: 0.86;
+      padding: 9px 16px;
+  
+      img {
+        margin-right: 10px;
+      }
+    }
+    .search-btn {
+      width: 60px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #3f4957;
+      color: #fff;
+      line-height: 20px;
+      font-family: UbuntuMedium, sans-serif;
+      border-radius: 10px;
+    }
+  }
+  .action-btns {
+    .update-btn {
+      height: 36px;
+      color: #fff;
+      font-family: UbuntuMedium, sans-serif;
+      font-size: 14px;
+      line-height: 12px;
+      border-radius: 4px;
+      box-shadow: none;
+      background-color: #3f4957;
+    }
+  }
+  
+  @media (max-width: 360px) {
+    .table-header {
+      padding: 10px 4px;
+    }
+  }
+  .classContainer{
+    text-align: center;
+    padding: 2px;
+  }
+  .delete-btn {
+    width: 33px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-family: UbuntuMedium, sans-serif;
+    font-size: 12px;
+    line-height: 12px;
+    border-radius: 4px;
+    box-shadow: none;
+    background-color: #f72717;
+  }
+  .delete-btn:hover{
+    border:1px solid darkblue !important;
+    color:white !important;
+    background-color: #f72717 !important;
+  }
+  
+  

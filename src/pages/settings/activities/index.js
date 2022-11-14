@@ -24,6 +24,7 @@ import '../../../styles/settings/eventTypesPagination.scss'
 import { getEventTypes, addEventType, updateEventType } from '../../../store/slice/eventTypeSlice';
 
 const Activities = () => {
+  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getEventTypes());
   },[])
@@ -31,7 +32,6 @@ const Activities = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [selectedPackageId, setSelectedPackageId] = useState();
   const { eventTypes, filterObject, tableProperty } = useSelector((state) => state?.eventType);
-  const dispatch = useDispatch();
 
   const [form] = Form.useForm();
 
@@ -299,7 +299,7 @@ const Activities = () => {
           columns={columns}
           onChange={handleSort}
           pagination={false}
-          rowKey={(record) => `events-${record?.id || record?.headText}`}
+          rowKey={(record) => `events-${record?.id || record?.name}`}
           footer={() => <TableFooter paginationProps={paginationProps} />}
           scroll={{
             y: 750,
