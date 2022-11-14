@@ -42,16 +42,16 @@ const AddAnnouncementTabs = ({ showData }) => {
                 )}
               </span>
             </li>
-            {/* <li>
-              <Text t="Aktif/ Arşiv" /> :{' '}
+            <li>
+              <Text t="Arşivlendi mi?" /> :{' '}
               <span>
                 {showData?.isActive ? (
-                  <span className="status-text-active">Aktif</span>
+                  <span className="status-text-active">Hayır</span>
                 ) : (
-                  <span className="status-text-passive">Arşiv</span>
+                  <span className="status-text-passive">Evet</span>
                 )}
               </span>
-            </li> */}
+            </li>
           </ul>
         </CustomCollapseCard>
         <ul className="announcement-show-footer">

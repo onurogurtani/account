@@ -132,6 +132,17 @@ export const setArchiveAnnouncements = createAsyncThunk(
     }
   },
 );
+export const setActiveAnnouncements = createAsyncThunk(
+  'setActiveAnnouncements',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await announcementServices.setActiveAnnouncements(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 export const announcementSlice = createSlice({
   name: 'announcement',
   initialState: {

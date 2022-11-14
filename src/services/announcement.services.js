@@ -70,6 +70,13 @@ const setArchiveAnnouncements = (data) => {
     data,
   });
 };
+const setActiveAnnouncements = (data) => {
+  return api({
+    url: `Announcements/SetActiveAnnouncement`,
+    method: 'POST',
+    data,
+  });
+};
 const announcementServices = {
   announcementGetList,
   getByFilterPagedAnnouncements,
@@ -80,7 +87,8 @@ const announcementServices = {
   deleteAnnouncement,
   setPublishedAnnouncements,
   setArchiveAnnouncements,
-  setUnPublishedAnnouncements
+  setUnPublishedAnnouncements,
+  setActiveAnnouncements
 };
 
 export default announcementServices;
