@@ -1,11 +1,10 @@
 import { Form } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Col, Row, Tag, Button } from 'antd';
+import _ from 'lodash';
 import {
   confirmDialog,
   CustomButton,
-  CustomPagination,
   CustomCollapseCard,
   CustomForm,
   CustomFormItem,
@@ -19,35 +18,58 @@ import {
   successDialog,
   Text,
 } from '../../../components';
-import '../../../styles/settings/packages.scss';
-import '../../../styles/table.scss';
-import { getEventTypes, addEventType, updateEventType } from '../../../store/slice/eventTypeSlice';
+import classes from '../../../styles/settings/classStages.module.scss';
+import {
+  getAllClassStages,
+  addNewClassStage,
+  updateClassStage,
+  deleteClassStage,
+} from '../../../store/slice/classStageSlice';
 
 const ClassStages = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getEventTypes());
+    dispatch(getAllClassStages());
   }, []);
+
+  const { allClassList} = useSelector((state) => state?.classStages);
+ 
+
   const [form] = Form.useForm();
 
   const [open, setOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [selectedPackageId, setSelectedPackageId] = useState();
-  const { eventTypes, filterObject, tableProperty } = useSelector((state) => state?.eventType);
-  console.log(tableProperty);
+  const [selectedClassId, setSelectedClassId] = useState();
+  const [updateObject, setUpdateObject] = useState({});
 
   const stages = [
-    { id: 1, value: 'ilkOkul', text: 'İlkokul' },
-    { id: 2, value: 'ortaOkul', text: 'Ortaokul' },
-    { id: 3, value: 'lise', text: 'Lise' },
+    { id: 10, value: 'İlkokul', text: 'İlkokul' },
+    { id: 20, value: 'Ortaokul', text: 'Ortaokul' },
+    { id: 30, value: 'Lise', text: 'Lise' },
   ];
+
+  const schoolLevelReverseEnum = {
+    10: 'İlkokul',
+    20: 'Ortaokul',
+    30: 'Lise',
+  };
+  const schoolLevelEnum = {
+    İlkokul: 10,
+    Ortaokul: 20,
+    Lise: 30,
+  };
+
   const columns = [
     {
       title: 'No',
-      dataIndex: 'no',
+      dataIndex: 'id',
       key: 'no',
       width: 90,
-      sorter: true,
+      defaultSortOrder: 'ascend',
+      sorter: {
+        compare: (a, b) => a.id - b.id,
+        multiple: 1,
+      },
       align: 'center',
       render: (text, record) => {
         return <div>{text}</div>;
@@ -58,25 +80,33 @@ const ClassStages = () => {
       dataIndex: 'name',
       key: 'name',
       align: 'center',
-      sorter: true,
+      sorter: {
+        compare: (a, b) => a.name.localeCompare(b.name, 'tr', { numeric: true }),
+        multiple: 3,
+      },
       render: (text, record) => {
-        return <div className="eventDescriptionContainer">{text}</div>;
+        return <div className={classes.classContainer}>{text}</div>;
       },
     },
 
     {
       title: 'Okul Seviyesi',
-      dataIndex: 'description',
-      key: 'description',
+      dataIndex: 'schoolLevel',
+      key: 'schoolLevel',
       align: 'center',
+      sortDirections: ['ascend', 'descend'],
+      sorter: {
+        compare: (a, b) => schoolLevelReverseEnum[a.schoolLevel].localeCompare(schoolLevelReverseEnum[b.schoolLevel], 'tr', { numeric: false }),
+        multiple: 2,
+      },
       render: (text, record) => {
-        return <div className="eventDescriptionContainer">{text}</div>;
+        return <div className={classes.classContainer}>{schoolLevelReverseEnum[text]}</div>;
       },
     },
     {
       title: 'İşlemler',
-      dataIndex: 'updateEventType',
-      key: 'updateEventType',
+      dataIndex: 'updateClassStage',
+      key: 'updateClassStage',
       align: 'center',
       width: 200,
       render: (text, record) => {
@@ -89,19 +119,25 @@ const ClassStages = () => {
               alignContent: 'space-around',
             }}
           >
-            <div className="action-btns" style={{ marginRight: '5px' }}>
+            <div className={classes["action-btns"]} style={{ marginRight: '5px' }}>
               <CustomButton
-                className="update-btn"
+                className={classes["update-btn"]}
                 onClick={() => {
-                  console.log(record);
-                  editEventType(record);
+                  setIsEdit(true);
+                  setSelectedClassId(record.id);
+                  editClassStage(record);
                 }}
               >
                 Güncelle
               </CustomButton>
             </div>
-            <div className="action-btns">
-              <CustomButton className="delete-btn" onClick={deleteClassStageHandler}>
+            <div className={classes["action-btns"]}>
+              <CustomButton
+                className={classes["delete-btn"]}
+                onClick={() => {
+                  deleteClassStageHandler(record);
+                }}
+              >
                 Sil
               </CustomButton>
             </div>
@@ -111,32 +147,17 @@ const ClassStages = () => {
     },
   ];
 
-  const sortFields = [
-    {
-      key: 'no',
-      ascend: 'idASC',
-      descend: 'idDESC',
-    },
-    {
-      key: 'name',
-      ascend: 'nameASC',
-      descend: 'nameDESC',
-    },
-    {
-      key: 'isActive',
-      ascend: 'isActiveASC',
-      descend: 'isActiveDESC',
-    },
-  ];
-
-  const editEventType = useCallback((record) => {
+  const editClassStage = useCallback((record) => {
     setOpen(true);
-    setSelectedPackageId(record.no);
     setIsEdit(true);
-    form.setFieldsValue(record);
+    setUpdateObject(record);
+    form.setFieldsValue({
+      name: record.name,
+      schoolLevel: schoolLevelReverseEnum[record.schoolLevel],
+    });
   });
-  const handleAddEventType = () => {
-    setSelectedPackageId();
+  const handleaddNewClassStage = () => {
+    setSelectedClassId();
     setIsEdit(false);
     form.resetFields();
     setOpen(true);
@@ -144,25 +165,34 @@ const ClassStages = () => {
 
   const onFinish = async () => {
     const values = await form.validateFields();
-    console.log(values);
     const data = {
-      name: values?.name,
-      isActive: values?.isActive,
-      description: values?.description,
-      id: isEdit ? selectedPackageId : undefined,
+      entity: {
+        name: values?.name,
+        isActive: true,
+        schoolLevel: schoolLevelEnum[values.schoolLevel],
+        id: isEdit ? selectedClassId : undefined,
+      },
     };
-    console.log(data);
     if (isEdit) {
-      const action = await dispatch(updateEventType(data));
-      if (updateEventType.fulfilled.match(action)) {
+      if (_.isEqual(data.entity, updateObject)) {
+        errorDialog({
+          title: <Text t="error" />,
+          message: 'Kayıt üzerinde herhangi bir değişiklik yapmadınız!',
+        });
+        return false;
+      }
+      const action = await dispatch(updateClassStage(data));
+      if (updateClassStage.fulfilled.match(action)) {
         setOpen(false);
         successDialog({
           title: <Text t="success" />,
-          message: action?.payload.message,
+          message: 'İlgili kayıt güncellenmiştir.',
           onOk: () => {
             form.resetFields();
           },
         });
+        setIsEdit(false);
+        dispatch(getAllClassStages());
       } else {
         errorDialog({
           title: <Text t="error" />,
@@ -172,17 +202,18 @@ const ClassStages = () => {
       return;
     }
 
-    const action = await dispatch(addEventType(data));
-    if (addEventType.fulfilled.match(action)) {
+    const action = await dispatch(addNewClassStage(data));
+    if (addNewClassStage.fulfilled.match(action)) {
       setOpen(false);
       successDialog({
         title: <Text t="success" />,
-        message: action?.payload.message,
+        message: 'Yeni kayıt başarıyla eklenmiştir.',
         onOk: () => {
           setOpen(false);
           form.resetFields();
         },
       });
+      dispatch(getAllClassStages());
     } else {
       errorDialog({
         title: <Text t="error" />,
@@ -190,27 +221,17 @@ const ClassStages = () => {
       });
     }
   };
-  const onOk = useCallback(() => {
-    {
-      !isEdit && onFinish();
-    }
-    {
-      isEdit &&
-        confirmDialog({
-          title: 'Uyarı',
-          message: 'Seçtiğiniz Kayıt Üzerinde Değişiklik Yapılacaktır. Emin misiniz?',
-          onOk: () => {
-            onFinish();
-          },
-        });
-    }
-  }, [isEdit]);
+  const onOk = async () => {
+    onFinish();
+  };
 
   const onCancel = useCallback(() => {
     {
       confirmDialog({
         title: 'Uyarı',
-        message: 'İşlemi İptal Etmek İstediğinizden Emin Misiniz?',
+        message: 'İptal Etmek İstediğinizden Emin Misiniz?',
+        okText: 'Evet',
+        cancelText: 'Hayır',
         onOk: () => {
           form.resetFields();
           setOpen(false);
@@ -219,72 +240,45 @@ const ClassStages = () => {
     }
   });
 
-  const handleSort = (pagination, filters, sorter) => {
-    console.log(pagination);
-    if (sorter.order == undefined) {
-      const data = { ...filterObject };
-      dispatch(getEventTypes(data));
-    } else {
-      const sortType = sortFields.filter((field) => field.key === sorter.columnKey);
-      console.log(sortType);
-      const data = {
-        OrderBy: sortType.length ? sortType[0][sorter.order] : '',
-      };
-      dispatch(getEventTypes(data));
-    }
-  };
-  const paginationProps = {
-    showSizeChanger: true,
-    showQuickJumper: {
-      goButton: <CustomButton className="go-button">Git</CustomButton>,
-    },
-    total: tableProperty.totalCount,
-    current: tableProperty.currentPage,
-    pageSize: tableProperty.pageSize,
-    position: 'bottomRight',
-    onChange: (page, pageSize) => {
-      const data = {
-        ...filterObject,
-        PageNumber: page,
-        PageSize: pageSize,
-      };
-      dispatch(getEventTypes(data));
-    },
-  };
-
-  const TableFooter = ({ paginationProps }) => {
-    return (
-      <Row justify="end">
-        <CustomPagination className="custom-pagination" {...paginationProps} />
-      </Row>
-    );
-  };
-
-  const deleteClassStageHandler = useCallback(() => {
+  const deleteClassStageHandler = async (record) => {
     confirmDialog({
       title: 'Uyarı',
       message: 'Üzerinde olduğunuz ilgili kaydı silmek istediğinize emin misiniz?',
-      onOk: () => {
-        onFinish();
+      onOk: async () => {
+        const data = record.id;
+        const action = await dispatch(deleteClassStage(data));
+        if (deleteClassStage.fulfilled.match(action)) {
+          successDialog({
+            title: <Text t="success" />,
+            message: 'İlgili kayıt silinmiştir',
+            onOk: () => {
+              dispatch(getAllClassStages());
+            },
+          });
+        } else {
+          errorDialog({
+            title: <Text t="error" />,
+            message: action?.payload.message,
+          });
+        }
       },
     });
-  });
+  };
+ 
 
   return (
     <CustomPageHeader title="Sınıf Seviye Tanım Bilgileri" showBreadCrumb routes={['Ayarlar']}>
       <CustomCollapseCard cardTitle="Sınıf Seviye Tanım Bilgileri">
-        <div className="table-header">
-          <CustomButton className="add-btn" onClick={handleAddEventType}>
+        <div className={classes["table-header"]}>
+          <CustomButton className={classes["add-btn"]} onClick={handleaddNewClassStage}>
             Yeni
           </CustomButton>
         </div>
         <CustomTable
-          dataSource={eventTypes}
+          dataSource={allClassList}
           columns={columns}
-          onChange={handleSort}
           pagination={false}
-          rowKey={(record) => `events-${record?.id || record?.headText}`}
-          footer={() => <TableFooter paginationProps={paginationProps} />}
+          rowKey={(record) => `events-${record?.id || record?.name}`}
           scroll={{
             y: 750,
           }}
@@ -292,14 +286,14 @@ const ClassStages = () => {
       </CustomCollapseCard>
 
       <CustomModal
-        title={isEdit ? 'Sınıf Sevite Tanımı Güncelle' : 'Sınıf Sevite Tanımı  Ekle'}
+        title={isEdit ? 'Sınıf Seviye Tanımı Güncelle' : 'Sınıf Seviye Tanımı  Ekle'}
         visible={open}
         okText={isEdit ? 'Güncelle ve Kaydet' : 'Kaydet ve Bitir'}
         onOk={onOk}
-        cancelText="İptal Et"
+        cancelText="İptal"
         onCancel={onCancel}
         bodyStyle={{ overflowY: 'auto', maxHeight: 'calc(100vh - 300px)' }}
-        // width={600}
+        
       >
         <CustomForm form={form} layout="vertical" name="form" onFinish={onFinish}>
           <CustomFormItem
@@ -310,12 +304,12 @@ const ClassStages = () => {
               },
             ]}
             label="Sınıf Seviyesi"
-            name="isActive"
+            name="schoolLevel"
           >
-            <CustomSelect placeholder="Sınıf Seviyesi">
-              {stages.map(({ id, value, text }) => (
-                <Option key={id} value={id}>
-                  {text}
+            <CustomSelect placeholder="Okul Seviyesi">
+              {stages.map(({ id, value }) => (
+                <Option key={id} value={value}>
+                  {value}
                 </Option>
               ))}
             </CustomSelect>
