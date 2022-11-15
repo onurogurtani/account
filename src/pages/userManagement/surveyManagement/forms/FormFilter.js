@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form } from 'antd';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   CustomButton,
@@ -14,26 +14,45 @@ import {
   CustomFormItem,
   CustomInput,
 } from '../../../../components';
-import { getFilteredPagedForms } from '../../../../store/slice/formsSlice';
+import { getFilteredPagedForms,getFormCategories  } from '../../../../store/slice/formsSlice';
 import iconSearchWhite from '../../../../assets/icons/icon-white-search.svg';
 import '../../../../styles/surveyManagement/surveyFilter.scss';
 import dayjs from 'dayjs';
 
-const categoryList = [
-  { id: 1, categoryName: 'Eğitimden Önce' },
-  { id: 2, categoryName: 'Eğitimden Sonra' },
-  { id: 3, categoryName: 'String' },
-];
+// const categoryList = [
+//   { id: 1, categoryName: 'Eğitimden Önce' },
+//   { id: 2, categoryName: 'Eğitimden Sonra' },
+//   { id: 3, categoryName: 'String' },
+// ];
 
-const situationList = [
-  { id: 1, key: 'isActive', value: 'true', text: 'Aktif' },
-  { id: 2, key: 'isActive', value: 'false', text: 'Pasif' },
+const publishSituation = [
+  { id: 1, value: 'Yayında'},
+  { id: 2,  value: 'Yayında değil'},
+  { id: 3,  value: 'Taslak'},
+
 ];
+const publishEnum={
+  'Yayında':1,
+  'Yayında değil':2,
+  'Taslak':3
+}
+const publishEnumReverse={
+  1:'Yayında',
+  2:'Yayında değil',
+  3:'Taslak'
+}
 
 const FormFilter = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
-  const { filterObject, formList } = useSelector((state) => state?.forms);
+  const { filterObject, formList, formCategories } = useSelector((state) => state?.forms);
+
+  useEffect(() => {
+    dispatch(getFilteredPagedForms(filterObject));
+    dispatch(getFormCategories());
+  }, [dispatch]);
+  
+  console.log(formCategories);
 
   const handleClear = useCallback(async () => {
     console.log(filterObject);
@@ -60,12 +79,12 @@ const FormFilter = () => {
       const values = await form.validateFields();
       console.log(values);
 
-      if (values.status != null || values.status != undefined) {
-        var Status = [values.status];
-      }
+      // if (values.status != null || values.status != undefined) {
+      //   var Status = [values.status];
+      // }
       const body = {
         Name: values?.name || null,
-        Status,
+        PublishStatus:publishEnum[values.status],
         CategoryId: values.categoryId || null,
         StartDate: values?.startDate
           ? dayjs(values?.startDate)?.format('YYYY-MM-DDT00:00:00')
@@ -125,7 +144,7 @@ const FormFilter = () => {
                     {form.name}
                   </Option>
                 ))}
-                <Option key={11111} value={null}>
+                <Option key={11111} value={undefined}>
                   Hepsi
                 </Option>
               </CustomSelect>
@@ -134,7 +153,7 @@ const FormFilter = () => {
             <CustomFormItem
               label={
                 <div>
-                  <Text t="Durum" />
+                  <Text t="Yayınlanma Durumu" />
                   <span>:</span>
                 </div>
               }
@@ -142,9 +161,9 @@ const FormFilter = () => {
               className="filter-item"
             >
               <CustomSelect className="form-filter-item" placeholder={useText('Seçiniz')}>
-                {situationList?.map(({ id, text, value, key }) => (
-                  <Option id={id} key={key} value={value}>
-                    {text}
+                {publishSituation?.map(({ id,value}) => (
+                  <Option key={id} value={value}>
+                    {value}
                   </Option>
                 ))}
                 <Option key={111} value={undefined}>
@@ -164,9 +183,9 @@ const FormFilter = () => {
               className="filter-item"
             >
               <CustomSelect className="form-filter-item" placeholder={useText('choose')}>
-                {categoryList?.map(({ id, categoryName }) => (
+                {formCategories?.map(({ id, name }) => (
                   <Option key={id} value={id}>
-                    {categoryName}
+                    {name}
                   </Option>
                 ))}
                 <Option key={112} value={undefined}>

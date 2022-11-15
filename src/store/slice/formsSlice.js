@@ -50,11 +50,18 @@ export const getFilteredPagedForms = createAsyncThunk("forms/getFilteredPagedFor
 
 
 // Get Categories
-export const getFormCategories = createAsyncThunk('form/getFormCategories', async (data, { dispatch }) => {
-  const response = await formServices.getFormCategories(data);
-  dispatch(getFilteredPagedForms ());
-  return response;
-},
+
+export const getFormCategories = createAsyncThunk(
+  'getFormCategories',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      console.log('pişşşt')
+      const response = await formServices.getFormCategories();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
 );
 
 // Get TargetGroup
@@ -156,7 +163,7 @@ export const formsSlice = createSlice({
     });
 
     builder.addCase(getFormCategories.fulfilled, (state, action) => {
-      state.formCategories = action.payload.data
+      state.formCategories = action.payload.data.items;
     });
 
     builder.addCase(getTargetGroup.fulfilled, (state, action) => {

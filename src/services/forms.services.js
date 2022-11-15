@@ -11,11 +11,11 @@ const getByFilterPagedForms = (urlString) => {
 
 //AŞAĞIDA YAZILI SERVİSLER ÖNCEDEN YAZILDIĞI VE SONRAKİ SPRINTLERDE DÜZELTİLEREK KULLANILMASI İÇİN SİLİNMEDİ:
 
-const getFormCategories = (data) => {
+const getFormCategories = () => {
   return api({
-    url: `Categorys/getList?PageNumber=1&PageSize=50`,
+    url: `SubCategory/GetByFilterPagedSubCategories?SubCategoryDetailSearch.PageNumber=1&SubCategoryDetailSearch.PageSize=1000`,
     method: 'POST',
-    data,
+    data:''
   });
 };
 

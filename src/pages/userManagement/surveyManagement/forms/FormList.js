@@ -12,7 +12,7 @@ import '../../../../styles/surveyManagement/surveyStyles.scss';
 import { columns, sortList } from './static';
 import { useDispatch, useSelector } from 'react-redux';
 import iconSearchWhite from '../../../../assets/icons/icon-white-search.svg';
-import { getFilteredPagedForms } from '../../../../store/slice/formsSlice';
+import { getFilteredPagedForms,getFormCategories  } from '../../../../store/slice/formsSlice';
 import FormFilter from './FormFilter';
 
 const FormList = () => {
@@ -27,6 +27,7 @@ const FormList = () => {
 
   useEffect(() => {
     dispatch(getFilteredPagedForms(filterObject));
+    dispatch(getFormCategories());
     console.log(tableProperty);
   }, [dispatch]);
 
@@ -81,7 +82,9 @@ const FormList = () => {
           <CustomButton
             data-testid="search"
             className="search-btn"
-            onClick={() => setFilterFormVisible((prev) => !prev)}
+            onClick={() => {
+              
+              setFilterFormVisible((prev) => !prev)}}
           >
             <CustomImage src={iconSearchWhite} />
           </CustomButton>
