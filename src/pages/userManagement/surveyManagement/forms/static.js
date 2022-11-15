@@ -209,22 +209,34 @@ const columns = [
   },
   {
     title: 'Yayınlanma Durumu',
-    dataIndex: 'isPublished',
-    key: 'isPublished',
+    dataIndex: 'publishStatus',
+    key: 'publishStatus',
     width:'120px',
     sorter: true,
-    render: (isPublished) => {
-      return isPublished ? (
-        <span style={{ backgroundColor: '#00a483', borderRadius: '5px', boxShadow: '0 5px 5px 0', padding:'5px',width:'100px', display:'inline-block', textAlign:'center' }}>
-          Yayınlandı
-        </span>
-      ) : (
-        <span
-          style={{ backgroundColor: '#ff8c00', borderRadius: '5px', boxShadow: '0 5px 5px 0', padding:'5px',width:'100px', display:'inline-block', textAlign:'center' }}
-        >
-          Yayınlanmadı
-        </span>
-      );
+    render: (publishStatus) => {
+      if(publishStatus==1){
+        return (
+          <span style={{ backgroundColor: '#00a483', borderRadius: '5px', boxShadow: '0 5px 5px 0', padding:'5px',width:'100px', display:'inline-block', textAlign:'center' }}>
+            Yayında
+          </span>
+        ) 
+      }else if(publishStatus==2){
+        return (
+          <span
+            style={{ backgroundColor: '#ff8c00', borderRadius: '5px', boxShadow: '0 5px 5px 0', padding:'5px',width:'100px', display:'inline-block', textAlign:'center' }}
+          >
+            Yayında değil
+          </span>
+        );
+      }else{
+        return (
+          <span
+            style={{ backgroundColor: '#fcec03', borderRadius: '5px', boxShadow: '0 5px 5px 0', padding:'5px',width:'100px', display:'inline-block', textAlign:'center' }}
+          >
+            Taslak
+          </span>
+        );
+      }  
     },
   },
   {
