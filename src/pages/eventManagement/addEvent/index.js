@@ -49,12 +49,13 @@ const AddEvent = () => {
     if (!values.formId) {
       delete values?.subCategoryId;
     }
+    values.isActive = true;
     console.log(values);
     const action = await dispatch(addEvent({ event: values }));
     if (addEvent.fulfilled.match(action)) {
       successDialog({
         title: <Text t="success" />,
-        message: action?.payload.message,
+        message: 'Etkinlik Başarıyla Oluşturuldu',
         onOk: async () => {
           history.push('/event-management/list');
         },
@@ -88,9 +89,9 @@ const AddEvent = () => {
                 layout="horizontal"
                 form={form}
                 name="form"
-                initialValues={{
-                  isActive: true,
-                }}
+                // initialValues={{
+                //   isActive: true,
+                // }}
               >
                 <EventForm form={form} />
               </CustomForm>

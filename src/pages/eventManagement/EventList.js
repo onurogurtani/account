@@ -8,25 +8,43 @@ import {
 } from '../../components';
 import iconFilter from '../../assets/icons/icon-filter.svg';
 import { useDispatch, useSelector } from 'react-redux';
-import { getByFilterPagedEvents, setSorterObject } from '../../store/slice/eventsSlice';
+import {
+  getByFilterPagedEvents,
+  setIsFilter,
+  setSorterObject,
+} from '../../store/slice/eventsSlice';
 import '../../styles/table.scss';
+import '../../styles/eventsManagement/listEvent.scss';
 import { Tag } from 'antd';
 import dayjs from 'dayjs';
 import { RightOutlined } from '@ant-design/icons';
 import EventFilter from './EventFilter';
 import { dateTimeFormat } from '../../utils/keys';
 import { useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
+function useQuery() {
+  const { search } = useLocation();
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+}
 const EventList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
+  let query = useQuery();
 
-  const { events, tableProperty, sorterObject, filterObject } = useSelector(
+  const { events, tableProperty, sorterObject, filterObject, isFilter } = useSelector(
     (state) => state?.events,
   );
   const [isEventFilter, setIsEventFilter] = useState(false);
   useEffect(() => {
-    loadEvents();
+    if (query.get('filter')) {
+      isFilter && setIsEventFilter(true);
+      loadEvents(filterObject);
+    } else {
+      dispatch(setSorterObject({}));
+      dispatch(setIsFilter(false));
+      loadEvents();
+    }
   }, []);
 
   const loadEvents = useCallback(
@@ -174,13 +192,17 @@ const EventList = () => {
       render: (text, record) => {
         return (
           <div>
-            {record.isPublised ? (
+            {record.isDraft ? (
+              <Tag color="yellow" key={2}>
+                Taslak
+              </Tag>
+            ) : record.isPublised ? (
               <Tag color="green" key={1}>
                 Yayınlandı
               </Tag>
             ) : (
-              <Tag color="yellow" key={2}>
-                Taslak
+              <Tag color="red" key={2}>
+                Yayından Kaldırıldı
               </Tag>
             )}
           </div>
@@ -195,6 +217,12 @@ const EventList = () => {
   ];
   const addEvent = () => {
     history.push('/event-management/add');
+  };
+
+  const showEvent = (record) => {
+    history.push({
+      pathname: `/event-management/show/${record.id}`,
+    });
   };
   return (
     <CustomPageHeader
@@ -222,11 +250,11 @@ const EventList = () => {
           onChange={onChangeTable}
           className="event-table-list"
           columns={columns}
-          // onRow={(record, rowIndex) => {
-          //   return {
-          //     onClick: (event) => showVideo(record),
-          //   };
-          // }}
+          onRow={(record, rowIndex) => {
+            return {
+              onClick: (event) => showEvent(record),
+            };
+          }}
           pagination={paginationProps}
           rowKey={(record) => `event-list-${record?.id}`}
           scroll={{ x: false }}

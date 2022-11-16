@@ -221,16 +221,16 @@ const App = () => {
                           Component={EventManagement?.AddEvent}
                           authority="dashboard"
                         />
-                        {/* <PrivateRoute
+                        <PrivateRoute
                           path={`${match?.path}/show/:id`}
-                          Component={VideoManagement?.ShowVideo}
+                          Component={EventManagement?.ShowEvent}
                           authority="dashboard"
-                        /> */}
-                        {/* <PrivateRoute
+                        />
+                        <PrivateRoute
                           path={`${match?.path}/edit/:id`}
-                          Component={VideoManagement?.EditVideo}
+                          Component={EventManagement?.EditEvent}
                           authority="dashboard"
-                        /> */}
+                        />
                         <Route
                           component={() => (
                             <Redirect

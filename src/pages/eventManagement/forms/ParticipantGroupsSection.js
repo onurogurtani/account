@@ -1,16 +1,21 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { CustomFormItem, CustomSelect, Option } from '../../../components';
 import { getParticipantGroupsList } from '../../../store/slice/eventsSlice';
 import { turkishToLower } from '../../../utils/utils';
 
 const ParticipantGroupsSection = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
+
   const [participantGroupsList, setParticipantGroupsList] = useState([]);
 
   useEffect(() => {
     loadparticipantGroups();
   }, []);
+
+  const isDisableAllButDate = location?.state?.isDisableAllButDate;
 
   const loadparticipantGroups = useCallback(async () => {
     const action = await dispatch(getParticipantGroupsList());
@@ -39,6 +44,7 @@ const ParticipantGroupsSection = () => {
         }
         showArrow
         mode="multiple"
+        disabled={isDisableAllButDate}
         placeholder="Lütfen Katılımcı Grubu Seçiniz"
       >
         {participantGroupsList

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import {
   CustomFormItem,
   CustomInput,
@@ -8,7 +9,10 @@ import {
   Option,
   Text,
 } from '../../../components';
-import { getSurveyWithFilterSurveyCategory } from '../../../store/slice/eventsSlice';
+import {
+  getSurveyListWithSelectedSurveyCategory,
+  setSurveyListWithSelectedSurveyCategory,
+} from '../../../store/slice/eventsSlice';
 import { getByFilterPagedSubCategories } from '../../../store/slice/subCategorySlice ';
 import { turkishToLower } from '../../../utils/utils';
 import DateSection from './DateSection';
@@ -16,13 +20,15 @@ import ParticipantGroupsSection from './ParticipantGroupsSection';
 
 const EventForm = ({ form }) => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const { subCategories } = useSelector((state) => state?.subCategory);
-  const [isSelectedSurveyCategory, setIsSelectedSurveyCategory] = useState(false);
-  const [surveyList, setSurveyList] = useState([]);
+  const { surveyListWithSelectedSurveyCategory } = useSelector((state) => state?.events);
 
   useEffect(() => {
     loadSurveyCategories();
   }, []);
+
+  const isDisableAllButDate = location?.state?.isDisableAllButDate;
 
   const loadSurveyCategories = useCallback(async () => {
     await dispatch(getByFilterPagedSubCategories({ id: 24 })); //24 anket kategorilerinin id
@@ -31,26 +37,20 @@ const EventForm = ({ form }) => {
   const surveyCategroyChange = async (value) => {
     form.resetFields(['formId']);
     if (!value) {
-      setSurveyList([]);
-      setIsSelectedSurveyCategory(false);
+      dispatch(setSurveyListWithSelectedSurveyCategory([])); //Anket Kategorisi seçmekten vazgeçerse anket listesi sıfırla
       return false;
     }
-    const action = await dispatch(getSurveyWithFilterSurveyCategory(value));
-    if (getSurveyWithFilterSurveyCategory.fulfilled.match(action)) {
+
+    const action = await dispatch(getSurveyListWithSelectedSurveyCategory(value));
+    if (getSurveyListWithSelectedSurveyCategory.fulfilled.match(action)) {
       const surveyList = action?.payload?.data?.items;
-      if (surveyList.length) {
-        !isSelectedSurveyCategory && setIsSelectedSurveyCategory(true);
-        setSurveyList(surveyList);
-      } else {
-        setIsSelectedSurveyCategory(false);
+      if (!surveyList.length) {
         errorDialog({
           title: <Text t="error" />,
           message: 'Seçtiğiniz Kategoriye Ait Kayıtlı Anket Bulunamadı',
         });
       }
     } else {
-      setSurveyList([]);
-      setIsSelectedSurveyCategory(false);
       errorDialog({
         title: <Text t="error" />,
         message: action?.payload?.message,
@@ -68,7 +68,7 @@ const EventForm = ({ form }) => {
           { whitespace: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
         ]}
       >
-        <CustomInput placeholder="Etkinlik Adı" />
+        <CustomInput disabled={isDisableAllButDate} placeholder="Etkinlik Adı" />
       </CustomFormItem>
 
       <CustomFormItem
@@ -79,15 +79,15 @@ const EventForm = ({ form }) => {
           { whitespace: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
         ]}
       >
-        <CustomInput placeholder="Açıklama" />
+        <CustomInput disabled={isDisableAllButDate} placeholder="Açıklama" />
       </CustomFormItem>
 
-      <CustomFormItem
+      {/* <CustomFormItem
         rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
         label="Durum"
         name="isActive"
       >
-        <CustomSelect placeholder="Durum">
+        <CustomSelect disabled={isDisableAllButDate} placeholder="Durum">
           <Option key={1} value={true}>
             Aktif
           </Option>
@@ -95,13 +95,14 @@ const EventForm = ({ form }) => {
             Pasif
           </Option>
         </CustomSelect>
-      </CustomFormItem>
+      </CustomFormItem> */}
 
       <CustomFormItem label="Anket Kategorisi" name="subCategoryId">
         <CustomSelect
           filterOption={(input, option) =>
             turkishToLower(option.children).includes(turkishToLower(input))
           }
+          disabled={isDisableAllButDate}
           showArrow
           showSearch
           onChange={surveyCategroyChange}
@@ -129,13 +130,13 @@ const EventForm = ({ form }) => {
           filterOption={(input, option) =>
             turkishToLower(option.children).includes(turkishToLower(input))
           }
-          disabled={!isSelectedSurveyCategory}
+          disabled={!surveyListWithSelectedSurveyCategory.length || isDisableAllButDate}
           placeholder="Anket Seçiniz"
         >
           <Option key={false} value={false}>
             Anket Seçiniz
           </Option>
-          {surveyList
+          {surveyListWithSelectedSurveyCategory
             // ?.filter((item) => item.isActive)
             ?.map((item) => {
               return (
