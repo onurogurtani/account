@@ -175,11 +175,13 @@ const columns = [
   },
   {
     title: 'Kategori',
-    dataIndex: 'category',
-    key: 'category',
+    dataIndex: 'subCategory',
+    key: 'subCategory',
     sorter: true,
-    render: (category) => {
-      return category?.name;
+    render: (subCategory
+      ) => {
+      return subCategory
+      ?.name;
     },
   },
   {
