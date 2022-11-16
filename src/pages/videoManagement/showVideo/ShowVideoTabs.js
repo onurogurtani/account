@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import ShowVideoGeneralInformation from './ShowVideoGeneralInformation';
 import ShowVideoDocument from './ShowVideoDocument';
 import ShowVideoQuestion from './ShowVideoQuestion';
+import ModuleShowFooter from '../../../components/ModuleShowFooter';
 
 const { TabPane } = Tabs;
 
@@ -33,23 +34,12 @@ const ShowVideoTabs = () => {
               </CustomCollapseCard>
             </TabPane>
           </Tabs>
-
-          <ul className="footer">
-            <li>
-              Oluşturma Tarihi :{' '}
-              <span>{dayjs(currentVideo?.insertTime)?.format('YYYY-MM-DD HH:mm')}</span>
-            </li>
-            <li>
-              Oluşturan : <span>{currentVideo?.insertUserFullName}</span>
-            </li>
-            <li>
-              Güncelleme Tarihi :{' '}
-              <span>{dayjs(currentVideo?.updateTime)?.format('YYYY-MM-DD HH:mm')}</span>
-            </li>
-            <li>
-              Güncelleyen : <span>{currentVideo?.updateUserFullName}</span>
-            </li>
-          </ul>
+          <ModuleShowFooter
+            insertTime={currentVideo?.insertTime}
+            insertUserFullName={currentVideo?.insertUserFullName}
+            updateTime={currentVideo?.updateTime}
+            updateUserFullName={currentVideo?.updateUserFullName}
+          />
         </>
       ) : null}
     </>

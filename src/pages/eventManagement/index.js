@@ -12,23 +12,23 @@ const AddEvent = lazy(() =>
   })),
 );
 
-// const ShowVideo = lazy(() =>
-//   import('./showVideo/').then(({ default: Component }) => ({
-//     default: Component,
-//   })),
-// );
+const ShowEvent = lazy(() =>
+  import('./showEvent/').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 
-// const EditVideo = lazy(() =>
-//   import('./editVideo/').then(({ default: Component }) => ({
-//     default: Component,
-//   })),
-// );
+const EditEvent = lazy(() =>
+  import('./editEvent/').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 
 const EventManagement = {
   AddEvent,
   EventList,
-  // ShowVideo,
-  // EditVideo,
+  ShowEvent,
+  EditEvent,
 };
 
 export default EventManagement;

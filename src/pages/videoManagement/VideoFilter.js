@@ -273,17 +273,16 @@ const VideoFilter = () => {
               })}
             </CustomSelect>
           </CustomFormItem>
-
-          <div className="form-footer">
-            <div className="action-buttons">
-              <CustomButton className="clear-btn" onClick={handleReset}>
-                Temizle
-              </CustomButton>
-              <CustomButton className="search-btn" onClick={handleFilter}>
-                <CustomImage className="icon-search" src={iconSearchWhite} />
-                Filtrele
-              </CustomButton>
-            </div>
+        </div>
+        <div className="form-footer">
+          <div className="action-buttons">
+            <CustomButton className="clear-btn" onClick={handleReset}>
+              Temizle
+            </CustomButton>
+            <CustomButton className="search-btn" onClick={handleFilter}>
+              <CustomImage className="icon-search" src={iconSearchWhite} />
+              Filtrele
+            </CustomButton>
           </div>
         </div>
       </CustomForm>

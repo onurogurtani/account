@@ -13,7 +13,7 @@ import iconFilter from '../../assets/icons/icon-filter.svg';
 import '../../styles/table.scss';
 import '../../styles/videoManagament/videoList.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { getByFilterPagedVideos, setSorterObject } from '../../store/slice/videoSlice';
+import { getByFilterPagedVideos, setIsFilter, setSorterObject } from '../../store/slice/videoSlice';
 import { Tag } from 'antd';
 import { useLocation } from 'react-router-dom';
 
@@ -43,6 +43,7 @@ const VideoList = () => {
       loadVideos(filterObject);
     } else {
       dispatch(setSorterObject({}));
+      dispatch(setIsFilter(false));
       loadVideos();
     }
   }, []);

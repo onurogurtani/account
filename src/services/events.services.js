@@ -7,6 +7,13 @@ const getByFilterPagedEvents = (urlString) => {
   });
 };
 
+const getByEventId = (id) => {
+  return api({
+    url: `Events/getById?Id=${id}`,
+    method: 'POST',
+  });
+};
+
 const addEvent = (data) => {
   return api({
     url: `Events/Add`,
@@ -22,10 +29,29 @@ const getEventNames = () => {
   });
 };
 
+const editEvent = (data) => {
+  return api({
+    url: `/Events/Update`,
+    method: 'PUT',
+    data,
+  });
+};
+
+const deleteEvent = (data) => {
+  return api({
+    url: `Events/Delete`,
+    method: 'DELETE',
+    data,
+  });
+};
+
 const eventsServices = {
   getByFilterPagedEvents,
   addEvent,
   getEventNames,
+  getByEventId,
+  deleteEvent,
+  editEvent,
 };
 
 export default eventsServices;

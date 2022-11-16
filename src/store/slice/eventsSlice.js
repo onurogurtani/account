@@ -49,6 +49,18 @@ export const getByFilterPagedEvents = createAsyncThunk(
   },
 );
 
+export const getByEventId = createAsyncThunk(
+  'events/getByEventId',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await eventsServices.getByEventId(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
 export const addEvent = createAsyncThunk(
   'events/addEvent',
   async (data, { dispatch, rejectWithValue }) => {
@@ -61,8 +73,8 @@ export const addEvent = createAsyncThunk(
   },
 );
 
-export const getSurveyWithFilterSurveyCategory = createAsyncThunk(
-  'events/getSurveyWithFilterSurveyCategory',
+export const getSurveyListWithSelectedSurveyCategory = createAsyncThunk(
+  'events/getSurveyListWithSelectedSurveyCategory',
   async (data, { dispatch, rejectWithValue }) => {
     try {
       const urlString = `FormDetailSearch.CategoryId=${data}&FormDetailSearch.Status=true`;
@@ -98,8 +110,34 @@ export const getEventNames = createAsyncThunk(
   },
 );
 
+export const editEvent = createAsyncThunk(
+  'events/editEvent',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await eventsServices.editEvent(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
+export const deleteEvent = createAsyncThunk(
+  'events/deleteEvent',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await eventsServices.deleteEvent(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
 const initialState = {
   events: [],
+  currentEvent: {},
+  surveyListWithSelectedSurveyCategory: [], //seçilen anket kategorisindeki anketler
   tableProperty: {
     currentPage: 1,
     page: 1,
@@ -124,6 +162,9 @@ export const eventsSlice = createSlice({
     setIsFilter: (state, action) => {
       state.isFilter = action.payload;
     },
+    setSurveyListWithSelectedSurveyCategory: (state, action) => {
+      state.surveyListWithSelectedSurveyCategory = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getByFilterPagedEvents.fulfilled, (state, action) => {
@@ -134,7 +175,24 @@ export const eventsSlice = createSlice({
       state.events = [];
       state.tableProperty = [];
     });
+    builder.addCase(getByEventId.fulfilled, (state, action) => {
+      state.currentEvent = action?.payload?.data;
+    });
+    builder.addCase(getByEventId.rejected, (state) => {
+      state.currentEvent = {};
+    });
+    builder.addCase(getSurveyListWithSelectedSurveyCategory.fulfilled, (state, action) => {
+      state.surveyListWithSelectedSurveyCategory = action?.payload?.data?.items;
+    });
+    builder.addCase(getSurveyListWithSelectedSurveyCategory.rejected, (state) => {
+      state.surveyListWithSelectedSurveyCategory = [];
+    });
   },
 });
 
-export const { setFilterObject, setSorterObject, setIsFilter } = eventsSlice.actions;
+export const {
+  setFilterObject,
+  setSorterObject,
+  setIsFilter,
+  setSurveyListWithSelectedSurveyCategory,
+} = eventsSlice.actions;

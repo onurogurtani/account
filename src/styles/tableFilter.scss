@@ -6,7 +6,7 @@
       align-items: center;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       column-gap: 24px;
-      padding: 26px 24px 12px 48px;
+      padding: 26px 24px 0px 48px;
 
       .ant-form-item {
         flex-wrap: nowrap;
@@ -35,44 +35,44 @@
         width: 100%;
         align-items: self-start;
       }
+    }
+    .form-footer {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 0 10px 10px 0;
 
-      .form-footer {
-        width: 100%;
-        display: flex;
-        justify-content: flex-end;
-        flex-wrap: wrap;
-        align-items: center;
+      .action-buttons {
+        .clear-btn {
+          background: none;
+          border: none;
+          box-shadow: none;
+          font-size: 16px;
+          line-height: 20px;
+          text-decoration: underline !important;
+          display: inline-flex;
+          justify-content: center;
+          align-items: center;
+          width: 58px;
 
-        .action-buttons {
-          .clear-btn {
-            background: none;
-            border: none;
-            box-shadow: none;
-            font-size: 16px;
-            line-height: 20px;
-            text-decoration: underline !important;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            width: 58px;
+          margin-right: 24px;
+          color: #3f4957;
+        }
 
-            margin-right: 24px;
-            color: #3f4957;
-          }
+        .search-btn {
+          width: 127px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #3f4957;
+          color: #fff;
+          line-height: 20px;
+          border-radius: 10px;
 
-          .search-btn {
-            width: 127px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #3f4957;
-            color: #fff;
-            line-height: 20px;
-            border-radius: 10px;
-
-            .icon-search {
-              margin-right: 15px;
-            }
+          .icon-search {
+            margin-right: 15px;
           }
         }
       }
