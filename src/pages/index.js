@@ -40,10 +40,6 @@ const CommunicationPreferences = lazy(() =>
   })),
 );
 
-const PaymentResult = lazy(() =>
-  import('./PaymentResult').then(({ default: Component }) => ({ default: Component })),
-);
-
 export {
   Login,
   ForgotPassword,
@@ -56,5 +52,4 @@ export {
   PersonalInformation,
   PasswordInformation,
   CommunicationPreferences,
-  PaymentResult,
 };

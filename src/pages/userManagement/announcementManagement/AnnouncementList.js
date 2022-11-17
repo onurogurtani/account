@@ -23,13 +23,12 @@ import AnnouncementFilter from './AnnouncementFilter';
 import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
 import dayjs from 'dayjs';
 import FormItem from 'antd/lib/form/FormItem';
-import cardOrderDetailsServices from '../../../services/cardOrderDetails.services';
 
 const AnnouncementList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [announcementFilterIsShow, setAnnouncementFilterIsShow] = useState(false);
-  const [activeValue, setActiveValue]=useState();
+  const [activeValue, setActiveValue] = useState();
   const { announcements, tableProperty, filterObject } = useSelector(
     (state) => state?.announcement,
   );
@@ -45,10 +44,8 @@ const AnnouncementList = () => {
     return unifiedRoles;
   }, []);
 
-  useEffect(async() => {
-    await dispatch(
-      getByFilterPagedAnnouncements(),
-    );
+  useEffect(async () => {
+    await dispatch(getByFilterPagedAnnouncements());
   }, []);
 
   const handleSelectChange = useCallback(
@@ -60,7 +57,8 @@ const AnnouncementList = () => {
         }),
       );
       setActiveValue(activeEnum[value]);
-    }, [dispatch],
+    },
+    [dispatch],
   );
   const activeEnum = {
     true: 'Aktif Kayıtlar',
