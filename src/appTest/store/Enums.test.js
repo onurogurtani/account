@@ -1,4 +1,4 @@
-import { monthsList, orderTypeList } from '../../store/enums';
+import { monthsList } from '../../store/enums';
 
 describe('Store enums render', () => {
   it('Month list should be render', () => {
@@ -23,16 +23,5 @@ describe('Store enums render', () => {
     });
 
     expect(monthsList).toMatchObject(monthsListMock);
-  });
-
-  it('Order type list should be render', () => {
-    let orderTypeListMock = [];
-
-    const orders = ['Standart Sipariş', 'Ramazan Sipariş', 'Bayram Yardımı', 'Yılbaşı Hediyesi'];
-    orderTypeListMock = orders.map((text, index) => {
-      return { value: index, text };
-    });
-
-    expect(orderTypeList).toMatchObject(orderTypeListMock);
   });
 });

@@ -1,7 +1,5 @@
 import { logout, removeToken } from '../store/slice/authSlice';
 import { persist } from '../store/store';
-import masterCardLogo from '../assets/images/cardOrders/mastercard-logo.svg';
-import cardBankLogo from '../assets/images/cardOrders/bitmap.webp';
 import { Modal } from 'antd';
 
 export const objectEmptyCheck = (obj) => {
@@ -62,72 +60,29 @@ export const persistLogin = async (dispatch, staticLogout) => {
   await persist.purge();
 };
 
-export const cardTypeIcon = (cardType) => {
-  switch (cardType) {
-    case 'Visa':
-      return masterCardLogo;
-    case 'Mastercard':
-      return masterCardLogo;
-    case 'maestro':
-      return masterCardLogo;
-    case 'Amex':
-      return masterCardLogo;
-    case 'Troy':
-      return masterCardLogo;
-    case 'JCB':
-      return masterCardLogo;
-    case 'DinersClub':
-      return masterCardLogo;
-    case 'Maestro':
-      return masterCardLogo;
-    case 'Discover':
-      return masterCardLogo;
-    default:
-      return masterCardLogo;
-  }
-};
-
-export const bankCodeIcon = (bankCode) => {
-  switch (bankCode) {
-    case '046': // akbank
-      return cardBankLogo;
-    case '111': // finansbank
-      return cardBankLogo;
-    case '012': // halkbank
-      return cardBankLogo;
-    case '010': //ziraatbank
-      return cardBankLogo;
-    case '062': //garanti
-      return cardBankLogo;
-    default:
-      // default
-      return cardBankLogo;
-  }
-};
-
 // blob ile çalıştırılır
-export const previewDownload = async (blob) => {
-  const blobURL = URL.createObjectURL(blob);
-  const iframe = document.createElement('iframe'); //load content in an iframe to print later
-  document.body.appendChild(iframe);
-  iframe.style.display = 'none';
-  iframe.src = blobURL;
-  iframe.onload = await function () {
-    setTimeout(function () {
-      iframe.focus();
-      iframe.contentWindow.print();
-    }, 1);
-  };
-};
+// export const previewDownload = async (blob) => {
+//   const blobURL = URL.createObjectURL(blob);
+//   const iframe = document.createElement('iframe'); //load content in an iframe to print later
+//   document.body.appendChild(iframe);
+//   iframe.style.display = 'none';
+//   iframe.src = blobURL;
+//   iframe.onload = await function () {
+//     setTimeout(function () {
+//       iframe.focus();
+//       iframe.contentWindow.print();
+//     }, 1);
+//   };
+// };
 
-export const isGreaterMaximumLoadedAmount = (data) => {
-  const controlValue = parseFloat(data?.controlValue?.replace(',', '.')) || 0;
-  if (data.price > controlValue) {
-    return true;
-  } else {
-    return false;
-  }
-};
+// export const isGreaterMaximumLoadedAmount = (data) => {
+//   const controlValue = parseFloat(data?.controlValue?.replace(',', '.')) || 0;
+//   if (data.price > controlValue) {
+//     return true;
+//   } else {
+//     return false;
+//   }
+// };
 
 export const turkishToLower = (string) => {
   let letters = { İ: 'i', I: 'ı', Ş: 'ş', Ğ: 'ğ', Ü: 'ü', Ö: 'ö', Ç: 'ç' };

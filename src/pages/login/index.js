@@ -16,7 +16,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../store/slice/authSlice';
 import ReCAPTCHA from 'react-google-recaptcha';
-import { loginApplicationLink, ReCAPTCHAKeys } from '../../utils/keys';
+import { ReCAPTCHAKeys } from '../../utils/keys';
 import fastLoginImg from '../../assets/images/login/fastLoginImg.png';
 
 const Login = ({ history }) => {

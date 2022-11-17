@@ -11,8 +11,6 @@ export const footerLink = {
   twitter: '/',
 };
 
-export const loginApplicationLink =
-  'https://yemek-karti.ticket.com.tr/basvuru/?utm_source=ticketonline&utm_medium=banner&utm_campaign=ticket-online-login&utm_content=basvurmak-icin-tiklayin';
 export const sessionModalMinutes = {
   modalMinutes: 2,
   sessionMinutes: process.env.SESSION_MINUTES || 15,

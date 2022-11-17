@@ -9,7 +9,6 @@ import {
   Maintenance,
   MyProfile,
   NotFound,
-  PaymentResult,
   ResetPassword,
   SmsVerification,
 } from './pages';
@@ -21,7 +20,6 @@ import { getCurrentUser } from './store/slice/userSlice';
 import HomeLayout from './layout/HomeLayout';
 
 import UserManagement from './pages/userManagement';
-import SurveyManagement from './pages/userManagement/surveyManagement';
 import VideoManagement from './pages/videoManagement';
 import Settings from './pages/settings';
 import EventManagement from './pages/eventManagement';
@@ -59,7 +57,6 @@ const App = () => {
               <Route exact path="/sms-verification" component={SmsVerification} />
               <Route exact path="/not-found" component={NotFound} />
               <Route exact path="/maintenance" component={Maintenance} />
-              <Route path={'/payment-result'} component={PaymentResult} />
 
               <HomeLayout>
                 <PrivateRoute exact path={'/'} Component={Dashboard} authority="dashboard" />

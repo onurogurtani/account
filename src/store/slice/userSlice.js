@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import profileServices from '../../services/profile.services';
-import { userCustomersGetList } from './customerSlice';
 
 export const getCurrentUser = createAsyncThunk(
   'getCurrentUser',
