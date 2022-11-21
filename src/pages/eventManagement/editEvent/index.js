@@ -36,7 +36,9 @@ const EditEvent = () => {
   const isDisableAllButDate = location?.state?.isDisableAllButDate;
 
   useEffect(() => {
-    loadEvent(id);
+    if (currentEvent?.id !== Number(id)) {
+      loadEvent(id);
+    }
   }, []);
 
   const loadEvent = useCallback(
@@ -56,28 +58,34 @@ const EditEvent = () => {
   );
 
   useEffect(() => {
-    if (currentEvent?.formId) {
-      const action = dispatch(getSurveyListWithSelectedSurveyCategory(currentEvent?.subCategoryId));
-    } // etkinliğe eklenen anket varsa
-    if (Object.keys(currentEvent)) {
-      form.setFieldsValue({
-        name: currentEvent?.name,
-        description: currentEvent?.description,
-        isActive: currentEvent?.isActive,
-        isPublised: currentEvent?.isPublised,
-        isDraft: currentEvent?.isDraft,
-        formId: currentEvent?.formId,
-        subCategoryId: currentEvent?.subCategoryId,
-        participantGroups: currentEvent?.participantGroups?.map((item) => item.participantGroupId),
-        startDate: dayjs(currentEvent?.startDate),
-        endDate: dayjs(currentEvent?.endDate),
-      });
-      if (isDisableAllButDate) {
-        //isDisableAllButDate sadece tarih editlenebilceği zaman
-        form.validateFields(['startDate', 'endDate']);
-      }
+    if (Object.keys(currentEvent).length) {
+      setFormFieldsValue();
     }
   }, [currentEvent]);
+
+  const setFormFieldsValue = async () => {
+    if (currentEvent?.formId) {
+      await dispatch(getSurveyListWithSelectedSurveyCategory(currentEvent?.subCategoryId));
+    } // etkinliğe eklenen anket varsa
+
+    form.setFieldsValue({
+      name: currentEvent?.name,
+      description: currentEvent?.description,
+      isActive: currentEvent?.isActive,
+      isPublised: currentEvent?.isPublised,
+      isDraft: currentEvent?.isDraft,
+      formId: currentEvent?.formId,
+      subCategoryId: currentEvent?.subCategoryId,
+      participantGroups: currentEvent?.participantGroups?.map((item) => item.participantGroupId),
+      startDate: dayjs(currentEvent?.startDate),
+      endDate: dayjs(currentEvent?.endDate),
+    });
+
+    if (isDisableAllButDate) {
+      //isDisableAllButDate sadece tarih editlenebilceği zaman
+      form.validateFields(['startDate', 'endDate']);
+    }
+  };
 
   const handleBackButton = () => {
     history.push(`/event-management/show/${id}`);

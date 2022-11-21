@@ -114,7 +114,7 @@ const AddVideo = () => {
       <div className="addVideo-wrapper">
         <Tabs
           type="card"
-          activeKey={activeKey}
+          // activeKey={activeKey}
           onTabClick={(newKey, e) => {
             const isTriggeredByClick = e;
             if (isTriggeredByClick) return;

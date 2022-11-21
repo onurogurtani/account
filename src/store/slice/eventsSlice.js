@@ -79,6 +79,12 @@ export const getSurveyListWithSelectedSurveyCategory = createAsyncThunk(
     try {
       const urlString = `FormDetailSearch.CategoryId=${data}&FormDetailSearch.Status=true`;
       const response = await formServices.getByFilterPagedForms(urlString);
+      const surveyListLength = response?.data?.items.length;
+      if (!surveyListLength) {
+        return rejectWithValue({
+          message: 'Seçtiğiniz Kategoriye Ait Kayıtlı Anket Bulunamadı',
+        });
+      }
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -179,6 +185,9 @@ export const eventsSlice = createSlice({
       state.currentEvent = action?.payload?.data;
     });
     builder.addCase(getByEventId.rejected, (state) => {
+      state.currentEvent = {};
+    });
+    builder.addCase(deleteEvent.fulfilled, (state, action) => {
       state.currentEvent = {};
     });
     builder.addCase(getSurveyListWithSelectedSurveyCategory.fulfilled, (state, action) => {
