@@ -36,9 +36,9 @@ const EditEvent = () => {
   const isDisableAllButDate = location?.state?.isDisableAllButDate;
 
   useEffect(() => {
-    if (currentEvent?.id !== Number(id)) {
-      loadEvent(id);
-    }
+    // if (currentEvent?.id !== Number(id)) {
+    loadEvent(id);
+    // }
   }, []);
 
   const loadEvent = useCallback(
