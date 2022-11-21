@@ -42,15 +42,7 @@ const EventForm = ({ form }) => {
     }
 
     const action = await dispatch(getSurveyListWithSelectedSurveyCategory(value));
-    if (getSurveyListWithSelectedSurveyCategory.fulfilled.match(action)) {
-      const surveyList = action?.payload?.data?.items;
-      if (!surveyList.length) {
-        errorDialog({
-          title: <Text t="error" />,
-          message: 'Seçtiğiniz Kategoriye Ait Kayıtlı Anket Bulunamadı',
-        });
-      }
-    } else {
+    if (!getSurveyListWithSelectedSurveyCategory.fulfilled.match(action)) {
       errorDialog({
         title: <Text t="error" />,
         message: action?.payload?.message,
