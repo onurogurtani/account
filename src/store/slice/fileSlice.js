@@ -10,3 +10,11 @@ export const downloadFile = createAsyncThunk('downloadFile', async (body, { reje
     return rejectWithValue(error?.data);
   }
 });
+
+export const deleteFile = createAsyncThunk('deleteFile', async (body, { rejectWithValue }) => {
+  try {
+    const response = await fileServices.deleteFile({ id: body });
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});

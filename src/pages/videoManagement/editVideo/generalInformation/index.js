@@ -15,6 +15,7 @@ import IntroVideoSection from './IntroVideoSection';
 import LessonsSectionForm from './LessonsSectionForm';
 import StatusAndVideoTextSection from './StatusAndVideoTextSection';
 import SurveyAndKeywordSection from './SurveyAndKeywordSection';
+import UrlAndPdfSection from './UrlAndPdfSection';
 import VideoSection from './VideoSection';
 
 const EditGeneralInformation = ({ sendValue }) => {
@@ -57,6 +58,38 @@ const EditGeneralInformation = ({ sendValue }) => {
       values.introVideoId = introVideoObj.id; //İntro video kayıtlılardan seçti ise
     }
     values.kalturaVideoName = kalturaVideoName;
+    const urlAndPdfAttach = form.getFieldValue('urlAndPdfAttach');
+    if (urlAndPdfAttach) {
+      let videoAttachments = [];
+      urlAndPdfAttach.map((item) => {
+        if (item?.uploadedFile) {
+          videoAttachments = [
+            ...videoAttachments,
+            {
+              attachmentTypeId: 1,
+              fileId: item?.uploadedFile?.id,
+              videoTime: item?.time,
+            },
+          ];
+        }
+        item?.urlFormList?.map((i) => {
+          if (i?.url) {
+            videoAttachments = [
+              ...videoAttachments,
+              {
+                attachmentTypeId: 2,
+                attachmentUrl: i.url,
+                videoTime: item?.time,
+              },
+            ];
+          }
+        });
+      });
+      values.videoAttachments = videoAttachments;
+      console.log('videoAttachments', videoAttachments);
+    }
+
+    console.log('urlAndPdfAttach', urlAndPdfAttach);
     sendValue(values);
     dispatch(onChangeActiveKey('1'));
   };
@@ -91,6 +124,7 @@ const EditGeneralInformation = ({ sendValue }) => {
             />
             <BracketSection form={form} />
             <SurveyAndKeywordSection form={form} />
+            <UrlAndPdfSection form={form} />
           </div>
         </div>
         <div className="general-information-form-footer">

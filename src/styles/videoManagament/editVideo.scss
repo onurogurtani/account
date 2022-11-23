@@ -54,6 +54,17 @@
         }
       }
     }
+    .url-pdf-attach {
+      .ant-form-item-control-input-content {
+        .ant-tag {
+          cursor: pointer;
+          margin-bottom: 5px;
+          .anticon {
+            vertical-align: 1px;
+          }
+        }
+      }
+    }
     .quill {
       .ql-toolbar {
         border-radius: 4px 4px 0 0;
@@ -118,7 +129,8 @@
     opacity: 100;
   }
 }
-.intro-video-modal {
+.intro-video-modal,
+.url-and-pdf-modal {
   .intro-video-list {
     .ant-list-item-meta {
       align-items: center;
@@ -127,6 +139,13 @@
   .add-intro-video-collapse {
     .ant-collapse-content {
       padding: 20px;
+    }
+  }
+  .ant-upload-list-item-card-actions-btn {
+    opacity: 100;
+    z-index: 100;
+    .anticon-delete {
+      color: red;
     }
   }
 }

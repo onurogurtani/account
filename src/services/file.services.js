@@ -12,10 +12,17 @@ const downloadFile = (id) => {
 const uploadFile = (data, options) => {
   return axios.post(`${process.env.PUBLIC_HOST_API}/Files`, data, { ...options });
 };
-
+const deleteFile = (data) => {
+  return api({
+    url: `/Files`,
+    method: 'DELETE',
+    data,
+  });
+};
 const fileServices = {
   downloadFile,
   uploadFile,
+  deleteFile,
 };
 
 export default fileServices;
