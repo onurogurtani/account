@@ -9,6 +9,7 @@ import {
   CustomInput,
   CustomMaskInput,
 } from '../../../../components';
+import { videoTimeValidator } from '../../../../utils/formRule';
 
 const BracketSection = ({ form }) => {
   const { currentVideo } = useSelector((state) => state?.videos);
@@ -77,6 +78,10 @@ const BracketSection = ({ form }) => {
                     {
                       required: true,
                       message: 'Zorunlu Alan',
+                    },
+                    {
+                      validator: videoTimeValidator,
+                      message: 'Lütfen Boş Bırakmayınız',
                     },
                   ]}
                 >

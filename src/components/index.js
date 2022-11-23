@@ -32,6 +32,7 @@ import CustomPagination from './CustomPagination';
 import CustomSelect, { Option } from './CustomSelect';
 import CustomAutoComplete, { AutoCompleteOption } from './CustomAutoComplete';
 import CustomMoneyInput from './CustomMoneyInput';
+import CustomTextArea from './CustomTextArea';
 
 export {
   CustomInput,
@@ -74,4 +75,5 @@ export {
   CustomTimePicker,
   CustomAutoComplete,
   AutoCompleteOption,
+  CustomTextArea,
 };

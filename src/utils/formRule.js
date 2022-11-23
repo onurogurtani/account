@@ -99,6 +99,19 @@ export const nameSurnameValidator = async (field, value) => {
   }
 };
 
+export const videoTimeValidator = async (field, value) => {
+  try {
+    const valueUnmask = value.replace(/[^\d]/g, '');
+    console.log(valueUnmask);
+    if (!valueUnmask || valueUnmask.length === 5) {
+      return Promise.resolve();
+    }
+    return Promise.reject(new Error());
+  } catch (e) {
+    return Promise.reject(new Error());
+  }
+};
+
 const rule = {
   formStringMatching,
   formPhoneRegex,
@@ -106,6 +119,7 @@ const rule = {
   formCreditCardRegex,
   dateValidator,
   nameSurnameValidator,
+  videoTimeValidator,
 };
 
 export default rule;

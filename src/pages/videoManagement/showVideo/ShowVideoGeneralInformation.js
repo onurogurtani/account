@@ -1,11 +1,18 @@
 import { Tag } from 'antd';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ReactPlayer from 'react-player';
+import { CustomButton } from '../../../components';
+import { DownloadOutlined } from '@ant-design/icons';
+import { downloadFile } from '../../../store/slice/fileSlice';
 
 const ShowVideoGeneralInformation = () => {
+  const dispatch = useDispatch();
   const { currentVideo } = useSelector((state) => state?.videos);
 
+  const download = (file) => {
+    dispatch(downloadFile(file));
+  };
   return (
     <div>
       <ul className="list">
@@ -117,6 +124,37 @@ const ShowVideoGeneralInformation = () => {
                 Pasif
               </Tag>
             )}
+          </span>
+        </li>
+        <li>
+          Bağlantı-Dosya:{' '}
+          <span>
+            {!!currentVideo?.videoAttachmentsResponse.length
+              ? currentVideo?.videoAttachmentsResponse?.map((item, id) => {
+                  return (
+                    <Tag className="m-1" color="geekblue" key={id}>
+                      {item?.url ? (
+                        <>
+                          {item?.time + ' => '}
+                          <a href={item?.url} target="_blank" rel="noreferrer">
+                            {item?.url}
+                          </a>
+                        </>
+                      ) : (
+                        <>
+                          {item?.time + ' => ' + item?.file?.fileName}
+                          <CustomButton
+                            onClick={() => download(item?.file)}
+                            icon={<DownloadOutlined style={{ fontSize: '13px', height: '13' }} />}
+                            type="link"
+                            height="15"
+                          ></CustomButton>
+                        </>
+                      )}
+                    </Tag>
+                  );
+                })
+              : 'Yok'}
           </span>
         </li>
       </ul>
