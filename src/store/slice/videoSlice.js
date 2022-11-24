@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import videoServices from '../../services/video.services';
+import categoryOfVideosServices from '../../services/categoryOfVideos.services';
 import { saveAs } from 'file-saver';
 
 export const getByFilterPagedVideos = createAsyncThunk(
@@ -88,7 +89,7 @@ export const addVideoCategory = createAsyncThunk(
   'videos/addVideoCategory',
   async (data, { dispatch, rejectWithValue }) => {
     try {
-      const response = await videoServices.addVideoCategory(data);
+      const response = await categoryOfVideosServices.addVideoCategory(data);
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -100,7 +101,7 @@ export const editVideoCategory = createAsyncThunk(
   'videos/editVideoCategory',
   async (data, { dispatch, rejectWithValue }) => {
     try {
-      const response = await videoServices.editVideoCategory(data);
+      const response = await categoryOfVideosServices.editVideoCategory(data);
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -112,7 +113,7 @@ export const getVideoCategoryList = createAsyncThunk(
   'videos/getVideoCategoryList',
   async (data, { dispatch, rejectWithValue }) => {
     try {
-      const response = await videoServices.getVideoCategoryList(data);
+      const response = await categoryOfVideosServices.getVideoCategoryList(data);
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);

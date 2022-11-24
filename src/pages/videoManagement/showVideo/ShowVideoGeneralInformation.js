@@ -17,7 +17,7 @@ const ShowVideoGeneralInformation = () => {
     <div>
       <ul className="list">
         <li>
-          Video Kategorisi: <span>{currentVideo?.videoCategory?.name}</span>
+          Video Kategorisi: <span>{currentVideo?.categoryOfVideo?.name}</span>
         </li>
         <li>
           Bağlı Olduğu Paket:{' '}

@@ -35,7 +35,8 @@ const EventShow = () => {
           </li>
 
           <li>
-            Anket Kategorisi: <span>{currentEvent?.subCategory?.name || 'Anket Eklenmedi'}</span>
+            Anket Kategorisi:{' '}
+            <span>{currentEvent?.form?.categoryOfForm?.name || 'Anket Eklenmedi'}</span>
           </li>
 
           <li>

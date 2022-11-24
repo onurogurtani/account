@@ -65,7 +65,7 @@ const EditEvent = () => {
 
   const setFormFieldsValue = async () => {
     if (currentEvent?.formId) {
-      await dispatch(getSurveyListWithSelectedSurveyCategory(currentEvent?.subCategoryId));
+      await dispatch(getSurveyListWithSelectedSurveyCategory(currentEvent?.form?.categoryOfFormId));
     } // etkinliğe eklenen anket varsa
 
     form.setFieldsValue({
@@ -75,7 +75,7 @@ const EditEvent = () => {
       isPublised: currentEvent?.isPublised,
       isDraft: currentEvent?.isDraft,
       formId: currentEvent?.formId,
-      subCategoryId: currentEvent?.subCategoryId,
+      categoryOfFormId: currentEvent?.form?.categoryOfFormId,
       participantGroups: currentEvent?.participantGroups?.map((item) => item.participantGroupId),
       startDate: dayjs(currentEvent?.startDate),
       endDate: dayjs(currentEvent?.endDate),
@@ -117,7 +117,7 @@ const EditEvent = () => {
     values.startDate = values?.startDate.utc();
     values.endDate = values?.endDate.utc();
     if (!values.formId) {
-      delete values?.subCategoryId;
+      delete values?.categoryOfFormId;
     }
     console.log(values);
     const action = await dispatch(editEvent({ event: values }));

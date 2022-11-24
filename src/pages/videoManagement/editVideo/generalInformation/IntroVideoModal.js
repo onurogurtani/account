@@ -115,7 +115,7 @@ const IntroVideoModal = ({
               <Option key={1} value={1}>
                 Canlı
               </Option>
-              <Option key={2} value={1}>
+              <Option key={2} value={2}>
                 Asenkron
               </Option>
             </CustomSelect>

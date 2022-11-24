@@ -77,7 +77,7 @@ export const getSurveyListWithSelectedSurveyCategory = createAsyncThunk(
   'events/getSurveyListWithSelectedSurveyCategory',
   async (data, { dispatch, rejectWithValue }) => {
     try {
-      const urlString = `FormDetailSearch.CategoryId=${data}&FormDetailSearch.Status=true`;
+      const urlString = `FormDetailSearch.CategoryOfFormId=${data}&FormDetailSearch.Status=true`;
       const response = await formServices.getByFilterPagedForms(urlString);
       const surveyListLength = response?.data?.items.length;
       if (!surveyListLength) {

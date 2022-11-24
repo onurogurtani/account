@@ -16,30 +16,6 @@ const editVideo = (data) => {
   });
 };
 
-const addVideoCategory = (data) => {
-  return api({
-    url: `VideoCategorys`,
-    method: 'POST',
-    data,
-  });
-};
-
-const editVideoCategory = (data) => {
-  return api({
-    url: `VideoCategorys`,
-    method: 'PUT',
-    data,
-  });
-};
-
-const getVideoCategoryList = () => {
-  return api({
-    url: `VideoCategorys/getList?PageSize=0`,
-    method: 'POST',
-    data: null,
-  });
-};
-
 const deleteVideoDocumentFile = (data) => {
   return api({
     url: `/Files`,
@@ -110,8 +86,6 @@ const videoServices = {
   getByFilterPagedVideos,
   addVideo,
   editVideo,
-  addVideoCategory,
-  getVideoCategoryList,
   deleteVideoDocumentFile,
   addVideoQuestionsExcel,
   downloadVideoQuestionsExcel,
@@ -120,7 +94,6 @@ const videoServices = {
   getByVideoId,
   getAllVideoKeyword,
   deleteVideo,
-  editVideoCategory,
 };
 
 export default videoServices;

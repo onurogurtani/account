@@ -170,7 +170,7 @@ const VideoSection = ({ form, setKalturaVideoName }) => {
 
   return (
     <>
-      <CustomFormItem label="Video Ekle">
+      <CustomFormItem>
         <CustomFormItem
           rules={[
             {
@@ -178,10 +178,11 @@ const VideoSection = ({ form, setKalturaVideoName }) => {
               message: 'Lütfen dosya seçiniz.',
             },
           ]}
+          label="Video Ekle"
           name="kalturaVideoId"
           valuePropName="fileList"
           getValueFromEvent={normFile}
-          noStyle
+          labelCol={{ flex: '165px' }}
         >
           <Upload.Dragger
             name="files"
@@ -202,8 +203,8 @@ const VideoSection = ({ form, setKalturaVideoName }) => {
             </p>
             <p className="ant-upload-hint">Sadece bir adet dosya yükleyebilirsiniz.</p>
           </Upload.Dragger>
+          {isError && <div className="ant-form-item-explain-error">{isError}</div>}
         </CustomFormItem>
-        {isError && <div className="ant-form-item-explain-error">{isError}</div>}
       </CustomFormItem>
     </>
   );

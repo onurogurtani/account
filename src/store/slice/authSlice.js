@@ -22,6 +22,7 @@ export const loginOtp = createAsyncThunk(
       if (!mobileLoginId) {
         return rejectWithValue('Lütfen önce giriş yapınız.');
       }
+      body.sessionType = 1;
       return await authServices.loginOtp({ ...body, mobileLoginId: parseFloat(mobileLoginId) });
     } catch (error) {
       return rejectWithValue(error?.data);
