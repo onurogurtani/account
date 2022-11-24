@@ -1,6 +1,6 @@
 import { Form } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   CustomButton,
   CustomCollapseCard,
@@ -16,8 +16,16 @@ import {
   Text,
 } from '../../../components';
 import '../../../styles/settings/categories.scss';
-import { getByFilterPagedCategoriesQuery } from '../../../store/slice/categorySlice';
-import { getByFilterPagedSubCategories, addSubCategory, updateSubCategory } from '../../../store/slice/subCategorySlice ';
+import {
+  addVideoCategory,
+  editVideoCategory,
+  getVideoCategoryList,
+} from '../../../store/slice/videoSlice';
+import {
+  addFormCategory,
+  editFormCategory,
+  getFormCategoryList,
+} from '../../../store/slice/categoryOfFormsSlice';
 
 const Categories = () => {
   const [form] = Form.useForm();
@@ -29,9 +37,8 @@ const Categories = () => {
   const [categoryType, setCategoryType] = useState();
   const [subCategryList, setSubCategryList] = useState([]);
   const [selectedSubCategoryId, setSelectedSubCategoryId] = useState();
-  const { categories } = useSelector((state) => state.category);
 
-  const addSubCategories = () => {
+  const addSubCategory = () => {
     setIsEdit(false);
     setOpen(true);
   };
@@ -47,21 +54,20 @@ const Categories = () => {
     setOpen(false);
   };
 
-  useEffect(() => {
-    dispatch(getByFilterPagedCategoriesQuery());
-  }, []);
-
   const onFinish = async (values) => {
+    const category = categories.filter((item) => item.id === categoryType);
+
     const data = {
-      name: values?.name,
-      isActive: values?.isActive,
+      entity: {
+        name: values?.name,
+        isActive: values?.isActive,
+      },
     };
     if (isEdit) {
-
-      data.categoryId = categoryType;
-      data.id = selectedSubCategoryId ;
-      const action = await dispatch(updateSubCategory(data));
-      if (updateSubCategory.fulfilled.match(action)) {
+      data.entity.id = selectedSubCategoryId;
+      const action = await dispatch(category[0].edit(data));
+      // const action = await dispatch(editVideoCategory(data));
+      if (category[0].edit.fulfilled.match(action)) {
         successDialog({
           title: <Text t="success" />,
           message: action?.payload.message,
@@ -71,7 +77,7 @@ const Categories = () => {
         });
         handleChange(categoryType);
         parentForm.setFieldsValue({
-          subCategoryName: data.id,
+          subCategoryName: data.entity.id,
         });
       } else {
         errorDialog({
@@ -80,32 +86,30 @@ const Categories = () => {
         });
       }
       return;
+    }
+    const action = await dispatch(category[0].add(data));
+    if (category[0].add.fulfilled.match(action)) {
+      successDialog({
+        title: <Text t="success" />,
+        message: action?.payload.message,
+        onOk: async () => {
+          await handleClose();
+        },
+      });
+      handleChange(categoryType);
     } else {
-      data.categoryId = values?.categoryType;
-      const action = await dispatch(addSubCategory(data));
-      if (addSubCategory.fulfilled.match(action)) {
-        successDialog({
-          title: <Text t="success" />,
-          message: action?.payload.message,
-          onOk: async () => {
-            await handleClose();
-          },
-        });
-        handleChange(categoryType);
-      } else {
-        errorDialog({
-          title: <Text t="error" />,
-          message: action?.payload.message,
-        });
-      }
+      errorDialog({
+        title: <Text t="error" />,
+        message: action?.payload.message,
+      });
     }
   };
 
   const handleChange = async (value) => {
     setCategoryType(value);
-    const action = await dispatch(getByFilterPagedSubCategories({ id: value }));
-    if (getByFilterPagedSubCategories.fulfilled.match(action)) {
-      console.log(action?.payload, 11);
+    const category = categories.filter((item) => item.id === value);
+    const action = await dispatch(category[0].action());
+    if (category[0].action.fulfilled.match(action)) {
       setSubCategryList(action?.payload?.data?.items);
     } else {
       setSubCategryList([]);
@@ -117,6 +121,23 @@ const Categories = () => {
   const onCategoryTypeChange = (value) => {
     setCategoryType(value);
   };
+  //yeni kategori eklenicekse buraya eklemeniz yeterli
+  const categories = [
+    {
+      id: 1,
+      name: 'Video Kategorileri',
+      action: getVideoCategoryList,
+      add: addVideoCategory,
+      edit: editVideoCategory,
+    },
+    {
+      id: 2,
+      name: 'Anket Kategorileri',
+      action: getFormCategoryList,
+      add: addFormCategory,
+      edit: editFormCategory,
+    },
+  ];
   return (
     <CustomPageHeader title="Kategoriler" showBreadCrumb routes={['Ayarlar']}>
       <CustomCollapseCard cardTitle="Kategoriler">
@@ -124,11 +145,13 @@ const Categories = () => {
           <CustomForm form={parentForm} layout="vertical" name="form">
             <CustomFormItem label="Kategori Türü">
               <CustomSelect onChange={handleChange} placeholder="Kategori Türü">
-                {categories.map((item, i) => (
-                  <Option key={`categories-${item?.id}`} value={item?.id}>
-                    {item?.name}
-                  </Option>
-                ))}
+                {categories?.map((item) => {
+                  return (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.name}
+                    </Option>
+                  );
+                })}
               </CustomSelect>
             </CustomFormItem>
 
@@ -136,7 +159,7 @@ const Categories = () => {
               <CustomSelect placeholder="Alt Kategori Adı" onChange={onSubCategoryChange}>
                 {subCategryList?.map((item) => {
                   return (
-                    <Option key={`subCategories-${item?.id}`} value={item?.id}>
+                    <Option key={item?.id} value={item?.id}>
                       {item?.name}
                     </Option>
                   );
@@ -144,7 +167,7 @@ const Categories = () => {
               </CustomSelect>
             </CustomFormItem>
             <div className="btn-group">
-              <CustomButton type="primary" onClick={addSubCategories}>
+              <CustomButton type="primary" onClick={addSubCategory}>
                 Alt Kategori Ekle
               </CustomButton>
               {selectedSubCategoryId && (
@@ -162,7 +185,10 @@ const Categories = () => {
           onOk={() => form.submit()}
           okText="Kaydet"
           cancelText="Vazgeç"
-          onCancel={() => setOpen(false)}
+          onCancel={() => {
+            form.resetFields();
+            setOpen(false);
+          }}
           bodyStyle={{ overflowY: 'auto', maxHeight: 'calc(100vh - 300px)' }}
           // width={600}
         >
@@ -173,17 +199,19 @@ const Categories = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Lütfen Zorunlu Alanları Doldurunuz.11',
+                    message: 'Lütfen Zorunlu Alanları Doldurunuz.',
                   },
                 ]}
                 label="Kategori Türü"
               >
                 <CustomSelect placeholder="Kategori Türü" onChange={onCategoryTypeChange}>
-                  {categories.map((item, i) => (
-                    <Option key={`categories-Add-${item?.id}`} value={item?.id}>
-                      {item?.name}
-                    </Option>
-                  ))}
+                  {categories?.map((item) => {
+                    return (
+                      <Option key={item?.id} value={item?.id}>
+                        {item?.name}
+                      </Option>
+                    );
+                  })}
                 </CustomSelect>
               </CustomFormItem>
             )}
@@ -192,7 +220,7 @@ const Categories = () => {
               rules={[
                 {
                   required: true,
-                  message: 'Lütfen Zorunlu Alanları Doldurunuz.22',
+                  message: 'Lütfen Zorunlu Alanları Doldurunuz.',
                 },
               ]}
               label="Alt Kategori Adı"
@@ -205,7 +233,7 @@ const Categories = () => {
               rules={[
                 {
                   required: true,
-                  message: 'Lütfen Zorunlu Alanları Doldurunuz.33',
+                  message: 'Lütfen Zorunlu Alanları Doldurunuz.',
                 },
               ]}
               label="Durumu"

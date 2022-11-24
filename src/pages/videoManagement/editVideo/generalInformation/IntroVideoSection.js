@@ -229,7 +229,11 @@ const IntroVideoSection = ({ form, introVideoFile, setIntroVideoFile }) => {
 
   return (
     <>
-      <CustomFormItem name="addIntroVideo" label="Intro Video Ekle">
+      <CustomFormItem
+        className="requiredFieldLabelMark"
+        name="addIntroVideo"
+        label="Intro Video Ekle"
+      >
         {isAddedIntroVideo ? (
           <div className="ant-upload-list ant-upload-list-text">
             <div className="ant-upload-list-text-container">

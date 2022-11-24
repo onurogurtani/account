@@ -122,7 +122,7 @@ const VideoFilter = () => {
         onFinish={onFinish}
       >
         <div className="form-item">
-          <CustomFormItem label="Video Kategorisi" name="CategoryIds">
+          <CustomFormItem label="Video Kategorisi" name="CategoryOfVideoIds">
             <CustomSelect
               filterOption={(input, option) =>
                 turkishToLower(option.children).includes(turkishToLower(input))

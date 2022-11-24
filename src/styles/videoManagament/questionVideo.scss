@@ -28,7 +28,7 @@
         .ant-list-item-meta-title {
           flex: 1;
           display: flex;
-          align-items: center;
+          padding-top: 7px;
         }
         .ant-list-item-meta-description {
           flex: 1;
@@ -42,7 +42,7 @@
           }
           .question-answer {
             display: flex;
-            align-items: center;
+            padding-top: 7px;
           }
         }
       }

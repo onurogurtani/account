@@ -47,7 +47,7 @@ const AddEvent = () => {
     values.startDate = values?.startDate.utc();
     values.endDate = values?.endDate.utc();
     if (!values.formId) {
-      delete values?.subCategoryId;
+      delete values?.categoryOfFormId;
     }
     values.isActive = true;
     console.log(values);

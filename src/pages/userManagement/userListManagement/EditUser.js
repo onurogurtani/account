@@ -17,7 +17,12 @@ import {
   Option,
 } from '../../../components';
 import { Form } from 'antd';
-import { formPhoneRegex, formMailRegex, tcknValidator } from '../../../utils/formRule';
+import {
+  formPhoneRegex,
+  formMailRegex,
+  tcknValidator,
+  nameSurnameValidator,
+} from '../../../utils/formRule';
 import '../../../styles/userInfo/userInfo.scss';
 import { updateUserList } from '../../../store/slice/userListSlice';
 import { useDispatch } from 'react-redux';
@@ -99,6 +104,10 @@ const EditUser = () => {
               rules={[
                 { required: true, message: <Text t="Bilgilerinizi kontrol ediniz." /> },
                 { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+                {
+                  validator: nameSurnameValidator,
+                  message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                },
               ]}
             >
               <CustomInput placeholder="Ad Soyad" />

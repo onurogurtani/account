@@ -21,7 +21,7 @@ const CategoryAndPackageSection = ({ form }) => {
 
   useEffect(() => {
     form.setFieldsValue({
-      videoCategoryId: currentVideo?.videoCategoryId,
+      categoryOfVideoId: currentVideo?.categoryOfVideoId,
       packages: currentVideo?.packages?.map((item) => item.packageId),
     });
   }, [currentVideo]);
@@ -44,7 +44,7 @@ const CategoryAndPackageSection = ({ form }) => {
           },
         ]}
         label="Video Kategorisi"
-        name="videoCategoryId"
+        name="categoryOfVideoId"
       >
         <CustomSelect placeholder="Video Kategorisi">
           {categories

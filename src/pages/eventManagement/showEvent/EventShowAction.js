@@ -21,7 +21,7 @@ const EventShowAction = () => {
     isPublised: currentEvent?.isPublised,
     isDraft: currentEvent?.isDraft,
     formId: currentEvent?.formId,
-    subCategoryId: currentEvent?.subCategoryId,
+    categoryOfFormId: currentEvent?.form?.categoryOfFormId,
     participantGroups: currentEvent?.participantGroups?.map((item) => ({
       participantGroupId: item.participantGroupId,
     })),

@@ -37,7 +37,7 @@ const CategoryAndPackageSection = ({ form }) => {
           },
         ]}
         label="Video Kategorisi"
-        name="videoCategoryId"
+        name="categoryOfVideoId"
       >
         <CustomSelect placeholder="Video Kategorisi">
           {categories

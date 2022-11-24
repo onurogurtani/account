@@ -90,7 +90,7 @@ const AddGeneralInformation = ({ sendValue }) => {
   return (
     <>
       <CustomForm
-        labelCol={{ flex: '150px' }}
+        labelCol={{ flex: '165px' }}
         autoComplete="off"
         layout="horizontal"
         className="general-information-add-form"

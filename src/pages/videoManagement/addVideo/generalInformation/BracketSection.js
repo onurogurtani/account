@@ -22,7 +22,7 @@ const BracketSection = ({ form }) => {
       >
         {(fields, { add, remove }, { errors }) => (
           <>
-            <CustomFormItem label="Ayraç">
+            <CustomFormItem className="requiredFieldLabelMark" label="Ayraç">
               <CustomButton
                 type="dashed"
                 onClick={() => {

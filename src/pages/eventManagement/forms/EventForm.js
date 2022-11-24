@@ -9,11 +9,11 @@ import {
   Option,
   Text,
 } from '../../../components';
+import { getFormCategoryList } from '../../../store/slice/categoryOfFormsSlice';
 import {
   getSurveyListWithSelectedSurveyCategory,
   setSurveyListWithSelectedSurveyCategory,
 } from '../../../store/slice/eventsSlice';
-import { getByFilterPagedSubCategories } from '../../../store/slice/subCategorySlice ';
 import { turkishToLower } from '../../../utils/utils';
 import DateSection from './DateSection';
 import ParticipantGroupsSection from './ParticipantGroupsSection';
@@ -21,18 +21,23 @@ import ParticipantGroupsSection from './ParticipantGroupsSection';
 const EventForm = ({ form }) => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const { subCategories } = useSelector((state) => state?.subCategory);
-  const { surveyListWithSelectedSurveyCategory } = useSelector((state) => state?.events);
 
+  const { surveyListWithSelectedSurveyCategory } = useSelector((state) => state?.events);
+  const [formCategories, setFormCategories] = useState([]);
   useEffect(() => {
     loadSurveyCategories();
   }, []);
 
   const isDisableAllButDate = location?.state?.isDisableAllButDate;
 
-  const loadSurveyCategories = useCallback(async () => {
-    await dispatch(getByFilterPagedSubCategories({ id: 24 })); //24 anket kategorilerinin id
-  }, [dispatch]);
+  const loadSurveyCategories = async () => {
+    const action = await dispatch(getFormCategoryList());
+    if (getFormCategoryList.fulfilled.match(action)) {
+      setFormCategories(action?.payload?.data?.items);
+    } else {
+      setFormCategories([]);
+    }
+  };
 
   const surveyCategroyChange = async (value) => {
     form.resetFields(['formId']);
@@ -89,7 +94,7 @@ const EventForm = ({ form }) => {
         </CustomSelect>
       </CustomFormItem> */}
 
-      <CustomFormItem label="Anket Kategorisi" name="subCategoryId">
+      <CustomFormItem label="Anket Kategorisi" name="categoryOfFormId">
         <CustomSelect
           filterOption={(input, option) =>
             turkishToLower(option.children).includes(turkishToLower(input))
@@ -103,7 +108,7 @@ const EventForm = ({ form }) => {
           <Option key={false} value={false}>
             Anket Kategorisi Seçiniz
           </Option>
-          {subCategories
+          {formCategories
             ?.filter((item) => item.isActive)
             ?.map((item) => {
               return (

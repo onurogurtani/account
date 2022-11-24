@@ -176,7 +176,7 @@ const VideoSection = ({ form, setKalturaVideoName, kalturaVideoName }) => {
 
   return (
     <>
-      <CustomFormItem label="Video Ekle">
+      <CustomFormItem className="requiredFieldLabelMark" label="Video Ekle">
         {kalturaVideoName ? (
           <div className="ant-upload-list ant-upload-list-text">
             <div className="ant-upload-list-text-container">

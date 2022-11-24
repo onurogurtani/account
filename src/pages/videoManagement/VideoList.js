@@ -130,12 +130,12 @@ const VideoList = () => {
     },
     {
       title: 'KATEGORİ',
-      dataIndex: 'videoCategory',
-      key: 'videoCategory',
+      dataIndex: 'categoryOfVideo',
+      key: 'categoryOfVideo',
       sorter: true,
-      sortOrder: sorterObject?.columnKey === 'videoCategory' ? sorterObject?.order : null,
+      sortOrder: sorterObject?.columnKey === 'categoryOfVideo' ? sorterObject?.order : null,
       render: (text, record) => {
-        return <div>{text.name}</div>;
+        return <div>{text?.name}</div>;
       },
     },
     {
@@ -208,7 +208,7 @@ const VideoList = () => {
 
   const sortFields = {
     kalturaVideoId: { ascend: 'KalturaVideoIdASC', descend: 'KalturaVideoIdDESC' },
-    videoCategory: { ascend: 'CategoryASC', descend: 'CategoryDESC' },
+    categoryOfVideo: { ascend: 'CategoryASC', descend: 'CategoryDESC' },
     packages: { ascend: 'PackageASC', descend: 'PackageDESC' },
     lesson: { ascend: 'LessonASC', descend: 'LessonDESC' },
     lessonUnit: { ascend: 'LessonUnitASC', descend: 'LessonUnitDESC' },

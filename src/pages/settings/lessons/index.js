@@ -204,7 +204,7 @@ const Lessons = () => {
       </CustomPageHeader>
 
       <CustomModal
-        title="Yeni Soru Ekle"
+        title="Excel İle Ekle"
         visible={open}
         onOk={onOkModal}
         okText="Kaydet"
