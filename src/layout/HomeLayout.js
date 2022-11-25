@@ -27,7 +27,7 @@ const HomeLayout = ({ children }) => {
 
   const dispatch = useDispatch();
 
-  const ticketOnlineOrderingPlatformLanguage = useText('ticketOnlineOrderingPlatform');
+  const ticketOnlineOrderingPlatformLanguage = useText('enterpriseSolutions');
   const crossTabsControl = localStorage.getItem('persist:crossTabs');
 
   useEffect(() => {

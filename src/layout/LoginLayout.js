@@ -10,7 +10,7 @@ import { Col, Row } from 'antd';
 
 const LoginLayout = ({ children, isBackButton, className }) => {
   const isDesktop = useMediaQuery({ query: '(min-width: 992px)' });
-  const ticketOnlineOrderingPlatformLanguage = useText('ticketOnlineOrderingPlatform');
+  const ticketOnlineOrderingPlatformLanguage = useText('enterpriseSolutions');
 
   const history = useHistory();
   const { languageChange, language } = useLang();
