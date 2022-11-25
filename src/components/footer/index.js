@@ -20,7 +20,7 @@ const { Option } = Select;
 const Footer = () => {
   const { languageChange, language } = useLang();
 
-  const ticketOnlineOrderingPlatformLanguage = useText('ticketOnlineOrderingPlatform');
+  const ticketOnlineOrderingPlatformLanguage = useText('enterpriseSolutions');
 
   const handleChange = useCallback(
     (value) => {
@@ -40,9 +40,7 @@ const Footer = () => {
   return (
     <div className={'dd-footer'}>
       <div className="campaigns">
-        <span className="title">
-          <Text t="redClubCampaigns" />
-        </span>
+        <span className="title"></span>
         <CustomImage src={rightArrow} className="arrow-icon" />
       </div>
 
