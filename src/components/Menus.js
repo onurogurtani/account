@@ -329,6 +329,14 @@ const Menus = () => {
           </MenuItemText>
         </CustomItem>
 
+        <CustomItem key="/settings/announcementType">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Duyuru Tipi Tanımlama" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
       </CustomSubMenu>
     </CustomMenu>
   );
