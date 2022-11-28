@@ -19,21 +19,28 @@ const Lessons = lazy(() =>
 const Activities = lazy(() =>
   import('./activities').then(({ default: Component }) => ({
     default: Component,
-  }))
-  );
-  const ClassStages = lazy(() =>
+  })),
+);
+
+const ClassStages = lazy(() =>
   import('./classStages').then(({ default: Component }) => ({
     default: Component,
-  }))
-  );
+  })),
+);
 
+const AnnouncementType = lazy(() =>
+  import('./announcementType').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 
 const Settings = {
   Categories,
   Packages,
   Lessons,
   Activities,
-  ClassStages
+  ClassStages,
+  AnnouncementType,
 };
 
 export default Settings;

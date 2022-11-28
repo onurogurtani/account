@@ -275,6 +275,11 @@ const App = () => {
                           Component={Settings?.ClassStages}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/announcementType`}
+                          Component={Settings?.AnnouncementType}
+                          authority="dashboard"
+                        />
                         <Route
                           component={() => (
                             <Redirect
