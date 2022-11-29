@@ -48,7 +48,7 @@ export const announcementTypeSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getAnnouncementType.fulfilled, (state, action) => {
-      state.announcementTypes = action?.payload?.data?.items.reverse();
+      state.announcementTypes = action?.payload?.data?.items;
     });
     builder.addCase(getAnnouncementType.rejected, (state) => {
       state.announcementTypes = [];
