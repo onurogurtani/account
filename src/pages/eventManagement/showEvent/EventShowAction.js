@@ -1,11 +1,10 @@
-import { Popconfirm } from 'antd';
 import dayjs from 'dayjs';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { confirmDialog, CustomButton, errorDialog, Text } from '../../../components';
-import { addEvent, deleteEvent, editEvent } from '../../../store/slice/eventsSlice';
+import { deleteEvent, editEvent } from '../../../store/slice/eventsSlice';
 
 const EventShowAction = () => {
   const history = useHistory();
@@ -116,27 +115,10 @@ const EventShowAction = () => {
       okText: <Text t="Evet" />,
       cancelText: 'Hayır',
       onOk: async () => {
-        const data = {
-          event: {
-            ...eventData,
-            name: `${currentEvent?.name} kopyası`,
-            isActive: false,
-            isDraft: true,
-            isPublised: false,
-          },
-        };
-        const action = await dispatch(addEvent(data));
-        if (addEvent.fulfilled.match(action)) {
-          const copiedEventId = action?.payload?.data?.id;
-          history.push(`/event-management/edit/${copiedEventId}`);
-        } else {
-          if (action?.payload?.message) {
-            errorDialog({
-              title: <Text t="error" />,
-              message: action?.payload?.message,
-            });
-          }
-        }
+        history.push({
+          pathname: '/event-management/add',
+          state: { isCopy: true, currentEvent },
+        });
       },
     });
   };

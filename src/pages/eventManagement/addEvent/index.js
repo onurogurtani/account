@@ -1,5 +1,5 @@
 import { Form } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   confirmDialog,
   CustomButton,
@@ -14,12 +14,46 @@ import EventForm from '../forms/EventForm';
 import '../../../styles/eventsManagement/addEvent.scss';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { addEvent } from '../../../store/slice/eventsSlice';
+import {
+  addEvent,
+  getSurveyListWithSelectedSurveyCategory,
+} from '../../../store/slice/eventsSlice';
+import { useLocation } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 const AddEvent = () => {
   const [form] = Form.useForm();
   const history = useHistory();
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  const isCopy = location?.state?.isCopy;
+  const currentEvent = location?.state?.currentEvent;
+
+  useEffect(() => {
+    if (isCopy) {
+      setFormFieldsValue();
+    }
+  }, []);
+
+  const setFormFieldsValue = async () => {
+    if (currentEvent?.formId) {
+      await dispatch(getSurveyListWithSelectedSurveyCategory(currentEvent?.form?.categoryOfFormId));
+    } // etkinliğe eklenen anket varsa
+
+    form.setFieldsValue({
+      name: `${currentEvent?.name} kopyası`,
+      description: currentEvent?.description,
+      isActive: currentEvent?.isActive,
+      isPublised: currentEvent?.isPublised,
+      isDraft: currentEvent?.isDraft,
+      formId: currentEvent?.formId,
+      categoryOfFormId: currentEvent?.form?.categoryOfFormId,
+      participantGroups: currentEvent?.participantGroups?.map((item) => item.participantGroupId),
+      startDate: dayjs(currentEvent?.startDate),
+      endDate: dayjs(currentEvent?.endDate),
+    });
+  };
 
   const handleBackButton = () => {
     history.push('/event-management/list');
