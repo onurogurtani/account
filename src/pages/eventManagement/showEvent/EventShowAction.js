@@ -1,11 +1,10 @@
-import { Popconfirm } from 'antd';
 import dayjs from 'dayjs';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { confirmDialog, CustomButton, errorDialog, Text } from '../../../components';
-import { addEvent, deleteEvent, editEvent } from '../../../store/slice/eventsSlice';
+import { deleteEvent, editEvent } from '../../../store/slice/eventsSlice';
 
 const EventShowAction = () => {
   const history = useHistory();
