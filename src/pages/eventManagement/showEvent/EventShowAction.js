@@ -116,27 +116,10 @@ const EventShowAction = () => {
       okText: <Text t="Evet" />,
       cancelText: 'Hayır',
       onOk: async () => {
-        const data = {
-          event: {
-            ...eventData,
-            name: `${currentEvent?.name} kopyası`,
-            isActive: false,
-            isDraft: true,
-            isPublised: false,
-          },
-        };
-        const action = await dispatch(addEvent(data));
-        if (addEvent.fulfilled.match(action)) {
-          const copiedEventId = action?.payload?.data?.id;
-          history.push(`/event-management/edit/${copiedEventId}`);
-        } else {
-          if (action?.payload?.message) {
-            errorDialog({
-              title: <Text t="error" />,
-              message: action?.payload?.message,
-            });
-          }
-        }
+        history.push({
+          pathname: '/event-management/add',
+          state: { isCopy: true, currentEvent },
+        });
       },
     });
   };
