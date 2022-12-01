@@ -1,6 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import lessonsServices from '../../services/lessons.services';
 
+export const getLessonDetailSearch = createAsyncThunk(
+  'getLessonDetailSearch',
+  async (id, { dispatch, rejectWithValue }) => {
+    try {
+      return await lessonsServices.getLessonDetailSearch(id);
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 export const getLessons = createAsyncThunk(
   'getLessons',
   async (body, { dispatch, rejectWithValue }) => {
@@ -62,10 +72,7 @@ export const uploadLessonsExcel = createAsyncThunk(
   async (data, { dispatch, rejectWithValue }) => {
     try {
       const response = await lessonsServices.uploadLessonsExcel(data);
-      dispatch(getLessons());
-      dispatch(getUnits());
-      dispatch(getLessonSubjects());
-      dispatch(getLessonSubSubjects());
+    
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -73,6 +80,7 @@ export const uploadLessonsExcel = createAsyncThunk(
   },
 );
 const initialState = {
+  filteredLessons: [],
   lessons: [],
   units: [],
   lessonSubjects: [],
@@ -86,6 +94,9 @@ export const lessonsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getLessons.fulfilled, (state, action) => {
       state.lessons = action?.payload?.data?.items;
+    });
+    builder.addCase(getLessonDetailSearch.fulfilled, (state, action) => {
+      state.filteredLessons = action?.payload?.data?.items;
     });
     builder.addCase(getLessons.rejected, (state) => {
       state.lessons = [];
