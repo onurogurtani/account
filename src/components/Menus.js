@@ -337,7 +337,7 @@ const Menus = () => {
             </span>
           </MenuItemText>
         </CustomItem>
-        <CustomItem key="/preferencePeriod/academicYear">
+        <CustomItem key="/settings/academicYear">
           <MenuItemText>
             <CustomImage src={menuIcons} />
             <span>
