@@ -280,6 +280,11 @@ const App = () => {
                           Component={Settings?.AnnouncementType}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/packagesType`}
+                          Component={Settings?.PackagesType}
+                          authority="dashboard"
+                        />
                         <Route
                           component={() => (
                             <Redirect

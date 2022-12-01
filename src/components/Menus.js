@@ -337,6 +337,14 @@ const Menus = () => {
             </span>
           </MenuItemText>
         </CustomItem>
+        <CustomItem key="/settings/packagesType">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Paket Türü Tanımlama" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
       </CustomSubMenu>
     </CustomMenu>
   );

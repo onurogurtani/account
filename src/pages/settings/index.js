@@ -33,6 +33,11 @@ const AnnouncementType = lazy(() =>
     default: Component,
   })),
 );
+const PackagesType = lazy(() =>
+  import('./packagesType').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 
 const Settings = {
   Categories,
@@ -41,6 +46,7 @@ const Settings = {
   Activities,
   ClassStages,
   AnnouncementType,
+  PackagesType,
 };
 
 export default Settings;
