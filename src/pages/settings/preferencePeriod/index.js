@@ -71,7 +71,13 @@ const PreferencePeriod = () => {
         cancelText="İptal"
         title="Yeni Tercih Dönemi Ekleme"
         visible={showModal}
-        onCancel={() => setShowModal(false)}
+        onOk={() => {
+          form.submit();
+        }}
+        onCancel={() => {
+          form.resetFields();
+          setShowModal(false);
+        }}
       >
         <CustomForm layout="vertical" form={form}>
           <CustomFormItem
