@@ -23,7 +23,7 @@ import {
   getEducationYearAdd,
   getEducationYearList,
   getEducationYearUpdate,
-} from '../../../store/slice/preferencePeriodSlice';
+} from '../../../store/slice/educationYearsSlice';
 import '../../../styles/table.scss';
 import '../../../styles/prefencePeriod/prefencePeriod.scss';
 import modalClose from '../../../assets/icons/icon-close.svg';
@@ -34,7 +34,7 @@ const AcademicYear = () => {
   const [form] = Form.useForm();
   const [editInfo, setEditInfo] = useState(null);
 
-  const { educationYearList } = useSelector((state) => state.preferencePeriod);
+  const { educationYearList } = useSelector((state) => state.educationYears);
   useEffect(() => {
     dispatch(getEducationYearList());
   }, [dispatch]);

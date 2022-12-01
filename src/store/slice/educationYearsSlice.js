@@ -1,10 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import preferencePeriod from '../../services/preferencePeriod.services';
+import educationYearsServices from '../../services/EducationYears.services';
 export const getEducationYearList = createAsyncThunk(
   'getEducationYearList',
   async (data, { dispatch, rejectWithValue }) => {
     try {
-      const response = await preferencePeriod.getEducationYearList({ PageNumber: 0, PageSize: 10 });
+      const response = await educationYearsServices.getEducationYearList({
+        PageNumber: 0,
+        PageSize: 10,
+      });
       return response;
     } catch (error) {
       console.log(error);
@@ -16,7 +19,7 @@ export const getEducationYearAdd = createAsyncThunk(
   'getEducationYearList',
   async (data, { dispatch, rejectWithValue }) => {
     try {
-      const response = await preferencePeriod.getEducationYearAdd(data);
+      const response = await educationYearsServices.getEducationYearAdd(data);
       return response;
     } catch (error) {
       console.log(error);
@@ -28,7 +31,7 @@ export const getEducationYearUpdate = createAsyncThunk(
   'getEducationYearList',
   async (data, { dispatch, rejectWithValue }) => {
     try {
-      const response = await preferencePeriod.getEducationYearAdd(data);
+      const response = await educationYearsServices.getEducationYearUpdate(data);
       return response;
     } catch (error) {
       console.log(error);
@@ -40,8 +43,8 @@ const initialState = {
   educationYearList: [],
 };
 
-export const preferencePeriodSlice = createSlice({
-  name: 'preferencePeriodSlice',
+export const educationYearsSlice = createSlice({
+  name: 'educationYearsSlice',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -50,4 +53,4 @@ export const preferencePeriodSlice = createSlice({
     });
   },
 });
-export const clearClasses = preferencePeriodSlice.actions;
+export const clearClasses = educationYearsSlice.actions;

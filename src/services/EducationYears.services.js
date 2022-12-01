@@ -22,9 +22,10 @@ const getEducationYearUpdate = ({ data }) => {
   });
 };
 
-const prefencePeriodServices = {
+const EducationYearsServices = {
   getEducationYearList,
   getEducationYearAdd,
+  getEducationYearUpdate,
 };
 
-export default prefencePeriodServices;
+export default EducationYearsServices;
