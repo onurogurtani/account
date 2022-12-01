@@ -337,6 +337,15 @@ const Menus = () => {
             </span>
           </MenuItemText>
         </CustomItem>
+
+        <CustomItem key="/settings/preferencePeriod">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Tercih Dönemi Tanımlama" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
       </CustomSubMenu>
     </CustomMenu>
   );

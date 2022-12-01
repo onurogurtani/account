@@ -33,7 +33,11 @@ const AnnouncementType = lazy(() =>
     default: Component,
   })),
 );
-
+const PreferencePeriod = lazy(() =>
+  import('./preferencePeriod').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 const Settings = {
   Categories,
   Packages,
@@ -41,6 +45,7 @@ const Settings = {
   Activities,
   ClassStages,
   AnnouncementType,
+  PreferencePeriod,
 };
 
 export default Settings;
