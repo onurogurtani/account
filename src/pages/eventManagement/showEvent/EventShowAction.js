@@ -41,10 +41,10 @@ const EventShowAction = () => {
       okText: <Text t="Evet" />,
       cancelText: 'Hayır',
       onOk: async () => {
-        console.log(currentEvent?.endDate, dayjs());
         if (
-          dayjs().isAfter(currentEvent?.endDate, 'minute') ||
-          dayjs().isSame(currentEvent?.endDate, 'minute')
+          !currentEvent?.isPublised &&
+          (dayjs().isAfter(currentEvent?.endDate, 'minute') ||
+            dayjs().isSame(currentEvent?.endDate, 'minute'))
         ) {
           //router state deki isDisableAllButDate sadece tarih editleneceği zaman diğer inputları disable etmek için
           history.push({
