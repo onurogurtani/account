@@ -22,6 +22,8 @@ import HomeLayout from './layout/HomeLayout';
 import UserManagement from './pages/userManagement';
 import VideoManagement from './pages/videoManagement';
 import Settings from './pages/settings';
+import PreferencePeriod from './pages/preferencePeriod';
+
 import EventManagement from './pages/eventManagement';
 
 const PrivateRoute = lazy(() =>
@@ -280,6 +282,33 @@ const App = () => {
                           Component={Settings?.AnnouncementType}
                           authority="dashboard"
                         />
+                        <Route
+                          component={() => (
+                            <Redirect
+                              to={{
+                                pathname: '/not-found',
+                                state: { status: 404 },
+                              }}
+                            />
+                          )}
+                        />
+                      </Switch>
+                    );
+                  }}
+                  authority="dashboard"
+                  isLayout={false}
+                />
+                <PrivateRoute
+                  path={'/preferencePeriod'}
+                  Component={({ match }) => {
+                    return (
+                      <Switch>
+                        <PrivateRoute
+                          path={`${match?.path}/academicYear`}
+                          Component={PreferencePeriod?.AcademicYear}
+                          authority="dashboard"
+                        />
+
                         <Route
                           component={() => (
                             <Redirect

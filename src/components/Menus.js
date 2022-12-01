@@ -337,6 +337,14 @@ const Menus = () => {
             </span>
           </MenuItemText>
         </CustomItem>
+        <CustomItem key="/preferencePeriod/academicYear">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Tercih Dönemi Eğitim Öğretim Yılı" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
       </CustomSubMenu>
     </CustomMenu>
   );
