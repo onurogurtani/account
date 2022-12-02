@@ -34,6 +34,12 @@ const AnnouncementType = lazy(() =>
   })),
 );
 
+const TargetScreen = lazy(() =>
+  import('./targetScreen').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+
 const Settings = {
   Categories,
   Packages,
@@ -41,6 +47,7 @@ const Settings = {
   Activities,
   ClassStages,
   AnnouncementType,
+  TargetScreen
 };
 
 export default Settings;

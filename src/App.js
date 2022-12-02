@@ -280,6 +280,11 @@ const App = () => {
                           Component={Settings?.AnnouncementType}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/targetScreen`}
+                          Component={Settings?.TargetScreen}
+                          authority="dashboard"
+                        />
                         <Route
                           component={() => (
                             <Redirect
