@@ -64,7 +64,7 @@ const reducers = combineReducers({
   educationYears: educationYearsSlice.reducer,
   graduationYears: graduationYearsSlice.reducer,
   targetSentence: targetSentenceSlice.reducer,
-  preferencePeriod: preferencePeriodSlice,
+  preferencePeriod: preferencePeriodSlice.reducer,
 });
 
 const persistConfig = {

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   CustomButton,
   CustomCollapseCard,
@@ -12,26 +12,88 @@ import {
   successDialog,
   Text,
   CustomDatePicker,
+  Option,
 } from '../../../components';
 import { Form } from 'antd';
 
-import { getPreferencePeriod } from '../../../store/slice/preferencePeriodSlice';
+import {
+  getEducationYears,
+  getPreferencePeriod,
+  getPreferencePeriodAdd,
+  getPreferencePeriodUpdate,
+} from '../../../store/slice/preferencePeriodSlice';
 import '../../../styles/settings/preferencePeriod.scss';
 
 const PreferencePeriod = () => {
   const [showModal, setShowModal] = useState(false);
-  const [editInfo, setEditInfo] = useState(null);
+  const [editInfo, setEditInfo] = useState('sti');
   const [form] = Form.useForm();
-
+  const { preferencePeriod, educationYears } = useSelector((state) => state?.preferencePeriod);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getPreferencePeriod());
   }, [dispatch]);
 
-  const openEdit = useCallback(() => {
+  const openEdit = () => {
     setShowModal(true);
     setEditInfo({});
-  }, []);
+  };
+
+  const sumbit = useCallback(
+    (e) => {
+      const data = {
+        educationYearId: e.educationYearId,
+        period1StartDate: e.period1StartDate.$d,
+        period2StartDate: e.period2StartDate.$d,
+        period3StartDate: e.period3StartDate.$d,
+        period3EndDate: e.period3EndDate.$d,
+        period2EndDate: e.period3EndDate.$d,
+        period1EndDate: e.period3EndDate.$d,
+      };
+      console.log(editInfo);
+      if (editInfo) {
+        const action = dispatch(getPreferencePeriodUpdate(data));
+        if (getPreferencePeriodUpdate.fulfilled.match(action)) {
+          successDialog({
+            title: <Text t="success" />,
+            message: action?.payload?.message,
+            onOk: () => {
+              form.resetFields();
+              setShowModal(false);
+              setEditInfo(null);
+            },
+          });
+        } else {
+          errorDialog({
+            title: <Text t="error" />,
+            message: 'Bilgileri kontrol ediniz.',
+          });
+        }
+      } else {
+        const action = dispatch(getPreferencePeriodAdd(data));
+        if (getPreferencePeriodAdd.fulfilled.match(action)) {
+          successDialog({
+            title: <Text t="success" />,
+            message: action?.payload?.message,
+            onOk: () => {
+              form.resetFields();
+              setShowModal(false);
+            },
+          });
+        } else {
+          errorDialog({
+            title: <Text t="error" />,
+            message: 'Bilgileri kontrol ediniz.',
+          });
+        }
+      }
+    },
+    [dispatch, form, editInfo],
+  );
+  useEffect(() => {
+    dispatch(getEducationYears());
+  }, [dispatch]);
+
   return (
     <CustomPageHeader title={'Tercih Dönemi Tanımlama'} showBreadCrumb routes={['Ayarlar']}>
       <CustomCollapseCard className={'preferencePeriod'} cardTitle={'Tercih Dönemleri Belirleme'}>
@@ -56,7 +118,9 @@ const PreferencePeriod = () => {
               </div>
               <div>
                 <div style={{ marginBottom: '10px' }}>
-                  <CustomButton className="edit-button">Düzenle</CustomButton>
+                  <CustomButton onClick={openEdit} className="edit-button">
+                    Düzenle
+                  </CustomButton>
                 </div>
                 <div>
                   <CustomButton className="delete-button">Sil</CustomButton>
@@ -77,9 +141,10 @@ const PreferencePeriod = () => {
         onCancel={() => {
           form.resetFields();
           setShowModal(false);
+          setEditInfo(null);
         }}
       >
-        <CustomForm layout="vertical" form={form}>
+        <CustomForm onFinish={sumbit} layout="vertical" form={form}>
           <CustomFormItem
             rules={[
               {
@@ -90,7 +155,13 @@ const PreferencePeriod = () => {
             label="Eğitim Öğretim Yılı"
             name="educationYearId"
           >
-            <CustomSelect height={35}></CustomSelect>
+            <CustomSelect height={35}>
+              {educationYears?.items?.map((item, index) => (
+                <Option key={index} value={item.id}>
+                  {item.startYear}-{item.endYear}
+                </Option>
+              ))}
+            </CustomSelect>
           </CustomFormItem>
           <CustomFormItem label="1. Tarih Aralığı" required>
             <div className="date-form-item">
@@ -127,7 +198,7 @@ const PreferencePeriod = () => {
                     message: 'Lütfen Zorunlu Alanları Doldurunuz.',
                   },
                 ]}
-                name="period1StartDate"
+                name="period2StartDate"
               >
                 <CustomDatePicker height={35}></CustomDatePicker>
               </CustomFormItem>
@@ -138,7 +209,7 @@ const PreferencePeriod = () => {
                     message: 'Lütfen Zorunlu Alanları Doldurunuz.',
                   },
                 ]}
-                name="period1EndDate"
+                name="period2EndDate"
               >
                 <CustomDatePicker height={35}></CustomDatePicker>
               </CustomFormItem>
@@ -153,7 +224,7 @@ const PreferencePeriod = () => {
                     message: 'Lütfen Zorunlu Alanları Doldurunuz.',
                   },
                 ]}
-                name="period1StartDate"
+                name="period3StartDate"
               >
                 <CustomDatePicker height={35}></CustomDatePicker>
               </CustomFormItem>
@@ -164,7 +235,7 @@ const PreferencePeriod = () => {
                     message: 'Lütfen Zorunlu Alanları Doldurunuz.',
                   },
                 ]}
-                name="period1EndDate"
+                name="period3EndDate"
               >
                 <CustomDatePicker height={35}></CustomDatePicker>
               </CustomFormItem>
