@@ -22,6 +22,7 @@ import HomeLayout from './layout/HomeLayout';
 import UserManagement from './pages/userManagement';
 import VideoManagement from './pages/videoManagement';
 import Settings from './pages/settings';
+
 import EventManagement from './pages/eventManagement';
 
 const PrivateRoute = lazy(() =>
@@ -278,6 +279,11 @@ const App = () => {
                         <PrivateRoute
                           path={`${match?.path}/announcementType`}
                           Component={Settings?.AnnouncementType}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/academicYear`}
+                          Component={Settings?.AcademicYear}
                           authority="dashboard"
                         />
                         <Route
