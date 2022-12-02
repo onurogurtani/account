@@ -198,6 +198,10 @@ const Lessons = () => {
       });
       await form.resetFields();
       loadLessons()
+      loadUnits();
+      loadLessonSubjects();
+      loadLessonSubSubjects();
+      loadAllClassStages();
       setOpen(false);
     } else {
       errorDialog({

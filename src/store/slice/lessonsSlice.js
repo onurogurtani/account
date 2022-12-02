@@ -72,7 +72,6 @@ export const uploadLessonsExcel = createAsyncThunk(
   async (data, { dispatch, rejectWithValue }) => {
     try {
       const response = await lessonsServices.uploadLessonsExcel(data);
-    
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
