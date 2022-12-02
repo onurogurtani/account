@@ -23,6 +23,7 @@ import {
   getEducationYearAdd,
   getEducationYearList,
   getEducationYearUpdate,
+  getEducationYearDelete,
 } from '../../../store/slice/educationYearsSlice';
 import '../../../styles/table.scss';
 import '../../../styles/prefencePeriod/prefencePeriod.scss';
@@ -43,16 +44,19 @@ const AcademicYear = () => {
   const handleClose = useCallback(() => {
     form.resetFields();
     setShowAddModal(false);
+    setEditInfo(null);
   }, [setShowAddModal, form]);
 
   const formAdd = useCallback(
     async (e) => {
-      const action = await dispatch(getEducationYearAdd(e));
+      const action = await dispatch(getEducationYearAdd({ entity: e }));
       if (getEducationYearAdd.fulfilled.match(action)) {
         successDialog({
           title: <Text t="success" />,
           message: action?.payload?.message,
         });
+        dispatch(getEducationYearList());
+        setShowAddModal(false);
       } else {
         errorDialog({
           title: <Text t="error" />,
@@ -64,11 +68,17 @@ const AcademicYear = () => {
   );
   const formEdit = useCallback(
     async (e) => {
-      const action = await dispatch(getEducationYearUpdate(e));
+      const action = await dispatch(getEducationYearUpdate({ entity: { ...e, id: editInfo.id } }));
       if (getEducationYearUpdate.fulfilled.match(action)) {
         successDialog({
           title: <Text t="success" />,
           message: action?.payload?.message,
+          onOk: () => {
+            setShowAddModal(false);
+            dispatch(getEducationYearList());
+            setEditInfo(null);
+            form.resetFields();
+          },
         });
       } else {
         errorDialog({
@@ -77,11 +87,19 @@ const AcademicYear = () => {
         });
       }
     },
-    [dispatch],
+    [dispatch, editInfo, form],
   );
 
+  useEffect(() => {
+    console.log(educationYearList);
+  }, [educationYearList]);
+  const currentYear = new Date().getFullYear();
+  let years = [];
+  for (let i = 0; i < 11; i++) {
+    years.push(currentYear + i);
+  }
   return (
-    <CustomPageHeader title="Tercih Dönemi Eğitim Yılı" showBreadCrumb routes={['Tercih Dönemi']}>
+    <CustomPageHeader title="Tercih Dönemi Eğitim Yılı" showBreadCrumb routes={['Ayarlar']}>
       <CustomCollapseCard cardTitle="Tercih Dönemi Eğitim Yılı">
         <div className="table-header">
           <CustomButton
@@ -94,12 +112,42 @@ const AcademicYear = () => {
           </CustomButton>
         </div>
         <CustomTable
-          dataSource={[{ a: 'ati' }]}
+          pagination={{
+            current: educationYearList?.tableProperty?.currentPage,
+            pageSize: educationYearList?.tableProperty?.pageSize,
+            total: educationYearList?.tableProperty?.totalCount,
+            showSizeChanger: true,
+            position: 'bottomRight',
+          }}
+          onChange={(e) => {
+            dispatch(
+              getEducationYearList({ params: { PageSize: e.pageSize, PageNumber: e.current } }),
+            );
+          }}
+          dataSource={educationYearList?.items}
           columns={[
             {
               title: 'No',
-              dataIndex: 'a',
-              key: 'a',
+              dataIndex: 'id',
+              key: 'id',
+              width: 90,
+              render: (text, record) => {
+                return <div>{text}</div>;
+              },
+            },
+            {
+              title: 'Başlangıç',
+              dataIndex: 'startYear',
+              key: 'startYear',
+              width: 90,
+              render: (text, record) => {
+                return <div>{text}</div>;
+              },
+            },
+            {
+              title: 'Bitiş',
+              dataIndex: 'endYear',
+              key: 'endYear',
               width: 90,
               render: (text, record) => {
                 return <div>{text}</div>;
@@ -118,19 +166,53 @@ const AcademicYear = () => {
                       onClick={() => {
                         setEditInfo(record);
                         setShowAddModal(true);
+                        form.setFieldsValue(record);
                       }}
                       className="detail-btn"
                     >
                       DÜZENLE
+                    </CustomButton>
+                    <CustomButton
+                      style={{ background: '#A52A2A' }}
+                      onClick={() => {
+                        confirmDialog({
+                          title: <Text t="attention" />,
+                          message: 'Kaydı silmek istediğinizden emin misiniz?',
+                          okText: <Text t="delete" />,
+                          cancelText: 'Vazgeç',
+                          onOk: async () => {
+                            let data = {
+                              id: record.id,
+                            };
+                            const action = await dispatch(getEducationYearDelete(data));
+                            if (getEducationYearDelete.fulfilled.match(action)) {
+                              successDialog({
+                                title: <Text t="successfullySent" />,
+                                message: action?.payload?.message,
+                                onOk: () => {
+                                  dispatch(getEducationYearList());
+                                },
+                              });
+                            } else {
+                              if (action?.payload?.message) {
+                                errorDialog({
+                                  title: <Text t="error" />,
+                                  message: action?.payload?.message,
+                                });
+                              }
+                            }
+                          },
+                        });
+                      }}
+                      className="detail-btn"
+                    >
+                      Sil
                     </CustomButton>
                   </div>
                 );
               },
             },
           ]}
-          pagination={{
-            position: 'bottomRight',
-          }}
           rowKey={(record) => `announcementType-${record?.id || record?.name}`}
           scroll={{ x: false }}
         />
@@ -155,13 +237,29 @@ const AcademicYear = () => {
             >
               <div className="form-item-select">
                 <CustomFormItem
-                  // rules={[{ required: true, message: 'Lütfen bir seçim yapınız.' }]}
-                  name="start"
+                  rules={[{ required: true, message: 'Lütfen bir seçim yapınız.' }]}
+                  name="startYear"
                 >
-                  <CustomSelect placeholder={useText('Seçiniz')} height={36} />
+                  <CustomSelect placeholder={useText('Seçiniz')} height={36}>
+                    {years.map((item, index) => (
+                      <Option key={index} value={item}>
+                        {item}
+                      </Option>
+                    ))}
+                  </CustomSelect>
                 </CustomFormItem>
-                <CustomFormItem>
-                  <CustomSelect placeholder={useText('Seçiniz')} height={36} />
+                <CustomFormItem
+                  value={'2024'}
+                  name="endYear"
+                  rules={[{ required: true, message: 'Lütfen bir seçim yapınız.' }]}
+                >
+                  <CustomSelect placeholder={useText('Seçiniz')} height={36}>
+                    {years.map((item, index) => (
+                      <Option key={index} value={item}>
+                        {item}
+                      </Option>
+                    ))}
+                  </CustomSelect>
                 </CustomFormItem>
               </div>
 

@@ -4,10 +4,7 @@ export const getEducationYearList = createAsyncThunk(
   'getEducationYearList',
   async (data, { dispatch, rejectWithValue }) => {
     try {
-      const response = await educationYearsServices.getEducationYearList({
-        PageNumber: 0,
-        PageSize: 10,
-      });
+      const response = await educationYearsServices.getEducationYearList(null, data?.params);
       return response;
     } catch (error) {
       console.log(error);
@@ -39,6 +36,18 @@ export const getEducationYearUpdate = createAsyncThunk(
     }
   },
 );
+export const getEducationYearDelete = createAsyncThunk(
+  'getEducationYearList',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await educationYearsServices.getEducationYearDelete(data);
+      return response;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 const initialState = {
   educationYearList: [],
 };
@@ -49,7 +58,7 @@ export const educationYearsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getEducationYearList.fulfilled, (state, action) => {
-      state.educationYearList = action.data;
+      state.educationYearList = action.payload.data;
     });
   },
 });
