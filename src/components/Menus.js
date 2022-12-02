@@ -337,6 +337,14 @@ const Menus = () => {
             </span>
           </MenuItemText>
         </CustomItem>
+        <CustomItem key="/settings/branch">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Şube Tanımlama" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
       </CustomSubMenu>
     </CustomMenu>
   );
