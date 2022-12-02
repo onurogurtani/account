@@ -58,7 +58,7 @@ const reducers = combineReducers({
   events: eventsSlice.reducer,
   classStages: classStageSlice.reducer,
   announcementTypes: announcementTypeSlice.reducer,
-  preferencePeriod: preferencePeriodSlice,
+  preferencePeriod: preferencePeriodSlice.reducer,
 });
 
 const persistConfig = {
