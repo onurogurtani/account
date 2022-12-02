@@ -1,5 +1,8 @@
 .lessons-wrapper {
   padding: 10px 20px;
+  .lessons-header{
+    display: flex;
+  }
   .ant-collapse {
     border: none;
     background-color: #fff;
