@@ -1,5 +1,5 @@
 import { FileExcelOutlined, InboxOutlined } from '@ant-design/icons';
-import { Collapse, Form, Upload } from 'antd';
+import { Collapse, Form, Typography, Upload } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -14,6 +14,7 @@ import {
   Option,
   successDialog,
   Text,
+  warningDialog,
 } from '../../../components';
 import { getAllClassStages } from '../../../store/slice/classStageSlice';
 import {
@@ -27,6 +28,7 @@ import {
 import '../../../styles/settings/lessons.scss';
 
 const { Panel } = Collapse;
+const { Title } = Typography;
 
 const Lessons = () => {
   const dispatch = useDispatch();
@@ -34,7 +36,7 @@ const Lessons = () => {
 
   const [open, setOpen] = useState(false);
   const [errorList, setErrorList] = useState([]);
-  const [selectedClassId, setSelectedClassId] = useState();
+  const [selectedClassId, setSelectedClassId] = useState(null);
 
   const { allClassList } = useSelector((state) => state?.classStages);
 
@@ -59,18 +61,18 @@ const Lessons = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    allClassList[0] && setSelectedClassId(allClassList[0].id);
-  }, [allClassList]);
-  useEffect(() => {
-    loadLessons();
+    selectedClassId && setSelectedClassId(selectedClassId);
   }, [selectedClassId]);
 
   useEffect(() => {
-    loadUnits();
-    loadLessonSubjects();
-    loadLessonSubSubjects();
+    if (selectedClassId) {
+      loadLessons();
+      loadUnits();
+      loadLessonSubjects();
+      loadLessonSubSubjects();
+    }
     loadAllClassStages();
-  }, []);
+  }, [selectedClassId]);
 
   const { filteredLessons, units, lessonSubjects, lessonSubSubjects } = useSelector(
     (state) => state?.lessons,
@@ -120,7 +122,14 @@ const Lessons = () => {
     </Panel>
   ));
   const uploadExcel = () => {
-    setOpen(true);
+    if (!selectedClassId) {
+      warningDialog({
+        title: <Text t="error" />,
+        message: 'Excel ile ekleme yapmak için öncelikle sınıf seçmeniz gerekmektedir.',
+      });
+    } else {
+      setOpen(true);
+    }
   };
   const onCancelModal = async () => {
     await form.resetFields();
@@ -197,7 +206,7 @@ const Lessons = () => {
         message: action?.payload?.message,
       });
       await form.resetFields();
-      loadLessons()
+      loadLessons();
       loadUnits();
       loadLessonSubjects();
       loadLessonSubSubjects();
@@ -217,20 +226,20 @@ const Lessons = () => {
         <CustomCollapseCard cardTitle="Ders Tanım Bilgileri">
           <div className="lessons-wrapper">
             <div className="lessons-header">
-              <div>
-                {allClassList[0] && (
-                  <CustomSelect
-                    style={{
-                      width: 300,
-                    }}
-                    defaultValue={allClassList[0]?.name}
-                    onChange={(e) => setSelectedClassId(e)}
-                  >
-                    {allClassList?.map(({ id, name }) => (
-                      <Option value={id}>{name}</Option>
-                    ))}
-                  </CustomSelect>
-                )}
+              <div className="class-select-container">
+                <Title level={5}>Sınıf Bilgisi :</Title>
+                <CustomSelect
+                  style={{
+                    width: 300,
+                    paddingLeft: 5,
+                  }}
+                  placeholder="Seçiniz"
+                  onChange={(e) => setSelectedClassId(e)}
+                >
+                  {allClassList?.map(({ id, name }) => (
+                    <Option value={id}>{name}</Option>
+                  ))}
+                </CustomSelect>
               </div>
               <CustomButton
                 icon={<FileExcelOutlined />}
