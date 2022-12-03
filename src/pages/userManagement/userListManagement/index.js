@@ -1,22 +1,13 @@
-import { CustomPageHeader, Text } from '../../../components';
-import { useEffect } from 'react';
-import UserList from './UserList';
+import { lazy } from 'react';
 
-const UserListManagement = () => {
+const UserList = lazy(() =>
+  import('./UserList').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
-    return (
-        <CustomPageHeader
-            title={<Text t="Kullanıcılar" />}
-            showBreadCrumb
-            showHelpButton
-            routes={['Kullanıcı Yönetimi']}
-        >
-            <UserList />
-        </CustomPageHeader>
-    )
-}
+const UserListManagement = {
+  UserList,
+};
 
-export default UserListManagement
+export default UserListManagement;

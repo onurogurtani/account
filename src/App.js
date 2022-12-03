@@ -23,6 +23,7 @@ import UserManagement from './pages/userManagement';
 import VideoManagement from './pages/videoManagement';
 import Settings from './pages/settings';
 import EventManagement from './pages/eventManagement';
+import UserListManagement from './pages/userManagement/userListManagement';
 
 const PrivateRoute = lazy(() =>
   import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -101,10 +102,45 @@ const App = () => {
                         />
                         <PrivateRoute
                           path={`${match?.path}/user-list-management`}
-                          Component={UserManagement?.UserListManagement}
                           authority="dashboard"
+                          Component={({ match }) => {
+                            return (
+                              <Switch>
+                                <PrivateRoute
+                                  path={`${match?.path}/list`}
+                                  Component={UserListManagement.UserList}
+                                  authority="dashboard"
+                                />
+                                {/* <PrivateRoute
+                                  path={`${match?.path}/add`}
+                                  Component={EventManagement?.AddEvent}
+                                  authority="dashboard"
+                                />
+                                <PrivateRoute
+                                  path={`${match?.path}/show/:id`}
+                                  Component={EventManagement?.ShowEvent}
+                                  authority="dashboard"
+                                />
+                                <PrivateRoute
+                                  path={`${match?.path}/edit/:id`}
+                                  Component={EventManagement?.EditEvent}
+                                  authority="dashboard"
+                                /> */}
+                                <Route
+                                  component={() => (
+                                    <Redirect
+                                      to={{
+                                        pathname: '/not-found',
+                                        state: { status: 404 },
+                                      }}
+                                    />
+                                  )}
+                                />
+                              </Switch>
+                            );
+                          }}
                         />
-                        <PrivateRoute
+                        {/* <PrivateRoute
                           path={`${match?.path}/add-user`}
                           Component={UserManagement?.AddUser}
                           authority="dashboard"
@@ -113,7 +149,7 @@ const App = () => {
                           path={`${match?.path}/edit-user`}
                           Component={UserManagement?.EditUser}
                           authority="dashboard"
-                        />
+                        /> */}
                         <PrivateRoute
                           path={`${match?.path}/avatar-management`}
                           Component={UserManagement?.AvatarManagement}
