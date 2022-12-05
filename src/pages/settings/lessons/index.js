@@ -222,8 +222,8 @@ const Lessons = () => {
 
   return (
     <>
-      <CustomPageHeader title="Ders Tanım Bilgileri" showBreadCrumb routes={['Ayarlar']}>
-        <CustomCollapseCard cardTitle="Ders Tanım Bilgileri">
+      <CustomPageHeader title="Kazanım Ağacı" showBreadCrumb routes={['Ayarlar']}>
+        <CustomCollapseCard cardTitle="Kazanım Ağacı">
           <div className="lessons-wrapper">
             <div className="lessons-header">
               <div className="class-select-container">
