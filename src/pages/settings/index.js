@@ -38,6 +38,11 @@ const AcademicYear = lazy(() =>
     default: Component,
   })),
 );
+const TargetSentence = lazy(() =>
+  import('./targetSentence').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 const Settings = {
   Categories,
   Packages,
@@ -46,6 +51,7 @@ const Settings = {
   ClassStages,
   AnnouncementType,
   AcademicYear,
+  TargetSentence,
 };
 
 export default Settings;

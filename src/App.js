@@ -319,6 +319,11 @@ const App = () => {
                           Component={Settings?.AcademicYear}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/targetSentence`}
+                          Component={Settings?.TargetSentence}
+                          authority="dashboard"
+                        />
                         <Route
                           component={() => (
                             <Redirect
