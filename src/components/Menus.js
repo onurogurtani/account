@@ -308,7 +308,7 @@ const Menus = () => {
           <MenuItemText>
             <CustomImage src={menuIcons} />
             <span>
-              <Text t="Ders Tanım Bilgileri" />
+              <Text t="Kazanım Ağacı" />
             </span>
           </MenuItemText>
         </CustomItem>
