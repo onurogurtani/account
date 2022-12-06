@@ -112,21 +112,18 @@ const App = () => {
                                   Component={UserListManagement.UserList}
                                   authority="dashboard"
                                 />
-                                {/* <PrivateRoute
-                                  path={`${match?.path}/add`}
-                                  Component={EventManagement?.AddEvent}
-                                  authority="dashboard"
-                                />
                                 <PrivateRoute
-                                  path={`${match?.path}/show/:id`}
-                                  Component={EventManagement?.ShowEvent}
+                                  path={`${match?.path}/add`}
+                                  exact
+                                  Component={UserListManagement?.UserCreate}
                                   authority="dashboard"
                                 />
                                 <PrivateRoute
                                   path={`${match?.path}/edit/:id`}
-                                  Component={EventManagement?.EditEvent}
+                                  exact
+                                  Component={UserListManagement?.UserCreate}
                                   authority="dashboard"
-                                /> */}
+                                />
                                 <Route
                                   component={() => (
                                     <Redirect

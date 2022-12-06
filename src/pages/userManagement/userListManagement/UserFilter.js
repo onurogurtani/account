@@ -5,20 +5,26 @@ import {
   CustomForm,
   CustomFormItem,
   CustomImage,
+  CustomInput,
+  CustomMaskInput,
   CustomSelect,
   Option,
 } from '../../../components';
 import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
 import '../../../styles/tableFilter.scss';
 import { useDispatch } from 'react-redux';
-import { userType } from '../../../constants/users';
+import { packagePurchaseStatus, userType } from '../../../constants/users';
+import { formPhoneRegex, tcknValidator } from '../../../utils/formRule';
 
-const VideoFilter = () => {
+const UserFilter = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
 
   const onFinish = useCallback(
     async (values) => {
+      values.CitizenId = values.CitizenId
+        ? values?.CitizenId.toString().replaceAll('_', '')
+        : undefined;
       console.log(values);
     },
     [dispatch],
@@ -50,18 +56,45 @@ const VideoFilter = () => {
             </CustomSelect>
           </CustomFormItem>
 
-          <CustomFormItem label="Durum" name="Status">
-            <CustomSelect placeholder="Durum">
-              <Option key={0} value={0}>
-                Hepsi
+          <CustomFormItem label="Ad" name="Name">
+            <CustomInput placeholder="Ad" />
+          </CustomFormItem>
+
+          <CustomFormItem label="Soyad" name="SurName">
+            <CustomInput placeholder="Soyad" />
+          </CustomFormItem>
+
+          <CustomFormItem label="Paket Satın Alma Durumu" name="packagePurchaseStatus">
+            <CustomSelect placeholder="Seçiniz">
+              <Option key={0} value={''}>
+                Seçiniz
               </Option>
-              <Option key={1} value={true}>
-                Aktif
-              </Option>
-              <Option key={2} value={false}>
-                Pasif
-              </Option>
+              {packagePurchaseStatus.map((item) => (
+                <Option key={item.id} value={item.id}>
+                  {item.value}
+                </Option>
+              ))}
             </CustomSelect>
+          </CustomFormItem>
+
+          <CustomFormItem
+            rules={[{ validator: tcknValidator, message: '11 Karakter İçermelidir' }]}
+            label="TC Kimlik Numarası"
+            name="CitizenId"
+          >
+            <CustomMaskInput maskPlaceholder={null} mask={'99999999999'}>
+              <CustomInput placeholder="TC Kimlik Numarası" />
+            </CustomMaskInput>
+          </CustomFormItem>
+
+          <CustomFormItem
+            rules={[{ validator: formPhoneRegex, message: 'Geçerli Telefon Giriniz' }]}
+            label="Telefon Numarası"
+            name="MobilePhones"
+          >
+            <CustomMaskInput mask={'+\\90 (999) 999 99 99'}>
+              <CustomInput placeholder="Telefon Numarası" />
+            </CustomMaskInput>
           </CustomFormItem>
         </div>
         <div className="form-footer">
@@ -80,4 +113,4 @@ const VideoFilter = () => {
   );
 };
 
-export default VideoFilter;
+export default UserFilter;

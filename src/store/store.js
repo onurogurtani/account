@@ -35,6 +35,7 @@ import { eventsSlice } from './slice/eventsSlice';
 import { classStageSlice } from './slice/classStageSlice';
 import { announcementTypeSlice } from './slice/announcementTypeSlice';
 import { educationYearsSlice } from './slice/educationYearsSlice';
+import { graduationYearsSlice } from './slice/graduationYearsSlice';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -59,6 +60,7 @@ const reducers = combineReducers({
   classStages: classStageSlice.reducer,
   announcementTypes: announcementTypeSlice.reducer,
   educationYears: educationYearsSlice.reducer,
+  graduationYears: graduationYearsSlice.reducer,
 });
 
 const persistConfig = {
