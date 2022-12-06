@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import {
+  confirmDialog,
   CustomButton,
   CustomCollapseCard,
   CustomImage,
   CustomPageHeader,
   CustomTable,
+  Text,
 } from '../../../components';
 import UserFilter from './UserFilter';
 import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
@@ -129,12 +131,18 @@ const UserList = () => {
         return (
           <div className="action-btns">
             {record.status ? (
-              <CustomButton className="btn passive-btn">PASİF ET</CustomButton>
+              <CustomButton className="btn passive-btn" onClick={changeStatus}>
+                PASİF ET
+              </CustomButton>
             ) : (
-              <CustomButton className="btn active-btn">AKTİF ET</CustomButton>
+              <CustomButton className="btn active-btn" onClick={changeStatus}>
+                AKTİF ET
+              </CustomButton>
             )}
             <CustomButton className="btn detail-btn">DÜZENLE</CustomButton>
-            <CustomButton className="btn delete-btn">SİL</CustomButton>
+            <CustomButton className="btn delete-btn" onClick={onDelete}>
+              SİL
+            </CustomButton>
           </div>
         );
       },
@@ -152,6 +160,29 @@ const UserList = () => {
     // pageSize: tableProperty?.pageSize,
   };
   const addUser = () => history.push('/user-management/user-list-management/add');
+
+  const onDelete = () => {
+    confirmDialog({
+      title: <Text t="attention" />,
+      message: 'Seçtiğiniz kaydı silmek istediğinize emin misiniz?',
+      okText: 'Evet',
+      cancelText: 'Hayır',
+      onOk: async () => {},
+    });
+  };
+
+  const changeStatus = (status) => {
+    confirmDialog({
+      title: <Text t="attention" />,
+      message: status
+        ? 'Pasifleştirmek  istediğinizden emin misiniz?'
+        : 'Aktifleştirmek  istediğinizden emin misiniz?',
+      okText: 'Evet',
+      cancelText: 'Hayır',
+      onOk: async () => {},
+    });
+  };
+
   return (
     <CustomPageHeader title="Üye Listesi" showBreadCrumb showHelpButton routes={['Üye Yönetimi']}>
       <CustomCollapseCard className="user-list-card" cardTitle="Üye Listesi">

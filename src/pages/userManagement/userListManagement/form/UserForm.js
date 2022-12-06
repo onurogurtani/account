@@ -1,11 +1,13 @@
-import { Form } from 'antd';
+import { Form, Typography } from 'antd';
 import {
+  confirmDialog,
   CustomButton,
   CustomForm,
   CustomFormItem,
   CustomInput,
   CustomMaskInput,
   CustomSelect,
+  CustomTable,
   CustomTextInput,
   Option,
   Text,
@@ -16,11 +18,15 @@ import OptionalUserInformationFormSection from './OptionalUserInformationFormSec
 import '../../../../styles/userManagement/userForm.scss';
 import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 const UserForm = () => {
   const [form] = Form.useForm();
-  const [userTypeId, setUserTypeId] = useState();
+  const history = useHistory();
+  const { Title } = Typography;
   const { pathname } = useLocation();
+
+  const [userTypeId, setUserTypeId] = useState();
   const isEdit = pathname.includes('edit');
 
   const onChangeUserType = (value) => {
@@ -32,6 +38,74 @@ const UserForm = () => {
     values.diplomaGrade = parseFloat(values.diplomaGrade);
     console.log(values);
   };
+  const onCancel = () => {
+    confirmDialog({
+      title: <Text t="attention" />,
+      message: 'İptal etmek istediğinizden emin misiniz?',
+      okText: 'Evet',
+      cancelText: 'Hayır',
+      onOk: async () => {
+        history.push('/user-management/user-list-management/list');
+      },
+    });
+  };
+
+  const columnsStudentParents = [
+    {
+      title: 'Ad',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: 'Soyad',
+      dataIndex: 'surName',
+      key: 'surName',
+    },
+    {
+      title: 'TC Kimlik No',
+      dataIndex: 'tc',
+      key: 'tc',
+    },
+    {
+      title: 'E-Mail',
+      dataIndex: 'mail',
+      key: 'mail',
+    },
+    {
+      title: 'Telefon Numarası',
+      dataIndex: 'phone',
+      key: 'phone',
+    },
+  ];
+  const columnsPackages = [
+    {
+      title: 'Paketler',
+      dataIndex: 'packages',
+      key: 'name',
+      width: 200,
+    },
+    {
+      title: 'Öğrenci',
+      children: [
+        {
+          title: 'Ad',
+          dataIndex: 'name',
+          key: 'name',
+        },
+        {
+          title: 'Soyad',
+          dataIndex: 'surName',
+          key: 'surName',
+        },
+        {
+          title: 'TC Kimlik No',
+          dataIndex: 'tc',
+          key: 'tc',
+        },
+      ],
+    },
+  ];
   return (
     <div className="add-user-container">
       <CustomForm
@@ -123,9 +197,31 @@ const UserForm = () => {
         </CustomFormItem>
         {isEdit && <OptionalUserInformationFormSection form={form} />}
       </CustomForm>
-
-      <div className="add-event-footer">
-        <CustomButton type="primary" className="cancel-btn">
+      {isEdit && userTypeId && (
+        <>
+          <Title level={3}>
+            {userTypeId === 1 ? 'Veli Bilgileri' : 'Satın Alınan Paket Bilgileri'}{' '}
+          </Title>
+          <CustomTable
+            dataSource={[
+              {
+                name: 'Ahmet',
+                packages: 'TYT Matematik',
+                surName: 'Ünlü',
+                tc: '76543456788',
+                phone: '05455555555',
+                mail: 'mail',
+              },
+            ]}
+            columns={userTypeId === 1 ? columnsStudentParents : columnsPackages}
+            pagination={false}
+            rowKey={(record) => `add-user-form-${record?.id}`}
+            scroll={{ x: false }}
+          />
+        </>
+      )}
+      <div className="add-user-footer">
+        <CustomButton type="primary" className="cancel-btn" onClick={onCancel}>
           İptal
         </CustomButton>
         <CustomButton type="primary" className="save-btn" onClick={onFinish}>
