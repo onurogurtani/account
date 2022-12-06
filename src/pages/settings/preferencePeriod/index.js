@@ -23,10 +23,10 @@ import {
   getPreferencePeriodUpdate,
 } from '../../../store/slice/preferencePeriodSlice';
 import '../../../styles/settings/preferencePeriod.scss';
-
+import moment from 'moment';
 const PreferencePeriod = () => {
   const [showModal, setShowModal] = useState(false);
-  const [editInfo, setEditInfo] = useState('sti');
+  const [editInfo, setEditInfo] = useState(null);
   const [form] = Form.useForm();
   const { preferencePeriod, educationYears } = useSelector((state) => state?.preferencePeriod);
   const dispatch = useDispatch();
@@ -34,13 +34,24 @@ const PreferencePeriod = () => {
     dispatch(getPreferencePeriod());
   }, [dispatch]);
 
-  const openEdit = () => {
+  const openEdit = (data) => {
     setShowModal(true);
-    setEditInfo({});
+    setEditInfo(data);
+    const newData = {
+      ...data,
+      period1StartDate: moment(data.period1StartDate),
+      period1EndDate: moment(data.period1EndDate),
+      period2StartDate: moment(data.period2StartDate),
+      period2EndDate: moment(data.period2EndDate),
+      period3StartDate: moment(data.period3StartDate),
+      period3EndDate: moment(data.period3EndDate),
+    };
+    form.setFieldsValue(newData);
   };
 
   const sumbit = useCallback(
     (e) => {
+      const educationYearObject = educationYears.items.find((q) => q.id === e.educationYearId);
       const data = {
         educationYearId: e.educationYearId,
         period1StartDate: e.period1StartDate.$d,
@@ -49,10 +60,13 @@ const PreferencePeriod = () => {
         period3EndDate: e.period3EndDate.$d,
         period2EndDate: e.period3EndDate.$d,
         period1EndDate: e.period3EndDate.$d,
+        educationYear: educationYearObject,
       };
-      console.log(editInfo);
       if (editInfo) {
-        const action = dispatch(getPreferencePeriodUpdate(data));
+        console.log(editInfo);
+        const action = dispatch(
+          getPreferencePeriodUpdate({ entitiy: { ...data, id: editInfo.id } }),
+        );
         if (getPreferencePeriodUpdate.fulfilled.match(action)) {
           successDialog({
             title: <Text t="success" />,
@@ -70,7 +84,7 @@ const PreferencePeriod = () => {
           });
         }
       } else {
-        const action = dispatch(getPreferencePeriodAdd(data));
+        const action = dispatch(getPreferencePeriodAdd({ entitiy: data }));
         if (getPreferencePeriodAdd.fulfilled.match(action)) {
           successDialog({
             title: <Text t="success" />,
@@ -88,12 +102,19 @@ const PreferencePeriod = () => {
         }
       }
     },
-    [dispatch, form, editInfo],
+    [educationYears, editInfo, dispatch, form],
   );
   useEffect(() => {
     dispatch(getEducationYears());
   }, [dispatch]);
 
+  const convertDate = (date) => {
+    return new Date(date).toLocaleDateString('tr-TR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
   return (
     <CustomPageHeader title={'Tercih Dönemi Tanımlama'} showBreadCrumb routes={['Ayarlar']}>
       <CustomCollapseCard className={'preferencePeriod'} cardTitle={'Tercih Dönemleri Belirleme'}>
@@ -108,26 +129,44 @@ const PreferencePeriod = () => {
           </CustomButton>
         </div>
         <div className=" list">
-          <CustomCollapseCard className={'list-col'} cardTitle={'Tercih Dönemleri Belirleme'}>
-            <div className="list-card">
-              <div className=" list-card-items">
-                <div className=" list-card-item">sdsad</div>
-                <div className=" list-card-item">sdsad</div>
-                <div className=" list-card-item">sdsad</div>
-                <div className=" list-card-item">sdsad</div>
-              </div>
-              <div>
-                <div style={{ marginBottom: '10px' }}>
-                  <CustomButton onClick={openEdit} className="edit-button">
-                    Düzenle
-                  </CustomButton>
+          {preferencePeriod?.items?.map((item, index) => (
+            <CustomCollapseCard
+              className={'list-col'}
+              cardTitle={item.educationStartYear + '-' + item.educationEndYear}
+            >
+              <div className="list-card">
+                <div className=" list-card-items">
+                  <div className=" list-card-item">
+                    <div>{convertDate(item.period1StartDate)}</div>
+                    <span>-</span>
+                    <div>{convertDate(item.period1EndDate)}</div>
+                  </div>
+                  <div className=" list-card-item">
+                    <div>{convertDate(item.period2StartDate)}</div>
+                    <span>-</span>
+
+                    <div>{convertDate(item.period2EndDate)}</div>
+                  </div>
+                  <div className=" list-card-item">
+                    <div>{convertDate(item.period3StartDate)}</div>
+                    <span>-</span>
+
+                    <div>{convertDate(item.period3EndDate)}</div>
+                  </div>
                 </div>
-                <div>
-                  <CustomButton className="delete-button">Sil</CustomButton>
+                <div className="prefencePeriodButton" style={{ display: 'flex' }}>
+                  <div style={{ marginBottom: '10px' }}>
+                    <CustomButton onClick={() => openEdit(item)} className="edit-button">
+                      Düzenle
+                    </CustomButton>
+                  </div>
+                  <div>
+                    <CustomButton className="delete-button">Sil</CustomButton>
+                  </div>
                 </div>
               </div>
-            </div>
-          </CustomCollapseCard>
+            </CustomCollapseCard>
+          ))}
         </div>
       </CustomCollapseCard>
       <CustomModal
