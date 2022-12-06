@@ -69,11 +69,21 @@ const CustomSelectContent = styled(Select)(
   .ant-select-arrow{
     right: 24px !important;
   }
+  .ant-select-clear{
+    top: 37%;
+    right: 50px;
+    font-size: 18px;
+  }
 `,
 );
 
-const CustomSelect = ({ ...props }) => {
-  return <CustomSelectContent {...props} suffixIcon={<CustomImage src={selectDown} />} />;
+const CustomSelect = ({ suffixIcon, ...props }) => {
+  return (
+    <CustomSelectContent
+      {...props}
+      suffixIcon={suffixIcon ? <CustomImage src={suffixIcon} /> : <CustomImage src={selectDown} />}
+    />
+  );
 };
 
 export default CustomSelect;

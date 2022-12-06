@@ -6,10 +6,8 @@ const CustomTextInput = ({ onChange, ...props }) => {
     (e) => {
       const { value } = e.target;
       const regex = /^[a-zA-ZğüşöçıİĞÜŞÖÇ ]+$/;
-      if (regex?.test(value) || value === '' || value === '-') {
+      if (regex?.test(value) || value === '') {
         onChange(value);
-      } else {
-        onChange('');
       }
     },
     [onChange],

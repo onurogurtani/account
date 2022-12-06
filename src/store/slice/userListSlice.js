@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import userServices from '../../services/user.service';
+import schoolsServices from '../../services/schools.services';
 
 export const getUserList = createAsyncThunk(
   'getUserList',
@@ -42,6 +43,17 @@ export const deleteUserList = createAsyncThunk(
   async ({ id }, { rejectWithValue }) => {
     try {
       return await userServices.deleteUser({ id });
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
+export const getSchools = createAsyncThunk(
+  'userList/getSchools',
+  async (body, { rejectWithValue }) => {
+    try {
+      return await schoolsServices.getSchools(body);
     } catch (error) {
       return rejectWithValue(error?.data);
     }
