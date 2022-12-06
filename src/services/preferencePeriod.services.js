@@ -2,7 +2,7 @@ import { api } from './api';
 
 const preferencePeriodGetList = (data) => {
   return api({
-    url: `PreferencePeriod/getList?PageSize=20`,
+    url: `PreferencePeriod/getPagedList?PageSize=20`,
     method: 'POST',
     data: null,
   });

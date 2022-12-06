@@ -42,3 +42,16 @@
     width: 100%;
   }
 }
+
+.list-card-item {
+  display: flex;
+  gap: 4px;
+}
+@media (max-width: 767.98px) {
+  .list-card {
+    flex-direction: column;
+  }
+  .prefencePeriodButton {
+    margin-top: 10px;
+  }
+}
