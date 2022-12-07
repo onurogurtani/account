@@ -33,6 +33,7 @@ const AnnouncementType = lazy(() =>
     default: Component,
   })),
 );
+
 const AcademicYear = lazy(() =>
   import('./academicYear').then(({ default: Component }) => ({
     default: Component,
@@ -40,6 +41,12 @@ const AcademicYear = lazy(() =>
 );
 const TargetSentence = lazy(() =>
   import('./targetSentence').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+
+const PreferencePeriod = lazy(() =>
+  import('./preferencePeriod').then(({ default: Component }) => ({
     default: Component,
   })),
 );
@@ -52,6 +59,7 @@ const Settings = {
   AnnouncementType,
   AcademicYear,
   TargetSentence,
+  PreferencePeriod,
 };
 
 export default Settings;

@@ -298,7 +298,6 @@ const App = () => {
                           Component={Settings?.Lessons}
                           authority="dashboard"
                         />
-
                         <PrivateRoute
                           path={`${match?.path}/activities`}
                           Component={Settings?.Activities}
@@ -324,6 +323,12 @@ const App = () => {
                           Component={Settings?.TargetSentence}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/preferencePeriod`}
+                          Component={Settings?.PreferencePeriod}
+                          authority="dashboard"
+                        />
+
                         <Route
                           component={() => (
                             <Redirect

@@ -337,6 +337,7 @@ const Menus = () => {
             </span>
           </MenuItemText>
         </CustomItem>
+
         <CustomItem key="/settings/academicYear">
           <MenuItemText>
             <CustomImage src={menuIcons} />
@@ -350,6 +351,15 @@ const Menus = () => {
             <CustomImage src={menuIcons} />
             <span>
               <Text t="Hedef Cümle" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+
+        <CustomItem key="/settings/preferencePeriod">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Tercih Dönemi Tanımlama" />
             </span>
           </MenuItemText>
         </CustomItem>
