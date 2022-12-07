@@ -1,0 +1,54 @@
+.action-btns {
+  display: flex;
+  justify-content: center;
+
+  .detail-btn {
+    width: 105px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-family: UbuntuMedium, sans-serif;
+    font-size: 12px;
+    line-height: 12px;
+    border-radius: 4px;
+    box-shadow: none;
+    background-color: #3f4957;
+  }
+
+  .delete-btn {
+    width: 33px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-family: UbuntuMedium, sans-serif;
+    font-size: 12px;
+    line-height: 12px;
+    border-radius: 4px;
+    box-shadow: none;
+    background-color: #f72717;
+  }
+}
+
+.form-item-select {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+  .ant-form-item {
+    width: 100%;
+  }
+}
+.academicYear-modal {
+  width: 200px;
+}
+
+.academicYearSumbit {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  height: 40px !important;
+}

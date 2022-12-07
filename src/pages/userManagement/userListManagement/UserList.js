@@ -1,158 +1,121 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   confirmDialog,
   CustomButton,
   CustomCollapseCard,
   CustomImage,
+  CustomPageHeader,
   CustomTable,
-  errorDialog,
-  successDialog,
   Text,
 } from '../../../components';
-import { useDispatch, useSelector } from 'react-redux';
-import { getUserList, deleteUserList, updateUserList } from '../../../store/slice/userListSlice';
-import '../../../styles/draftOrder/draftList.scss';
+import UserFilter from './UserFilter';
+import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
+import '../../../styles/table.scss';
+import '../../../styles/userManagement/userList.scss';
+import { Tag } from 'antd';
 import { useHistory } from 'react-router-dom';
-import cardsRegistered from '../../../assets/icons/icon-cards-registered.svg';
 
 const UserList = () => {
   const history = useHistory();
-
-  const dispatch = useDispatch();
-  const { usersList, tableProperty } = useSelector((state) => state?.userList);
-
-  useEffect(() => {
-    (async () => {
-      await loadUserList();
-    })();
-  }, []);
-
-  const loadUserList = useCallback(async () => {
-    dispatch(getUserList({ pageNumber: 1, pageSize: 10 }));
-  }, [dispatch]);
-
-  const editUser = (record) => {
-    console.log(record);
-    history.push({
-      pathname: '/user-management/edit-user',
-      state: { data: record },
-    });
-  };
-
-  const addUser = () => {
-    history.push('/user-management/add-user');
-  };
-
-  const handleStatus = useCallback(
-    async (status, record) => {
-      const data = {
-        entity: {
-          id: record?.id,
-          status,
-        },
-      };
-      const action = await dispatch(updateUserList(data));
-      if (updateUserList.fulfilled.match(action)) {
-        successDialog({
-          title: <Text t="success" />,
-          message: action?.payload?.message,
-          onOk: () => {
-            loadUserList();
-          },
-        });
-      } else {
-        errorDialog({
-          title: <Text t="error" />,
-          message: action?.payload?.message,
-        });
-      }
-    },
-    [dispatch],
-  );
-
-  const handleDeleteRole = async (record) => {
-    confirmDialog({
-      title: <Text t="attention" />,
-      message: 'Kaydı silmek istediğinizden emin misiniz?',
-      okText: <Text t="delete" />,
-      cancelText: 'Vazgeç',
-      onOk: async () => {
-        let id = record.id;
-        const action = await dispatch(deleteUserList({ id }));
-        if (deleteUserList.fulfilled.match(action)) {
-          successDialog({
-            title: <Text t="successfullySent" />,
-            message: action?.payload?.message,
-            onOk: () => {
-              loadUserList();
-            },
-          });
-        } else {
-          if (action?.payload?.message) {
-            errorDialog({
-              title: <Text t="error" />,
-              message: action?.payload?.message,
-            });
-          }
-        }
-      },
-    });
-  };
-
+  const [isUserFilter, setIsUserFilter] = useState(false);
   const columns = [
-    // {
-    //   title: 'AD',
-    //   dataIndex: 'name',
-    //   key: 'name',
-    // },
-    // {
-    //   title: 'SOYAD',
-    //   dataIndex: 'surName',
-    //   key: 'surName',
-    // },
     {
-      title: 'AD SOYAD',
-      dataIndex: 'nameSurname',
-      key: 'nameSurname',
+      title: 'Kullanıcı Türü',
+      dataIndex: 'id',
+      key: 'id',
+      sorter: true,
+      // sortOrder: sorterObject?.columnKey === 'id' ? sorterObject?.order : null,
+      render: (text, record) => {
+        return <div>{text}</div>;
+      },
     },
     {
-      title: 'E-Mail',
-      dataIndex: 'email',
-      key: 'email',
+      title: 'TC',
+      dataIndex: 'name',
+      key: 'name',
+      sorter: true,
+      // sortOrder: sorterObject?.columnKey === 'name' ? sorterObject?.order : null,
+      render: (text, record) => {
+        return <div>{text}</div>;
+      },
     },
     {
-      title: 'KULLANICI ADI',
-      dataIndex: 'userName',
-      key: 'userName',
+      title: 'Ad',
+      dataIndex: 'name',
+      key: 'name',
+      sorter: true,
+      // sortOrder: sorterObject?.columnKey === 'name' ? sorterObject?.order : null,
+      render: (text, record) => {
+        return <div>{text}</div>;
+      },
     },
     {
-      title: 'TC KİMLİK NO',
-      dataIndex: 'citizenId',
-      key: 'citizenId',
+      title: 'Soyad',
+      dataIndex: 'name',
+      key: 'name',
+      sorter: true,
+      // sortOrder: sorterObject?.columnKey === 'name' ? sorterObject?.order : null,
+      render: (text, record) => {
+        return <div>{text}</div>;
+      },
     },
     {
-      title: 'CEP TELEFONU',
-      dataIndex: 'mobilePhones',
-      key: 'mobilePhones',
+      title: 'E-Posta',
+      dataIndex: 'name',
+      key: 'name',
+      sorter: true,
+      // sortOrder: sorterObject?.columnKey === 'name' ? sorterObject?.order : null,
+      render: (text, record) => {
+        return <div>{text}</div>;
+      },
     },
-    /*
     {
-      title: 'E-POSTA',
-      dataIndex: 'email',
-      key: 'email',
+      title: 'Cep Telefonu',
+      dataIndex: 'name',
+      key: 'name',
+      sorter: true,
+      // sortOrder: sorterObject?.columnKey === 'name' ? sorterObject?.order : null,
+      render: (text, record) => {
+        return <div>{text}</div>;
+      },
     },
-    */
     {
-      title: 'DURUM',
-      dataIndex: 'status',
-      key: 'status',
+      title: 'Paket Satın Alma Durumu',
+      dataIndex: 'name',
+      key: 'name',
+      sorter: true,
+      // sortOrder: sorterObject?.columnKey === 'name' ? sorterObject?.order : null,
+      render: (text, record) => {
+        return <div>{text}</div>;
+      },
+    },
+    {
+      title: 'Yerine Giriş',
+      dataIndex: 'name',
+      key: 'name',
+      sorter: true,
+      // sortOrder: sorterObject?.columnKey === 'name' ? sorterObject?.order : null,
+      render: (text, record) => {
+        return <div>{text}</div>;
+      },
+    },
+    {
+      title: 'Durum',
+      dataIndex: 'isActive',
+      key: 'isActive',
+      sorter: true,
+      // sortOrder: sorterObject?.columnKey === 'isActive' ? sorterObject?.order : null,
       render: (text, record) => {
         return (
           <div>
-            {record.status ? (
-              <span className="status-text-active ">Aktif</span>
+            {record.isActive ? (
+              <Tag color="green" key={1}>
+                Aktif
+              </Tag>
             ) : (
-              <span className="status-text-passive ">Pasif</span>
+              <Tag color="red" key={2}>
+                Pasif
+              </Tag>
             )}
           </div>
         );
@@ -168,18 +131,16 @@ const UserList = () => {
         return (
           <div className="action-btns">
             {record.status ? (
-              <CustomButton onClick={() => handleStatus(false, record)} className="passive-btn">
+              <CustomButton className="btn passive-btn" onClick={changeStatus}>
                 PASİF ET
               </CustomButton>
             ) : (
-              <CustomButton onClick={() => handleStatus(true, record)} className="active-btn">
+              <CustomButton className="btn active-btn" onClick={changeStatus}>
                 AKTİF ET
               </CustomButton>
             )}
-            <CustomButton className="detail-btn" onClick={() => editUser(record)}>
-              DÜZENLE
-            </CustomButton>
-            <CustomButton className="delete-btn" onClick={() => handleDeleteRole(record)}>
+            <CustomButton className="btn detail-btn">DÜZENLE</CustomButton>
+            <CustomButton className="btn delete-btn" onClick={onDelete}>
               SİL
             </CustomButton>
           </div>
@@ -187,37 +148,73 @@ const UserList = () => {
       },
     },
   ];
-  const handleTableChange = async ({ pageSize, current }, filters, sorter) => {
-    await dispatch(getUserList({ pageNumber: current, pageSize }));
-  };
-  return (
-    <CustomCollapseCard className="draft-list-card" cardTitle={<Text t="Kullanıcı Listesi" />}>
-      {
-        <div className="number-registered-drafts">
-          <CustomButton className="add-btn" onClick={addUser}>
-            YENİ KULLANICI EKLE
-          </CustomButton>
-          <div className="drafts-count-title">
-            <CustomImage src={cardsRegistered} />
-            Kayıtlı Kullanıcı Sayısı: <span>{usersList?.length}</span>
-          </div>
-        </div>
-      }
 
-      <CustomTable
-        pagination={{
-          current: tableProperty?.currentPage,
-          pageSize: tableProperty?.pageSize,
-          total: tableProperty?.totalCount,
-          showSizeChanger: true,
-        }}
-        onChange={handleTableChange}
-        dataSource={usersList}
-        columns={columns}
-        rowKey={(record) => `draft-list-new-order-${record?.id || record?.name}`}
-        scroll={{ x: false }}
-      />
-    </CustomCollapseCard>
+  const paginationProps = {
+    showSizeChanger: true,
+    showQuickJumper: {
+      goButton: <CustomButton className="go-button">Git</CustomButton>,
+    },
+    position: 'bottomRight',
+    // total: tableProperty?.totalCount,
+    // current: tableProperty?.currentPage,
+    // pageSize: tableProperty?.pageSize,
+  };
+  const addUser = () => history.push('/user-management/user-list-management/add');
+
+  const onDelete = () => {
+    confirmDialog({
+      title: <Text t="attention" />,
+      message: 'Seçtiğiniz kaydı silmek istediğinize emin misiniz?',
+      okText: 'Evet',
+      cancelText: 'Hayır',
+      onOk: async () => {},
+    });
+  };
+
+  const changeStatus = (status) => {
+    confirmDialog({
+      title: <Text t="attention" />,
+      message: status
+        ? 'Pasifleştirmek  istediğinizden emin misiniz?'
+        : 'Aktifleştirmek  istediğinizden emin misiniz?',
+      okText: 'Evet',
+      cancelText: 'Hayır',
+      onOk: async () => {},
+    });
+  };
+
+  return (
+    <CustomPageHeader title="Üye Listesi" showBreadCrumb showHelpButton routes={['Üye Yönetimi']}>
+      <CustomCollapseCard className="user-list-card" cardTitle="Üye Listesi">
+        <div className="table-header">
+          <CustomButton className="add-btn" onClick={addUser}>
+            YENİ EKLE
+          </CustomButton>
+          <CustomButton
+            data-testid="search"
+            className="search-btn"
+            onClick={() => setIsUserFilter((prev) => !prev)}
+          >
+            <CustomImage src={iconSearchWhite} />
+          </CustomButton>
+        </div>
+        {isUserFilter && <UserFilter />}
+        <CustomTable
+          dataSource={[{ name: 'deneme' }]}
+          // onChange={onChangeTable}
+          className="user-table-list"
+          columns={columns}
+          // onRow={(record, rowIndex) => {
+          //   return {
+          //     onClick: (event) => showEvent(record),
+          //   };
+          // }}
+          pagination={paginationProps}
+          rowKey={(record) => `user-list-${record?.id}`}
+          scroll={{ x: false }}
+        />
+      </CustomCollapseCard>
+    </CustomPageHeader>
   );
 };
 
