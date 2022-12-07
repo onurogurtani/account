@@ -363,6 +363,15 @@ const Menus = () => {
             </span>
           </MenuItemText>
         </CustomItem>
+
+        <CustomItem key="/settings/targetScreen">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Hedef Ekranları Tanımlama" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
       </CustomSubMenu>
     </CustomMenu>
   );

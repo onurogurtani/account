@@ -39,6 +39,8 @@ import { graduationYearsSlice } from './slice/graduationYearsSlice';
 import { targetSentenceSlice } from './slice/targetSentenceSlice';
 import { preferencePeriodSlice } from './slice/preferencePeriodSlice';
 
+import { targetScreenSlice } from './slice/targetScreen';
+
 const reducers = combineReducers({
   auth: authSlice.reducer,
   user: userSlice.reducer,
@@ -61,6 +63,7 @@ const reducers = combineReducers({
   events: eventsSlice.reducer,
   classStages: classStageSlice.reducer,
   announcementTypes: announcementTypeSlice.reducer,
+  targetScreen:targetScreenSlice.reducer,
   educationYears: educationYearsSlice.reducer,
   graduationYears: graduationYearsSlice.reducer,
   targetSentence: targetSentenceSlice.reducer,
