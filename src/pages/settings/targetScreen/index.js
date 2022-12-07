@@ -25,6 +25,7 @@ import {
   getAllTargetScreen,
   updateTargetScreen,
 } from '../../../store/slice/targetScreen';
+import { userScreen } from '../../../constants/uiScreen';
 
 const TargetScreen = () => {
   const [form] = Form.useForm();
@@ -33,13 +34,6 @@ const TargetScreen = () => {
   const [open, setOpen] = useState(false);
   const [selectedTargetScreenId, setSelectedTargetScreenId] = useState();
   const { allTargetScreen, tableProperty } = useSelector((state) => state?.targetScreen);
-
-  const testolist = [
-    'Net Hedef Aralığı',
-    'Hedef Listesi tayfası',
-    'net aralığı',
-    'Dersler Sayfası',
-  ];
 
   useResetFormOnCloseModal({ form, open });
 
@@ -267,9 +261,9 @@ const TargetScreen = () => {
             <CustomSelect
               placeholder="Seçiniz"
               showArrow
-              options={testolist.map((province) => ({
-                label: province,
-                value: province,
+              options={userScreen.map((item) => ({
+                label: item.value,
+                value: item.value,
               }))}
             />
           </CustomFormItem>
