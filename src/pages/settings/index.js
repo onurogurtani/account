@@ -10,6 +10,16 @@ const Packages = lazy(() =>
     default: Component,
   })),
 );
+const AddPackages = lazy(() =>
+  import('./packages/AddPackages').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+const EditPackages = lazy(() =>
+  import('./packages/EditPackages').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 
 const Lessons = lazy(() =>
   import('./lessons').then(({ default: Component }) => ({
@@ -41,6 +51,8 @@ const AcademicYear = lazy(() =>
 const Settings = {
   Categories,
   Packages,
+  AddPackages,
+  EditPackages,
   Lessons,
   Activities,
   ClassStages,

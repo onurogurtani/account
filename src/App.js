@@ -256,6 +256,16 @@ const App = () => {
                           authority="dashboard"
                         />
                         <PrivateRoute
+                          path={`${match?.path}/packages/add`}
+                          Component={Settings?.AddPackages}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/packages/edit`}
+                          Component={Settings?.EditPackages}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
                           path={`${match?.path}/packages`}
                           Component={Settings?.Packages}
                           authority="dashboard"
