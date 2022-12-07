@@ -62,7 +62,7 @@ const reducers = combineReducers({
   announcementTypes: announcementTypeSlice.reducer,
   educationYears: educationYearsSlice.reducer,
   graduationYears: graduationYearsSlice.reducer,
-  targetSentence: targetSentenceSlice,
+  targetSentence: targetSentenceSlice.reducer,
 });
 
 const persistConfig = {

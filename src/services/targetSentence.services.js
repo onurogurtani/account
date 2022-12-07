@@ -1,10 +1,11 @@
 import { api } from './api';
 
-const targetSentenceGetList = () => {
+const targetSentenceGetList = (params = {}) => {
   return api({
     url: `TargetSentence/getList`,
     method: 'POST',
     data: null,
+    params,
   });
 };
 const targetSentenceAdd = (data) => {
@@ -21,11 +22,19 @@ const targetSentenceUpdate = (data) => {
     data: data,
   });
 };
+const targetSentenceDelete = (data) => {
+  return api({
+    url: `TargetSentence`,
+    method: 'DELETE',
+    data: data,
+  });
+};
 
 const targetSentenceServices = {
   targetSentenceGetList,
   targetSentenceAdd,
   targetSentenceUpdate,
+  targetSentenceDelete,
 };
 
 export default targetSentenceServices;
