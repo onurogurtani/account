@@ -35,6 +35,7 @@ import { eventsSlice } from './slice/eventsSlice';
 import { classStageSlice } from './slice/classStageSlice';
 import { announcementTypeSlice } from './slice/announcementTypeSlice';
 import { educationYearsSlice } from './slice/educationYearsSlice';
+
 import { graduationYearsSlice } from './slice/graduationYearsSlice';
 import { targetSentenceSlice } from './slice/targetSentenceSlice';
 
