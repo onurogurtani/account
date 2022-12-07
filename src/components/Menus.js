@@ -354,6 +354,7 @@ const Menus = () => {
             </span>
           </MenuItemText>
         </CustomItem>
+
         <CustomItem key="/settings/preferencePeriod">
           <MenuItemText>
             <CustomImage src={menuIcons} />

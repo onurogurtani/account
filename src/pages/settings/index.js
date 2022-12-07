@@ -44,6 +44,7 @@ const TargetSentence = lazy(() =>
     default: Component,
   })),
 );
+
 const PreferencePeriod = lazy(() =>
   import('./preferencePeriod').then(({ default: Component }) => ({
     default: Component,

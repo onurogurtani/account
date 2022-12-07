@@ -314,7 +314,6 @@ const App = () => {
                           authority="dashboard"
                         />
                         <PrivateRoute
-                          ü
                           path={`${match?.path}/academicYear`}
                           Component={Settings?.AcademicYear}
                           authority="dashboard"
