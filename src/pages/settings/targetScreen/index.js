@@ -19,12 +19,12 @@ import {
 } from '../../../components';
 import '../../../styles/settings/packages.scss';
 import '../../../styles/table.scss';
-// import {
-//   addTargetScreen,
-//   getTargetScreen,
-//   updateTargetScreen,
-// } from '../../../store/slice/TargetScreenSlice';
 import useResetFormOnCloseModal from '../../../hooks/useResetFormOnCloseModal';
+import {
+  addNewTargetScreen,
+  getAllTargetScreen,
+  updateTargetScreen,
+} from '../../../store/slice/targetScreen';
 
 const TargetScreen = () => {
   const [form] = Form.useForm();
@@ -32,17 +32,7 @@ const TargetScreen = () => {
 
   const [open, setOpen] = useState(false);
   const [selectedTargetScreenId, setSelectedTargetScreenId] = useState();
-  // const { TargetScreens } = useSelector((state) => state?.TargetScreens);
-
-  const TargetScreens = [
-    { id: 1, name: 'Net Hedef Aralığı', status: true, packageAccessPage: 'Net Hedef Aralığı' },
-    {
-      id: 2,
-      name: 'Hedef Listesi + Terchi Sihirbaz',
-      status: false,
-      packageAccessPage: 'Hedeflerim',
-    },
-  ];
+  const { allTargetScreen, tableProperty } = useSelector((state) => state?.targetScreen);
 
   const testolist = [
     'Net Hedef Aralığı',
@@ -54,12 +44,12 @@ const TargetScreen = () => {
   useResetFormOnCloseModal({ form, open });
 
   useEffect(() => {
-    // loadTargetScreen();
+    loadTargetScreen();
   }, []);
 
-  // const loadTargetScreen = useCallback(async () => {
-  //   dispatch(getTargetScreen());
-  // }, [dispatch]);
+  const loadTargetScreen = useCallback(async (data=null) => {
+    dispatch(getAllTargetScreen(data));
+  }, [dispatch]);
 
   const columns = [
     {
@@ -73,8 +63,8 @@ const TargetScreen = () => {
     },
     {
       title: 'Durumu',
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'isActive',
+      key: 'isActive',
       sorter: (a, b) => b.isActive - a.isActive,
       render: (text, record) => {
         return <div>{text ? 'Aktif' : 'Pasif'}</div>;
@@ -91,9 +81,9 @@ const TargetScreen = () => {
     },
     {
       title: 'İlgili Sayfa Adı',
-      dataIndex: 'packageAccessPage',
-      key: 'packageAccessPage',
-      sorter: (a, b) => a.name.localeCompare(b.packageAccessPage),
+      dataIndex: 'pageName',
+      key: 'pageName',
+      sorter: (a, b) => a.name.localeCompare(b.pageName),
       render: (text, record) => {
         return <div>{text}</div>;
       },
@@ -132,30 +122,33 @@ const TargetScreen = () => {
   };
 
   const onFinish = async (values) => {
-    // const data = {
-    //   name: values?.name,
-    //   isActive: values?.isActive,
-    //   id: selectedTargetScreenId ? selectedTargetScreenId : undefined,
-    // };
-    // const action = await dispatch(
-    //   selectedTargetScreenId ? updateTargetScreen(data) : addTargetScreen(data),
-    // );
-    // const reducer = selectedTargetScreenId ? updateTargetScreen : addTargetScreen;
-    // if (reducer.fulfilled.match(action)) {
-    //   successDialog({
-    //     title: <Text t="success" />,
-    //     message: selectedTargetScreenId ? 'Kayıt Güncellenmiştir' : 'Kaydedildi',
-    //     // message: action?.payload.message,
-    //     onOk: async () => {
-    //       await handleClose();
-    //     },
-    //   });
-    // } else {
-    //   errorDialog({
-    //     title: <Text t="error" />,
-    //     message: action?.payload.message,
-    //   });
-    // }
+    const data = {
+      targetScreen: {
+        name: values?.name,
+        isActive: values?.isActive,
+        id: selectedTargetScreenId ? selectedTargetScreenId : undefined,
+        pageName: values?.pageName,
+      },
+    };
+    const action = await dispatch(
+      selectedTargetScreenId ? updateTargetScreen(data) : addNewTargetScreen(data),
+    );
+    const reducer = selectedTargetScreenId ? updateTargetScreen : addNewTargetScreen;
+    if (reducer.fulfilled.match(action)) {
+      successDialog({
+        title: <Text t="success" />,
+        message: selectedTargetScreenId ? 'Kayıt Güncellenmiştir' : 'Kaydedildi',
+        onOk: async () => {
+          await handleClose();
+        },
+      });
+      loadTargetScreen();
+    } else {
+      errorDialog({
+        title: <Text t="error" />,
+        message: action?.payload.message,
+      });
+    }
   };
 
   const onOk = async () => {
@@ -194,15 +187,24 @@ const TargetScreen = () => {
           </CustomButton>
         </div>
         <CustomTable
-          dataSource={TargetScreens}
-          //   onChange={handleSort}
+          dataSource={allTargetScreen}
           columns={columns}
           pagination={{
             showSizeChanger: true,
             showQuickJumper: {
               goButton: <CustomButton className="go-button">Git</CustomButton>,
             },
+            total: tableProperty.totalCount,
+            current: tableProperty.currentPage,
+            pageSize: tableProperty.pageSize,
             position: 'bottomRight',
+            onChange: (page, pageSize) => {
+              const data = {
+                PageNumber: page,
+                PageSize: pageSize,
+              };
+              loadTargetScreen(data)
+            },
           }}
           rowKey={(record) => `TargetScreen-${record?.id || record?.name}`}
           scroll={{ x: false }}
@@ -251,6 +253,7 @@ const TargetScreen = () => {
               </Option>
             </CustomSelect>
           </CustomFormItem>
+
           <CustomFormItem
             rules={[
               {
@@ -259,11 +262,10 @@ const TargetScreen = () => {
               },
             ]}
             label="İlgili Sayfa Seçimi"
-            name="packageAccessPage"
+            name="pageName"
           >
             <CustomSelect
               placeholder="Seçiniz"
-              mode="multiple"
               showArrow
               options={testolist.map((province) => ({
                 label: province,
