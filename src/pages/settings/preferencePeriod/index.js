@@ -51,7 +51,7 @@ const PreferencePeriod = () => {
 
   const sumbit = useCallback(
     (e) => {
-      const educationYearObject = educationYears.items.find((q) => q.id === e.educationYearId);
+      // const educationYearObject = educationYears.items.find((q) => q.id === e.educationYearId);
       const data = {
         educationYearId: e.educationYearId,
         period1StartDate: e.period1StartDate.$d,
@@ -60,7 +60,7 @@ const PreferencePeriod = () => {
         period3EndDate: e.period3EndDate.$d,
         period2EndDate: e.period3EndDate.$d,
         period1EndDate: e.period3EndDate.$d,
-        educationYear: educationYearObject,
+        //  educationYear: educationYearObject,
       };
       if (editInfo) {
         console.log(editInfo);
