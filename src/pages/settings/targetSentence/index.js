@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
+  confirmDialog,
   CustomButton,
   CustomCollapseCard,
   CustomForm,
@@ -19,6 +20,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {
   getTargetSentenceAdd,
+  getTargetSentenceDelete,
   getTargetSentenceList,
   getTargetSentenceUpdate,
 } from '../../../store/slice/targetSentenceSlice';
@@ -28,7 +30,7 @@ const TargetStence = () => {
   const [editInfo, setEditInfo] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [textValue, setTextValue] = useState('');
-
+  const { targetSentenceList } = useSelector((state) => state?.targetSentence);
   const columns = [
     {
       title: 'No',
@@ -40,8 +42,9 @@ const TargetStence = () => {
     },
     {
       title: 'Hedef Cümle',
-      dataIndex: 'isActive',
-      key: 'isActive',
+      dataIndex: 'name',
+      key: 'name',
+
       render: (text, record) => {
         return <div>{text}</div>;
       },
@@ -55,8 +58,47 @@ const TargetStence = () => {
       render: (text, record) => {
         return (
           <div className="action-btns">
-            <CustomButton className="update-btn" onClick={() => console.log('d')}>
+            <CustomButton
+              className="update-btn"
+              onClick={() => {
+                setEditInfo(record);
+                setTextValue(record.name);
+                setShowAddModal(true);
+              }}
+            >
               Güncelle
+            </CustomButton>
+            <CustomButton
+              style={{ background: 'red' }}
+              className="update-btn"
+              onClick={() => {
+                confirmDialog({
+                  title: <Text t="attention" />,
+                  message: 'Silmek istediğinizden emin misiniz?',
+                  onOk: async () => {
+                    const action = await dispatch(getTargetSentenceDelete({ id: record.id }));
+
+                    if (getTargetSentenceDelete.fulfilled.match(action)) {
+                      successDialog({
+                        title: <Text t="success" />,
+                        message: action?.payload?.message,
+                      });
+                      setShowAddModal(false);
+                      setEditInfo(null);
+                      setTextValue('');
+                    } else {
+                      errorDialog({
+                        title: <Text t="error" />,
+                        message: action?.payload?.message,
+                      });
+                    }
+
+                    await dispatch(getTargetSentenceList());
+                  },
+                });
+              }}
+            >
+              Sil
             </CustomButton>
           </div>
         );
@@ -64,7 +106,7 @@ const TargetStence = () => {
     },
   ];
   const formEdit = async () => {
-    const action = await dispatch(getTargetSentenceUpdate({ value: textValue }));
+    const action = await dispatch(getTargetSentenceUpdate({ entity: { name: textValue } }));
     if (getTargetSentenceAdd.fulfilled.match(action)) {
       successDialog({
         title: <Text t="successfullySent" />,
@@ -92,15 +134,16 @@ const TargetStence = () => {
       });
       return;
     }
-    const action = await dispatch(getTargetSentenceAdd({ value: textValue }));
+    const action = await dispatch(getTargetSentenceAdd({ entity: { name: textValue } }));
     if (getTargetSentenceAdd.fulfilled.match(action)) {
       successDialog({
         title: <Text t="successfullySent" />,
         message: action?.payload?.message,
         onOk: () => {
-          dispatch(getTargetSentenceList());
-          setEditInfo(null);
           setTextValue('');
+          setEditInfo(null);
+          setShowAddModal(false);
+          dispatch(getTargetSentenceList());
         },
       });
     } else {
@@ -127,13 +170,21 @@ const TargetStence = () => {
           </CustomButton>
         </div>
         <CustomTable
-          dataSource={['s']}
+          dataSource={targetSentenceList?.items}
           columns={columns}
           pagination={{
-            showQuickJumper: {
-              goButton: <CustomButton className="go-button">Git</CustomButton>,
-            },
+            total: targetSentenceList?.pagedProperty?.totalCount,
+            current: targetSentenceList?.pagedProperty?.currentPage,
+            pageSize: targetSentenceList?.pagedProperty?.pageSize,
             position: 'bottomRight',
+            showSizeChanger: true,
+            onChange: (page, pageSize) => {
+              const data = {
+                PageNumber: page,
+                PageSize: pageSize,
+              };
+              dispatch(getTargetSentenceList({ params: data }));
+            },
           }}
           rowKey={(record) => `announcementType-${record?.id || record?.name}`}
         />
@@ -160,7 +211,7 @@ const TargetStence = () => {
           layout={'horizontal'}
           onFinish={editInfo ? formEdit : formAdd}
         >
-          <CustomFormItem name={'ati'} label="Hedef Cümle Şablon">
+          <CustomFormItem label="Hedef Cümle Şablon">
             <ReactQuill
               value={textValue}
               onChange={(e) => {

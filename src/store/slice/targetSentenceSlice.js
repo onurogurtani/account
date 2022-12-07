@@ -5,7 +5,7 @@ export const getTargetSentenceList = createAsyncThunk(
   'getTargetSentenceList',
   async (data, { rejectWithValue }) => {
     try {
-      const response = await targetSentenceServices.targetSentenceGetList();
+      const response = await targetSentenceServices.targetSentenceGetList(data?.params);
       return response;
     } catch (error) {
       console.log(error);
@@ -37,7 +37,18 @@ export const getTargetSentenceUpdate = createAsyncThunk(
     }
   },
 );
-
+export const getTargetSentenceDelete = createAsyncThunk(
+  'getTargetSentenceDelete',
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await targetSentenceServices.targetSentenceDelete(data);
+      return response;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 const initialState = {
   targetSentenceList: [],
 };
@@ -47,7 +58,7 @@ export const targetSentenceSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(targetSentenceServices.fulfilled, (state, action) => {
+    builder.addCase(getTargetSentenceList.fulfilled, (state, action) => {
       state.targetSentenceList = action?.payload?.data;
     });
   },

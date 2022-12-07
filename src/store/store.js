@@ -59,7 +59,7 @@ const reducers = combineReducers({
   classStages: classStageSlice.reducer,
   announcementTypes: announcementTypeSlice.reducer,
   educationYears: educationYearsSlice.reducer,
-  targetSentence: targetSentenceSlice,
+  targetSentence: targetSentenceSlice.reducer,
 });
 
 const persistConfig = {
