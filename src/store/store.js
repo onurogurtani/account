@@ -1,16 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import storage from 'redux-persist/lib/storage';
 import { combineReducers } from 'redux';
-import {
-  FLUSH,
-  PAUSE,
-  PERSIST,
-  persistReducer,
-  persistStore,
-  PURGE,
-  REGISTER,
-  REHYDRATE,
-} from 'redux-persist';
+import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist';
 import { encryptTransform } from 'redux-persist-transform-encrypt';
 
 import { authSlice } from './slice/authSlice';
@@ -36,6 +27,7 @@ import { classStageSlice } from './slice/classStageSlice';
 import { announcementTypeSlice } from './slice/announcementTypeSlice';
 import { educationYearsSlice } from './slice/educationYearsSlice';
 import { graduationYearsSlice } from './slice/graduationYearsSlice';
+import { adminUserSlice } from './slice/adminUserSlice';
 import { targetSentenceSlice } from './slice/targetSentenceSlice';
 import { preferencePeriodSlice } from './slice/preferencePeriodSlice';
 
@@ -63,9 +55,10 @@ const reducers = combineReducers({
   events: eventsSlice.reducer,
   classStages: classStageSlice.reducer,
   announcementTypes: announcementTypeSlice.reducer,
-  targetScreen:targetScreenSlice.reducer,
+  targetScreen: targetScreenSlice.reducer,
   educationYears: educationYearsSlice.reducer,
   graduationYears: graduationYearsSlice.reducer,
+  adminUsers: adminUserSlice.reducer,
   targetSentence: targetSentenceSlice.reducer,
   preferencePeriod: preferencePeriodSlice.reducer,
 });

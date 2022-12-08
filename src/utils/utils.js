@@ -91,3 +91,13 @@ export const turkishToLower = (string) => {
   });
   return string.toLowerCase();
 };
+
+export const getUnmaskedPhone = (string) => {
+  return string.replace(/\)/g, '').replace(/\(/g, '').replace(/-/g, '').replace(/ /g, '').replace('+90', '');
+};
+
+export const maskedPhone = (string) => {
+  const maskedNumber = string.match(/^(\d{3})(\d{3})(\d{2})(\d{2})$/);
+  const number = `+90 (${maskedNumber?.[1]}) ${maskedNumber?.[2]} ${maskedNumber?.[3]} ${maskedNumber?.[4]}`;
+  return number;
+};

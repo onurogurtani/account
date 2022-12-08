@@ -13,7 +13,7 @@ export const footerLink = {
 
 export const sessionModalMinutes = {
   modalMinutes: 2,
-  sessionMinutes: process.env.SESSION_MINUTES || 15,
+  sessionMinutes: process.env.SESSION_MINUTES || 3000,
 };
 
 export const loginTimeStorageKey = 'login-time';
