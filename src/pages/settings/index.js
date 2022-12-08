@@ -33,6 +33,11 @@ const AnnouncementType = lazy(() =>
     default: Component,
   })),
 );
+const PackagesType = lazy(() =>
+  import('./packagesType').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 
 const AcademicYear = lazy(() =>
   import('./academicYear').then(({ default: Component }) => ({
@@ -63,6 +68,7 @@ const Settings = {
   Activities,
   ClassStages,
   AnnouncementType,
+  PackagesType,
   TargetScreen,
   AcademicYear,
   TargetSentence,
