@@ -25,6 +25,7 @@ import Settings from './pages/settings';
 
 import EventManagement from './pages/eventManagement';
 import UserListManagement from './pages/userManagement/userListManagement';
+import AdminUsersManagement from './pages/userManagement/adminUsersManagement';
 
 const PrivateRoute = lazy(() =>
   import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -110,6 +111,7 @@ const App = () => {
                                 <PrivateRoute
                                   path={`${match?.path}/list`}
                                   Component={UserListManagement.UserList}
+                                  exact
                                   authority="dashboard"
                                 />
                                 <PrivateRoute
@@ -138,16 +140,7 @@ const App = () => {
                             );
                           }}
                         />
-                        {/* <PrivateRoute
-                          path={`${match?.path}/add-user`}
-                          Component={UserManagement?.AddUser}
-                          authority="dashboard"
-                        />
-                        <PrivateRoute
-                          path={`${match?.path}/edit-user`}
-                          Component={UserManagement?.EditUser}
-                          authority="dashboard"
-                        /> */}
+
                         <PrivateRoute
                           path={`${match?.path}/avatar-management`}
                           Component={UserManagement?.AvatarManagement}
@@ -317,6 +310,45 @@ const App = () => {
                         <PrivateRoute
                           path={`${match?.path}/academicYear`}
                           Component={Settings?.AcademicYear}
+                          authority="dashboard"
+                        />
+                        <Route
+                          component={() => (
+                            <Redirect
+                              to={{
+                                pathname: '/not-found',
+                                state: { status: 404 },
+                              }}
+                            />
+                          )}
+                        />
+                      </Switch>
+                    );
+                  }}
+                  authority="dashboard"
+                  isLayout={false}
+                />
+                <PrivateRoute
+                  path={'/admin-users-management'}
+                  Component={({ match }) => {
+                    return (
+                      <Switch>
+                        <PrivateRoute
+                          path={`${match?.path}/list`}
+                          exact
+                          Component={AdminUsersManagement?.AdminUserList}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/add`}
+                          exact
+                          Component={AdminUsersManagement?.AdminUserCreate}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/edit/:id`}
+                          exact
+                          Component={AdminUsersManagement?.AdminUserCreate}
                           authority="dashboard"
                         />
                         <Route

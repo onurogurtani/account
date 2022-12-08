@@ -94,7 +94,7 @@ const OptionalUserInformationFormSection = ({ form }) => {
 
       {is18 && userType === 1 && (
         <CustomFormItem label="Veli Bildirim Durumu" name="notificationStatus">
-          <CustomSelect placeholder="Seçiniz..." optionFilterProp="children">
+          <CustomSelect disabled placeholder="Seçiniz..." optionFilterProp="children">
             {parentNotificationStatus.map((item) => (
               <Option key={item.id} value={item.id}>
                 {item.value}

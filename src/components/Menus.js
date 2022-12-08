@@ -233,6 +233,14 @@ const Menus = () => {
           </span>
         </MenuItemText>
       </CustomItem>
+      <CustomItem key="/admin-users-management/list">
+        <MenuItemText>
+          <CustomImage src={menuIcons} />
+          <span>
+            <Text t="Admin Kullanıcı Listesi" />
+          </span>
+        </MenuItemText>
+      </CustomItem>
       <CustomItem key="/user-management/survey-management">
         <MenuItemText>
           <CustomImage src={menuIcons} />
