@@ -1,0 +1,57 @@
+.preferencePeriod {
+  .list {
+    padding: 20px;
+    width: 100%;
+    display: flex;
+    .list-col {
+      width: 100%;
+    }
+    .edit-button {
+      background-color: green;
+      color: white;
+    }
+    .delete-button {
+      background-color: red;
+      color: white;
+    }
+  }
+  .list-card {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    padding-right: 30px;
+    padding-left: 30px;
+  }
+  .add-button-item {
+    display: flex;
+    width: 100%;
+    justify-content: end;
+    padding-right: 20px;
+  }
+}
+
+.date-form-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  gap: 10px;
+  .emFChG {
+    margin-bottom: 0px;
+    width: 100%;
+  }
+}
+
+.list-card-item {
+  display: flex;
+  gap: 4px;
+}
+@media (max-width: 767.98px) {
+  .list-card {
+    flex-direction: column;
+  }
+  .prefencePeriodButton {
+    margin-top: 10px;
+  }
+}

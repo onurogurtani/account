@@ -345,11 +345,38 @@ const Menus = () => {
             </span>
           </MenuItemText>
         </CustomItem>
+
         <CustomItem key="/settings/academicYear">
           <MenuItemText>
             <CustomImage src={menuIcons} />
             <span>
               <Text t="Tercih Dönemi Eğitim Öğretim Yılı" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+        <CustomItem key="/settings/targetSentence">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Hedef Cümle" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+
+        <CustomItem key="/settings/preferencePeriod">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Tercih Dönemi Tanımlama" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+
+        <CustomItem key="/settings/targetScreen">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Hedef Ekranları Tanımlama" />
             </span>
           </MenuItemText>
         </CustomItem>
