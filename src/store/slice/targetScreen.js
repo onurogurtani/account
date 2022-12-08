@@ -79,11 +79,7 @@ const initialState = {
 export const targetScreenSlice = createSlice({
   name: 'targetScreenSlice',
   initialState,
-  reducers: {
-    clearClasses: (state, action) => {
-      state.allClassList = [];
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getAllTargetScreen.fulfilled, (state, action) => {
       state.allTargetScreen = action?.payload?.data?.items;
@@ -91,4 +87,3 @@ export const targetScreenSlice = createSlice({
     });
   },
 });
-export const clearClasses = targetScreenSlice.actions;

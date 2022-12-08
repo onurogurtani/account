@@ -33,7 +33,7 @@ const PackagesType = () => {
 
   const [open, setOpen] = useState(false);
   const [selectedPackagesTypeId, setSelectedPackagesTypeId] = useState();
-  const { allPackageType } = useSelector((state) => state?.packageType);
+  const { allPackageType, tableProperty } = useSelector((state) => state?.packageType);
   const { allTargetScreen } = useSelector((state) => state?.targetScreen);
 
   useResetFormOnCloseModal({ form, open });
@@ -43,9 +43,12 @@ const PackagesType = () => {
     loadTargetScreen();
   }, []);
 
-  const loadPackagesType = useCallback(async () => {
-    dispatch(getAllPackageType());
-  }, [dispatch]);
+  const loadPackagesType = useCallback(
+    async (data = null) => {
+      dispatch(getAllPackageType(data));
+    },
+    [dispatch],
+  );
 
   const loadTargetScreen = useCallback(async () => {
     dispatch(getAllTargetScreen());
@@ -216,7 +219,7 @@ const PackagesType = () => {
         packageTypeTargetScreens: ['Hedeflerim sayfasının içeriğini göremez'],
       });
   };
-
+  console.log(tableProperty);
   return (
     <CustomPageHeader title="Paket Türü Tanımlama" showBreadCrumb routes={['Tanımlamalar']}>
       <CustomCollapseCard cardTitle="Paket Türü Tanımlama">
@@ -233,7 +236,17 @@ const PackagesType = () => {
             showQuickJumper: {
               goButton: <CustomButton className="go-button">Git</CustomButton>,
             },
+            total: tableProperty.totalCount,
+            current: tableProperty.currentPage,
+            pageSize: tableProperty.pageSize,
             position: 'bottomRight',
+            onChange: (page, pageSize) => {
+              const data = {
+                PageNumber: page,
+                PageSize: pageSize,
+              };
+              loadPackagesType(data);
+            },
           }}
           rowKey={(record) => `PackagesType-${record?.id || record?.name}`}
           scroll={{ x: false }}
