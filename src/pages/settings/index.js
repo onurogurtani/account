@@ -39,6 +39,28 @@ const PackagesType = lazy(() =>
   })),
 );
 
+const AcademicYear = lazy(() =>
+  import('./academicYear').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+const TargetSentence = lazy(() =>
+  import('./targetSentence').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+
+const PreferencePeriod = lazy(() =>
+  import('./preferencePeriod').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+const TargetScreen = lazy(() =>
+  import('./targetScreen').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+
 const Settings = {
   Categories,
   Packages,
@@ -47,6 +69,10 @@ const Settings = {
   ClassStages,
   AnnouncementType,
   PackagesType,
+  TargetScreen,
+  AcademicYear,
+  TargetSentence,
+  PreferencePeriod,
 };
 
 export default Settings;

@@ -1,5 +1,13 @@
 .lessons-wrapper {
   padding: 10px 20px;
+  .lessons-header{
+    display: flex;
+    margin-bottom: 20px;
+    .class-select-container{
+      display: flex;
+      align-items: center;
+    }
+  }
   .ant-collapse {
     border: none;
     background-color: #fff;
@@ -22,6 +30,5 @@
     border: none;
     display: block;
     margin-left: auto;
-    margin-bottom: 20px;
   }
 }

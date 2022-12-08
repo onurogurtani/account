@@ -22,7 +22,9 @@ import HomeLayout from './layout/HomeLayout';
 import UserManagement from './pages/userManagement';
 import VideoManagement from './pages/videoManagement';
 import Settings from './pages/settings';
+
 import EventManagement from './pages/eventManagement';
+import UserListManagement from './pages/userManagement/userListManagement';
 
 const PrivateRoute = lazy(() =>
   import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -101,10 +103,42 @@ const App = () => {
                         />
                         <PrivateRoute
                           path={`${match?.path}/user-list-management`}
-                          Component={UserManagement?.UserListManagement}
                           authority="dashboard"
+                          Component={({ match }) => {
+                            return (
+                              <Switch>
+                                <PrivateRoute
+                                  path={`${match?.path}/list`}
+                                  Component={UserListManagement.UserList}
+                                  authority="dashboard"
+                                />
+                                <PrivateRoute
+                                  path={`${match?.path}/add`}
+                                  exact
+                                  Component={UserListManagement?.UserCreate}
+                                  authority="dashboard"
+                                />
+                                <PrivateRoute
+                                  path={`${match?.path}/edit/:id`}
+                                  exact
+                                  Component={UserListManagement?.UserCreate}
+                                  authority="dashboard"
+                                />
+                                <Route
+                                  component={() => (
+                                    <Redirect
+                                      to={{
+                                        pathname: '/not-found',
+                                        state: { status: 404 },
+                                      }}
+                                    />
+                                  )}
+                                />
+                              </Switch>
+                            );
+                          }}
                         />
-                        <PrivateRoute
+                        {/* <PrivateRoute
                           path={`${match?.path}/add-user`}
                           Component={UserManagement?.AddUser}
                           authority="dashboard"
@@ -113,7 +147,7 @@ const App = () => {
                           path={`${match?.path}/edit-user`}
                           Component={UserManagement?.EditUser}
                           authority="dashboard"
-                        />
+                        /> */}
                         <PrivateRoute
                           path={`${match?.path}/avatar-management`}
                           Component={UserManagement?.AvatarManagement}
@@ -264,7 +298,6 @@ const App = () => {
                           Component={Settings?.Lessons}
                           authority="dashboard"
                         />
-
                         <PrivateRoute
                           path={`${match?.path}/activities`}
                           Component={Settings?.Activities}
@@ -283,6 +316,26 @@ const App = () => {
                         <PrivateRoute
                           path={`${match?.path}/packagesType`}
                           Component={Settings?.PackagesType}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/academicYear`}
+                          Component={Settings?.AcademicYear}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/targetSentence`}
+                          Component={Settings?.TargetSentence}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/preferencePeriod`}
+                          Component={Settings?.PreferencePeriod}
+                          authority="dashboard"
+                        />
+                         <PrivateRoute
+                          path={`${match?.path}/targetScreen`}
+                          Component={Settings?.TargetScreen}
                           authority="dashboard"
                         />
                         <Route

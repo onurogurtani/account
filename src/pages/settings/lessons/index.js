@@ -1,5 +1,5 @@
 import { FileExcelOutlined, InboxOutlined } from '@ant-design/icons';
-import { Collapse, Form, Upload } from 'antd';
+import { Collapse, Form, Typography, Upload } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -9,13 +9,17 @@ import {
   CustomFormItem,
   CustomModal,
   CustomPageHeader,
+  CustomSelect,
   errorDialog,
+  Option,
   successDialog,
   Text,
+  warningDialog,
 } from '../../../components';
+import { getAllClassStages } from '../../../store/slice/classStageSlice';
 import {
   downloadLessonsExcel,
-  getLessons,
+  getLessonDetailSearch,
   getLessonSubjects,
   getLessonSubSubjects,
   getUnits,
@@ -24,6 +28,7 @@ import {
 import '../../../styles/settings/lessons.scss';
 
 const { Panel } = Collapse;
+const { Title } = Typography;
 
 const Lessons = () => {
   const dispatch = useDispatch();
@@ -31,10 +36,17 @@ const Lessons = () => {
 
   const [open, setOpen] = useState(false);
   const [errorList, setErrorList] = useState([]);
+  const [selectedClassId, setSelectedClassId] = useState(null);
+
+  const { allClassList } = useSelector((state) => state?.classStages);
+
+  const loadAllClassStages = useCallback(async () => {
+    dispatch(getAllClassStages());
+  }, [dispatch]);
 
   const loadLessons = useCallback(async () => {
-    dispatch(getLessons());
-  }, [dispatch]);
+    selectedClassId && dispatch(getLessonDetailSearch(selectedClassId));
+  }, [dispatch, selectedClassId]);
 
   const loadUnits = useCallback(async () => {
     dispatch(getUnits());
@@ -49,16 +61,23 @@ const Lessons = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    loadLessons();
-    loadUnits();
-    loadLessonSubjects();
-    loadLessonSubSubjects();
-  }, []);
+    selectedClassId && setSelectedClassId(selectedClassId);
+  }, [selectedClassId]);
 
-  const { lessons, units, lessonSubjects, lessonSubSubjects } = useSelector(
+  useEffect(() => {
+    if (selectedClassId) {
+      loadLessons();
+      loadUnits();
+      loadLessonSubjects();
+      loadLessonSubSubjects();
+    }
+    loadAllClassStages();
+  }, [selectedClassId]);
+
+  const { filteredLessons, units, lessonSubjects, lessonSubSubjects } = useSelector(
     (state) => state?.lessons,
   );
-  console.log(lessonSubjects);
+
   const onChange = (key) => {
     console.log(key);
   };
@@ -97,13 +116,20 @@ const Lessons = () => {
       ));
   };
 
-  const lessonsJSX = lessons?.map((lesson) => (
+  const lessonsJSX = filteredLessons?.map((lesson) => (
     <Panel header={lesson?.name} key={lesson?.id}>
       {unitsJSX(lesson?.id)}
     </Panel>
   ));
   const uploadExcel = () => {
-    setOpen(true);
+    if (!selectedClassId) {
+      warningDialog({
+        title: <Text t="error" />,
+        message: 'Excel ile ekleme yapmak için öncelikle sınıf seçmeniz gerekmektedir.',
+      });
+    } else {
+      setOpen(true);
+    }
   };
   const onCancelModal = async () => {
     await form.resetFields();
@@ -111,7 +137,6 @@ const Lessons = () => {
   };
 
   const normFile = (e) => {
-    console.log('Upload event:', e);
     if (Array.isArray(e)) {
       return e;
     }
@@ -167,14 +192,13 @@ const Lessons = () => {
       link.setAttribute('download', `Ders Tanımlama Dosya Deseni ${Date.now()}.xlsx`);
       document.body.appendChild(link);
       link.click();
-      console.log(action);
     }
   };
   const onFinish = async (values) => {
-    console.log(values);
     const fileData = values?.excelFile[0]?.originFileObj;
     const data = new FormData();
     data.append('FormFile', fileData);
+    data.append('ClassroomId', selectedClassId);
     const action = await dispatch(uploadLessonsExcel(data));
     if (uploadLessonsExcel.fulfilled.match(action)) {
       successDialog({
@@ -182,6 +206,11 @@ const Lessons = () => {
         message: action?.payload?.message,
       });
       await form.resetFields();
+      loadLessons();
+      loadUnits();
+      loadLessonSubjects();
+      loadLessonSubSubjects();
+      loadAllClassStages();
       setOpen(false);
     } else {
       errorDialog({
@@ -190,14 +219,37 @@ const Lessons = () => {
       });
     }
   };
+
   return (
     <>
-      <CustomPageHeader title="Ders Tanım Bilgileri" showBreadCrumb routes={['Ayarlar']}>
-        <CustomCollapseCard cardTitle="Ders Tanım Bilgileri">
+      <CustomPageHeader title="Kazanım Ağacı" showBreadCrumb routes={['Ayarlar']}>
+        <CustomCollapseCard cardTitle="Kazanım Ağacı">
           <div className="lessons-wrapper">
-            <CustomButton icon={<FileExcelOutlined />} className="upload-btn" onClick={uploadExcel}>
-              Excel ile Ekle
-            </CustomButton>
+            <div className="lessons-header">
+              <div className="class-select-container">
+                <Title level={5}>Sınıf Bilgisi :</Title>
+                <CustomSelect
+                  style={{
+                    width: 300,
+                    paddingLeft: 5,
+                  }}
+                  placeholder="Seçiniz"
+                  onChange={(e) => setSelectedClassId(e)}
+                >
+                  {allClassList?.map(({ id, name }) => (
+                    <Option value={id}>{name}</Option>
+                  ))}
+                </CustomSelect>
+              </div>
+              <CustomButton
+                icon={<FileExcelOutlined />}
+                className="upload-btn"
+                onClick={uploadExcel}
+              >
+                Excel ile Ekle
+              </CustomButton>
+            </div>
+
             <Collapse onChange={onChange}>{lessonsJSX}</Collapse>
           </div>
         </CustomCollapseCard>

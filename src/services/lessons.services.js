@@ -1,5 +1,12 @@
 import { api } from './api';
 
+const getLessonDetailSearch = (id) => {
+  return api({
+    url: `Lessons/getByFilterPagedLessons?LessonDetailSearch.ClassroomId=${id}`,
+    method: 'POST',
+  });
+};
+
 const getLessons = () => {
   return api({
     url: `Lessons/getList?PageSize=0`,
@@ -57,6 +64,7 @@ const lessonsServices = {
   getLessonSubSubjects,
   downloadLessonsExcel,
   uploadLessonsExcel,
+  getLessonDetailSearch,
 };
 
 export default lessonsServices;

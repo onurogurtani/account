@@ -10,7 +10,7 @@ const loadSchools = (data) => {
 
 const getSchools = (data) => {
   return api({
-    url: `Schools/getPagedList?PageNumber=${data.pageNumber}&PageSize=${data.pageSize}`,
+    url: `Schools/getPagedList?PageNumber=${data.pageNumber || 0}&PageSize=${data.pageSize || 0}`,
     method: 'POST',
     data,
   });
