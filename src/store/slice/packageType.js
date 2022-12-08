@@ -79,11 +79,7 @@ const initialState = {
 export const packageTypeSlice = createSlice({
   name: 'packageTypeSlice',
   initialState,
-  reducers: {
-    clearClasses: (state, action) => {
-      state.allClassList = [];
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getAllPackageType.fulfilled, (state, action) => {
       state.allPackageType = action?.payload?.data?.items;
@@ -91,4 +87,3 @@ export const packageTypeSlice = createSlice({
     });
   },
 });
-export const clearClasses = packageTypeSlice.actions;
