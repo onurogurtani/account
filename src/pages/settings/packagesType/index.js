@@ -19,12 +19,13 @@ import {
 } from '../../../components';
 import '../../../styles/settings/packages.scss';
 import '../../../styles/table.scss';
-// import {
-//   addPackagesType,
-//   getPackagesType,
-//   updatePackagesType,
-// } from '../../../store/slice/PackagesTypeSlice';
 import useResetFormOnCloseModal from '../../../hooks/useResetFormOnCloseModal';
+import {
+  addNewPackageType,
+  getAllPackageType,
+  updatePackageType,
+} from '../../../store/slice/packageType';
+import { getAllTargetScreen } from '../../../store/slice/targetScreen';
 
 const PackagesType = () => {
   const [form] = Form.useForm();
@@ -32,36 +33,23 @@ const PackagesType = () => {
 
   const [open, setOpen] = useState(false);
   const [selectedPackagesTypeId, setSelectedPackagesTypeId] = useState();
-  // const { PackagesTypes } = useSelector((state) => state?.PackagesTypes);
-
-  const PackagesTypes = [
-    { id: 1, name: 'ders Paket', status: true, packageAccessPage: 'Net Hedef Aralığı' },
-    { id: 2, name: 'ful yks Paketi', status: true, packageAccessPage: 'Hedef Listesi tayfası' },
-    { id: 3, name: 'Paket türü 3', status: false, packageAccessPage: 'net aralığı + Hedef' },
-    {
-      id: 4,
-      name: 'Ayt Paketi',
-      status: false,
-      packageAccessPage: 'Hedeflerim sayfasının içeriğini göremez',
-    },
-  ];
-
-  const testolist = [
-    'Net Hedef Aralığı',
-    'Hedef Listesi tayfası',
-    'net aralığı',
-    'Hedeflerim sayfasının içeriğini göremez' ,
-  ];
+  const { allPackageType } = useSelector((state) => state?.packageType);
+  const { allTargetScreen } = useSelector((state) => state?.targetScreen);
 
   useResetFormOnCloseModal({ form, open });
 
   useEffect(() => {
-    // loadPackagesType();
+    loadPackagesType();
+    loadTargetScreen();
   }, []);
 
-  // const loadPackagesType = useCallback(async () => {
-  //   dispatch(getPackagesType());
-  // }, [dispatch]);
+  const loadPackagesType = useCallback(async () => {
+    dispatch(getAllPackageType());
+  }, [dispatch]);
+
+  const loadTargetScreen = useCallback(async () => {
+    dispatch(getAllTargetScreen());
+  }, [dispatch]);
 
   const columns = [
     {
@@ -75,8 +63,8 @@ const PackagesType = () => {
     },
     {
       title: 'Durumu',
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'isActive',
+      key: 'isActive',
       sorter: (a, b) => b.isActive - a.isActive,
       render: (text, record) => {
         return <div>{text ? 'Aktif' : 'Pasif'}</div>;
@@ -93,11 +81,25 @@ const PackagesType = () => {
     },
     {
       title: 'Paketin Erişebileceği Hedef Ekranı',
-      dataIndex: 'packageAccessPage',
-      key: 'packageAccessPage',
+      dataIndex: 'packageTypeTargetScreens',
+      key: 'packageTypeTargetScreens',
       sorter: (a, b) => a.name.localeCompare(b.packageAccessPage),
       render: (text, record) => {
-        return <div>{text}</div>;
+        let packageTypeTargetScreens = '';
+        let iterations = text?.length;
+        if (iterations > 0) {
+          for (const item of text) {
+            if (!--iterations) {
+              packageTypeTargetScreens += item.targetScreen.name;
+            } else {
+              packageTypeTargetScreens += item.targetScreen.name + ' + ';
+            }
+          }
+        } else {
+          packageTypeTargetScreens = 'Hedeflerim sayfasının içeriğini göremez';
+        }
+
+        return <div>{packageTypeTargetScreens}</div>;
       },
     },
 
@@ -122,6 +124,17 @@ const PackagesType = () => {
     setOpen(true);
     setSelectedPackagesTypeId(record.id);
     form.setFieldsValue(record);
+
+    const targetScreenArray = [];
+    if (record.packageTypeTargetScreens.length > 0) {
+      record.packageTypeTargetScreens.map((item) => targetScreenArray.push(item.targetScreen.id));
+    } else {
+      targetScreenArray.push('Hedeflerim sayfasının içeriğini göremez');
+    }
+
+    form.setFieldsValue({
+      packageTypeTargetScreens: targetScreenArray,
+    });
   };
 
   const handleAddPackagesType = () => {
@@ -134,30 +147,40 @@ const PackagesType = () => {
   };
 
   const onFinish = async (values) => {
-    // const data = {
-    //   name: values?.name,
-    //   isActive: values?.isActive,
-    //   id: selectedPackagesTypeId ? selectedPackagesTypeId : undefined,
-    // };
-    // const action = await dispatch(
-    //   selectedPackagesTypeId ? updatePackagesType(data) : addPackagesType(data),
-    // );
-    // const reducer = selectedPackagesTypeId ? updatePackagesType : addPackagesType;
-    // if (reducer.fulfilled.match(action)) {
-    //   successDialog({
-    //     title: <Text t="success" />,
-    //     message: selectedPackagesTypeId ? 'Kayıt Güncellenmiştir' : 'Kaydedildi',
-    //     // message: action?.payload.message,
-    //     onOk: async () => {
-    //       await handleClose();
-    //     },
-    //   });
-    // } else {
-    //   errorDialog({
-    //     title: <Text t="error" />,
-    //     message: action?.payload.message,
-    //   });
-    // }
+    let data = {
+      packageType: {
+        name: values?.name,
+        isActive: values?.isActive,
+      },
+    };
+    if (selectedPackagesTypeId) data.packageType['id'] = selectedPackagesTypeId;
+    if (values?.packageTypeTargetScreens?.includes('Hedeflerim sayfasının içeriğini göremez')) {
+      data.packageType['isCanSeeTargetScreen'] = false;
+    } else {
+      data.packageType['isCanSeeTargetScreen'] = true;
+      data.packageType['packageTypeTargetScreens'] = values.packageTypeTargetScreens.map((item) => {
+        return { targetScreenId: item };
+      });
+    }
+    const action = await dispatch(
+      selectedPackagesTypeId ? updatePackageType(data) : addNewPackageType(data),
+    );
+    const reducer = selectedPackagesTypeId ? updatePackageType : addNewPackageType;
+    if (reducer.fulfilled.match(action)) {
+      successDialog({
+        title: <Text t="success" />,
+        message: selectedPackagesTypeId ? 'Kayıt Güncellenmiştir' : 'Kaydedildi',
+        onOk: async () => {
+          await handleClose();
+        },
+      });
+      loadPackagesType();
+    } else {
+      errorDialog({
+        title: <Text t="error" />,
+        message: action?.payload.message,
+      });
+    }
   };
 
   const onOk = async () => {
@@ -188,8 +211,10 @@ const PackagesType = () => {
   };
 
   const onSecondSelectChange = (value) => {
-    if(value.includes("Hedeflerim sayfasının içeriğini göremez"))
-    form.setFieldsValue({packageAccessPage:["Hedeflerim sayfasının içeriğini göremez"]})
+    if (value.includes('Hedeflerim sayfasının içeriğini göremez'))
+      form.setFieldsValue({
+        packageTypeTargetScreens: ['Hedeflerim sayfasının içeriğini göremez'],
+      });
   };
 
   return (
@@ -201,8 +226,7 @@ const PackagesType = () => {
           </CustomButton>
         </div>
         <CustomTable
-          dataSource={PackagesTypes}
-          //   onChange={handleSort}
+          dataSource={allPackageType}
           columns={columns}
           pagination={{
             showSizeChanger: true,
@@ -266,18 +290,25 @@ const PackagesType = () => {
               },
             ]}
             label="Paketin Erişebileceği Hedef Ekranı"
-            name="packageAccessPage"
+            name="packageTypeTargetScreens"
           >
             <CustomSelect
               placeholder="Seçiniz"
               mode="multiple"
               showArrow
               onChange={onSecondSelectChange}
-              options={testolist.map((province) => ({
-                label: province,
-                value: province,
-              }))}
-            />
+            >
+              {allTargetScreen?.map((item, i) => {
+                return (
+                  <Option key={item?.id} value={item?.id}>
+                    {item?.name}
+                  </Option>
+                );
+              })}
+              <Option value={'Hedeflerim sayfasının içeriğini göremez'}>
+                Hedeflerim sayfasının içeriğini göremez
+              </Option>
+            </CustomSelect>
           </CustomFormItem>
         </CustomForm>
       </CustomModal>

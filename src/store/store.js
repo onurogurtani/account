@@ -40,6 +40,7 @@ import { targetSentenceSlice } from './slice/targetSentenceSlice';
 import { preferencePeriodSlice } from './slice/preferencePeriodSlice';
 
 import { targetScreenSlice } from './slice/targetScreen';
+import { packageTypeSlice } from './slice/packageType';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -68,6 +69,7 @@ const reducers = combineReducers({
   graduationYears: graduationYearsSlice.reducer,
   targetSentence: targetSentenceSlice.reducer,
   preferencePeriod: preferencePeriodSlice.reducer,
+  packageType:packageTypeSlice.reducer
 });
 
 const persistConfig = {
