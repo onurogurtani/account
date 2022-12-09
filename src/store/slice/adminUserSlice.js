@@ -44,10 +44,17 @@ export const getByFilterPagedAdminUsers = createAsyncThunk('adminUsersManagement
 });
 
 export const getByAdminUserId = createAsyncThunk('adminUsersManagement/getByAdminUserId', async (data, { dispatch, rejectWithValue }) => {
+  const { id, errorDialog, history } = data;
   try {
-    const response = await adminUsersServices.getByAdminUserId(data);
+    console.log(id, history);
+    const response = await adminUsersServices.getByAdminUserId(id);
     return response;
   } catch (error) {
+    errorDialog({
+      title: 'Hata',
+      message: error?.data?.message,
+    });
+    history.push('/admin-users-management/list');
     return rejectWithValue(error?.data);
   }
 });
@@ -90,6 +97,7 @@ export const setAdminUserStatus = createAsyncThunk('adminUsersManagement/setAdmi
 
 const initialState = {
   adminUsers: [],
+  currentAdminUser: undefined,
   tableProperty: {
     currentPage: 1,
     page: 1,
@@ -133,7 +141,7 @@ export const adminUserSlice = createSlice({
       state.currentAdminUser = action?.payload?.data;
     });
     builder.addCase(getByAdminUserId.rejected, (state) => {
-      state.currentAdminUser = {};
+      state.currentAdminUser = undefined;
     });
     builder.addCase(setAdminUserStatus.fulfilled, (state, action) => {
       const {

@@ -1,26 +1,34 @@
-import { Form } from 'antd';
-import { confirmDialog, CustomButton, CustomForm, CustomFormItem, CustomInput, CustomMaskInput, CustomSelect, CustomTextInput, errorDialog, Option, successDialog, Text } from '../../../../components';
-import { formMailRegex, formPhoneRegex } from '../../../../utils/formRule';
-import '../../../../styles/adminUserManagement/adminUserForm.scss';
-import { useLocation } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
-import { status } from '../../../../constants';
-import { getUnmaskedPhone, maskedPhone, turkishToLower } from '../../../../utils/utils';
-import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
+import { Form } from 'antd';
+import {
+  confirmDialog,
+  CustomButton,
+  CustomForm,
+  CustomFormItem,
+  CustomInput,
+  CustomMaskInput,
+  CustomSelect,
+  CustomTextInput,
+  errorDialog,
+  Option,
+  successDialog,
+  Text,
+} from '../../../../components';
+import { formMailRegex, formPhoneRegex } from '../../../../utils/formRule';
+import { useHistory, useParams } from 'react-router-dom';
+import { status } from '../../../../constants';
+import { useDispatch, useSelector } from 'react-redux';
 import { getGroupsList } from '../../../../store/slice/groupsSlice';
-import { useParams } from 'react-router-dom';
-import { addAdminUser, editAdminUser, getByAdminUserId } from '../../../../store/slice/adminUserSlice';
+import { addAdminUser, editAdminUser } from '../../../../store/slice/adminUserSlice';
+import { getUnmaskedPhone, maskedPhone, turkishToLower } from '../../../../utils/utils';
+import '../../../../styles/adminUserManagement/adminUserForm.scss';
 
-const AdminUserForm = () => {
+const AdminUserForm = ({ isEdit, currentAdminUser }) => {
   const [form] = Form.useForm();
   const history = useHistory();
-  const { pathname } = useLocation();
   const dispatch = useDispatch();
   const { id } = useParams();
-  const isEdit = pathname.includes('edit');
   const { groupsList } = useSelector((state) => state?.groups);
-  const { adminUsers } = useSelector((state) => state?.adminUsers);
 
   useEffect(() => {
     if (groupsList.length) return false;
@@ -28,26 +36,14 @@ const AdminUserForm = () => {
   }, []);
 
   useEffect(() => {
-    if (isEdit) {
-      (async () => {
-        let user = adminUsers.find((item) => item.id === Number(id));
-
-        if (!user) {
-          const action = await dispatch(getByAdminUserId(id));
-          if (getByAdminUserId?.fulfilled?.match(action)) {
-            user = action?.payload?.data;
-          } else {
-            errorDialog({
-              title: <Text t="error" />,
-              message: action?.payload?.message,
-            });
-            history.push('/admin-users-management/list');
-          }
-        }
-
-        form.setFieldsValue({ ...user, mobilePhones: maskedPhone(user?.mobilePhones), groupIds: user?.groups?.map((i) => i.id) });
-      })();
+    if (isEdit && currentAdminUser) {
+      form.setFieldsValue({
+        ...currentAdminUser,
+        mobilePhones: maskedPhone(currentAdminUser?.mobilePhones),
+        groupIds: currentAdminUser?.groups?.map((i) => i.id),
+      });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onFinish = async () => {
@@ -81,34 +77,32 @@ const AdminUserForm = () => {
       okText: 'Evet',
       cancelText: 'Hayır',
       onOk: async () => {
-        history.push('/admin-users-management/list');
+        history.push('/admin-users-management/list?filter=true');
       },
     });
   };
+  const validateMessages = { required: 'Lütfen Zorunlu Alanları Doldurunuz.' };
 
   return (
     <div className="add-admin-user-container">
-      <CustomForm labelCol={{ flex: '130px' }} autoComplete="off" className="add-admin-user-form" layout="horizontal" labelWrap labelAlign="left" colon={false} form={form} name="form">
+      <CustomForm
+        labelCol={{ flex: '130px' }}
+        autoComplete="off"
+        className="add-admin-user-form"
+        layout="horizontal"
+        labelWrap
+        labelAlign="left"
+        colon={false}
+        form={form}
+        validateMessages={validateMessages}
+        name="form"
+      >
         <div className="left">
-          <CustomFormItem
-            label="Ad"
-            name="name"
-            rules={[
-              { required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
-              { whitespace: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
-            ]}
-          >
+          <CustomFormItem label="Ad" name="name" rules={[{ required: true }, { whitespace: true }]}>
             <CustomTextInput placeholder="Ad" />
           </CustomFormItem>
 
-          <CustomFormItem
-            label="Soyad"
-            name="surName"
-            rules={[
-              { required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
-              { whitespace: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
-            ]}
-          >
+          <CustomFormItem label="Soyad" name="surName" rules={[{ required: true }, { whitespace: true }]}>
             <CustomTextInput placeholder="Soyad" />
           </CustomFormItem>
 
@@ -122,18 +116,18 @@ const AdminUserForm = () => {
             label="E-Mail"
             name="email"
             rules={[
-              { required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
-              { validator: formMailRegex, message: <Text t="enterValidEmail" /> },
+              { required: true },
+              {
+                validator: formMailRegex,
+                message: <Text t="enterValidEmail" />,
+              },
             ]}
           >
             <CustomInput placeholder="E-Mail" />
           </CustomFormItem>
 
           <CustomFormItem
-            rules={[
-              { required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
-              { validator: formPhoneRegex, message: 'Geçerli Telefon Giriniz' },
-            ]}
+            rules={[{ required: true }, { validator: formPhoneRegex, message: 'Geçerli Telefon Giriniz' }]}
             label="Cep Telefonu"
             name="mobilePhones"
           >
@@ -144,8 +138,13 @@ const AdminUserForm = () => {
         </div>
 
         <div className="right">
-          <CustomFormItem rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]} label="Rol" name="groupIds">
-            <CustomSelect filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))} showArrow mode="multiple" placeholder="Rol">
+          <CustomFormItem rules={[{ required: true }]} label="Rol" name="groupIds">
+            <CustomSelect
+              filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
+              showArrow
+              mode="multiple"
+              placeholder="Rol"
+            >
               {groupsList
                 // ?.filter((item) => item.isActive)
                 ?.map((item) => {
@@ -158,7 +157,7 @@ const AdminUserForm = () => {
             </CustomSelect>
           </CustomFormItem>
 
-          <CustomFormItem rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]} label="Durum" name="status">
+          <CustomFormItem rules={[{ required: true }]} label="Durum" name="status">
             <CustomSelect placeholder="Seçiniz">
               {status.map((item) => (
                 <Option key={item.id} value={item.id}>
