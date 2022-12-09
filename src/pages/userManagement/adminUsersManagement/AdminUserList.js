@@ -1,5 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { confirmDialog, CustomButton, CustomCollapseCard, CustomImage, CustomPageHeader, CustomTable, errorDialog, Text } from '../../../components';
+import {
+  confirmDialog,
+  CustomButton,
+  CustomCollapseCard,
+  CustomImage,
+  CustomPageHeader,
+  CustomTable,
+  errorDialog,
+  Text,
+} from '../../../components';
 import AdminUserFilter from './AdminUserFilter';
 import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
 import '../../../styles/table.scss';
@@ -10,14 +19,19 @@ import dayjs from 'dayjs';
 import { dateTimeFormat } from '../../../utils/keys';
 import useLocationQuery from '../../../hooks/useLocationQuery';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteAdminUser, getByFilterPagedAdminUsers, setAdminUserStatus, setIsFilter, setSorterObject } from '../../../store/slice/adminUserSlice';
+import {
+  deleteAdminUser,
+  getByFilterPagedAdminUsers,
+  setAdminUserStatus,
+  setIsFilter,
+  setSorterObject,
+} from '../../../store/slice/adminUserSlice';
 import { maskedPhone } from '../../../utils/utils';
 
 const AdminUserList = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   let query = useLocationQuery();
-
   const [isUserFilter, setIsUserFilter] = useState(false);
   const { adminUsers, tableProperty, sorterObject, filterObject, isFilter } = useSelector((state) => state?.adminUsers);
 
@@ -28,7 +42,7 @@ const AdminUserList = () => {
   useEffect(() => {
     if (query.get('filter')) {
       isFilter && setIsUserFilter(true);
-      loadAdminUsers(filterObject);
+      !Object.keys(adminUsers).length && loadAdminUsers(filterObject);
     } else {
       dispatch(setSorterObject({}));
       dispatch(setIsFilter(false));
@@ -119,7 +133,7 @@ const AdminUserList = () => {
       // sorter: true,
       // sortOrder: sorterObject?.columnKey === 'name' ? sorterObject?.order : null,
       render: (text, record) => {
-        return <div>{dayjs(text)?.format(dateTimeFormat)}</div>;
+        return <div>{text && dayjs(text)?.format(dateTimeFormat)}</div>;
       },
     },
 
@@ -208,7 +222,9 @@ const AdminUserList = () => {
     console.log(record);
     confirmDialog({
       title: <Text t="attention" />,
-      message: record?.status ? 'Pasifleştirmek  istediğinizden emin misiniz?' : 'Aktifleştirmek  istediğinizden emin misiniz?',
+      message: record?.status
+        ? 'Pasifleştirmek  istediğinizden emin misiniz?'
+        : 'Aktifleştirmek  istediğinizden emin misiniz?',
       okText: 'Evet',
       cancelText: 'Hayır',
       onOk: async () => {
@@ -222,7 +238,12 @@ const AdminUserList = () => {
   };
 
   return (
-    <CustomPageHeader title="Admin Kullanıcı Listesi" showBreadCrumb showHelpButton routes={['Admin Kullanıcı Yönetimi']}>
+    <CustomPageHeader
+      title="Admin Kullanıcı Listesi"
+      showBreadCrumb
+      showHelpButton
+      routes={['Admin Kullanıcı Yönetimi']}
+    >
       <CustomCollapseCard className="admin-user-list-card" cardTitle="Admin Kullanıcı Listesi">
         <div className="table-header">
           <CustomButton className="add-btn" onClick={addAdminUser}>
