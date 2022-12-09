@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import targetScreenServices from '../../services/targetScreen.services';
+import packageTypeServices from '../../services/packageType.service';
 
-export const getAllTargetScreen = createAsyncThunk(
-  'getAllTargetScreen',
+export const getAllPackageType = createAsyncThunk(
+  'getAllPackageType',
   async (data, { dispatch, rejectWithValue }) => {
     let urlString = '';
     if (data) {
@@ -11,11 +11,11 @@ export const getAllTargetScreen = createAsyncThunk(
         if (data[item] !== undefined) {
           if (Array.isArray(data[item])) {
             data[item]?.map((element, idx) => {
-              let newStr = `TargetScreenDetailSearch.${item}=${data[item][idx]}`;
+              let newStr = `PackageTypeDetailSearch.${item}=${data[item][idx]}`;
               urlArr.push(newStr);
             });
           } else {
-            let newStr = `TargetScreenDetailSearch.${item}=${data[item]}`;
+            let newStr = `PackageTypeDetailSearch.${item}=${data[item]}`;
             urlArr.push(newStr);
           }
         }
@@ -23,7 +23,7 @@ export const getAllTargetScreen = createAsyncThunk(
       }
     }
     try {
-      const response = await targetScreenServices.getTargetScreenList(urlString);
+      const response = await packageTypeServices.getPackageTypeList(urlString);
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -31,11 +31,11 @@ export const getAllTargetScreen = createAsyncThunk(
   },
 );
 
-export const addNewTargetScreen = createAsyncThunk(
-  'addNewTargetScreen',
+export const addNewPackageType = createAsyncThunk(
+  'addNewPackageType',
   async (data, { dispatch, rejectWithValue }) => {
     try {
-      const response = await targetScreenServices.addTargetScreen(data);
+      const response = await packageTypeServices.addPackageType(data);
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -43,22 +43,22 @@ export const addNewTargetScreen = createAsyncThunk(
   },
 );
 
-export const updateTargetScreen = createAsyncThunk(
-  'updateTargetScreen',
+export const updatePackageType = createAsyncThunk(
+  'updatePackageType',
   async (data, { dispatch, rejectWithValue }) => {
     try {
-      const response = await targetScreenServices.updateTargetScreen(data);
+      const response = await packageTypeServices.updatePackageType(data);
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
     }
   },
 );
-export const deleteTargetScreen = createAsyncThunk(
-  'deleteTargetScreen',
+export const deletePackageType = createAsyncThunk(
+  'deletePackageType',
   async (data, { dispatch, rejectWithValue }) => {
     try {
-      const response = await targetScreenServices.deleteTargetScreen(data);
+      const response = await packageTypeServices.deletePackageType(data);
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -67,7 +67,7 @@ export const deleteTargetScreen = createAsyncThunk(
 );
 
 const initialState = {
-  allTargetScreen: [],
+  allPackageType: [],
   tableProperty: {
     currentPage: 1,
     page: 1,
@@ -76,13 +76,13 @@ const initialState = {
   },
 };
 
-export const targetScreenSlice = createSlice({
-  name: 'targetScreenSlice',
+export const packageTypeSlice = createSlice({
+  name: 'packageTypeSlice',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getAllTargetScreen.fulfilled, (state, action) => {
-      state.allTargetScreen = action?.payload?.data?.items;
+    builder.addCase(getAllPackageType.fulfilled, (state, action) => {
+      state.allPackageType = action?.payload?.data?.items;
       state.tableProperty = action?.payload?.data?.pagedProperty;
     });
   },
