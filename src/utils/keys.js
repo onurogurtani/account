@@ -15,6 +15,8 @@ export const sessionModalMinutes = {
   modalMinutes: 2,
   sessionMinutes: process.env.SESSION_MINUTES || 3000,
 };
+export const endUserPageUrl = process.env.END_USER_PAGE;
+export const endUserPageBehalfOfLoginUrl = endUserPageUrl + 'behalfOfLogin';
 
 export const loginTimeStorageKey = 'login-time';
 export const languageStorageKey = 'language';

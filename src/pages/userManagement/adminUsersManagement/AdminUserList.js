@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  confirmDialog,
   CustomButton,
   CustomCollapseCard,
   CustomImage,
   CustomPageHeader,
   CustomTable,
-  errorDialog,
-  Text,
+  DeleteButton,
+  SetStatusButton,
 } from '../../../components';
 import AdminUserFilter from './AdminUserFilter';
 import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
@@ -27,6 +26,7 @@ import {
   setSorterObject,
 } from '../../../store/slice/adminUserSlice';
 import { maskedPhone } from '../../../utils/utils';
+import usePaginationProps from '../../../hooks/usePaginationProps';
 
 const AdminUserList = () => {
   const history = useHistory();
@@ -146,31 +146,18 @@ const AdminUserList = () => {
       render: (_, record) => {
         return (
           <div className="action-btns">
-            <CustomButton className="btn passive-btn" onClick={() => changeStatus(record)}>
-              {record.status ? 'PASİF ET' : ' AKTİF ET'}
-            </CustomButton>
+            <SetStatusButton record={record} statusAction={setAdminUserStatus} />
             <CustomButton className="btn detail-btn" onClick={() => editAdminUser(record?.id)}>
               DÜZENLE
             </CustomButton>
-            <CustomButton className="btn delete-btn" onClick={() => onDelete(record?.id)}>
-              SİL
-            </CustomButton>
+            <DeleteButton id={record?.id} deleteAction={deleteAdminUser} />
           </div>
         );
       },
     },
   ];
 
-  const paginationProps = {
-    showSizeChanger: true,
-    showQuickJumper: {
-      goButton: <CustomButton className="go-button">Git</CustomButton>,
-    },
-    position: 'bottomRight',
-    total: tableProperty?.totalCount,
-    current: tableProperty?.currentPage,
-    pageSize: tableProperty?.pageSize,
-  };
+  const paginationProps = usePaginationProps(tableProperty);
 
   const onChangeTable = async (pagination, filters, sorter, extra) => {
     const data = { ...filterObject };
@@ -195,47 +182,6 @@ const AdminUserList = () => {
 
   const addAdminUser = () => history.push('/admin-users-management/add');
   const editAdminUser = (id) => history.push({ pathname: `/admin-users-management/edit/${id}` });
-
-  const onDelete = (id) => {
-    confirmDialog({
-      title: <Text t="attention" />,
-      message: 'Seçtiğiniz kaydı silmek istediğinize emin misiniz?',
-      okText: 'Evet',
-      cancelText: 'Hayır',
-      onOk: async () => {
-        const action = await dispatch(deleteAdminUser({ id }));
-        if (deleteAdminUser.fulfilled.match(action)) {
-          loadAdminUsers(filterObject);
-        } else {
-          if (action?.payload?.message) {
-            errorDialog({
-              title: <Text t="error" />,
-              message: action?.payload?.message,
-            });
-          }
-        }
-      },
-    });
-  };
-
-  const changeStatus = (record) => {
-    console.log(record);
-    confirmDialog({
-      title: <Text t="attention" />,
-      message: record?.status
-        ? 'Pasifleştirmek  istediğinizden emin misiniz?'
-        : 'Aktifleştirmek  istediğinizden emin misiniz?',
-      okText: 'Evet',
-      cancelText: 'Hayır',
-      onOk: async () => {
-        const data = {
-          id: record?.id,
-          status: !record?.status,
-        };
-        dispatch(setAdminUserStatus(data));
-      },
-    });
-  };
 
   return (
     <CustomPageHeader

@@ -33,6 +33,7 @@ import { preferencePeriodSlice } from './slice/preferencePeriodSlice';
 
 import { targetScreenSlice } from './slice/targetScreen';
 import { packageTypeSlice } from './slice/packageType';
+import { userTypeSlice } from './slice/userTypeSlice';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -62,7 +63,8 @@ const reducers = combineReducers({
   adminUsers: adminUserSlice.reducer,
   targetSentence: targetSentenceSlice.reducer,
   preferencePeriod: preferencePeriodSlice.reducer,
-  packageType:packageTypeSlice.reducer
+  packageType: packageTypeSlice.reducer,
+  userType: userTypeSlice.reducer,
 });
 
 const persistConfig = {

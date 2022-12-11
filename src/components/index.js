@@ -6,13 +6,7 @@ import CustomPopover from './CustomPopover';
 import ResponseImage from './ResponseImage';
 import { Loading, LoadingImage } from './Loading';
 import ApiProvider from './ApiProvider';
-import {
-  confirmDialog,
-  CustomDialogProvider,
-  errorDialog,
-  successDialog,
-  warningDialog,
-} from './CustomDialog';
+import { confirmDialog, CustomDialogProvider, errorDialog, successDialog, warningDialog } from './CustomDialog';
 import CustomImage from './CustomImage';
 import CustomMaskInput from './CustomMaskInput';
 import CustomTextInput from './CustomTextInput';
@@ -33,6 +27,8 @@ import CustomSelect, { Option } from './CustomSelect';
 import CustomAutoComplete, { AutoCompleteOption } from './CustomAutoComplete';
 import CustomMoneyInput from './CustomMoneyInput';
 import CustomTextArea from './CustomTextArea';
+import SetStatusButton from './SetStatusButton';
+import DeleteButton from './DeleteButton';
 
 export {
   CustomInput,
@@ -76,4 +72,6 @@ export {
   CustomAutoComplete,
   AutoCompleteOption,
   CustomTextArea,
+  SetStatusButton,
+  DeleteButton,
 };
