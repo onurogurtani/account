@@ -62,6 +62,13 @@ const changeUserPassword = (data) => {
     data,
   });
 };
+const behalfOfLogin = (data) => {
+  return api({
+    url: 'Auth/BehalfOfLogin',
+    method: 'POST',
+    data,
+  });
+};
 
 const logout = () => {
   return api({
@@ -80,6 +87,7 @@ const authServices = {
   getPasswordRules,
   forgottenPasswordTokenCheck,
   changeUserPassword,
+  behalfOfLogin,
   logout,
 };
 

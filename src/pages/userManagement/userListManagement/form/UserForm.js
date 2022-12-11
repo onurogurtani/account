@@ -9,34 +9,81 @@ import {
   CustomSelect,
   CustomTable,
   CustomTextInput,
+  errorDialog,
   Option,
+  successDialog,
   Text,
 } from '../../../../components';
-import { userType } from '../../../../constants/users';
 import { formMailRegex, formPhoneRegex, tcknValidator } from '../../../../utils/formRule';
 import OptionalUserInformationFormSection from './OptionalUserInformationFormSection';
 import '../../../../styles/userManagement/userForm.scss';
-import { useLocation } from 'react-router-dom';
-import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserTypesList } from '../../../../store/slice/userTypeSlice';
+import { userTypeCode } from '../../../../constants/users';
+import { getUnmaskedPhone, maskedPhone } from '../../../../utils/utils';
+import { useParams } from 'react-router-dom';
+import { addUser, editUser } from '../../../../store/slice/userListSlice';
 
-const UserForm = () => {
+const UserForm = ({ isEdit, currentUser }) => {
   const [form] = Form.useForm();
   const history = useHistory();
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const { userTypes } = useSelector((state) => state?.userType);
+
+  const [selectedUserTypeCode, setSelectedUserTypeCode] = useState();
   const { Title } = Typography;
-  const { pathname } = useLocation();
 
-  const [userTypeId, setUserTypeId] = useState();
-  const isEdit = pathname.includes('edit');
+  useEffect(() => {
+    if (Object.keys(userTypes).length) return false;
+    dispatch(getUserTypesList());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
-  const onChangeUserType = (value) => {
-    setUserTypeId(value);
+  useEffect(() => {
+    if (isEdit && currentUser) {
+      const selectedUserCode = userTypes?.find((i) => i.id === Number(currentUser?.userTypeId))?.code;
+      selectedUserCode && setSelectedUserTypeCode(selectedUserCode);
+      form.setFieldsValue({
+        ...currentUser,
+        userTypeId: Number(currentUser?.userTypeId),
+        mobilePhones: maskedPhone(currentUser?.mobilePhones),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser, userTypes]);
+
+  const onChangeUserType = (value, { key }) => {
+    setSelectedUserTypeCode(key);
   };
 
   const onFinish = async () => {
     const values = await form.validateFields();
-    values.diplomaGrade = parseFloat(values.diplomaGrade);
     console.log(values);
+    values.mobilePhones = getUnmaskedPhone(values.mobilePhones);
+    if (isEdit) {
+      values.id = id;
+      // values.diplomaGrade = parseFloat(values.diplomaGrade);
+    }
+    const data = values;
+
+    const action = isEdit ? await dispatch(editUser(data)) : await dispatch(addUser(data));
+    if (isEdit ? editUser.fulfilled.match(action) : addUser.fulfilled.match(action)) {
+      successDialog({
+        title: <Text t="success" />,
+        message: action?.payload?.message,
+        onOk: async () => {
+          history.push('/user-management/user-list-management/list');
+        },
+      });
+    } else {
+      errorDialog({
+        title: <Text t="error" />,
+        message: action?.payload?.message,
+      });
+    }
   };
   const onCancel = () => {
     confirmDialog({
@@ -45,7 +92,7 @@ const UserForm = () => {
       okText: 'Evet',
       cancelText: 'Hayır',
       onOk: async () => {
-        history.push('/user-management/user-list-management/list');
+        history.push('/user-management/user-list-management/list?filter=true');
       },
     });
   };
@@ -106,6 +153,8 @@ const UserForm = () => {
       ],
     },
   ];
+  const validateMessages = { required: 'Lütfen Zorunlu Alanları Doldurunuz.' };
+
   return (
     <div className="add-user-container">
       <CustomForm
@@ -116,7 +165,7 @@ const UserForm = () => {
         labelWrap
         style={
           isEdit
-            ? userTypeId === 1
+            ? selectedUserTypeCode === userTypeCode.student
               ? { gridTemplateRows: 'repeat(11, 1fr)' }
               : { gridTemplateRows: 'repeat(7, 1fr)' }
             : null
@@ -124,27 +173,23 @@ const UserForm = () => {
         labelAlign="left"
         colon={false}
         form={form}
+        validateMessages={validateMessages}
         name="form"
       >
-        <CustomFormItem
-          rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
-          label="Kullanıcı Türü"
-          name="UserType"
-        >
+        <CustomFormItem rules={[{ required: true }]} label="Kullanıcı Türü" name="userTypeId">
           <CustomSelect onChange={onChangeUserType} placeholder="Seçiniz">
-            {userType.map((item) => (
-              <Option key={item.id} value={item.id}>
-                {item.value}
-              </Option>
-            ))}
+            {userTypes
+              .filter((i) => i.recordStatus === 1)
+              .map((item) => (
+                <Option key={item.code} value={item.id}>
+                  {item.name}
+                </Option>
+              ))}
           </CustomSelect>
         </CustomFormItem>
 
         <CustomFormItem
-          rules={[
-            { required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
-            { validator: tcknValidator, message: '11 Karakter İçermelidir' },
-          ]}
+          rules={[{ required: true }, { validator: tcknValidator, message: '11 Karakter İçermelidir' }]}
           label="TC Kimlik Numarası"
           name="citizenId"
         >
@@ -153,35 +198,18 @@ const UserForm = () => {
           </CustomMaskInput>
         </CustomFormItem>
 
-        <CustomFormItem
-          label="Ad"
-          name="name"
-          rules={[
-            { required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
-            { whitespace: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
-          ]}
-        >
+        <CustomFormItem label="Ad" name="name" rules={[{ required: true }, { whitespace: true }]}>
           <CustomTextInput placeholder="Ad" />
         </CustomFormItem>
 
-        <CustomFormItem
-          label="Soyad"
-          name="surName"
-          rules={[
-            { required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
-            { whitespace: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
-          ]}
-        >
+        <CustomFormItem label="Soyad" name="surName" rules={[{ required: true }, { whitespace: true }]}>
           <CustomTextInput placeholder="Soyad" />
         </CustomFormItem>
 
         <CustomFormItem
-          rules={[
-            { required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
-            { validator: formPhoneRegex, message: 'Geçerli Telefon Giriniz' },
-          ]}
+          rules={[{ required: true }, { validator: formPhoneRegex, message: 'Geçerli Telefon Giriniz' }]}
           label="Telefon Numarası"
-          name="MobilePhones"
+          name="mobilePhones"
         >
           <CustomMaskInput mask={'+\\90 (999) 999 99 99'}>
             <CustomInput placeholder="Telefon Numarası" />
@@ -195,12 +223,12 @@ const UserForm = () => {
         >
           <CustomInput placeholder="E-Mail" />
         </CustomFormItem>
-        {isEdit && <OptionalUserInformationFormSection form={form} />}
+        {isEdit && <OptionalUserInformationFormSection form={form} selectedUserTypeCode={selectedUserTypeCode} />}
       </CustomForm>
-      {isEdit && userTypeId && (
+      {isEdit && selectedUserTypeCode && (
         <>
           <Title level={3}>
-            {userTypeId === 1 ? 'Veli Bilgileri' : 'Satın Alınan Paket Bilgileri'}{' '}
+            {selectedUserTypeCode === userTypeCode.student ? 'Veli Bilgileri' : 'Satın Alınan Paket Bilgileri'}{' '}
           </Title>
           <CustomTable
             dataSource={[
@@ -213,7 +241,7 @@ const UserForm = () => {
                 mail: 'mail',
               },
             ]}
-            columns={userTypeId === 1 ? columnsStudentParents : columnsPackages}
+            columns={selectedUserTypeCode === userTypeCode.student ? columnsStudentParents : columnsPackages}
             pagination={false}
             rowKey={(record) => `add-user-form-${record?.id}`}
             scroll={{ x: false }}

@@ -1,6 +1,16 @@
 import React, { useCallback, useEffect } from 'react';
 import { Form } from 'antd';
-import { CustomButton, CustomForm, CustomFormItem, CustomImage, CustomInput, CustomMaskInput, CustomSelect, Option, Text } from '../../../components';
+import {
+  CustomButton,
+  CustomForm,
+  CustomFormItem,
+  CustomImage,
+  CustomInput,
+  CustomMaskInput,
+  CustomSelect,
+  Option,
+  Text,
+} from '../../../components';
 import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
 import '../../../styles/tableFilter.scss';
 import { useDispatch, useSelector } from 'react-redux';
@@ -59,32 +69,52 @@ const AdminUserFilter = () => {
 
   return (
     <div className="table-filter">
-      <CustomForm name="filterForm" className="filter-form" autoComplete="off" layout="vertical" form={form} onFinish={onFinish}>
+      <CustomForm
+        name="filterForm"
+        className="filter-form"
+        autoComplete="off"
+        layout="vertical"
+        form={form}
+        onFinish={onFinish}
+      >
         <div className="form-item">
-          <CustomFormItem label="Ad" name="Name">
+          <CustomFormItem label="Ad" rules={[{ whitespace: true }]} name="Name">
             <CustomInput placeholder="Ad" />
           </CustomFormItem>
 
-          <CustomFormItem label="Soyad" name="SurName">
+          <CustomFormItem label="Soyad" rules={[{ whitespace: true }]} name="SurName">
             <CustomInput placeholder="Soyad" />
           </CustomFormItem>
 
-          <CustomFormItem rules={[{ validator: formPhoneRegex, message: 'Geçerli Telefon Giriniz' }]} label="Telefon Numarası" name="MobilePhones">
+          <CustomFormItem
+            rules={[{ validator: formPhoneRegex, message: 'Geçerli Telefon Giriniz' }]}
+            label="Telefon Numarası"
+            name="MobilePhones"
+          >
             <CustomMaskInput mask={'+\\90 (999) 999 99 99'}>
               <CustomInput placeholder="Telefon Numarası" />
             </CustomMaskInput>
           </CustomFormItem>
 
-          <CustomFormItem label="Kullanıcı Adı" name="UserName">
+          <CustomFormItem label="Kullanıcı Adı" rules={[{ whitespace: true }]} name="UserName">
             <CustomInput placeholder="Kullanıcı Adı" />
           </CustomFormItem>
 
-          <CustomFormItem label="E-Mail" name="Email" rules={[{ validator: formMailRegex, message: <Text t="enterValidEmail" /> }]}>
+          <CustomFormItem
+            label="E-Mail"
+            name="Email"
+            rules={[{ validator: formMailRegex, message: <Text t="enterValidEmail" /> }]}
+          >
             <CustomInput placeholder="E-Mail" />
           </CustomFormItem>
 
           <CustomFormItem label="Rol" name="GroupIds">
-            <CustomSelect filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))} showArrow mode="multiple" placeholder="Rol">
+            <CustomSelect
+              filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
+              showArrow
+              mode="multiple"
+              placeholder="Rol"
+            >
               {groupsList
                 // ?.filter((item) => item.isActive)
                 ?.map((item) => {

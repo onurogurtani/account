@@ -11,15 +11,14 @@ const AdminUserCreate = () => {
   const { id } = useParams();
   const history = useHistory();
   const isEdit = pathname.includes('edit');
-  const { adminUsers, currentAdminUser } = useSelector((state) => state?.adminUsers);
-  const _currentAdminUser = adminUsers.find((item) => item.id === Number(id)) || currentAdminUser;
+  const { currentAdminUser } = useSelector((state) => state?.adminUsers);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
-    if (isEdit && !_currentAdminUser) {
+    if (isEdit) {
       dispatch(getByAdminUserId({ id, errorDialog, history }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -32,7 +31,7 @@ const AdminUserCreate = () => {
       showBreadCrumb
     >
       <CustomCollapseCard cardTitle={!isEdit ? 'Yeni Admin Ekle' : 'Admin Görüntüle - Düzenle'}>
-        <AdminUserForm isEdit={isEdit} currentAdminUser={_currentAdminUser} />
+        <AdminUserForm isEdit={isEdit} currentAdminUser={currentAdminUser} />
       </CustomCollapseCard>
     </CustomPageHeader>
   );

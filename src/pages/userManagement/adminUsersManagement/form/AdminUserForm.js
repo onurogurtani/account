@@ -44,7 +44,7 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentAdminUser]);
 
   const onFinish = async () => {
     const values = await form.validateFields();
