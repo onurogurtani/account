@@ -1,28 +1,17 @@
 import React, { useCallback, useEffect } from 'react';
-import { Form } from 'antd';
-import {
-  CustomButton,
-  CustomForm,
-  CustomFormItem,
-  CustomImage,
-  CustomInput,
-  CustomMaskInput,
-  CustomSelect,
-  Option,
-} from '../../../components';
-import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
-import '../../../styles/tableFilter.scss';
+import { CustomFormItem, CustomInput, CustomMaskInput, CustomSelect, Option } from '../../../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { packagePurchaseStatus } from '../../../constants/users';
 import { formPhoneRegex, tcknValidator } from '../../../utils/formRule';
 import { getUserTypesList } from '../../../store/slice/userTypeSlice';
 import { getByFilterPagedUsers, setIsFilter } from '../../../store/slice/userListSlice';
 import { getUnmaskedPhone } from '../../../utils/utils';
+import TableFilter from '../../../components/TableFilter';
 
 const UserFilter = () => {
-  const [form] = Form.useForm();
   const dispatch = useDispatch();
-  const { filterObject, isFilter } = useSelector((state) => state?.userList);
+  const state = (state) => state?.userList;
+  const { filterObject } = useSelector(state);
   const { userTypes } = useSelector((state) => state?.userType);
 
   useEffect(() => {
@@ -30,12 +19,6 @@ const UserFilter = () => {
     dispatch(getUserTypesList());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
-
-  useEffect(() => {
-    if (isFilter) {
-      form.setFieldsValue(filterObject);
-    }
-  }, []);
 
   const onFinish = useCallback(
     async (values) => {
@@ -58,9 +41,7 @@ const UserFilter = () => {
     [dispatch, filterObject],
   );
 
-  const handleFilter = () => form.submit();
-  const handleReset = async () => {
-    form.resetFields();
+  const reset = async () => {
     await dispatch(
       getByFilterPagedUsers({
         PageSize: filterObject?.PageSize,
@@ -69,81 +50,61 @@ const UserFilter = () => {
     );
     await dispatch(setIsFilter(false));
   };
-
+  const tableFilterProps = { onFinish, reset, state };
   return (
-    <div className="table-filter">
-      <CustomForm
-        name="filterForm"
-        className="filter-form"
-        autoComplete="off"
-        layout="vertical"
-        form={form}
-        onFinish={onFinish}
-      >
-        <div className="form-item">
-          <CustomFormItem label="Kullanıcı Türü" name="UserTypeId">
-            <CustomSelect allowClear placeholder="Seçiniz">
-              {userTypes
-                .filter((i) => i.recordStatus === 1)
-                .map((item) => (
-                  <Option key={item.code} value={item.id}>
-                    {item.name}
-                  </Option>
-                ))}
-            </CustomSelect>
-          </CustomFormItem>
-
-          <CustomFormItem label="Ad" rules={[{ whitespace: true }]} name="Name">
-            <CustomInput placeholder="Ad" />
-          </CustomFormItem>
-
-          <CustomFormItem label="Soyad" rules={[{ whitespace: true }]} name="SurName">
-            <CustomInput placeholder="Soyad" />
-          </CustomFormItem>
-
-          <CustomFormItem label="Paket Satın Alma Durumu" name="PackageBuyStatus">
-            <CustomSelect allowClear placeholder="Seçiniz">
-              {packagePurchaseStatus.map((item) => (
-                <Option key={item.id} value={item.id}>
-                  {item.value}
+    <TableFilter {...tableFilterProps}>
+      <div className="form-item">
+        <CustomFormItem label="Kullanıcı Türü" name="UserTypeId">
+          <CustomSelect allowClear placeholder="Seçiniz">
+            {userTypes
+              .filter((i) => i.recordStatus === 1)
+              .map((item) => (
+                <Option key={item.code} value={item.id}>
+                  {item.name}
                 </Option>
               ))}
-            </CustomSelect>
-          </CustomFormItem>
+          </CustomSelect>
+        </CustomFormItem>
 
-          <CustomFormItem
-            rules={[{ validator: tcknValidator, message: '11 Karakter İçermelidir' }]}
-            label="TC Kimlik Numarası"
-            name="CitizenId"
-          >
-            <CustomMaskInput mask={'99999999999'}>
-              <CustomInput placeholder="TC Kimlik Numarası" />
-            </CustomMaskInput>
-          </CustomFormItem>
+        <CustomFormItem label="Ad" rules={[{ whitespace: true }]} name="Name">
+          <CustomInput placeholder="Ad" />
+        </CustomFormItem>
 
-          <CustomFormItem
-            rules={[{ validator: formPhoneRegex, message: 'Geçerli Telefon Giriniz' }]}
-            label="Telefon Numarası"
-            name="MobilePhones"
-          >
-            <CustomMaskInput mask={'+\\90 (999) 999 99 99'}>
-              <CustomInput placeholder="Telefon Numarası" />
-            </CustomMaskInput>
-          </CustomFormItem>
-        </div>
-        <div className="form-footer">
-          <div className="action-buttons">
-            <CustomButton className="clear-btn" onClick={handleReset}>
-              Temizle
-            </CustomButton>
-            <CustomButton className="search-btn" onClick={handleFilter}>
-              <CustomImage className="icon-search" src={iconSearchWhite} />
-              Filtrele
-            </CustomButton>
-          </div>
-        </div>
-      </CustomForm>
-    </div>
+        <CustomFormItem label="Soyad" rules={[{ whitespace: true }]} name="SurName">
+          <CustomInput placeholder="Soyad" />
+        </CustomFormItem>
+
+        <CustomFormItem label="Paket Satın Alma Durumu" name="PackageBuyStatus">
+          <CustomSelect allowClear placeholder="Seçiniz">
+            {packagePurchaseStatus.map((item) => (
+              <Option key={item.id} value={item.id}>
+                {item.value}
+              </Option>
+            ))}
+          </CustomSelect>
+        </CustomFormItem>
+
+        <CustomFormItem
+          rules={[{ validator: tcknValidator, message: '11 Karakter İçermelidir' }]}
+          label="TC Kimlik Numarası"
+          name="CitizenId"
+        >
+          <CustomMaskInput mask={'99999999999'}>
+            <CustomInput placeholder="TC Kimlik Numarası" />
+          </CustomMaskInput>
+        </CustomFormItem>
+
+        <CustomFormItem
+          rules={[{ validator: formPhoneRegex, message: 'Geçerli Telefon Giriniz' }]}
+          label="Telefon Numarası"
+          name="MobilePhones"
+        >
+          <CustomMaskInput mask={'+\\90 (999) 999 99 99'}>
+            <CustomInput placeholder="Telefon Numarası" />
+          </CustomMaskInput>
+        </CustomFormItem>
+      </div>
+    </TableFilter>
   );
 };
 
