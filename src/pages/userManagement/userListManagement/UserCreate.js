@@ -14,10 +14,6 @@ const UserCreate = () => {
   const { selectedUser } = useSelector((state) => state?.userList);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  useEffect(() => {
     if (isEdit) {
       dispatch(getByUserId({ id, errorDialog, history }));
     }
