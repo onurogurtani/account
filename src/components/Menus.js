@@ -181,6 +181,7 @@ const Menus = () => {
   const dispatch = useDispatch();
 
   useLayoutEffect(() => {
+    window.scrollTo(0, 0);
     if (['/', '/dashboard', '/profile'].includes(location.pathname)) {
       dispatch(menuChange(['']));
     } else {
@@ -193,12 +194,7 @@ const Menus = () => {
   };
 
   return (
-    <CustomMenu
-      data-testid="menus-test"
-      onClick={handleClick}
-      mode="vertical"
-      selectedKeys={selectedKey}
-    >
+    <CustomMenu data-testid="menus-test" onClick={handleClick} mode="vertical" selectedKeys={selectedKey}>
       <CustomItemGroup title={<Text t="Kullanıcı Yönetimi" />} color="#ffffff" />
 
       <CustomItem key="/user-management/role-management">
@@ -342,6 +338,14 @@ const Menus = () => {
             <CustomImage src={menuIcons} />
             <span>
               <Text t="Duyuru Tipi Tanımlama" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+        <CustomItem key="/settings/branch">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Şube Bilgileri Tanımları" />
             </span>
           </MenuItemText>
         </CustomItem>

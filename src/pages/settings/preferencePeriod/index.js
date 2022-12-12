@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   CustomButton,
@@ -13,6 +13,7 @@ import {
   Text,
   CustomDatePicker,
   Option,
+  confirmDialog,
 } from '../../../components';
 import { Form } from 'antd';
 
@@ -20,6 +21,7 @@ import {
   getEducationYears,
   getPreferencePeriod,
   getPreferencePeriodAdd,
+  getPreferencePeriodDelete,
   getPreferencePeriodUpdate,
 } from '../../../store/slice/preferencePeriodSlice';
 import '../../../styles/settings/preferencePeriod.scss';
@@ -33,7 +35,29 @@ const PreferencePeriod = () => {
   useEffect(() => {
     dispatch(getPreferencePeriod());
   }, [dispatch]);
-
+  const preferencePeriodDelete = async (id) => {
+    confirmDialog({
+      title: <Text t="attention" />,
+      message: 'Silmek istediğinizden emin misiniz?',
+      onOk: async () => {
+        const action = await dispatch(getPreferencePeriodDelete({ id }));
+        if (getPreferencePeriodUpdate.fulfilled.match(action)) {
+          successDialog({
+            title: <Text t="success" />,
+            message: action?.payload?.message,
+            onOk: () => {
+              dispatch(getPreferencePeriod());
+            },
+          });
+        } else {
+          errorDialog({
+            title: <Text t="error" />,
+            message: 'Bilgileri kontrol ediniz.',
+          });
+        }
+      },
+    });
+  };
   const openEdit = (data) => {
     setShowModal(true);
     setEditInfo(data);
@@ -50,8 +74,7 @@ const PreferencePeriod = () => {
   };
 
   const sumbit = useCallback(
-    (e) => {
-      // const educationYearObject = educationYears.items.find((q) => q.id === e.educationYearId);
+    async (e) => {
       const data = {
         educationYearId: e.educationYearId,
         period1StartDate: e.period1StartDate.$d,
@@ -60,12 +83,11 @@ const PreferencePeriod = () => {
         period3EndDate: e.period3EndDate.$d,
         period2EndDate: e.period3EndDate.$d,
         period1EndDate: e.period3EndDate.$d,
-        //  educationYear: educationYearObject,
       };
       if (editInfo) {
         console.log(editInfo);
-        const action = dispatch(
-          getPreferencePeriodUpdate({ entitiy: { ...data, id: editInfo.id } }),
+        const action = await dispatch(
+          getPreferencePeriodUpdate({ entity: { ...data, id: editInfo.preferencePeriodId } }),
         );
         if (getPreferencePeriodUpdate.fulfilled.match(action)) {
           successDialog({
@@ -75,6 +97,7 @@ const PreferencePeriod = () => {
               form.resetFields();
               setShowModal(false);
               setEditInfo(null);
+              dispatch(getPreferencePeriod());
             },
           });
         } else {
@@ -84,7 +107,7 @@ const PreferencePeriod = () => {
           });
         }
       } else {
-        const action = dispatch(getPreferencePeriodAdd({ entitiy: data }));
+        const action = await dispatch(getPreferencePeriodAdd({ entity: data }));
         if (getPreferencePeriodAdd.fulfilled.match(action)) {
           successDialog({
             title: <Text t="success" />,
@@ -92,9 +115,11 @@ const PreferencePeriod = () => {
             onOk: () => {
               form.resetFields();
               setShowModal(false);
+              dispatch(getPreferencePeriod());
             },
           });
         } else {
+          alert('bitik');
           errorDialog({
             title: <Text t="error" />,
             message: 'Bilgileri kontrol ediniz.',
@@ -102,7 +127,7 @@ const PreferencePeriod = () => {
         }
       }
     },
-    [educationYears, editInfo, dispatch, form],
+    [editInfo, dispatch, form],
   );
   useEffect(() => {
     dispatch(getEducationYears());
@@ -161,7 +186,14 @@ const PreferencePeriod = () => {
                     </CustomButton>
                   </div>
                   <div>
-                    <CustomButton className="delete-button">Sil</CustomButton>
+                    <CustomButton
+                      onClick={() => {
+                        preferencePeriodDelete(item.preferencePeriodId);
+                      }}
+                      className="delete-button"
+                    >
+                      Sil
+                    </CustomButton>
                   </div>
                 </div>
               </div>

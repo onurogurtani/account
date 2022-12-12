@@ -71,6 +71,12 @@ const TargetScreen = lazy(() =>
   })),
 );
 
+const Branch = lazy(() =>
+  import('./branch').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+
 const Settings = {
   Categories,
   Packages,
@@ -80,6 +86,7 @@ const Settings = {
   Activities,
   ClassStages,
   AnnouncementType,
+  Branch,
   PackagesType,
   TargetScreen,
   AcademicYear,

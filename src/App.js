@@ -63,12 +63,7 @@ const App = () => {
 
               <HomeLayout>
                 <PrivateRoute exact path={'/'} Component={Dashboard} authority="dashboard" />
-                <PrivateRoute
-                  exact
-                  path={'/dashboard'}
-                  Component={Dashboard}
-                  authority="dashboard"
-                />
+                <PrivateRoute exact path={'/dashboard'} Component={Dashboard} authority="dashboard" />
                 <PrivateRoute path={'/profile'} Component={MyProfile} authority="dashboard" />
 
                 <PrivateRoute
@@ -336,9 +331,14 @@ const App = () => {
                           Component={Settings?.PreferencePeriod}
                           authority="dashboard"
                         />
-                         <PrivateRoute
+                        <PrivateRoute
                           path={`${match?.path}/targetScreen`}
                           Component={Settings?.TargetScreen}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/branch`}
+                          Component={Settings?.Branch}
                           authority="dashboard"
                         />
                         <Route
@@ -398,11 +398,7 @@ const App = () => {
                 />
               </HomeLayout>
 
-              <Route
-                component={() => (
-                  <Redirect to={{ pathname: '/not-found', state: { status: 404 } }} />
-                )}
-              />
+              <Route component={() => <Redirect to={{ pathname: '/not-found', state: { status: 404 } }} />} />
             </Switch>
           </BrowserRouter>
         </ApiProvider>

@@ -1,16 +1,22 @@
 import { api } from './api';
 
-const userGetList = ({ pageNumber = 1, pageSize = 10 }) => {
+const getByFilterPagedUsers = (urlString) => {
   return api({
-    url: `Users/getList?PageNumber=${pageNumber}&PageSize=${pageSize}`,
+    url: `Users/getByFilterPaged?${urlString}`,
     method: 'POST',
-    data: null,
   });
 };
 
-const userUpdate = (data) => {
+const getByUserId = (id) => {
   return api({
-    url: `Users`,
+    url: `Users/getbyid?id=${id}`,
+    method: 'GET',
+  });
+};
+
+const editUser = (data) => {
+  return api({
+    url: `Users/edit`,
     method: 'PUT',
     data,
   });
@@ -18,24 +24,34 @@ const userUpdate = (data) => {
 
 const addUser = (data) => {
   return api({
-    url: `Users`,
+    url: `Users/add`,
     method: 'POST',
     data,
   });
 };
 
-const deleteUser = ({ id }) => {
+const deleteUser = (data) => {
   return api({
-    url: `Users?id=${id}`,
+    url: `Users/delete`,
     method: 'DELETE',
+    data,
+  });
+};
+const setUserStatus = (data) => {
+  return api({
+    url: `Users/setStatus`,
+    method: 'POST',
+    data,
   });
 };
 
 const userServices = {
-  userGetList,
-  userUpdate,
+  getByFilterPagedUsers,
+  editUser,
   addUser,
   deleteUser,
+  getByUserId,
+  setUserStatus,
 };
 
 export default userServices;

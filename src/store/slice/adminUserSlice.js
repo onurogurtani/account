@@ -1,99 +1,121 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import adminUsersServices from '../../services/adminUser.service';
 
-export const getByFilterPagedAdminUsers = createAsyncThunk('adminUsersManagement/getByFilterPagedAdminUsers', async (data, { getState, dispatch, rejectWithValue }) => {
-  try {
-    let urlString;
-    if (data) {
-      let urlArr = [];
-      for (let item in data) {
-        if (data[item] !== undefined) {
-          if (Array.isArray(data[item])) {
-            data[item]?.map((element, idx) => {
-              let newStr = `AdminDetailSearch.${item}=${data[item][idx]}`;
+export const getByFilterPagedAdminUsers = createAsyncThunk(
+  'adminUsersManagement/getByFilterPagedAdminUsers',
+  async (data, { getState, dispatch, rejectWithValue }) => {
+    try {
+      let urlString;
+      if (data) {
+        let urlArr = [];
+        for (let item in data) {
+          if (data[item] !== undefined && data[item] !== '') {
+            if (Array.isArray(data[item])) {
+              data[item]?.map((element, idx) => {
+                let newStr = `AdminDetailSearch.${item}=${data[item][idx]}`;
+                urlArr.push(newStr);
+              });
+            } else {
+              let newStr = `AdminDetailSearch.${item}=${data[item]}`;
               urlArr.push(newStr);
-            });
-          } else {
-            let newStr = `AdminDetailSearch.${item}=${data[item]}`;
-            urlArr.push(newStr);
+            }
           }
         }
+        if (!data.OrderBy) {
+          let newStr = `AdminDetailSearch.OrderBy=UpdateTimeDESC`;
+          urlArr.push(newStr);
+        }
+        if (!data.PageNumber) {
+          let newStr = `AdminDetailSearch.PageNumber=1`;
+          urlArr.push(newStr);
+        }
+        if (!data.PageSize) {
+          let newStr = `AdminDetailSearch.PageSize=10`;
+          urlArr.push(newStr);
+        }
+        urlString = urlArr.join('&');
+      } else {
+        urlString =
+          'AdminDetailSearch.OrderBy=UpdateTimeDESC&AdminDetailSearch.PageNumber=1&AdminDetailSearch.PageSize=10';
       }
-      if (!data.OrderBy) {
-        let newStr = `AdminDetailSearch.OrderBy=UpdateTimeDESC`;
-        urlArr.push(newStr);
-      }
-      if (!data.PageNumber) {
-        let newStr = `AdminDetailSearch.PageNumber=1`;
-        urlArr.push(newStr);
-      }
-      if (!data.PageSize) {
-        let newStr = `AdminDetailSearch.PageSize=10`;
-        urlArr.push(newStr);
-      }
-      urlString = urlArr.join('&');
-    } else {
-      urlString = 'AdminDetailSearch.OrderBy=UpdateTimeDESC&AdminDetailSearch.PageNumber=1&AdminDetailSearch.PageSize=10';
+      const response = await adminUsersServices.getByFilterPagedAdminUsers(urlString);
+      dispatch(setFilterObject(data));
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
     }
-    const response = await adminUsersServices.getByFilterPagedAdminUsers(urlString);
-    dispatch(setFilterObject(data));
-    return response;
-  } catch (error) {
-    return rejectWithValue(error?.data);
-  }
-});
+  },
+);
 
-export const getByAdminUserId = createAsyncThunk('adminUsersManagement/getByAdminUserId', async (data, { dispatch, rejectWithValue }) => {
-  const { id, errorDialog, history } = data;
-  try {
-    console.log(id, history);
-    const response = await adminUsersServices.getByAdminUserId(id);
-    return response;
-  } catch (error) {
-    errorDialog({
-      title: 'Hata',
-      message: error?.data?.message,
-    });
-    history.push('/admin-users-management/list');
-    return rejectWithValue(error?.data);
-  }
-});
+export const getByAdminUserId = createAsyncThunk(
+  'adminUsersManagement/getByAdminUserId',
+  async (data, { dispatch, getState, rejectWithValue }) => {
+    const { id, errorDialog, history } = data;
+    try {
+      const adminUserFindState = getState()?.adminUsers.adminUsers.find((item) => item.id === Number(id));
+      if (adminUserFindState) return { data: adminUserFindState };
+      //statede yok ise servisten getir
+      const response = await adminUsersServices.getByAdminUserId(id);
+      return response;
+    } catch (error) {
+      errorDialog({
+        title: 'Hata',
+        message: error?.data?.message,
+      });
+      history.push('/admin-users-management/list');
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 
-export const addAdminUser = createAsyncThunk('adminUsersManagement/addAdminUser', async (data, { dispatch, rejectWithValue }) => {
-  try {
-    const response = await adminUsersServices.addAdminUser(data);
-    return response;
-  } catch (error) {
-    return rejectWithValue(error?.data);
-  }
-});
+export const addAdminUser = createAsyncThunk(
+  'adminUsersManagement/addAdminUser',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await adminUsersServices.addAdminUser(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 
-export const editAdminUser = createAsyncThunk('adminUsersManagement/editAdminUser', async (data, { dispatch, rejectWithValue }) => {
-  try {
-    const response = await adminUsersServices.editAdminUser(data);
-    return response;
-  } catch (error) {
-    return rejectWithValue(error?.data);
-  }
-});
+export const editAdminUser = createAsyncThunk(
+  'adminUsersManagement/editAdminUser',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await adminUsersServices.editAdminUser(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 
-export const deleteAdminUser = createAsyncThunk('adminUsersManagement/deleteAdminUser', async (data, { dispatch, rejectWithValue }) => {
-  try {
-    const response = await adminUsersServices.deleteAdminUser(data);
-    return response;
-  } catch (error) {
-    return rejectWithValue(error?.data);
-  }
-});
+export const deleteAdminUser = createAsyncThunk(
+  'adminUsersManagement/deleteAdminUser',
+  async (data, { dispatch, getState, rejectWithValue }) => {
+    try {
+      const response = await adminUsersServices.deleteAdminUser(data);
+      await dispatch(getByFilterPagedAdminUsers(getState()?.adminUsers.filterObject));
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 
-export const setAdminUserStatus = createAsyncThunk('adminUsersManagement/setAdminUserStatus', async (data, { dispatch, rejectWithValue }) => {
-  try {
-    const response = await adminUsersServices.setAdminUserStatus(data);
-    return response;
-  } catch (error) {
-    return rejectWithValue(error?.data);
-  }
-});
+export const setAdminUserStatus = createAsyncThunk(
+  'adminUsersManagement/setAdminUserStatus',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await adminUsersServices.setAdminUserStatus(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 
 const initialState = {
   adminUsers: [],
