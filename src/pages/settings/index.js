@@ -33,6 +33,33 @@ const AnnouncementType = lazy(() =>
     default: Component,
   })),
 );
+const PackagesType = lazy(() =>
+  import('./packagesType').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+
+const AcademicYear = lazy(() =>
+  import('./academicYear').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+const TargetSentence = lazy(() =>
+  import('./targetSentence').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+
+const PreferencePeriod = lazy(() =>
+  import('./preferencePeriod').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+const TargetScreen = lazy(() =>
+  import('./targetScreen').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 
 const Branch = lazy(() =>
   import('./branch').then(({ default: Component }) => ({
@@ -47,7 +74,12 @@ const Settings = {
   Activities,
   ClassStages,
   AnnouncementType,
-  Branch
+  Branch,
+  PackagesType,
+  TargetScreen,
+  AcademicYear,
+  TargetSentence,
+  PreferencePeriod,
 };
 
 export default Settings;

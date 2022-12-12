@@ -181,6 +181,7 @@ const Menus = () => {
   const dispatch = useDispatch();
 
   useLayoutEffect(() => {
+    window.scrollTo(0, 0);
     if (['/', '/dashboard', '/profile'].includes(location.pathname)) {
       dispatch(menuChange(['']));
     } else {
@@ -193,12 +194,7 @@ const Menus = () => {
   };
 
   return (
-    <CustomMenu
-      data-testid="menus-test"
-      onClick={handleClick}
-      mode="vertical"
-      selectedKeys={selectedKey}
-    >
+    <CustomMenu data-testid="menus-test" onClick={handleClick} mode="vertical" selectedKeys={selectedKey}>
       <CustomItemGroup title={<Text t="Kullanıcı Yönetimi" />} color="#ffffff" />
 
       <CustomItem key="/user-management/role-management">
@@ -225,11 +221,19 @@ const Menus = () => {
           </span>
         </MenuItemText>
       </CustomItem>
-      <CustomItem key="/user-management/user-list-management">
+      <CustomItem key="/user-management/user-list-management/list">
         <MenuItemText>
           <CustomImage src={menuIcons} />
           <span>
-            <Text t="Kullanıcı Listesi" />
+            <Text t="Üye Listesi" />
+          </span>
+        </MenuItemText>
+      </CustomItem>
+      <CustomItem key="/admin-users-management/list">
+        <MenuItemText>
+          <CustomImage src={menuIcons} />
+          <span>
+            <Text t="Admin Kullanıcı Listesi" />
           </span>
         </MenuItemText>
       </CustomItem>
@@ -308,7 +312,7 @@ const Menus = () => {
           <MenuItemText>
             <CustomImage src={menuIcons} />
             <span>
-              <Text t="Ders Tanım Bilgileri" />
+              <Text t="Kazanım Ağacı" />
             </span>
           </MenuItemText>
         </CustomItem>
@@ -342,6 +346,49 @@ const Menus = () => {
             <CustomImage src={menuIcons} />
             <span>
               <Text t="Şube Bilgileri Tanımları" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+        <CustomItem key="/settings/packagesType">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Paket Türü Tanımlama" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+
+        <CustomItem key="/settings/academicYear">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Tercih Dönemi Eğitim Öğretim Yılı" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+        <CustomItem key="/settings/targetSentence">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Hedef Cümle" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+
+        <CustomItem key="/settings/preferencePeriod">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Tercih Dönemi Tanımlama" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+
+        <CustomItem key="/settings/targetScreen">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Hedef Ekranları Tanımlama" />
             </span>
           </MenuItemText>
         </CustomItem>

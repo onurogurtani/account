@@ -179,7 +179,12 @@ export const eventsSlice = createSlice({
     });
     builder.addCase(getByFilterPagedEvents.rejected, (state) => {
       state.events = [];
-      state.tableProperty = [];
+      state.tableProperty = {
+        currentPage: 1,
+        page: 1,
+        pageSize: 10,
+        totalCount: 0,
+      };
     });
     builder.addCase(getByEventId.fulfilled, (state, action) => {
       state.currentEvent = action?.payload?.data;
