@@ -341,6 +341,14 @@ const Menus = () => {
             </span>
           </MenuItemText>
         </CustomItem>
+        <CustomItem key="/settings/branch">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Şube Bilgileri Tanımları" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
         <CustomItem key="/settings/packagesType">
           <MenuItemText>
             <CustomImage src={menuIcons} />
