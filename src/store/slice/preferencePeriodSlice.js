@@ -31,6 +31,16 @@ export const getPreferencePeriodUpdate = createAsyncThunk(
     }
   },
 );
+export const getPreferencePeriodDelete = createAsyncThunk(
+  'getPreferencePeriodUpdate',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      return await preferencePeriodServices.preferencePeriodDelete(data);
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 export const getEducationYears = createAsyncThunk(
   'getEducationYears',
   async (data, { dispatch, rejectWithValue }) => {
