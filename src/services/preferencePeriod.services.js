@@ -2,7 +2,7 @@ import { api } from './api';
 
 const preferencePeriodGetList = (data) => {
   return api({
-    url: `PreferencePeriod/getPagedList?PageSize=20`,
+    url: `PreferencePeriod/getPagedList?PageSize=50`,
     method: 'POST',
     data: null,
   });
@@ -22,6 +22,13 @@ const preferencePeriodUpdate = (data) => {
     data: data,
   });
 };
+const preferencePeriodDelete = (data) => {
+  return api({
+    url: `PreferencePeriod`,
+    method: 'DELETE',
+    params: data,
+  });
+};
 const getEducationYears = (data) => {
   return api({
     url: `EducationYears/getList?PageSize=20`,
@@ -35,6 +42,7 @@ const preferencePeriodServices = {
   getEducationYears,
   preferencePeriodAdd,
   preferencePeriodUpdate,
+  preferencePeriodDelete,
 };
 
 export default preferencePeriodServices;
