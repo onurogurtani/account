@@ -13,12 +13,12 @@ const useUserListTableColumns = () => {
   const columns = [
     {
       title: 'Kullanıcı Türü',
-      dataIndex: 'userTypeId',
-      key: 'userTypeId',
+      dataIndex: 'userType',
+      key: 'userType',
       // sorter: true,
       // sortOrder: sorterObject?.columnKey === 'id' ? sorterObject?.order : null,
       render: (text, record) => {
-        return <div>{text}</div>;
+        return <div>{text?.name}</div>;
       },
     },
     {
