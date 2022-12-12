@@ -9,10 +9,12 @@ const getPackageList = () => {
 };
 
 const addPackage = (data) => {
+  console.log('data1', data)
+
   return api({
-    url: `Packages`,
+    url: `Packages/Add`,
     method: 'POST',
-    data,
+    data
   });
 };
 

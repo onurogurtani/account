@@ -35,10 +35,10 @@
 
       .ant-form-item-control {
         .ant-form-item-control-input {
+          .max-net-count {
+            width: 287px;
+          }
           .ant-form-item-control-input-content {
-            input {
-            }
-
             .ant-select {
               width: 287px;
 
@@ -68,53 +68,19 @@
       }
     }
 
-    .upload-btn {
-      font-weight: normal;
-      font-family: UbuntuRegular;
-      color: #6b7789;
-      &:hover {
-        border-color: #0d6efd;
+    .add-package-footer {
+      display: flex;
+      justify-content: end;
+      gap: 10px;
+      margin-top: 10px;
+      .save-btn {
+        background-color: #699a00;
+        border: none;
       }
-    }
-
-    .submit-btn {
-      background-color: #699a00;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: UbuntuMedium, sans-serif;
-      line-height: 12px;
-      border-radius: 4px;
-      outline: 0;
-      box-shadow: none;
-      border: none;
-    }
-
-    .cancel-btn {
-      background-color: grey;
-      color: #fff;
-      justify-content: center;
-      align-items: center;
-      font-family: UbuntuMedium, sans-serif;
-      line-height: 12px;
-      border-radius: 4px;
-      outline: 0;
-      box-shadow: none;
-      border: none;
-    }
-    .back-btn {
-      background-color: #162056;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: UbuntuMedium, sans-serif;
-      line-height: 12px;
-      border-radius: 4px;
-      outline: 0;
-      box-shadow: none;
-      border: none;
+      .cancel-btn {
+        background-color: gray;
+        border: none;
+      }
     }
   }
 

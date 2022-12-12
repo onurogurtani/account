@@ -18,6 +18,7 @@ const ApiProvider = ({ children }) => {
   useEffect(() => {
     api?.interceptors?.request?.use(
       function (config) {
+        console.log(config, "config dosyası")
         setRequestCount((r) => r + 1);
         return config;
       },
