@@ -307,11 +307,6 @@ const App = () => {
                           authority="dashboard"
                         />
                         <PrivateRoute
-                          path={`${match?.path}/branch`}
-                          Component={Settings?.Branch}
-                          authority="dashboard"
-                        />
-                        <PrivateRoute
                           path={`${match?.path}/packagesType`}
                           Component={Settings?.PackagesType}
                           authority="dashboard"
