@@ -73,15 +73,15 @@ const Branch = () => {
     },
     {
       title: 'Durumu',
-      dataIndex: 'status',
-      key: 'status',
-      sorter: (a, b) => b.isActive - a.isActive,
+      dataIndex: 'recordStatus',
+      key: 'recordStatus',
+      sorter: (a, b) => b.recordStatus - a.recordStatus,
       render: (text, record) => {
-        return <div>{text ? 'Aktif' : 'Pasif'}</div>;
+        return <div>{text===1 ? 'Aktif' : 'Pasif'}</div>;
       },
     },
     {
-      title: 'Hedef Ekranı Adı',
+      title: 'Sınıf',
       dataIndex: 'name',
       key: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
@@ -90,7 +90,7 @@ const Branch = () => {
       },
     },
     {
-      title: 'İlgili Sayfa Adı',
+      title: 'Şube Adı',
       dataIndex: 'packageAccessPage',
       key: 'packageAccessPage',
       sorter: (a, b) => a.name.localeCompare(b.packageAccessPage),
@@ -98,7 +98,15 @@ const Branch = () => {
         return <div>{text}</div>;
       },
     },
-
+    {
+      title: 'Şube Türü',
+      dataIndex: 'packageAccessPage',
+      key: 'packageAccessPage',
+      sorter: (a, b) => a.name.localeCompare(b.packageAccessPage),
+      render: (text, record) => {
+        return <div>{text}</div>;
+      },
+    },
     {
       title: 'İşlemler',
       dataIndex: 'schoolDeleteAction',
@@ -186,8 +194,8 @@ const Branch = () => {
   };
 
   return (
-    <CustomPageHeader title="Şube Tanımlama" showBreadCrumb routes={['Tanımlamalar']}>
-      <CustomCollapseCard cardTitle="Şube Tanımlama">
+    <CustomPageHeader title="Şube Bilgileri Tanımlama" showBreadCrumb routes={['Tanımlamalar']}>
+      <CustomCollapseCard cardTitle="Şube Bilgileri Tanımlama">
         <div className="table-header">
           <CustomButton className="add-btn" onClick={handleAddTargetScreen}>
             Yeni
@@ -240,7 +248,7 @@ const Branch = () => {
               },
             ]}
             label="Durumu"
-            name="isActive"
+            name="recordStatus"
           >
             <CustomSelect placeholder="Seçiniz">
               <Option key={1} value={true}>
