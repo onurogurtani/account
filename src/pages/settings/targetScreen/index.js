@@ -24,7 +24,7 @@ import {
   addNewTargetScreen,
   getAllTargetScreen,
   updateTargetScreen,
-} from '../../../store/slice/targetScreen';
+} from '../../../store/slice/targetScreenSlice';
 import { userScreen } from '../../../constants/uiScreen';
 
 const TargetScreen = () => {
@@ -85,8 +85,8 @@ const TargetScreen = () => {
 
     {
       title: 'İşlemler',
-      dataIndex: 'schoolDeleteAction',
-      key: 'schoolDeleteAction',
+      dataIndex: 'targetScreenAction',
+      key: 'targetScreenAction',
       align: 'center',
       render: (text, record) => {
         return (

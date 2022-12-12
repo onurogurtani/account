@@ -20,12 +20,8 @@ import {
 import '../../../styles/settings/packages.scss';
 import '../../../styles/table.scss';
 import useResetFormOnCloseModal from '../../../hooks/useResetFormOnCloseModal';
-import {
-  addNewPackageType,
-  getAllPackageType,
-  updatePackageType,
-} from '../../../store/slice/packageType';
-import { getAllTargetScreen } from '../../../store/slice/targetScreen';
+import { addNewPackageType, getAllPackageType, updatePackageType } from '../../../store/slice/packageTypeSlice';
+import { getAllTargetScreen } from '../../../store/slice/targetScreenSlice';
 
 const PackagesType = () => {
   const [form] = Form.useForm();
@@ -108,8 +104,8 @@ const PackagesType = () => {
 
     {
       title: 'İşlemler',
-      dataIndex: 'schoolDeleteAction',
-      key: 'schoolDeleteAction',
+      dataIndex: 'packagesTypesUpdateAction',
+      key: 'packagesTypesUpdateAction',
       align: 'center',
       render: (text, record) => {
         return (
@@ -165,9 +161,7 @@ const PackagesType = () => {
         return { targetScreenId: item };
       });
     }
-    const action = await dispatch(
-      selectedPackagesTypeId ? updatePackageType(data) : addNewPackageType(data),
-    );
+    const action = await dispatch(selectedPackagesTypeId ? updatePackageType(data) : addNewPackageType(data));
     const reducer = selectedPackagesTypeId ? updatePackageType : addNewPackageType;
     if (reducer.fulfilled.match(action)) {
       successDialog({
@@ -219,7 +213,6 @@ const PackagesType = () => {
         packageTypeTargetScreens: ['Hedeflerim sayfasının içeriğini göremez'],
       });
   };
-  console.log(tableProperty);
   return (
     <CustomPageHeader title="Paket Türü Tanımlama" showBreadCrumb routes={['Tanımlamalar']}>
       <CustomCollapseCard cardTitle="Paket Türü Tanımlama">
@@ -305,12 +298,7 @@ const PackagesType = () => {
             label="Paketin Erişebileceği Hedef Ekranı"
             name="packageTypeTargetScreens"
           >
-            <CustomSelect
-              placeholder="Seçiniz"
-              mode="multiple"
-              showArrow
-              onChange={onSecondSelectChange}
-            >
+            <CustomSelect placeholder="Seçiniz" mode="multiple" showArrow onChange={onSecondSelectChange}>
               {allTargetScreen?.map((item, i) => {
                 return (
                   <Option key={item?.id} value={item?.id}>
@@ -318,9 +306,7 @@ const PackagesType = () => {
                   </Option>
                 );
               })}
-              <Option value={'Hedeflerim sayfasının içeriğini göremez'}>
-                Hedeflerim sayfasının içeriğini göremez
-              </Option>
+              <Option value={'Hedeflerim sayfasının içeriğini göremez'}>Hedeflerim sayfasının içeriğini göremez</Option>
             </CustomSelect>
           </CustomFormItem>
         </CustomForm>

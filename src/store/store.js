@@ -31,9 +31,10 @@ import { adminUserSlice } from './slice/adminUserSlice';
 import { targetSentenceSlice } from './slice/targetSentenceSlice';
 import { preferencePeriodSlice } from './slice/preferencePeriodSlice';
 
-import { targetScreenSlice } from './slice/targetScreen';
-import { packageTypeSlice } from './slice/packageType';
+import { targetScreenSlice } from './slice/targetScreenSlice';
+import { packageTypeSlice } from './slice/packageTypeSlice';
 import { userTypeSlice } from './slice/userTypeSlice';
+import { branchsSlice } from './slice/branchsSlice';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -65,6 +66,7 @@ const reducers = combineReducers({
   preferencePeriod: preferencePeriodSlice.reducer,
   packageType: packageTypeSlice.reducer,
   userType: userTypeSlice.reducer,
+  branchs:branchsSlice.reducer
 });
 
 const persistConfig = {

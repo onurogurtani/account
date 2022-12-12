@@ -6,7 +6,6 @@ import formServices from '../../services/forms.services';
 export const getFilteredPagedForms = createAsyncThunk("forms/getFilteredPagedForms",
   async (data) => {
     let urlString;
-    console.log(data)
     if(data){
       let urlArr = []
       for (let item in data) {
@@ -44,7 +43,6 @@ export const getFilteredPagedForms = createAsyncThunk("forms/getFilteredPagedFor
       urlString="FormDetailSearch.OrderBy=IdDESC&FormDetailSearch.PageNumber=1&FormDetailSearch.PageSize=10"
     }
     const response = await formServices.getByFilterPagedForms(urlString);
-    console.log(response)
     return response;
   });
 
@@ -55,7 +53,6 @@ export const getFormCategories = createAsyncThunk(
   'getFormCategories',
   async (data, { dispatch, rejectWithValue }) => {
     try {
-      console.log('pişşşt')
       const response = await formServices.getFormCategories();
       return response;
     } catch (error) {

@@ -87,7 +87,6 @@ export const activeQuestion = createAsyncThunk('question/activeQuestion', async 
 
 // Passive Question
 export const passiveQuestion = createAsyncThunk('question/passiveQuestion', async (data, { dispatch }) => {
-  console.log(data)
   const response = await questionServices.questionPassive(data);
   dispatch(getQuestions());
   return response;

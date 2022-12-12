@@ -7,7 +7,6 @@ import {
   CustomCollapseCard,
   CustomForm,
   CustomFormItem,
-  CustomInput,
   CustomModal,
   CustomPageHeader,
   CustomSelect,
@@ -19,47 +18,38 @@ import {
 } from '../../../components';
 import '../../../styles/settings/packages.scss';
 import '../../../styles/table.scss';
-// import {
-//   addTargetScreen,
-//   getTargetScreen,
-//   updateTargetScreen,
-// } from '../../../store/slice/TargetScreenSlice';
 import useResetFormOnCloseModal from '../../../hooks/useResetFormOnCloseModal';
+import { addBranchs, getBranchs, updateBranchs } from '../../../store/slice/branchsSlice';
+import { classroomArray, fieldType, fieldTypeArray } from '../../../constants/classroom';
+import { getAllClassStages } from '../../../store/slice/classStageSlice';
 
 const Branch = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
-  const [selectedTargetScreenId, setSelectedTargetScreenId] = useState();
-  // const { TargetScreens } = useSelector((state) => state?.TargetScreens);
-
-  const TargetScreens = [
-    { id: 1, name: 'Net Hedef Aralığı', status: true, packageAccessPage: 'Net Hedef Aralığı' },
-    {
-      id: 2,
-      name: 'Hedef Listesi + Terchi Sihirbaz',
-      status: false,
-      packageAccessPage: 'Hedeflerim',
-    },
-  ];
-
-  const testolist = [
-    'Net Hedef Aralığı',
-    'Hedef Listesi tayfası',
-    'net aralığı',
-    'Dersler Sayfası',
-  ];
+  const [isfieldTypeDisable, SetIsfieldTypeDisable] = useState(true);
+  const [selectedBranchId, setSelectedBranchId] = useState();
+  const { allBranchs,tableProperty } = useSelector((state) => state?.branchs);
+  const { allClassList } = useSelector((state) => state?.classStages);
 
   useResetFormOnCloseModal({ form, open });
 
   useEffect(() => {
-    // loadTargetScreen();
+    loadBranchs();
+    loadClassStages();
   }, []);
 
-  // const loadTargetScreen = useCallback(async () => {
-  //   dispatch(getTargetScreen());
-  // }, [dispatch]);
+  const loadBranchs = useCallback(
+    async (data = null) => {
+      dispatch(getBranchs(data));
+    },
+    [dispatch],
+  );
+
+  const loadClassStages = useCallback(async () => {
+    dispatch(getAllClassStages());
+  }, [dispatch]);
 
   const columns = [
     {
@@ -73,15 +63,24 @@ const Branch = () => {
     },
     {
       title: 'Durumu',
-      dataIndex: 'recordStatus',
-      key: 'recordStatus',
-      sorter: (a, b) => b.recordStatus - a.recordStatus,
+      dataIndex: 'isActive',
+      key: 'isActive',
+      sorter: (a, b) => b.isActive - a.isActive,
       render: (text, record) => {
-        return <div>{text===1 ? 'Aktif' : 'Pasif'}</div>;
+        return <div>{text ? 'Aktif' : 'Pasif'}</div>;
       },
     },
     {
       title: 'Sınıf',
+      dataIndex: 'classroom',
+      key: 'classroom',
+      sorter: (a, b) => b.classroom.name - b.classroom.name,
+      render: (text, record) => {
+        return <div>{text.name}</div>;
+      },
+    },
+    {
+      title: 'Şube Adı',
       dataIndex: 'name',
       key: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
@@ -90,32 +89,23 @@ const Branch = () => {
       },
     },
     {
-      title: 'Şube Adı',
-      dataIndex: 'packageAccessPage',
-      key: 'packageAccessPage',
-      sorter: (a, b) => a.name.localeCompare(b.packageAccessPage),
-      render: (text, record) => {
-        return <div>{text}</div>;
-      },
-    },
-    {
       title: 'Şube Türü',
-      dataIndex: 'packageAccessPage',
-      key: 'packageAccessPage',
-      sorter: (a, b) => a.name.localeCompare(b.packageAccessPage),
+      dataIndex: 'fieldType',
+      key: 'fieldType',
+      sorter: (a, b) => a.name.localeCompare(b.fieldType),
       render: (text, record) => {
-        return <div>{text}</div>;
+        return <div>{fieldType[text]}</div>;
       },
     },
     {
       title: 'İşlemler',
-      dataIndex: 'schoolDeleteAction',
-      key: 'schoolDeleteAction',
+      dataIndex: 'branchUpdateAction',
+      key: 'branchUpdateAction',
       align: 'center',
       render: (text, record) => {
         return (
           <div className="action-btns">
-            <CustomButton className="update-btn" onClick={() => editTargetScreen(record)}>
+            <CustomButton className="update-btn" onClick={() => editBranch(record)}>
               Güncelle
             </CustomButton>
           </div>
@@ -124,14 +114,17 @@ const Branch = () => {
     },
   ];
 
-  const editTargetScreen = (record) => {
+  const editBranch = (record) => {
+    record.classroom.name === '11' || record.classroom.name === '12'
+      ? SetIsfieldTypeDisable(false)
+      : SetIsfieldTypeDisable(true);
     setOpen(true);
-    setSelectedTargetScreenId(record.id);
+    setSelectedBranchId(record.id);
     form.setFieldsValue(record);
   };
 
-  const handleAddTargetScreen = () => {
-    setSelectedTargetScreenId();
+  const handleAddBranch = () => {
+    setSelectedBranchId();
     setOpen(true);
   };
 
@@ -140,34 +133,39 @@ const Branch = () => {
   };
 
   const onFinish = async (values) => {
-    // const data = {
-    //   name: values?.name,
-    //   isActive: values?.isActive,
-    //   id: selectedTargetScreenId ? selectedTargetScreenId : undefined,
-    // };
-    // const action = await dispatch(
-    //   selectedTargetScreenId ? updateTargetScreen(data) : addTargetScreen(data),
-    // );
-    // const reducer = selectedTargetScreenId ? updateTargetScreen : addTargetScreen;
-    // if (reducer.fulfilled.match(action)) {
-    //   successDialog({
-    //     title: <Text t="success" />,
-    //     message: selectedTargetScreenId ? 'Kayıt Güncellenmiştir' : 'Kaydedildi',
-    //     // message: action?.payload.message,
-    //     onOk: async () => {
-    //       await handleClose();
-    //     },
-    //   });
-    // } else {
-    //   errorDialog({
-    //     title: <Text t="error" />,
-    //     message: action?.payload.message,
-    //   });
-    // }
+    const data = {
+      entity: {
+        name: values?.name,
+        classroomId: values?.classroomId,
+        id: selectedBranchId ? selectedBranchId : undefined,
+      },
+    };
+
+    if (selectedBranchId) data.entity['isActive'] = values?.isActive;
+    if (!isfieldTypeDisable) data.entity['fieldType'] = values?.fieldType;
+
+    const action = await dispatch(selectedBranchId ? updateBranchs(data) : addBranchs(data));
+    const reducer = selectedBranchId ? updateBranchs : addBranchs;
+    if (reducer.fulfilled.match(action)) {
+      successDialog({
+        title: <Text t="success" />,
+        message: selectedBranchId ? 'Kayıt Güncellenmiştir' : 'Kaydedildi',
+        onOk: async () => {
+          await handleClose();
+        },
+      });
+      SetIsfieldTypeDisable(true);
+      loadBranchs();
+    } else {
+      errorDialog({
+        title: <Text t="error" />,
+        message: action?.payload.message,
+      });
+    }
   };
 
   const onOk = async () => {
-    if (!selectedTargetScreenId) {
+    if (!selectedBranchId) {
       form.submit();
       return;
     }
@@ -193,35 +191,52 @@ const Branch = () => {
     });
   };
 
+  const checkClassroomAccess = (_, item) => {
+    if (item.children === '11' || item.children === '12') {
+      SetIsfieldTypeDisable(false);
+    } else {
+      SetIsfieldTypeDisable(true);
+    }
+  };
+
   return (
     <CustomPageHeader title="Şube Bilgileri Tanımlama" showBreadCrumb routes={['Tanımlamalar']}>
       <CustomCollapseCard cardTitle="Şube Bilgileri Tanımlama">
         <div className="table-header">
-          <CustomButton className="add-btn" onClick={handleAddTargetScreen}>
+          <CustomButton className="add-btn" onClick={handleAddBranch}>
             Yeni
           </CustomButton>
         </div>
         <CustomTable
-          dataSource={TargetScreens}
-          //   onChange={handleSort}
+          dataSource={allBranchs}
           columns={columns}
           pagination={{
             showSizeChanger: true,
             showQuickJumper: {
               goButton: <CustomButton className="go-button">Git</CustomButton>,
             },
+            total: tableProperty.totalCount,
+            current: tableProperty.currentPage,
+            pageSize: tableProperty.pageSize,
             position: 'bottomRight',
+            onChange: (page, pageSize) => {
+              const data = {
+                PageNumber: page,
+                PageSize: pageSize,
+              };
+              loadBranchs(data);
+            },
           }}
-          rowKey={(record) => `TargetScreen-${record?.id || record?.name}`}
+          rowKey={(record) => `Branch-${record?.id || record?.name}`}
           scroll={{ x: false }}
         />
       </CustomCollapseCard>
 
       <CustomModal
-        title={selectedTargetScreenId ? 'Şube Güncelle' : 'Şube Ekleme'}
+        title={selectedBranchId ? 'Şube Güncelle' : 'Şube Ekleme'}
         visible={open}
         onOk={onOk}
-        okText={selectedTargetScreenId ? 'Güncelle' : 'Kaydet'}
+        okText={selectedBranchId ? 'Güncelle' : 'Kaydet'}
         cancelText="İptal"
         onCancel={onCancel}
         bodyStyle={{ overflowY: 'auto', maxHeight: 'calc(100vh - 300px)' }}
@@ -234,10 +249,16 @@ const Branch = () => {
                 message: 'Lütfen Zorunlu Alanları Doldurunuz.',
               },
             ]}
-            label="Hedef Ekranı Adı"
-            name="name"
+            label="Sınıf Bilgisi"
+            name="classroomId"
           >
-            <CustomInput placeholder="Paket Türü Adı" />
+            <CustomSelect placeholder="Seçiniz" onChange={checkClassroomAccess}>
+              {allClassList.map((item) => (
+                <Option key={item.id} value={item.id}>
+                  {item?.name}
+                </Option>
+              ))}
+            </CustomSelect>
           </CustomFormItem>
 
           <CustomFormItem
@@ -247,38 +268,58 @@ const Branch = () => {
                 message: 'Lütfen Zorunlu Alanları Doldurunuz.',
               },
             ]}
-            label="Durumu"
-            name="recordStatus"
+            label="Şube Adı"
+            name="name"
           >
             <CustomSelect placeholder="Seçiniz">
-              <Option key={1} value={true}>
-                Aktif
-              </Option>
-              <Option key={2} value={false}>
-                Pasif
-              </Option>
+              {classroomArray.map((item) => (
+                <Option key={item} value={item}>
+                  {item}
+                </Option>
+              ))}
             </CustomSelect>
           </CustomFormItem>
+
           <CustomFormItem
             rules={[
               {
-                required: true,
+                required: !isfieldTypeDisable,
                 message: 'Lütfen Zorunlu Alanları Doldurunuz.',
               },
             ]}
-            label="İlgili Sayfa Seçimi"
-            name="packageAccessPage"
+            label="Sınıf Bilgisi"
+            name="fieldType"
           >
-            <CustomSelect
-              placeholder="Seçiniz"
-              mode="multiple"
-              showArrow
-              options={testolist.map((province) => ({
-                label: province,
-                value: province,
-              }))}
-            />
+            <CustomSelect placeholder="Seçiniz" disabled={isfieldTypeDisable}>
+              {fieldTypeArray.map((item) => (
+                <Option key={item.id} value={item.id}>
+                  {item?.value}
+                </Option>
+              ))}
+            </CustomSelect>
           </CustomFormItem>
+
+          {selectedBranchId && (
+            <CustomFormItem
+              rules={[
+                {
+                  required: true,
+                  message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                },
+              ]}
+              label="Durumu"
+              name="isActive"
+            >
+              <CustomSelect placeholder="Seçiniz">
+                <Option key={1} value={true}>
+                  Aktif
+                </Option>
+                <Option key={2} value={false}>
+                  Pasif
+                </Option>
+              </CustomSelect>
+            </CustomFormItem>
+          )}
         </CustomForm>
       </CustomModal>
     </CustomPageHeader>
