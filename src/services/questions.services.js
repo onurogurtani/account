@@ -4,16 +4,18 @@ import { api } from './api';
 //  Questios Type
 const getQuestionType = () => {
     return api({
-        url: `QuestionTypes/getList`,
+        url: 'QuestionTypes/getList',
         method: 'POST',
+        data:[]
     });
 }
 
 //  Questios Type
-const getLikertType = (pageNumber = 1, pageSize = 10) => {
+const getLikertType = () => {
     return api({
-        url: `LikertTypes/getList?PageNumber=${pageNumber}&PageSize=${pageSize}`,
+        url: `LikertTypes/getList`,
         method: 'POST',
+        data:[]        
     });
 }
 

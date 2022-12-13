@@ -1,0 +1,162 @@
+.generalContainer {
+    .questionGroup{
+      border:2px solid pink;
+      .groupNameContainer {
+        width: 100%;
+        display: flex;
+        margin: 16px;
+        justify-content: flex-start;
+        input {
+          width: 300px;
+          margin: 0 16px 0 0;
+        }
+        Button {
+          background-color: purple;
+          margin: 0 16px;
+          color: #fff;
+        }
+      }
+      
+      .questionGroupsContainer {
+        margin: 16px;
+        border: 2px solid gray;
+        border-radius: 10px;
+        position: relative;  
+        .questionGroupHeader {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          padding: 16px;
+    
+          
+          .anyContainer {
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            left: 1em;
+            .select {
+              left: 2em;
+              width: 200px;
+            }
+          }
+          .addBtnContainer {
+            display: flex;
+            justify-content: center;
+            
+            .add-btn {
+              z-index: 5;
+              background-color: rgb(17, 137, 193);
+              // color: #fff;
+              justify-content: center;
+              align-items: center;
+              // font-family: UbuntuMedium, sans-serif;
+              line-height: 12px;
+              border-radius: 4px;
+              box-shadow: none;
+              border: none;
+              margin: auto;
+              width: 250px !important;
+            }
+          }
+        }  
+        .questionContainer {
+          margin: 2px;
+          border: 2px solid red;
+          border-radius: 5px;
+          .answersContainer {
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+            align-content: space-between;
+            .answer {
+              display: block;
+              margin: 1rem;
+              
+            }
+          }
+          .control-buttons{
+            display: flex;
+            justify-content: flex-end;
+            justify-items: center;
+            align-items: center;
+          }
+        }
+      }
+  
+    }
+    .questionsFooter {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+  
+      .saveAndFinish-btn {
+        background-color: #699a00;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: UbuntuMedium, sans-serif;
+        line-height: 12px;
+        border-radius: 4px;
+        outline: 0;
+        box-shadow: none;
+        border: none;
+        margin: 10px;
+      }
+      .cancel-btn {
+        background-color: grey;
+        color: #fff;
+        justify-content: center;
+        align-items: center;
+        font-family: UbuntuMedium, sans-serif;
+        line-height: 12px;
+        border-radius: 4px;
+        outline: 0;
+        box-shadow: none;
+        border: none;
+        margin: 10px;
+      }
+      .saveAsDraft-btn {
+        background-color: rgb(150, 150, 25);
+        color: #fff;
+        justify-content: center;
+        align-items: center;
+        font-family: UbuntuMedium, sans-serif;
+        line-height: 12px;
+        border-radius: 4px;
+        outline: 0;
+        box-shadow: none;
+        border: none;
+        margin: 10px;
+      }
+      .back-btn {
+        background-color: #162056;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: UbuntuMedium, sans-serif;
+        line-height: 12px;
+        border-radius: 4px;
+        outline: 0;
+        box-shadow: none;
+        border: none;
+      }
+      .show-btn {
+        background-color: #784c4c;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: UbuntuMedium, sans-serif;
+        line-height: 12px;
+        border-radius: 4px;
+        outline: 0;
+        box-shadow: none;
+        border: none;
+      }
+    }
+  }

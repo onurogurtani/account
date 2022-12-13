@@ -1,0 +1,69 @@
+.container {
+  border: 2px solid black;
+  margin: 0.5em;
+  border-radius: 1em;
+  padding: 16px;
+}
+.singleQuestionContainer {
+  padding: 16px;
+  min-height: 150px;
+  .singleQuestion {
+    top: 10px;
+    // border:2px solid blue;
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+    .questionText {
+      // border:2px solid black;
+      right: 1em;
+      display: block;
+      width: 100%;
+      padding-left: 1em;
+    }
+  }
+  .questionAnswers {
+    // border:2px solid black;
+    right: 1em;
+    display: block;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    // align-items:center;
+    // padding-left: 1em;
+
+    .choices {
+      margin: 0.5em;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      .answer {
+        margin: 0.1em;
+      }
+    }
+  }
+}
+.actionButtonsContainer {
+  // border:2px solid red;
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+
+  .updateButton {
+    background-color: rgb(15, 146, 222);
+    color: white;
+    margin-right: 16px;
+  }
+  .deleteButton {
+    background-color: rgb(186, 45, 45);
+    color: white;
+    margin-right: 16px;
+  }
+  .setScoreButton {
+    background-color: gray;
+    color: white;
+    margin-right: 16px;
+  }
+}

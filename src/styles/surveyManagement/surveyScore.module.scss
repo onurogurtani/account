@@ -1,0 +1,55 @@
+.groupScoreContainer {
+  border: 2px solid red;
+  margin: 16px;
+  padding: 0;
+}
+.form {
+  margin: 1rem;
+  border-radius: 1em;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  border: 2px solid black;
+  padding: 16px 0;
+
+  .formItemContainer {
+    // border:2px solid salmon;
+    // margin: 0 1em;
+    // margin: 1em;
+    // margin-bottom: 0.5em;
+    // // border: 2px solid blue;
+    // padding: 0 0 1em 0;
+    height: 60px;
+  }
+  .inputContainer {
+    margin: 0;
+    // border:2px solid red;
+    width: 80px;
+    /* border: 2px solid red; */
+  }
+  .groupScoreButtonsContainer {
+    display: flex;
+    margin: 0;
+    padding: 0 16px;
+    margin-right: 0;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-end;
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      // padding: 0.5em ;
+      .clear-btn {
+        background-color: gray;
+        margin: 0 1em;
+      }
+      .submit-btn {
+        background-color: green;
+      }
+    }
+  }
+}
