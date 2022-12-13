@@ -6,10 +6,8 @@ export const getEventTypes = createAsyncThunk(
   async (data, { dispatch, rejectWithValue }) => {
     let urlString;
     if (data) {
-      console.log(data);
       let urlArr = [];
       for (const [key, value] of Object.entries(data)) {
-        console.log(`${key}: ${value}`);
         let newStr = `EventTypeDetailSearch.${key}=${value}`;
         urlArr.push(newStr);
       }
@@ -27,7 +25,6 @@ export const getEventTypes = createAsyncThunk(
       }
       
       urlString = urlArr.join('&');
-      console.log(urlString)
     } else {
       urlString ='EventTypeDetailSearch.OrderBy=IdDesc&EventTypeDetailSearch.PageNumber=1&EventTypeDetailSearch.PageSize=10';
     }
@@ -37,7 +34,6 @@ export const getEventTypes = createAsyncThunk(
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
-      console.log(error);
     }
   },
 );
@@ -93,7 +89,6 @@ export const eventTypeSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getEventTypes.fulfilled, (state, action) => {
-      console.log(action?.payload);
       state.eventTypes = action?.payload?.data?.items;
       state.tableProperty = action?.payload?.data?.pagedProperty || {};
     });
