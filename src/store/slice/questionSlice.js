@@ -53,54 +53,39 @@ export const getLikertType = createAsyncThunk('getLikertType', async () => {
 });
 
 // Add Question
-export const addQuestions = createAsyncThunk(
-  'question/addQuestions',
-  async (data, { dispatch }) => {
-    const response = await questionServices.addQuestion(data);
-    dispatch(getQuestions());
-    return response;
-  },
-);
+export const addQuestions = createAsyncThunk('question/addQuestions', async (data, { dispatch }) => {
+  const response = await questionServices.addQuestion(data);
+  dispatch(getQuestions());
+  return response;
+});
 
 // Update Question
-export const updateQuestions = createAsyncThunk(
-  'question/updateQuestions',
-  async (data, { dispatch }) => {
-    const response = await questionServices.updateQuestion(data);
-    dispatch(getQuestions());
-    return response;
-  },
-);
+export const updateQuestions = createAsyncThunk('question/updateQuestions', async (data, { dispatch }) => {
+  const response = await questionServices.updateQuestion(data);
+  dispatch(getQuestions());
+  return response;
+});
 
 // Delete Qeustion
-export const deleteQuestion = createAsyncThunk(
-  'question/deleteQuestion',
-  async (data, { dispatch }) => {
-    const response = await questionServices.questionDelete(data);
-    dispatch(getQuestions());
-    return response;
-  },
-);
+export const deleteQuestion = createAsyncThunk('question/deleteQuestion', async (data, { dispatch }) => {
+  const response = await questionServices.questionDelete(data);
+  dispatch(getQuestions());
+  return response;
+});
 
 // Active Question
-export const activeQuestion = createAsyncThunk(
-  'question/activeQuestion',
-  async (data, { dispatch }) => {
-    const response = await questionServices.questionActive(data);
-    dispatch(getQuestions());
-    return response;
-  },
-);
+export const activeQuestion = createAsyncThunk('question/activeQuestion', async (data, { dispatch }) => {
+  const response = await questionServices.questionActive(data);
+  dispatch(getQuestions());
+  return response;
+});
 
 // Passive Question
-export const passiveQuestion = createAsyncThunk(
-  'question/passiveQuestion',
-  async (data, { dispatch }) => {
-    const response = await questionServices.questionPassive(data);
-    dispatch(getQuestions());
-    return response;
-  },
-);
+export const passiveQuestion = createAsyncThunk('question/passiveQuestion', async (data, { dispatch }) => {
+  const response = await questionServices.questionPassive(data);
+  dispatch(getQuestions());
+  return response;
+});
 
 // Initial State
 const initialState = {

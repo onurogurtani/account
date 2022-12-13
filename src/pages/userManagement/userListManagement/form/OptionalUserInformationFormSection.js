@@ -1,14 +1,7 @@
-import { Form } from 'antd';
 import dayjs from 'dayjs';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  CustomDatePicker,
-  CustomFormItem,
-  CustomInput,
-  CustomSelect,
-  Option,
-} from '../../../../components';
+import { CustomDatePicker, CustomFormItem, CustomInput, CustomSelect, Option } from '../../../../components';
 import CitySelector from '../../../../components/CitySelector';
 import CountySelector from '../../../../components/CountySelector';
 import CustomNumberInputWithDot from '../../../../components/CustomNumberInputWithDot';
@@ -21,18 +14,18 @@ import {
   graduationStatus,
   isReligiousCultureCourseMust,
   parentNotificationStatus,
+  userTypeCode,
   yksExperienceInformation,
 } from '../../../../constants/users';
 import { getGraduationYears } from '../../../../store/slice/graduationYearsSlice';
 
-const OptionalUserInformationFormSection = ({ form }) => {
+const OptionalUserInformationFormSection = ({ form, selectedUserTypeCode }) => {
   const dispatch = useDispatch();
   const graduationYears = useSelector((state) => state?.graduationYears?.graduationYears);
   const [selectedCityId, setSelectedCityId] = useState();
   const [dateOfBirth, setDateOfBirth] = useState();
   const [graduationStatusId, setGraduationStatusId] = useState();
   const [educationLevelId, setEducationLevelId] = useState();
-  const userType = Form.useWatch('UserType', form);
 
   const onCityChange = (value) => {
     setSelectedCityId(value);
@@ -55,7 +48,7 @@ const OptionalUserInformationFormSection = ({ form }) => {
 
   return (
     <>
-      {userType === 1 && (
+      {selectedUserTypeCode === userTypeCode.student && (
         <CustomFormItem
           label="Doğum Yeri/Tarihi"
           style={{
@@ -92,9 +85,9 @@ const OptionalUserInformationFormSection = ({ form }) => {
         </CustomFormItem>
       )}
 
-      {is18 && userType === 1 && (
+      {is18 && selectedUserTypeCode === userTypeCode.student && (
         <CustomFormItem label="Veli Bildirim Durumu" name="notificationStatus">
-          <CustomSelect placeholder="Seçiniz..." optionFilterProp="children">
+          <CustomSelect disabled placeholder="Seçiniz..." optionFilterProp="children">
             {parentNotificationStatus.map((item) => (
               <Option key={item.id} value={item.id}>
                 {item.value}
@@ -104,7 +97,7 @@ const OptionalUserInformationFormSection = ({ form }) => {
         </CustomFormItem>
       )}
 
-      {userType === 1 && (
+      {selectedUserTypeCode === userTypeCode.student && (
         <CustomFormItem
           label="Yaşadığı İl-İlçe"
           style={{
@@ -144,13 +137,13 @@ const OptionalUserInformationFormSection = ({ form }) => {
         </CustomSelect>
       </CustomFormItem>
 
-      {userType === 1 && (
+      {selectedUserTypeCode === userTypeCode.student && (
         <CustomFormItem label="Nickname" name="nickName">
           <CustomInput disabled placeholder="Nickname" />
         </CustomFormItem>
       )}
 
-      {userType === 1 && (
+      {selectedUserTypeCode === userTypeCode.student && (
         <>
           <CustomFormItem label="Cinsiyet" name="gender">
             <CustomSelect placeholder="Seçiniz..." allowClear optionFilterProp="children">
@@ -178,7 +171,7 @@ const OptionalUserInformationFormSection = ({ form }) => {
         </>
       )}
 
-      {graduationStatusId === 1 && userType === 1 && (
+      {graduationStatusId === 1 && selectedUserTypeCode === userTypeCode.student && (
         <>
           <CustomFormItem label="Mezuniyet Yılı" name="graduationYear">
             <CustomSelect allowClear placeholder="Seçiniz..." optionFilterProp="children">
@@ -212,7 +205,7 @@ const OptionalUserInformationFormSection = ({ form }) => {
         </>
       )}
 
-      {graduationStatusId === 2 && userType === 1 && (
+      {graduationStatusId === 2 && selectedUserTypeCode === userTypeCode.student && (
         <CustomFormItem label="Eğitim Seviyesi" name="educationLevel">
           <CustomSelect
             onChange={onChangeEducationLevel}
@@ -229,7 +222,7 @@ const OptionalUserInformationFormSection = ({ form }) => {
         </CustomFormItem>
       )}
 
-      {educationLevelId === 3 && userType === 1 && (
+      {educationLevelId === 3 && selectedUserTypeCode === userTypeCode.student && (
         <CustomFormItem label="YKS Deneyim Bilgisi" name="yksExperienceInformation">
           <CustomSelect placeholder="Seçiniz..." optionFilterProp="children">
             {yksExperienceInformation?.map((item) => (
@@ -240,9 +233,9 @@ const OptionalUserInformationFormSection = ({ form }) => {
           </CustomSelect>
         </CustomFormItem>
       )}
-      {userType === 1 && <SchoolSelector form={form} />}
+      {selectedUserTypeCode === userTypeCode.student && <SchoolSelector form={form} />}
 
-      {userType === 1 && graduationStatusId === 1 && (
+      {selectedUserTypeCode === userTypeCode.student && graduationStatusId === 1 && (
         <CustomFormItem label="Alan" name="field">
           <CustomSelect placeholder="Seçiniz..." optionFilterProp="children">
             {field?.map((item) => (
@@ -254,11 +247,8 @@ const OptionalUserInformationFormSection = ({ form }) => {
         </CustomFormItem>
       )}
 
-      {(graduationStatusId === 1 || educationLevelId === 3) && userType === 1 && (
-        <CustomFormItem
-          label="Din Kültürü Dersi Zorunluluk Bilgisi"
-          name="isReligiousCultureCourseMust"
-        >
+      {(graduationStatusId === 1 || educationLevelId === 3) && selectedUserTypeCode === userTypeCode.student && (
+        <CustomFormItem label="Din Kültürü Dersi Zorunluluk Bilgisi" name="isReligiousCultureCourseMust">
           <CustomSelect placeholder="Seçiniz..." optionFilterProp="children">
             {isReligiousCultureCourseMust?.map((item) => (
               <Option key={item?.id} value={item?.id}>

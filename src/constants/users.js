@@ -1,25 +1,16 @@
-export const userType = [
-  {
-    id: 1,
-    value: 'Öğrenci',
-  },
-  {
-    id: 2,
-    value: 'Veli',
-  },
-  {
-    id: 3,
-    value: 'Yakını',
-  },
-];
+export const userTypeCode = {
+  student: 'StudentUserType',
+  parent: 'ParentUserType',
+  relative: 'RelativeUserType',
+};
 
 export const packagePurchaseStatus = [
   {
-    id: 1,
+    id: true,
     value: 'Var',
   },
   {
-    id: 2,
+    id: false,
     value: 'Yok',
   },
 ];

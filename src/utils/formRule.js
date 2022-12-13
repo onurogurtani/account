@@ -41,8 +41,8 @@ export const formMailRegex = async (field, value) => {
 
 export const tcknValidator = async (field, value) => {
   try {
-    console.log(value);
-    const _value = value.toString().replaceAll('_', '');
+    let _value = value;
+    _value = _value && value.toString().replaceAll('_', '');
     if (!value || (_value.length === 11 && _value >= 10000000000)) {
       return Promise.resolve();
     }

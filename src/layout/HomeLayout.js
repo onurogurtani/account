@@ -39,16 +39,16 @@ const HomeLayout = ({ children }) => {
   const idleTimer = useIdleTimer({
     timeout: 1000 * 60 * sessionModalMinutes?.sessionMinutes,
     onIdle: () => {
-      console.log('modal açıldı.');
+      persistLogin(dispatch, false);
       idleTimer?.pause();
       setVisible(true);
     },
     onActive: () => {
-      console.log('hareket var');
+      // console.log('hareket var');
       idleTimer?.start();
     },
     onAction: () => {
-      console.log('hareket var');
+      // console.log('hareket var');
       idleTimer?.start();
     },
     debounce: 250,
