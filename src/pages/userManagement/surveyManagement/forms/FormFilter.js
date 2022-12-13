@@ -68,18 +68,16 @@ const FormFilter = () => {
   const handleSearch = useCallback(async () => {
     try {
       const values = await form.validateFields();
-      console.log(values);
 
       const body = {
         Name: values?.name || null,
         PublishStatus:publishEnum[values.status],
-        CategoryId: values.categoryId || null,
+        CategoryOfFormId: values.categoryId || null,
         StartDate: values?.startDate
           ? dayjs(values?.startDate)?.format('YYYY-MM-DDT00:00:00')
           : undefined,
         EndDate: values?.endDate && dayjs(values?.endDate)?.format('YYYY-MM-DDT23:59:59'),
       };
-      console.log(body)
 
       await dispatch(getFilteredPagedForms({ ...filterObject, ...body }));
     } catch (e) {

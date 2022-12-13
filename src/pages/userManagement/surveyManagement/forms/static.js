@@ -1,8 +1,8 @@
 import { Button } from 'antd';
-import {  RightOutlined } from '@ant-design/icons';
+import { RightOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
-// AŞAĞIDki data nın temizlenmesi gerekebilir: 
+
 const data = [
   {
     id: 1,
@@ -135,19 +135,13 @@ const sortList = [
     key: 'isPublished',
     ascend: 'IsPublishedASC',
     descend: 'IsPublishedDESC',
-
   },
   {
     key: 'description',
     ascend: 'DescriptionASC',
     descend: 'DescriptionDESC',
-  }
-
-  
-  
+  },
 ];
-
-
 
 const columns = [
   {
@@ -162,7 +156,6 @@ const columns = [
     dataIndex: 'name',
     key: 'name',
     sorter: true,
-    
   },
   {
     title: 'Durum',
@@ -175,13 +168,11 @@ const columns = [
   },
   {
     title: 'Kategori',
-    dataIndex: 'subCategory',
-    key: 'subCategory',
+    dataIndex: 'categoryOfForm',
+    key: 'categoryOfForm',
     sorter: true,
-    render: (subCategory
-      ) => {
-      return subCategory
-      ?.name;
+    render: (categoryOfForm) => {
+      return categoryOfForm?.name;
     },
   },
   {
@@ -213,32 +204,58 @@ const columns = [
     title: 'Yayınlanma Durumu',
     dataIndex: 'publishStatus',
     key: 'publishStatus',
-    width:'120px',
+    width: '120px',
     sorter: true,
     render: (publishStatus) => {
-      if(publishStatus==1){
-        return (
-          <span style={{ backgroundColor: '#00a483', borderRadius: '5px', boxShadow: '0 5px 5px 0', padding:'5px',width:'100px', display:'inline-block', textAlign:'center' }}>
-            Yayında
-          </span>
-        ) 
-      }else if(publishStatus==2){
+      if (publishStatus == 1) {
         return (
           <span
-            style={{ backgroundColor: '#ff8c00', borderRadius: '5px', boxShadow: '0 5px 5px 0', padding:'5px',width:'100px', display:'inline-block', textAlign:'center' }}
+            style={{
+              backgroundColor: '#00a483',
+              borderRadius: '5px',
+              boxShadow: '0 5px 5px 0',
+              padding: '5px',
+              width: '100px',
+              display: 'inline-block',
+              textAlign: 'center',
+            }}
+          >
+            Yayında
+          </span>
+        );
+      } else if (publishStatus == 2) {
+        return (
+          <span
+            style={{
+              backgroundColor: '#ff8c00',
+              borderRadius: '5px',
+              boxShadow: '0 5px 5px 0',
+              padding: '5px',
+              width: '100px',
+              display: 'inline-block',
+              textAlign: 'center',
+            }}
           >
             Yayında değil
           </span>
         );
-      }else{
+      } else {
         return (
           <span
-            style={{ backgroundColor: '#fcec03', borderRadius: '5px', boxShadow: '0 5px 5px 0', padding:'5px',width:'100px', display:'inline-block', textAlign:'center' }}
+            style={{
+              backgroundColor: '#fcec03',
+              borderRadius: '5px',
+              boxShadow: '0 5px 5px 0',
+              padding: '5px',
+              width: '100px',
+              display: 'inline-block',
+              textAlign: 'center',
+            }}
           >
             Taslak
           </span>
         );
-      }  
+      }
     },
   },
   {
@@ -252,11 +269,13 @@ const columns = [
         <Button
           style={{
             padding: '0 5px',
-            border:'none'
-
+            border: 'none',
           }}
         >
-          <span style={{margin:'0',marginTop:'-20px', fontSize:'25px', padding:'0' }} > <RightOutlined /></span>
+          <span style={{ margin: '0', marginTop: '-20px', fontSize: '25px', padding: '0' }}>
+            {' '}
+            <RightOutlined />
+          </span>
         </Button>
       );
     },

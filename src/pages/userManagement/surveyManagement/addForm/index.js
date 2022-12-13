@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import { CustomButton, CustomPageHeader, Text } from '../../../../components';
 import AddSurveyTabs from './AddSurveyTabs';
 
-
 const AddSurvey = () => {
   const history = useHistory();
   const [step, setStep] = useState('1');
@@ -37,4 +36,3 @@ const AddSurvey = () => {
 };
 
 export default AddSurvey;
-
