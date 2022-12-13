@@ -9,4 +9,4 @@ const SurveyQuestions = () => {
   )
 }
 
-export default SurveyQuestions
+export default SurveyQuestions;

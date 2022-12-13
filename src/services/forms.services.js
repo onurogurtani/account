@@ -1,11 +1,89 @@
 import { api } from './api';
+//ADD NEW FORM
+const addNewForm = (data) => {
+  return api({
+    url: `Forms`,
+    method: 'POST',
+    data,
+  });
+};
+const updateForm = (data) => {
+  return api({
+    url: `Forms`,
+    method: 'PUT',
+    data,
+  });
+};
+
+const addNewGroupToForm = (data) => {
+  return api({
+    url: `GroupOfQuestions`,
+    method: 'POST',
+    data,
+  });
+};
+const updateGroupOfForm = (data) => {
+  return api({
+    url: `GroupOfQuestions`,
+    method: 'PUT',
+    data,
+  });
+};
+const deleteGroupOfForm = (data) => {
+  return api({
+    url: `GroupOfQuestions?id=${data}`,
+    method: 'DELETE',
+  });
+};
+const getGroupsOfForm = (data) => {
+  return api({
+    url: `GroupOfQuestions/getList?PageNumber=1&PageSize=1000`,
+    method: 'POST',
+    data: [], // BURADA GEÇİCİ OLARAK BOŞ ARRAY YAZILDI, FORM ID si gönderebilmem lazım
+  });
+}; // burada aslında tüm gruplar geliyor;
+const addNewQuestionToForm = (data) => {
+  return api({
+    url: `Questions/AddWithGroupId`,
+    method: 'POST',
+    data,
+  });
+};
+const addNewQuestionToGroup = (data) => {
+  return api({
+    url: `QuestionGroupOfQuestions`,
+    method: 'POST',
+    data,
+  });
+};
+const updateQuestion = (data) => {
+  return api({
+    url: `FormQuestions`,
+    method: 'PUT',
+    data,
+  });
+};
+const getAllQuestionsOfForm = (data) => {
+  return api({
+    url: `FormQuestions/getByFormIdQuestions`,
+    method: 'POST',
+    data,
+  });
+};
+const deleteQuestion = (data) => {
+  return api({
+    url: `FormQuestions?id=${data.id}`,
+    method: 'DELETE',
+    data,
+  });
+};
 
 //BU AŞAMADA SADECE FORMLARIN FİLTER OBJECT İLE FİLTRELENEREK(FİLTER OBJECT NULL OLABİLİR) FORMLARIN ÇEŞİTLİ SIRALAMA KRİTERLERİNE GÖRE ASC/DESC SIRALANMASI İÇİN AŞAĞIDAKİ SERVİS İŞİMİZİ GÖRÜYOR:
 
 const getByFilterPagedForms = (urlString) => {
   return api({
     url: `Forms/GetByFilterPagedForms?${urlString}`,
-    method: 'POST'
+    method: 'POST',
   });
 };
 
@@ -13,9 +91,17 @@ const getByFilterPagedForms = (urlString) => {
 
 const getFormCategories = () => {
   return api({
-    url: `SubCategory/GetByFilterPagedSubCategories?SubCategoryDetailSearch.PageNumber=1&SubCategoryDetailSearch.PageSize=1000`,
+    url: `CategoryOfForms/getList`,
     method: 'POST',
-    data:''
+    data: [],
+  });
+};
+
+const getFormPackages = () => {
+  return api({
+    url: `Packages/getList`,
+    method: 'POST',
+    data: [],
   });
 };
 
@@ -37,20 +123,10 @@ const getSurveyConstraint = (data) => {
   });
 };
 
-// Add Form
-const addForm = (data) => {
+const updateQuestionsOrder = (data) => {
   return api({
-    url: `Forms`,
+    url: `FormQuestions/updateQuestionsOrder`,
     method: 'POST',
-    data,
-  });
-};
-
-// Update Form
-const updateForm = (data) => {
-  return api({
-    url: `Forms`,
-    method: 'PUT',
     data,
   });
 };
@@ -81,17 +157,36 @@ const formPassive = (data) => {
     data,
   });
 };
+const setScore = (data) => {
+  return api({
+    url: `FormQuestions/setScore`,
+    method: 'POST',
+    data,
+  });
+};
 
 const formServices = {
+  deleteQuestion,
+  setScore,
+  deleteGroupOfForm,
   getByFilterPagedForms,
   getFormCategories,
+  getFormPackages,
   getTargetGroup,
   getSurveyConstraint,
-  addForm,
   updateForm,
   formActive,
   formPassive,
   formDelete,
+  addNewForm,
+  addNewGroupToForm,
+  updateGroupOfForm,
+  getGroupsOfForm,
+  addNewQuestionToForm,
+  addNewQuestionToGroup,
+  updateQuestion,
+  getAllQuestionsOfForm,
+  updateQuestionsOrder,
 };
 
 export default formServices;

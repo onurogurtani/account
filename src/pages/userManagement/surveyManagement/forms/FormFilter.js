@@ -19,12 +19,6 @@ import iconSearchWhite from '../../../../assets/icons/icon-white-search.svg';
 import '../../../../styles/surveyManagement/surveyFilter.scss';
 import dayjs from 'dayjs';
 
-// const categoryList = [
-//   { id: 1, categoryName: 'Eğitimden Önce' },
-//   { id: 2, categoryName: 'Eğitimden Sonra' },
-//   { id: 3, categoryName: 'String' },
-// ];
-
 const publishSituation = [
   { id: 1, value: 'Yayında'},
   { id: 2,  value: 'Yayında değil'},
@@ -52,10 +46,8 @@ const FormFilter = () => {
     dispatch(getFormCategories());
   }, [dispatch]);
   
-  console.log(formCategories);
 
   const handleClear = useCallback(async () => {
-    console.log(filterObject);
     form.resetFields();
     form.resetFields(['CategoryId']);
     const body = {
@@ -65,7 +57,6 @@ const FormFilter = () => {
       InsertEndDate: '',
       InsertStartDate: '',
     };
-    console.log(body);
     await dispatch(
       getFilteredPagedForms({
         ...filterObject,
@@ -79,9 +70,6 @@ const FormFilter = () => {
       const values = await form.validateFields();
       console.log(values);
 
-      // if (values.status != null || values.status != undefined) {
-      //   var Status = [values.status];
-      // }
       const body = {
         Name: values?.name || null,
         PublishStatus:publishEnum[values.status],
@@ -91,11 +79,10 @@ const FormFilter = () => {
           : undefined,
         EndDate: values?.endDate && dayjs(values?.endDate)?.format('YYYY-MM-DDT23:59:59'),
       };
+      console.log(body)
 
-      console.log({ ...filterObject, ...body });
       await dispatch(getFilteredPagedForms({ ...filterObject, ...body }));
     } catch (e) {
-      console.log(e);
     }
   }, [dispatch, filterObject, form]);
 

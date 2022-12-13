@@ -1,360 +1,526 @@
 // Question List
 .draft-list-card {
-    .operations-buttons {
-      display: flex;
-      justify-content: space-between;
+  .operations-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 17px 24px 17px;
+
+    .add-btn {
+      width: 217px !important;
+      background: #00a483 !important;
+      // height: 36px;
+      font-size: 14px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      letter-spacing: normal;
+      text-align: center;
+      color: #fff;
+      border-radius: 6px;
+      line-height: 0.86;
+      padding: 9px 16px;
+
+      img {
+        margin-right: 10px;
+      }
+    }
+    .search-btn {
+      width: 60px;
+      // height: 36px;
+      display: inline-flex;
       align-items: center;
-      padding: 17px 24px 17px;
-  
-      .add-btn {
-          width: 217px !important;
-          background: #00a483 !important;
-          // height: 36px;
-          font-size: 14px;
-          font-weight: 500;
-          font-stretch: normal;
-          font-style: normal;
-          letter-spacing: normal;
-          text-align: center;
-          color: #fff;
-          border-radius: 6px;
-          line-height: 0.86;
-          padding: 9px 16px;
-    
-          img {
-            margin-right: 10px;
+      justify-content: center;
+      background-color: #3f4957;
+      color: #fff;
+      font-size: 14px;
+      line-height: 20px;
+      font-family: UbuntuMedium, sans-serif;
+      border-radius: 10px;
+    }
+  }
+  tbody tr {
+    cursor: pointer;
+  }
+}
+
+.labelContainer {
+  // border: 2px solid pink;
+}
+
+// Question Modals
+@mixin choise-form {
+  .answers-title {
+    margin-bottom: 25px;
+  }
+
+  .answers {
+    input {
+      width: 80%;
+      margin-right: 10px;
+      margin-bottom: 20px;
+    }
+    .ant-form-item-control-input-content {
+      display: grid;
+      grid-template-columns: 85% 15%;
+      grid-gap: 10px;
+    }
+
+    button {
+      height: 36px;
+    }
+  }
+
+  .add-answer {
+    button {
+      height: 36px;
+    }
+  }
+}
+
+// Modal
+.survey-modal {
+  width: 1100px !important;
+
+  .survey-form {
+    .survey-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 0;
+
+      label {
+        // min-width: 100px;
+        height: 22px;
+        margin: 0 0 12px 0;
+        width: 100%;
+        font-size: 16px;
+        font-weight: 500;
+        font-family: UbuntuMedium, sans-serif;
+      }
+      .form-left-side {
+        width: 100%;
+        margin: 16px 0;
+
+        Input {
+          border: 2pxx solid pink;
+          width: 97.3%;
+          margin-right: 1.5em !important;
+          margin-left: 1.5em;
+        }
+      }
+
+      .form-right-side {
+        width: 100%;
+        margin: 16px 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        .quillContainer {
+          padding: 0;
+          margin: 0;
+          min-height: 250px;
+          display: flex;
+          flex-direction: row;
+          align-content: space-between;
+          .questionTextQuill {
+            margin: 0;
+            height: 200px !important;
           }
         }
-        .search-btn {
-          width: 60px;
-          // height: 36px;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          background-color: #3f4957;
-          color: #fff;
-          font-size: 14px;
-          line-height: 20px;
-          font-family: UbuntuMedium, sans-serif;
-          border-radius: 10px;
-        }
       }
-      tbody tr {
-        cursor: pointer;
-      }
-  }
-  
-  // Question Modals
-  @mixin choise-form {
-    .answers-title {
-      margin-bottom: 25px;
-    }
-  
-    .answers {
-      input {
-        width: 80%;
-        margin-right: 10px;
-        margin-bottom: 20px;
-      }
-      .ant-form-item-control-input-content {
-        display: grid;
-        grid-template-columns: 85% 15%;
-        grid-gap: 10px;
-      }
-  
-      button {
-        height: 36px;
-      }
-    }
-  
-    .add-answer {
-      button {
-        height: 36px;
-      }
-    }
-  }
-  
-  // Modal
-  .survey-modal {
-    width: 1100px !important;
-  
-    .survey-form {
-      .survey-content {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        align-items: flex-start;
-        grid-gap: 25px;
-  
-        label {
-          min-width: 100px;
-          height: 22px;
-          margin: 0 0 12px 0;
+      .answersContainer {
+        padding: 0;
+        margin: 0 -16px;
+        top: 1rem;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        .answers-title {
           width: 100%;
-          font-size: 16px;
-          font-weight: 500;
-          font-family: UbuntuMedium, sans-serif;
+          display: flex;
+
+          justify-content: flex-start;
+          padding: 5px 0;
         }
-  
-        .form-right-side {
-          margin-l .answer-form-item {
+        .answers {
+          margin: 0;
+          padding: 0;
+          width: 100%;
+          flex-direction: column;
+          display: flex;
+          justify-content: flex-start;
+          .choice-Container {
             display: flex;
             flex-direction: row;
+            .inputContainer {
+              padding: 0;
+              width: 100% !important;
+              .answerInput {
+                width: 100% !important;
+                margin: 0;
+              }
+            }
           }
         }
       }
-  
-      .form-buttons {
-        text-align: right;
-  
-        button {
-          height: 50px;
-  
-          &:first-child {
-            margin-right: 20px;
-          }
-  
-          &:last-child {
-            background: #699a00;
-            color: #fff;
-            border-color: #699a00;
-          }
+    }
+
+    .form-buttons {
+      text-align: right;
+
+      button {
+        height: 50px;
+
+        &:first-child {
+          margin-right: 20px;
+        }
+
+        &:last-child {
+          background: #699a00;
+          color: #fff;
+          border-color: #699a00;
         }
       }
-  
-      .ql-container {
-        min-height: 100px;
-      }
-      .likert-input {
-        width: 80%;
+    }
+
+    .ql-container {
+      min-height: 100px;
+    }
+    .likert-input {
+      width: 80%;
+      margin-right: 10px;
+      margin-bottom: 20px;
+    }
+  }
+
+  .one-choice-question-link-form,
+  .multiple-choice-question-link-form {
+    @include choise-form;
+  }
+
+  .open-ended-question-link-form,
+  .likert-choice-question-link-form,
+  .fill-in-the-blank-question-link-form,
+  .one-choice-question-link-form,
+  .multiple-choice-question-link-form {
+    .ant-select-selector {
+      height: 36px;
+      font-size: 16px;
+      padding-left: 16px;
+      font-family: UbuntuRegular;
+      color: #3f4957;
+      border-radius: 4px;
+    }
+  }
+
+  .fill-in-the-blank-question-link-form {
+    .blank-add-buttons {
+      float: right;
+      margin-bottom: 25px;
+      .add-blank-btn {
         margin-right: 10px;
-        margin-bottom: 20px;
+        margin-top: 0;
       }
     }
-  
-    .one-choice-question-link-form,
-    .multiple-choice-question-link-form {
-      @include choise-form;
+  }
+
+  // Likert Modal
+
+  // Star Rating
+  $stars: 5;
+  $star-size: 40px;
+  $star-spacing: 2px;
+  $star-on-color: #f9df4a;
+  $star-off-color: #cccccc;
+
+  .star-rating {
+    width: 100%;
+    height: 100px;
+
+    label {
+      float: right !important;
+      position: relative !important;
+      width: $star-size !important;
+      height: $star-size !important;
+      cursor: pointer !important;
+      min-width: auto !important;
+
+      &:not(:first-of-type) {
+        padding-right: $star-spacing;
+      }
+
+      &:before {
+        content: '\2605';
+        font-size: $star-size + 2px;
+        color: $star-off-color;
+        line-height: 1;
+      }
     }
-  
-    .open-ended-question-link-form,
-    .likert-choice-question-link-form,
-    .fill-in-the-blank-question-link-form,
-    .one-choice-question-link-form,
-    .multiple-choice-question-link-form {
-      .ant-select-selector {
+
+    input {
+      display: none;
+    }
+
+    input:checked ~ label:before,
+    &:not(:checked) > label:hover:before,
+    &:not(:checked) > label:hover ~ label:before {
+      color: $star-on-color;
+    }
+  }
+
+  // Emoji Rating
+  .emoji-rating {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .emoji-rating input {
+    display: none;
+  }
+
+  .emoji-rating label {
+    position: relative !important;
+    width: 0 !important;
+    height: 128px !important;
+    cursor: pointer;
+
+    img {
+      width: 75px;
+      opacity: 0.2;
+      transition: all 0.5s ease;
+    }
+  }
+
+  .emoji-rating input:hover + label img,
+  .emoji-rating input:checked + label img {
+    opacity: 1;
+  }
+
+  .scoresContainer {
+    display: flex;
+    flex-direction: row;
+    align-content: flex-start;
+    .score {
+      padding: 0 2rem;
+      min-height: 100px;
+
+      .ant-form-item-label > label {
+        top: 0;
+        height: 48px;
+        display: inline;
+        font-size: 1.5em;
+        font-weight: lighter;
+        min-width: 10px !important;
+        text-align: center;
+      }
+      Input {
+        font-size: 1.5em;
+      }
+    }
+  }
+  .fill-in-the-blank-question-link-form {
+    .add-blank-btn {
+      margin-top: 15px;
+      height: 36px;
+    }
+  }
+}
+
+// Sort Modal
+.sort-modal {
+  .sort-list-container {
+    .sort-buttons {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .sort-btn {
+        margin-top: 10px;
         height: 36px;
+      }
+
+      .active {
+        background-color: #3f4957;
+        color: #fff;
+      }
+    }
+
+    .form-buttons {
+      margin-top: 30px;
+      text-align: center;
+
+      button {
+        height: 50px;
+
+        &:first-child {
+          margin-right: 20px;
+        }
+      }
+    }
+  }
+}
+
+// Filter Modal
+.filter-modal {
+  .filter-list-container {
+    .data-filter-form-content {
+      label {
+        min-width: 170px;
+      }
+
+      .ant-select-selector {
+        min-height: 36px;
         font-size: 16px;
-        padding-left: 16px;
+        padding: 10px 16px;
         font-family: UbuntuRegular;
         color: #3f4957;
         border-radius: 4px;
-      }
-    }
-  
-    .fill-in-the-blank-question-link-form {
-      .blank-add-buttons {
-        float: right;
-        margin-bottom: 25px;
-        .add-blank-btn {
-          margin-right: 10px;
-          margin-top: 0;
-        }
-      }
-    }
-  
-    // Likert Modal
-  
-    // Star Rating
-    $stars: 5;
-    $star-size: 40px;
-    $star-spacing: 2px;
-    $star-on-color: #f9df4a;
-    $star-off-color: #cccccc;
-  
-    .star-rating {
-      width: 100%;
-      height: 100px;
-  
-      label {
-        float: right !important;
-        position: relative !important;
-        width: $star-size !important;
-        height: $star-size !important;
-        cursor: pointer !important;
-        min-width: auto !important;
-  
-        &:not(:first-of-type) {
-          padding-right: $star-spacing;
-        }
-  
-        &:before {
-          content: '\2605';
-          font-size: $star-size + 2px;
-          color: $star-off-color;
-          line-height: 1;
-        }
-      }
-  
-      input {
-        display: none;
-      }
-  
-      input:checked ~ label:before,
-      &:not(:checked) > label:hover:before,
-      &:not(:checked) > label:hover ~ label:before {
-        color: $star-on-color;
-      }
-    }
-  
-    // Emoji Rating
-    .emoji-rating {
-      position: relative;
-      display: flex;
-    }
-  
-    .emoji-rating input {
-      display: none;
-    }
-  
-    .emoji-rating label {
-      position: relative !important;
-      width: 0 !important;
-      height: 128px !important;
-      cursor: pointer;
-  
-      img {
-        width: 75px;
-        opacity: 0.2;
-        transition: all 0.5s ease;
-      }
-    }
-  
-    .emoji-rating input:hover + label img,
-    .emoji-rating input:checked + label img {
-      opacity: 1;
-    }
-  
-    .fill-in-the-blank-question-link-form {
-      .add-blank-btn {
-        margin-top: 15px;
-        height: 36px;
-      }
-    }
-  }
-  
-  // Sort Modal
-  .sort-modal {
-    .sort-list-container {
-      .sort-buttons {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-  
-        .sort-btn {
-          margin-top: 10px;
-          height: 36px;
-        }
-  
-        .active {
-          background-color: #3f4957;
-          color: #fff;
-        }
-      }
-  
-      .form-buttons {
-        margin-top: 30px;
-        text-align: center;
-  
-        button {
-          height: 50px;
-  
-          &:first-child {
-            margin-right: 20px;
-          }
-        }
-      }
-    }
-  }
-  
-  // Filter Modal
-  .filter-modal {
-    .filter-list-container {
-      .data-filter-form-content {
-        label {
-          min-width: 170px;
-        }
-  
-        .ant-select-selector {
-          min-height: 36px;
-          font-size: 16px;
-          padding: 10px 16px;
-          font-family: UbuntuRegular;
+
+        span {
           color: #3f4957;
-          border-radius: 4px;
-  
-          span {
-            color: #3f4957;
-          }
-        }
-      }
-  
-      .form-buttons {
-        margin-top: 30px;
-        text-align: center;
-  
-        button {
-          height: 50px;
-  
-          &:first-child {
-            margin-right: 20px;
-          }
-        }
-  
-        .filter-btn {
-          border-radius: 4px;
-          background: #00a483;
-          color: white;
-          border-color: #00a483;
         }
       }
     }
+
+    .form-buttons {
+      margin-top: 30px;
+      text-align: center;
+
+      button {
+        height: 50px;
+
+        &:first-child {
+          margin-right: 20px;
+        }
+      }
+
+      .filter-btn {
+        border-radius: 4px;
+        background: #00a483;
+        color: white;
+        border-color: #00a483;
+      }
+    }
   }
-  
-  .pagination-container{
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+
+  .custom-pagination {
+    flex-wrap: wrap;
+    .ant-pagination-options-quick-jumper input {
+      margin-left: -20px;
+      margin-right: -40px;
+    }
+    .ant-pagination-options-quick-jumper .go-button {
+      background: #00a483 !important;
+      height: 24px;
+      font-size: 14px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      letter-spacing: normal;
+      text-align: center;
+      color: #fff;
+      border-radius: 6px;
+      line-height: 0.86;
+      margin-left: 12px;
+      margin-right: 12px;
+    }
+    .ant-pagination-options {
+      display: flex;
+      flex-direction: row-reverse;
+    }
+  }
+}
+
+// FOR SHOWING STAR RATING AND EMOJI QUESTIONS
+$stars: 5;
+$star-size: 40px;
+$star-spacing: 2px;
+$star-on-color: #f9df4a;
+$star-off-color: #cccccc;
+
+.star-rating {
+  width: 100%;
+  height: 100px;
+
+  label {
+    float: right !important;
+    position: relative !important;
+    width: $star-size !important;
+    height: $star-size !important;
+    cursor: pointer !important;
+    min-width: auto !important;
+
+    &:not(:first-of-type) {
+      padding-right: $star-spacing;
+    }
+
+    &:before {
+      content: '\2605';
+      font-size: $star-size + 2px;
+      color: $star-off-color;
+      line-height: 1;
+    }
+  }
+
+  input {
+    display: none;
+  }
+
+  input:checked ~ label:before,
+  &:not(:checked) > label:hover:before,
+  &:not(:checked) > label:hover ~ label:before {
+    color: $star-on-color;
+  }
+
+  // Emoji Rating
+  .emoji-rating {
+    position: relative;
     display: flex;
-    justify-content: flex-end;
-    padding: 10px;
-  
-    .custom-pagination {
-      flex-wrap: wrap;
-      .ant-pagination-options-quick-jumper input {
-        margin-left: -20px;
-        margin-right: -40px;
-      }
-      .ant-pagination-options-quick-jumper .go-button {
-        background: #00a483 !important;
-        height: 24px;
-        font-size: 14px;
-        font-weight: 500;
-        font-stretch: normal;
-        font-style: normal;
-        letter-spacing: normal;
-        text-align: center;
-        color: #fff;
-        border-radius: 6px;
-        line-height: 0.86;
-        margin-left: 12px;
-        margin-right: 12px;
-      }
-      .ant-pagination-options {
-        display: flex;
-        flex-direction: row-reverse;
-      }
-    }
-    
-  
-  
+    justify-content: center;
+    align-items: center;
   }
-  
-  
-  
+
+  .emoji-rating input {
+    display: none;
+  }
+
+  .emoji-rating label {
+    position: relative !important;
+    width: 0 !important;
+    height: 128px !important;
+    cursor: pointer;
+
+    img {
+      width: 75px;
+      opacity: 0.2;
+      transition: all 0.5s ease;
+    }
+  }
+
+  .emoji-rating input:hover + label img,
+  .emoji-rating input:checked + label img {
+    opacity: 1;
+  }
+}
+.emoji{
+  width:100px;
+  opacity:0.2
+}
+.emoji:hover{
+  opacity: 1;
+}
+.emoji2{
+  width:100px;
+}

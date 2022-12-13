@@ -1,4 +1,4 @@
-import React, { useState, useCallback , useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {
@@ -6,256 +6,333 @@ import {
   CustomForm,
   CustomFormItem,
   CustomInput,
-  CustomSelect,
   Text,
   successDialog,
   errorDialog,
-  useText,
-  Option
 } from '../../../../../components';
-import { Form, Select } from 'antd';
-import "../../../../../styles/surveyManagement/surveyStyles.scss"
+import { Form, Col, Row } from 'antd';
+import '../../../../../styles/surveyManagement/surveyStyles.scss';
 import { useDispatch } from 'react-redux';
+import {
+  getAllQuestionsOfForm,
+  addNewQuestionToForm,
+  deleteQuestion,
+} from '../../../../../store/slice/formsSlice';
+const alphabet = [
+  'A',
+  'B',
+  'C',
+  'Ç',
+  'D',
+  'E',
+  'F',
+  'G',
+  'Ğ',
+  'H',
+  'I',
+  'İ',
+  'J',
+  'K',
+  'L',
+  'M',
+  'N',
+  'O',
+  'Ö',
+  'P',
+  'R',
+  'S',
+  'Ş',
+  'T',
+  'U',
+  'Ü',
+  'V',
+  'Y',
+  'Z',
+];
+const initialValues = {
+  headText: 'string',
+  text: 'string',
+  tags: 'string',
+  isActive: true,
+  questionTypeId: 3,
+  likertTypeId: 2,
+  choices: [
+    {
+      text: '',
+      score: 1,
+    },
+    {
+      text: '',
+      score: 1,
+    },
+  ],
+};
 
-
-const MultipleChoiseQuestion = ({ handleModalVisible , selectedQuestion , addQuestions , updateQuestions,  setIsEdit, setSelectedQuestion , isEdit }) => {
-
-
+const OneChoiseQuestion = ({
+  addQuestions,
+  updateQuestions,
+  setQuestionModalVisible,
+  setSelectedQuestionType,
+  selectedQuestion,
+  isEdit,
+  setIsEdit,
+  setSelectedQuestion,
+  currentForm,
+  groupKnowledge,
+  questionKnowledge,
+}) => {
   const [form] = Form.useForm();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const handleClose = () => {
-    setIsEdit(false)
-    setSelectedQuestion("")
+  useEffect(() => {}, [questionKnowledge]);
+
+  const handleClose = async () => {
     form.resetFields();
-    handleModalVisible(false);
+    setQuestionModalVisible(false);
+    await dispatch(getAllQuestionsOfForm({ formId: currentForm.id }));
+  };
+
+  const [formObj, setFormObj] = useState({ ...initialValues });
+
+  const defineInitialObj = async () => {
+    for (let i = 0; i < questionKnowledge?.choices.length; i++) {
+      initialValues.choices[i].text = questionKnowledge?.choices[i].text;
+      initialValues.choices[i].score = Number(questionKnowledge?.choices[i].score);
+    }
+    initialValues.text = questionKnowledge.text;
+    form.setFieldsValue({ ...initialValues });
+    setFormObj(initialValues);
   };
   useEffect(() => {
-    if (selectedQuestion) {
-      let newArr = [...answers]
-      selectedQuestion.choices?.forEach((el, idx) => {
-        newArr[idx].marker = el.marker
-        newArr[idx].text = el.text
-        newArr[idx].active = true
-      })
-      setAnswers(newArr)
+    if (isEdit) {
+      defineInitialObj();
     }
-  }, [])
+  }, [questionKnowledge]);
 
+  const onFinish = useCallback(async () => {
+    let questionType = {
+      name: 'Tek Seçimli Soru',
+      id: 2,
+    };
+    const values = await form.validateFields();
+    let choices = values.choices;
+    for (let i = 0; i < choices.length; i++) {
+      choices[i].marker = alphabet[i];
+    }
+    values.choices = choices;
+    values.questionType = questionType;
+    initialValues.text = values.text;
+    initialValues.choices = values.choices;
+    initialValues.groupId = groupKnowledge.id;
+    let data = {};
+    data.questionWithGroupIdDto = initialValues;
 
-  const onFinish = useCallback(
-    async (values) => {
-      let newArr = answers.filter((answer) => (answer.text !== "" && answer.active === true))
-      let arrangedArr = []
-      newArr.forEach((el) => {
-        let newObj = { marker: el.marker, text: el.text }
-        arrangedArr.push(newObj)
-      })
-      values.choices = arrangedArr
-      const formvalues = {
-        "entity":
-        {
-          "headText": values.headText,
-          "isActive": values.isActive,
-          "questionTypeId": 3,
-          "tags": values.tags,
-          "text": values.text,
-          "choices": values.choices
-        }
+    const action = await dispatch(addNewQuestionToForm(data));
+    if (addNewQuestionToForm.fulfilled.match(action)) {
+      if (isEdit) {
+        let deleteData = { id: questionKnowledge.formQuestionId };
+        await dispatch(deleteQuestion(deleteData));
       }
-        if (
-          !!values.headText && 
-          !!values.tags && 
-          !!values.text && 
-          values.text !== "<p><br></p>" && 
-          !!values.choices && 
-          values.choices.length > 0)  {
-          if(isEdit){
-            formvalues.entity.id =selectedQuestion.id 
-            const action1 = await dispatch(updateQuestions(formvalues));
-            if (updateQuestions.fulfilled.match(action1)) {
-                successDialog({
-                    title: <Text t='success' />,
-                    message: action1?.payload?.message,
-                    onOk: async () => {
-                       handleClose()
-                    },
-                });
-            } else {
-                errorDialog({
-                    title: <Text t='error' />,
-                    message: action1?.payload?.message,
-                });
-            }
-          } else {
-            const action = await dispatch(addQuestions(formvalues));
-            if (addQuestions.fulfilled.match(action)) {
-                successDialog({
-                    title: <Text t='success' />,
-                    message: action?.payload?.message,
-                    onOk: async () => {
-                       handleClose()
-                    },
-                });
-            } else {
-                errorDialog({
-                    title: <Text t='error' />,
-                    message: action?.payload?.message,
-                });
-            }
-          }
-        } else {
-            errorDialog({
-                title: <Text t='error' />,
-                message: 'Lütfen tüm alanları doldurunuz.',
-            });
-        }
-    },
-    [dispatch, handleModalVisible],
-  );
-
-
-
-
-
-  const [answers, setAnswers] = useState([
-    {
-      marker: 'A',
-      text: "",
-      active: true
-    },
-    {
-      marker: 'B',
-      text: "",
-      active: true
-    },
-    {
-      marker: 'C',
-      text: "",
-      active: false
-    },
-    {
-      marker: 'D',
-      text: "",
-      active: false
-    },
-    {
-      marker: 'E',
-      text: "",
-      active: false
-    },
-  ])
-
-  const deleteAnswer = (idx) => {
-    let newArr = [...answers]
-    newArr[idx].active = false
-    setAnswers(newArr)
-  }
-
-  const addAnswer = () => {
-
-    let idx = answers.indexOf(answers.find((answer) => {
-      return answer.active === false
-    }))
-    if (idx !== -1) {
-      let newArr = [...answers]
-      newArr[idx].active = true
-      setAnswers(newArr)
+      form.resetFields();
+      successDialog({
+        title: <Text t="success" />,
+        message: isEdit ? 'Soru Başarıyla Güncellenmiştir' : 'Soru Başarıyla Eklenmiştir',
+        onOk: async () => {
+          handleClose();
+        },
+      });
+    } else {
+      errorDialog({
+        title: <Text t="error" />,
+        message: action?.payload?.message,
+      });
     }
-  }
-
-  const handleAnswers = (e, idx) => {
-    let newArr = [...answers]
-    newArr[idx].text = e.target.value
-    setAnswers(newArr)
-  }
-
+  }, [dispatch]);
   return (
     <CustomForm
-      name='multipleChoiceQuestionLinkForm'
-      className='multiple-choice-question-link-form survey-form'
+      name="oneChoiceQuestionLinkForm"
+      className="one-choice-question-link-form survey-form"
       form={form}
-      initialValues={isEdit ? selectedQuestion : {isActive: true}}
+      initialValues={initialValues}
       onFinish={onFinish}
-      autoComplete='off'
+      autoComplete="off"
       layout={'horizontal'}
     >
       <div className="survey-content">
         <div className="form-left-side">
-          <CustomFormItem
-            label={<Text t='Soru Başlığı' />}
-            name='headText'
-          >
+          <CustomFormItem label={<Text t="Soru Tipi" />} name="questionType">
             <CustomInput
-              placeholder={useText('Soru Başlığı')}
+              defaultValue={'Çok Seçimli Soru Tipi'}
+              value={'Tek Seçimli Soru'}
               height={36}
+              disabled={true}
             />
           </CustomFormItem>
-          <CustomFormItem
-            label={<Text t='Etiket' />}
-            name='tags'
-          >
-            <CustomInput
-              placeholder={useText('Etiket')}
-              height={36}
-            />
-          </CustomFormItem>
-          <Form.Item
-            label="Durum:"
-            name="isActive">
-            <Select>
-              <Select.Option value={true}>Aktif</Select.Option>
-              <Select.Option value={false}>Pasif</Select.Option>
-            </Select>
-          </Form.Item>
         </div>
         <div className="form-right-side">
           <CustomFormItem
-            label={<Text t='Soru Metni' />}
-            name='text'
+            label={<Text t="Soru Metni" />}
+            name="text"
+            rules={[
+              {
+                required: true,
+                message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
+              },
+            ]}
           >
             <ReactQuill theme="snow" />
           </CustomFormItem>
-          <div className='answers-title'>
-            <h5>Cevaplar</h5>
+        </div>
+        <div className="answersContainer">
+          <div className="answers-title">
+            <h5 style={{ margin: '0 0 2em 0' }}>Cevaplar</h5>
           </div>
-          <div className='answers'>
-            {
-              answers.map((answer, idx) => {
-                return answer.active === true &&
-                  <div key={idx}>
-                    <CustomInput
-                      height={36}
-                      value={answer.text}
-                      onChange={(e) => handleAnswers(e, idx)}
-                    />
-                    <CustomButton onClick={() => deleteAnswer(idx)}>Sil</CustomButton>
+          <div className="answers">
+            <Form.List name={'choices'}>
+              {(fields, { add, remove }) => (
+                <>
+                  {fields.map(({ key, name, ...restField }, index) => {
+                    return (
+                      <Row
+                        gutter={16}
+                        style={{
+                          margin: '0',
+                          padding: '0',
+                        }}
+                      >
+                        <Col
+                          span={groupKnowledge.scoringType == 2 ? '15' : '20'}
+                          style={{
+                            margin: '0',
+                            padding: '0',
+                          }}
+                        >
+                          <Form.Item
+                            {...restField}
+                            key={key}
+                            label={`${index + 1}.Seçenek`}
+                            validateTrigger={['onChange', 'onBlur']}
+                            name={[name, 'text']}
+                            rules={[
+                              {
+                                required: true,
+                                message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
+                              },
+                            ]}
+                            style={{
+                              margin: '0 0 4rem 0',
+                              padding: '0',
+                            }}
+                          >
+                            <ReactQuill
+                              key={key}
+                              placeholder="Seçenek Metni"
+                              theme="snow"
+                              className="questionTextQuill"
+                              height={100}
+                              style={{
+                                height: '50%',
+                                width: '120%',
+                              }}
+                            />
+                          </Form.Item>
+                        </Col>
+                        {groupKnowledge.scoringType == 2 && (
+                          <Col span={5} style={{}}>
+                            <Form.Item
+                              {...restField}
+                              label={'Puan'}
+                              validateTrigger={['onChange', 'onBlur']}
+                              name={[name, 'score']}
+                              type="number"
+                              style={{
+                                // border:'2px solid red',
+                                marginLeft: '1em',
+                                padding: '0',
+                              }}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
+                                  pattern: new RegExp(/^[0-9]+$/),
+                                },
+                              ]}
+                            >
+                              <CustomInput
+                                key={key}
+                                type="number"
+                                style={{
+                                  width: '75px',
+                                  height: '48px',
+                                }}
+                              />
+                            </Form.Item>
+                          </Col>
+                        )}
+                        <Col span={3}>
+                          <div
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}
+                          >
+                            {fields.length > 2 ? (
+                              <CustomButton
+                                style={{ marginTop: '5px' }}
+                                onClick={() => remove(name)}
+                                type="danger"
+                              >
+                                Sil
+                              </CustomButton>
+                            ) : null}
+                          </div>
+                        </Col>
+                      </Row>
+                    );
+                  })}
+                  <Form.Item
+                    style={{
+                      display: 'flex',
+                      alignContent: 'flex-start',
+                      justifyContent: 'center',
+                      alignContent: 'center',
+                      padding: '0 16px',
+                    }}
+                  >
+                    <div className="add-answer">
+                      <CustomButton
+                        onClick={() => {
+                          add();
+                        }}
+                      >
+                        Cevap Şıkkı Ekle
+                      </CustomButton>
                     </div>
-
-              })
-            }
-            <CustomButton onClick={addAnswer}>Cevap Şıkkı Ekle</CustomButton>
+                  </Form.Item>
+                </>
+              )}
+            </Form.List>
           </div>
         </div>
       </div>
 
-      <div className='form-buttons'>
-        <CustomFormItem className='footer-form-item'>
-          <CustomButton className='cancel-btn' type='danger' onClick={handleClose}>
-            <span className='cancel'>
-              <Text t='Vazgeç' />
+      <div className="form-buttons">
+        <CustomFormItem className="footer-form-item">
+          <CustomButton className="cancel-btn" type="danger" onClick={handleClose}>
+            <span className="cancel">
+              <Text t="Vazgeç" />
             </span>
           </CustomButton>
-          <CustomButton className='submit-btn' type='primary' htmlType='submit'>
-            <span className='submit'>
-              <Text t='Kaydet' />
+          <CustomButton className="submit-btn" type="primary" htmlType="submit">
+            <span className="submit">
+              <Text t="Kaydet" />
             </span>
           </CustomButton>
         </CustomFormItem>
       </div>
-
     </CustomForm>
-  )
-}
+  );
+};
 
-export default MultipleChoiseQuestion
+export default OneChoiseQuestion;
