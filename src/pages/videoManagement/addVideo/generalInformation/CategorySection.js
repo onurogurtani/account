@@ -1,19 +1,21 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomFormItem, CustomSelect, Option } from '../../../../components';
-import { getAllClassStages } from '../../../../store/slice/classStageSlice';
+import { getVideoCategoryList } from '../../../../store/slice/videoSlice';
 
-const ClassroomsSection = ({ form }) => {
+const CategorySection = ({ form }) => {
   const dispatch = useDispatch();
 
-  const { allClassList } = useSelector((state) => state?.classStages);
+  const { categories } = useSelector((state) => state?.videos);
 
   useEffect(() => {
-    loadClassrooms();
+    // if (!Object.keys(categories).length) {
+    loadVideoCategories();
+    // }
   }, []);
 
-  const loadClassrooms = useCallback(async () => {
-    await dispatch(getAllClassStages());
+  const loadVideoCategories = useCallback(async () => {
+    await dispatch(getVideoCategoryList());
   }, [dispatch]);
 
   return (
@@ -25,11 +27,11 @@ const ClassroomsSection = ({ form }) => {
             message: 'Lütfen Zorunlu Alanları Doldurunuz.',
           },
         ]}
-        label="Sınıf Seviyesi"
-        name="classroom"
+        label="Video Kategorisi"
+        name="categoryOfVideoId"
       >
-        <CustomSelect placeholder="Sınıf Seviyesi">
-          {allClassList
+        <CustomSelect placeholder="Video Kategorisi">
+          {categories
             // ?.filter((item) => item.isActive)
             ?.map((item) => {
               return (
@@ -44,4 +46,4 @@ const ClassroomsSection = ({ form }) => {
   );
 };
 
-export default ClassroomsSection;
+export default CategorySection;

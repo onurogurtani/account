@@ -17,88 +17,76 @@ const LessonsSectionForm = ({ form }) => {
 
   useEffect(() => {
     if (!allClassList.length) loadClassrooms();
-    // // if (!Object.keys(lessons).length) {
-    // loadLessons();
-    // // }
-    // // if (!Object.keys(units).length) {
-    // loadUnits();
-    // // }
-    // // if (!Object.keys(lessonSubjects).length) {
-    // loadLessonSubjects();
-    // // }
-    // // if (!Object.keys(lessonSubSubjects).length) {
-    // loadLessonSubSubjects();
-    // // }
   }, []);
 
-  const onClassroomChange = (value) => {
-    setClassroomId(value);
-    const findLessons = lessons.find((i) => i.classroomId === value);
-    if (!findLessons) {
-      loadLessons([
-        {
-          field: 'classroomId',
-          value: value,
-          compareType: 0,
-        },
-      ]);
-    }
-
+  useEffect(() => {
+    if (!classroomId) return false;
     setLessonId();
     setUnitId();
     setLessonSubjectId();
     form.resetFields(['lessonId', 'lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects']);
+    loadLessons([
+      {
+        field: 'classroomId',
+        value: classroomId,
+        compareType: 0,
+      },
+    ]);
+  }, [classroomId]);
+
+  useEffect(() => {
+    if (!lessonId) return false;
+    setUnitId();
+    setLessonSubjectId();
+    form.resetFields(['lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects']);
+    loadUnits([
+      {
+        field: 'lessonId',
+        value: lessonId,
+        compareType: 0,
+      },
+    ]);
+  }, [lessonId]);
+
+  useEffect(() => {
+    if (!unitId) return false;
+    setLessonSubjectId();
+    form.resetFields(['lessonSubjectId', 'lessonSubSubjects']);
+    loadLessonSubjects([
+      {
+        field: 'lessonUnitId',
+        value: unitId,
+        compareType: 0,
+      },
+    ]);
+  }, [unitId]);
+
+  useEffect(() => {
+    if (!lessonSubjectId) return false;
+    form.resetFields(['lessonSubSubjects']);
+    loadLessonSubSubjects([
+      {
+        field: 'lessonSubjectId',
+        value: lessonSubjectId,
+        compareType: 0,
+      },
+    ]);
+  }, [lessonSubjectId]);
+
+  const onClassroomChange = (value) => {
+    setClassroomId(value);
   };
 
   const onLessonChange = (value) => {
     setLessonId(value);
-    //state eklenen ünite ise tekrar request engelliyoruz
-    const findUnits = units.find((i) => i.lessonId === value);
-    if (!findUnits) {
-      loadUnits([
-        {
-          field: 'lessonId',
-          value: value,
-          compareType: 0,
-        },
-      ]);
-    }
-    setUnitId();
-    setLessonSubjectId();
-    form.resetFields(['lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects']);
   };
 
   const onUnitChange = (value) => {
     setUnitId(value);
-    //state eklenen ders başlığı ise tekrar request engelliyoruz
-    const findLessonSubjects = lessonSubjects.find((i) => i.lessonUnitId === value);
-    if (!findLessonSubjects) {
-      loadLessonSubjects([
-        {
-          field: 'lessonUnitId',
-          value: value,
-          compareType: 0,
-        },
-      ]);
-    }
-    setLessonSubjectId();
-    form.resetFields(['lessonSubjectId', 'lessonSubSubjects']);
   };
 
   const onLessonSubjectsChange = (value) => {
     setLessonSubjectId(value);
-    //state eklenen ders alt başlığı ise tekrar request engelliyoruz
-    const findLessonSubSubjects = lessonSubSubjects.find((i) => i.lessonSubjectId === value);
-    if (!findLessonSubSubjects) {
-      loadLessonSubSubjects([
-        {
-          field: 'lessonSubjectId',
-          value: value,
-          compareType: 0,
-        },
-      ]);
-    }
-    form.resetFields(['lessonSubSubjects']);
   };
 
   const loadLessons = useCallback(

@@ -11,34 +11,55 @@ export const getLessonDetailSearch = createAsyncThunk(
     }
   },
 );
-export const getLessons = createAsyncThunk('getLessons', async (body, { dispatch, rejectWithValue }) => {
+export const getLessons = createAsyncThunk('getLessons', async (body, { dispatch, getState, rejectWithValue }) => {
   try {
+    //statede varsa request iptal
+    const findLessons = getState()?.lessons.lessons.find((i) => i.classroomId === body[0]?.value);
+    if (findLessons) return { data: { items: [] } };
+
     return await lessonsServices.getLessons(body);
   } catch (error) {
     return rejectWithValue(error?.data);
   }
 });
 
-export const getUnits = createAsyncThunk('getUnits', async (body, { dispatch, rejectWithValue }) => {
+export const getUnits = createAsyncThunk('getUnits', async (body, { dispatch, getState, rejectWithValue }) => {
   try {
+    //statede varsa request iptal
+    const findUnits = getState()?.lessons.units.find((i) => i.lessonId === body[0]?.value);
+    if (findUnits) return { data: { items: [] } };
+
     return await lessonsServices.getUnits(body);
   } catch (error) {
     return rejectWithValue(error?.data);
   }
 });
 
-export const getLessonSubjects = createAsyncThunk('getLessonSubjects', async (body, { dispatch, rejectWithValue }) => {
-  try {
-    return await lessonsServices.getLessonSubjects(body);
-  } catch (error) {
-    return rejectWithValue(error?.data);
-  }
-});
+export const getLessonSubjects = createAsyncThunk(
+  'getLessonSubjects',
+  async (body, { dispatch, getState, rejectWithValue }) => {
+    try {
+      //statede varsa request iptal
+      const findLessonSubjects = getState()?.lessons.lessonSubjects.find((i) => i.lessonUnitId === body[0]?.value);
+      if (findLessonSubjects) return { data: { items: [] } };
+
+      return await lessonsServices.getLessonSubjects(body);
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 
 export const getLessonSubSubjects = createAsyncThunk(
   'getLessonSubSubjects',
-  async (body, { dispatch, rejectWithValue }) => {
+  async (body, { dispatch, getState, rejectWithValue }) => {
     try {
+      //statede varsa request iptal
+      const findLessonSubSubjects = getState()?.lessons.lessonSubSubjects.find(
+        (i) => i.lessonSubjectId === body[0]?.value,
+      );
+      if (findLessonSubSubjects) return { data: { items: [] } };
+
       return await lessonsServices.getLessonSubSubjects(body);
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -86,6 +107,7 @@ export const lessonsSlice = createSlice({
       state.filteredLessons = action?.payload?.data?.items;
     });
     builder.addCase(getLessons.fulfilled, (state, action) => {
+      console.log(action);
       state.lessons = state.lessons.concat(action?.payload?.data?.items);
     });
     builder.addCase(getLessons.rejected, (state) => {

@@ -1,13 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { Form } from 'antd';
-import {
-  CustomButton,
-  CustomForm,
-  CustomFormItem,
-  CustomImage,
-  CustomSelect,
-  Option,
-} from '../../components';
+import { CustomButton, CustomForm, CustomFormItem, CustomImage, CustomSelect, Option } from '../../components';
 import iconSearchWhite from '../../assets/icons/icon-white-search.svg';
 import '../../styles/tableFilter.scss';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,13 +10,7 @@ import {
   getVideoCategoryList,
   setIsFilter,
 } from '../../store/slice/videoSlice';
-import { getPackageList } from '../../store/slice/packageSlice';
-import {
-  getLessons,
-  getLessonSubjects,
-  getLessonSubSubjects,
-  getUnits,
-} from '../../store/slice/lessonsSlice';
+import { getLessons, getLessonSubjects, getLessonSubSubjects, getUnits } from '../../store/slice/lessonsSlice';
 import { turkishToLower } from '../../utils/utils';
 
 const VideoFilter = () => {
@@ -31,15 +18,11 @@ const VideoFilter = () => {
   const dispatch = useDispatch();
 
   const { categories, keywords, filterObject, isFilter } = useSelector((state) => state?.videos);
-  const { packages } = useSelector((state) => state?.packages);
-  const { lessons, units, lessonSubjects, lessonSubSubjects } = useSelector(
-    (state) => state?.lessons,
-  );
+  const { lessons, units, lessonSubjects, lessonSubSubjects } = useSelector((state) => state?.lessons);
 
   useEffect(() => {
     loadLessons();
     loadVideoCategories();
-    loadPackages();
     loadUnits();
     loadLessonSubjects();
     loadLessonSubSubjects();
@@ -54,10 +37,6 @@ const VideoFilter = () => {
 
   const loadVideoCategories = useCallback(async () => {
     await dispatch(getVideoCategoryList());
-  }, [dispatch]);
-
-  const loadPackages = useCallback(async () => {
-    await dispatch(getPackageList());
   }, [dispatch]);
 
   const loadLessons = useCallback(async () => {
@@ -105,9 +84,7 @@ const VideoFilter = () => {
 
   const handleReset = async () => {
     form.resetFields();
-    await dispatch(
-      getByFilterPagedVideos({ PageSize: filterObject?.PageSize, OrderBy: filterObject?.OrderBy }),
-    );
+    await dispatch(getByFilterPagedVideos({ PageSize: filterObject?.PageSize, OrderBy: filterObject?.OrderBy }));
     await dispatch(setIsFilter(false));
   };
 
@@ -124,9 +101,7 @@ const VideoFilter = () => {
         <div className="form-item">
           <CustomFormItem label="Video Kategorisi" name="CategoryOfVideoIds">
             <CustomSelect
-              filterOption={(input, option) =>
-                turkishToLower(option.children).includes(turkishToLower(input))
-              }
+              filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
               showArrow
               mode="multiple"
               placeholder="Video Kategorisi"
@@ -143,32 +118,9 @@ const VideoFilter = () => {
             </CustomSelect>
           </CustomFormItem>
 
-          <CustomFormItem label="Bağlı Olduğu Paket" name="PackageIds">
-            <CustomSelect
-              filterOption={(input, option) =>
-                turkishToLower(option.children).includes(turkishToLower(input))
-              }
-              showArrow
-              mode="multiple"
-              placeholder="Bağlı Olduğu Paket"
-            >
-              {packages
-                // ?.filter((item) => item.isActive)
-                ?.map((item) => {
-                  return (
-                    <Option key={item?.id} value={item?.id}>
-                      {item?.name}
-                    </Option>
-                  );
-                })}
-            </CustomSelect>
-          </CustomFormItem>
-
           <CustomFormItem label="Ders" name="LessonIds">
             <CustomSelect
-              filterOption={(input, option) =>
-                turkishToLower(option.children).includes(turkishToLower(input))
-              }
+              filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
               showArrow
               mode="multiple"
               placeholder="Ders"
@@ -187,9 +139,7 @@ const VideoFilter = () => {
 
           <CustomFormItem label="Ünite" name="LessonUnitIds">
             <CustomSelect
-              filterOption={(input, option) =>
-                turkishToLower(option.children).includes(turkishToLower(input))
-              }
+              filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
               showArrow
               mode="multiple"
               placeholder="Ünite"
@@ -208,9 +158,7 @@ const VideoFilter = () => {
 
           <CustomFormItem label="Konu" name="LessonSubjectIds">
             <CustomSelect
-              filterOption={(input, option) =>
-                turkishToLower(option.children).includes(turkishToLower(input))
-              }
+              filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
               showArrow
               mode="multiple"
               placeholder="Konu"
@@ -229,9 +177,7 @@ const VideoFilter = () => {
 
           <CustomFormItem label="Alt Başlık" name="LessonSubSubjectIds">
             <CustomSelect
-              filterOption={(input, option) =>
-                turkishToLower(option.children).includes(turkishToLower(input))
-              }
+              filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
               showArrow
               mode="multiple"
               placeholder="Alt Başlık"

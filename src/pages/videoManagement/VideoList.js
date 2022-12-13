@@ -1,13 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  CustomButton,
-  CustomCollapseCard,
-  CustomImage,
-  CustomPageHeader,
-  CustomTable,
-  Text,
-} from '../../components';
+import { CustomButton, CustomCollapseCard, CustomImage, CustomPageHeader, CustomTable, Text } from '../../components';
 import VideoFilter from './VideoFilter';
 import iconFilter from '../../assets/icons/icon-filter.svg';
 import '../../styles/table.scss';
@@ -29,9 +22,7 @@ const VideoList = () => {
 
   const [isVideoFilter, setisVideoFilter] = useState(false);
 
-  const { videos, tableProperty, filterObject, sorterObject, isFilter } = useSelector(
-    (state) => state?.videos,
-  );
+  const { videos, tableProperty, filterObject, sorterObject, isFilter } = useSelector((state) => state?.videos);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -139,24 +130,6 @@ const VideoList = () => {
       },
     },
     {
-      title: 'BAĞLI OLDUĞU PAKET',
-      dataIndex: 'packages',
-      key: 'packages',
-      sorter: true,
-      sortOrder: sorterObject?.columnKey === 'packages' ? sorterObject?.order : null,
-      render: (_, record) => (
-        <>
-          {record.packages?.map((item, id) => {
-            return (
-              <Tag className="m-1" color="blue" key={id}>
-                {item.package.name}
-              </Tag>
-            );
-          })}
-        </>
-      ),
-    },
-    {
       title: 'DERS',
       dataIndex: 'lesson',
       key: 'lesson',
@@ -209,29 +182,19 @@ const VideoList = () => {
   const sortFields = {
     kalturaVideoId: { ascend: 'KalturaVideoIdASC', descend: 'KalturaVideoIdDESC' },
     categoryOfVideo: { ascend: 'CategoryASC', descend: 'CategoryDESC' },
-    packages: { ascend: 'PackageASC', descend: 'PackageDESC' },
     lesson: { ascend: 'LessonASC', descend: 'LessonDESC' },
     lessonUnit: { ascend: 'LessonUnitASC', descend: 'LessonUnitDESC' },
     lessonSubject: { ascend: 'LessonSubjectASC', descend: 'LessonSubjectDESC' },
     lessonSubSubjects: { ascend: 'LessonSubSubjectASC', descend: 'LessonSubSubjectDESC' },
   };
   return (
-    <CustomPageHeader
-      title={<Text t="Videolar" />}
-      showBreadCrumb
-      showHelpButton
-      routes={['Video Yönetimi']}
-    >
+    <CustomPageHeader title={<Text t="Videolar" />} showBreadCrumb showHelpButton routes={['Video Yönetimi']}>
       <CustomCollapseCard className="video-list" cardTitle={<Text t="Videolar" />}>
         <div className="table-header">
           <CustomButton className="add-btn" onClick={addVideo}>
             YENİ VİDEO EKLE
           </CustomButton>
-          <CustomButton
-            data-testid="search"
-            className="search-btn"
-            onClick={() => setisVideoFilter((prev) => !prev)}
-          >
+          <CustomButton data-testid="search" className="search-btn" onClick={() => setisVideoFilter((prev) => !prev)}>
             <CustomImage src={iconFilter} />
           </CustomButton>
         </div>

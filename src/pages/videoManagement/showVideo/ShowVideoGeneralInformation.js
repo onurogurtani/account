@@ -20,18 +20,6 @@ const ShowVideoGeneralInformation = () => {
           Video Kategorisi: <span>{currentVideo?.categoryOfVideo?.name}</span>
         </li>
         <li>
-          Bağlı Olduğu Paket:{' '}
-          <span>
-            {currentVideo?.packages?.map((item, id) => {
-              return (
-                <Tag className="m-1" color="blue" key={id}>
-                  {item.package.name}
-                </Tag>
-              );
-            })}
-          </span>
-        </li>
-        <li>
           Ders: <span>{currentVideo?.lesson?.name}</span>
         </li>
         <li>
@@ -53,11 +41,7 @@ const ShowVideoGeneralInformation = () => {
           </span>
         </li>
         <li style={{ height: 'auto' }}>
-          Video Metni:{' '}
-          <div
-            className="content-text"
-            dangerouslySetInnerHTML={{ __html: currentVideo?.text }}
-          ></div>
+          Video Metni: <div className="content-text" dangerouslySetInnerHTML={{ __html: currentVideo?.text }}></div>
         </li>
         <li>
           Video:{' '}
