@@ -1,10 +1,7 @@
 import { useEffect, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getGroupsList } from '../../../../store/slice/groupsSlice';
-import {
-  addAnnouncement,
-  getByFilterPagedAnnouncements,
-} from '../../../../store/slice/announcementSlice';
+import { addAnnouncement, getByFilterPagedAnnouncements } from '../../../../store/slice/announcementSlice';
 
 import '../../../../styles/announcementManagement/addAnnouncementRole.scss';
 import {
@@ -30,7 +27,7 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  
+
   useEffect(() => {
     (async () => {
       await loadGroupsList();
@@ -109,7 +106,6 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
   const handleAddRole = (id) => {
     const data = role.filter((r) => r.id === id);
     setSelectedRole([...selectedRole, ...data]);
-
   };
   const handleDeleteRole = (id) => {
     const data = selectedRole.filter((r) => r.id !== id);
@@ -139,24 +135,23 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
       return;
     }
 
-    announcementInfoData.roles=selectedRole;
+    announcementInfoData.roles = selectedRole;
     const action = await dispatch(addAnnouncement(announcementInfoData));
 
     if (addAnnouncement.fulfilled.match(action)) {
       successDialog({
-              title: <Text t="success" />,
-              message: 'Yeni Duyuru Başarıyla Eklendi',
-              onOk: () => {
-                history.push('/user-management/announcement-management');
-              },
-            });
-          } else {
-            errorDialog({
-              title: <Text t="error" />,
-              message: action?.payload?.message,
-            }) 
-          };
-
+        title: <Text t="success" />,
+        message: 'Yeni Duyuru Başarıyla Eklendi',
+        onOk: () => {
+          history.push('/user-management/announcement-management');
+        },
+      });
+    } else {
+      errorDialog({
+        title: <Text t="error" />,
+        message: action?.payload?.message,
+      });
+    }
   };
   return (
     <CustomCollapseCard className="add-announcement-role-card" cardTitle={<Text t="Roller" />}>
@@ -180,12 +175,7 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
         <CustomButton className="cancel-btn" onClick={onCancel}>
           İptal
         </CustomButton>
-        <CustomButton
-          type="primary"
-          htmlType="submit"
-          className="back-btn"
-          onClick={handleBackInfo}
-        >
+        <CustomButton type="primary" htmlType="submit" className="back-btn" onClick={handleBackInfo}>
           Genel Bilgiler Sayfasına Dön
         </CustomButton>
         <CustomButton type="primary" onClick={onFinish} className="submit-btn">

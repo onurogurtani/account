@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import {errorDialog} from '../../../../components';
+import { errorDialog } from '../../../../components';
 import dayjs from 'dayjs';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -14,13 +14,14 @@ const EditAnnouncementFooter = ({
   selectedRole,
   announcementInfoData,
   currentId,
+  fileImage,
 }) => {
   const location = useLocation();
   const justDateEdit = location?.state?.justDateEdit;
 
-  const goToRolesPage=async()=>{
+  const goToRolesPage = async () => {
     const values = await form.validateFields();
-    if (dayjs(values.endDate).isBefore(dayjs(values.startDate))){
+    if (dayjs(values.endDate).isBefore(dayjs(values.startDate))) {
       errorDialog({
         title: <Text t="error" />,
         message: 'Başlangıç Tarihi Bitiş Tarihinden Önce Olmalıdır',
@@ -32,12 +33,10 @@ const EditAnnouncementFooter = ({
         message: 'Duyuru Bitiş Tarihi Geçmiş Bir Tarih Olmamalıdır',
       });
       return;
-    }
-    else{
+    } else {
       setStep('2');
-      
     }
-  }
+  };
 
   const onCancel = () => {
     confirmDialog({
@@ -58,14 +57,12 @@ const EditAnnouncementFooter = ({
         </CustomButton>
 
         {!justDateEdit && (
-          <CustomButton
-            className="back-btn"
-            onClick={goToRolesPage}
-          >
+          <CustomButton className="back-btn" onClick={goToRolesPage}>
             Roller Sayfasına Git
           </CustomButton>
         )}
         <SaveAndFinish
+          fileImage={fileImage}
           form={form}
           currentId={currentId}
           selectedRole={selectedRole}
