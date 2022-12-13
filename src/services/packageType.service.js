@@ -1,9 +1,17 @@
 import { api } from './api';
 
-const getPackageTypeList = (urlString) => {
+const getByFilterPagedPackageTypes = (urlString) => {
   return api({
     url: `PackageTypes/GetByFilterPagedPackageTypes${urlString}`,
     method: 'POST',
+  });
+};
+
+const getList = (data=[]) => {
+  return api({
+    url: `PackageTypes/getList`,
+    method: 'POST',
+    data
   });
 };
 
@@ -31,7 +39,8 @@ const deletePackageType = (data) => {
 };
 
 const packageTypeServices = {
-  getPackageTypeList,
+  getByFilterPagedPackageTypes,
+  getList,
   addPackageType,
   updatePackageType,
   deletePackageType,
