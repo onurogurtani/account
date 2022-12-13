@@ -145,7 +145,7 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
     if (addAnnouncement.fulfilled.match(action)) {
       successDialog({
               title: <Text t="success" />,
-              message: action.payload?.message,
+              message: 'Yeni Duyuru Başarıyla Eklendi',
               onOk: () => {
                 history.push('/user-management/announcement-management');
               },

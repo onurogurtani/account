@@ -28,7 +28,7 @@ export const getFilteredPagedForms = createAsyncThunk(
         }
       }
       if (!data.OrderBy) {
-        let newStr = `FormDetailSearch.OrderBy=IdASC`;
+        let newStr = `FormDetailSearch.OrderBy=IdDESC`;
         urlArr.push(newStr);
       }
       if (!data.PageNumber) {
