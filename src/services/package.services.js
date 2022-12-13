@@ -1,24 +1,32 @@
 import { api } from './api';
 
-const getPackageList = () => {
+const getPackageList = (urlString) => {
   return api({
-    url: `Packages/getList?PageSize=0`,
+    url: `Packages/GetByFilterPagedPackages${urlString}`,
     method: 'POST',
-    data: null,
+  }); 
+};
+
+
+const getPackageById = (id) => {
+  return api({
+    url: `Packages/getbyid?Id=${id}`,
+    method: 'GET',
   });
 };
 
 const addPackage = (data) => {
+
   return api({
-    url: `Packages`,
+    url: `Packages/Add`,
     method: 'POST',
-    data,
+    data
   });
 };
 
 const updatePackage = (data) => {
   return api({
-    url: `Packages`,
+    url: `Packages/Update`,
     method: 'PUT',
     data,
   });
@@ -28,6 +36,7 @@ const packageServices = {
   getPackageList,
   addPackage,
   updatePackage,
+  getPackageById,
 };
 
 export default packageServices;
