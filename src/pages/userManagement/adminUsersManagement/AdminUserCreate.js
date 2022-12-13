@@ -21,7 +21,6 @@ const AdminUserCreate = () => {
     if (isEdit) {
       dispatch(getByAdminUserId({ id, errorDialog, history }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   return (
