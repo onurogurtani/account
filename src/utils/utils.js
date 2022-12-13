@@ -1,6 +1,7 @@
 import { logout, removeToken } from '../store/slice/authSlice';
 import { persist } from '../store/store';
 import { Modal } from 'antd';
+import FormData from 'form-data';
 
 export const objectEmptyCheck = (obj) => {
   return Object.keys(obj).length === 0 && obj.constructor === Object;
@@ -100,4 +101,12 @@ export const maskedPhone = (string) => {
   const maskedNumber = string.match(/^(\d{3})(\d{3})(\d{2})(\d{2})$/);
   const number = `+90 (${maskedNumber?.[1]}) ${maskedNumber?.[2]} ${maskedNumber?.[3]} ${maskedNumber?.[4]}`;
   return number;
+};
+
+export const FORM_DATA_CONVERT = (data) => {
+  const formData = new FormData();
+  Object.keys(data).forEach((key) => {
+    formData.append(key, data[key]);
+  });
+  return formData;
 };
