@@ -11,44 +11,35 @@ export const getLessonDetailSearch = createAsyncThunk(
     }
   },
 );
-export const getLessons = createAsyncThunk(
-  'getLessons',
-  async (body, { dispatch, rejectWithValue }) => {
-    try {
-      return await lessonsServices.getLessons();
-    } catch (error) {
-      return rejectWithValue(error?.data);
-    }
-  },
-);
+export const getLessons = createAsyncThunk('getLessons', async (body, { dispatch, rejectWithValue }) => {
+  try {
+    return await lessonsServices.getLessons(body);
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
 
-export const getUnits = createAsyncThunk(
-  'getUnits',
-  async (body, { dispatch, rejectWithValue }) => {
-    try {
-      return await lessonsServices.getUnits();
-    } catch (error) {
-      return rejectWithValue(error?.data);
-    }
-  },
-);
+export const getUnits = createAsyncThunk('getUnits', async (body, { dispatch, rejectWithValue }) => {
+  try {
+    return await lessonsServices.getUnits(body);
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
 
-export const getLessonSubjects = createAsyncThunk(
-  'getLessonSubjects',
-  async (body, { dispatch, rejectWithValue }) => {
-    try {
-      return await lessonsServices.getLessonSubjects();
-    } catch (error) {
-      return rejectWithValue(error?.data);
-    }
-  },
-);
+export const getLessonSubjects = createAsyncThunk('getLessonSubjects', async (body, { dispatch, rejectWithValue }) => {
+  try {
+    return await lessonsServices.getLessonSubjects(body);
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
 
 export const getLessonSubSubjects = createAsyncThunk(
   'getLessonSubSubjects',
   async (body, { dispatch, rejectWithValue }) => {
     try {
-      return await lessonsServices.getLessonSubSubjects();
+      return await lessonsServices.getLessonSubSubjects(body);
     } catch (error) {
       return rejectWithValue(error?.data);
     }
@@ -91,29 +82,29 @@ export const lessonsSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getLessons.fulfilled, (state, action) => {
-      state.lessons = action?.payload?.data?.items;
-    });
     builder.addCase(getLessonDetailSearch.fulfilled, (state, action) => {
       state.filteredLessons = action?.payload?.data?.items;
+    });
+    builder.addCase(getLessons.fulfilled, (state, action) => {
+      state.lessons = state.lessons.concat(action?.payload?.data?.items);
     });
     builder.addCase(getLessons.rejected, (state) => {
       state.lessons = [];
     });
     builder.addCase(getUnits.fulfilled, (state, action) => {
-      state.units = action?.payload?.data?.items;
+      state.units = state.units.concat(action?.payload?.data?.items);
     });
     builder.addCase(getUnits.rejected, (state) => {
       state.units = [];
     });
     builder.addCase(getLessonSubjects.fulfilled, (state, action) => {
-      state.lessonSubjects = action?.payload?.data?.items;
+      state.lessonSubjects = state.lessonSubjects.concat(action?.payload?.data?.items);
     });
     builder.addCase(getLessonSubjects.rejected, (state) => {
       state.lessonSubjects = [];
     });
     builder.addCase(getLessonSubSubjects.fulfilled, (state, action) => {
-      state.lessonSubSubjects = action?.payload?.data?.items;
+      state.lessonSubSubjects = state.lessonSubSubjects.concat(action?.payload?.data?.items);
     });
     builder.addCase(getLessonSubSubjects.rejected, (state) => {
       state.lessonSubSubjects = [];
