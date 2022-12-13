@@ -173,7 +173,7 @@ const AnnouncementInfoForm = ({
       <CustomFormItem label={<Text t="Duyuru İcon" />} name="fileId" rules={[]}>
         <Upload
           listType="picture"
-          accept=".png,.jpeg"
+          accept=".png,.jpeg,.jpg,.WEBP"
           beforeUpload={(e) => {
             console.log(e);
             return false;
