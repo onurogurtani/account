@@ -1,25 +1,28 @@
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Row, Upload } from 'antd';
+import { Button, Form, Upload } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  confirmDialog,
   CustomButton,
   CustomCollapseCard,
-  CustomDatePicker,
   CustomForm,
   CustomFormItem,
   CustomInput,
   CustomSelect,
+  errorDialog,
   Option,
+  successDialog,
   Text,
 } from '../../../components';
 import fileServices from '../../../services/file.services';
-import { getPackageTypeList } from '../../../store/slice/packageType';
 import '../../../styles/settings/packages.scss';
 import { reactQuillValidator } from '../../../utils/formRule';
 import { CancelToken, isCancel } from 'axios';
 import { addPackage } from '../../../store/slice/packageSlice';
+import { getPackageTypeList } from '../../../store/slice/packageTypeSlice';
+import { useHistory } from 'react-router-dom';
 
 const AddPackages = () => {
   const [form] = Form.useForm();
@@ -31,6 +34,7 @@ const AddPackages = () => {
   const token = useSelector((state) => state?.auth?.token);
   const { packageTypeList } = useSelector((state) => state?.packageType);
   const dispatch = useDispatch();
+  const history = useHistory();
 
   useEffect(() => {
     loadPackageType();
@@ -108,13 +112,10 @@ const AddPackages = () => {
         setErrorUpload('Dosya yüklenemedi yeniden deneyiniz');
       }
     }
-    console.log('imageListArray', imageListArray);
     return imageListArray;
   };
 
   const onFinish = async (values) => {
-    console.log('values', values);
-
     const data = {
       package: {
         ...values,
@@ -123,8 +124,35 @@ const AddPackages = () => {
       },
     };
 
-    dispatch(addPackage(data));
+    const action = await dispatch(addPackage(data));
+    if (addPackage.fulfilled.match(action)) {
+      successDialog({
+        title: <Text t="success" />,
+        message: action?.payload.message,
+        onOk: async () => {
+          history.push('/settings/packages');
+        },
+      });
+    } else {
+      errorDialog({
+        title: <Text t="error" />,
+        message: action?.payload.message,
+      });
+    }
     setIsDisable(false);
+  };
+
+
+  const onCancel = () => {
+    confirmDialog({
+      title: <Text t="attention" />,
+      message: 'İptal etmek istediğinizden emin misiniz?',
+      okText: 'Evet',
+      cancelText: 'Hayır',
+      onOk: async () => {
+        history.push('/settings/packages');
+      },
+    });
   };
 
   return (
@@ -146,7 +174,7 @@ const AddPackages = () => {
               { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
             ]}
           >
-            <CustomInput placeholder={'Başlık'} />
+            <CustomInput placeholder={'Paket Adı'} />
           </CustomFormItem>
 
           <CustomFormItem
@@ -157,7 +185,7 @@ const AddPackages = () => {
               { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
             ]}
           >
-            <CustomInput placeholder={'Başlık'} />
+            <CustomInput placeholder={'Paket Özeti'} />
           </CustomFormItem>
 
           <CustomFormItem
@@ -194,7 +222,6 @@ const AddPackages = () => {
             >
               <Upload
                 name="files"
-                disabled={isDisable}
                 maxCount={5}
                 multiple={true}
                 showUploadList={{
@@ -202,9 +229,12 @@ const AddPackages = () => {
                   removeIcon: <DeleteOutlined onClick={(e) => cancelIntroVideoUpload()} />,
                 }}
                 beforeUpload={beforeUpload}
+                onChange={(e) => (e.fileList.length >= 5 ? setIsDisable(true) : setIsDisable(false))}
                 accept=".csv, .doc, .docx, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, application/pdf, image/*"
               >
-                <Button icon={<UploadOutlined />}>Upload</Button>
+                <Button disabled={isDisable} icon={<UploadOutlined />}>
+                  Upload
+                </Button>
               </Upload>
             </CustomFormItem>
           </CustomFormItem>
@@ -231,7 +261,7 @@ const AddPackages = () => {
             rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}
           >
             <CustomSelect className="form-filter-item" placeholder={'Seçiniz'}>
-              {packageTypeList.map((item) => {
+              {packageTypeList?.map((item) => {
                 return (
                   <Option key={`packageTypeList-${item.id}`} value={item.id}>
                     <Text t={item.name} />
@@ -242,11 +272,11 @@ const AddPackages = () => {
           </CustomFormItem>
 
           <CustomFormItem label={<Text t="Max. Net Sayısı" />} name="maxNetCount">
-            <CustomInput type={'number'} placeholder={'Başlık'} className="max-net-count" />
+            <CustomInput type={'number'} placeholder={'Max. Net Sayısı'} className="max-net-count" />
           </CustomFormItem>
 
           <div className="add-package-footer">
-            <CustomButton type="primary" className="cancel-btn" onClick={() => console.log('object')}>
+            <CustomButton type="primary" className="cancel-btn" onClick={onCancel}>
               İptal
             </CustomButton>
             <CustomButton type="primary" className="save-btn" onClick={() => form.submit()}>
