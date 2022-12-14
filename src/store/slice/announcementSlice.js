@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import announcementServices from '../../services/announcement.services';
-
+import fileServices from '../../services/file.services';
 
 export const getByFilterPagedAnnouncements = createAsyncThunk(
   'announcement/GetByFilterPagedAnnouncements',
@@ -44,8 +44,8 @@ export const getByFilterPagedAnnouncements = createAsyncThunk(
 export const getByFilterPagedAnnouncementTypes = createAsyncThunk(
   'announcement/GetByFilterPagedAnnouncementTypes',
   async (data, { getState, dispatch, rejectWithValue }) => {
-    try{
-      let urlString= 'AnnouncementTypeDetailSearch.PageNumber=1&AnnouncementTypeDetailSearch.PageSize=1000'
+    try {
+      let urlString = 'AnnouncementTypeDetailSearch.PageNumber=1&AnnouncementTypeDetailSearch.PageSize=1000';
       const response = await announcementServices.getByFilterAnnouncementTypes(urlString);
       return response;
     } catch (error) {
@@ -75,30 +75,23 @@ export const createOrUpdateAnnouncementRole = createAsyncThunk(
     }
   },
 );
-export const editAnnouncement = createAsyncThunk(
-  'editAnnouncement',
-  async (data, { dispatch, rejectWithValue }) => {
-    try {
-      const response = await announcementServices.editAnnouncement(data);
-      return response;
-    } catch (error) {
-      return rejectWithValue(error?.data);
-    }
-  },
-);
-export const deleteAnnouncement = createAsyncThunk(
-  'deleteAnnouncement',
-  async ({ id }, { rejectWithValue }) => {
-    try {
-
-      const data={id:id}
-      const response = await announcementServices.deleteAnnouncement(data);
-      return response;
-    } catch (error) {
-      return rejectWithValue(error?.data);
-    }
-  },
-);
+export const editAnnouncement = createAsyncThunk('editAnnouncement', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await announcementServices.editAnnouncement(data);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+export const deleteAnnouncement = createAsyncThunk('deleteAnnouncement', async ({ id }, { rejectWithValue }) => {
+  try {
+    const data = { id: id };
+    const response = await announcementServices.deleteAnnouncement(data);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
 export const setPublishAnnouncements = createAsyncThunk(
   'setPublishedAnnouncements',
   async (data, { dispatch, rejectWithValue }) => {
@@ -143,6 +136,14 @@ export const setActiveAnnouncements = createAsyncThunk(
     }
   },
 );
+export const getAvatarUpload = createAsyncThunk('getAvatarUpload', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await fileServices.uploadFileBaseApi(data);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
 export const announcementSlice = createSlice({
   name: 'announcement',
   initialState: {
@@ -155,27 +156,25 @@ export const announcementSlice = createSlice({
     },
     filterObject: {
       HeadText: '',
-      Text:'',
-      IsActive: '', 
-      IsPublished: '', 
+      Text: '',
+      IsActive: '',
+      IsPublished: '',
       EndDate: '',
       StartDate: '',
       OrderBy: '',
       PageNumber: 1,
       PageSize: 10,
     },
-    announcementTypes:[],
-    updateAnnouncementObject:{},
-    
+    announcementTypes: [],
+    updateAnnouncementObject: {},
   },
   reducers: {
     setFilterObject: (state, action) => {
       state.filterObject = action.payload;
     },
-    setUpdateAnnouncementObject:(state, action)=>{
+    setUpdateAnnouncementObject: (state, action) => {
       state.updateAnnouncementObject = action.payload;
-
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getByFilterPagedAnnouncements.fulfilled, (state, action) => {
@@ -194,8 +193,7 @@ export const announcementSlice = createSlice({
     builder.addCase(getByFilterPagedAnnouncementTypes.fulfilled, (state, action) => {
       state.announcementTypes = action?.payload?.data?.items || state.announcementTypes;
     });
-    
   },
 });
 
-export const { setFilterObject, setAnnouncementData, setUpdateAnnouncementObject} = announcementSlice.actions;
+export const { setFilterObject, setAnnouncementData, setUpdateAnnouncementObject } = announcementSlice.actions;

@@ -1,9 +1,10 @@
-import { Col, Form, Row } from 'antd';
+import { Col, Form, Row, Upload } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import { useLocation } from 'react-router-dom';
 import {
+  CustomButton,
   CustomDatePicker,
   CustomForm,
   CustomFormItem,
@@ -17,6 +18,9 @@ import { dateValidator, reactQuillValidator } from '../../../../utils/formRule';
 import AddAnnouncementFooter from '../addAnnouncement/AddAnnouncementFooter';
 import EditAnnouncementFooter from '../editAnnouncement/EditAnnouncementFooter';
 import { getByFilterPagedAnnouncementTypes } from '../../../../store/slice/announcementSlice';
+import { UploadFile } from 'antd/es/upload/interface';
+import { UploadOutlined } from '@ant-design/icons';
+import fileServices from '../../../../services/file.services';
 
 const AnnouncementInfoForm = ({
   setAnnouncementInfoData,
@@ -35,7 +39,7 @@ const AnnouncementInfoForm = ({
   const { announcementTypes } = useSelector((state) => state?.announcement);
   const dispatch = useDispatch();
   const [quillValue, setQuillValue] = useState('');
-
+  const [fileImage, setFileImage] = useState(null);
   useEffect(() => {
     dispatch(getByFilterPagedAnnouncementTypes());
     if (initialValues) {
@@ -64,18 +68,15 @@ const AnnouncementInfoForm = ({
 
   const disabledStartDate = (startValue) => {
     const { endDate } = form?.getFieldsValue(['endDate']);
-    return (
-      startValue?.startOf('day') > endDate?.startOf('day') || startValue < dayjs().startOf('day')
-    );
+    return startValue?.startOf('day') > endDate?.startOf('day') || startValue < dayjs().startOf('day');
   };
 
   const disabledEndDate = (endValue) => {
     const { startDate } = form?.getFieldsValue(['startDate']);
 
-    return (
-      endValue?.startOf('day') < startDate?.startOf('day') || endValue < dayjs().startOf('day')
-    );
+    return endValue?.startOf('day') < startDate?.startOf('day') || endValue < dayjs().startOf('day');
   };
+  const token = useSelector((state) => state?.auth?.token);
 
   return (
     <CustomForm
@@ -105,11 +106,7 @@ const AnnouncementInfoForm = ({
           { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
         ]}
       >
-        <CustomSelect
-          className="form-filter-item"
-          placeholder={'Seçiniz'}
-          style={{ width: '100%' }}
-        >
+        <CustomSelect className="form-filter-item" placeholder={'Seçiniz'} style={{ width: '100%' }}>
           {announcementTypes?.map(({ id, name }) => (
             <Option id={id} key={id} value={name}>
               <Text t={name} />
@@ -136,12 +133,8 @@ const AnnouncementInfoForm = ({
           },
         ]}
       >
-        <ReactQuill
-          className={isErrorReactQuill ? 'quill-error' : ''}
-          theme="snow"
-        />
+        <ReactQuill className={isErrorReactQuill ? 'quill-error' : ''} theme="snow" />
       </CustomFormItem>
-
       <CustomFormItem
         label={<Text t="Duyuru Anasayfa Metni" />}
         name="homePageContent"
@@ -153,9 +146,50 @@ const AnnouncementInfoForm = ({
           { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
         ]}
       >
-        <CustomInput
-          placeholder={'Yeni duyurunuz ile ilgili özet metin'}
-        />
+        <CustomInput placeholder={'Yeni duyurunuz ile ilgili özet metin'} />
+      </CustomFormItem>
+      <CustomFormItem
+        label={<Text t="Button İsmi" />}
+        name="buttonName"
+        rules={[
+          { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+          { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+        ]}
+      >
+        <CustomInput placeholder={'Button İsmi'} />
+      </CustomFormItem>
+
+      <CustomFormItem
+        label={<Text t="Button Url" />}
+        name="buttonUrl"
+        rules={[
+          { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+          { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+        ]}
+      >
+        <CustomInput placeholder={'Button Url '} />
+      </CustomFormItem>
+
+      <CustomFormItem label={<Text t="Duyuru İcon" />} name="fileId" rules={[]}>
+        <Upload
+          listType="picture"
+          accept=".png,.jpeg,.jpg,.WEBP"
+          beforeUpload={(e) => {
+            console.log(e);
+            return false;
+          }}
+          onChange={async (e) => {
+            const data = new FormData();
+            data.append('File', e.file);
+            data.append('FileType', 5);
+            data.append('FileName', e.file.name);
+            data.append('Description', e.file.name);
+            setFileImage(data);
+          }}
+          maxCount={1}
+        >
+          <CustomButton icon={<UploadOutlined />}>Upload</CustomButton>
+        </Upload>
       </CustomFormItem>
       <Row gutter={16}>
         <Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} lg={{ span: 16 }}>
@@ -216,6 +250,7 @@ const AnnouncementInfoForm = ({
           setStep={setStep}
           setIsErrorReactQuill={setIsErrorReactQuill}
           history={history}
+          fileImage={fileImage}
         />
       ) : (
         <EditAnnouncementFooter
@@ -230,6 +265,7 @@ const AnnouncementInfoForm = ({
           currentId={initialValues.id}
           updated={updated}
           setUpdated={setUpdated}
+          fileImage={fileImage}
         />
       )}
     </CustomForm>

@@ -2,15 +2,8 @@ import dayjs from 'dayjs';
 import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import {
-  CustomButton,
-  CustomImage,
-  CustomModal,
-  errorDialog,
-  Text,
-  successDialog,
-} from '../../../../components';
-import { editAnnouncement } from '../../../../store/slice/announcementSlice';
+import { CustomButton, CustomImage, CustomModal, errorDialog, Text, successDialog } from '../../../../components';
+import { editAnnouncement, getAvatarUpload } from '../../../../store/slice/announcementSlice';
 import modalSuccessIcon from '../../../../assets/icons/icon-modal-success.svg';
 import '../../../../styles/announcementManagement/saveAndFinish.scss';
 
@@ -22,27 +15,23 @@ const SaveAndFinish = ({
   history,
   setIsErrorReactQuill,
   justDateEdit,
+  fileImage,
 }) => {
   const dispatch = useDispatch();
   const [isVisible, setIsVisible] = useState(false);
   const [currentAnnouncement, setCurrentAnnouncement] = useState();
-  const { announcementTypes, updateAnnouncementObject } = useSelector(
-    (state) => state?.announcement,
-  );
+  const { announcementTypes, updateAnnouncementObject } = useSelector((state) => state?.announcement);
   const [updatedAnnouncement, setUpdatedAnnouncement] = useState({});
   const location = useLocation();
   const oldAnnouncement = location?.state?.data;
 
   const onFinish = useCallback(async () => {
-
     const values = await form.validateFields();
     const startOfAnnouncement = values?.startDate
       ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD-HH-mm')
       : undefined;
 
-    const endOfAnnouncement = values?.endDate
-      ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD-HH-mm')
-      : undefined;
+    const endOfAnnouncement = values?.endDate ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD-HH-mm') : undefined;
 
     if (startOfAnnouncement >= endOfAnnouncement) {
       errorDialog({
@@ -53,26 +42,21 @@ const SaveAndFinish = ({
     }
 
     try {
-      const startDate = values?.startDate
-        ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD')
-        : undefined;
-      const startHour = values?.startDate
-        ? dayjs(values?.startDate)?.utc().format('HH:mm:ss')
-        : undefined;
-      const endDate = values?.endDate
-        ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD')
-        : undefined;
-      const endHour = values?.endDate
-        ? dayjs(values?.endDate)?.utc().format('HH:mm:ss')
-        : undefined;
+      const startDate = values?.startDate ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD') : undefined;
+      const startHour = values?.startDate ? dayjs(values?.startDate)?.utc().format('HH:mm:ss') : undefined;
+      const endDate = values?.endDate ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD') : undefined;
+      const endHour = values?.endDate ? dayjs(values?.endDate)?.utc().format('HH:mm:ss') : undefined;
       const typeName = values.announcementType;
 
-      const transFormedType= [];
+      const transFormedType = [];
       for (let i = 0; i < announcementTypes.length; i++) {
         if (announcementTypes[i].name == typeName) {
           transFormedType.push(announcementTypes[i]);
         }
       }
+      let fileId = '';
+      console.log(fileImage);
+      if (fileImage !== null) fileId = await dispatch(getAvatarUpload(fileImage));
 
       const data = {
         id: currentId,
@@ -82,6 +66,9 @@ const SaveAndFinish = ({
         homePageContent: values.homePageContent,
         startDate: startDate + 'T' + startHour + '.000Z',
         endDate: endDate + 'T' + endHour + '.000Z',
+        fileId: fileImage ? fileId?.payload?.data?.id : updateAnnouncementObject?.fileId,
+        buttonName: values.buttonName,
+        buttonUrl: values.buttonUrl,
       };
       if (selectedRole.length === 0) {
         errorDialog({
@@ -114,7 +101,17 @@ const SaveAndFinish = ({
         message: error,
       });
     }
-  }, [form, setStep, selectedRole, announcementTypes]);
+  }, [
+    form,
+    fileImage,
+    dispatch,
+    currentId,
+    updateAnnouncementObject?.fileId,
+    selectedRole,
+    announcementTypes,
+    setStep,
+    oldAnnouncement,
+  ]);
 
   return (
     <>

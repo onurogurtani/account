@@ -1,20 +1,16 @@
 import dayjs from 'dayjs';
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-  confirmDialog,
-  CustomButton,
-  CustomFormItem,
-  Text,
-  errorDialog,
-} from '../../../../components';
+import { confirmDialog, CustomButton, CustomFormItem, Text, errorDialog } from '../../../../components';
 import { useDispatch, useSelector } from 'react-redux';
-import { getByFilterPagedAnnouncementTypes } from '../../../../store/slice/announcementSlice';
+import { getByFilterPagedAnnouncementTypes, getAvatarUpload } from '../../../../store/slice/announcementSlice';
+import { FORM_DATA_CONVERT } from '../../../../utils/utils';
+import fileServices from '../../../../services/file.services';
 
-const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, history }) => {
+const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, history, fileImage }) => {
   const dispatch = useDispatch();
   const { announcementTypes } = useSelector((state) => state?.announcement);
 
-  const onFinish = async () => {
+  const onFinish = useCallback(async () => {
     // CONTROLLİNG START AND END DATE
     dispatch(getByFilterPagedAnnouncementTypes());
     const values = await form.validateFields();
@@ -22,9 +18,7 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, history
       ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD-HH-mm')
       : undefined;
 
-    const endOfAnnouncement = values?.endDate
-      ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD-HH-mm')
-      : undefined;
+    const endOfAnnouncement = values?.endDate ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD-HH-mm') : undefined;
 
     if (startOfAnnouncement >= endOfAnnouncement) {
       errorDialog({
@@ -36,18 +30,10 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, history
     try {
       const values = await form.validateFields();
 
-      const startDate = values?.startDate
-        ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD')
-        : undefined;
-      const startHour = values?.startDate
-        ? dayjs(values?.startDate)?.utc().format('HH:mm:ss')
-        : undefined;
-      const endDate = values?.endDate
-        ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD')
-        : undefined;
-      const endHour = values?.endDate
-        ? dayjs(values?.endDate)?.utc().format('HH:mm:ss')
-        : undefined;
+      const startDate = values?.startDate ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD') : undefined;
+      const startHour = values?.startDate ? dayjs(values?.startDate)?.utc().format('HH:mm:ss') : undefined;
+      const endDate = values?.endDate ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD') : undefined;
+      const endHour = values?.endDate ? dayjs(values?.endDate)?.utc().format('HH:mm:ss') : undefined;
       const typeName = values.announcementType;
 
       const hop = [];
@@ -56,8 +42,8 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, history
           hop.push(announcementTypes[i]);
         }
       }
-
-      const data = {
+      const fileId = await dispatch(getAvatarUpload(fileImage));
+      let data = {
         announcementType: hop[0],
         headText: values.headText.trim(),
         content: values.content,
@@ -66,17 +52,20 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, history
         endDate: endDate + 'T' + endHour + '.000Z',
         isPublished: false,
         isArchived: false,
+        fileId: fileId.payload.data.id,
+        buttonName: values.buttonName,
+        buttonUrl: values.buttonUrl,
       };
-
       setAnnouncementInfoData(data);
       setStep('2');
     } catch (error) {
+      console.log(error);
       errorDialog({
         title: <Text t="error" />,
         message: 'error',
       });
     }
-  };
+  }, [announcementTypes, dispatch, fileImage, form, setAnnouncementInfoData, setStep]);
 
   const onCancel = () => {
     confirmDialog({
