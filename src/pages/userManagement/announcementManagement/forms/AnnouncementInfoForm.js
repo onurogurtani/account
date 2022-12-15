@@ -181,7 +181,7 @@ const AnnouncementInfoForm = ({
           onChange={async (e) => {
             const data = new FormData();
             data.append('File', e.file);
-            data.append('FileType', 5);
+            data.append('FileType', 7);
             data.append('FileName', e.file.name);
             data.append('Description', e.file.name);
             setFileImage(data);

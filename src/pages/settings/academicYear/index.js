@@ -113,16 +113,14 @@ const AcademicYear = () => {
         </div>
         <CustomTable
           pagination={{
-            current: educationYearList?.tableProperty?.currentPage,
-            pageSize: educationYearList?.tableProperty?.pageSize,
-            total: educationYearList?.tableProperty?.totalCount,
-            showSizeChanger: true,
+            total: educationYearList?.pagedProperty?.totalCount,
+            current: educationYearList?.pagedProperty?.currentPage,
+            pageSize: educationYearList?.pagedProperty?.pageSize,
             position: 'bottomRight',
+            showSizeChanger: true,
           }}
           onChange={(e) => {
-            dispatch(
-              getEducationYearList({ params: { PageSize: e.pageSize, PageNumber: e.current } }),
-            );
+            dispatch(getEducationYearList({ params: { PageSize: e.pageSize, PageNumber: e.current } }));
           }}
           dataSource={educationYearList?.items}
           columns={[
@@ -172,6 +170,7 @@ const AcademicYear = () => {
                     >
                       DÜZENLE
                     </CustomButton>
+                    {/*
                     <CustomButton
                       style={{ background: '#A52A2A' }}
                       onClick={() => {
@@ -207,7 +206,7 @@ const AcademicYear = () => {
                       className="detail-btn"
                     >
                       Sil
-                    </CustomButton>
+                    </CustomButton> */}
                   </div>
                 );
               },
@@ -236,10 +235,7 @@ const AcademicYear = () => {
               onFinish={editInfo ? formEdit : formAdd}
             >
               <div className="form-item-select">
-                <CustomFormItem
-                  rules={[{ required: true, message: 'Lütfen bir seçim yapınız.' }]}
-                  name="startYear"
-                >
+                <CustomFormItem rules={[{ required: true, message: 'Lütfen bir seçim yapınız.' }]} name="startYear">
                   <CustomSelect placeholder={useText('Seçiniz')} height={36}>
                     {years.map((item, index) => (
                       <Option key={index} value={item}>
