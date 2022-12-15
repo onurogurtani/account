@@ -81,8 +81,8 @@ const PreferencePeriod = () => {
         period2StartDate: e.period2StartDate.$d,
         period3StartDate: e.period3StartDate.$d,
         period3EndDate: e.period3EndDate.$d,
-        period2EndDate: e.period3EndDate.$d,
-        period1EndDate: e.period3EndDate.$d,
+        period2EndDate: e.period2EndDate.$d,
+        period1EndDate: e.period1EndDate.$d,
       };
       if (editInfo) {
         console.log(editInfo);
@@ -157,7 +157,7 @@ const PreferencePeriod = () => {
           {preferencePeriod?.items?.map((item, index) => (
             <CustomCollapseCard
               className={'list-col'}
-              cardTitle={item.educationStartYear + '-' + item.educationEndYear}
+              cardTitle={item.educationStartYear + '-' + item.educationEndYear + ' Öğretim Yılı Tercih Dönemleri'}
             >
               <div className="list-card">
                 <div className=" list-card-items">
@@ -243,6 +243,7 @@ const PreferencePeriod = () => {
                     message: 'Lütfen Zorunlu Alanları Doldurunuz.',
                   },
                 ]}
+                style={{ width: '50%' }}
                 name="period1StartDate"
               >
                 <CustomDatePicker height={35}></CustomDatePicker>
@@ -254,6 +255,7 @@ const PreferencePeriod = () => {
                     message: 'Lütfen Zorunlu Alanları Doldurunuz.',
                   },
                 ]}
+                style={{ width: '50%' }}
                 name="period1EndDate"
               >
                 <CustomDatePicker height={35}></CustomDatePicker>
@@ -269,6 +271,7 @@ const PreferencePeriod = () => {
                     message: 'Lütfen Zorunlu Alanları Doldurunuz.',
                   },
                 ]}
+                style={{ width: '50%' }}
                 name="period2StartDate"
               >
                 <CustomDatePicker height={35}></CustomDatePicker>
@@ -280,6 +283,7 @@ const PreferencePeriod = () => {
                     message: 'Lütfen Zorunlu Alanları Doldurunuz.',
                   },
                 ]}
+                style={{ width: '50%' }}
                 name="period2EndDate"
               >
                 <CustomDatePicker height={35}></CustomDatePicker>
@@ -295,6 +299,7 @@ const PreferencePeriod = () => {
                     message: 'Lütfen Zorunlu Alanları Doldurunuz.',
                   },
                 ]}
+                style={{ width: '50%' }}
                 name="period3StartDate"
               >
                 <CustomDatePicker height={35}></CustomDatePicker>
@@ -306,6 +311,7 @@ const PreferencePeriod = () => {
                     message: 'Lütfen Zorunlu Alanları Doldurunuz.',
                   },
                 ]}
+                style={{ width: '50%' }}
                 name="period3EndDate"
               >
                 <CustomDatePicker height={35}></CustomDatePicker>
