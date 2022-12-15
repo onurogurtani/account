@@ -12,6 +12,8 @@ import {
 } from '../../store/slice/videoSlice';
 import { getLessons, getLessonSubjects, getLessonSubSubjects, getUnits } from '../../store/slice/lessonsSlice';
 import { turkishToLower } from '../../utils/utils';
+import { getAllClassStages } from '../../store/slice/classStageSlice';
+import useAcquisitionTree from '../../hooks/useAcquisitionTree';
 
 const VideoFilter = () => {
   const [form] = Form.useForm();
@@ -19,13 +21,12 @@ const VideoFilter = () => {
 
   const { categories, keywords, filterObject, isFilter } = useSelector((state) => state?.videos);
   const { lessons, units, lessonSubjects, lessonSubSubjects } = useSelector((state) => state?.lessons);
+  const { allClassList } = useSelector((state) => state?.classStages);
+  const { classroomId, setClassroomId, lessonId, setLessonId, unitId, setUnitId, lessonSubjectId, setLessonSubjectId } =
+    useAcquisitionTree();
 
   useEffect(() => {
-    loadLessons();
     loadVideoCategories();
-    loadUnits();
-    loadLessonSubjects();
-    loadLessonSubSubjects();
     loadAllKeyword();
   }, []);
 
@@ -35,24 +36,15 @@ const VideoFilter = () => {
     }
   }, []);
 
+  const onClassroomChange = (value) => {
+    setClassroomId(value);
+  };
+
+  const onLessonChange = (value) => {
+    setLessonId(value);
+  };
   const loadVideoCategories = useCallback(async () => {
     await dispatch(getVideoCategoryList());
-  }, [dispatch]);
-
-  const loadLessons = useCallback(async () => {
-    await dispatch(getLessons());
-  }, [dispatch]);
-
-  const loadUnits = useCallback(async () => {
-    await dispatch(getUnits());
-  }, [dispatch]);
-
-  const loadLessonSubjects = useCallback(async () => {
-    await dispatch(getLessonSubjects());
-  }, [dispatch]);
-
-  const loadLessonSubSubjects = useCallback(async () => {
-    await dispatch(getLessonSubSubjects());
   }, [dispatch]);
 
   const loadAllKeyword = useCallback(async () => {
@@ -118,15 +110,31 @@ const VideoFilter = () => {
             </CustomSelect>
           </CustomFormItem>
 
+          <CustomFormItem label="Sınıf Seviyesi" name="classroom">
+            <CustomSelect onChange={onClassroomChange} placeholder="Sınıf Seviyesi">
+              {allClassList
+                // ?.filter((item) => item.isActive)
+                ?.map((item) => {
+                  return (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.name}
+                    </Option>
+                  );
+                })}
+            </CustomSelect>
+          </CustomFormItem>
+
           <CustomFormItem label="Ders" name="LessonIds">
             <CustomSelect
               filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
               showArrow
               mode="multiple"
+              onChange={onLessonChange}
               placeholder="Ders"
             >
               {lessons
                 // ?.filter((item) => item.isActive)
+                ?.filter((item) => item.classroomId === classroomId)
                 ?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>
