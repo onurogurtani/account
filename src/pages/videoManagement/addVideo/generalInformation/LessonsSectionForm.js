@@ -131,7 +131,7 @@ const LessonsSectionForm = ({ form }) => {
           },
         ]}
         label="Sınıf Seviyesi"
-        name="classroom"
+        name="classroomId"
       >
         <CustomSelect onChange={onClassroomChange} placeholder="Sınıf Seviyesi">
           {allClassList

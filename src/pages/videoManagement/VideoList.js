@@ -130,6 +130,16 @@ const VideoList = () => {
       },
     },
     {
+      title: 'SINIF SEVİYESİ',
+      dataIndex: 'classroom',
+      key: 'classroom',
+      sorter: true,
+      sortOrder: sorterObject?.columnKey === 'classroom' ? sorterObject?.order : null,
+      render: (text, record) => {
+        return <div>{text?.name}</div>;
+      },
+    },
+    {
       title: 'DERS',
       dataIndex: 'lesson',
       key: 'lesson',
@@ -186,6 +196,7 @@ const VideoList = () => {
     lessonUnit: { ascend: 'LessonUnitASC', descend: 'LessonUnitDESC' },
     lessonSubject: { ascend: 'LessonSubjectASC', descend: 'LessonSubjectDESC' },
     lessonSubSubjects: { ascend: 'LessonSubSubjectASC', descend: 'LessonSubSubjectDESC' },
+    classroom: { ascend: 'ClassroomASC', descend: 'ClassroomDESC' },
   };
   return (
     <CustomPageHeader title={<Text t="Videolar" />} showBreadCrumb showHelpButton routes={['Video Yönetimi']}>

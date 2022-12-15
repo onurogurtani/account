@@ -10,20 +10,21 @@ import {
   getVideoCategoryList,
   setIsFilter,
 } from '../../store/slice/videoSlice';
-import { getLessons, getLessonSubjects, getLessonSubSubjects, getUnits } from '../../store/slice/lessonsSlice';
-import { turkishToLower } from '../../utils/utils';
-import { getAllClassStages } from '../../store/slice/classStageSlice';
+import { removeFromArray, turkishToLower } from '../../utils/utils';
 import useAcquisitionTree from '../../hooks/useAcquisitionTree';
 
 const VideoFilter = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
-
   const { categories, keywords, filterObject, isFilter } = useSelector((state) => state?.videos);
   const { lessons, units, lessonSubjects, lessonSubSubjects } = useSelector((state) => state?.lessons);
   const { allClassList } = useSelector((state) => state?.classStages);
-  const { classroomId, setClassroomId, lessonId, setLessonId, unitId, setUnitId, lessonSubjectId, setLessonSubjectId } =
-    useAcquisitionTree();
+  const { classroomId, setClassroomId, setLessonId, setUnitId, setLessonSubjectId } = useAcquisitionTree();
+
+  const lessonIds = Form.useWatch('LessonIds', form) || [];
+  const lessonUnitIds = Form.useWatch('LessonUnitIds', form) || [];
+  const lessonSubjectIds = Form.useWatch('LessonSubjectIds', form) || [];
+  const lessonSubSubjectIds = Form.useWatch('LessonSubSubjectIds', form) || [];
 
   useEffect(() => {
     loadVideoCategories();
@@ -38,11 +39,57 @@ const VideoFilter = () => {
 
   const onClassroomChange = (value) => {
     setClassroomId(value);
+    form.resetFields(['LessonIds', 'LessonUnitIds', 'LessonSubjectIds', 'LessonSubSubjectIds']);
   };
 
   const onLessonChange = (value) => {
-    setLessonId(value);
+    setLessonId(value.at(-1));
   };
+  const onLessonDeselect = (value) => {
+    onDeselectControl('Lesson', value);
+  };
+  const onUnitDeselect = (value) => {
+    onDeselectControl('Unit', value);
+  };
+  const onLessonSubjectDeselect = (value) => {
+    onDeselectControl('Subject', value);
+  };
+
+  const onDeselectControl = (key, value) => {
+    const findUnitIds = units.filter((i) => i.lessonId === value).map((item) => item.id);
+
+    const findSubjectIds = lessonSubjects
+      .filter((i) => (key === 'Unit' ? i.lessonUnitId === value : findUnitIds.includes(i.lessonUnitId)))
+      .map((item) => item.id);
+
+    const findSubSubjectIds = lessonSubSubjects
+      .filter((i) => (key === 'Subject' ? i.lessonSubjectId === value : findSubjectIds.includes(i.lessonSubjectId)))
+      .map((item) => item.id);
+
+    form.setFieldsValue({
+      LessonSubSubjectIds: removeFromArray(lessonSubSubjectIds, ...findSubSubjectIds),
+    });
+    if (key === 'Subject') return false;
+
+    form.setFieldsValue({
+      LessonSubjectIds: removeFromArray(lessonSubjectIds, ...findSubjectIds),
+    });
+
+    if (key === 'Unit') return false;
+
+    form.setFieldsValue({
+      LessonUnitIds: removeFromArray(lessonUnitIds, ...findUnitIds),
+    });
+  };
+
+  const onUnitChange = (value) => {
+    setUnitId(value.at(-1));
+  };
+
+  const onLessonSubjectsChange = (value) => {
+    setLessonSubjectId(value.at(-1));
+  };
+
   const loadVideoCategories = useCallback(async () => {
     await dispatch(getVideoCategoryList());
   }, [dispatch]);
@@ -110,7 +157,7 @@ const VideoFilter = () => {
             </CustomSelect>
           </CustomFormItem>
 
-          <CustomFormItem label="Sınıf Seviyesi" name="classroom">
+          <CustomFormItem label="Sınıf Seviyesi" name="ClassroomId">
             <CustomSelect onChange={onClassroomChange} placeholder="Sınıf Seviyesi">
               {allClassList
                 // ?.filter((item) => item.isActive)
@@ -129,6 +176,7 @@ const VideoFilter = () => {
               filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
               showArrow
               mode="multiple"
+              onDeselect={onLessonDeselect}
               onChange={onLessonChange}
               placeholder="Ders"
             >
@@ -151,9 +199,12 @@ const VideoFilter = () => {
               showArrow
               mode="multiple"
               placeholder="Ünite"
+              onChange={onUnitChange}
+              onDeselect={onUnitDeselect}
             >
               {units
                 // ?.filter((item) => item.isActive)
+                ?.filter((item) => lessonIds.includes(item.lessonId))
                 ?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>
@@ -170,9 +221,12 @@ const VideoFilter = () => {
               showArrow
               mode="multiple"
               placeholder="Konu"
+              onChange={onLessonSubjectsChange}
+              onDeselect={onLessonSubjectDeselect}
             >
               {lessonSubjects
                 // ?.filter((item) => item.isActive)
+                ?.filter((item) => lessonUnitIds.includes(item.lessonUnitId))
                 ?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>
@@ -192,6 +246,7 @@ const VideoFilter = () => {
             >
               {lessonSubSubjects
                 // ?.filter((item) => item.isActive)
+                ?.filter((item) => lessonSubjectIds.includes(item.lessonSubjectId))
                 ?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>

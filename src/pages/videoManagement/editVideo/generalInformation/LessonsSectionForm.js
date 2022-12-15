@@ -22,12 +22,12 @@ const LessonsSectionForm = ({ form }) => {
 
   useEffect(() => {
     if (Object.keys(currentVideo).length) {
-      setClassroomId(41);
+      setClassroomId(currentVideo?.classroomId);
       setLessonId(currentVideo.lessonId);
       setUnitId(currentVideo.lessonUnitId);
       setLessonSubjectId(currentVideo.lessonSubjectId);
       form.setFieldsValue({
-        classroom: 41,
+        classroomId: currentVideo?.classroomId,
         lessonId: currentVideo?.lessonId,
         lessonUnitId: currentVideo?.lessonUnitId,
         lessonSubjectId: currentVideo?.lessonSubjectId,
@@ -147,7 +147,7 @@ const LessonsSectionForm = ({ form }) => {
           },
         ]}
         label="Sınıf Seviyesi"
-        name="classroom"
+        name="classroomId"
       >
         <CustomSelect onChange={onClassroomChange} placeholder="Sınıf Seviyesi">
           {allClassList
