@@ -110,3 +110,5 @@ export const FORM_DATA_CONVERT = (data) => {
   });
   return formData;
 };
+
+export const removeFromArray = (arr, ...args) => arr.filter((val) => !args.includes(val));

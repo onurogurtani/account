@@ -11,33 +11,39 @@ export const getLessonDetailSearch = createAsyncThunk(
     }
   },
 );
-export const getLessons = createAsyncThunk(
-  'getLessons',
-  async (body, { dispatch, rejectWithValue }) => {
-    try {
-      return await lessonsServices.getLessons();
-    } catch (error) {
-      return rejectWithValue(error?.data);
-    }
-  },
-);
+export const getLessons = createAsyncThunk('getLessons', async (body, { dispatch, getState, rejectWithValue }) => {
+  try {
+    //statede varsa request iptal
+    const findLessons = getState()?.lessons.lessons.find((i) => i.classroomId === body[0]?.value);
+    if (findLessons) return { data: { items: [] } };
 
-export const getUnits = createAsyncThunk(
-  'getUnits',
-  async (body, { dispatch, rejectWithValue }) => {
-    try {
-      return await lessonsServices.getUnits();
-    } catch (error) {
-      return rejectWithValue(error?.data);
-    }
-  },
-);
+    return await lessonsServices.getLessons(body);
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+
+export const getUnits = createAsyncThunk('getUnits', async (body, { dispatch, getState, rejectWithValue }) => {
+  try {
+    //statede varsa request iptal
+    const findUnits = getState()?.lessons.units.find((i) => i.lessonId === body[0]?.value);
+    if (findUnits) return { data: { items: [] } };
+
+    return await lessonsServices.getUnits(body);
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
 
 export const getLessonSubjects = createAsyncThunk(
   'getLessonSubjects',
-  async (body, { dispatch, rejectWithValue }) => {
+  async (body, { dispatch, getState, rejectWithValue }) => {
     try {
-      return await lessonsServices.getLessonSubjects();
+      //statede varsa request iptal
+      const findLessonSubjects = getState()?.lessons.lessonSubjects.find((i) => i.lessonUnitId === body[0]?.value);
+      if (findLessonSubjects) return { data: { items: [] } };
+
+      return await lessonsServices.getLessonSubjects(body);
     } catch (error) {
       return rejectWithValue(error?.data);
     }
@@ -46,9 +52,15 @@ export const getLessonSubjects = createAsyncThunk(
 
 export const getLessonSubSubjects = createAsyncThunk(
   'getLessonSubSubjects',
-  async (body, { dispatch, rejectWithValue }) => {
+  async (body, { dispatch, getState, rejectWithValue }) => {
     try {
-      return await lessonsServices.getLessonSubSubjects();
+      //statede varsa request iptal
+      const findLessonSubSubjects = getState()?.lessons.lessonSubSubjects.find(
+        (i) => i.lessonSubjectId === body[0]?.value,
+      );
+      if (findLessonSubSubjects) return { data: { items: [] } };
+
+      return await lessonsServices.getLessonSubSubjects(body);
     } catch (error) {
       return rejectWithValue(error?.data);
     }
@@ -91,29 +103,30 @@ export const lessonsSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getLessons.fulfilled, (state, action) => {
-      state.lessons = action?.payload?.data?.items;
-    });
     builder.addCase(getLessonDetailSearch.fulfilled, (state, action) => {
       state.filteredLessons = action?.payload?.data?.items;
+    });
+    builder.addCase(getLessons.fulfilled, (state, action) => {
+      console.log(action);
+      state.lessons = state.lessons.concat(action?.payload?.data?.items);
     });
     builder.addCase(getLessons.rejected, (state) => {
       state.lessons = [];
     });
     builder.addCase(getUnits.fulfilled, (state, action) => {
-      state.units = action?.payload?.data?.items;
+      state.units = state.units.concat(action?.payload?.data?.items);
     });
     builder.addCase(getUnits.rejected, (state) => {
       state.units = [];
     });
     builder.addCase(getLessonSubjects.fulfilled, (state, action) => {
-      state.lessonSubjects = action?.payload?.data?.items;
+      state.lessonSubjects = state.lessonSubjects.concat(action?.payload?.data?.items);
     });
     builder.addCase(getLessonSubjects.rejected, (state) => {
       state.lessonSubjects = [];
     });
     builder.addCase(getLessonSubSubjects.fulfilled, (state, action) => {
-      state.lessonSubSubjects = action?.payload?.data?.items;
+      state.lessonSubSubjects = state.lessonSubSubjects.concat(action?.payload?.data?.items);
     });
     builder.addCase(getLessonSubSubjects.rejected, (state) => {
       state.lessonSubSubjects = [];

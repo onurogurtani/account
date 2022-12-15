@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { CustomButton, CustomForm } from '../../../../components';
 import { onChangeActiveKey } from '../../../../store/slice/videoSlice';
 import BracketSection from './BracketSection';
-import CategoryAndPackageSection from './CategoryAndPackageSection';
+import CategorySection from './CategorySection';
 import IntroVideoSection from './IntroVideoSection';
 import LessonsSectionForm from './LessonsSectionForm';
 import StatusAndVideoTextSection from './StatusAndVideoTextSection';
@@ -37,9 +37,6 @@ const AddGeneralInformation = ({ sendValue }) => {
       lessonSubSubjectId: item,
     }));
     values.keyWords = values.keyWords.join();
-    values.packages = values.packages.map((item) => ({
-      packageId: item,
-    }));
     values.beforeEducationSurvey = values?.survey === 'before' ? true : false;
     values.afterEducationSurvey = values?.survey === 'after' ? true : false;
     delete values.survey;
@@ -100,28 +97,20 @@ const AddGeneralInformation = ({ sendValue }) => {
       >
         <div className="general-information-add-form-content">
           <div className="left-form">
-            <CategoryAndPackageSection form={form} />
+            <CategorySection form={form} />
             <LessonsSectionForm form={form} />
             <StatusAndVideoTextSection form={form} />
           </div>
           <div className="right-form">
             <VideoSection form={form} setKalturaVideoName={setKalturaVideoName} />
-            <IntroVideoSection
-              form={form}
-              introVideoFile={introVideoFile}
-              setIntroVideoFile={setIntroVideoFile}
-            />
+            <IntroVideoSection form={form} introVideoFile={introVideoFile} setIntroVideoFile={setIntroVideoFile} />
             <BracketSection form={form} />
             <SurveyAndKeywordSection form={form} />
             <UrlAndPdfSection form={form} />
           </div>
         </div>
         <div className="general-information-add-form-footer">
-          <CustomButton
-            type="primary"
-            onClick={() => history.push('/video-management/list')}
-            className="back-btn"
-          >
+          <CustomButton type="primary" onClick={() => history.push('/video-management/list')} className="back-btn">
             Geri
           </CustomButton>
 

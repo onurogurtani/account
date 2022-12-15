@@ -1,16 +1,12 @@
 import { Form } from 'antd';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
-import { CustomButton, CustomForm, errorDialog, Text } from '../../../../components';
-import {
-  getByVideoId,
-  onChangeActiveKey,
-  setKalturaIntroVideoId,
-} from '../../../../store/slice/videoSlice';
+import { CustomButton, CustomForm } from '../../../../components';
+import { onChangeActiveKey } from '../../../../store/slice/videoSlice';
 import BracketSection from './BracketSection';
-import CategoryAndPackageSection from './CategoryAndPackageSection';
+import CategorySection from './CategorySection';
 import IntroVideoSection from './IntroVideoSection';
 import LessonsSectionForm from './LessonsSectionForm';
 import StatusAndVideoTextSection from './StatusAndVideoTextSection';
@@ -44,9 +40,6 @@ const EditGeneralInformation = ({ sendValue }) => {
       lessonSubSubjectId: item,
     }));
     values.keyWords = values.keyWords.join();
-    values.packages = values.packages.map((item) => ({
-      packageId: item,
-    }));
     values.beforeEducationSurvey = values?.survey === 'before' ? true : false;
     values.afterEducationSurvey = values?.survey === 'after' ? true : false;
     delete values.survey;
@@ -107,21 +100,13 @@ const EditGeneralInformation = ({ sendValue }) => {
       >
         <div className="general-information-edit-form-content">
           <div className="left-form">
-            <CategoryAndPackageSection form={form} />
+            <CategorySection form={form} />
             <LessonsSectionForm form={form} />
             <StatusAndVideoTextSection form={form} />
           </div>
           <div className="right-form">
-            <VideoSection
-              form={form}
-              kalturaVideoName={kalturaVideoName}
-              setKalturaVideoName={setKalturaVideoName}
-            />
-            <IntroVideoSection
-              form={form}
-              introVideoFile={introVideoFile}
-              setIntroVideoFile={setIntroVideoFile}
-            />
+            <VideoSection form={form} kalturaVideoName={kalturaVideoName} setKalturaVideoName={setKalturaVideoName} />
+            <IntroVideoSection form={form} introVideoFile={introVideoFile} setIntroVideoFile={setIntroVideoFile} />
             <BracketSection form={form} />
             <SurveyAndKeywordSection form={form} />
             <UrlAndPdfSection form={form} />
