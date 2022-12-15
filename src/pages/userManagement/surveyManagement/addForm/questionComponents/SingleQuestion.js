@@ -1,28 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import QuestionScores from './QuestionScores';
 import classes from '../../../../../styles/surveyManagement/singleQuestion.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
 import { Radio } from 'antd';
-import { Form, Select, Space, Col, Row, Input } from 'antd';
+import { Form} from 'antd';
 import {
   CustomCheckbox,
   CustomRadio,
-  CustomButton,
-  CustomForm,
-  CustomFormItem,
   CustomInput,
-  CustomSelect,
-  Text,
-  useText,
-  successDialog,
-  errorDialog,
-  Option,
 } from '../../../../../components';
-import emoji1 from '../../../../../assets/images/emoji/emoji1.png';
-import emoji2 from '../../../../../assets/images/emoji/emoji2.png';
-import emoji3 from '../../../../../assets/images/emoji/emoji3.png';
-import emoji4 from '../../../../../assets/images/emoji/emoji4.png';
-import emoji5 from '../../../../../assets/images/emoji/emoji5.png';
 import EmojiRating from './EmojiRating';
 import StarRating from './StarRating';
 import QuestionHandlers from './QuestionHandlers';
@@ -119,7 +104,6 @@ const SingleQuestion = ({
                 </CustomCheckbox>
               ))}
             </div>
-            {/* {groupKnowledge.scoringType == 2 && <QuestionScores />} */}
           </div>
         )}
         {questionKnowledge.questionTypeId == 4 && (
@@ -141,13 +125,6 @@ const SingleQuestion = ({
                   <div dangerouslySetInnerHTML={{ __html: questionKnowledge.text }}></div>
                 </div>
                 <EmojiRating />
-                {/* {groupKnowledge.scoringType == 2 && (
-                  <QuestionScores
-                    key={index}
-                    questionKnowledge={questionKnowledge}
-                    groupKnowledge={groupKnowledge}
-                  />
-                )} */}
               </div>
             ) : questionKnowledge.likertTypeId == 7 ? (
               <div className={classes.singleQuestionContainer}>
@@ -156,13 +133,7 @@ const SingleQuestion = ({
                   <div dangerouslySetInnerHTML={{ __html: questionKnowledge.text }}></div>
                 </div>
                 <StarRating />
-                {groupKnowledge.scoringType == 2 && (
-                  <QuestionScores
-                    key={index}
-                    questionKnowledge={questionKnowledge}
-                    groupKnowledge={groupKnowledge}
-                  />
-                )}
+                
               </div>
             ) : (
               <div className={classes.singleQuestionContainer}>
@@ -183,13 +154,6 @@ const SingleQuestion = ({
                     ))}
                   </Radio.Group>
                 </div>
-                {/* {groupKnowledge.scoringType == 2 && (
-                  <QuestionScores
-                    key={index}
-                    questionKnowledge={questionKnowledge}
-                    groupKnowledge={groupKnowledge}
-                  />
-                )} */}
               </div>
             )}
           </>

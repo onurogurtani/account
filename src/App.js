@@ -46,7 +46,7 @@ const App = () => {
     } else {
       delete api.defaults.headers.common['Authorization'];
     }
-  }, [dispatch, store?.token]);
+  }, [store?.token]);
 
   return (
     <Suspense fallback={<LoadingImage />}>
