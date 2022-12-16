@@ -1,9 +1,26 @@
 import '../../../styles/questionManagement/addQuestionFileForm.scss';
-import { CustomForm, CustomFormItem, CustomSelect, CustomButton } from '../../../components';
+import { CustomForm, CustomFormItem, CustomSelect, CustomButton, Option } from '../../../components';
+import { getAllClassStages } from '../../../store/slice/classStageSlice';
+import { getLessons } from '../../../store/slice/lessonsSlice';
 import { UploadOutlined } from '@ant-design/icons';
 import { Upload } from 'antd';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 const QuestionFileCreate = ({}) => {
+  const lessons = useSelector((state) => state?.lessons?.lessons);
+  const classStages = useSelector((state) => state?.classStages?.allClassList);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllClassStages());
+  }, []);
+
+  useEffect(() => {
+    dispatch(getLessons());
+  }, []);
+
   return (
     <div className="add-question-container">
       <CustomForm
@@ -13,11 +30,27 @@ const QuestionFileCreate = ({}) => {
         labelWrap
         className="add-question-form "
       >
-        <CustomFormItem rules={[{ required: true }]} label="Sınıf Seviyesi">
-          <CustomSelect placeholder="Sınıf Seçiniz"></CustomSelect>
+        <CustomFormItem rules={[{ required: true }]} label="Sınıf Seviyesi" name="classStage">
+          <CustomSelect placeholder="Sınıf Seçiniz">
+            {classStages.map((item) => {
+              return (
+                <Option key={item.id} value={item.id}>
+                  {item.name}
+                </Option>
+              );
+            })}
+          </CustomSelect>
         </CustomFormItem>
-        <CustomFormItem rules={[{ required: true }]} label="Soruların Bağlı Olduğu Ders">
-          <CustomSelect placeholder="Ders Seçiniz"></CustomSelect>
+        <CustomFormItem rules={[{ required: true }]} label="Soruların Bağlı Olduğu Ders" name="lesson">
+          <CustomSelect placeholder="Ders Seçiniz">
+          {lessons.map((item) => {
+              return (
+                <Option key={item.id} value={item.id}>
+                  {item.name}
+                </Option>
+              );
+            })}
+          </CustomSelect>
         </CustomFormItem>
         <CustomFormItem rules={[{ required: true }]} label="Yayın Adı">
           <CustomSelect placeholder="Yayın Seçiniz"></CustomSelect>
@@ -25,7 +58,7 @@ const QuestionFileCreate = ({}) => {
         <CustomFormItem rules={[{ required: true }]} label="Eser/Kitap Adı">
           <CustomSelect placeholder="Eser/Kitap Seçiniz"></CustomSelect>
         </CustomFormItem>
-        <CustomFormItem rules={[{ required: true }]} label="Zip Dosyası Ekle">
+        <CustomFormItem rules={[{ required: true }]} label="Zip Dosyası Ekle" name="upload">
           <Upload>
             <CustomButton icon={<UploadOutlined />}>Yükle</CustomButton>
           </Upload>
