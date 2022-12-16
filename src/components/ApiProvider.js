@@ -18,7 +18,9 @@ const ApiProvider = ({ children }) => {
   useEffect(() => {
     api?.interceptors?.request?.use(
       function (config) {
-        setRequestCount((r) => r + 1);
+        if (!config.headers?.isWithOutLoadingBar) {
+          setRequestCount((r) => r + 1);
+        }
         return config;
       },
       function (error) {
@@ -28,7 +30,9 @@ const ApiProvider = ({ children }) => {
 
     api?.interceptors?.response?.use(
       function (response) {
-        setRequestCount((r) => r - 1);
+        if (!response.config.headers?.isWithOutLoadingBar) {
+          setRequestCount((r) => r - 1);
+        }
         return responseJsonIgnore(response.data);
       },
       async function (error) {
