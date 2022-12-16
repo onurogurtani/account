@@ -1,9 +1,4 @@
-import {
-  DeleteOutlined,
-  InboxOutlined,
-  MinusCircleOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
+import { DeleteOutlined, InboxOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Form, Upload } from 'antd';
 import { CancelToken, isCancel } from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
@@ -42,8 +37,13 @@ const UrlAndPdfModal = ({ open, setOpen, form, selectedTime }) => {
       setFirstUploadedFileId();
     }
   }, [selectedTime]);
-  console.log('uploadedFile', uploadedFile);
-  console.log('firstUploadedFileId', firstUploadedFileId);
+  useEffect(() => {
+    //Fix the Maximum Update Depth Exceeded
+    if (!open) {
+      urlAndPdfForm.resetFields();
+    }
+  }, [open]);
+
   const beforeUpload = async (file) => {
     setUploadedFile();
     const isPdf = ['.pdf', 'application/pdf'].includes(file.type.toLowerCase());
@@ -111,10 +111,7 @@ const UrlAndPdfModal = ({ open, setOpen, form, selectedTime }) => {
 
     const urlAndPdfAttach = (await form?.getFieldValue('urlAndPdfAttach')) || [];
 
-    if (
-      !!urlAndPdfAttach.filter((item) => item.time === values.time).length &&
-      selectedTime?.time !== values?.time
-    ) {
+    if (!!urlAndPdfAttach.filter((item) => item.time === values.time).length && selectedTime?.time !== values?.time) {
       warningDialog({
         title: <Text t="attention" />,
         closeIcon: false,
@@ -139,10 +136,9 @@ const UrlAndPdfModal = ({ open, setOpen, form, selectedTime }) => {
         urlAndPdfAttach: [...urlAndPdfAttach, values],
       });
     }
-    setOpen(false);
     setUploadedFile();
     setFirstUploadedFileId();
-    urlAndPdfForm.resetFields();
+    setOpen(false);
   };
 
   const cancelUpload = () => {
@@ -317,12 +313,8 @@ const UrlAndPdfModal = ({ open, setOpen, form, selectedTime }) => {
                 <p className="ant-upload-drag-icon">
                   <InboxOutlined />
                 </p>
-                <p className="ant-upload-text">
-                  Dosya yüklemek için tıklayın veya dosyayı bu alana sürükleyin.
-                </p>
-                <p className="ant-upload-hint">
-                  Sadece bir adet pdf türünde dosya yükleyebilirsiniz.
-                </p>
+                <p className="ant-upload-text">Dosya yüklemek için tıklayın veya dosyayı bu alana sürükleyin.</p>
+                <p className="ant-upload-hint">Sadece bir adet pdf türünde dosya yükleyebilirsiniz.</p>
               </Upload.Dragger>
             </CustomFormItem>
           )}

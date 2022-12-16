@@ -7,35 +7,35 @@ const getLessonDetailSearch = (id) => {
   });
 };
 
-const getLessons = () => {
+const getLessons = (data = null) => {
   return api({
     url: `Lessons/getList?PageSize=0`,
     method: 'POST',
-    data: null,
+    data,
   });
 };
 
-const getUnits = () => {
+const getUnits = (data = null) => {
   return api({
     url: `LessonUnits/getList?PageSize=0`,
     method: 'POST',
-    data: null,
+    data,
   });
 };
 
-const getLessonSubjects = () => {
+const getLessonSubjects = (data = null) => {
   return api({
     url: `LessonSubjects/getList?PageSize=0`,
     method: 'POST',
-    data: null,
+    data,
   });
 };
 
-const getLessonSubSubjects = () => {
+const getLessonSubSubjects = (data = null) => {
   return api({
     url: `LessonSubSubjects/getList?PageSize=0`,
     method: 'POST',
-    data: null,
+    data,
   });
 };
 

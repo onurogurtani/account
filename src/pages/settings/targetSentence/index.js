@@ -68,7 +68,7 @@ const TargetStence = () => {
             >
               Güncelle
             </CustomButton>
-            <CustomButton
+            {/* <CustomButton
               style={{ background: 'red' }}
               className="update-btn"
               onClick={() => {
@@ -99,7 +99,7 @@ const TargetStence = () => {
               }}
             >
               Sil
-            </CustomButton>
+            </CustomButton>*/}
           </div>
         );
       },
@@ -205,12 +205,7 @@ const TargetStence = () => {
           form.submit();
         }}
       >
-        <CustomForm
-          form={form}
-          autoComplete="off"
-          layout={'horizontal'}
-          onFinish={editInfo ? formEdit : formAdd}
-        >
+        <CustomForm form={form} autoComplete="off" layout={'horizontal'} onFinish={editInfo ? formEdit : formAdd}>
           <CustomFormItem label="Hedef Cümle Şablon">
             <ReactQuill
               value={textValue}

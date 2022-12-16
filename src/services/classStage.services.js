@@ -1,10 +1,10 @@
 import { api } from './api';
 
-const getClassList = (data) => {
+const getClassList = (data = null) => {
   return api({
-    url: 'Classrooms/getList?PageNumber=1&PageSize=1000',
+    url: 'Classrooms/getList?PageSize=0',
     method: 'POST',
-    data:[]
+    data,
   });
 };
 
@@ -24,17 +24,17 @@ const updateClass = (data) => {
   });
 };
 const deleteClass = (data) => {
-    return api({
-      url: `Classrooms?id=${data}`,
-      method: 'DELETE',
-    });
-  };
+  return api({
+    url: `Classrooms?id=${data}`,
+    method: 'DELETE',
+  });
+};
 
 const classStageServices = {
-    getClassList ,
-    addClass,
-    updateClass,
-    deleteClass,
+  getClassList,
+  addClass,
+  updateClass,
+  deleteClass,
 };
 
 export default classStageServices;
