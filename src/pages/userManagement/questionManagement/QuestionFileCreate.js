@@ -1,25 +1,28 @@
 import '../../../styles/questionManagement/addQuestionFileForm.scss';
 import { CustomForm, CustomFormItem, CustomSelect, CustomButton, Option } from '../../../components';
-import { getAllClassStages } from '../../../store/slice/classStageSlice';
-import { getLessons } from '../../../store/slice/lessonsSlice';
 import { UploadOutlined } from '@ant-design/icons';
-import { Upload } from 'antd';
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { Form, Upload } from 'antd';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import useAcquisitionTree from '../../../hooks/useAcquisitionTree';
 
 const QuestionFileCreate = ({}) => {
   const lessons = useSelector((state) => state?.lessons?.lessons);
   const classStages = useSelector((state) => state?.classStages?.allClassList);
 
-  const dispatch = useDispatch();
+  const [form] = Form.useForm();
 
-  useEffect(() => {
-    dispatch(getAllClassStages());
-  }, []);
+  const { classroomId, setClassroomId } = useAcquisitionTree();
 
-  useEffect(() => {
-    dispatch(getLessons());
-  }, []);
+  const onClassroomChange = (value) => {
+    setClassroomId(value);
+    form.resetFields(['lesson']);
+  };
+
+  const submitForm = async (e) => {
+    const values = await form.validateFields();
+    console.log('values', values);
+  };
 
   return (
     <div className="add-question-container">
@@ -29,9 +32,14 @@ const QuestionFileCreate = ({}) => {
         layout="horizontal"
         labelWrap
         className="add-question-form "
+        form={form}
+        onFinish={submitForm}
       >
+        <CustomFormItem rules={[{ required: true }]} label="Eğitim Öğretim Yılı">
+          <CustomSelect placeholder="Eğitim Öğretim Yılı Seçiniz"></CustomSelect>
+        </CustomFormItem>
         <CustomFormItem rules={[{ required: true }]} label="Sınıf Seviyesi" name="classStage">
-          <CustomSelect placeholder="Sınıf Seçiniz">
+          <CustomSelect onChange={onClassroomChange} placeholder="Sınıf Seçiniz">
             {classStages.map((item) => {
               return (
                 <Option key={item.id} value={item.id}>
@@ -43,13 +51,15 @@ const QuestionFileCreate = ({}) => {
         </CustomFormItem>
         <CustomFormItem rules={[{ required: true }]} label="Soruların Bağlı Olduğu Ders" name="lesson">
           <CustomSelect placeholder="Ders Seçiniz">
-          {lessons.map((item) => {
-              return (
-                <Option key={item.id} value={item.id}>
-                  {item.name}
-                </Option>
-              );
-            })}
+            {lessons
+              ?.filter((item) => item.classroomId === classroomId)
+              ?.map((item) => {
+                return (
+                  <Option key={item?.id} value={item?.id}>
+                    {item?.name}
+                  </Option>
+                );
+              })}
           </CustomSelect>
         </CustomFormItem>
         <CustomFormItem rules={[{ required: true }]} label="Yayın Adı">
@@ -63,14 +73,18 @@ const QuestionFileCreate = ({}) => {
             <CustomButton icon={<UploadOutlined />}>Yükle</CustomButton>
           </Upload>
         </CustomFormItem>
+        <CustomFormItem></CustomFormItem>
       </CustomForm>
+
       <div className="add-question-footer">
         <CustomButton type="primary" className="cancel-btn">
           İptal
         </CustomButton>
-        <CustomButton type="primary" className="save-btn">
-          Kaydet
-        </CustomButton>
+        <CustomFormItem>
+          <CustomButton onClick={submitForm} type="primary" className="save-btn">
+            Kaydet
+          </CustomButton>
+        </CustomFormItem>
       </div>
     </div>
   );
