@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form } from 'antd';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,27 +14,26 @@ import {
   CustomFormItem,
   CustomInput,
 } from '../../../../components';
-import { getFilteredPagedForms,getFormCategories  } from '../../../../store/slice/formsSlice';
+import { getFilteredPagedForms, getFormCategories, setFormFilterObject } from '../../../../store/slice/formsSlice';
 import iconSearchWhite from '../../../../assets/icons/icon-white-search.svg';
 import '../../../../styles/surveyManagement/surveyFilter.scss';
 import dayjs from 'dayjs';
 
 const publishSituation = [
-  { id: 1, value: 'Yayında'},
-  { id: 2,  value: 'Yayında değil'},
-  { id: 3,  value: 'Taslak'},
-
+  { id: 1, value: 'Yayında' },
+  { id: 2, value: 'Yayında değil' },
+  { id: 3, value: 'Taslak' },
 ];
-const publishEnum={
-  'Yayında':1,
-  'Yayında değil':2,
-  'Taslak':3
-}
-const publishEnumReverse={
-  1:'Yayında',
-  2:'Yayında değil',
-  3:'Taslak'
-}
+// const publishEnum = {
+//   Yayında: 1,
+//   Yayında değil: 2,
+//   Taslak: 3,
+// };
+const publishEnumReverse = {
+  1: 'Yayında',
+  2: 'Yayında değil',
+  3: 'Taslak',
+};
 
 const FormFilter = () => {
   const [form] = Form.useForm();
@@ -44,15 +43,14 @@ const FormFilter = () => {
   useEffect(() => {
     dispatch(getFilteredPagedForms(filterObject));
     dispatch(getFormCategories());
-  }, [dispatch]);
-  
+  }, []);
 
   const handleClear = useCallback(async () => {
     form.resetFields();
     form.resetFields(['CategoryId']);
     const body = {
       name: '',
-      Status: [],
+      PublishStatus: [],
       CategoryId: [],
       InsertEndDate: '',
       InsertStartDate: '',
@@ -68,20 +66,20 @@ const FormFilter = () => {
   const handleSearch = useCallback(async () => {
     try {
       const values = await form.validateFields();
+      console.log(values);
+      // console.log(filterObject);
 
       const body = {
-        Name: values?.name || null,
-        PublishStatus:publishEnum[values.status],
-        CategoryOfFormId: values.categoryId || null,
-        StartDate: values?.startDate
-          ? dayjs(values?.startDate)?.format('YYYY-MM-DDT00:00:00')
-          : undefined,
+        // ...filterObject,
+        Name: values?.name,
+        PublishStatus: values?.PublishStatus,
+        CategoryOfFormId: values?.categoryId,
+        StartDate: values?.startDate ? dayjs(values?.startDate)?.format('YYYY-MM-DDT00:00:00') : undefined,
         EndDate: values?.endDate && dayjs(values?.endDate)?.format('YYYY-MM-DDT23:59:59'),
       };
-
-      await dispatch(getFilteredPagedForms({ ...filterObject, ...body }));
-    } catch (e) {
-    }
+      await dispatch(getFilteredPagedForms(body));
+      dispatch(setFormFilterObject({...filterObject, ...body}))
+    } catch (e) {}
   }, [dispatch, filterObject, form]);
 
   const disabledStartDate = (startValue) => {
@@ -129,7 +127,7 @@ const FormFilter = () => {
                     {form.name}
                   </Option>
                 ))}
-                <Option key={11111} value={undefined}>
+                <Option key={11111} value={null}>
                   Hepsi
                 </Option>
               </CustomSelect>
@@ -142,16 +140,16 @@ const FormFilter = () => {
                   <span>:</span>
                 </div>
               }
-              name="status"
+              name="PublishStatus"
               className="filter-item"
             >
               <CustomSelect className="form-filter-item" placeholder={useText('Seçiniz')}>
-                {publishSituation?.map(({ id,value}) => (
-                  <Option key={id} value={value}>
+                {publishSituation?.map(({ id, value }) => (
+                  <Option key={id} value={id}>
                     {value}
                   </Option>
                 ))}
-                <Option key={111} value={undefined}>
+                <Option key={111} value={null}>
                   <Text t="Hepsi" />
                 </Option>
               </CustomSelect>
@@ -173,7 +171,7 @@ const FormFilter = () => {
                     {name}
                   </Option>
                 ))}
-                <Option key={112} value={undefined}>
+                <Option key={112} value={null}>
                   <Text t="Hepsi" />
                 </Option>
               </CustomSelect>
