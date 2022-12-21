@@ -23,6 +23,10 @@ import { isCancel,CancelToken } from 'axios';
 import { getPackageById, updatePackage } from '../../../store/slice/packageSlice';
 import { getPackageTypeList } from '../../../store/slice/packageTypeSlice';
 import { useHistory, useParams } from 'react-router-dom';
+import {  removeFromArray, turkishToLower } from '../../../utils/utils';
+import useAcquisitionTree from '../../../hooks/useAcquisitionTree';
+import DateSection from '../../eventManagement/forms/DateSection';
+import dayjs from 'dayjs';
 
 const EditPackages = () => {
   const [form] = Form.useForm();
@@ -31,18 +35,53 @@ const EditPackages = () => {
   const [errorList, setErrorList] = useState([]);
   const [errorUpload, setErrorUpload] = useState();
   const [currentImages, setCurrenImages] = useState([]);
+  const [selectedClassrooms, setSelectedClassrooms] = useState([])
+  const [lessonsOptions, setLessonsOptions] = useState([])
+  const [currentClassroomIds, setCurrentClassroomIds] = useState([])
+  const { lessons } = useSelector((state) => state?.lessons);
   const cancelFileUpload = useRef(null);
   const token = useSelector((state) => state?.auth?.token);
   const { packageTypeList } = useSelector((state) => state?.packageType);
+  const { allClassList } = useSelector((state) => state?.classStages);
   const dispatch = useDispatch();
   const history = useHistory();
 
   const { id } = useParams();
 
+  const { setClassroomId, setLessonId } = useAcquisitionTree();
+
+  const lessonIds = Form.useWatch('lesson', form) || [];
+
+
   useEffect(() => {
     loadPackageById();
     loadPackageList();
   }, []);
+
+ 
+  useEffect(()=>{
+    const abc = selectedClassrooms.map((item) => {
+      return {
+        label: item.name,
+        options: lessons
+          .filter((i) => i.classroomId === item.id)
+          .map((a) => {
+            return {
+              label: a.name,
+              value: a.id,
+            };
+          }),
+      };
+    })
+
+    setLessonsOptions(abc)
+  },[lessons,selectedClassrooms])
+
+
+  useEffect(()=>{
+    let selectedClass = allClassList.filter(item=>currentClassroomIds.includes(item.id))
+    setSelectedClassrooms(selectedClass);
+  },[allClassList,currentClassroomIds])
 
   const loadPackageById = async () => {
     const currentPackageResponse = await dispatch(getPackageById(id));
@@ -54,10 +93,29 @@ const EditPackages = () => {
         name: item.file.fileName,
       });
     });
+
+    let currentClassrooms = [... new Set(currentPackageResponse.payload.packageLessons.map(item=>item.lesson.classroom.id))]
+ 
+    setCurrentClassroomIds(currentClassrooms)
+
+    currentClassrooms.map(item=>{
+      setClassroomId(item)
+    })
+
     form.setFieldsValue({
       ...currentPackageResponse.payload,
+      startDate: dayjs(currentPackageResponse.payload.startDate),
+      endDate: dayjs(currentPackageResponse.payload.finishDate),
       imageOfPackages: currentImageArray,
     });
+
+
+
+    form.setFieldsValue({
+      gradeLevel: currentClassrooms,
+      lesson: currentPackageResponse.payload.packageLessons.map(item=>item.lesson.id)
+    })
+
     currentPackageResponse.payload.imageOfPackages.forEach((item) => {
       setCurrenImages((prev) => [
         ...prev,
@@ -195,6 +253,23 @@ const EditPackages = () => {
     });
   };
 
+  const onClassroomChange = (value) => {
+    setClassroomId(value.at(-1));
+    let selectedClass = allClassList.filter(item=>value.includes(item.id))
+    setSelectedClassrooms(selectedClass);
+  };
+
+  const onLessonChange = (value) => {
+    setLessonId(value.at(-1));
+  };
+
+  const onClassroomsDeselect = (value) => {
+    const findLessonsIds = lessons.filter((i) => i.classroomId === value).map((item) => item.id);
+    form.setFieldsValue({
+      lesson: removeFromArray(lessonIds, ...findLessonsIds),
+    });
+  }
+
   return (
     <CustomCollapseCard cardTitle="Paket Güncelleme">
       <div className="add-packages-container">
@@ -290,6 +365,46 @@ const EditPackages = () => {
             </CustomSelect>
           </CustomFormItem>
 
+          
+
+          <CustomFormItem
+            label={<Text t="Sınıf Seviyesi" />}
+            name="gradeLevel"
+            rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}>
+              <CustomSelect
+              className="form-filter-item" 
+              placeholder={'Seçiniz'}
+              filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
+              showArrow
+              mode="multiple"
+              onDeselect={onClassroomsDeselect}
+              onChange={onClassroomChange}
+            >
+              {allClassList
+                ?.map((item) => {
+                  return (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.name}
+                    </Option>
+                  );
+                })}
+            </CustomSelect>
+          </CustomFormItem>
+
+          <CustomFormItem label="Ders" name="lesson"
+           rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}>
+            <CustomSelect
+              className="form-filter-item" placeholder={'Seçiniz'}
+              filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
+              showArrow
+              mode="multiple"
+              // onDeselect={onLessonDeselect}
+              onChange={onLessonChange}
+              options={lessonsOptions}
+            >
+            </CustomSelect>
+          </CustomFormItem>
+
           <CustomFormItem
             label={<Text t="Paket Türü" />}
             name="packageTypeId"
@@ -309,6 +424,8 @@ const EditPackages = () => {
           <CustomFormItem label={<Text t="Max. Net Sayısı" />} name="maxNetCount">
             <CustomInput type={'number'} placeholder={'Max. Net Sayısı'} className="max-net-count" />
           </CustomFormItem>
+
+          <DateSection form={form}/>
 
           <div className="add-package-footer">
             <CustomButton type="primary" className="cancel-btn" onClick={onCancel}>
