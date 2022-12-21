@@ -35,6 +35,9 @@ import { targetScreenSlice } from './slice/targetScreenSlice';
 import { packageTypeSlice } from './slice/packageTypeSlice';
 import { userTypeSlice } from './slice/userTypeSlice';
 import { branchsSlice } from './slice/branchsSlice';
+import { lessonUnitsSlice } from './slice/lessonUnitsSlice';
+import { lessonSubjectsSlice } from './slice/lessonSubjectsSlice';
+import { lessonSubSubjectsSlice } from './slice/lessonSubSubjectsSlice';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -51,6 +54,9 @@ const reducers = combineReducers({
   citysCountys: citysCountysSlice.reducer,
   videos: videoSlice.reducer,
   lessons: lessonsSlice.reducer,
+  lessonUnits: lessonUnitsSlice.reducer,
+  lessonSubjects: lessonSubjectsSlice.reducer,
+  lessonSubSubjects: lessonSubSubjectsSlice.reducer,
   packages: packageSlice.reducer,
   category: categorySlice.reducer,
   subCategory: subCategorySlice.reducer,
@@ -66,7 +72,7 @@ const reducers = combineReducers({
   preferencePeriod: preferencePeriodSlice.reducer,
   packageType: packageTypeSlice.reducer,
   userType: userTypeSlice.reducer,
-  branchs:branchsSlice.reducer
+  branchs: branchsSlice.reducer,
 });
 
 const persistConfig = {

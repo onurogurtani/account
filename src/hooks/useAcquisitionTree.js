@@ -1,8 +1,12 @@
 // Kazanım Ağacı
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllClassStages } from '../store/slice/classStageSlice';
-import { getLessons, getLessonSubjects, getLessonSubSubjects, getUnits } from '../store/slice/lessonsSlice';
+import { getLessons } from '../store/slice/lessonsSlice';
+import { getLessonSubjects } from '../store/slice/lessonSubjectsSlice';
+import { getLessonSubSubjects } from '../store/slice/lessonSubSubjectsSlice';
+import { getUnits } from '../store/slice/lessonUnitsSlice';
+import { getListFilterParams } from '../utils/utils';
 
 const useAcquisitionTree = () => {
   const dispatch = useDispatch();
@@ -13,7 +17,7 @@ const useAcquisitionTree = () => {
   const [lessonSubjectId, setLessonSubjectId] = useState();
 
   useEffect(() => {
-    if (!allClassList.length) loadClassrooms();
+    if (!allClassList.length) dispatch(getAllClassStages());
   }, []);
 
   useEffect(() => {
@@ -21,82 +25,26 @@ const useAcquisitionTree = () => {
     setLessonId();
     setUnitId();
     setLessonSubjectId();
-    loadLessons([
-      {
-        field: 'classroomId',
-        value: classroomId,
-        compareType: 0,
-      },
-    ]);
+    dispatch(getLessons(getListFilterParams('classroomId', classroomId)));
   }, [classroomId]);
 
   useEffect(() => {
     if (!lessonId) return false;
     setUnitId();
     setLessonSubjectId();
-    loadUnits([
-      {
-        field: 'lessonId',
-        value: lessonId,
-        compareType: 0,
-      },
-    ]);
+    dispatch(getUnits(getListFilterParams('lessonId', lessonId)));
   }, [lessonId]);
 
   useEffect(() => {
     if (!unitId) return false;
     setLessonSubjectId();
-    loadLessonSubjects([
-      {
-        field: 'lessonUnitId',
-        value: unitId,
-        compareType: 0,
-      },
-    ]);
+    dispatch(getLessonSubjects(getListFilterParams('lessonUnitId', unitId)));
   }, [unitId]);
 
   useEffect(() => {
     if (!lessonSubjectId) return false;
-    loadLessonSubSubjects([
-      {
-        field: 'lessonSubjectId',
-        value: lessonSubjectId,
-        compareType: 0,
-      },
-    ]);
+    dispatch(getLessonSubSubjects(getListFilterParams('lessonSubjectId', lessonSubjectId)));
   }, [lessonSubjectId]);
-
-  const loadClassrooms = useCallback(async () => {
-    await dispatch(getAllClassStages());
-  }, [dispatch]);
-
-  const loadLessons = useCallback(
-    async (data) => {
-      dispatch(getLessons(data));
-    },
-    [dispatch],
-  );
-
-  const loadUnits = useCallback(
-    async (data) => {
-      await dispatch(getUnits(data));
-    },
-    [dispatch],
-  );
-
-  const loadLessonSubjects = useCallback(
-    async (data) => {
-      await dispatch(getLessonSubjects(data));
-    },
-    [dispatch],
-  );
-
-  const loadLessonSubSubjects = useCallback(
-    async (data) => {
-      await dispatch(getLessonSubSubjects(data));
-    },
-    [dispatch],
-  );
 
   return {
     classroomId,
