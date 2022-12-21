@@ -9,16 +9,34 @@ const getEducationYears = () => {
 };
 
 const uploadZipFileOfQuestion = (data) => {
-    return api({
-      url: `GroupOfQuestionOfExams/UploadZipFileGroupOfQuestionOfExam`,
-      method: 'POST',
-      data: data,
-    });
-  };
+  return api({
+    url: `GroupOfQuestionOfExams/UploadZipFileGroupOfQuestionOfExam`,
+    method: 'POST',
+    data: data,
+  });
+};
+
+const getPublisherList = () => {
+  return api({
+    url: `Publishers/getList?PageNumber=0&PageSize=0`,
+    method: 'POST',
+    data:null
+  });
+};
+
+const getBookList = (data) => {
+  return api({
+    url: `Books/getList?PageNumber=0&PageSize=0`,
+    method: 'POST',
+    data:data
+  });
+};
 
 const questionMangementServices = {
   getEducationYears,
-  uploadZipFileOfQuestion 
+  uploadZipFileOfQuestion,
+  getPublisherList,
+  getBookList,
 };
 
-export default questionMangementServices ;
+export default questionMangementServices;

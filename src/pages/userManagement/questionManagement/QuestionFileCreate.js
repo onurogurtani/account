@@ -5,6 +5,7 @@ import { Form, Upload } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useAcquisitionTree from '../../../hooks/useAcquisitionTree';
+import usePublishers from '../../../hooks/usePublishers';
 import { getEducationYears } from '../../../store/slice/questionFileSlice';
 
 const QuestionFileCreate = ({}) => {
@@ -12,32 +13,39 @@ const QuestionFileCreate = ({}) => {
 
   const lessons = useSelector((state) => state?.lessons?.lessons);
   const classStages = useSelector((state) => state?.classStages?.allClassList);
-  const educationYears = useSelector((state) => state?.questionManagement?.educationYears);
+  const { publisherList, educationYears, bookList } = useSelector((state) => state?.questionManagement);
 
   const dispatch = useDispatch();
 
   const [form] = Form.useForm();
 
   const { classroomId, setClassroomId } = useAcquisitionTree();
+  const { publisherId, setPublisherId } = usePublishers();
 
   const onClassroomChange = (value) => {
     setClassroomId(value);
     form.resetFields(['lesson']);
   };
 
+  const onPublisherChange = (value) => {
+    setPublisherId(value);
+  };
+
   useEffect(() => {
     dispatch(getEducationYears());
   }, []);
 
-  const submitForm = async (e) => {
+  const submitForm = async () => {
     const values = await form.validateFields();
-    console.log('values', values);
+    const fileData = values?.ZipFile?.fileList[0].originFileObj;
+    const data = new FormData();
+    data.append('ZipFile', fileData);
+    data.append('BookId', values?.BookId);
+    data.append('LessonId', values?.LessonId);
+    data.append('EducationYearsId', values?.EducationYearId);
   };
 
   const beforeUpload = (file) => {
-    if (file) {
-      return false;
-    }
     const isZip = file.type === 'application/x-zip-compressed';
     if (!isZip) {
       setShowFileList(false);
@@ -45,10 +53,11 @@ const QuestionFileCreate = ({}) => {
         title: 'Hata',
         message: 'Yüklemek istediğiniz dosya zip formatında olmalıdır.',
       });
+      return false;
     } else {
       setShowFileList(true);
+      return false;
     }
-    return isZip;
   };
 
   return (
@@ -62,7 +71,7 @@ const QuestionFileCreate = ({}) => {
         form={form}
         onFinish={submitForm}
       >
-        <CustomFormItem rules={[{ required: true }]} label="Eğitim Öğretim Yılı">
+        <CustomFormItem rules={[{ required: true }]} label="Eğitim Öğretim Yılı" name="EducationYearId">
           <CustomSelect placeholder="Eğitim Öğretim Yılı Seçiniz">
             {educationYears.map((item) => {
               return (
@@ -73,7 +82,7 @@ const QuestionFileCreate = ({}) => {
             })}
           </CustomSelect>
         </CustomFormItem>
-        <CustomFormItem rules={[{ required: true }]} label="Sınıf Seviyesi" name="classStage">
+        <CustomFormItem label="Sınıf Seviyesi" name="classStage">
           <CustomSelect onChange={onClassroomChange} placeholder="Sınıf Seçiniz">
             {classStages.map((item) => {
               return (
@@ -97,11 +106,29 @@ const QuestionFileCreate = ({}) => {
               })}
           </CustomSelect>
         </CustomFormItem>
-        <CustomFormItem rules={[{ required: true }]} name="PublishingHouseName" label="Yayın Adı">
-          <CustomSelect placeholder="Yayın Seçiniz"></CustomSelect>
+        <CustomFormItem name="PublishingHouseName" label="Yayın Adı">
+          <CustomSelect onChange={onPublisherChange} placeholder="Yayın Seçiniz">
+            {publisherList.map((item) => {
+              return (
+                <Option key={item?.id} value={item?.id}>
+                  {item.name}
+                </Option>
+              );
+            })}
+          </CustomSelect>
         </CustomFormItem>
-        <CustomFormItem rules={[{ required: true }]} label="Eser/Kitap Adı">
-          <CustomSelect placeholder="Eser/Kitap Seçiniz"></CustomSelect>
+        <CustomFormItem rules={[{ required: true }]} label="Eser/Kitap Adı" name="BookId">
+          <CustomSelect placeholder="Eser/Kitap Seçiniz">
+            {bookList
+              ?.filter((item) => item.publisherId === publisherId)
+              ?.map((item) => {
+                return (
+                  <Option key={item?.id} value={item?.id}>
+                    {item?.name}
+                  </Option>
+                );
+              })}
+          </CustomSelect>
         </CustomFormItem>
         <CustomFormItem rules={[{ required: true }]} label="Zip Dosyası Ekle" name="ZipFile">
           <Upload showUploadList={showFileList} maxCount={1} beforeUpload={beforeUpload}>

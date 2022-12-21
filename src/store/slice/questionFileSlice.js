@@ -9,6 +9,22 @@ export const getEducationYears = createAsyncThunk('getEducationYears', async (da
   }
 });
 
+export const getPublisherList = createAsyncThunk('getPublisherList', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    return await questionMangementServices.getPublisherList();
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+
+export const getBookList = createAsyncThunk('getBookList', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    return await questionMangementServices.getBookList(data);
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+
 export const uploadZipFileOfQuestion = createAsyncThunk(
   'uploadZipFileOfQuestion',
   async (data, { dispatch, rejectWithValue }) => {
@@ -22,6 +38,8 @@ export const uploadZipFileOfQuestion = createAsyncThunk(
 
 const initialState = {
   educationYears: [],
+  publisherList: [],
+  bookList: [],
 };
 
 export const questionManagementSlice = createSlice({
@@ -31,6 +49,12 @@ export const questionManagementSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getEducationYears.fulfilled, (state, action) => {
       state.educationYears = action.payload.data?.items;
+    });
+    builder.addCase(getPublisherList.fulfilled, (state, action) => {
+      state.publisherList = action.payload.data?.items;
+    });
+    builder.addCase(getBookList.fulfilled, (state, action) => {
+      state.bookList = action.payload.data?.items;
     });
   },
 });
