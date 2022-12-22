@@ -7,6 +7,7 @@ import {
   Option,
   errorDialog,
   successDialog,
+  Text,
 } from '../../../components';
 import { UploadOutlined } from '@ant-design/icons';
 import { Form, Upload } from 'antd';
@@ -59,7 +60,7 @@ const QuestionFileCreate = ({}) => {
         title: <Text t="success" />,
         message: 'İşlem Başarıyla Gerçekleştirildi.',
       });
-      form.resetFields(['LessonId', 'BookId', 'EducationYearId', 'ZipFile']);
+      form.resetFields(['LessonId', 'BookId', 'EducationYearId', 'ZipFile', 'classStage', 'PublishingHouseName']);
     } else {
       errorDialog({
         title: <Text t="error" />,
