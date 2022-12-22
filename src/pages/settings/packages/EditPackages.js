@@ -109,8 +109,6 @@ const EditPackages = () => {
       imageOfPackages: currentImageArray,
     });
 
-
-
     form.setFieldsValue({
       gradeLevel: currentClassrooms,
       lesson: currentPackageResponse.payload.packageLessons.map(item=>item.lesson.id)
@@ -214,12 +212,25 @@ const EditPackages = () => {
 
     newImageArray = currentImages.concat(diffOldImages);
 
+    let lessonsArr = values.lesson.map(item=>{
+      return {lessonId: item}
+    })
+
     const data = {
-      package: {
-        ...values,
+      "package": {
+        // ...values,
+        id: id,
+        name: values.name,
+        summary: values.summary,
+        content: values.content,
+        maxNetCount: Number(values.maxNetCount),
+        packageTypeId: values.packageTypeId,
+        isActive: values.isActive,
+        startDate: values.startDate.$d,
+        finishDate: values.endDate.$d,
+        packageLessons:  lessonsArr,
         imageOfPackages: await handleUpload(newImageArray),
         examType: 10, //sınav tipi halihazırda inputtan alınmıyor
-        id: id,
       },
     };
 

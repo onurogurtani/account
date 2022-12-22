@@ -139,7 +139,6 @@ const AddPackages = () => {
         summary: values.summary,
         content: values.content,
         maxNetCount: Number(values.maxNetCount),
-        examType: values.examType,
         packageTypeId: values.packageTypeId,
         isActive: values.isActive,
         startDate: values.startDate.$d,
@@ -198,10 +197,9 @@ const AddPackages = () => {
 
     setLessonsOptions(abc)
   },[lessons,selectedClassrooms])
-console.log(lessons)
+
 
   const onClassroomChange = (value) => {
-    console.log("onClassroomChange")
     setClassroomId(value.at(-1));
     let selectedClass = allClassList.filter(item=>value.includes(item.id))
     setSelectedClassrooms(selectedClass);

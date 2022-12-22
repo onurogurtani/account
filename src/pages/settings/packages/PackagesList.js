@@ -87,10 +87,7 @@ const PackagesList = () => {
       key: 'expiryDate',
       sorter: (a, b) => a.expiryDate - b.expiryDate,
       render: (text, record) => {
-        console.log(record)
-        console.log(record.startDate)
-
-        return <div>{record.startDate.substring(0, 10)} - {record.finishDate.substring(0, 10)}</div>;
+        return <div>{new Date(record.startDate).toLocaleDateString('en-GB')} - {new Date(record.finishDate).toLocaleDateString('en-GB')}</div>;
       },
     },
     {
