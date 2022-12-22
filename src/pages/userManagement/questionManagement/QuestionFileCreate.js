@@ -1,12 +1,20 @@
 import '../../../styles/questionManagement/addQuestionFileForm.scss';
-import { CustomForm, CustomFormItem, CustomSelect, CustomButton, Option, errorDialog } from '../../../components';
+import {
+  CustomForm,
+  CustomFormItem,
+  CustomSelect,
+  CustomButton,
+  Option,
+  errorDialog,
+  successDialog,
+} from '../../../components';
 import { UploadOutlined } from '@ant-design/icons';
 import { Form, Upload } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useAcquisitionTree from '../../../hooks/useAcquisitionTree';
 import usePublishers from '../../../hooks/usePublishers';
-import { getEducationYears } from '../../../store/slice/questionFileSlice';
+import { getEducationYears, uploadZipFileOfQuestion } from '../../../store/slice/questionFileSlice';
 
 const QuestionFileCreate = ({}) => {
   const [showFileList, setShowFileList] = useState(true);
@@ -24,7 +32,7 @@ const QuestionFileCreate = ({}) => {
 
   const onClassroomChange = (value) => {
     setClassroomId(value);
-    form.resetFields(['lesson']);
+    form.resetFields(['LessonId']);
   };
 
   const onPublisherChange = (value) => {
@@ -39,10 +47,25 @@ const QuestionFileCreate = ({}) => {
     const values = await form.validateFields();
     const fileData = values?.ZipFile?.fileList[0].originFileObj;
     const data = new FormData();
-    data.append('ZipFile', fileData);
-    data.append('BookId', values?.BookId);
-    data.append('LessonId', values?.LessonId);
-    data.append('EducationYearsId', values?.EducationYearId);
+    data.append('CreateGroupOfQuestionOfExam.ZipFile', fileData);
+    data.append('CreateGroupOfQuestionOfExam.BookId', values?.BookId);
+    data.append('CreateGroupOfQuestionOfExam.LessonId', values?.LessonId);
+    data.append('CreateGroupOfQuestionOfExam.EducationYearId', values?.EducationYearId);
+
+    const action = await dispatch(uploadZipFileOfQuestion(data));
+
+    if (uploadZipFileOfQuestion.fulfilled.match(action)) {
+      successDialog({
+        title: <Text t="success" />,
+        message: 'İşlem Başarıyla Gerçekleştirildi.',
+      });
+      form.resetFields(['LessonId', 'BookId', 'EducationYearId', 'ZipFile']);
+    } else {
+      errorDialog({
+        title: <Text t="error" />,
+        message: action?.payload.message,
+      });
+    }
   };
 
   const beforeUpload = (file) => {
