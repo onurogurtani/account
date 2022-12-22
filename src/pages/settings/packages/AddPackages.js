@@ -181,7 +181,7 @@ const AddPackages = () => {
   };
 
   useEffect(()=>{
-    const abc = selectedClassrooms.map((item) => {
+    const selectedLessonsOptions = selectedClassrooms.map((item) => {
       return {
         label: item.name,
         options: lessons
@@ -195,7 +195,7 @@ const AddPackages = () => {
       };
     })
 
-    setLessonsOptions(abc)
+    setLessonsOptions(selectedLessonsOptions)
   },[lessons,selectedClassrooms])
 
 
