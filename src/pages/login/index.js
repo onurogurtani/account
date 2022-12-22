@@ -2,12 +2,12 @@ import {
   CustomButton,
   CustomForm,
   CustomFormItem,
-  CustomInput,
   CustomPassword,
   errorDialog,
   CustomImage,
   Text,
   useText,
+  CustomNumberInput,
 } from '../../components';
 import { Form } from 'antd';
 import LoginLayout from '../../layout/LoginLayout';
@@ -34,7 +34,7 @@ const Login = ({ history }) => {
   const onFinish = useCallback(
     async (values) => {
       const body = {
-        Email: values?.Email,
+        citizenId: values?.citizenId,
         password: values?.password,
         captchaKey: values?.captchaKey,
       };
@@ -66,17 +66,14 @@ const Login = ({ history }) => {
         layout={'vertical'}
       >
         <CustomFormItem
-          label={<Text t="loginUserName" />}
-          name="Email"
+          label={<Text t="T.C. Kimlik No" />}
+          name="citizenId"
           rules={[
-            {
-              required: true,
-              message: <Text t="loginUsernameInputRequired" />,
-            },
-            { type: 'string', max: 50 },
+            { required: true, message: 'Lütfen T.C. kimlik no bilginizi giriniz.' },
+            { type: 'number', min: 10000000000, message: '11 karakter olmalı' },
           ]}
         >
-          <CustomInput height="58" placeholder={useText('loginUsernameInput')} maxLength={50} />
+          <CustomNumberInput height="58" maxlength="11" placeholder="T.C. Kimlik No Girinizı" />
         </CustomFormItem>
 
         <CustomFormItem

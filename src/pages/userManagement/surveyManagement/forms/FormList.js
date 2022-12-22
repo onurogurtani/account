@@ -17,6 +17,7 @@ import FormFilter from './FormFilter';
 
 const FormList = () => {
   const { tableProperty, formList, filterObject } = useSelector((state) => state?.forms);
+  console.log(formList);
   const [filterFormVisible, setFilterFormVisible] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -28,8 +29,7 @@ const FormList = () => {
   useEffect(() => {
     dispatch(getFilteredPagedForms(filterObject));
     dispatch(getFormCategories());
-    console.log(tableProperty);
-  }, [dispatch]);
+  }, []);
 
   const paginationProps = {
     showSizeChanger: true,

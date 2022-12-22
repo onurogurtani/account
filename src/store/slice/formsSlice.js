@@ -2,27 +2,23 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import formServices from '../../services/forms.services';
 
 // Get Forms
-export const getFilteredPagedForms = createAsyncThunk('forms/getFilteredPagedForms', async (data) => {
+export const getFilteredPagedForms = createAsyncThunk('getFilteredPagedForms', async (data) => {
   let urlString;
+  console.log(data);
   if (data) {
     let urlArr = [];
     for (let item in data) {
-      if (!!data[item]) {
-        if (
-          item === 'SurveyConstraintId' ||
-          item === 'TargetGroupId' ||
-          item === 'CategoryId' ||
-          item === 'SurveyCompletionStatusId' ||
-          item === 'Status'
-        ) {
-          data[item]?.map((element, idx) => {
-            let newStr = `FormDetailSearch.${item}=${data[item][idx]}`;
-            urlArr.push(newStr);
-          });
-        } else {
-          let newStr = `FormDetailSearch.${item}=${data[item]}`;
-          urlArr.push(newStr);
-        }
+      console.log(item);
+      if (data[item]!=null && data[item]!='') {
+        let newStr = `FormDetailSearch.${item}=${data[item]}`;
+        // console.log(newStr);
+        urlArr.push(newStr);
+       
+        // data[item]?.map(({key,value}, idx) => {
+        //   let newStr = `FormDetailSearch.${key}=${value}`;
+        //   urlArr.push(newStr);
+        // });
+        // console.log(urlArr);
       }
     }
     if (!data.OrderBy) {
@@ -38,6 +34,7 @@ export const getFilteredPagedForms = createAsyncThunk('forms/getFilteredPagedFor
       urlArr.push(newStr);
     }
     urlString = urlArr.join('&');
+    console.log(urlString);
   } else {
     urlString = 'FormDetailSearch.OrderBy=IdDESC&FormDetailSearch.PageNumber=1&FormDetailSearch.PageSize=10';
   }
@@ -231,7 +228,7 @@ const initialState = {
     SurveyConstraintId: [],
     TargetGroupId: [],
     CategoryId: [],
-    Status: [],
+    PublishStatus: null,
     UpdateStartDate: '',
     UpdateEndDate: '',
     InsertEndDate: '',
@@ -264,6 +261,7 @@ export const formsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getFilteredPagedForms.fulfilled, (state, action) => {
+      console.log(action?.payload?.data?.items);
       state.formList = action?.payload?.data?.items || [];
       state.tableProperty = action?.payload?.data?.pagedProperty || {};
     });
