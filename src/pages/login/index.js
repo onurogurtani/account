@@ -73,7 +73,7 @@ const Login = ({ history }) => {
             { type: 'number', min: 10000000000, message: '11 karakter olmalı' },
           ]}
         >
-          <CustomNumberInput maxlength="11" placeholder="T.C. Kimlik No Girinizı" />
+          <CustomNumberInput height="58" maxlength="11" placeholder="T.C. Kimlik No Girinizı" />
         </CustomFormItem>
 
         <CustomFormItem
