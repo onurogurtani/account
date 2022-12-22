@@ -376,7 +376,7 @@ const EditPackages = () => {
             </CustomSelect>
           </CustomFormItem>
 
-          
+          <DateSection form={form}/>
 
           <CustomFormItem
             label={<Text t="Sınıf Seviyesi" />}
@@ -436,7 +436,6 @@ const EditPackages = () => {
             <CustomInput type={'number'} placeholder={'Max. Net Sayısı'} className="max-net-count" />
           </CustomFormItem>
 
-          <DateSection form={form}/>
 
           <div className="add-package-footer">
             <CustomButton type="primary" className="cancel-btn" onClick={onCancel}>
