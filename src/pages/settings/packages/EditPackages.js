@@ -60,7 +60,7 @@ const EditPackages = () => {
 
  
   useEffect(()=>{
-    const abc = selectedClassrooms.map((item) => {
+    const selectedLessonsOptions = selectedClassrooms.map((item) => {
       return {
         label: item.name,
         options: lessons
@@ -74,7 +74,7 @@ const EditPackages = () => {
       };
     })
 
-    setLessonsOptions(abc)
+    setLessonsOptions(selectedLessonsOptions)
   },[lessons,selectedClassrooms])
 
 
