@@ -1,125 +1,39 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { CustomFormItem, CustomSelect, Option } from '../../../../components';
-import { getAllClassStages } from '../../../../store/slice/classStageSlice';
-import { getLessons, getLessonSubjects, getLessonSubSubjects, getUnits } from '../../../../store/slice/lessonsSlice';
+import useAcquisitionTree from '../../../../hooks/useAcquisitionTree';
 
 const LessonsSectionForm = ({ form }) => {
-  const dispatch = useDispatch();
+  const { classroomId, setClassroomId, lessonId, setLessonId, unitId, setUnitId, lessonSubjectId, setLessonSubjectId } =
+    useAcquisitionTree();
 
-  const [classroomId, setClassroomId] = useState();
-  const [lessonId, setLessonId] = useState();
-  const [unitId, setUnitId] = useState();
-  const [lessonSubjectId, setLessonSubjectId] = useState();
+  const { lessons } = useSelector((state) => state?.lessons);
+  const { lessonSubSubjects } = useSelector((state) => state?.lessonSubSubjects);
 
-  const { lessons, units, lessonSubjects, lessonSubSubjects } = useSelector((state) => state?.lessons);
+  const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
+
+  const { lessonUnits } = useSelector((state) => state?.lessonUnits);
   const { allClassList } = useSelector((state) => state?.classStages);
-
-  useEffect(() => {
-    if (!allClassList.length) loadClassrooms();
-  }, []);
-
-  useEffect(() => {
-    if (!classroomId) return false;
-    setLessonId();
-    setUnitId();
-    setLessonSubjectId();
-    form.resetFields(['lessonId', 'lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects']);
-    loadLessons([
-      {
-        field: 'classroomId',
-        value: classroomId,
-        compareType: 0,
-      },
-    ]);
-  }, [classroomId]);
-
-  useEffect(() => {
-    if (!lessonId) return false;
-    setUnitId();
-    setLessonSubjectId();
-    form.resetFields(['lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects']);
-    loadUnits([
-      {
-        field: 'lessonId',
-        value: lessonId,
-        compareType: 0,
-      },
-    ]);
-  }, [lessonId]);
-
-  useEffect(() => {
-    if (!unitId) return false;
-    setLessonSubjectId();
-    form.resetFields(['lessonSubjectId', 'lessonSubSubjects']);
-    loadLessonSubjects([
-      {
-        field: 'lessonUnitId',
-        value: unitId,
-        compareType: 0,
-      },
-    ]);
-  }, [unitId]);
-
-  useEffect(() => {
-    if (!lessonSubjectId) return false;
-    form.resetFields(['lessonSubSubjects']);
-    loadLessonSubSubjects([
-      {
-        field: 'lessonSubjectId',
-        value: lessonSubjectId,
-        compareType: 0,
-      },
-    ]);
-  }, [lessonSubjectId]);
 
   const onClassroomChange = (value) => {
     setClassroomId(value);
+    form.resetFields(['lessonId', 'lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects']);
   };
 
   const onLessonChange = (value) => {
     setLessonId(value);
+    form.resetFields(['lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects']);
   };
 
   const onUnitChange = (value) => {
     setUnitId(value);
+    form.resetFields(['lessonSubjectId', 'lessonSubSubjects']);
   };
 
   const onLessonSubjectsChange = (value) => {
     setLessonSubjectId(value);
+    form.resetFields(['lessonSubSubjects']);
   };
-
-  const loadLessons = useCallback(
-    async (data) => {
-      dispatch(getLessons(data));
-    },
-    [dispatch],
-  );
-
-  const loadUnits = useCallback(
-    async (data) => {
-      await dispatch(getUnits(data));
-    },
-    [dispatch],
-  );
-
-  const loadLessonSubjects = useCallback(
-    async (data) => {
-      await dispatch(getLessonSubjects(data));
-    },
-    [dispatch],
-  );
-
-  const loadLessonSubSubjects = useCallback(
-    async (data) => {
-      await dispatch(getLessonSubSubjects(data));
-    },
-    [dispatch],
-  );
-
-  const loadClassrooms = useCallback(async () => {
-    await dispatch(getAllClassStages());
-  }, [dispatch]);
 
   return (
     <>
@@ -181,7 +95,7 @@ const LessonsSectionForm = ({ form }) => {
         name="lessonUnitId"
       >
         <CustomSelect onChange={onUnitChange} placeholder="Ünite">
-          {units
+          {lessonUnits
             ?.filter((item) => item.lessonId === lessonId)
             ?.map((item) => {
               return (

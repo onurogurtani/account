@@ -1,12 +1,5 @@
 import { api } from './api';
 
-const getLessonDetailSearch = (id) => {
-  return api({
-    url: `Lessons/getByFilterPagedLessons?LessonDetailSearch.ClassroomId=${id}`,
-    method: 'POST',
-  });
-};
-
 const getLessons = (data = null) => {
   return api({
     url: `Lessons/getList?PageSize=0`,
@@ -15,37 +8,34 @@ const getLessons = (data = null) => {
   });
 };
 
-const getUnits = (data = null) => {
+const addLessons = (data) => {
   return api({
-    url: `LessonUnits/getList?PageSize=0`,
+    url: `Lessons`,
     method: 'POST',
     data,
   });
 };
 
-const getLessonSubjects = (data = null) => {
+const editLessons = (data) => {
   return api({
-    url: `LessonSubjects/getList?PageSize=0`,
-    method: 'POST',
+    url: `Lessons`,
+    method: 'PUT',
     data,
   });
 };
 
-const getLessonSubSubjects = (data = null) => {
+const deleteLessons = (id) => {
   return api({
-    url: `LessonSubSubjects/getList?PageSize=0`,
-    method: 'POST',
-    data,
+    url: `Lessons?id=${id}`,
+    method: 'DELETE',
   });
 };
 
 const downloadLessonsExcel = () => {
-  const headers = { 'Content-Type': 'blob' };
   return api({
     url: `/Lessons/downloadLessonExcel`,
     method: 'GET',
-    responseType: 'arraybuffer',
-    headers,
+    responseType: 'blob',
   });
 };
 
@@ -59,12 +49,11 @@ const uploadLessonsExcel = (data) => {
 
 const lessonsServices = {
   getLessons,
-  getUnits,
-  getLessonSubjects,
-  getLessonSubSubjects,
+  editLessons,
+  deleteLessons,
   downloadLessonsExcel,
   uploadLessonsExcel,
-  getLessonDetailSearch,
+  addLessons,
 };
 
 export default lessonsServices;
