@@ -12,7 +12,7 @@ const PackagesList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { packages, tableProperty } = useSelector((state) => state?.packages);
-
+ 
   useEffect(() => {
     loadPackages();
   }, []);
@@ -82,9 +82,36 @@ const PackagesList = () => {
       },
     },
     {
+      title: 'Paket Geçerlilik Tarihi',
+      dataIndex: 'expiryDate',
+      key: 'expiryDate',
+      sorter: (a, b) => a.expiryDate - b.expiryDate,
+      render: (text, record) => {
+        return <div>{new Date(record.startDate).toLocaleDateString('en-GB')} - {new Date(record.finishDate).toLocaleDateString('en-GB')}</div>;
+      },
+    },
+    {
+      title: 'Sınıf Seviyesi',
+      dataIndex: 'gradeLevel',
+      key: 'gradeLevel',
+      sorter: (a, b) => a.gradeLevel - b.gradeLevel,
+      render: (text, record) => {
+        return <div>{record.packageLessons.map(i=>i.lesson.classroom.name)}</div>;
+      },
+    },
+    {
+      title: 'Ders',
+      dataIndex: 'lesson',
+      key: 'lesson',
+      sorter: (a, b) => a.lesson - b.lesson,
+      render: (text, record) => {
+        return <div>{record.packageLessons.map(i=>i.lesson.name)}</div>;
+      },
+    },
+    {
       title: 'Paket Türü',
       dataIndex: 'examType',
-      key: 'examTypeme',
+      key: 'examType',
       sorter: (a, b) => a.examType - b.examType,
       render: (text, record) => {
         return <div>{text === 10 ? 'LGS' : 'YKS'}</div>;

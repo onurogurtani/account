@@ -1,5 +1,5 @@
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Form, Upload } from 'antd';
+import { Button, Form, Upload, Space } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,6 +23,9 @@ import { CancelToken, isCancel } from 'axios';
 import { addPackage } from '../../../store/slice/packageSlice';
 import { getPackageTypeList } from '../../../store/slice/packageTypeSlice';
 import { useHistory } from 'react-router-dom';
+import useAcquisitionTree from '../../../hooks/useAcquisitionTree';
+import { removeFromArray, turkishToLower } from '../../../utils/utils';
+import DateSection from '../../eventManagement/forms/DateSection';
 
 const AddPackages = () => {
   const [form] = Form.useForm();
@@ -30,11 +33,20 @@ const AddPackages = () => {
   const [isDisable, setIsDisable] = useState(false);
   const [errorList, setErrorList] = useState([]);
   const [errorUpload, setErrorUpload] = useState();
+  const [selectedClassrooms, setSelectedClassrooms] = useState([])
+  const [lessonsOptions, setLessonsOptions] = useState([])
   const cancelFileUpload = useRef(null);
   const token = useSelector((state) => state?.auth?.token);
   const { packageTypeList } = useSelector((state) => state?.packageType);
+  const { allClassList } = useSelector((state) => state?.classStages);
+  const { lessons } = useSelector((state) => state?.lessons);
   const dispatch = useDispatch();
   const history = useHistory();
+
+  const { setClassroomId, setLessonId } = useAcquisitionTree();
+  
+
+  const lessonIds = Form.useWatch('lesson', form) || [];
 
   useEffect(() => {
     loadPackageType();
@@ -116,9 +128,22 @@ const AddPackages = () => {
   };
 
   const onFinish = async (values) => {
+   
+    let lessonsArr = values.lesson.map(item=>{
+      return {lessonId: item}
+    })
+
     const data = {
-      package: {
-        ...values,
+      "package": {
+        name: values.name,
+        summary: values.summary,
+        content: values.content,
+        maxNetCount: Number(values.maxNetCount),
+        packageTypeId: values.packageTypeId,
+        isActive: values.isActive,
+        startDate: values.startDate.$d,
+        finishDate: values.endDate.$d,
+        packageLessons:  lessonsArr,
         imageOfPackages: await handleUpload(values.imageOfPackages),
         examType: 10, //sınav tipi halihazırda inputtan alınmıyor
       },
@@ -154,6 +179,42 @@ const AddPackages = () => {
       },
     });
   };
+
+  useEffect(()=>{
+    const abc = selectedClassrooms.map((item) => {
+      return {
+        label: item.name,
+        options: lessons
+          .filter((i) => i.classroomId === item.id)
+          .map((a) => {
+            return {
+              label: a.name,
+              value: a.id,
+            };
+          }),
+      };
+    })
+
+    setLessonsOptions(abc)
+  },[lessons,selectedClassrooms])
+
+
+  const onClassroomChange = (value) => {
+    setClassroomId(value.at(-1));
+    let selectedClass = allClassList.filter(item=>value.includes(item.id))
+    setSelectedClassrooms(selectedClass);
+  };
+
+  const onLessonChange = (value) => {
+    setLessonId(value.at(-1));
+  };
+
+  const onClassroomsDeselect = (value) => {
+    const findLessonsIds = lessons.filter((i) => i.classroomId === value).map((item) => item.id);
+    form.setFieldsValue({
+      lesson: removeFromArray(lessonIds, ...findLessonsIds),
+    });
+  }
 
   return (
     <CustomCollapseCard cardTitle="Yeni Paket Oluşturma">
@@ -252,6 +313,47 @@ const AddPackages = () => {
               <Option key={false} value={false}>
                 <Text t={'Pasive'} />
               </Option>
+            </CustomSelect>
+          </CustomFormItem>
+
+          <DateSection form={form}/>
+         
+          <CustomFormItem
+            label={<Text t="Sınıf Seviyesi" />}
+            name="gradeLevel"
+            rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}>
+              <CustomSelect
+              className="form-filter-item" 
+              placeholder={'Seçiniz'}
+              filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
+              showArrow
+              mode="multiple"
+              onDeselect={onClassroomsDeselect}
+              onChange={onClassroomChange}
+            >
+              {allClassList
+                ?.map((item) => {
+                  return (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.name}
+                    </Option>
+                  );
+                })}
+            </CustomSelect>
+          </CustomFormItem>
+
+
+          <CustomFormItem label="Ders" name="lesson"
+           rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}>
+            <CustomSelect
+              className="form-filter-item" placeholder={'Seçiniz'}
+              filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
+              showArrow
+              mode="multiple"
+              // onDeselect={onLessonDeselect}
+              onChange={onLessonChange}
+              options={lessonsOptions}
+            >
             </CustomSelect>
           </CustomFormItem>
 
