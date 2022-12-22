@@ -2,25 +2,25 @@ import React, { memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { confirmDialog, errorDialog, Text } from '../../../components';
 import EditableInput from '../../../components/EditableInput';
-import { deleteLessons, editLessons } from '../../../store/slice/lessonsSlice';
+import { deleteUnits, editUnits } from '../../../store/slice/lessonUnitsSlice';
 import Toolbar from './Toolbar';
 
-const Lesson = ({ lesson, open, setSelectedInsertKey }) => {
+const Unit = ({ unit, open, setSelectedInsertKey }) => {
   const dispatch = useDispatch();
   const [isEdit, setIsEdit] = useState(false);
 
-  const updateLesson = async (value) => {
+  const updateUnit = async (value) => {
     const entity = {
       entity: {
-        id: lesson.id,
+        id: unit.id,
         name: value,
-        classroomId: lesson.classroomId,
+        lessonId: unit.lessonId,
       },
     };
-    await dispatch(editLessons(entity));
+    await dispatch(editUnits(entity));
   };
 
-  const deleteLesson = async () => {
+  const deleteUnit = async () => {
     confirmDialog({
       title: <Text t="attention" />,
       message: 'Tüm ilişkili bağlantılar silinecektir. Silmek istediğinizden emin misiniz?',
@@ -28,7 +28,7 @@ const Lesson = ({ lesson, open, setSelectedInsertKey }) => {
       cancelText: 'Hayır',
       onOk: async () => {
         try {
-          await dispatch(deleteLessons(lesson.id)).unwrap();
+          await dispatch(deleteUnits(unit.id)).unwrap();
         } catch (err) {
           errorDialog({ title: <Text t="error" />, message: err.message });
         }
@@ -37,21 +37,21 @@ const Lesson = ({ lesson, open, setSelectedInsertKey }) => {
   };
 
   const toolbarProps = {
-    addText: 'Ünite Ekle',
-    editText: 'Dersi Düzenle',
-    deleteText: 'Dersi Sil',
+    addText: 'Konu Ekle',
+    editText: 'Üniteyi Düzenle',
+    deleteText: 'Üniteyi Sil',
     open,
     setIsEdit,
     setSelectedInsertKey,
-    deleteAction: deleteLesson,
-    selectedKey: lesson.id,
+    deleteAction: deleteUnit,
+    selectedKey: unit.id,
   };
   return (
     <>
-      <EditableInput initialValue={lesson.name} isEdit={isEdit} setIsEdit={setIsEdit} onEnter={updateLesson} />
+      <EditableInput initialValue={unit.name} isEdit={isEdit} setIsEdit={setIsEdit} onEnter={updateUnit} />
       <Toolbar {...toolbarProps} />
     </>
   );
 };
 
-export default memo(Lesson);
+export default memo(Unit);

@@ -1,15 +1,25 @@
 import { Space } from 'antd';
-import { memo, useState } from 'react';
+import React, { memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { confirmDialog, errorDialog, Text } from '../../../components';
 import EditableInput from '../../../components/EditableInput';
 import { deleteLessonSubSubjects, editLessonSubSubjects } from '../../../store/slice/lessonSubSubjectsSlice';
 import Toolbar from './Toolbar';
 
-const LessonSubSubjects = ({ lessonSubSubject }) => {
+const LessonSubSubject = ({ lessonSubSubject, open, setSelectedInsertKey }) => {
   const dispatch = useDispatch();
   const [isEdit, setIsEdit] = useState(false);
-  const [open, setOpen] = useState(false);
+
+  const updatelessonSubSubject = async (value) => {
+    const entity = {
+      entity: {
+        id: lessonSubSubject.id,
+        name: value,
+        lessonSubjectId: lessonSubSubject.lessonSubjectId,
+      },
+    };
+    await dispatch(editLessonSubSubjects(entity));
+  };
 
   const deleteLessonSubSubject = async () => {
     confirmDialog({
@@ -27,38 +37,26 @@ const LessonSubSubjects = ({ lessonSubSubject }) => {
     });
   };
 
-  const updatelessonSubSubject = async (value) => {
-    const entity = {
-      entity: {
-        id: lessonSubSubject.id,
-        name: value,
-        lessonSubjectId: lessonSubSubject.lessonSubjectId,
-      },
-    };
-    await dispatch(editLessonSubSubjects(entity));
-  };
   const toolbarProps = {
     editText: 'Alt Başlığı Düzenle',
     deleteText: 'Alt Başlığı Sil',
-    open,
     setIsEdit,
     hidePlusButton: true,
+    setSelectedInsertKey,
     deleteAction: deleteLessonSubSubject,
+    selectedKey: lessonSubSubject.id,
   };
   return (
-    <div className="mb-3">
-      <Space align="baseline">
-        <EditableInput
-          initialValue={lessonSubSubject.name}
-          isEdit={isEdit}
-          setIsEdit={setIsEdit}
-          height="40"
-          onEnter={updatelessonSubSubject}
-        />
-        <Toolbar {...toolbarProps} />
-      </Space>
-    </div>
+    <Space align="baseline">
+      <EditableInput
+        initialValue={lessonSubSubject.name}
+        isEdit={isEdit}
+        setIsEdit={setIsEdit}
+        onEnter={updatelessonSubSubject}
+      />
+      <Toolbar {...toolbarProps} />
+    </Space>
   );
 };
 
-export default memo(LessonSubSubjects);
+export default memo(LessonSubSubject);

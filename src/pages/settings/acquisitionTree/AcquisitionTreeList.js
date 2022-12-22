@@ -1,6 +1,6 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Space, Typography } from 'antd';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   CustomButton,
@@ -14,16 +14,17 @@ import {
 import EditableInput from '../../../components/EditableInput';
 import useAcquisitionTree from '../../../hooks/useAcquisitionTree';
 import { addLessons } from '../../../store/slice/lessonsSlice';
+
 import '../../../styles/settings/lessons.scss';
+
 import AcquisitionTreeUploadExcelModal from './AcquisitionTreeUploadExcelModal';
-import Lesson from './Lesson';
+import Lessons from './Lessons';
 
 const { Title } = Typography;
 const AcquisitionTreeList = () => {
   const dispatch = useDispatch();
   const { classroomId, setClassroomId } = useAcquisitionTree();
   const { allClassList } = useSelector((state) => state?.classStages);
-  const { lessons } = useSelector((state) => state?.lessons);
   const [isAdd, setIsAdd] = useState(false);
 
   const validateClassroom = useCallback(() => {
@@ -50,10 +51,6 @@ const AcquisitionTreeList = () => {
     [classroomId, dispatch],
   );
 
-  const filteredLessons = useMemo(
-    () => lessons?.filter((item) => item.classroomId === classroomId),
-    [lessons, classroomId],
-  );
   return (
     <>
       <CustomPageHeader title="Kazanım Ağacı" showBreadCrumb routes={['Ayarlar']}>
@@ -85,12 +82,7 @@ const AcquisitionTreeList = () => {
               </Space>
             </div>
             <EditableInput height="40" isEdit={isAdd} setIsEdit={setIsAdd} onEnter={addLesson} />
-            {filteredLessons.length > 0 && <Title level={3}>Dersler</Title>}
-            {filteredLessons
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map((i) => (
-                <Lesson key={i.id} lesson={i} />
-              ))}
+            <Lessons classroomId={classroomId} />
           </div>
         </CustomCollapseCard>
       </CustomPageHeader>

@@ -1,16 +1,26 @@
-import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Space, Tooltip } from 'antd';
-import React from 'react';
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { memo } from 'react';
 
-const Toolbar = ({ addText, editText, deleteText, open, setIsAdd, setIsEdit, deleteAction, hidePlusButton }) => {
+const Toolbar = ({
+  addText,
+  editText,
+  deleteText,
+  open,
+  setIsEdit,
+  deleteAction,
+  hidePlusButton,
+  setSelectedInsertKey,
+  selectedKey,
+}) => {
   return (
-    <Space align="center">
+    <Space align="center" style={{ marginLeft: 'auto' }}>
       {hidePlusButton ? null : (
         <Tooltip title={addText}>
           <PlusCircleOutlined
             onClick={(event) => {
               if (open) event.stopPropagation();
-              setIsAdd(true);
+              setSelectedInsertKey(selectedKey);
             }}
           />
         </Tooltip>
@@ -37,4 +47,4 @@ const Toolbar = ({ addText, editText, deleteText, open, setIsAdd, setIsEdit, del
   );
 };
 
-export default Toolbar;
+export default memo(Toolbar);
