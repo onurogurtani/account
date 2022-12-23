@@ -22,7 +22,7 @@ const EditPackages = lazy(() =>
 );
 
 const Lessons = lazy(() =>
-  import('./lessons').then(({ default: Component }) => ({
+  import('./acquisitionTree/AcquisitionTreeList').then(({ default: Component }) => ({
     default: Component,
   })),
 );

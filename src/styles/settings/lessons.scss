@@ -1,9 +1,10 @@
 .lessons-wrapper {
   padding: 10px 20px;
-  .lessons-header{
+  .lessons-header {
     display: flex;
     margin-bottom: 20px;
-    .class-select-container{
+    justify-content: space-between;
+    .class-select-container {
       display: flex;
       align-items: center;
     }
@@ -28,7 +29,10 @@
     background: #0f733d !important;
     color: #fff;
     border: none;
-    display: block;
-    margin-left: auto;
+  }
+  .add-btn {
+    background: #00a483 !important;
+    color: #fff;
+    border: none;
   }
 }

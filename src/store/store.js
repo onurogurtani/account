@@ -37,6 +37,9 @@ import { packageTypeSlice } from './slice/packageTypeSlice';
 import { userTypeSlice } from './slice/userTypeSlice';
 import { branchsSlice } from './slice/branchsSlice';
 import { questionManagementSlice } from './slice/questionFileSlice';
+import { lessonUnitsSlice } from './slice/lessonUnitsSlice';
+import { lessonSubjectsSlice } from './slice/lessonSubjectsSlice';
+import { lessonSubSubjectsSlice } from './slice/lessonSubSubjectsSlice';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -53,6 +56,9 @@ const reducers = combineReducers({
   citysCountys: citysCountysSlice.reducer,
   videos: videoSlice.reducer,
   lessons: lessonsSlice.reducer,
+  lessonUnits: lessonUnitsSlice.reducer,
+  lessonSubjects: lessonSubjectsSlice.reducer,
+  lessonSubSubjects: lessonSubSubjectsSlice.reducer,
   packages: packageSlice.reducer,
   category: categorySlice.reducer,
   subCategory: subCategorySlice.reducer,
