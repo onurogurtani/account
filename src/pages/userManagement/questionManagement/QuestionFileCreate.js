@@ -38,6 +38,7 @@ const QuestionFileCreate = ({}) => {
 
   const onPublisherChange = (value) => {
     setPublisherId(value);
+    form.resetFields(['BookId']);
   };
 
   useEffect(() => {
