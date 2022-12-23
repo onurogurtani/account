@@ -270,7 +270,6 @@ const Menus = () => {
           </span>
         </MenuItemText>
       </CustomItem>
-
       <CustomSubMenu key="SubMenu" title="Tanımlamalar" icon={<CustomImage src={menuIcons} />}>
         <CustomItem key="/user-management/school-management">
           <MenuItemText>
@@ -389,6 +388,17 @@ const Menus = () => {
             <CustomImage src={menuIcons} />
             <span>
               <Text t="Hedef Ekranları Tanımlama" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+      </CustomSubMenu>
+
+      <CustomSubMenu key="QuestionMenu" title="Soru Yönetimi" icon={<CustomImage src={menuIcons} />}>
+        <CustomItem key="/question-management/add-question-file">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Soru Dosyası Ekleme" />
             </span>
           </MenuItemText>
         </CustomItem>
