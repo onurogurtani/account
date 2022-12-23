@@ -142,6 +142,11 @@ const App = () => {
                           authority="dashboard"
                         />
                         <PrivateRoute
+                          path={`${match?.path}/password-management`}
+                          Component={UserManagement?.PasswordManagement}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
                           path={`${match?.path}/school-management`}
                           Component={UserManagement?.SchoolManagement}
                           authority="dashboard"
