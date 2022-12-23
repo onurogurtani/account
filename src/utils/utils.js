@@ -112,3 +112,4 @@ export const FORM_DATA_CONVERT = (data) => {
 };
 
 export const removeFromArray = (arr, ...args) => arr.filter((val) => !args.includes(val));
+export const getListFilterParams = (field, value) => [{ field, value, compareType: 0 }];

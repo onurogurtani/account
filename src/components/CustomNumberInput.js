@@ -8,9 +8,9 @@ const CustomNumberInput = ({ onChange, ...props }) => {
       const reg = /^-?\d*(\.\d*)?$/;
       if (reg.test(value) && !isNaN(parseFloat(value))) {
         onChange(parseFloat(value));
-      } else if (value === '' || value === '-') {
+      } else if (value === '') {
         onChange(value);
-      } else {
+      } else if (!reg.test(value.charAt(0)) || value === '-') {
         onChange('');
       }
     },
