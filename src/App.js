@@ -26,6 +26,7 @@ import Settings from './pages/settings';
 import EventManagement from './pages/eventManagement';
 import UserListManagement from './pages/userManagement/userListManagement';
 import AdminUsersManagement from './pages/userManagement/adminUsersManagement';
+import QuestionManagement from './pages/userManagement/questionManagement';
 
 const PrivateRoute = lazy(() =>
   import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -389,6 +390,33 @@ const App = () => {
                           path={`${match?.path}/edit/:id`}
                           exact
                           Component={AdminUsersManagement?.AdminUserCreate}
+                          authority="dashboard"
+                        />
+                        <Route
+                          component={() => (
+                            <Redirect
+                              to={{
+                                pathname: '/not-found',
+                                state: { status: 404 },
+                              }}
+                            />
+                          )}
+                        />
+                      </Switch>
+                    );
+                  }}
+                  authority="dashboard"
+                  isLayout={false}
+                />
+                <PrivateRoute
+                  path={'/question-management'}
+                  Component={({ match }) => {
+                    return (
+                      <Switch>
+                        <PrivateRoute
+                          path={`${match?.path}/add-question-file`}
+                          exact
+                          Component={QuestionManagement}
                           authority="dashboard"
                         />
                         <Route

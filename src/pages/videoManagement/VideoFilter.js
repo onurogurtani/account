@@ -17,7 +17,13 @@ const VideoFilter = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const { categories, keywords, filterObject, isFilter } = useSelector((state) => state?.videos);
-  const { lessons, units, lessonSubjects, lessonSubSubjects } = useSelector((state) => state?.lessons);
+  const { lessons } = useSelector((state) => state?.lessons);
+  const { lessonSubSubjects } = useSelector((state) => state?.lessonSubSubjects);
+
+  const { lessonUnits } = useSelector((state) => state?.lessonUnits);
+
+  const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
+
   const { allClassList } = useSelector((state) => state?.classStages);
   const { classroomId, setClassroomId, setLessonId, setUnitId, setLessonSubjectId } = useAcquisitionTree();
 
@@ -56,7 +62,7 @@ const VideoFilter = () => {
   };
 
   const onDeselectControl = (key, value) => {
-    const findUnitIds = units.filter((i) => i.lessonId === value).map((item) => item.id);
+    const findUnitIds = lessonUnits.filter((i) => i.lessonId === value).map((item) => item.id);
 
     const findSubjectIds = lessonSubjects
       .filter((i) => (key === 'Unit' ? i.lessonUnitId === value : findUnitIds.includes(i.lessonUnitId)))
@@ -202,7 +208,7 @@ const VideoFilter = () => {
               onChange={onUnitChange}
               onDeselect={onUnitDeselect}
             >
-              {units
+              {lessonUnits
                 // ?.filter((item) => item.isActive)
                 ?.filter((item) => lessonIds.includes(item.lessonId))
                 ?.map((item) => {

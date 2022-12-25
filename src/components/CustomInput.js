@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Input } from 'antd';
+import { forwardRef } from 'react';
 
 const CustomInputs = styled(Input)(
   ({ height }) => ` 
@@ -76,8 +77,8 @@ export const CustomPassword = styled(Input.Password)(
 `,
 );
 
-const CustomInput = (props) => {
-  return <CustomInputs autoComplete="off" {...props} />;
+const CustomInput = (props, ref) => {
+  return <CustomInputs ref={ref} autoComplete="off" {...props} />;
 };
 
-export default CustomInput;
+export default forwardRef(CustomInput);
