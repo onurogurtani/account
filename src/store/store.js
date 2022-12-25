@@ -31,11 +31,14 @@ import { adminUserSlice } from './slice/adminUserSlice';
 import { targetSentenceSlice } from './slice/targetSentenceSlice';
 import { preferencePeriodSlice } from './slice/preferencePeriodSlice';
 
-
 import { targetScreenSlice } from './slice/targetScreenSlice';
 import { packageTypeSlice } from './slice/packageTypeSlice';
 import { userTypeSlice } from './slice/userTypeSlice';
 import { branchsSlice } from './slice/branchsSlice';
+
+import { publisherSlice } from './slice/publisherSlice';
+import { publisherBookSlice } from './slice/publisherBookSlice';
+
 import { questionManagementSlice } from './slice/questionFileSlice';
 import { lessonUnitsSlice } from './slice/lessonUnitsSlice';
 import { lessonSubjectsSlice } from './slice/lessonSubjectsSlice';
@@ -74,8 +77,10 @@ const reducers = combineReducers({
   preferencePeriod: preferencePeriodSlice.reducer,
   packageType: packageTypeSlice.reducer,
   userType: userTypeSlice.reducer,
-  branchs:branchsSlice.reducer,
-  questionManagement : questionManagementSlice.reducer
+  branchs: branchsSlice.reducer,
+  publisher: publisherSlice.reducer,
+  publisherBook: publisherBookSlice.reducer,
+  questionManagement: questionManagementSlice.reducer,
 });
 
 const persistConfig = {

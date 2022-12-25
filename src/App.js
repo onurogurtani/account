@@ -343,6 +343,16 @@ const App = () => {
                           Component={Settings?.Branch}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/publisherBook`}
+                          Component={Settings?.PublisherBook}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/publisher`}
+                          Component={Settings?.Publisher}
+                          authority="dashboard"
+                        />
                         <Route
                           component={() => (
                             <Redirect

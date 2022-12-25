@@ -76,7 +76,16 @@ const Branch = lazy(() =>
     default: Component,
   })),
 );
-
+const PublisherBook = lazy(() =>
+  import('./publisherBook').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+const Publisher = lazy(() =>
+  import('./publisher').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 const Settings = {
   Categories,
   Packages,
@@ -92,6 +101,8 @@ const Settings = {
   AcademicYear,
   TargetSentence,
   PreferencePeriod,
+  PublisherBook,
+  Publisher,
 };
 
 export default Settings;
