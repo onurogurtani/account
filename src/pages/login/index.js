@@ -84,10 +84,9 @@ const Login = ({ history }) => {
               required: true,
               message: <Text t="loginPasswordInputRequired" />,
             },
-            { type: 'string', max: 10 },
           ]}
         >
-          <CustomPassword placeholder={useText('loginPasswordInput')} maxLength={10} />
+          <CustomPassword placeholder={useText('loginPasswordInput')} />
         </CustomFormItem>
 
         <CustomFormItem>
