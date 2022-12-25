@@ -35,6 +35,8 @@ import { targetScreenSlice } from './slice/targetScreenSlice';
 import { packageTypeSlice } from './slice/packageTypeSlice';
 import { userTypeSlice } from './slice/userTypeSlice';
 import { branchsSlice } from './slice/branchsSlice';
+import { publisherSlice } from './slice/publisherSlice';
+import { publisherBookSlice } from './slice/publisherBookSlice';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -66,7 +68,9 @@ const reducers = combineReducers({
   preferencePeriod: preferencePeriodSlice.reducer,
   packageType: packageTypeSlice.reducer,
   userType: userTypeSlice.reducer,
-  branchs:branchsSlice.reducer
+  branchs: branchsSlice.reducer,
+  publisher: publisherSlice.reducer,
+  publisherBook: publisherBookSlice.reducer,
 });
 
 const persistConfig = {
