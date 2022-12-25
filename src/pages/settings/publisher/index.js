@@ -183,7 +183,7 @@ const Publisher = () => {
             <CustomFormItem
               rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
               name={'name'}
-              label={<Text t="Yetki Adı" />}
+              label={<Text t="Yayın İsmi" />}
             >
               <CustomInput />
             </CustomFormItem>
