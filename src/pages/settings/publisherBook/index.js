@@ -29,7 +29,16 @@ const PublisherBook = () => {
   const [publisherSelectData, setPublisherSelectData] = useState([]);
   const { publisherList } = useSelector((state) => state.publisher);
   const { publisherBookList } = useSelector((state) => state.publisherBook);
-
+  const nowYear = new Date();
+  let yearArray = [];
+  const year = nowYear.getFullYear();
+  for (let i = year - 50; i < year + 1; i++) {
+    yearArray.push({ value: i, label: i });
+  }
+  yearArray = yearArray.sort(function (a, b) {
+    return b.value - a.value;
+  });
+  console.log(yearArray);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getPublisherList({ params: { PageSize: 100 } }));
@@ -236,12 +245,7 @@ const PublisherBook = () => {
                     label="Baskı Yılı"
                     required={true}
                   >
-                    <CustomSelect
-                      options={[
-                        { value: 2022, label: 2022 },
-                        { value: 2021, label: 2021 },
-                      ]}
-                    />
+                    <CustomSelect options={yearArray} />
                   </CustomFormItem>
                 </Col>
               </Row>
@@ -267,12 +271,7 @@ const PublisherBook = () => {
                       label="Baskı Yılı"
                       required={true}
                     >
-                      <CustomSelect
-                        options={[
-                          { value: 2022, label: 2022 },
-                          { value: 2021, label: 2021 },
-                        ]}
-                      />
+                      <CustomSelect options={yearArray} />
                     </CustomFormItem>
                   </Col>
                   {index !== 0 && (
