@@ -112,11 +112,6 @@ const sortList = [
     descend: 'NameDESC',
   },
   {
-    key: 'isActive',
-    ascend: 'IsActiveASC',
-    descend: 'IsActiveDESC',
-  },
-  {
     key: 'category',
     ascend: 'CategoryASC',
     descend: 'CategoryDESC',
@@ -156,15 +151,6 @@ const columns = [
     dataIndex: 'name',
     key: 'name',
     sorter: true,
-  },
-  {
-    title: 'Durum',
-    dataIndex: 'isActive',
-    key: 'isActive',
-    sorter: true,
-    render: (isActive) => {
-      return isActive ? 'Aktif' : 'Pasif';
-    },
   },
   {
     title: 'Kategori',

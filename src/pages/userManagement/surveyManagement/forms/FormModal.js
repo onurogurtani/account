@@ -124,47 +124,10 @@ const AddFormModal = ({
                 </Select>
               </CustomFormItem>
               <CustomFormItem label="Hedef Kitle" name="TargetGroupId">
-                {/*<Select
-                  placeholder="Hedef Kitle Seçiniz..."
-                  onChange={onTargetGroupChange}
-                  mode="multiple"
-                  showArrow
-                  height="40px"
-                >
-                   {forms.formTargetGroup.items?.map((targetitems) => (
-                    <Option key={targetitems.id} value={targetitems.id}>
-                      {targetitems.name}
-                    </Option>
-                  ))}
-                  {/* <Option value="Veli">Veli</Option>
-                        <Option value="Öğrenci">Öğrenci</Option>
-                        <Option value="Koç">Koç</Option>
-                        <Option value="Genel">Genel</Option> 
-                </Select> */}
               </CustomFormItem>
 
               <CustomFormItem label="Anket Kısıtı/Tipi" name="SurveyConstraintId">
-                {/* <Select
-                  placeholder="Anket Kısıtı/Tipi..."
-                  onChange={onSurveyConstraintChange}
-                  mode="multiple"
-                  showArrow
-                  height="40px"
-                >
-                  {forms.surveyConstraint.items?.map((surveyconstraintitems) => (
-                    <Option key={surveyconstraintitems.id} value={surveyconstraintitems.id}>
-                      {surveyconstraintitems.name}
-                    </Option>
-                  ))}
-                  {/* <Option value="Veli Özelinde">Veli Özelinde</Option>
-                        <Option value="Koç Özelinde">Koç Özelinde</Option>
-                        <Option value="Genel">Genel</Option>
-                        <Option value="Sınıf Özelinde">Sınıf Özelinde</Option>
-                        <Option value="İl Bazında">İl Bazında</Option>
-                        <Option value="Alan Bazında">Alan Bazında</Option>
-                        <Option value="Okul Türü Bazında">Okul Türü Bazında</Option>
-                        <Option value="Okul Bazında">Okul Bazında</Option> 
-                </Select> */}
+               
 
               </CustomFormItem>
 

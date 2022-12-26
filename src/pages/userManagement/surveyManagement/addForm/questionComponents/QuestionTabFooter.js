@@ -1,38 +1,25 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import classes from '../../../../../styles/surveyManagement/addSurvey.module.scss';
-import { useDispatch } from 'react-redux';
-import {
-  CustomButton,
-  confirmDialog,
-  Text,
-  warningDialog,
-  successDialog,
-} from '../../../../../components';
+import { useDispatch, useSelector } from 'react-redux';
+import { CustomButton, confirmDialog, Text, warningDialog, successDialog } from '../../../../../components';
 import SurveyPreviewModal from './SurveyPreviewModal';
-import { updateForm } from '../../../../../store/slice/formsSlice';
+import { updateForm, setCurrentForm, setShowFormObj } from '../../../../../store/slice/formsSlice';
 const publishSituation = [
   { id: 1, value: 'Yayında' },
   { id: 2, value: 'Yayında değil' },
   { id: 3, value: 'Taslak' },
 ];
 
-const QuestionTabFooter = ({
-  setStep,
-  step,
-  currentForm,
-  questionsOfForm,
-  preview,
-  setPreview,
-}) => {
+const QuestionTabFooter = ({ setStep, step, currentForm, questionsOfForm, preview, setPreview }) => {
   const dispatch = useDispatch();
+  const {showFormObj } = useSelector((state) => state?.forms);
   const [previewModalVisible, setPreviewModalVisible] = useState(false);
   const history = useHistory();
   const cancelHandler = async () => {
     confirmDialog({
       title: <Text t="attention" />,
-      message:
-        'İptal ettiğinizde bütün veriler silinecektir.İptal etmek istediğinizden emin misiniz?',
+      message: 'İptal ettiğinizde bütün veriler silinecektir.İptal etmek istediğinizden emin misiniz?',
       okText: 'Evet',
       cancelText: 'Hayır',
       onOk: async () => {
@@ -62,17 +49,19 @@ const QuestionTabFooter = ({
     }
     let data = {
       form: {
-        id: currentForm.id,
-        publishStatus: 3,
+        ...currentForm,
+        publishStatus: 1,
       },
     };
     const action2 = await dispatch(updateForm(data));
     if (updateForm.fulfilled.match(action2)) {
       successDialog({
         title: <Text t="success" />,
-        message: 'Anket başarıyla yayınlanmıştır',
+        message: showFormObj.id != undefined ? 'Anket Başarıyla Güncellenmiştir' : 'Anket başarıyla yayınlanmıştır',
       });
       history.push('/user-management/survey-management');
+      await dispatch(setCurrentForm({}));
+      await dispatch(setShowFormObj({}));
     }
   };
   const previewHandler = () => {
@@ -86,7 +75,7 @@ const QuestionTabFooter = ({
   const saveAsDraftHandler = async () => {
     let data = {
       form: {
-        id: currentForm.id,
+        ...currentForm,
         publishStatus: 3,
       },
     };

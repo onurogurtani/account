@@ -4,7 +4,7 @@ import {
   CustomButton,
 } from '../../../../../components';
 import QuestionModal from '../../questions/QuestionModal';
-import { deleteQuestion, getAllQuestionsOfForm } from '../../../../../store/slice/formsSlice';
+import { deleteQuestion, getAllQuestionsOfForm,deleteQuestionFromGroup } from '../../../../../store/slice/formsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 const typeEnum = {
@@ -33,9 +33,10 @@ const QuestionHandlers = ({ questionKnowledge, groupKnowledge }) => {
   };
   const deleteteQuestionHandler = async () => {
     let data = { id: questionKnowledge.formQuestionId };
-
+    let data2={id:questionKnowledge.questionGroupOfQuestionId}
     await dispatch(deleteQuestion(data));
-    await dispatch(getAllQuestionsOfForm({ id :groupKnowledge.formId }));
+    await dispatch(deleteQuestionFromGroup(data2))
+    await dispatch(getAllQuestionsOfForm({ formId :groupKnowledge.formId }));
   };
   const setScoreHandler = (questionKnowledge) => {};
   return (

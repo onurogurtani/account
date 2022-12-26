@@ -127,6 +127,20 @@
           box-shadow: none;
           border: none;
         }
+        .draft-button{
+          background-color: #b8ae3c;
+          color: #fff;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-family: UbuntuMedium, sans-serif;
+          line-height: 12px;
+          border-radius: 4px;
+          outline: 0;
+          box-shadow: none;
+          border: none;
+          margin: 10px;
+        }
       }
     }
   }

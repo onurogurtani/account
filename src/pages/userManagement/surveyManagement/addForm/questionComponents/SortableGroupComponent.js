@@ -35,7 +35,6 @@ const SortableGroupComponent = ({ preview, setPreview, groupKnowledge, questions
         <div className="list">
           {items.map((value, index) => (
             <SortableItem
-            pressThreshold={20}
               disableAutoscroll
               preview={preview}
               setPreview={setPreview}
@@ -79,7 +78,9 @@ const SortableGroupComponent = ({ preview, setPreview, groupKnowledge, questions
         items={listData}
         onSortEnd={onSortEnd}
         groupKnowledge={groupKnowledge}
-        axis="xy"
+        axis="y"
+        lockAxis='y'
+        pressDelay={100}
         questionsOfForm={questionsOfForm}
       />
     </>
