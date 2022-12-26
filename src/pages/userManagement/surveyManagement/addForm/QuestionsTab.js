@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import classes from '../../../../styles/surveyManagement/addSurvey.module.scss';
 import { CustomButton } from '../../../../components';
-import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomCollapseCard, Text } from '../../../../components';
 import { addNewGroupToForm, getAllQuestionsOfForm } from '../../../../store/slice/formsSlice';
@@ -13,7 +12,7 @@ const QuestionsTab = ({ setStep, step }) => {
   const [addFirstShow, setAddFirstShow] = useState(true);
   const dispatch = useDispatch();
   const [preview, setPreview] = useState(false);
-  const { currentForm, questionsOfForm } = useSelector((state) => state?.forms);
+  const { currentForm, questionsOfForm, showFormObj } = useSelector((state) => state?.forms);
 
   useEffect(() => {
     if (currentForm) {
@@ -22,32 +21,11 @@ const QuestionsTab = ({ setStep, step }) => {
     }
   }, []);
 
-  const newGroupData = {
-    entity: {
-      name: '1.Grup Sorular',
-      scoringType: 2,
-      formId: currentForm?.id,
-    },
-  };
-
-  const addFirsGroupToForm = async () => {
-    setAddFirstShow(false);
-    await dispatch(addNewGroupToForm(newGroupData));
-    await dispatch(getAllQuestionsOfForm({ formId: currentForm?.id }));
-  };
+  
 
   return (
     <CustomCollapseCard cardTitle={<Text t="Sorular" />}>
-      {addFirstShow && (
-        <>
-          <p>Bilgilendirme yazısı olabilir burada...</p>
-          <div className={classes.addFirsContainer}>
-            <CustomButton className={classes.addfirstButton} onClick={addFirsGroupToForm}>
-              Anket Sorularını Oluştur
-            </CustomButton>
-          </div>
-        </>
-      )}
+      <p>Bilgilendirme yazısı olabilir burada...</p>
 
       {questionsOfForm?.groupQuestions.map((group, idx) => (
         <QuestionGroup
@@ -59,7 +37,7 @@ const QuestionsTab = ({ setStep, step }) => {
           questionsOfForm={questionsOfForm}
         />
       ))}
-      {!addFirstShow && (
+      {(!addFirstShow || showFormObj.id != undefined) && (
         <QuestionTabFooter
           preview={preview}
           setPreview={setPreview}

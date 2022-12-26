@@ -1,24 +1,14 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import formServices from '../../services/forms.services';
 
-// Get Forms
 export const getFilteredPagedForms = createAsyncThunk('getFilteredPagedForms', async (data) => {
   let urlString;
-  console.log(data);
   if (data) {
     let urlArr = [];
     for (let item in data) {
-      console.log(item);
-      if (data[item]!=null && data[item]!='') {
+      if (data[item] != null && data[item] != '') {
         let newStr = `FormDetailSearch.${item}=${data[item]}`;
-        // console.log(newStr);
         urlArr.push(newStr);
-       
-        // data[item]?.map(({key,value}, idx) => {
-        //   let newStr = `FormDetailSearch.${key}=${value}`;
-        //   urlArr.push(newStr);
-        // });
-        // console.log(urlArr);
       }
     }
     if (!data.OrderBy) {
@@ -34,16 +24,12 @@ export const getFilteredPagedForms = createAsyncThunk('getFilteredPagedForms', a
       urlArr.push(newStr);
     }
     urlString = urlArr.join('&');
-    console.log(urlString);
   } else {
     urlString = 'FormDetailSearch.OrderBy=IdDESC&FormDetailSearch.PageNumber=1&FormDetailSearch.PageSize=10';
   }
   const response = await formServices.getByFilterPagedForms(urlString);
   return response;
 });
-
-// Get Categories
-
 export const getFormCategories = createAsyncThunk('getFormCategories', async (data, { dispatch, rejectWithValue }) => {
   try {
     const response = await formServices.getFormCategories();
@@ -55,6 +41,14 @@ export const getFormCategories = createAsyncThunk('getFormCategories', async (da
 export const getFormPackages = createAsyncThunk('getFormPackages', async (data, { dispatch, rejectWithValue }) => {
   try {
     const response = await formServices.getFormPackages();
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+export const copyForm = createAsyncThunk('copyForm', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await formServices.copyForm(data);
     return response;
   } catch (error) {
     return rejectWithValue(error?.data);
@@ -178,6 +172,17 @@ export const deleteQuestion = createAsyncThunk('deleteQuestion', async (data, { 
     return rejectWithValue(error?.data);
   }
 });
+export const deleteQuestionFromGroup = createAsyncThunk(
+  'deleteQuestionFromGroup',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await formServices.deleteQuestionFromGroup(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 
 // Get TargetGroup
 export const getTargetGroup = createAsyncThunk('form/getTargetGroup', async (data, { dispatch }) => {
@@ -242,10 +247,9 @@ const initialState = {
   formTargetGroup: [],
   surveyConstraint: [],
   currentForm: [],
-  // groupsOfForm:[],
   allGroups: [],
-  // currentGroup:[],
   questionsOfForm: null,
+  showFormObj: {},
 };
 
 export const formsSlice = createSlice({
@@ -258,10 +262,15 @@ export const formsSlice = createSlice({
     setTableProperty: (state, action) => {
       state.tableProperty = action.payload;
     },
+    setShowFormObj: (state, action) => {
+      state.showFormObj = action.payload;
+    },
+    setCurrentForm: (state, action) => {
+      state.currentForm = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getFilteredPagedForms.fulfilled, (state, action) => {
-      console.log(action?.payload?.data?.items);
       state.formList = action?.payload?.data?.items || [];
       state.tableProperty = action?.payload?.data?.pagedProperty || {};
     });
@@ -282,6 +291,10 @@ export const formsSlice = createSlice({
     });
     builder.addCase(addNewForm.fulfilled, (state, action) => {
       state.currentForm = action?.payload?.data;
+      // state.showFormObj=action?.payload?.data;
+    });
+    builder.addCase(copyForm.fulfilled, (state, action) => {
+      state.showFormObj = action?.payload?.data;
     });
 
     builder.addCase(getFormCategories.fulfilled, (state, action) => {
@@ -310,4 +323,4 @@ export const formsSlice = createSlice({
   },
 });
 
-export const { setFormFilterObject, setTableProperty } = formsSlice.actions;
+export const { setCurrentForm, setFormFilterObject, setTableProperty, setShowFormObj } = formsSlice.actions;

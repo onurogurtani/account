@@ -5,7 +5,7 @@ import { CustomCollapseCard, Text } from '../../../../components';
 
 const { TabPane } = Tabs;
 
-const AddAnnouncementTabs = ({ showData }) => {
+const ShowAnnouncementTabs = ({ showData }) => {
   return (
     <Tabs defaultActiveKey={'1'}>
       <TabPane tab="Genel Bilgiler" key="1">
@@ -91,4 +91,4 @@ const AddAnnouncementTabs = ({ showData }) => {
   );
 };
 
-export default AddAnnouncementTabs;
+export default ShowAnnouncementTabs;

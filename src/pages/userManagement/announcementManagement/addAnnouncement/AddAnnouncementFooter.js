@@ -52,14 +52,13 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, history
         endDate: endDate + 'T' + endHour + '.000Z',
         isPublished: false,
         isArchived: false,
-        fileId: fileId.payload.data.id,
+        fileId: fileId?.payload?.data?.id,
         buttonName: values.buttonName,
         buttonUrl: values.buttonUrl,
       };
       setAnnouncementInfoData(data);
       setStep('2');
     } catch (error) {
-      console.log(error);
       errorDialog({
         title: <Text t="error" />,
         message: 'error',

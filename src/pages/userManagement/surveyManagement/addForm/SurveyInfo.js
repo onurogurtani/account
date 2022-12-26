@@ -13,8 +13,9 @@ import {
   CustomRadio,
   CustomButton,
   errorDialog,
+  confirmDialog,
 } from '../../../../components';
-import { useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { dateValidator } from '../../../../utils/formRule';
 import { CustomCollapseCard, Text } from '../../../../components';
@@ -24,9 +25,14 @@ import {
   getFormPackages,
   addNewForm,
   getGroupsOfForm,
-  addNewQuestionToGroup,
-  addNewQuestionToForm,
+  updateForm,
+  addNewGroupToForm,
+  getAllQuestionsOfForm,
+  setCurrentForm,
+  setShowFormObj,
+  deleteForm,
 } from '../../../../store/slice/formsSlice';
+import { data } from '../forms/static';
 
 const publishStatus = [
   { id: 1, value: 'Yayında' },
@@ -43,10 +49,21 @@ const publishEnumReverse = {
   2: 'Yayında değil',
   3: 'Taslak',
 };
+const radioOptions = [
+  {
+    label: 'Kullanıcı tüm soruları cevapladığında anketi bitirebilir.',
+    value: true,
+  },
+  {
+    label: 'Kullanıcı her an anketi bitirebilir',
+    value: false,
+  },
+];
 
 const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
+  const [serviceData, setServiceData] = useState({});
   const [form] = Form.useForm();
-  const location = useLocation();
+  const history = useHistory();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -55,7 +72,7 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
     dispatch(getFormPackages());
   }, []);
 
-  const { formCategories, formPackages, currentForm } = useSelector((state) => state?.forms);
+  const { formCategories, formPackages, currentForm, showFormObj } = useSelector((state) => state?.forms);
 
   useEffect(() => {
     if (!formPackages) {
@@ -69,22 +86,45 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
     }
   }, [formCategories]);
 
+  useEffect(() => {
+    if (showFormObj.id != undefined) {
+      const currentDate = dayjs().utc().format('YYYY-MM-DD-HH-mm');
+      const startDate = dayjs(showFormObj?.startDate).utc().format('YYYY-MM-DD-HH-mm');
+      const endDate = dayjs(showFormObj?.endDate).utc().format('YYYY-MM-DD-HH-mm');
+      let initialData = {
+        surveyName: showFormObj?.name,
+        description: showFormObj?.description,
+        publishStatus: publishEnumReverse[showFormObj?.publishStatus],
+        startDate: startDate >= currentDate ? dayjs(showFormObj?.startDate) : undefined,
+        endDate: endDate >= currentDate ? dayjs(showFormObj?.endDate) : undefined,
+        surveyCategory: showFormObj?.categoryOfForm?.name,
+        finishCondition: showFormObj?.onlyComletedWhenFinish,
+      };
+      if (showFormObj?.categoryOfForm?.name.toLowerCase().includes('envanter')) {
+        let newData = {
+          ...initialData,
+          packages: showFormObj?.packages[0]?.package.name,
+          classStage: showFormObj?.formClassrooms[0]?.classroom?.name,
+        };
+        form.setFieldsValue({ ...newData });
+      } else {
+        form.setFieldsValue({ ...initialData });
+      }
+    }
+  }, [showFormObj]);
+
   const { allClassList } = useSelector((state) => state?.classStages);
   const [stock, setStock] = useState(false);
 
   const disabledStartDate = (startValue) => {
     const { endDate } = form?.getFieldsValue(['endDate']);
-    return (
-      startValue?.startOf('day') > endDate?.startOf('day') || startValue < dayjs().startOf('day')
-    );
+    return startValue?.startOf('day') > endDate?.startOf('day') || startValue < dayjs().startOf('day');
   };
 
   const disabledEndDate = (endValue) => {
     const { startDate } = form?.getFieldsValue(['startDate']);
 
-    return (
-      endValue?.startOf('day') < startDate?.startOf('day') || endValue < dayjs().startOf('day')
-    );
+    return endValue?.startOf('day') < startDate?.startOf('day') || endValue < dayjs().startOf('day');
   };
   const showStock = async () => {
     let surveyCategory = form.getFieldsValue().surveyCategory;
@@ -95,18 +135,35 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
     }
   };
 
-  const onCancel = () => {
-    alert('cancel');
+  const cancelHandler = async () => {
+    confirmDialog({
+      title: <Text t="attention" />,
+      message: 'İptal etmek istediğinizden emin misiniz?',
+      okText: 'Evet',
+      cancelText: 'Hayır',
+      onOk: async () => {
+        if (showFormObj?.id == undefined && currentForm?.id != undefined) {
+          await dispatch(updateForm({ form: { ...currentForm, publishStatus: 2 } }));
+          dispatch(
+            deleteForm({
+              ids: [currentForm.id],
+            }),
+          );
+        }
+        history.push('/user-management/survey-management');
+        await dispatch(setCurrentForm({}));
+        await dispatch(setShowFormObj({}));
+      },
+    });
   };
-  const onFinish = async () => {
-    const values = await form.validateFields();
-    const startOfForm = values?.startDate
-      ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD-HH-mm')
-      : undefined;
 
-    const endOfForm = values?.endDate
-      ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD-HH-mm')
-      : undefined;
+  //           JSON.stringify(showFormObj) === JSON.stringify({ ...showFormObj, ...data.form }),
+
+  const onFinish = async (string) => {
+    const values = await form.validateFields();
+    const startOfForm = values?.startDate ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD-HH-mm') : undefined;
+
+    const endOfForm = values?.endDate ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD-HH-mm') : undefined;
 
     if (startOfForm >= endOfForm) {
       errorDialog({
@@ -115,21 +172,12 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
       });
       return;
     }
-    try {
-      const values = await form.validateFields();
 
-      const startDate = values?.startDate
-        ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD')
-        : undefined;
-      const startHour = values?.startDate
-        ? dayjs(values?.startDate)?.utc().format('HH:mm:ss')
-        : undefined;
-      const endDate = values?.endDate
-        ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD')
-        : undefined;
-      const endHour = values?.endDate
-        ? dayjs(values?.endDate)?.utc().format('HH:mm:ss')
-        : undefined;
+    try {
+      const startDate = values?.startDate ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD') : undefined;
+      const startHour = values?.startDate ? dayjs(values?.startDate)?.utc().format('HH:mm:ss') : undefined;
+      const endDate = values?.endDate ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD') : undefined;
+      const endHour = values?.endDate ? dayjs(values?.endDate)?.utc().format('HH:mm:ss') : undefined;
 
       const categoryName = values.surveyCategory;
       const category = [];
@@ -155,15 +203,16 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
         }
       }
       const selectedPublishStatus = values.publishStatus;
-      let data = {
+      const data = {
         entity: {
           name: values.surveyName,
           description: values.description,
           publishStatus: publishEnum[selectedPublishStatus],
           startDate: startDate + 'T' + startHour + '.000Z',
           endDate: endDate + 'T' + endHour + '.000Z',
-          categoryOfFormId: category[0].id,
+          categoryOfFormId: category[0]?.id,
           onlyComletedWhenFinish: values.finishCondition,
+          isActive: true,
         },
       };
 
@@ -181,12 +230,51 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
         data.entity.packages = packages;
         data.entity.formClassrooms = formClassrooms;
       }
-      const action = await dispatch(addNewForm(data));
+      setServiceData(data);
+      if (string == 'kaydet ve yayınla') {
+        data.entity.publishStatus = 1;
+      } else if (string == 'taslak olarak kaydet') {
+        data.entity.publishStatus = 3;
+      }
+      if (showFormObj.id != undefined) {
+        let newData = { form: { ...data.entity, id: showFormObj.id } };
+        const action = await dispatch(updateForm(newData));
+        if (updateForm.fulfilled.match(action)) {
+          await dispatch(getAllQuestionsOfForm({ formId: showFormObj.id }));
+          dispatch(getGroupsOfForm());
+          if (string == 'taslak olarak kaydet' || string == 'kaydet ve yayınla') {
+            history.push('/user-management/survey-management');
+          } else {
+            setStep('2');
+            setPermitNext(true);
+          }
+        }
+      } else if (currentForm.id != undefined) {
+        let newData = { form: { ...data.entity, id: currentForm.id } };
+        const action = await dispatch(updateForm(newData));
+        if (updateForm.fulfilled.match(action)) {
+          await dispatch(getAllQuestionsOfForm({ formId: currentForm.id }));
 
-      if (addNewForm.fulfilled.match(action)) {
-        dispatch(getGroupsOfForm());
-        setStep('2');
-        setPermitNext(true);
+          setStep('2');
+          setPermitNext(true);
+        }
+      } else {
+        const action = await dispatch(addNewForm(data));
+        if (addNewForm.fulfilled.match(action)) {
+          const res = action.payload.data;
+          const newGroupData = {
+            entity: {
+              name: '1.Grup Sorular',
+              scoringType: 2,
+              formId: res?.id,
+            },
+          };
+          await dispatch(addNewGroupToForm(newGroupData));
+          await dispatch(getAllQuestionsOfForm({ formId: res.id }));
+          // dispatch(getGroupsOfForm());
+          setStep('2');
+          setPermitNext(true);
+        }
       }
     } catch (error) {
       errorDialog({
@@ -196,6 +284,7 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
       setStep('2');
     }
   };
+
   return (
     <>
       <CustomCollapseCard cardTitle={<Text t="Genel Bilgiler" />}>
@@ -222,9 +311,7 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
               label={<Text t="Durum" />}
               name="publishStatus"
               className={classes['ant-form-item']}
-              rules={[
-                { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-              ]}
+              rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}
             >
               <CustomSelect onChange={showStock} placeholder={'Seçiniz'} className={classes.select}>
                 {publishStatus.map(({ id, value }) => (
@@ -238,15 +325,13 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
               label={<Text t="Açıklama" />}
               name="description"
               className={classes['ant-form-item']}
-              placeholder={
-                'Bu alana girilen veri anasayfa, tüm duyurular sayfası ve pop-uplarda gösterilecek özet bilgi metnidir.'
-              }
+              placeholder={'Açıklama  giriniz'}
               rules={[
                 { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
                 { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
               ]}
             >
-              <CustomInput placeholder={'Yeni duyurunuz ile ilgili özet metin'} />
+              <CustomInput placeholder={'Yeni anket ile ilgili açıklama'} />
             </CustomFormItem>
             <CustomFormItem
               label={<Text t="Kategori" />}
@@ -258,23 +343,20 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
               ]}
             >
               <CustomSelect onChange={showStock} placeholder={'Seçiniz'} className={classes.select}>
-                {formCategories?.map(({ id, name }) => (
-                  <Option id={id} key={id} value={name}>
-                    <Text t={name} />
+                {formCategories?.map((category, index) => (
+                  <Option id={category.id} key={category.id} value={category.name}>
+                    <Text t={category.name} />
                   </Option>
                 ))}
               </CustomSelect>
             </CustomFormItem>
-            {stock && (
+            {(stock || showFormObj?.categoryOfForm?.name?.toLowerCase().includes('envanter')) && (
               <>
                 <CustomFormItem
                   label={<Text t="Paketler" />}
                   name="packages"
                   className={classes['ant-form-item']}
-                  rules={[
-                    { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-                    // { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-                  ]}
+                  rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}
                 >
                   <CustomSelect type="number" placeholder={'Seçiniz'} className={classes.select}>
                     {formPackages?.map(({ id, name }) => (
@@ -362,13 +444,15 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                   name="finishCondition"
                   rules={[{ required: true, message: <Text t="Lütfen Seçim Yapınız" /> }]}
                 >
-                  <CustomRadioGroup className={classes.radioGroup}>
-                    <CustomRadio value={true} className={classes.radio}>
-                      Kullanıcı tüm soruları cevapladığında anketi bitirebilir.{' '}
-                    </CustomRadio>
-                    <CustomRadio value={false} className={classes.radio}>
-                      Kullanıcı her an anketi bitirebilir
-                    </CustomRadio>
+                  <CustomRadioGroup
+                    defaultValue={showFormObj ? showFormObj.onlyComletedWhenFinish : null}
+                    className={classes.radioGroup}
+                  >
+                    {radioOptions.map((radio, index) => (
+                      <CustomRadio key={index} value={radio.value} className={classes.radio} checked={true}>
+                        {radio.label}
+                      </CustomRadio>
+                    ))}
                   </CustomRadioGroup>
                 </CustomFormItem>
               </Col>
@@ -376,18 +460,45 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
 
             <CustomFormItem className={classes['footer-form-item']}>
               <div className={classes.buttonContainer}>
-                <CustomButton className={classes['cancel-btn']} onClick={onCancel}>
+                <CustomButton className={classes['cancel-btn']} onClick={cancelHandler}>
                   İptal
                 </CustomButton>
-                {permitNext ? (
-                  <CustomButton className={classes['submit-btn']} onClick={() => {
-                    setStep('2');
-                  }}>
+                {(permitNext || showFormObj.id != undefined) && (
+                  <CustomButton
+                    className={classes['submit-btn']}
+                    onClick={() => {
+                      onFinish('ileri');
+                      setStep('2');
+                    }}
+                  >
                     İleri
                   </CustomButton>
-                ) : (
+                )}{' '}
+                {!permitNext && showFormObj.id == undefined && (
                   <CustomButton className={classes['submit-btn']} onClick={onFinish}>
                     Kaydet ve İlerle
+                  </CustomButton>
+                )}
+                {showFormObj.id != undefined && showFormObj.publishStatus == 2 && (
+                  <CustomButton
+                    className={classes['draft-button']}
+                    onClick={() => {
+                      onFinish('taslak olarak kaydet');
+                      // publishAndSaveHandler()
+                    }}
+                  >
+                    Taslak Olarak Kaydet
+                  </CustomButton>
+                )}
+                {(currentForm.id != undefined || showFormObj.id != undefined) && (
+                  <CustomButton
+                    className={classes['submit-btn']}
+                    onClick={() => {
+                      onFinish('kaydet ve yayınla');
+                      // publishAndSaveHandler()
+                    }}
+                  >
+                    Kaydet ve Yayınla
                   </CustomButton>
                 )}
               </div>

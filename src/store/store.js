@@ -72,7 +72,7 @@ const reducers = combineReducers({
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth', 'user', 'menu'], // only persist these keys,
+  whitelist: ['auth', 'user', 'menu', 'forms'], // only persist these keys,
   transforms: [
     encryptTransform({
       secretKey: 'dd-secret-key-for-redux-persist',

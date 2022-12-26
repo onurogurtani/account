@@ -9,22 +9,29 @@ const PreviewGroup = ({ groupKnowledge, questionsOfForm, preview, setPreview, cu
   const dispatch = useDispatch();
   useEffect(() => {
     if (currentForm) {
-      dispatch(getAllQuestionsOfForm({ formId: groupKnowledge.formId }));
+      dispatch(getAllQuestionsOfForm({ formId: currentForm.id }));
     }
   }, [currentForm]);
+  
   return (
     <>
       <div className={classes.previewGroupContainer}>
-        <h1 className={classes.groupHeader} >{groupKnowledge.name}</h1>
-        {groupKnowledge?.questions.map((question) => (
-          <SingleQuestion
-            preview={preview}
-            setPreview={setPreview}
-            questionsOfForm={questionsOfForm}
-            groupKnowledge={groupKnowledge}
-            questionKnowledge={question}
-          />
-        ))}
+        {groupKnowledge?.name != '1.Grup Sorular' && <h1 className={classes.groupHeader}>{groupKnowledge?.name}</h1>}
+
+        {groupKnowledge?.questions?.length == 0 ? (
+          <h5 style={{ color: 'red' }}>Bu gruba Soru eklenmemiştir</h5>
+        ) : (
+          groupKnowledge?.questions.map((question, index) => (
+            <SingleQuestion
+              key={index}
+              preview={preview}
+              setPreview={setPreview}
+              questionsOfForm={questionsOfForm}
+              groupKnowledge={groupKnowledge}
+              questionKnowledge={question}
+            />
+          ))
+        )}
       </div>
     </>
   );

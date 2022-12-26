@@ -10,6 +10,11 @@ const AddForm = lazy(() =>
     default: Component,
   })),
 );
+const ShowForm = lazy(() =>
+  import('./surveyManagement/showForm').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 
 const RoleManagement = lazy(() =>
   import('./roleManagement').then(({ default: Component }) => ({
@@ -65,6 +70,7 @@ const EditAnnouncement = lazy(() =>
 const UserManagement = {
   SurveyManagement,
   AddForm,
+  ShowForm,
   RoleManagement,
   OperationManagement,
   RoleOperationConnect,
