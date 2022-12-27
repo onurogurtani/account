@@ -31,6 +31,7 @@ const PasswordFormModal = ({ modalVisible, handleModalVisible, isEdit, handleEdi
     const dispatch = useDispatch();
 
     const selectList = [
+        { text: 'Yok', value: null},
         { text: '1 ay', value: '1' },
         { text: '2 ay', value: '2' },
         { text: '3 ay', value: '3' },
