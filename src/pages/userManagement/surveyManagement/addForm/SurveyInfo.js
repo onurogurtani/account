@@ -60,6 +60,13 @@ const radioOptions = [
   },
 ];
 
+const formPublicationPlaces = [
+  { id: 1, name: 'Anasayfa' },
+  { id: 2, name: 'Anketler Sayfası' },
+  { id: 3, name: 'Pop-up' },
+  { id: 4, name: 'Bildirimler' },
+];
+
 const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
   const [serviceData, setServiceData] = useState({});
   const [form] = Form.useForm();
@@ -99,6 +106,7 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
         endDate: endDate >= currentDate ? dayjs(showFormObj?.endDate) : undefined,
         surveyCategory: showFormObj?.categoryOfForm?.name,
         finishCondition: showFormObj?.onlyComletedWhenFinish,
+        formPublicationPlaces: showFormObj?.formPublicationPlaces,
       };
       if (showFormObj?.categoryOfForm?.name.toLowerCase().includes('envanter')) {
         let newData = {
@@ -213,6 +221,7 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
           categoryOfFormId: category[0]?.id,
           onlyComletedWhenFinish: values.finishCondition,
           isActive: true,
+          formPublicationPlaces: values?.formPublicationPlaces,
         },
       };
 
@@ -236,6 +245,7 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
       } else if (string == 'taslak olarak kaydet') {
         data.entity.publishStatus = 3;
       }
+      console.log(data);
       if (showFormObj.id != undefined) {
         let newData = { form: { ...data.entity, id: showFormObj.id } };
         const action = await dispatch(updateForm(newData));
@@ -457,7 +467,36 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                 </CustomFormItem>
               </Col>
             </Row>
-
+            <CustomFormItem
+              rules={[
+                {
+                  required: true,
+                  message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                },
+              ]}
+              label="Yayınlanma Yeri"
+              name="formPublicationPlaces"
+              className={classes['ant-form-item']}
+            >
+              <CustomSelect
+                placeholder="Seçiniz"
+                mode="multiple"
+                showArrow
+                // className={classes.select}
+                style={{
+                  width: '100%',
+                }}
+                // onChange={onSecondSelectChange}
+              >
+                {formPublicationPlaces.map((item, i) => {
+                  return (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.name}
+                    </Option>
+                  );
+                })}
+              </CustomSelect>
+            </CustomFormItem>
             <CustomFormItem className={classes['footer-form-item']}>
               <div className={classes.buttonContainer}>
                 <CustomButton className={classes['cancel-btn']} onClick={cancelHandler}>
