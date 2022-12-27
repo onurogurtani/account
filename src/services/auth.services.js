@@ -78,6 +78,13 @@ const logout = () => {
   });
 };
 
+const getPasswordRuleAndPeriod = () => {
+  return api({
+    url: 'AppSettings/getPasswordRuleAndPeriod',
+    method: 'GET',
+  })
+}
+
 const authServices = {
   login,
   loginOtp,
@@ -89,6 +96,7 @@ const authServices = {
   changeUserPassword,
   behalfOfLogin,
   logout,
+  getPasswordRuleAndPeriod
 };
 
 export default authServices;

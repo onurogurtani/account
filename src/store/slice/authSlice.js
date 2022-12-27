@@ -95,6 +95,14 @@ export const logout = createAsyncThunk('logout', async (body, { rejectWithValue 
   }
 });
 
+export const getPasswordRuleAndPeriod = createAsyncThunk('getPasswordRuleAndPeriod', async (body, { rejectWithValue }) => {
+  try {
+    await authServices.getPasswordRuleAndPeriod();
+  } catch (error) {
+    rejectWithValue(error?.data);
+  }
+});
+
 export const behalfOfLogin = createAsyncThunk('behalfOfLogin', async (body, { getState, rejectWithValue }) => {
   try {
     body.sessionType = 1;
