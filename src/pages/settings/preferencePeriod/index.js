@@ -26,6 +26,8 @@ import {
 } from '../../../store/slice/preferencePeriodSlice';
 import '../../../styles/settings/preferencePeriod.scss';
 import moment from 'moment';
+import dayjs from 'dayjs';
+
 const PreferencePeriod = () => {
   const [showModal, setShowModal] = useState(false);
   const [editInfo, setEditInfo] = useState(null);
@@ -140,6 +142,60 @@ const PreferencePeriod = () => {
       day: 'numeric',
     });
   };
+
+  const dateValidator = async (field, value) => {
+    let dateValue;
+    switch (field.field) {
+      case 'period1EndDate':
+        const { period1StartDate } = form?.getFieldsValue(['period1StartDate']);
+        dateValue = period1StartDate;
+        break;
+      case 'period2EndDate':
+        const { period2StartDate } = form?.getFieldsValue(['period2StartDate']);
+        dateValue = period2StartDate;
+        break;
+      case 'period3EndDate':
+        const { period3StartDate } = form?.getFieldsValue(['period3StartDate']);
+        dateValue = period3StartDate;
+        break;
+      default:
+        break;
+    }
+
+    try {
+      if (!dateValue || dayjs(value).startOf('date') > dateValue) {
+        return Promise.resolve();
+      }
+      return Promise.reject(new Error());
+    } catch (e) {
+      return Promise.reject(new Error());
+    }
+  };
+
+  const dateValidatorPeriodControl = async (field, value) => {
+    let dateValue;
+    switch (field.field) {
+      case 'period2StartDate':
+        const { period1EndDate } = form?.getFieldsValue(['period1EndDate']);
+        dateValue = period1EndDate;
+        break;
+      case 'period3StartDate':
+        const { period2EndDate } = form?.getFieldsValue(['period2EndDate']);
+        dateValue = period2EndDate;
+        break;
+      default:
+        break;
+    }
+
+    try {
+      if (!dateValue || dayjs(value).startOf('date') > dateValue) {
+        return Promise.resolve();
+      }
+      return Promise.reject(new Error());
+    } catch (e) {
+      return Promise.reject(new Error());
+    }
+  };
   return (
     <CustomPageHeader title={'Tercih Dönemi Tanımlama'} showBreadCrumb routes={['Ayarlar']}>
       <CustomCollapseCard className={'preferencePeriod'} cardTitle={'Tercih Dönemleri Belirleme'}>
@@ -220,7 +276,7 @@ const PreferencePeriod = () => {
             rules={[
               {
                 required: true,
-                message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                message: 'Lütfen seçimleri yapınız.',
               },
             ]}
             label="Eğitim Öğretim Yılı"
@@ -240,7 +296,7 @@ const PreferencePeriod = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                    message: 'Lütfen seçimleri yapınız.',
                   },
                 ]}
                 style={{ width: '50%' }}
@@ -252,7 +308,11 @@ const PreferencePeriod = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                    message: 'Lütfen seçimleri yapınız.',
+                  },
+                  {
+                    validator: dateValidator,
+                    message: 'Bitiş tarihleri başlangıç tarihlerinden daha ileri bir zaman seçilmelidir.',
                   },
                 ]}
                 style={{ width: '50%' }}
@@ -268,7 +328,11 @@ const PreferencePeriod = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                    message: 'Lütfen seçimleri yapınız.',
+                  },
+                  {
+                    validator: dateValidatorPeriodControl,
+                    message: 'Lütfen girilen tarihleri kontrol ediniz.',
                   },
                 ]}
                 style={{ width: '50%' }}
@@ -280,7 +344,11 @@ const PreferencePeriod = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                    message: 'Lütfen seçimleri yapınız.',
+                  },
+                  {
+                    validator: dateValidator,
+                    message: 'Bitiş tarihleri başlangıç tarihlerinden daha ileri bir zaman seçilmelidir.',
                   },
                 ]}
                 style={{ width: '50%' }}
@@ -296,7 +364,11 @@ const PreferencePeriod = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                    message: 'Lütfen seçimleri yapınız.',
+                  },
+                  {
+                    validator: dateValidatorPeriodControl,
+                    message: 'Lütfen girilen tarihleri kontrol ediniz.',
                   },
                 ]}
                 style={{ width: '50%' }}
@@ -308,7 +380,11 @@ const PreferencePeriod = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                    message: 'Lütfen seçimleri yapınız.',
+                  },
+                  {
+                    validator: dateValidator,
+                    message: 'Bitiş tarihleri başlangıç tarihlerinden daha ileri bir zaman seçilmelidir.',
                   },
                 ]}
                 style={{ width: '50%' }}
