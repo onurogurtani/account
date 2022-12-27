@@ -37,7 +37,7 @@ const QuestionsTab = ({ setStep, step }) => {
           questionsOfForm={questionsOfForm}
         />
       ))}
-      {(!addFirstShow || showFormObj.id != undefined) && (
+      {(!addFirstShow || showFormObj.id != undefined || currentForm.id!=undefined) && (
         <QuestionTabFooter
           preview={preview}
           setPreview={setPreview}

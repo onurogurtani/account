@@ -9,6 +9,12 @@ import { getFormCategories, getFormPackages, getAllQuestionsOfForm } from '../..
 import PreviewList from '../addForm/questionComponents/PreviewList';
 
 const { TabPane } = Tabs;
+const formPublicationPlacesReverseEnum = {
+  1: 'Anasayfa',
+  2: 'Anketler Sayfası',
+  3: 'Pop-up',
+  4: 'Bildirimler',
+};
 
 const ShowFormTabs = ({ showData }) => {
   const dispatch = useDispatch();
@@ -34,7 +40,8 @@ const ShowFormTabs = ({ showData }) => {
   const handleClose = async () => {
     confirmDialog({
       title: <Text t="Bilgilendirme Mesajı" />,
-      message: 'Kullanıcı anketi bitirdiğinde sorulara verdiği cevaplar kontrol edilecek, eğer anket bitirme koşulunu sağlamışsa cevaplar değerlendirilmek üzere kaydedilecektir.',
+      message:
+        'Kullanıcı anketi bitirdiğinde sorulara verdiği cevaplar kontrol edilecek, eğer anket bitirme koşulunu sağlamışsa cevaplar değerlendirilmek üzere kaydedilecektir.',
       okText: <Text t="Tamam" />,
       cancelText: <Text t="" />,
     });
@@ -52,55 +59,49 @@ const ShowFormTabs = ({ showData }) => {
               <Text t="Açıklama" /> :<span>{showData?.description}</span>
             </li>
             <li>
-              <Text t="Başlangıç Tarihi" /> : <span>{dayjs(showData?.startDate)?.format('YYYY-MM-DD HH:mm')}</span>
-            </li>
-            <li>
-              <Text t="Bitiş Tarihi" /> : <span>{dayjs(showData?.endDate)?.format('YYYY-MM-DD HH:mm')}</span>
-            </li>
-            <li>
-              <Text t="Yayında mı?" /> :{' '}
-              <span>
-                {showData?.publishStatus == 1 && <span className={classes['status-text-active']}>Evet</span>}
-                {showData?.publishStatus == 2 && <span className={classes['status-text-passive']}>Hayır</span>}
-                {showData?.publishStatus == 3 && (
-                  <span className={classes['status-text-draft']}>Taslak Olarak Kaydedildi</span>
-                )}
-              </span>
-            </li>
-            <li>
               <Text t="Kategori" /> : <span>{showData?.categoryOfForm?.name}</span>
             </li>
             {showData?.categoryOfFormId == 5 && (
               <>
                 <li>
-                  <Text t="Sınıf Seviyesi" />:{" "} <span>{showData?.formClassrooms[0]?.classroom.name}</span>
+                  <Text t="Sınıf Seviyesi" />: <span>{showData?.formClassrooms[0]?.classroom.name}</span>
                 </li>
                 <li>
-                  <Text t="Paketler" />:{" "} <span>{showData?.packages[0].package?.name}</span>
+                  <Text t="Paketler" />: <span>{showData?.packages[0].package?.name}</span>
                 </li>
               </>
             )}
             <li>
-              <Text t="Arşivlendi mi?" /> :{' '}
+              <Text t="Başlangıç Tarihi ve Saati" /> : <span>{dayjs(showData?.startDate)?.format('YYYY-MM-DD HH:mm')}</span>
+            </li>
+            <li>
+              <Text t="Bitiş Tarihi ve Saati" /> : <span>{dayjs(showData?.endDate)?.format('YYYY-MM-DD HH:mm')}</span>
+            </li>
+            <li>
+              <Text t="Yayınlanma Durumu" /> :{' '}
               <span>
-                {showData?.isActive ? (
-                  <span className={classes['status-text-active']}>Hayır</span>
-                ) : (
-                  <span className={classes['status-text-passive']}>Evet</span>
+                {showData?.publishStatus == 1 && <span className={classes['status-text-active']}>Yayında</span>}
+                {showData?.publishStatus == 2 && <span className={classes['status-text-passive']}>Yayında Değil</span>}
+                {showData?.publishStatus == 3 && (
+                  <span className={classes['status-text-draft']}>Taslak</span>
                 )}
+              </span>
+            </li>            
+            <li>
+              <Text t="Anket Tamamlama Koşulu" /> :{' '}
+              <span>
+                {showData?.onlyComletedWhenFinish
+                  ? 'Kullanıcı tüm sorular cevapladığında anketi bitirebilir'
+                  : 'Kullanıcı her an anketi bitirebilir'}
               </span>
             </li>
             <li>
-              <Text t="Bitirme Koşulu?" /> :{' '}
-              <span>
-                {showData?.onlyComletedWhenFinish ? (
-                  <span className={classes['status-text-active']}>
-                    Kullanıcı tüm sorular cevapladığında anketi bitirebilir
-                  </span>
-                ) : (
-                  <span className={classes['status-text-passive']}>Kullanıcı her an anketi bitirebilir</span>
-                )}
-              </span>
+              <Text t="Yayınlanma Yeri" /> :{' '}
+              <div className={classes.placesContainer}>
+                {showData?.formPublicationPlaces?.map((placeId, index) => (
+                  <span key={index}>{formPublicationPlacesReverseEnum[placeId]}</span>
+                ))}
+              </div>
             </li>
           </ul>
         </CustomCollapseCard>
@@ -120,7 +121,7 @@ const ShowFormTabs = ({ showData }) => {
         </ul>
       </TabPane>
       <TabPane tab="Sorular" key="2">
-        <CustomCollapseCard cardTitle={<Text t={`${showData.name} soruları`} />}>
+        <CustomCollapseCard cardTitle={<Text t="Sorular" />}>
           <PreviewList
             currentForm={showData}
             questionsOfForm={questionsOfForm}
