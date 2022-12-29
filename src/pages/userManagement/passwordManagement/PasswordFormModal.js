@@ -1,12 +1,10 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { Form, Checkbox, Col, Row, Tag } from 'antd';
+import { Form, Checkbox, Col, Row } from 'antd';
 import { useDispatch } from 'react-redux';
 import {
     CustomButton,
     CustomForm,
     CustomFormItem,
-    CustomImage,
-    CustomInput,
     CustomNumberInput,
     CustomModal,
     CustomSelect,
@@ -14,20 +12,16 @@ import {
     errorDialog,
     successDialog,
     Text,
-    useText,
     CustomCheckbox,
     confirmDialog
 } from '../../../components';
-// import '../../../styles/passwordManagement/passwordList.scss'
 import '../../../styles/myOrders/paymentModal.scss'
 import { useHistory } from 'react-router-dom';
+import {setPasswordRuleAndPeriodValue} from '../../../store/slice/authSlice'
 
-const PasswordFormModal = ({ modalVisible, handleModalVisible, isEdit, handleEdit, passwordRules }) => {
-    const [errorList, setErrorList] = useState([]);
-
+const PasswordFormModal = ({ modalVisible, handleModalVisible, isEdit, handleEdit, passwordRules, handlePasswordRules }) => {
     const [form] = Form.useForm();
     const history = useHistory();
-
     const dispatch = useDispatch();
 
     const selectList = [
@@ -44,26 +38,20 @@ const PasswordFormModal = ({ modalVisible, handleModalVisible, isEdit, handleEdi
         { text: '10 ay', value: '10' },
         { text: '11 ay', value: '11' },
         { text: '12 ay', value: '12' },
-
       ];
-
 
     useEffect(() => {
     if (modalVisible) {
-    //     console.log('selectedrow', selectedRow);
         if (isEdit) {
             form.setFieldsValue({
-                minCharacter: passwordRules.minCharacter
+                minCharacter: passwordRules.minCharacter,
+                maxCharacter: passwordRules.maxCharacter,
+                hasUpperChar: passwordRules.hasUpperChar,
+                hasLowerChar: passwordRules.hasLowerChar,
+                hasNumber: passwordRules.hasNumber,
+                hasSymbol: passwordRules.hasSymbol,
+                passwordPeriod: passwordRules.passwordPeriod
             });
-    //     setCurrentInstitutionTypeId(selectedRow?.institutionTypeId);
-    //     setCurrentInstitutionId(selectedRow?.institutionId);
-    //     const selectedInstitutionTypes = institutionTypes.filter(
-    //         (item) => item?.id === selectedRow?.institutionTypeId,
-    //     );
-    //     form.setFieldsValue({ institutionType: selectedInstitutionTypes[0]?.name });
-    //     const towns = countys?.filter((item) => item?.cityId === selectedRow?.cityId);
-    //     setTowns(towns);
-    //     form.setFieldsValue({ town: selectedRow?.countyId });
             handleEdit(true);
         }
     }
@@ -75,47 +63,62 @@ const PasswordFormModal = ({ modalVisible, handleModalVisible, isEdit, handleEdi
             message: 'İptal etmek istediğinizden emin misiniz?',
             okText: <Text t="Evet" />,
             cancelText: 'Hayır',
-            onOk: async () => {
+            onOk: () => {
                 form.resetFields();
                 handleModalVisible(false)
                 history.push('/user-management/password-management')
-                setErrorList([]);
             },
           });
     }, [handleModalVisible, form]);
 
-
     const onFinish = useCallback(
         async (values) => {
-            if (errorList.length > 0) {
-                console.log("ERRor var")
-                return
+            const body = {
+                    minCharacter: values.minCharacter, 
+                    maxCharacter: values.maxCharacter, 
+                    hasUpperChar: values.hasUpperChar, 
+                    hasLowerChar: values.hasLowerChar, 
+                    hasNumber: values.hasNumber,
+                    hasSymbol: values.hasSymbol,
+                    passwordPeriod: values.passwordPeriod 
             }
-            console.log("error yok", values)
-
+            const action = await dispatch(setPasswordRuleAndPeriodValue(body));
+            if(action?.payload?.success){
+                successDialog({
+                  title: <Text t="success" />,
+                  message: "Kayıt Güncellenmiştir.",
+                });
+                handlePasswordRules({
+                    minCharacter: values.minCharacter, 
+                    maxCharacter: values.maxCharacter, 
+                    hasUpperChar: values.hasUpperChar, 
+                    hasLowerChar: values.hasLowerChar, 
+                    hasNumber: values.hasNumber,
+                    hasSymbol: values.hasSymbol,
+                    passwordPeriod: values.passwordPeriod
+                })
+                handleModalVisible(false)
+                handleEdit(false)
+            }else{
+                    errorDialog({
+                    title: <Text t="error" />,
+                    message: "Minimum karakter sayısı maksimum karakter sayısından büyük olamaz",
+                    }); 
+            }
           },
-          [dispatch,errorList],
-       )
+          [dispatch],
+    )
 
-    // const onFinish = (values) => {
-    //     console.log('Success:', values);
-    // }
+    const onChange = (e) => {
+        let prevState = passwordRules;
+        prevState[e.target.name] = e.target.cheched;
 
-    const onFinishEdit = () => {
-
-    }
-
-    const onOk = (values) => {
-        console.log(values)
-    }
-
-    const onChange = (checkedValues) => {
-        console.log('checked = ', checkedValues);
+        handlePasswordRules(prevState)
     };
 
-    const onPeriodStatusChange = (values) => {
-        console.log(values)
-    }
+    useEffect(()=>{
+        console.log(passwordRules)
+    },[passwordRules])
 
     return (
         <CustomModal
@@ -136,7 +139,7 @@ const PasswordFormModal = ({ modalVisible, handleModalVisible, isEdit, handleEdi
                     form={form}
                     autoComplete='off'
                     layout={'horizontal'}
-                    onFinish={isEdit ? onFinishEdit : onFinish}
+                    onFinish={onFinish}
                     labelCol={{ span: 10 }}
                     wrapperCol={{ span: 14 }}
                 >
@@ -163,50 +166,49 @@ const PasswordFormModal = ({ modalVisible, handleModalVisible, isEdit, handleEdi
 
                     <Row>
                         <Col span={24}>
-                            <Checkbox.Group
-                                onChange={onChange}
-                                style={{ width: '100%' }}
-                            >
                                 <CustomFormItem
                                     label={false}
-                                    name="upperCase"
+                                    name="hasUpperChar"
                                     valuePropName="checked"
                                 >
                                     <div className="checkbox-row">
                                         <div className="checkbox-label">
                                             <Text t="Büyük harf" />
                                         </div>
-                                        <CustomCheckbox value="upperCase"></CustomCheckbox>
+                                        <CustomCheckbox name="hasUpperChar" checked={passwordRules.hasUpperChar} onChange={onChange}></CustomCheckbox>
 
                                     </div>
                                 </CustomFormItem>
                                 <CustomFormItem
                                     label={false}
-                                    name="lowerCase"
+                                    name="hasLowerChar"
                                     valuePropName="checked"
                                 >
                                     <div className="checkbox-row">
                                         <div className="checkbox-label">
                                             <Text t="Küçük harf" />
                                         </div>
-                                        <CustomCheckbox value="lowerCase"></CustomCheckbox>
+                                        <CustomCheckbox name="hasLowerChar" checked={passwordRules.hasLowerChar} onChange={onChange}></CustomCheckbox>
                                     </div>
                                 </CustomFormItem>
                                 <CustomFormItem
                                     label={false}
-                                    name="numeral"
+                                    name="hasNumber"
                                     valuePropName="checked"
-                                >
+                                > 
                                     <div className="checkbox-row">
                                         <div className="checkbox-label">
                                             <Text t="Rakam" />
                                         </div>
-                                        <CustomCheckbox value="numeral"></CustomCheckbox>
+                                        <CustomCheckbox
+                                        name="hasNumber"
+                                        checked={passwordRules.hasNumber} onChange={onChange}
+                                        />
                                     </div>
                                 </CustomFormItem>
                                 <CustomFormItem
                                     label={false}
-                                    name="symbol"
+                                    name="hasSymbol"
                                     valuePropName="checked"
                                     onChange={onChange}
                                 >
@@ -214,22 +216,20 @@ const PasswordFormModal = ({ modalVisible, handleModalVisible, isEdit, handleEdi
                                         <div className="checkbox-label">
                                             <Text t="Sembol" />
                                         </div>
-                                        <CustomCheckbox value="symbol"></CustomCheckbox>
+                                        <CustomCheckbox 
+                                        name="hasSymbol"
+                                        checked={passwordRules.hasSymbol} onChange={onChange}></CustomCheckbox>
                                     </div>
                                 </CustomFormItem>
-                            </Checkbox.Group>
                         </Col>
                     </Row>
 
                     <CustomFormItem
                         label="Şifre Periyod"
                         name="passwordPeriod"
-                        // rules={[{ required: true, message: <Text t="Periyot seçiniz." /> }]}
                     >
                         <CustomSelect
                             placeholder="Periyot seçiniz"
-                            // optionFilterProp="children"
-                            onChange={onPeriodStatusChange}
                         >
                             {selectList.map(item=>(
                                <Option key={item.value} value={item.value}>
@@ -241,7 +241,7 @@ const PasswordFormModal = ({ modalVisible, handleModalVisible, isEdit, handleEdi
 
                     <div className='modal-footer'>
                         <CustomFormItem>
-                            <CustomButton className='submit-btn' type='primary' htmlType='submit' onClick={handleClose}>
+                            <CustomButton className='submit-btn' type='primary' onClick={handleClose}>
                                 <span className='submit'>
                                     <Text t='İptal' />
                                 </span>
