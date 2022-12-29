@@ -1,5 +1,5 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { Form, Checkbox, Col, Row } from 'antd';
+import React, { useCallback, useEffect } from 'react';
+import { Form, Col, Row } from 'antd';
 import { useDispatch } from 'react-redux';
 import {
     CustomButton,
@@ -17,44 +17,44 @@ import {
 } from '../../../components';
 import '../../../styles/myOrders/paymentModal.scss'
 import { useHistory } from 'react-router-dom';
-import {setPasswordRuleAndPeriodValue} from '../../../store/slice/authSlice'
+import { setPasswordRuleAndPeriodValue } from '../../../store/slice/authSlice'
 
-const PasswordFormModal = ({ modalVisible, handleModalVisible, isEdit, handleEdit, passwordRules, handlePasswordRules }) => {
+const PasswordFormModal = ({ modalVisible, handleModalVisible, isEdit, handleEdit, passwordRules, setPasswordRules }) => {
     const [form] = Form.useForm();
     const history = useHistory();
     const dispatch = useDispatch();
 
     const selectList = [
-        { text: 'Yok', value: null},
-        { text: '1 ay', value: '1' },
-        { text: '2 ay', value: '2' },
-        { text: '3 ay', value: '3' },
-        { text: '4 ay', value: '4' },
-        { text: '5 ay', value: '5' },
-        { text: '6 ay', value: '6' },
-        { text: '7 ay', value: '7' },
-        { text: '8 ay', value: '8' },
-        { text: '9 ay', value: '9' },
-        { text: '10 ay', value: '10' },
-        { text: '11 ay', value: '11' },
-        { text: '12 ay', value: '12' },
-      ];
+        { text: 'Yok', value: null },
+        { text: '1 ay', value: 1 },
+        { text: '2 ay', value: 2 },
+        { text: '3 ay', value: 3 },
+        { text: '4 ay', value: 4 },
+        { text: '5 ay', value: 5 },
+        { text: '6 ay', value: 6 },
+        { text: '7 ay', value: 7 },
+        { text: '8 ay', value: 8 },
+        { text: '9 ay', value: 9 },
+        { text: '10 ay', value: 10 },
+        { text: '11 ay', value: 11 },
+        { text: '12 ay', value: 12 },
+    ];
 
     useEffect(() => {
-    if (modalVisible) {
-        if (isEdit) {
-            form.setFieldsValue({
-                minCharacter: passwordRules.minCharacter,
-                maxCharacter: passwordRules.maxCharacter,
-                hasUpperChar: passwordRules.hasUpperChar,
-                hasLowerChar: passwordRules.hasLowerChar,
-                hasNumber: passwordRules.hasNumber,
-                hasSymbol: passwordRules.hasSymbol,
-                passwordPeriod: passwordRules.passwordPeriod
-            });
-            handleEdit(true);
+        if (modalVisible) {
+            if (isEdit) {
+                form.setFieldsValue({
+                    minCharacter: passwordRules.minCharacter,
+                    maxCharacter: passwordRules.maxCharacter,
+                    hasUpperChar: passwordRules.hasUpperChar,
+                    hasLowerChar: passwordRules.hasLowerChar,
+                    hasNumber: passwordRules.hasNumber,
+                    hasSymbol: passwordRules.hasSymbol,
+                    passwordPeriod: passwordRules.passwordPeriod
+                });
+                handleEdit(true);
+            }
         }
-    }
     }, [modalVisible]);
 
     const handleClose = useCallback(() => {
@@ -68,57 +68,58 @@ const PasswordFormModal = ({ modalVisible, handleModalVisible, isEdit, handleEdi
                 handleModalVisible(false)
                 history.push('/user-management/password-management')
             },
-          });
+        });
     }, [handleModalVisible, form]);
 
     const onFinish = useCallback(
         async (values) => {
             const body = {
-                    minCharacter: values.minCharacter, 
-                    maxCharacter: values.maxCharacter, 
-                    hasUpperChar: values.hasUpperChar, 
-                    hasLowerChar: values.hasLowerChar, 
-                    hasNumber: values.hasNumber,
-                    hasSymbol: values.hasSymbol,
-                    passwordPeriod: values.passwordPeriod 
+                minCharacter: values.minCharacter,
+                maxCharacter: values.maxCharacter,
+                hasUpperChar: values.hasUpperChar,
+                hasLowerChar: values.hasLowerChar,
+                hasNumber: values.hasNumber,
+                hasSymbol: values.hasSymbol,
+                passwordPeriod: values.passwordPeriod
             }
             const action = await dispatch(setPasswordRuleAndPeriodValue(body));
-            if(action?.payload?.success){
+            if (action?.payload?.success) {
                 successDialog({
-                  title: <Text t="success" />,
-                  message: "Kayıt Güncellenmiştir.",
+                    title: <Text t="success" />,
+                    message: "Kayıt Güncellenmiştir.",
                 });
-                handlePasswordRules({
-                    minCharacter: values.minCharacter, 
-                    maxCharacter: values.maxCharacter, 
-                    hasUpperChar: values.hasUpperChar, 
-                    hasLowerChar: values.hasLowerChar, 
+                setPasswordRules({
+                    minCharacter: values.minCharacter,
+                    maxCharacter: values.maxCharacter,
+                    hasUpperChar: values.hasUpperChar,
+                    hasLowerChar: values.hasLowerChar,
                     hasNumber: values.hasNumber,
                     hasSymbol: values.hasSymbol,
                     passwordPeriod: values.passwordPeriod
                 })
                 handleModalVisible(false)
                 handleEdit(false)
-            }else{
-                    errorDialog({
+            } else {
+                console.log(action)
+                errorDialog({
                     title: <Text t="error" />,
-                    message: "Minimum karakter sayısı maksimum karakter sayısından büyük olamaz",
-                    }); 
+                    message: "Hatalı Giriş",
+                });
             }
-          },
-          [dispatch],
+        },
+        [dispatch, setPasswordRules, handleModalVisible, passwordRules],
     )
 
     const onChange = (e) => {
         let prevState = passwordRules;
-        prevState[e.target.name] = e.target.cheched;
+        prevState[e.target.name] = e.target.checked;
 
-        handlePasswordRules(prevState)
+        setPasswordRules(passwordRules => ({
+            ...passwordRules,
+            ...prevState
+        }))
+
     };
-
-    useEffect(()=>{
-        console.log(passwordRules)
-    },[passwordRules])
 
     return (
         <CustomModal
@@ -128,9 +129,7 @@ const PasswordFormModal = ({ modalVisible, handleModalVisible, isEdit, handleEdi
             title={'Şifre Yönetimi'}
             visible={modalVisible}
             onCancel={handleClose}
-            // onOk={onOk}
             autoComplete="off"
-            // closeIcon={<CustomImage src={modalClose} />}
         >
             <div className='payment-container'>
                 <CustomForm
@@ -166,61 +165,61 @@ const PasswordFormModal = ({ modalVisible, handleModalVisible, isEdit, handleEdi
 
                     <Row>
                         <Col span={24}>
-                                <CustomFormItem
-                                    label={false}
-                                    name="hasUpperChar"
-                                    valuePropName="checked"
-                                >
-                                    <div className="checkbox-row">
-                                        <div className="checkbox-label">
-                                            <Text t="Büyük harf" />
-                                        </div>
-                                        <CustomCheckbox name="hasUpperChar" checked={passwordRules.hasUpperChar} onChange={onChange}></CustomCheckbox>
+                            <CustomFormItem
+                                label={false}
+                                name="hasUpperChar"
+                                valuePropName="checked"
+                            >
+                                <div className="checkbox-row">
+                                    <div className="checkbox-label">
+                                        <Text t="Büyük harf" />
+                                    </div>
+                                    <CustomCheckbox name="hasUpperChar" checked={passwordRules.hasUpperChar} onChange={onChange}></CustomCheckbox>
 
+                                </div>
+                            </CustomFormItem>
+                            <CustomFormItem
+                                label={false}
+                                name="hasLowerChar"
+                                valuePropName="checked"
+                            >
+                                <div className="checkbox-row">
+                                    <div className="checkbox-label">
+                                        <Text t="Küçük harf" />
                                     </div>
-                                </CustomFormItem>
-                                <CustomFormItem
-                                    label={false}
-                                    name="hasLowerChar"
-                                    valuePropName="checked"
-                                >
-                                    <div className="checkbox-row">
-                                        <div className="checkbox-label">
-                                            <Text t="Küçük harf" />
-                                        </div>
-                                        <CustomCheckbox name="hasLowerChar" checked={passwordRules.hasLowerChar} onChange={onChange}></CustomCheckbox>
+                                    <CustomCheckbox name="hasLowerChar" checked={passwordRules.hasLowerChar} onChange={onChange}></CustomCheckbox>
+                                </div>
+                            </CustomFormItem>
+                            <CustomFormItem
+                                label={false}
+                                name="hasNumber"
+                                valuePropName="checked"
+                            >
+                                <div className="checkbox-row">
+                                    <div className="checkbox-label">
+                                        <Text t="Rakam" />
                                     </div>
-                                </CustomFormItem>
-                                <CustomFormItem
-                                    label={false}
-                                    name="hasNumber"
-                                    valuePropName="checked"
-                                > 
-                                    <div className="checkbox-row">
-                                        <div className="checkbox-label">
-                                            <Text t="Rakam" />
-                                        </div>
-                                        <CustomCheckbox
+                                    <CustomCheckbox
                                         name="hasNumber"
                                         checked={passwordRules.hasNumber} onChange={onChange}
-                                        />
+                                    />
+                                </div>
+                            </CustomFormItem>
+                            <CustomFormItem
+                                label={false}
+                                name="hasSymbol"
+                                valuePropName="checked"
+                                onChange={onChange}
+                            >
+                                <div className="checkbox-row">
+                                    <div className="checkbox-label">
+                                        <Text t="Sembol" />
                                     </div>
-                                </CustomFormItem>
-                                <CustomFormItem
-                                    label={false}
-                                    name="hasSymbol"
-                                    valuePropName="checked"
-                                    onChange={onChange}
-                                >
-                                    <div className="checkbox-row">
-                                        <div className="checkbox-label">
-                                            <Text t="Sembol" />
-                                        </div>
-                                        <CustomCheckbox 
+                                    <CustomCheckbox
                                         name="hasSymbol"
                                         checked={passwordRules.hasSymbol} onChange={onChange}></CustomCheckbox>
-                                    </div>
-                                </CustomFormItem>
+                                </div>
+                            </CustomFormItem>
                         </Col>
                     </Row>
 
@@ -231,10 +230,10 @@ const PasswordFormModal = ({ modalVisible, handleModalVisible, isEdit, handleEdi
                         <CustomSelect
                             placeholder="Periyot seçiniz"
                         >
-                            {selectList.map(item=>(
-                               <Option key={item.value} value={item.value}>
-                                   {item.text}
-                                </Option> 
+                            {selectList.map(item => (
+                                <Option key={item.value} value={item.value}>
+                                    {item.text}
+                                </Option>
                             ))}
                         </CustomSelect>
                     </CustomFormItem>
@@ -260,7 +259,7 @@ const PasswordFormModal = ({ modalVisible, handleModalVisible, isEdit, handleEdi
             </div>
 
 
-            
+
         </CustomModal>
     )
 }

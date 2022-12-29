@@ -1,11 +1,7 @@
 import {
-    confirmDialog,
     CustomButton,
     CustomCollapseCard,
-    CustomImage,
-    CustomTable,
     errorDialog,
-    successDialog,
     Text,
 } from '../../../components';
 import { useCallback, useEffect, useState } from 'react';
@@ -99,7 +95,7 @@ const PasswordList = () => {
                 isEdit={isEdit}
                 handleEdit={setIsEdit}
                 passwordRules={passwordRules}
-                handlePasswordRules={setPasswordRules}
+                setPasswordRules={setPasswordRules}
             />
         </CustomCollapseCard>
     )
