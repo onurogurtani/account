@@ -40,6 +40,12 @@ const AvatarManagement = lazy(() =>
   })),
 );
 
+const PasswordManagement = lazy(() =>
+  import('./passwordManagement').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+
 const SchoolManagement = lazy(() =>
   import('./schoolManagement').then(({ default: Component }) => ({
     default: Component,
@@ -80,6 +86,7 @@ const UserManagement = {
   AddAnnouncement,
   ShowAnnouncement,
   EditAnnouncement,
+  PasswordManagement
 };
 
 export default UserManagement;

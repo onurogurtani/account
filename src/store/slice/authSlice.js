@@ -95,6 +95,22 @@ export const logout = createAsyncThunk('logout', async (body, { rejectWithValue 
   }
 });
 
+export const getPasswordRuleAndPeriod = createAsyncThunk('getPasswordRuleAndPeriod', async (body, { rejectWithValue }) => {
+  try {
+     return await authServices.getPasswordRuleAndPeriod();
+  } catch (error) {
+    rejectWithValue(error?.data);
+  }
+});
+
+export const setPasswordRuleAndPeriodValue = createAsyncThunk('setPasswordRuleAndPeriodValue', async (body, { rejectWithValue }) => {
+  try {
+     return await authServices.setPasswordRuleAndPeriodValue(body);
+  } catch (error) {
+    rejectWithValue(error?.data);
+  }
+});
+
 export const behalfOfLogin = createAsyncThunk('behalfOfLogin', async (body, { getState, rejectWithValue }) => {
   try {
     body.sessionType = 1;
