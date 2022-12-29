@@ -166,7 +166,7 @@ const ClassStages = () => {
   const onFinish = async () => {
     const values = await form.validateFields();
     const data = {
-      entity: {
+      Classroom: {
         name: values?.name,
         isActive: true,
         schoolLevel: schoolLevelEnum[values.schoolLevel],
@@ -303,7 +303,7 @@ const ClassStages = () => {
                 message: 'Lütfen Zorunlu Alanları Doldurunuz.',
               },
             ]}
-            label="Sınıf Seviyesi"
+            label="Eğitim Seviyesi"
             name="schoolLevel"
           >
             <CustomSelect placeholder="Okul Seviyesi">

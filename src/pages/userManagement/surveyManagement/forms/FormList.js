@@ -12,12 +12,11 @@ import '../../../../styles/surveyManagement/surveyStyles.scss';
 import { columns, sortList } from './static';
 import { useDispatch, useSelector } from 'react-redux';
 import iconSearchWhite from '../../../../assets/icons/icon-white-search.svg';
-import { getFilteredPagedForms,getFormCategories  } from '../../../../store/slice/formsSlice';
+import { getFilteredPagedForms, getFormCategories, setShowFormObj,setCurrentForm} from '../../../../store/slice/formsSlice';
 import FormFilter from './FormFilter';
 
 const FormList = () => {
   const { tableProperty, formList, filterObject } = useSelector((state) => state?.forms);
-  console.log(formList);
   const [filterFormVisible, setFilterFormVisible] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -58,7 +57,6 @@ const FormList = () => {
 
   const handleSort = (pagination, filters, sorter) => {
     const sortType = sortList.filter((field) => field.key === sorter.columnKey);
-    console.log(sortType);
     const data = {
       ...filterObject,
       OrderBy: sortType.length ? sortType[0][sorter.order] : '',
@@ -67,8 +65,17 @@ const FormList = () => {
     dispatch(getFilteredPagedForms(data));
   };
 
-  const AddNewForm = () => {
-   return  history.push('/user-management/survey-management/add');
+  const AddNewForm = async () => {
+    await dispatch(setCurrentForm({}));
+    await dispatch(setShowFormObj({}));
+    history.push('/user-management/survey-management/add');
+  };
+  const showSurvey = async (record) => {
+    dispatch(setShowFormObj(record));
+    history.push({
+      pathname: '/user-management/survey-management/show',
+      state: { data: record },
+    });
   };
 
   return (
@@ -83,8 +90,8 @@ const FormList = () => {
             data-testid="search"
             className="search-btn"
             onClick={() => {
-              
-              setFilterFormVisible((prev) => !prev)}}
+              setFilterFormVisible((prev) => !prev);
+            }}
           >
             <CustomImage src={iconSearchWhite} />
           </CustomButton>
@@ -97,8 +104,8 @@ const FormList = () => {
           onRow={(record, rowIndex) => {
             return {
               onClick: () => {
-                AddNewForm();
-              }, 
+                showSurvey(record);
+              },
             };
           }}
           onChange={handleSort}

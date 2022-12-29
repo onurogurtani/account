@@ -222,6 +222,7 @@ const AcademicYear = () => {
           footer={false}
           title={'Tercih Dönemi Eğitim Yılı Tanımlama '}
           onCancel={handleClose}
+          width={700}
           closeIcon={<CustomImage src={modalClose} />}
         >
           <div>

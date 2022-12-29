@@ -7,6 +7,14 @@ const addNewForm = (data) => {
     data,
   });
 };
+
+const copyForm = (data) => {
+  return api({
+    url: `Forms/copyForm`,
+    method: 'POST',
+    data,
+  });
+};
 const updateForm = (data) => {
   return api({
     url: `Forms`,
@@ -75,6 +83,12 @@ const deleteQuestion = (data) => {
     url: `FormQuestions?id=${data.id}`,
     method: 'DELETE',
     data,
+  });
+};
+const deleteQuestionFromGroup=(data) => {
+  return api({
+    url: `QuestionGroupOfQuestions?id=${data.id}`,
+    method: 'DELETE',
   });
 };
 
@@ -166,7 +180,9 @@ const setScore = (data) => {
 };
 
 const formServices = {
+  copyForm,
   deleteQuestion,
+  deleteQuestionFromGroup,
   setScore,
   deleteGroupOfForm,
   getByFilterPagedForms,

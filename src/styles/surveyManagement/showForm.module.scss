@@ -1,0 +1,108 @@
+.btn-group{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    .back-btn{
+
+    }
+    .edit-btn{
+        background-color: #d5b803;
+        color:white;
+    }
+    .delete-btn{
+        background-color: red;
+        color:white;
+        
+    }
+    .publish-btn{
+        background-color: #00a483;
+        color:white;
+    }
+    .unPublish-btn{
+        background-color: #42897b;
+        color:white;
+    }
+    .copy-btn{
+      background-color: #8a8782;
+        color:white;
+    }
+}
+.form-show {
+    padding: 16px 45px 0 45px;
+    font-family: UbuntuRegular, sans-serif;
+    > li {
+      height: auto;
+      margin: 0 0 28px 0;
+      font-weight: bold;
+      letter-spacing: normal;
+      color: #050505;
+      list-style: none;
+  
+      > span {
+        color: #6b7789;
+      }
+      .status-text-active {
+        color: #00a483;
+        font-weight: bold;
+      }
+  
+      .status-text-passive {
+        color: #f72717;
+        font-weight: bold;
+      }
+      .status-text-draft{
+        color: goldenrod;
+        font-weight: bold;
+      }
+      
+    }
+    > li:last-child {
+      margin-bottom: 0;
+    }
+  
+    .roleListContainer{
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+    
+    
+    .rolesList{
+      list-style-type:decimal;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      padding: 0;
+      margin-left: 1.5rem;
+      .roles{
+        margin: 0;
+        margin-bottom: 5px;
+      }
+    }
+    }
+
+  .placesContainer{
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 5px;
+    margin: 0;
+    >span{
+      color: #6b7789
+    }
+  }
+  
+  
+  }
+  .form-show-footer {
+    font-family: UbuntuRegular, sans-serif;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    list-style: none;
+    color: #3485fd;
+    span {
+      color: #6b7789;
+    }
+    padding-left: 0;
+  }

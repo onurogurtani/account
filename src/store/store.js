@@ -35,6 +35,11 @@ import { targetScreenSlice } from './slice/targetScreenSlice';
 import { packageTypeSlice } from './slice/packageTypeSlice';
 import { userTypeSlice } from './slice/userTypeSlice';
 import { branchsSlice } from './slice/branchsSlice';
+
+import { publisherSlice } from './slice/publisherSlice';
+import { publisherBookSlice } from './slice/publisherBookSlice';
+
+import { questionManagementSlice } from './slice/questionFileSlice';
 import { lessonUnitsSlice } from './slice/lessonUnitsSlice';
 import { lessonSubjectsSlice } from './slice/lessonSubjectsSlice';
 import { lessonSubSubjectsSlice } from './slice/lessonSubSubjectsSlice';
@@ -73,12 +78,15 @@ const reducers = combineReducers({
   packageType: packageTypeSlice.reducer,
   userType: userTypeSlice.reducer,
   branchs: branchsSlice.reducer,
+  publisher: publisherSlice.reducer,
+  publisherBook: publisherBookSlice.reducer,
+  questionManagement: questionManagementSlice.reducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth', 'user', 'menu'], // only persist these keys,
+  whitelist: ['auth', 'user', 'menu', 'forms'], // only persist these keys,
   transforms: [
     encryptTransform({
       secretKey: 'dd-secret-key-for-redux-persist',
