@@ -14,6 +14,24 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, history
     // CONTROLLİNG START AND END DATE
     dispatch(getByFilterPagedAnnouncementTypes());
     const values = await form.validateFields();
+    console.log(values);
+  //   const file= await values.fileId;
+  //   const url=await file[0]?.thumbUrl;
+  //   const base64Response = await fetch(url);
+  //   const blob = await base64Response.blob();
+  //   console.log(blob);
+  //   const convertBlobToBase64 = (blob) => new Promise((resolve, reject) => {
+  //     const reader = new FileReader;
+  //     reader.onerror = reject;
+  //     reader.onload = () => {
+  //         resolve(reader.result);
+  //     };
+  //     reader.readAsDataURL(blob);
+  // });
+  
+  // const base64String = await convertBlobToBase64(blob);
+  // console.log(base64String);
+
     const startOfAnnouncement = values?.startDate
       ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD-HH-mm')
       : undefined;
