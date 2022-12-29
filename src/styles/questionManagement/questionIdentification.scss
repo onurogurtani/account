@@ -1,0 +1,25 @@
+.questionIdentification {
+  padding-left: 25px;
+  padding-right: 25px;
+  width: 100%;
+
+  .questionIdentificationMain {
+    width: 100%;
+    display: flex;
+    gap: 15px;
+    .questionIdentificationMainLeft {
+      width: 25%;
+      height: auto;
+      border: 1px solid gray;
+      .ant-form {
+        padding: 10px;
+        .findButton {
+          width: 100%;
+        }
+      }
+    }
+    .questionIdentificationMainRight {
+      width: 75%;
+    }
+  }
+}
