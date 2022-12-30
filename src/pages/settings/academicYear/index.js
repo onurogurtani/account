@@ -136,7 +136,7 @@ const AcademicYear = () => {
           maskClosable={false}
           visible={isOpenModal}
           footer={false}
-          title={<>Tercih Dönemi Eğitim Öğretim Yılı {selectedEducationYearId ? 'Güncelleme' : 'Tanımalama'} Ekranı</>}
+          title={<>Tercih Dönemi Eğitim Öğretim Yılı {selectedEducationYearId ? 'Güncelleme' : 'Tanımlama'} Ekranı</>}
           onCancel={handleClose}
           width={700}
           closeIcon={<CustomImage src={modalClose} />}
