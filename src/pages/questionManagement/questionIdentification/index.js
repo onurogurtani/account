@@ -69,6 +69,13 @@ const QuestionIdentification = () => {
                   </Row>
                 </CustomForm>
               </div>
+
+              <Row gutter={16}>
+                <Col span={12}>
+                  <div className="quesiton-images">asdasdsa</div>
+                </Col>
+                <Col pan={12}></Col>
+              </Row>
             </div>
           </div>
         </div>
