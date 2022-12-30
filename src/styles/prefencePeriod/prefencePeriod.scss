@@ -1,4 +1,4 @@
-.action-btns {
+.action-btns-academic-year {
   display: flex;
   justify-content: center;
 
@@ -33,22 +33,26 @@
   }
 }
 
-.form-item-select {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  width: 100%;
-  .ant-form-item {
-    width: 100%;
-  }
-}
 .academicYear-modal {
   width: 200px;
 }
 
-.academicYearSumbit {
+.academicYearSubmit {
   display: flex;
-  width: 100%;
   justify-content: flex-end;
   height: 40px !important;
+}
+.ant-form-item.requiredFieldLabelMark {
+  .ant-form-item-label {
+    label:after {
+      display: inline-block;
+      margin-left: 4px;
+      color: #f72717;
+      font-size: 13px;
+      font-family: SimSun, sans-serif;
+      line-height: 1;
+      content: '*';
+      font-weight: bold;
+    }
+  }
 }
