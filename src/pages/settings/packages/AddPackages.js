@@ -33,18 +33,18 @@ const AddPackages = () => {
   const [isDisable, setIsDisable] = useState(false);
   const [errorList, setErrorList] = useState([]);
   const [errorUpload, setErrorUpload] = useState();
-  const [selectedClassrooms, setSelectedClassrooms] = useState([])
-  const [lessonsOptions, setLessonsOptions] = useState([])
+  const [selectedClassrooms, setSelectedClassrooms] = useState([]);
+  const [lessonsOptions, setLessonsOptions] = useState([]);
   const cancelFileUpload = useRef(null);
   const token = useSelector((state) => state?.auth?.token);
   const { packageTypeList } = useSelector((state) => state?.packageType);
   const { allClassList } = useSelector((state) => state?.classStages);
   const { lessons } = useSelector((state) => state?.lessons);
+  const [isDisableButtonMaxNetCount, seTisDisableButtonMaxNetCount] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
 
   const { setClassroomId, setLessonId } = useAcquisitionTree();
-  
 
   const lessonIds = Form.useWatch('lesson', form) || [];
 
@@ -128,13 +128,12 @@ const AddPackages = () => {
   };
 
   const onFinish = async (values) => {
-   
-    let lessonsArr = values.lesson.map(item=>{
-      return {lessonId: item}
-    })
+    let lessonsArr = values.lesson.map((item) => {
+      return { lessonId: item };
+    });
 
     const data = {
-      "package": {
+      package: {
         name: values.name,
         summary: values.summary,
         content: values.content,
@@ -143,7 +142,7 @@ const AddPackages = () => {
         isActive: values.isActive,
         startDate: values.startDate.$d,
         finishDate: values.endDate.$d,
-        packageLessons:  lessonsArr,
+        packageLessons: lessonsArr,
         imageOfPackages: await handleUpload(values.imageOfPackages),
         examType: 10, //sınav tipi halihazırda inputtan alınmıyor
       },
@@ -167,7 +166,6 @@ const AddPackages = () => {
     setIsDisable(false);
   };
 
-
   const onCancel = () => {
     confirmDialog({
       title: <Text t="attention" />,
@@ -180,7 +178,7 @@ const AddPackages = () => {
     });
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     const selectedLessonsOptions = selectedClassrooms.map((item) => {
       return {
         label: item.name,
@@ -193,15 +191,14 @@ const AddPackages = () => {
             };
           }),
       };
-    })
+    });
 
-    setLessonsOptions(selectedLessonsOptions)
-  },[lessons,selectedClassrooms])
-
+    setLessonsOptions(selectedLessonsOptions);
+  }, [lessons, selectedClassrooms]);
 
   const onClassroomChange = (value) => {
     setClassroomId(value.at(-1));
-    let selectedClass = allClassList.filter(item=>value.includes(item.id))
+    let selectedClass = allClassList.filter((item) => value.includes(item.id));
     setSelectedClassrooms(selectedClass);
   };
 
@@ -209,12 +206,18 @@ const AddPackages = () => {
     setLessonId(value.at(-1));
   };
 
+  const onPackageTypeChange = (value) => {
+    packageTypeList.forEach((item) => {
+      if (item.id === value) seTisDisableButtonMaxNetCount(item.isCanSeeTargetScreen ? true : false);
+    });
+  };
+
   const onClassroomsDeselect = (value) => {
     const findLessonsIds = lessons.filter((i) => i.classroomId === value).map((item) => item.id);
     form.setFieldsValue({
       lesson: removeFromArray(lessonIds, ...findLessonsIds),
     });
-  }
+  };
 
   return (
     <CustomCollapseCard cardTitle="Yeni Paket Oluşturma">
@@ -316,14 +319,15 @@ const AddPackages = () => {
             </CustomSelect>
           </CustomFormItem>
 
-          <DateSection form={form}/>
-         
+          <DateSection form={form} />
+
           <CustomFormItem
             label={<Text t="Sınıf Seviyesi" />}
             name="gradeLevel"
-            rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}>
-              <CustomSelect
-              className="form-filter-item" 
+            rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}
+          >
+            <CustomSelect
+              className="form-filter-item"
               placeholder={'Seçiniz'}
               filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
               showArrow
@@ -331,30 +335,31 @@ const AddPackages = () => {
               onDeselect={onClassroomsDeselect}
               onChange={onClassroomChange}
             >
-              {allClassList
-                ?.map((item) => {
-                  return (
-                    <Option key={item?.id} value={item?.id}>
-                      {item?.name}
-                    </Option>
-                  );
-                })}
+              {allClassList?.map((item) => {
+                return (
+                  <Option key={item?.id} value={item?.id}>
+                    {item?.name}
+                  </Option>
+                );
+              })}
             </CustomSelect>
           </CustomFormItem>
 
-
-          <CustomFormItem label="Ders" name="lesson"
-           rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}>
+          <CustomFormItem
+            label="Ders"
+            name="lesson"
+            rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}
+          >
             <CustomSelect
-              className="form-filter-item" placeholder={'Seçiniz'}
+              className="form-filter-item"
+              placeholder={'Seçiniz'}
               filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
               showArrow
               mode="multiple"
               // onDeselect={onLessonDeselect}
               onChange={onLessonChange}
               options={lessonsOptions}
-            >
-            </CustomSelect>
+            ></CustomSelect>
           </CustomFormItem>
 
           <CustomFormItem
@@ -362,7 +367,7 @@ const AddPackages = () => {
             name="packageTypeId"
             rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}
           >
-            <CustomSelect className="form-filter-item" placeholder={'Seçiniz'}>
+            <CustomSelect className="form-filter-item" placeholder={'Seçiniz'} onChange={onPackageTypeChange}>
               {packageTypeList?.map((item) => {
                 return (
                   <Option key={`packageTypeList-${item.id}`} value={item.id}>
@@ -374,7 +379,12 @@ const AddPackages = () => {
           </CustomFormItem>
 
           <CustomFormItem label={<Text t="Max. Net Sayısı" />} name="maxNetCount">
-            <CustomInput type={'number'} placeholder={'Max. Net Sayısı'} className="max-net-count" />
+            <CustomInput
+              type={'number'}
+              placeholder={'Max. Net Sayısı'}
+              className="max-net-count"
+              disabled={!isDisableButtonMaxNetCount}
+            />
           </CustomFormItem>
 
           <div className="add-package-footer">
