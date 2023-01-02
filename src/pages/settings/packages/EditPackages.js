@@ -19,11 +19,11 @@ import {
 import fileServices from '../../../services/file.services';
 import '../../../styles/settings/packages.scss';
 import { reactQuillValidator } from '../../../utils/formRule';
-import { isCancel,CancelToken } from 'axios';
+import { isCancel, CancelToken } from 'axios';
 import { getPackageById, updatePackage } from '../../../store/slice/packageSlice';
 import { getPackageTypeList } from '../../../store/slice/packageTypeSlice';
 import { useHistory, useParams } from 'react-router-dom';
-import {  removeFromArray, turkishToLower } from '../../../utils/utils';
+import { removeFromArray, turkishToLower } from '../../../utils/utils';
 import useAcquisitionTree from '../../../hooks/useAcquisitionTree';
 import DateSection from '../../eventManagement/forms/DateSection';
 import dayjs from 'dayjs';
@@ -35,9 +35,9 @@ const EditPackages = () => {
   const [errorList, setErrorList] = useState([]);
   const [errorUpload, setErrorUpload] = useState();
   const [currentImages, setCurrenImages] = useState([]);
-  const [selectedClassrooms, setSelectedClassrooms] = useState([])
-  const [lessonsOptions, setLessonsOptions] = useState([])
-  const [currentClassroomIds, setCurrentClassroomIds] = useState([])
+  const [selectedClassrooms, setSelectedClassrooms] = useState([]);
+  const [lessonsOptions, setLessonsOptions] = useState([]);
+  const [currentClassroomIds, setCurrentClassroomIds] = useState([]);
   const { lessons } = useSelector((state) => state?.lessons);
   const cancelFileUpload = useRef(null);
   const token = useSelector((state) => state?.auth?.token);
@@ -52,14 +52,12 @@ const EditPackages = () => {
 
   const lessonIds = Form.useWatch('lesson', form) || [];
 
-
   useEffect(() => {
     loadPackageById();
     loadPackageList();
   }, []);
 
- 
-  useEffect(()=>{
+  useEffect(() => {
     const selectedLessonsOptions = selectedClassrooms.map((item) => {
       return {
         label: item.name,
@@ -72,16 +70,15 @@ const EditPackages = () => {
             };
           }),
       };
-    })
+    });
 
-    setLessonsOptions(selectedLessonsOptions)
-  },[lessons,selectedClassrooms])
+    setLessonsOptions(selectedLessonsOptions);
+  }, [lessons, selectedClassrooms]);
 
-
-  useEffect(()=>{
-    let selectedClass = allClassList.filter(item=>currentClassroomIds.includes(item.id))
+  useEffect(() => {
+    let selectedClass = allClassList.filter((item) => currentClassroomIds.includes(item.id));
     setSelectedClassrooms(selectedClass);
-  },[allClassList,currentClassroomIds])
+  }, [allClassList, currentClassroomIds]);
 
   const loadPackageById = async () => {
     const currentPackageResponse = await dispatch(getPackageById(id));
@@ -94,13 +91,15 @@ const EditPackages = () => {
       });
     });
 
-    let currentClassrooms = [... new Set(currentPackageResponse.payload.packageLessons.map(item=>item.lesson.classroom.id))]
- 
-    setCurrentClassroomIds(currentClassrooms)
+    let currentClassrooms = [
+      ...new Set(currentPackageResponse.payload.packageLessons.map((item) => item.lesson.classroom.id)),
+    ];
 
-    currentClassrooms.map(item=>{
-      setClassroomId(item)
-    })
+    setCurrentClassroomIds(currentClassrooms);
+
+    currentClassrooms.map((item) => {
+      setClassroomId(item);
+    });
 
     form.setFieldsValue({
       ...currentPackageResponse.payload,
@@ -111,8 +110,8 @@ const EditPackages = () => {
 
     form.setFieldsValue({
       gradeLevel: currentClassrooms,
-      lesson: currentPackageResponse.payload.packageLessons.map(item=>item.lesson.id)
-    })
+      lesson: currentPackageResponse.payload.packageLessons.map((item) => item.lesson.id),
+    });
 
     currentPackageResponse.payload.imageOfPackages.forEach((item) => {
       setCurrenImages((prev) => [
@@ -212,12 +211,12 @@ const EditPackages = () => {
 
     newImageArray = currentImages.concat(diffOldImages);
 
-    let lessonsArr = values.lesson.map(item=>{
-      return {lessonId: item}
-    })
+    let lessonsArr = values.lesson.map((item) => {
+      return { lessonId: item };
+    });
 
     const data = {
-      "package": {
+      package: {
         // ...values,
         id: id,
         name: values.name,
@@ -228,7 +227,7 @@ const EditPackages = () => {
         isActive: values.isActive,
         startDate: values.startDate.$d,
         finishDate: values.endDate.$d,
-        packageLessons:  lessonsArr,
+        packageLessons: lessonsArr,
         imageOfPackages: await handleUpload(newImageArray),
         examType: 10, //sınav tipi halihazırda inputtan alınmıyor
       },
@@ -266,7 +265,7 @@ const EditPackages = () => {
 
   const onClassroomChange = (value) => {
     setClassroomId(value.at(-1));
-    let selectedClass = allClassList.filter(item=>value.includes(item.id))
+    let selectedClass = allClassList.filter((item) => value.includes(item.id));
     setSelectedClassrooms(selectedClass);
   };
 
@@ -279,7 +278,7 @@ const EditPackages = () => {
     form.setFieldsValue({
       lesson: removeFromArray(lessonIds, ...findLessonsIds),
     });
-  }
+  };
 
   return (
     <CustomCollapseCard cardTitle="Paket Güncelleme">
@@ -376,14 +375,15 @@ const EditPackages = () => {
             </CustomSelect>
           </CustomFormItem>
 
-          <DateSection form={form}/>
+          <DateSection form={form} />
 
           <CustomFormItem
             label={<Text t="Sınıf Seviyesi" />}
             name="gradeLevel"
-            rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}>
-              <CustomSelect
-              className="form-filter-item" 
+            rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}
+          >
+            <CustomSelect
+              className="form-filter-item"
               placeholder={'Seçiniz'}
               filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
               showArrow
@@ -391,29 +391,31 @@ const EditPackages = () => {
               onDeselect={onClassroomsDeselect}
               onChange={onClassroomChange}
             >
-              {allClassList
-                ?.map((item) => {
-                  return (
-                    <Option key={item?.id} value={item?.id}>
-                      {item?.name}
-                    </Option>
-                  );
-                })}
+              {allClassList?.map((item) => {
+                return (
+                  <Option key={item?.id} value={item?.id}>
+                    {item?.name}
+                  </Option>
+                );
+              })}
             </CustomSelect>
           </CustomFormItem>
 
-          <CustomFormItem label="Ders" name="lesson"
-           rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}>
+          <CustomFormItem
+            label="Ders"
+            name="lesson"
+            rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}
+          >
             <CustomSelect
-              className="form-filter-item" placeholder={'Seçiniz'}
+              className="form-filter-item"
+              placeholder={'Seçiniz'}
               filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
               showArrow
               mode="multiple"
               // onDeselect={onLessonDeselect}
               onChange={onLessonChange}
               options={lessonsOptions}
-            >
-            </CustomSelect>
+            ></CustomSelect>
           </CustomFormItem>
 
           <CustomFormItem
@@ -436,13 +438,12 @@ const EditPackages = () => {
             <CustomInput type={'number'} placeholder={'Max. Net Sayısı'} className="max-net-count" />
           </CustomFormItem>
 
-
           <div className="add-package-footer">
             <CustomButton type="primary" className="cancel-btn" onClick={onCancel}>
               İptal
             </CustomButton>
             <CustomButton type="primary" className="save-btn" onClick={() => form.submit()}>
-              Kaydet
+              Güncelle
             </CustomButton>
           </div>
         </CustomForm>
