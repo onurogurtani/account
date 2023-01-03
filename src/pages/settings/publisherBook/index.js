@@ -49,6 +49,7 @@ const PublisherBook = () => {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
+      sorter: true,
       render: (text, record) => {
         return <div>{text}</div>;
       },
@@ -57,7 +58,7 @@ const PublisherBook = () => {
       title: 'İsim',
       dataIndex: 'name',
       key: 'name',
-
+      sorter: true,
       render: (text, record) => {
         return <div>{text}</div>;
       },
@@ -66,7 +67,7 @@ const PublisherBook = () => {
       title: 'Basım Yılı',
       dataIndex: 'pressYear',
       key: 'pressYear',
-
+      sorter: true,
       render: (text, record) => {
         return <div>{text}</div>;
       },
@@ -75,6 +76,7 @@ const PublisherBook = () => {
       title: 'Durum',
       dataIndex: 'recordStatus',
       key: 'recordStatus',
+      sorter: true,
       render: (text, record) => {
         return <>{text === 1 ? 'Aktif' : 'Pasif'}</>;
       },
@@ -195,8 +197,17 @@ const PublisherBook = () => {
               position: 'bottomRight',
               showSizeChanger: true,
             }}
-            onChange={(e) => {
-              dispatch(getPublisherBookList({ params: { PageSize: e.pageSize, PageNumber: e.current } }));
+            onChange={(pagination, filters, sorter) => {
+              let field = sorter.field[0].toUpperCase() + sorter.field.substring(1);
+              dispatch(
+                getPublisherBookList({
+                  params: {
+                    'BookDetailSearch.PageSize': pagination.pageSize,
+                    'BookDetailSearch.PageNumber': pagination.current,
+                    'BookDetailSearch.OrderBy': field + (sorter.order === 'descend' ? 'DESC' : 'ASC'),
+                  },
+                }),
+              );
             }}
             columns={columns}
             dataSource={publisherBookList?.items}
