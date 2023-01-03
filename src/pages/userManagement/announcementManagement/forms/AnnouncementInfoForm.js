@@ -37,6 +37,10 @@ const AnnouncementInfoForm = ({
   const [form] = Form.useForm();
   const location = useLocation();
   const { announcementTypes } = useSelector((state) => state?.announcement);
+  const [fieldRequired, setFieldRequired]=useState(false);
+  const [buttonName, setButtonName]=useState('');
+  const [buttonUrl, setButtonUrl]=useState('')
+  const [fileList, setFileList] = useState([]);
   const dispatch = useDispatch();
   const [quillValue, setQuillValue] = useState('');
   const [fileImage, setFileImage] = useState(null);
@@ -48,6 +52,12 @@ const AnnouncementInfoForm = ({
       setAnnouncementInfoData(initialValues.id);
     }
   }, []);
+  useEffect(() => {    
+  }, [fieldRequired])
+  useEffect(() => {    
+  }, [buttonUrl])
+  useEffect(() => {    
+  }, [buttonName])
 
   if (initialValues) {
     initialValues = {
@@ -77,6 +87,24 @@ const AnnouncementInfoForm = ({
     return endValue?.startOf('day') < startDate?.startOf('day') || endValue < dayjs().startOf('day');
   };
   const token = useSelector((state) => state?.auth?.token);
+  const getFile = (e) => {
+    console.log('Upload event:', e);
+
+    if (Array.isArray(e)) {
+      return e;
+    }
+    e && setFileList(e.fileList);
+    console.log(fileList);
+    return e && e.fileList;
+  };
+ const checkInputValue=async ()=>{
+  console.log(buttonName, buttonUrl)
+  if(buttonName!='' || buttonUrl!=''){
+    setFieldRequired(true)
+  }else{
+    setFieldRequired(false);
+  }
+ }
 
   return (
     <CustomForm
@@ -148,48 +176,76 @@ const AnnouncementInfoForm = ({
       >
         <CustomInput placeholder={'Yeni duyurunuz ile ilgili özet metin'} />
       </CustomFormItem>
-      <CustomFormItem
-        label={<Text t="Button İsmi" />}
-        name="buttonName"
-        rules={[
-          { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-          { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-        ]}
-      >
-        <CustomInput placeholder={'Button İsmi'} />
-      </CustomFormItem>
 
       <CustomFormItem
-        label={<Text t="Button Url" />}
-        name="buttonUrl"
+        label={<Text t="Duyuru İkon" />}
+        value={fileList}
+        onChange={(e) => {
+          console.log(e.target.files[0], fileList);
+        }}
+        name="fileId"
+        getValueFromEvent={getFile}
         rules={[
-          { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-          { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-        ]}
+          {
+              required: true,
+              message: 'Lütfen İkon seçiniz!',
+          },
+      ]}
+        // accept=".png,.jpeg,.jpg,.WEBP"
       >
-        <CustomInput placeholder={'Button Url '} />
-      </CustomFormItem>
-
-      <CustomFormItem label={<Text t="Duyuru İcon" />} name="fileId" rules={[]}>
         <Upload
-          listType="picture"
-          accept=".png,.jpeg,.jpg,.WEBP"
+        //  accept=".png, .jpg, .jpeg, .svg"
+
+          listType="picture"          
           beforeUpload={(e) => {
             console.log(e);
             return false;
           }}
-          onChange={async (e) => {
+          accept=".png,.jpeg,.jpg,.WEBP"          
+          onChange={async (e, value) => {
+            console.log(value);
+            console.log(e.file);
             const data = new FormData();
             data.append('File', e.file);
             data.append('FileType', 7);
             data.append('FileName', e.file.name);
             data.append('Description', e.file.name);
             setFileImage(data);
+            console.log(data);
           }}
           maxCount={1}
         >
-          <CustomButton icon={<UploadOutlined />}>Upload</CustomButton>
+          <CustomButton icon={<UploadOutlined />}>Yükle</CustomButton>
         </Upload>
+      </CustomFormItem>
+      <CustomFormItem
+        label={<Text t="Buton İsmi" />}
+        name="buttonName"
+        onChange={(e)=>{
+          setButtonName(e.target.value.trim());
+          checkInputValue()}}
+        rules={[
+          { required: fieldRequired, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+        ]}
+      >
+        <CustomInput placeholder={'Buton İsmi'} />
+      </CustomFormItem>
+
+      <CustomFormItem
+        label={<Text t="Buton Url" />}
+        name="buttonUrl"
+        onChange={(e)=>{
+          setButtonUrl(e.target.value.trim());
+          checkInputValue()}}
+        rules={[
+          { required: fieldRequired, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+          {
+            type: "url",
+            message: "Lütfen geçerli bir URL giriniz"
+        }
+        ]}
+      >
+        <CustomInput placeholder={"https://ButonUrl.com"}/>
       </CustomFormItem>
       <Row gutter={16}>
         <Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} lg={{ span: 16 }}>

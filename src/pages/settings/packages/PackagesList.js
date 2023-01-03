@@ -12,7 +12,7 @@ const PackagesList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { packages, tableProperty } = useSelector((state) => state?.packages);
- 
+
   useEffect(() => {
     loadPackages();
   }, []);
@@ -87,7 +87,12 @@ const PackagesList = () => {
       key: 'expiryDate',
       sorter: (a, b) => a.expiryDate - b.expiryDate,
       render: (text, record) => {
-        return <div>{new Date(record.startDate).toLocaleDateString('en-GB')} - {new Date(record.finishDate).toLocaleDateString('en-GB')}</div>;
+        return (
+          <div>
+            {new Date(record.startDate).toLocaleDateString('en-GB')} -{' '}
+            {new Date(record.finishDate).toLocaleDateString('en-GB')}
+          </div>
+        );
       },
     },
     {
@@ -96,7 +101,7 @@ const PackagesList = () => {
       key: 'gradeLevel',
       sorter: (a, b) => a.gradeLevel - b.gradeLevel,
       render: (text, record) => {
-        return <div>{record.packageLessons.map(i=>i.lesson.classroom.name)}</div>;
+        return <div>{record.packageLessons.map((i) => i.lesson.classroom.name)}</div>;
       },
     },
     {
@@ -105,16 +110,19 @@ const PackagesList = () => {
       key: 'lesson',
       sorter: (a, b) => a.lesson - b.lesson,
       render: (text, record) => {
-        return <div>{record.packageLessons.map(i=>i.lesson.name)}</div>;
+        return <div>{record.packageLessons.map((i) => i.lesson.name)}</div>;
       },
     },
     {
       title: 'Paket Türü',
-      dataIndex: 'examType',
-      key: 'examType',
-      sorter: (a, b) => a.examType - b.examType,
+      dataIndex: 'packageType',
+      key: 'packageType',
+      sorter: {
+        compare: (a, b) => a?.packageType?.name.localeCompare(b?.packageType?.name, 'tr', { numeric: true }),
+        multiple: 3,
+      },
       render: (text, record) => {
-        return <div>{text === 10 ? 'LGS' : 'YKS'}</div>;
+        return <div>{text?.name}</div>;
       },
     },
     {

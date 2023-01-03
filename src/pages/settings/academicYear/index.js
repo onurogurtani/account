@@ -1,103 +1,113 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  confirmDialog,
   CustomButton,
-  CustomPagination,
   CustomCollapseCard,
-  CustomForm,
-  CustomFormItem,
-  CustomInput,
   CustomModal,
   CustomPageHeader,
-  CustomSelect,
   CustomTable,
-  errorDialog,
-  Option,
-  successDialog,
-  Text,
-  useText,
   CustomImage,
 } from '../../../components';
 import {
-  getEducationYearAdd,
+  closeModal,
   getEducationYearList,
-  getEducationYearUpdate,
-  getEducationYearDelete,
+  openModal,
+  selectEducationYear,
 } from '../../../store/slice/educationYearsSlice';
 import '../../../styles/table.scss';
 import '../../../styles/prefencePeriod/prefencePeriod.scss';
 import modalClose from '../../../assets/icons/icon-close.svg';
-import { Form } from 'antd';
+import usePaginationProps from '../../../hooks/usePaginationProps';
+import { dateFormat } from '../../../utils/keys';
+import dayjs from 'dayjs';
+import AcademicYearForm from './AcademicYearForm';
+
+const selectedEducationYearSelector = (state) => {
+  const { educationYearList, selectedEducationYearId } = state.educationYears;
+  if (selectedEducationYearId) {
+    const educationYear = educationYearList.items.find((item) => item.id === selectedEducationYearId);
+    return { ...educationYear, startDate: dayjs(educationYear?.startDate), endDate: dayjs(educationYear?.endDate) };
+  }
+  return null;
+};
 
 const AcademicYear = () => {
   const dispatch = useDispatch();
-  const [form] = Form.useForm();
-  const [editInfo, setEditInfo] = useState(null);
-
   const { educationYearList } = useSelector((state) => state.educationYears);
+  const paginationProps = usePaginationProps(educationYearList?.pagedProperty);
+  const { isOpenModal, selectedEducationYearId } = useSelector((state) => state.educationYears);
+  const selectedEducationYear = useSelector(selectedEducationYearSelector);
+
   useEffect(() => {
     dispatch(getEducationYearList());
   }, [dispatch]);
 
-  const [showAddModal, setShowAddModal] = useState(false);
   const handleClose = useCallback(() => {
-    form.resetFields();
-    setShowAddModal(false);
-    setEditInfo(null);
-  }, [setShowAddModal, form]);
+    dispatch(closeModal());
+  }, [dispatch]);
 
-  const formAdd = useCallback(
-    async (e) => {
-      const action = await dispatch(getEducationYearAdd({ entity: e }));
-      if (getEducationYearAdd.fulfilled.match(action)) {
-        successDialog({
-          title: <Text t="success" />,
-          message: action?.payload?.message,
-        });
-        dispatch(getEducationYearList());
-        setShowAddModal(false);
-      } else {
-        errorDialog({
-          title: <Text t="error" />,
-          message: action?.payload.message,
-        });
-      }
+  const columns = [
+    {
+      title: 'Eğitim Öğretim Yılı',
+      dataIndex: 'startYear',
+      key: 'startYear',
+      width: 90,
+      render: (text, record) => {
+        return (
+          <div>
+            {text} - {record?.endYear}
+          </div>
+        );
+      },
+    },
+    {
+      title: 'Başlangıç Tarihi',
+      dataIndex: 'startDate',
+      key: 'startDate',
+      width: 90,
+      render: (text, record) => {
+        return <div>{dayjs(text)?.format(dateFormat)}</div>;
+      },
+    },
+    {
+      title: 'Bitiş Tarihi',
+      dataIndex: 'endDate',
+      key: 'endDate',
+      width: 90,
+      render: (text, record) => {
+        return <div>{dayjs(text)?.format(dateFormat)}</div>;
+      },
+    },
+    {
+      title: 'İŞLEMLER',
+      dataIndex: 'draftDeleteAction',
+      key: 'draftDeleteAction',
+      width: 100,
+      align: 'center',
+      render: (_, record) => {
+        return (
+          <div className="action-btns-academic-year">
+            <CustomButton
+              onClick={() => {
+                handleSelectEducationYear(record?.id);
+              }}
+              className="detail-btn"
+            >
+              DÜZENLE
+            </CustomButton>
+          </div>
+        );
+      },
+    },
+  ];
+
+  const handleSelectEducationYear = useCallback(
+    (id) => {
+      dispatch(selectEducationYear(id));
     },
     [dispatch],
   );
-  const formEdit = useCallback(
-    async (e) => {
-      const action = await dispatch(getEducationYearUpdate({ entity: { ...e, id: editInfo.id } }));
-      if (getEducationYearUpdate.fulfilled.match(action)) {
-        successDialog({
-          title: <Text t="success" />,
-          message: action?.payload?.message,
-          onOk: () => {
-            setShowAddModal(false);
-            dispatch(getEducationYearList());
-            setEditInfo(null);
-            form.resetFields();
-          },
-        });
-      } else {
-        errorDialog({
-          title: <Text t="error" />,
-          message: action?.payload.message,
-        });
-      }
-    },
-    [dispatch, editInfo, form],
-  );
 
-  useEffect(() => {
-    console.log(educationYearList);
-  }, [educationYearList]);
-  const currentYear = new Date().getFullYear();
-  let years = [];
-  for (let i = 0; i < 11; i++) {
-    years.push(currentYear + i);
-  }
   return (
     <CustomPageHeader title="Tercih Dönemi Eğitim Yılı" showBreadCrumb routes={['Ayarlar']}>
       <CustomCollapseCard cardTitle="Tercih Dönemi Eğitim Yılı">
@@ -105,172 +115,33 @@ const AcademicYear = () => {
           <CustomButton
             className="add-btn"
             onClick={() => {
-              setShowAddModal(true);
+              dispatch(openModal());
             }}
           >
             Yeni
           </CustomButton>
         </div>
         <CustomTable
-          pagination={{
-            total: educationYearList?.pagedProperty?.totalCount,
-            current: educationYearList?.pagedProperty?.currentPage,
-            pageSize: educationYearList?.pagedProperty?.pageSize,
-            position: 'bottomRight',
-            showSizeChanger: true,
-          }}
+          pagination={paginationProps}
           onChange={(e) => {
             dispatch(getEducationYearList({ params: { PageSize: e.pageSize, PageNumber: e.current } }));
           }}
           dataSource={educationYearList?.items}
-          columns={[
-            {
-              title: 'No',
-              dataIndex: 'id',
-              key: 'id',
-              width: 90,
-              render: (text, record) => {
-                return <div>{text}</div>;
-              },
-            },
-            {
-              title: 'Başlangıç',
-              dataIndex: 'startYear',
-              key: 'startYear',
-              width: 90,
-              render: (text, record) => {
-                return <div>{text}</div>;
-              },
-            },
-            {
-              title: 'Bitiş',
-              dataIndex: 'endYear',
-              key: 'endYear',
-              width: 90,
-              render: (text, record) => {
-                return <div>{text}</div>;
-              },
-            },
-            {
-              title: 'İŞLEMLER',
-              dataIndex: 'draftDeleteAction',
-              key: 'draftDeleteAction',
-              width: 100,
-              align: 'center',
-              render: (_, record) => {
-                return (
-                  <div className="action-btns">
-                    <CustomButton
-                      onClick={() => {
-                        setEditInfo(record);
-                        setShowAddModal(true);
-                        form.setFieldsValue(record);
-                      }}
-                      className="detail-btn"
-                    >
-                      DÜZENLE
-                    </CustomButton>
-                    {/*
-                    <CustomButton
-                      style={{ background: '#A52A2A' }}
-                      onClick={() => {
-                        confirmDialog({
-                          title: <Text t="attention" />,
-                          message: 'Kaydı silmek istediğinizden emin misiniz?',
-                          okText: <Text t="delete" />,
-                          cancelText: 'Vazgeç',
-                          onOk: async () => {
-                            let data = {
-                              id: record.id,
-                            };
-                            const action = await dispatch(getEducationYearDelete(data));
-                            if (getEducationYearDelete.fulfilled.match(action)) {
-                              successDialog({
-                                title: <Text t="successfullySent" />,
-                                message: action?.payload?.message,
-                                onOk: () => {
-                                  dispatch(getEducationYearList());
-                                },
-                              });
-                            } else {
-                              if (action?.payload?.message) {
-                                errorDialog({
-                                  title: <Text t="error" />,
-                                  message: action?.payload?.message,
-                                });
-                              }
-                            }
-                          },
-                        });
-                      }}
-                      className="detail-btn"
-                    >
-                      Sil
-                    </CustomButton> */}
-                  </div>
-                );
-              },
-            },
-          ]}
-          rowKey={(record) => `announcementType-${record?.id || record?.name}`}
+          columns={columns}
+          rowKey={(record) => `academicYear-${record?.id || record?.name}`}
           scroll={{ x: false }}
         />
         <CustomModal
           className="academicYear-modal"
           maskClosable={false}
-          visible={showAddModal}
+          visible={isOpenModal}
           footer={false}
-          title={'Tercih Dönemi Eğitim Yılı Tanımlama '}
+          title={<>Tercih Dönemi Eğitim Öğretim Yılı {selectedEducationYearId ? 'Güncelleme' : 'Tanımlama'} Ekranı</>}
           onCancel={handleClose}
           width={700}
           closeIcon={<CustomImage src={modalClose} />}
         >
-          <div>
-            <CustomForm
-              name=""
-              className=""
-              form={form}
-              initialValues={{}}
-              autoComplete="off"
-              layout={'horizontal'}
-              onFinish={editInfo ? formEdit : formAdd}
-            >
-              <div className="form-item-select">
-                <CustomFormItem rules={[{ required: true, message: 'Lütfen bir seçim yapınız.' }]} name="startYear">
-                  <CustomSelect placeholder={useText('Seçiniz')} height={36}>
-                    {years.map((item, index) => (
-                      <Option key={index} value={item}>
-                        {item}
-                      </Option>
-                    ))}
-                  </CustomSelect>
-                </CustomFormItem>
-                <CustomFormItem
-                  value={'2024'}
-                  name="endYear"
-                  rules={[{ required: true, message: 'Lütfen bir seçim yapınız.' }]}
-                >
-                  <CustomSelect placeholder={useText('Seçiniz')} height={36}>
-                    {years.map((item, index) => (
-                      <Option key={index} value={item}>
-                        {item}
-                      </Option>
-                    ))}
-                  </CustomSelect>
-                </CustomFormItem>
-              </div>
-
-              <div className="academicYearSumbit">
-                <CustomFormItem>
-                  <CustomButton type="primary" htmlType="submit">
-                    <span>
-                      <Text t="Kaydet" />
-                    </span>
-                  </CustomButton>
-                </CustomFormItem>
-              </div>
-            </CustomForm>
-          </div>
+          <AcademicYearForm educationYear={selectedEducationYear} onCancel={handleClose} />
         </CustomModal>
       </CustomCollapseCard>
     </CustomPageHeader>

@@ -100,3 +100,27 @@
     }
   }
 }
+
+
+.checkboxes{
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+  .checkbox-row{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+    .checkbox-label{
+      font-size: 16px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      // color: #162056;
+      font-family: UbuntuMedium, sans-serif;
+  }
+}
+
+

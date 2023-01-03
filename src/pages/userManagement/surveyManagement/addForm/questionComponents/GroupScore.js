@@ -64,9 +64,6 @@ const GroupScore = ({ groupKnowledge }) => {
         onBlur={() => onBlur()}
         onChange={() => setFormTouched(form.isFieldsTouched())}
       >
-        {/* <div style={{ width: '100%', padding: '0.5em 1em' }}>
-          {!formTouched && <h6 style={{ color: 'red' }}>Lütfen Puanları Kontrol Ediniz</h6>}
-        </div> */}
         <div style={{ width: '100%', padding: '0.5em 1em' }}>
           {formError && <h6 style={{ color: 'red' }}>Lütfen Tüm Alanları Kontrol Ediniz</h6>}
         </div>
@@ -75,7 +72,7 @@ const GroupScore = ({ groupKnowledge }) => {
             <CustomFormItem
               className={classes.formItemContainer}
               validateTrigger={['onChange', 'onBlur']}
-              label={index + 1}
+              label={`${index + 1}.Şık`}
               rules={[
                 {
                   required: true,

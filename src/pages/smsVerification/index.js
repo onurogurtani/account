@@ -21,7 +21,7 @@ const SmsVerification = ({ history }) => {
   const dispatch = useDispatch();
   const { mobileLoginId, msisdn, token } = useSelector((state) => state?.auth);
   const time = new Date();
-  const deadline = time.setMinutes(time.getMinutes() + 2);
+  const deadline = time.setSeconds(time.getSeconds() + 90);
 
   const counter = useTimer({ autoStart: false, expiryTimestamp: deadline });
 

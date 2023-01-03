@@ -288,7 +288,14 @@ const Menus = () => {
             </span>
           </MenuItemText>
         </CustomItem>
-
+        <CustomItem key="/user-management/password-management">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Şifre Yönetimi" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
         <CustomItem key="/settings/categories">
           <MenuItemText>
             <CustomImage src={menuIcons} />
