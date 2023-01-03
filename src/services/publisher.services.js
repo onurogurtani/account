@@ -1,7 +1,7 @@
 import { api } from './api';
 const getPublisherList = (params = {}) => {
   return api({
-    url: 'Publishers/getList',
+    url: 'Publishers/getByFilterPagedPublishers',
     method: 'POST',
     data: null,
     params: params,
