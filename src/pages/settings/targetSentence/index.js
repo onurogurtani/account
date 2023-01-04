@@ -23,6 +23,7 @@ import {
   getTargetSentenceList,
   getTargetSentenceUpdate,
 } from '../../../store/slice/targetSentenceSlice';
+
 const TargetSentence = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
