@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   confirmDialog,
@@ -6,7 +6,6 @@ import {
   CustomCollapseCard,
   CustomForm,
   CustomFormItem,
-  CustomInput,
   CustomModal,
   CustomPageHeader,
   CustomTable,
@@ -24,7 +23,7 @@ import {
   getTargetSentenceList,
   getTargetSentenceUpdate,
 } from '../../../store/slice/targetSentenceSlice';
-const TargetStence = () => {
+const TargetSentence = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const [editInfo, setEditInfo] = useState(null);
@@ -42,9 +41,8 @@ const TargetStence = () => {
     },
     {
       title: 'Hedef Cümle',
-      dataIndex: 'name',
-      key: 'name',
-
+      dataIndex: 'text',
+      key: 'text',
       render: (text, record) => {
         return <div>{text}</div>;
       },
@@ -62,7 +60,7 @@ const TargetStence = () => {
               className="update-btn"
               onClick={() => {
                 setEditInfo(record);
-                setTextValue(record.name);
+                setTextValue(record.text);
                 setShowAddModal(true);
               }}
             >
@@ -106,8 +104,8 @@ const TargetStence = () => {
     },
   ];
   const formEdit = async () => {
-    const action = await dispatch(getTargetSentenceUpdate({ entity: { name: textValue } }));
-    if (getTargetSentenceAdd.fulfilled.match(action)) {
+    const action = await dispatch(getTargetSentenceUpdate({ entity: { id: editInfo.id, text: textValue } }));
+    if (getTargetSentenceUpdate.fulfilled.match(action)) {
       successDialog({
         title: <Text t="successfullySent" />,
         message: action?.payload?.message,
@@ -134,7 +132,7 @@ const TargetStence = () => {
       });
       return;
     }
-    const action = await dispatch(getTargetSentenceAdd({ entity: { name: textValue } }));
+    const action = await dispatch(getTargetSentenceAdd({ entity: { text: textValue } }));
     if (getTargetSentenceAdd.fulfilled.match(action)) {
       successDialog({
         title: <Text t="successfullySent" />,
@@ -186,7 +184,7 @@ const TargetStence = () => {
               dispatch(getTargetSentenceList({ params: data }));
             },
           }}
-          rowKey={(record) => `announcementType-${record?.id || record?.name}`}
+          rowKey={(record) => `announcementType-${record?.id || record?.text}`}
         />
       </CustomCollapseCard>
 
@@ -220,4 +218,4 @@ const TargetStence = () => {
   );
 };
 
-export default TargetStence;
+export default TargetSentence;
