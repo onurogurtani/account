@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { Form, Input, Space, Typography } from 'antd';
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { CustomInputNumber, CustomFormItem, CustomCheckbox } from './index';
@@ -7,12 +8,19 @@ import { declarationType } from '../constants';
 const { Title } = Typography;
 
 const DeclarationSection = () => {
+  const location = useLocation();
+  const isDisableAllButDate = location?.state?.isDisableAllButDate;
+
   return (
     <Space direction="vertical">
       <Title level={5}>Bildirimler</Title>
       <Space align="start">
         <CustomFormItem name="declarationTypes">
-          <CustomCheckbox.Group options={declarationType} style={{ display: 'flex', flexDirection: 'column' }} />
+          <CustomCheckbox.Group
+            disabled={isDisableAllButDate}
+            options={declarationType}
+            style={{ display: 'flex', flexDirection: 'column' }}
+          />
         </CustomFormItem>
         <CustomFormItem
           noStyle
@@ -24,7 +32,10 @@ const DeclarationSection = () => {
                 {(fields, { add, remove }, { errors }) => (
                   <Space align="start">
                     <CustomFormItem>
-                      <PlusCircleOutlined style={{ fontSize: '32px', marginTop: '10px' }} onClick={() => add()} />
+                      <PlusCircleOutlined
+                        style={{ fontSize: '32px', marginTop: '10px' }}
+                        onClick={() => !isDisableAllButDate && add()}
+                      />
                     </CustomFormItem>
 
                     <Space direction="vertical">
@@ -49,7 +60,7 @@ const DeclarationSection = () => {
                               name={[name, 'day']}
                               dependencies={fields.map((i) => ['declarations', i.key, 'day'])}
                             >
-                              <CustomInputNumber min={1} precision={0} />
+                              <CustomInputNumber disabled={isDisableAllButDate} min={1} precision={0} />
                             </CustomFormItem>
                             gün önce bildirim gönder
                             {fields.length > 1 ? <MinusCircleOutlined onClick={() => remove(name)} /> : null}
