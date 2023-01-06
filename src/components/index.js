@@ -29,6 +29,8 @@ import CustomMoneyInput from './CustomMoneyInput';
 import CustomTextArea from './CustomTextArea';
 import SetStatusButton from './SetStatusButton';
 import DeleteButton from './DeleteButton';
+import DeclarationSection from './DeclarationSection';
+import CustomInputNumber from './CustomInputNumber';
 
 export {
   CustomInput,
@@ -74,4 +76,6 @@ export {
   CustomTextArea,
   SetStatusButton,
   DeleteButton,
+  DeclarationSection,
+  CustomInputNumber,
 };

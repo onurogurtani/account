@@ -7,11 +7,11 @@ const CustomNumberInput = ({ onChange, ...props }) => {
       const { value } = e.target;
       const reg = /^-?\d*(\.\d*)?$/;
       if (reg.test(value) && !isNaN(parseFloat(value))) {
-        onChange(parseFloat(value));
+        onChange?.(parseFloat(value));
       } else if (value === '') {
-        onChange(value);
+        onChange?.(value);
       } else if (!reg.test(value.charAt(0)) || value === '-') {
-        onChange('');
+        onChange?.('');
       }
     },
     [onChange],
@@ -25,10 +25,10 @@ const CustomNumberInput = ({ onChange, ...props }) => {
       if (value?.toString()?.charAt(value.length - 1) === '.' || value === '-') {
         valueTemp = value?.slice(0, -1);
       }
-      onChange(parseFloat(valueTemp?.replace(/0*(\d+)/, '$1') || 0));
+      onChange?.(parseFloat(valueTemp?.replace(/0*(\d+)/, '$1') || 0));
       onBlur?.();
     } else {
-      onChange('');
+      onChange?.('');
       onBlur?.();
     }
   }, [onChange, props]);
