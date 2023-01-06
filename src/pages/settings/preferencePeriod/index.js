@@ -89,7 +89,7 @@ const PreferencePeriod = () => {
       if (editInfo) {
         console.log(editInfo);
         const action = await dispatch(
-          getPreferencePeriodUpdate({ entity: { ...data, id: editInfo.preferencePeriodId } }),
+          getPreferencePeriodUpdate({ preferencePeriod: { ...data, id: editInfo.preferencePeriodId } }),
         );
         if (getPreferencePeriodUpdate.fulfilled.match(action)) {
           successDialog({
@@ -109,7 +109,7 @@ const PreferencePeriod = () => {
           });
         }
       } else {
-        const action = await dispatch(getPreferencePeriodAdd({ entity: data }));
+        const action = await dispatch(getPreferencePeriodAdd({ preferencePeriod: data }));
         if (getPreferencePeriodAdd.fulfilled.match(action)) {
           successDialog({
             title: <Text t="success" />,
