@@ -59,6 +59,18 @@
         font-size: 14px;
         line-height: 14px;
       }
+      .search-btn {
+        width: 60px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #3f4957;
+        color: #fff;
+        line-height: 20px;
+        font-family: UbuntuMedium, sans-serif;
+        border-radius: 10px;
+        margin-left: 20px;
+      }
     }
   }
 
