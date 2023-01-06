@@ -19,6 +19,7 @@ import RoleFilter from './RoleFilter';
 import usePaginationProps from '../../../hooks/usePaginationProps';
 import useOnchangeTable from '../../../hooks/useOnchangeTable';
 import useGetGroups from './hooks/useGetGroups';
+import '../../../styles/table.scss'
 
 const RoleList = () => {
   const dispatch = useDispatch();
@@ -32,7 +33,6 @@ const RoleList = () => {
 
   const paginationProps = usePaginationProps(tableProperty);
   const onChangeTable = useOnchangeTable({ filterObject, action: getByFilterPagedGroups });
-
 
   const addFormModal = () => {
     setSelectedRole(false);

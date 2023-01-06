@@ -1,9 +1,10 @@
 import { api } from './api';
 
-const GetByFilterPagedGroups = (urlString) => {
+const GetByFilterPagedGroups = (params) => {
   return api({
-    url: `Groups/GetByFilterPagedGroups?${urlString}`,
+    url: `Groups/GetByFilterPagedGroups`,
     method: 'POST',
+    params
   });
 };
 

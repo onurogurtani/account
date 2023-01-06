@@ -23,6 +23,12 @@ const RoleFilter = () => {
           ...values,
           PageNumber: 1,
         };
+        if (body?.rolType?.length > 0) {
+          body.rolType.forEach(item => {
+            body[item] = true
+          })
+          delete body.rolType
+        }
         await dispatch(getByFilterPagedGroups(body));
         await dispatch(setIsFilter(true));
       } catch (e) {
@@ -36,7 +42,6 @@ const RoleFilter = () => {
     await dispatch(
       getByFilterPagedGroups({
         PageSize: filterObject?.PageSize,
-        OrderBy: filterObject?.OrderBy,
       }),
     );
     await dispatch(setIsFilter(false));
@@ -58,7 +63,7 @@ const RoleFilter = () => {
         <CustomFormItem label="Rol Türü" name="rolType" wrapperCol={{ span: 10, offset: 0 }}>
           <CustomSelect allowClear placeholder="Seçiniz" mode="multiple">
             {roleType.map((item) => (
-              <Option key={item.id} value={item.value}>
+              <Option key={item.id} value={item.key}>
                 {item.value}
               </Option>
             ))}

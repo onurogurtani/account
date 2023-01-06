@@ -1,52 +1,14 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { roleType } from '../../constants/role';
 import groupsServices from '../../services/groups.service';
+import { getByFilterPagedParamsHelper } from '../../utils/utils';
 
 export const getByFilterPagedGroups = createAsyncThunk(
     'getByFilterPagedGroups',
-    async (data, { getState, dispatch, rejectWithValue }) => {
+    async (data = {}, { getState, dispatch, rejectWithValue }) => {
         try {
-            let urlString;
-            if (data) {
-                let urlArr = [];
-                for (let item in data) {
-                    if (data[item] !== undefined && data[item] !== '') {
-                        if (Array.isArray(data[item])) {
-                            if (item === 'rolType') {
-                                data[item].map((item) => {
-                                    let newStr = `GroupDetailSearch.${roleType.find((type) => type.value === item).key}=${true}`;
-                                    urlArr.push(newStr);
-                                })
-                            } else {
-                                data[item]?.map((element, idx) => {
-                                    let newStr = `GroupDetailSearch.${item}=${data[item][idx]}`;
-                                    urlArr.push(newStr);
-                                });
-                            }
-                        } else {
-                            let newStr = `GroupDetailSearch.${item}=${data[item]}`;
-                            urlArr.push(newStr);
-                        }
-                    }
-                }
-                if (!data.OrderBy) {
-                    let newStr = `GroupDetailSearch.OrderBy=UpdateTimeDESC`;
-                    urlArr.push(newStr);
-                }
-                if (!data.PageNumber) {
-                    let newStr = `GroupDetailSearch.PageNumber=1`;
-                    urlArr.push(newStr);
-                }
-                if (!data.PageSize) {
-                    let newStr = `GroupDetailSearch.PageSize=10`;
-                    urlArr.push(newStr);
-                }
-                urlString = urlArr.join('&');
-            } else {
-                urlString =
-                    'GroupDetailSearch.OrderBy=UpdateTimeDESC&GroupDetailSearch.PageNumber=1&GroupDetailSearch.PageSize=10';
-            }
-            const response = await groupsServices.GetByFilterPagedGroups(urlString);
+            const params = getByFilterPagedParamsHelper(data, 'GroupDetailSearch.');
+            const response = await groupsServices.GetByFilterPagedGroups(params);
             dispatch(setFilterObject(data));
             return response;
         } catch (error) {
