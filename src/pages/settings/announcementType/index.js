@@ -41,7 +41,7 @@ const AnnouncementType = () => {
   }, []);
 
   const loadAnnouncementType = useCallback(async () => {
-    dispatch(getAnnouncementType());
+    dispatch(getAnnouncementType({ data: null, params: { 'AnnouncementTypeDetailSearch.PageSize': 999999 } }));
   }, [dispatch]);
 
   const columns = [

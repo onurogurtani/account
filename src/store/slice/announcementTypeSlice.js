@@ -3,9 +3,9 @@ import announcementTypeServices from '../../services/announcementType.services';
 
 export const getAnnouncementType = createAsyncThunk(
   'AnnouncementType/getAnnouncementType',
-  async (body, { dispatch, rejectWithValue }) => {
+  async ({ data, params } = {}, { dispatch, rejectWithValue }) => {
     try {
-      return await announcementTypeServices.getAnnouncementType();
+      return await announcementTypeServices.getAnnouncementType(data, params);
     } catch (error) {
       return rejectWithValue(error?.data);
     }

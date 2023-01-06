@@ -2,45 +2,14 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import eventsServices from '../../services/events.services';
 import formServices from '../../services/forms.services';
 import participantGroupsServices from '../../services/participantGroups.services';
+import { getByFilterPagedParamsHelper } from '../../utils/utils';
 
 export const getByFilterPagedEvents = createAsyncThunk(
   'events/getByFilterPagedEvents',
-  async (data, { getState, dispatch, rejectWithValue }) => {
+  async (data = {}, { getState, dispatch, rejectWithValue }) => {
     try {
-      let urlString;
-      if (data) {
-        let urlArr = [];
-        for (let item in data) {
-          if (data[item] !== undefined) {
-            if (Array.isArray(data[item])) {
-              data[item]?.map((element, idx) => {
-                let newStr = `EventDetailSearch.${item}=${data[item][idx]}`;
-                urlArr.push(newStr);
-              });
-            } else {
-              let newStr = `EventDetailSearch.${item}=${data[item]}`;
-              urlArr.push(newStr);
-            }
-          }
-        }
-        if (!data.OrderBy) {
-          let newStr = `EventDetailSearch.OrderBy=UpdateTimeDESC`;
-          urlArr.push(newStr);
-        }
-        if (!data.PageNumber) {
-          let newStr = `EventDetailSearch.PageNumber=1`;
-          urlArr.push(newStr);
-        }
-        if (!data.PageSize) {
-          let newStr = `EventDetailSearch.PageSize=10`;
-          urlArr.push(newStr);
-        }
-        urlString = urlArr.join('&');
-      } else {
-        urlString =
-          'EventDetailSearch.OrderBy=UpdateTimeDESC&EventDetailSearch.PageNumber=1&EventDetailSearch.PageSize=10';
-      }
-      const response = await eventsServices.getByFilterPagedEvents(urlString);
+      const params = getByFilterPagedParamsHelper(data, 'EventDetailSearch.');
+      const response = await eventsServices.getByFilterPagedEvents(params);
       dispatch(setFilterObject(data));
       return response;
     } catch (error) {
@@ -49,29 +18,23 @@ export const getByFilterPagedEvents = createAsyncThunk(
   },
 );
 
-export const getByEventId = createAsyncThunk(
-  'events/getByEventId',
-  async (data, { dispatch, rejectWithValue }) => {
-    try {
-      const response = await eventsServices.getByEventId(data);
-      return response;
-    } catch (error) {
-      return rejectWithValue(error?.data);
-    }
-  },
-);
+export const getByEventId = createAsyncThunk('events/getByEventId', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await eventsServices.getByEventId(data);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
 
-export const addEvent = createAsyncThunk(
-  'events/addEvent',
-  async (data, { dispatch, rejectWithValue }) => {
-    try {
-      const response = await eventsServices.addEvent(data);
-      return response;
-    } catch (error) {
-      return rejectWithValue(error?.data);
-    }
-  },
-);
+export const addEvent = createAsyncThunk('events/addEvent', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await eventsServices.addEvent(data);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
 
 export const getSurveyListWithSelectedSurveyCategory = createAsyncThunk(
   'events/getSurveyListWithSelectedSurveyCategory',
@@ -104,35 +67,38 @@ export const getParticipantGroupsList = createAsyncThunk(
   },
 );
 
-export const getEventNames = createAsyncThunk(
-  'events/getEventNames',
-  async (data, { dispatch, rejectWithValue }) => {
-    try {
-      const response = await eventsServices.getEventNames();
-      return response;
-    } catch (error) {
-      return rejectWithValue(error?.data);
-    }
-  },
-);
+export const getEventNames = createAsyncThunk('events/getEventNames', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await eventsServices.getEventNames();
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
 
-export const editEvent = createAsyncThunk(
-  'events/editEvent',
-  async (data, { dispatch, rejectWithValue }) => {
-    try {
-      const response = await eventsServices.editEvent(data);
-      return response;
-    } catch (error) {
-      return rejectWithValue(error?.data);
-    }
-  },
-);
+export const editEvent = createAsyncThunk('events/editEvent', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await eventsServices.editEvent(data);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
 
-export const deleteEvent = createAsyncThunk(
-  'events/deleteEvent',
+export const deleteEvent = createAsyncThunk('events/deleteEvent', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await eventsServices.deleteEvent(data);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+
+export const getAllEventsKeyword = createAsyncThunk(
+  'events/getAllEventsKeyword',
   async (data, { dispatch, rejectWithValue }) => {
     try {
-      const response = await eventsServices.deleteEvent(data);
+      const response = await eventsServices.getAllEventsKeyword();
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -204,9 +170,5 @@ export const eventsSlice = createSlice({
   },
 });
 
-export const {
-  setFilterObject,
-  setSorterObject,
-  setIsFilter,
-  setSurveyListWithSelectedSurveyCategory,
-} = eventsSlice.actions;
+export const { setFilterObject, setSorterObject, setIsFilter, setSurveyListWithSelectedSurveyCategory } =
+  eventsSlice.actions;

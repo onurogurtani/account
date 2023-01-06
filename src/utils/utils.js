@@ -113,3 +113,19 @@ export const FORM_DATA_CONVERT = (data) => {
 
 export const removeFromArray = (arr, ...args) => arr.filter((val) => !args.includes(val));
 export const getListFilterParams = (field, value) => [{ field, value, compareType: 0 }];
+
+export const getByFilterPagedParamsHelper = (data, prefix) => {
+  let params = { ...data };
+  if (!params.OrderBy) {
+    params.OrderBy = `UpdateTimeDESC`;
+  }
+  if (!params.PageNumber) {
+    params.PageNumber = `1`;
+  }
+  if (!params.PageSize) {
+    params.PageSize = `10`;
+  }
+
+  const result = Object.fromEntries(Object.entries(params).map(([k, v]) => [`${prefix}${k}`, v]));
+  return result;
+};

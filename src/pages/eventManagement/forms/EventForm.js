@@ -1,14 +1,18 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { Radio } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import {
   CustomFormItem,
   CustomInput,
+  CustomRadio,
   CustomSelect,
+  DeclarationSection,
   errorDialog,
   Option,
   Text,
 } from '../../../components';
+import { eventTypes } from '../../../constants/events';
 import { getFormCategoryList } from '../../../store/slice/categoryOfFormsSlice';
 import {
   getSurveyListWithSelectedSurveyCategory,
@@ -16,6 +20,9 @@ import {
 } from '../../../store/slice/eventsSlice';
 import { turkishToLower } from '../../../utils/utils';
 import DateSection from './DateSection';
+import EventKeywordsSection from './EventKeywordsSection';
+import EventLocationSection from './EventLocationSection';
+import EventTypeSection from './EventTypeSection';
 import ParticipantGroupsSection from './ParticipantGroupsSection';
 
 const EventForm = ({ form }) => {
@@ -31,10 +38,10 @@ const EventForm = ({ form }) => {
   const isDisableAllButDate = location?.state?.isDisableAllButDate;
 
   const loadSurveyCategories = async () => {
-    const action = await dispatch(getFormCategoryList());
-    if (getFormCategoryList.fulfilled.match(action)) {
-      setFormCategories(action?.payload?.data?.items);
-    } else {
+    try {
+      const action = await dispatch(getFormCategoryList()).unwrap();
+      setFormCategories(action?.data?.items);
+    } catch (err) {
       setFormCategories([]);
     }
   };
@@ -79,26 +86,25 @@ const EventForm = ({ form }) => {
         <CustomInput disabled={isDisableAllButDate} placeholder="Açıklama" />
       </CustomFormItem>
 
-      {/* <CustomFormItem
+      <EventTypeSection />
+
+      <CustomFormItem
+        label="Etkinlik Tipi"
+        name="eventTypeEnum"
         rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
-        label="Durum"
-        name="isActive"
       >
-        <CustomSelect disabled={isDisableAllButDate} placeholder="Durum">
-          <Option key={1} value={true}>
-            Aktif
-          </Option>
-          <Option key={2} value={false}>
-            Pasif
-          </Option>
-        </CustomSelect>
-      </CustomFormItem> */}
+        <Radio.Group disabled={isDisableAllButDate}>
+          {eventTypes.map((item) => (
+            <CustomRadio key={item.id} value={item.id}>
+              {item.value}
+            </CustomRadio>
+          ))}
+        </Radio.Group>
+      </CustomFormItem>
 
       <CustomFormItem label="Anket Kategorisi" name="categoryOfFormId">
         <CustomSelect
-          filterOption={(input, option) =>
-            turkishToLower(option.children).includes(turkishToLower(input))
-          }
+          filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
           disabled={isDisableAllButDate}
           showArrow
           showSearch
@@ -124,9 +130,7 @@ const EventForm = ({ form }) => {
         <CustomSelect
           showArrow
           showSearch
-          filterOption={(input, option) =>
-            turkishToLower(option.children).includes(turkishToLower(input))
-          }
+          filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
           disabled={!surveyListWithSelectedSurveyCategory.length || isDisableAllButDate}
           placeholder="Anket Seçiniz"
         >
@@ -146,7 +150,14 @@ const EventForm = ({ form }) => {
       </CustomFormItem>
 
       <ParticipantGroupsSection />
+
       <DateSection form={form} />
+
+      <EventLocationSection />
+
+      <EventKeywordsSection />
+
+      <DeclarationSection />
     </>
   );
 };

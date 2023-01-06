@@ -21,13 +21,21 @@ const EventShowAction = () => {
     isDraft: currentEvent?.isDraft,
     formId: currentEvent?.formId,
     categoryOfFormId: currentEvent?.form?.categoryOfFormId,
+    eventTypeEnum: currentEvent?.eventTypeEnum,
+    locationType: currentEvent?.locationType,
+    physicalAddress: currentEvent?.physicalAddress,
     participantGroups: currentEvent?.participantGroups?.map((item) => ({
       participantGroupId: item.participantGroupId,
     })),
     startDate: currentEvent?.startDate,
     endDate: currentEvent?.endDate,
+    keyWords: currentEvent?.keyWords,
+    declarations: currentEvent?.declarations,
+    eventTypeOfEvents: currentEvent?.eventTypeOfEvents?.map((item) => ({
+      eventTypeId: item?.eventTypeId,
+    })),
   };
-
+  console.log(eventData);
   const handleEdit = () => {
     history.push(`/event-management/edit/${id}`);
   };
@@ -43,8 +51,7 @@ const EventShowAction = () => {
       onOk: async () => {
         if (
           !currentEvent?.isPublised &&
-          (dayjs().isAfter(currentEvent?.endDate, 'minute') ||
-            dayjs().isSame(currentEvent?.endDate, 'minute'))
+          (dayjs().isAfter(currentEvent?.endDate, 'minute') || dayjs().isSame(currentEvent?.endDate, 'minute'))
         ) {
           //router state deki isDisableAllButDate sadece tarih editleneceği zaman diğer inputları disable etmek için
           history.push({
