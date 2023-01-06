@@ -1,5 +1,60 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { roleType } from '../../constants/role';
 import groupsServices from '../../services/groups.service';
+
+export const getByFilterPagedGroups = createAsyncThunk(
+    'getByFilterPagedGroups',
+    async (data, { getState, dispatch, rejectWithValue }) => {
+        try {
+            let urlString;
+            if (data) {
+                let urlArr = [];
+                for (let item in data) {
+                    if (data[item] !== undefined && data[item] !== '') {
+                        if (Array.isArray(data[item])) {
+                            if (item === 'rolType') {
+                                data[item].map((item) => {
+                                    let newStr = `GroupDetailSearch.${roleType.find((type) => type.value === item).key}=${true}`;
+                                    urlArr.push(newStr);
+                                })
+                            } else {
+                                data[item]?.map((element, idx) => {
+                                    let newStr = `GroupDetailSearch.${item}=${data[item][idx]}`;
+                                    urlArr.push(newStr);
+                                });
+                            }
+                        } else {
+                            let newStr = `GroupDetailSearch.${item}=${data[item]}`;
+                            urlArr.push(newStr);
+                        }
+                    }
+                }
+                if (!data.OrderBy) {
+                    let newStr = `GroupDetailSearch.OrderBy=UpdateTimeDESC`;
+                    urlArr.push(newStr);
+                }
+                if (!data.PageNumber) {
+                    let newStr = `GroupDetailSearch.PageNumber=1`;
+                    urlArr.push(newStr);
+                }
+                if (!data.PageSize) {
+                    let newStr = `GroupDetailSearch.PageSize=10`;
+                    urlArr.push(newStr);
+                }
+                urlString = urlArr.join('&');
+            } else {
+                urlString =
+                    'GroupDetailSearch.OrderBy=UpdateTimeDESC&GroupDetailSearch.PageNumber=1&GroupDetailSearch.PageSize=10';
+            }
+            const response = await groupsServices.GetByFilterPagedGroups(urlString);
+            dispatch(setFilterObject(data));
+            return response;
+        } catch (error) {
+            return rejectWithValue(error?.data);
+        }
+    },
+);
+
 
 export const getGroupsList = createAsyncThunk(
     'getGroupsList',
@@ -95,6 +150,14 @@ const initialState = {
         pageSize: 10,
         totalCount: 0,
     },
+    isFilter: false,
+    filterObject: {},
+    tableProperty: {
+        currentPage: 1,
+        page: 1,
+        pageSize: 0,
+        totalCount: 0,
+    },
 }
 
 export const groupsSlice = createSlice({
@@ -103,9 +166,28 @@ export const groupsSlice = createSlice({
     reducers: {
         selectedGroup: (state, action) => {
             state.selectedRole = action.payload
-        }
+        },
+        setFilterObject: (state, action) => {
+            state.filterObject = action.payload;
+        },
+        setIsFilter: (state, action) => {
+            state.isFilter = action.payload;
+        },
     },
     extraReducers: (builder) => {
+        builder.addCase(getByFilterPagedGroups.fulfilled, (state, action) => {
+            state.groupsList = action?.payload?.data?.items || [];
+            state.tableProperty = action?.payload?.data?.pagedProperty || {};
+        });
+        builder.addCase(getByFilterPagedGroups.rejected, (state, action) => {
+            state.groupsList = [];
+            state.tableProperty = {
+                currentPage: 1,
+                page: 1,
+                pageSize: 10,
+                totalCount: 0,
+            };
+        });
         builder.addCase(getGroupsList.fulfilled, (state, action) => {
             state.groupsList = action?.payload?.data
             state.draftedTableProperty = {
@@ -130,4 +212,4 @@ export const groupsSlice = createSlice({
     }
 })
 
-export const { selectedGroup } = groupsSlice.actions;
+export const { selectedGroup, setFilterObject, setIsFilter } = groupsSlice.actions;
