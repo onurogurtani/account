@@ -1,12 +1,12 @@
 import styled from 'styled-components';
-import { Input } from 'antd';
-const { TextArea } = Input;
+import { InputNumber } from 'antd';
+import { forwardRef } from 'react';
 
-const CustomTextAreas = styled(TextArea)(
+const CustomInputNumbers = styled(InputNumber)(
   ({ height }) => ` 
-  // height: ${height || '88'}px !important;
+  height: ${height || '48'}px;
   font-size: 16px;
-  padding: 10px 16px;
+  // padding: 10px 16px;
   font-family: UbuntuRegular;
   font-weight: normal;
   font-stretch: normal;
@@ -14,8 +14,12 @@ const CustomTextAreas = styled(TextArea)(
   line-height: normal;
   letter-spacing: normal;
   color: #3f4957;
-  border-radius: 4px;
+  border-radius: 4px !important;
   
+  .ant-input-number-input {
+    height: ${height || '48'}px;
+  }
+
    @media (max-width: 767.98px) {
         font-size: 14px;
   }
@@ -34,8 +38,8 @@ const CustomTextAreas = styled(TextArea)(
 `,
 );
 
-const CustomTextArea = (props) => {
-  return <CustomTextAreas autoComplete="off" {...props} />;
+const CustomInputNumber = (props, ref) => {
+  return <CustomInputNumbers ref={ref} autoComplete="off" {...props} />;
 };
 
-export default CustomTextArea;
+export default forwardRef(CustomInputNumber);

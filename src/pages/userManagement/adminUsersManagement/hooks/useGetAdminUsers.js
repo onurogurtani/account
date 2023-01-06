@@ -1,8 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useLocationQuery from '../../../../hooks/useLocationQuery';
-import { getByFilterPagedAdminUsers } from '../../../../store/slice/adminUserSlice';
-import { setIsFilter, setSorterObject } from '../../../../store/slice/userListSlice';
+import { getByFilterPagedAdminUsers, setIsFilter, setSorterObject } from '../../../../store/slice/adminUserSlice';
 
 const useGetAdminUsers = (setIsUserFilter) => {
   let query = useLocationQuery();

@@ -1,10 +1,11 @@
 import { api } from './api';
 
-const getAnnouncementType = (data) => {
+const getAnnouncementType = (data, params) => {
   return api({
     url: `AnnouncementType/GetByFilterPagedAnnouncementTypes`,
     method: 'POST',
     data,
+    params,
   });
 };
 
