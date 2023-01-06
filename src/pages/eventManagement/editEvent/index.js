@@ -79,10 +79,12 @@ const EditEvent = () => {
       startDate: dayjs(currentEvent?.startDate).startOf('minute'),
       endDate: dayjs(currentEvent?.endDate).startOf('minute'),
       keyWords: currentEvent?.keyWords?.split(','),
-      declarationTypes: currentEvent?.declarations?.[0]?.declarationTypes,
-      declarations: currentEvent?.declarations?.map((item) => ({
-        day: item.day,
-      })),
+      ...(currentEvent?.declarations.length > 0 && {
+        declarationTypes: currentEvent?.declarations?.[0]?.declarationTypes,
+        declarations: currentEvent?.declarations?.map((item) => ({
+          day: item.day,
+        })),
+      }),
     });
 
     if (isDisableAllButDate) {
