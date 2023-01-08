@@ -19,6 +19,7 @@ import { useLocation } from 'react-router-dom';
 
 const EditAnnouncementRole = ({
   setStep,
+  step,
   announcementInfoData,
   selectedRole,
   setSelectedRole,
@@ -171,6 +172,7 @@ const EditAnnouncementRole = ({
           currentId={location?.state?.data?.id}
           selectedRole={selectedRole}
           setStep={setStep}
+          step={step}
           history={history}
           updated={updated}
           setUpdated={setUpdated}

@@ -1,6 +1,6 @@
 import { Col, Form, Row, Upload } from 'antd';
 import dayjs from 'dayjs';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import ReactQuill from 'react-quill';
 import { useLocation } from 'react-router-dom';
 import {
@@ -12,6 +12,7 @@ import {
   CustomSelect,
   Option,
   Text,
+  CustomCheckbox,
 } from '../../../../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { dateValidator, reactQuillValidator } from '../../../../utils/formRule';
@@ -21,10 +22,19 @@ import { getByFilterPagedAnnouncementTypes } from '../../../../store/slice/annou
 import { UploadFile } from 'antd/es/upload/interface';
 import { UploadOutlined } from '@ant-design/icons';
 import fileServices from '../../../../services/file.services';
+import AnnouncementIcon from './AnnouncementIcon';
+
+const formPublicationPlaces = [
+  { id: 1, name: 'Anasayfa' },
+  { id: 2, name: 'Anketler Sayfası' },
+  { id: 3, name: 'Pop-up' },
+  { id: 4, name: 'Bildirimler' },
+];
 
 const AnnouncementInfoForm = ({
   setAnnouncementInfoData,
   setStep,
+  step,
   goToRolesPage,
   history,
   initialValues,
@@ -34,30 +44,42 @@ const AnnouncementInfoForm = ({
   updated,
   setUpdated,
 }) => {
+  const urlRef = useRef('');
+  const nameRef = useRef('');
+  const [selectedPlaces, setSelectedPlaces] = useState([]);
+  console.log(selectedPlaces?.includes(3));
+  const [required, setRequired] = useState(false);
+  useEffect(() => {}, [required]);
+
   const [form] = Form.useForm();
-  const location = useLocation();
-  const { announcementTypes } = useSelector((state) => state?.announcement);
-  const [fieldRequired, setFieldRequired]=useState(false);
-  const [buttonName, setButtonName]=useState('');
-  const [buttonUrl, setButtonUrl]=useState('')
-  const [fileList, setFileList] = useState([]);
+  const { announcementTypes, updateAnnouncementObject } = useSelector((state) => state?.announcement);
+
   const dispatch = useDispatch();
   const [quillValue, setQuillValue] = useState('');
   const [fileImage, setFileImage] = useState(null);
   useEffect(() => {
     dispatch(getByFilterPagedAnnouncementTypes());
     if (initialValues) {
-      setFormData(form);
-      form.setFieldsValue({ announcementType: initialValues.announcementType.name });
+      const currentDate = dayjs().utc().format('YYYY-MM-DD-HH-mm');
+      const startDate = dayjs(initialValues?.startDate).utc().format('YYYY-MM-DD-HH-mm');
+      const endDate = dayjs(initialValues?.endDate).utc().format('YYYY-MM-DD-HH-mm');
+      let initialData = {
+        startDate: startDate >= currentDate ? dayjs(initialValues?.startDate) : undefined,
+        endDate: endDate >= currentDate ? dayjs(initialValues?.endDate) : undefined,
+        announcementPublicationPlaces: initialValues?.announcementPublicationPlaces,
+        fileId: initialValues?.fileId,
+        headText: initialValues.headText,
+        announcementType: initialValues.announcementType.name,
+        buttonName: initialValues?.buttonName,
+        buttonUrl: initialValues?.buttonUrl,
+        homePageContent: initialValues?.homePageContent,
+        content: initialValues?.content,
+      };
+      form.setFieldsValue({ ...initialData });
       setAnnouncementInfoData(initialValues.id);
+      setFormData(form);
     }
   }, []);
-  useEffect(() => {    
-  }, [fieldRequired])
-  useEffect(() => {    
-  }, [buttonUrl])
-  useEffect(() => {    
-  }, [buttonName])
 
   if (initialValues) {
     initialValues = {
@@ -86,26 +108,17 @@ const AnnouncementInfoForm = ({
 
     return endValue?.startOf('day') < startDate?.startOf('day') || endValue < dayjs().startOf('day');
   };
-  const token = useSelector((state) => state?.auth?.token);
-  const getFile = (e) => {
-    console.log('Upload event:', e);
-
-    if (Array.isArray(e)) {
-      return e;
+  const check = async () => {
+    if (urlRef?.current?.input?.value != '' || nameRef?.current?.input?.value != '') {
+      setRequired(true);
+    } else {
+      setRequired(false);
     }
-    e && setFileList(e.fileList);
-    console.log(fileList);
-    return e && e.fileList;
   };
- const checkInputValue=async ()=>{
-  console.log(buttonName, buttonUrl)
-  if(buttonName!='' || buttonUrl!=''){
-    setFieldRequired(true)
-  }else{
-    setFieldRequired(false);
-  }
- }
-
+  const handleChange = async (value) => {
+    console.log(`selected ${value}`);
+    setSelectedPlaces(value);
+  };
   return (
     <CustomForm
       name="announcementInfo"
@@ -176,76 +189,50 @@ const AnnouncementInfoForm = ({
       >
         <CustomInput placeholder={'Yeni duyurunuz ile ilgili özet metin'} />
       </CustomFormItem>
+      <AnnouncementIcon
+        initialValues={initialValues}
+        announcementInfoData={announcementInfoData}
+        setFormData={setFormData}
+        updated={updated}
+        setUpdated={setUpdated}
+        fileImage={fileImage}
+        setFileImage={setFileImage}
+      />
 
-      <CustomFormItem
-        label={<Text t="Duyuru İkon" />}
-        value={fileList}
-        onChange={(e) => {
-          console.log(e.target.files[0], fileList);
-        }}
-        name="fileId"
-        getValueFromEvent={getFile}
-        rules={[
-          {
-              required: true,
-              message: 'Lütfen İkon seçiniz!',
-          },
-      ]}
-        // accept=".png,.jpeg,.jpg,.WEBP"
-      >
-        <Upload
-        //  accept=".png, .jpg, .jpeg, .svg"
-
-          listType="picture"          
-          beforeUpload={(e) => {
-            console.log(e);
-            return false;
-          }}
-          accept=".png,.jpeg,.jpg,.WEBP"          
-          onChange={async (e, value) => {
-            console.log(value);
-            console.log(e.file);
-            const data = new FormData();
-            data.append('File', e.file);
-            data.append('FileType', 7);
-            data.append('FileName', e.file.name);
-            data.append('Description', e.file.name);
-            setFileImage(data);
-            console.log(data);
-          }}
-          maxCount={1}
-        >
-          <CustomButton icon={<UploadOutlined />}>Yükle</CustomButton>
-        </Upload>
-      </CustomFormItem>
       <CustomFormItem
         label={<Text t="Buton İsmi" />}
         name="buttonName"
-        onChange={(e)=>{
-          setButtonName(e.target.value.trim());
-          checkInputValue()}}
         rules={[
-          { required: fieldRequired, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+          {
+            required: required,
+            message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
+          },
         ]}
+        onChange={() => {
+          check();
+        }}
       >
-        <CustomInput placeholder={'Buton İsmi'} />
+        <CustomInput ref={nameRef} placeholder={'Buton İsmi'} />
       </CustomFormItem>
 
       <CustomFormItem
         label={<Text t="Buton Url" />}
         name="buttonUrl"
-        onChange={(e)=>{
-          setButtonUrl(e.target.value.trim());
-          checkInputValue()}}
         rules={[
-          { required: fieldRequired, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
           {
-            type: "url",
-            message: "Lütfen geçerli bir URL giriniz"
-        }
+            required: required,
+            message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
+          },
+          {
+            type: 'url',
+            message: 'Lütfen geçerli bir URL giriniz',
+          },
         ]}
+        onChange={() => {
+          check();
+        }}
       >
-        <CustomInput placeholder={"https://ButonUrl.com"}/>
+        <CustomInput ref={urlRef} placeholder={'https://ButonUrl.com'} />
       </CustomFormItem>
       <Row gutter={16}>
         <Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} lg={{ span: 16 }}>
@@ -299,6 +286,45 @@ const AnnouncementInfoForm = ({
       <Row className="ant-form-item-extra">
         Bitiş Tarihi Duyurunun, Arayüzünden kaldırılacağı tarihi belirlemenizi sağlar.
       </Row>
+      <CustomFormItem
+        rules={[
+          {
+            required: true,
+            message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+          },
+        ]}
+        label="Yayınlanma Yeri"
+        name="announcementPublicationPlaces"
+      >
+        <CustomSelect
+          placeholder="Seçiniz"
+          mode="multiple"
+          showArrow
+          onChange={handleChange}
+          // className={classes.select}
+          style={{
+            width: '100%',
+          }}
+          // onChange={onSecondSelectChange}
+        >
+          {formPublicationPlaces.map((item, i) => {
+            return (
+              <Option key={item?.id} value={item?.id}>
+                {item?.name}
+              </Option>
+            );
+          })}
+        </CustomSelect>
+      </CustomFormItem>
+      { selectedPlaces?.includes(3) && (<CustomFormItem label={false} name="isReadCheckbox" className="custom-form-item" valuePropName="checked">
+        <CustomCheckbox 
+        // onChange={handleChangeSurveyOption}
+        //  checked={selectedSurveyOption === 'after'} 
+         
+         value="true">
+          Okundu onayı alınsın
+        </CustomCheckbox>
+      </CustomFormItem>)}
       {!initialValues ? (
         <AddAnnouncementFooter
           form={form}

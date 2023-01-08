@@ -58,7 +58,7 @@ const EditAnnouncementFooter = ({
 
         {!justDateEdit && (
           <CustomButton className="back-btn" onClick={goToRolesPage}>
-            Roller Sayfasına Git
+            Roller Sayfasına Git 
           </CustomButton>
         )}
         <SaveAndFinish
@@ -70,6 +70,7 @@ const EditAnnouncementFooter = ({
           history={history}
           setIsErrorReactQuill={setIsErrorReactQuill}
           justDateEdit={justDateEdit}
+          initialValues={location?.state?.data}
         />
       </CustomFormItem>
     </div>

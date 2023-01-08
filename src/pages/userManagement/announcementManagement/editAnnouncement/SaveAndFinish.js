@@ -9,6 +9,7 @@ import '../../../../styles/announcementManagement/saveAndFinish.scss';
 
 const SaveAndFinish = ({
   form,
+  step,
   currentId,
   selectedRole,
   setStep,
@@ -16,9 +17,9 @@ const SaveAndFinish = ({
   setIsErrorReactQuill,
   justDateEdit,
   fileImage,
+  initialValues
 }) => {
-  console.log(fileImage);
-  
+  console.log(initialValues);
   const dispatch = useDispatch();
   const [isVisible, setIsVisible] = useState(false);
   const [currentAnnouncement, setCurrentAnnouncement] = useState();
@@ -29,7 +30,8 @@ const SaveAndFinish = ({
 
   const onFinish = useCallback(async () => {
     const values = await form.validateFields();
-    
+    console.log(values);
+
     const startOfAnnouncement = values?.startDate
       ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD-HH-mm')
       : undefined;
@@ -57,10 +59,13 @@ const SaveAndFinish = ({
           transFormedType.push(announcementTypes[i]);
         }
       }
-      let fileId = '';
-      console.log(fileImage, updatedAnnouncement, updatedAnnouncement?.fileId);
-      
-      if (fileImage !== null) fileId = await dispatch(getAvatarUpload(fileImage));
+      let fileId = updateAnnouncementObject?.fileId;
+
+      if(Array.isArray(values.fileId)){
+        let res = await dispatch(getAvatarUpload(fileImage));
+        fileId=await res?.payload?.data?.id
+        console.log(fileId)
+      }
 
       const data = {
         id: currentId,
@@ -70,13 +75,13 @@ const SaveAndFinish = ({
         homePageContent: values.homePageContent,
         startDate: startDate + 'T' + startHour + '.000Z',
         endDate: endDate + 'T' + endHour + '.000Z',
-        // fileId: fileImage ? fileId?.payload?.data?.id : updateAnnouncementObject?.fileId,
-        fileId:667,
+        fileId: fileId,
         buttonName: values.buttonName,
         buttonUrl: values.buttonUrl,
-        isArchived:false,
-        isPublished:true
+        isArchived: false,
+        isPublished: true,
       };
+      console.log(data);
       if (selectedRole.length === 0) {
         errorDialog({
           title: <Text t="error" />,
@@ -155,9 +160,16 @@ const SaveAndFinish = ({
           Tüm Kayıtları Görüntüle
         </CustomButton>
       </CustomModal>
-      <CustomButton type="primary" onClick={onFinish} className="submit-btn">
+      {step==1 &&  (<CustomButton type="primary" onClick={onFinish} className="submit-btn">
+        {'Kaydet ve Bitir'}
+      </CustomButton>) }
+     
+      {/* <CustomButton type="primary" onClick={onFinish} className="submit-btn">
         {justDateEdit ? 'Kaydet ve Yayınla' : 'Kaydet ve Bitir'}
       </CustomButton>
+      <CustomButton type="primary" onClick={onFinish} className="submit-btn">
+        {justDateEdit ? 'Kaydet ve Yayınla' : 'Kaydet ve Bitir'}
+      </CustomButton> */}
     </>
   );
 };

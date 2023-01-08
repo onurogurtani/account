@@ -8,6 +8,7 @@ import AnnouncementInfoForm from '../forms/AnnouncementInfoForm';
 
 const AddAnnouncementInfo = ({
   setStep,
+  step,
   setAnnouncementInfoData,
   selectedRole,
   announcementInfoData,
@@ -29,6 +30,7 @@ const AddAnnouncementInfo = ({
         <AnnouncementInfoForm
           setAnnouncementInfoData={setAnnouncementInfoData}
           setStep={setStep}
+          step={step}
           history={history}
           initialValues={location?.state?.data}
           selectedRole={selectedRole}
