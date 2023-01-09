@@ -83,7 +83,7 @@ const EventFilter = () => {
           ...filterObject,
           ...values,
           KeyWords: values.KeyWords?.toString(),
-          StartDate: values?.StartDate ? dayjs.utc(values?.StartDate).format() : undefined,
+          StartDate: values?.StartDate ? dayjs.utc(values?.StartDate).startOf('minute').format() : undefined,
           EndDate: values?.EndDate ? dayjs.utc(values?.EndDate).startOf('minute').format() : undefined,
           Status: values?.Status === 0 ? undefined : values?.Status,
           PublishedStatus: values?.PublishedStatus === 0 ? undefined : values?.PublishedStatus,

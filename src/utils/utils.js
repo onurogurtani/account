@@ -126,6 +126,10 @@ export const getByFilterPagedParamsHelper = (data, prefix) => {
     params.PageSize = `10`;
   }
 
-  const result = Object.fromEntries(Object.entries(params).map(([k, v]) => [`${prefix}${k}`, v]));
+  const result = Object.fromEntries(
+    Object.entries(params)
+      .filter(([_, v]) => v !== '')
+      .map(([k, v]) => [`${prefix}${k}`, v]),
+  );
   return result;
 };
