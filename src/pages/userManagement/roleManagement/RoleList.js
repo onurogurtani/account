@@ -122,7 +122,7 @@ const RoleList = () => {
             {text?.map((item, i) => (
               item &&
               <Tag color="green" key={`groupType-${i}`}>
-                {item && item}
+                {item}
               </Tag>
             ))}
           </div>
