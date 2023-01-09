@@ -22,11 +22,11 @@ import { getByFilterPagedAdminUsers, setIsFilter } from '../../../store/slice/ad
 const AdminUserFilter = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
-  const { groupsList } = useSelector((state) => state?.groups);
+  const { allGroupList } = useSelector((state) => state?.groups);
   const { filterObject, isFilter } = useSelector((state) => state?.adminUsers);
 
   useEffect(() => {
-    if (groupsList.length) return false;
+    if (allGroupList.length) return false;
     dispatch(getGroupsList());
   }, []);
 
@@ -115,7 +115,7 @@ const AdminUserFilter = () => {
               mode="multiple"
               placeholder="Rol"
             >
-              {groupsList
+              {allGroupList
                 // ?.filter((item) => item.isActive)
                 ?.map((item) => {
                   return (
