@@ -25,7 +25,7 @@ import { DoubleRightOutlined, DoubleLeftOutlined } from '@ant-design/icons';
 
 const RoleOperationList = () => {
     const dispatch = useDispatch();
-    const { groupsList, groupClaims, selectedRole } = useSelector((state) => state?.groups);
+    const { allGroupList, groupClaims, selectedRole } = useSelector((state) => state?.groups);
     const { operationClaimsList } = useSelector((state) => state?.operationClaims);
 
     const [data, setData] = useState([])
@@ -90,7 +90,7 @@ const RoleOperationList = () => {
     );
 
     const handleSelectChange = (value) => {
-        const role = groupsList?.find(group => group?.id === value)
+        const role = allGroupList?.find(group => group?.id === value)
         dispatch(selectedGroup(role))
     }
 
@@ -237,7 +237,7 @@ const RoleOperationList = () => {
                     filterOption={(input, option) => option.children.toLocaleLowerCase().includes(input.toLocaleLowerCase())}
                 >
                     {
-                        groupsList?.map(({ id, groupName }) => <Option value={id}>{groupName}</Option>)
+                        allGroupList?.map(({ id, groupName }) => <Option value={id}>{groupName}</Option>)
                     }
                 </CustomSelect>
                 {

@@ -19,7 +19,7 @@ import { useHistory } from 'react-router-dom';
 const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { groupsList } = useSelector((state) => state?.groups);
+  const { allGroupList } = useSelector((state) => state?.groups);
 
   const [role, setRole] = useState([]);
   const [selectedRole, setSelectedRole] = useState([]);
@@ -35,11 +35,11 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
   }, []);
 
   useEffect(() => {
-    setRole(groupsList);
-  }, [groupsList]);
+    setRole(allGroupList);
+  }, [allGroupList]);
 
   useEffect(() => {
-    let difference = getDifference(groupsList, selectedRole);
+    let difference = getDifference(allGroupList, selectedRole);
     setRole(difference);
   }, [selectedRole]);
 
@@ -179,10 +179,10 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
         <CustomButton type="primary" htmlType="submit" className="back-btn" onClick={handleBackInfo}>
           Genel Bilgiler Sayfasına Dön
         </CustomButton>
-        <CustomButton type="primary" onClick={()=>{onFinish(3)}} className="draft-btn">
+        <CustomButton type="primary" onClick={() => { onFinish(3) }} className="draft-btn">
           Taslak Olarak kaydet
         </CustomButton>
-        <CustomButton type="primary" onClick={()=>{onFinish(1)}} className="submit-btn">
+        <CustomButton type="primary" onClick={() => { onFinish(1) }} className="submit-btn">
           Kaydet ve Yayınla
         </CustomButton>
       </div>
