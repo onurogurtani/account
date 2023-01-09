@@ -23,6 +23,18 @@ import AnnouncementFilter from './AnnouncementFilter';
 import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
 import dayjs from 'dayjs';
 import FormItem from 'antd/lib/form/FormItem';
+const formPublicationPlacesEnum = {
+  1: 'Anasayfa',
+  2: 'Anketler Sayfası',
+  3: 'Pop-up',
+  4: 'Bildirimler',
+};
+const formPublicationPlaces = [
+  { id: 1, name: 'Anasayfa' },
+  { id: 2, name: 'Anketler Sayfası' },
+  { id: 3, name: 'Pop-up' },
+  { id: 4, name: 'Bildirimler' },
+];
 
 const AnnouncementList = () => {
   const dispatch = useDispatch();
@@ -171,12 +183,12 @@ const AnnouncementList = () => {
       render: (_, record) => listRoles(record),
     },
     {
-      title: 'Yayınlandı mı?',
-      dataIndex: 'isPublished',
-      key: 'isPublished',
+      title: 'Yayınlanma Durumu',
+      dataIndex: 'publishStatus',
+      key: 'publishStatus',
       align: 'center',
-      render: (isPublished) => {
-        return isPublished ? (
+      render: (publishStatus) => {
+        return publishStatus==1 ? (
           <span
             style={{
               backgroundColor: '#00a483',
@@ -190,8 +202,20 @@ const AnnouncementList = () => {
           >
             Yayınlandı
           </span>
-        ) : (
+        ) : (publishStatus==2 ?
           <span
+            style={{
+              backgroundColor: '#E6E624',
+              borderRadius: '5px',
+              boxShadow: '0 5px 5px 0',
+              padding: '5px',
+              width: '100px',
+              display: 'inline-block',
+              textAlign: 'center',
+            }}
+          >
+            Yayınlanmadı
+          </span> :  <span
             style={{
               backgroundColor: '#ff8c00',
               borderRadius: '5px',
@@ -202,7 +226,7 @@ const AnnouncementList = () => {
               textAlign: 'center',
             }}
           >
-            Yayınlanmadı
+            Taslak
           </span>
         );
       },

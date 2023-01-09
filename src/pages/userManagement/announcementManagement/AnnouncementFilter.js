@@ -22,6 +22,18 @@ import {
 } from '../../../store/slice/announcementSlice';
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
+const formPublicationPlacesEnum = {
+  1: 'Anasayfa',
+  2: 'Anketler Sayfası',
+  3: 'Pop-up',
+  4: 'Bildirimler',
+};
+
+const publishStatusObj=[
+  { id: 1, name: 'Yayında' },
+  { id: 2, name: 'Yayında Değil' },
+  { id: 3, name: 'Taslak' },
+]
 
 const AnnouncementFilter = () => {
   const [form] = Form.useForm();
@@ -58,6 +70,7 @@ const AnnouncementFilter = () => {
       const body = {
         AnnouncementTypeId: type,
         headText: values?.headText || undefined,
+        publishStatus:values.publishStatus,
         startDate: values?.startDate
           ? dayjs(values?.startDate)?.format('YYYY-MM-DDT00:00:00')
           : undefined,
@@ -139,6 +152,33 @@ const AnnouncementFilter = () => {
               }}
             >
               {announcementTypes?.map(({ id, name }, index) => (
+                <Option id={id} key={index} value={id}>
+                  <Text t={name} />
+                </Option>
+              ))}
+              <Option key={null} value={null}>
+                <Text t="Hepsi" />
+              </Option>
+            </CustomSelect>
+          </CustomFormItem>
+          <CustomFormItem
+            label={
+              <div>
+                <Text t="Yayınlanma Durumu" />
+              </div>
+            }
+            name="publishStatus"
+            className="filter-item"
+            onClick={ (value)=>{ return value==''; } }
+          >
+            <CustomSelect
+              className="form-filter-item"
+              placeholder={'Seçiniz'}
+              style={{
+                width: '100%',
+              }}
+            >
+              {publishStatusObj.map(({ id, name }, index) => (
                 <Option id={id} key={index} value={id}>
                   <Text t={name} />
                 </Option>

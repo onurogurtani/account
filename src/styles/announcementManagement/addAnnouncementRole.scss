@@ -44,6 +44,19 @@
     box-shadow: none;
     border: none;
   }
+  .draft-btn {
+    background-color: #a9ad30;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: UbuntuMedium, sans-serif;
+    line-height: 12px;
+    border-radius: 4px;
+    outline: 0;
+    box-shadow: none;
+    border: none;
+  }
 }
 .add-announcement-role-card {
   .action-btns {

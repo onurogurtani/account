@@ -126,7 +126,7 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
       },
     });
   };
-  const onFinish = async () => {
+  const onFinish = async (status) => {
     if (selectedRole.length === 0) {
       errorDialog({
         title: <Text t="error" />,
@@ -136,6 +136,7 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
     }
 
     announcementInfoData.roles = selectedRole;
+    announcementInfoData.publishStatus = status;
     const action = await dispatch(addAnnouncement(announcementInfoData));
 
     if (addAnnouncement.fulfilled.match(action)) {
@@ -178,8 +179,11 @@ const AddAnnouncementRole = ({ setStep, announcementInfoData }) => {
         <CustomButton type="primary" htmlType="submit" className="back-btn" onClick={handleBackInfo}>
           Genel Bilgiler Sayfasına Dön
         </CustomButton>
-        <CustomButton type="primary" onClick={onFinish} className="submit-btn">
-          Kaydet ve Bitir
+        <CustomButton type="primary" onClick={()=>{onFinish(3)}} className="draft-btn">
+          Taslak Olarak kaydet
+        </CustomButton>
+        <CustomButton type="primary" onClick={()=>{onFinish(1)}} className="submit-btn">
+          Kaydet ve Yayınla
         </CustomButton>
       </div>
     </CustomCollapseCard>
