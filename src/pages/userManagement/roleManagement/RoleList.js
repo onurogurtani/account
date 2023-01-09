@@ -12,7 +12,7 @@ import cardsRegistered from '../../../assets/icons/icon-cards-registered.svg';
 import React, { useCallback, useEffect, useState } from 'react';
 import '../../../styles/draftOrder/draftList.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { getGroupsList, deleteGroup, getByFilterPagedGroups } from '../../../store/slice/groupsSlice';
+import { deleteGroup, getByFilterPagedGroups } from '../../../store/slice/groupsSlice';
 import RoleFormModal from './RoleFormModal';
 import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
 import RoleFilter from './RoleFilter';
@@ -20,6 +20,7 @@ import usePaginationProps from '../../../hooks/usePaginationProps';
 import useOnchangeTable from '../../../hooks/useOnchangeTable';
 import useGetGroups from './hooks/useGetGroups';
 import '../../../styles/table.scss'
+import { Tag } from 'antd';
 
 const RoleList = () => {
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ const RoleList = () => {
   const [roleFormModalVisible, setRoleFormModalVisible] = useState(false);
   const [selectedRole, setSelectedRole] = useState(false);
   const [isGroupFilter, setIsGroupFilter] = useState(false);
+  const [convertedGroupList, setConvertedGroupList] = useState([])
 
   const paginationProps = usePaginationProps(tableProperty);
   const onChangeTable = useOnchangeTable({ filterObject, action: getByFilterPagedGroups });
@@ -38,6 +40,26 @@ const RoleList = () => {
     setSelectedRole(false);
     setRoleFormModalVisible(true);
   };
+
+  useEffect(() => {
+    convertList()
+  }, [groupsList])
+
+  const convertList = useCallback(() => {
+    const newList = []
+    groupsList?.forEach((item) => {
+      newList.push(
+        {
+          ...item,
+          groupType:
+            [item?.isPackageRole && 'Paket Rolü',
+            item?.isUserRole && 'Kullanıcı Rolü',
+            item?.showAtAnnouncement && 'Duyuruda Göster']
+        }
+      )
+    })
+    setConvertedGroupList(newList)
+  }, [groupsList])
 
   const handleDeleteRole = async (record) => {
     confirmDialog({
@@ -55,7 +77,7 @@ const RoleList = () => {
             title: <Text t="successfullySent" />,
             message: action?.payload?.message,
             onOk: () => {
-              getByFilterPagedGroups();
+              dispatch(getByFilterPagedGroups());
             },
           });
         } else {
@@ -90,6 +112,24 @@ const RoleList = () => {
       width: 400,
     },
     {
+      title: 'ROL TÜRÜ',
+      dataIndex: 'groupType',
+      key: 'groupType',
+      width: 400,
+      render: (text, record) => {
+        return (
+          <div>
+            {text?.map((item, i) => (
+              item &&
+              <Tag color="green" key={`groupType-${i}`}>
+                {item}
+              </Tag>
+            ))}
+          </div>
+        );
+      },
+    },
+    {
       title: 'İŞLEMLER',
       dataIndex: 'draftDeleteAction',
       key: 'draftDeleteAction',
@@ -118,21 +158,24 @@ const RoleList = () => {
         </CustomButton>
         <div className="drafts-count-title">
           <CustomImage src={cardsRegistered} />
-          Kayıtlı Rol Sayısı: <span>{groupsList?.length}</span>
+          Kayıtlı Rol Sayısı: <span>{tableProperty?.totalCount}</span>
           <CustomButton data-testid="search" className="search-btn" onClick={() => setIsGroupFilter((prev) => !prev)}>
             <CustomImage src={iconSearchWhite} />
           </CustomButton>
         </div>
       </div>
       {isGroupFilter && <RoleFilter />}
-      <CustomTable
-        dataSource={groupsList}
-        onChange={onChangeTable}
-        pagination={paginationProps}
-        columns={columns}
-        rowKey={(record) => `draft-list-new-order-${record?.id || record?.name}`}
-        scroll={{ x: false }}
-      />
+      {
+        convertedGroupList &&
+        <CustomTable
+          dataSource={convertedGroupList}
+          onChange={onChangeTable}
+          pagination={paginationProps}
+          columns={columns}
+          rowKey={(record) => `draft-list-new-order-${record?.id || record?.name}`}
+          scroll={{ x: false }}
+        />
+      }
       <RoleFormModal
         modalVisible={roleFormModalVisible}
         handleModalVisible={setRoleFormModalVisible}
