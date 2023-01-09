@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { CustomFormItem, CustomSelect, Option } from '../../../components';
 import { useDispatch, useSelector } from 'react-redux';
 import TableFilter from '../../../components/TableFilter';
@@ -9,11 +9,16 @@ const RoleFilter = () => {
   const dispatch = useDispatch();
   const state = (state) => state?.groups;
   const { filterObject, groupsList } = useSelector(state);
+  const [filterGroupList, setFilterGroupList] = useState([])
 
   useEffect(() => {
     if (Object.keys(groupsList).length) return false;
     dispatch(getByFilterPagedGroups(filterObject));
   }, [dispatch]);
+
+  useEffect(() => {
+    setFilterGroupList(groupsList)
+  }, [groupsList])
 
   const onFinish = useCallback(
     async (values) => {
@@ -52,7 +57,7 @@ const RoleFilter = () => {
       <div className="form-item">
         <CustomFormItem label="Rol" name="GroupIds" wrapperCol={{ span: 10, offset: 0 }}>
           <CustomSelect allowClear placeholder="Seçiniz" mode="multiple">
-            {groupsList.map((item) => (
+            {filterGroupList.map((item) => (
               <Option key={item.code} value={item.id}>
                 {item.groupName}
               </Option>
