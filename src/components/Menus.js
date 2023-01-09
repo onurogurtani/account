@@ -426,6 +426,14 @@ const Menus = () => {
           </MenuItemText>
         </CustomItem>
       </CustomSubMenu>
+      <CustomItem key="/work-plan-management/list">
+        <MenuItemText>
+          <CustomImage src={menuIcons} />
+          <span>
+            <Text t="Çalışma Planları" />
+          </span>
+        </MenuItemText>
+      </CustomItem>
     </CustomMenu>
   );
 };
