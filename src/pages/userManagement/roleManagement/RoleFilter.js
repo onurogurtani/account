@@ -3,13 +3,12 @@ import { CustomFormItem, CustomSelect, Option } from '../../../components';
 import { useDispatch, useSelector } from 'react-redux';
 import TableFilter from '../../../components/TableFilter';
 import { roleType } from '../../../constants/role';
-import { getByFilterPagedGroups, setIsFilter } from '../../../store/slice/groupsSlice';
+import { getByFilterPagedGroups, getGroupsList, setIsFilter } from '../../../store/slice/groupsSlice';
 
 const RoleFilter = () => {
   const dispatch = useDispatch();
   const state = (state) => state?.groups;
-  const { filterObject, groupsList } = useSelector(state);
-  const [filterGroupList, setFilterGroupList] = useState([])
+  const { filterObject, groupsList, allGroupList } = useSelector(state);
 
   useEffect(() => {
     if (Object.keys(groupsList).length) return false;
@@ -17,8 +16,9 @@ const RoleFilter = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    setFilterGroupList(groupsList)
-  }, [groupsList])
+    if (Object.keys(allGroupList).length) return false;
+    dispatch(getGroupsList());
+  }, [dispatch]);
 
   const onFinish = useCallback(
     async (values) => {
@@ -57,7 +57,7 @@ const RoleFilter = () => {
       <div className="form-item">
         <CustomFormItem label="Rol" name="GroupIds" wrapperCol={{ span: 10, offset: 0 }}>
           <CustomSelect allowClear placeholder="Seçiniz" mode="multiple">
-            {filterGroupList.map((item) => (
+            {allGroupList.map((item) => (
               <Option key={item.code} value={item.id}>
                 {item.groupName}
               </Option>

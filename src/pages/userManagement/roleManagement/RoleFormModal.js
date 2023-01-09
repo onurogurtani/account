@@ -40,6 +40,13 @@ const RoleFormModal = ({ modalVisible, handleModalVisible, selectedRole }) => {
 
   const onFinish = useCallback(
     async (values) => {
+      if (!(values.isPackageRole || values.isUserRole || values.showAtAnnouncement)) {
+        errorDialog({
+          title: <Text t="error" />,
+          message: 'En 1(Bir) Rol Tanımlamalısınız.',
+        });
+        return
+      }
       if (values?.groupName) {
         const body = {
           groupName: values?.groupName,
@@ -74,6 +81,13 @@ const RoleFormModal = ({ modalVisible, handleModalVisible, selectedRole }) => {
 
   const onFinishEdit = useCallback(
     async (values) => {
+      if (!(values.isPackageRole || values.isUserRole || values.showAtAnnouncement)) {
+        errorDialog({
+          title: <Text t="error" />,
+          message: 'En 1(Bir) Rol Tanımlamalısınız.',
+        });
+        return
+      }
       const data = {
         id: selectedRole?.id,
         groupName: values?.groupName,
