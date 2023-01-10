@@ -19,6 +19,7 @@ const EditAnnouncementTabs = ({ step, setStep, setUpdated, updated }) => {
         <EditAnnouncementInfo
           selectedRole={selectedRole}
           setStep={setStep}
+          step={step}
           setAnnouncementInfoData={setAnnouncementInfoData}
           announcementInfoData={announcementInfoData}
           setFormData={setFormData}
@@ -32,6 +33,7 @@ const EditAnnouncementTabs = ({ step, setStep, setUpdated, updated }) => {
           selectedRole={selectedRole}
           setSelectedRole={setSelectedRole}
           setStep={setStep}
+          step={step}
           announcementInfoData={announcementInfoData}
           formData={formData}
           updated={updated}

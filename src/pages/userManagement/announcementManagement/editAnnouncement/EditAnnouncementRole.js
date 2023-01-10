@@ -19,6 +19,7 @@ import { useLocation } from 'react-router-dom';
 
 const EditAnnouncementRole = ({
   setStep,
+  step,
   announcementInfoData,
   selectedRole,
   setSelectedRole,
@@ -29,7 +30,7 @@ const EditAnnouncementRole = ({
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
-  const { groupsList } = useSelector((state) => state?.groups);
+  const { allGroupList } = useSelector((state) => state?.groups);
 
   const [role, setRole] = useState([]);
 
@@ -43,12 +44,12 @@ const EditAnnouncementRole = ({
   }, []);
 
   useEffect(() => {
-    let difference = getDifference(groupsList, selectedRole);
+    let difference = getDifference(allGroupList, selectedRole);
     setRole(difference);
-  }, [groupsList]);
+  }, [allGroupList]);
 
   useEffect(() => {
-    let difference = getDifference(groupsList, selectedRole);
+    let difference = getDifference(allGroupList, selectedRole);
     setRole(difference);
   }, [selectedRole]);
 
@@ -171,6 +172,7 @@ const EditAnnouncementRole = ({
           currentId={location?.state?.data?.id}
           selectedRole={selectedRole}
           setStep={setStep}
+          step={step}
           history={history}
           updated={updated}
           setUpdated={setUpdated}

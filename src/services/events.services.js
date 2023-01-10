@@ -1,9 +1,10 @@
 import { api } from './api';
 
-const getByFilterPagedEvents = (urlString) => {
+const getByFilterPagedEvents = (params) => {
   return api({
-    url: `Events/GetByFilterPagedEvents?${urlString}`,
+    url: `Events/GetByFilterPagedEvents`,
     method: 'POST',
+    params,
   });
 };
 
@@ -45,6 +46,13 @@ const deleteEvent = (data) => {
   });
 };
 
+const getAllEventsKeyword = () => {
+  return api({
+    url: `Events/getEventKeyWords`,
+    method: 'GET',
+  });
+};
+
 const eventsServices = {
   getByFilterPagedEvents,
   addEvent,
@@ -52,6 +60,7 @@ const eventsServices = {
   getByEventId,
   deleteEvent,
   editEvent,
+  getAllEventsKeyword,
 };
 
 export default eventsServices;

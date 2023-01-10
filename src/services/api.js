@@ -16,6 +16,6 @@ export const api = axios.create({
   httpsAgent: new https.Agent({ keepAlive: true, rejectUnauthorized: false }),
   httpAgent: new http.Agent({ keepAlive: true }),
   paramsSerializer: (params) => {
-    return qs.stringify(params, { arrayFormat: 'brackets' });
+    return qs.stringify(params, { arrayFormat: 'repeat', skipNulls: true });
   },
 });

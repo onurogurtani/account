@@ -27,9 +27,16 @@ import { removeFromArray, turkishToLower } from '../../../utils/utils';
 import useAcquisitionTree from '../../../hooks/useAcquisitionTree';
 import DateSection from '../../eventManagement/forms/DateSection';
 import dayjs from 'dayjs';
+import { getGroupsList } from '../../../store/slice/groupsSlice';
 
 const EditPackages = () => {
   const [form] = Form.useForm();
+
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const cancelFileUpload = useRef(null);
+
   const [isErrorReactQuill, setIsErrorReactQuill] = useState(false);
   const [isDisable, setIsDisable] = useState(false);
   const [errorList, setErrorList] = useState([]);
@@ -38,19 +45,23 @@ const EditPackages = () => {
   const [selectedClassrooms, setSelectedClassrooms] = useState([]);
   const [lessonsOptions, setLessonsOptions] = useState([]);
   const [currentClassroomIds, setCurrentClassroomIds] = useState([]);
+  const [isDisableButtonMaxNetCount, seTisDisableButtonMaxNetCount] = useState(false);
+
   const { lessons } = useSelector((state) => state?.lessons);
-  const cancelFileUpload = useRef(null);
   const token = useSelector((state) => state?.auth?.token);
   const { packageTypeList } = useSelector((state) => state?.packageType);
   const { allClassList } = useSelector((state) => state?.classStages);
-  const dispatch = useDispatch();
-  const history = useHistory();
+  const { allGroupList } = useSelector((state) => state?.groups);
 
   const { id } = useParams();
 
   const { setClassroomId, setLessonId } = useAcquisitionTree();
-
   const lessonIds = Form.useWatch('lesson', form) || [];
+
+  useEffect(() => {
+    if (allGroupList.length) return false;
+    dispatch(getGroupsList());
+  }, []);
 
   useEffect(() => {
     loadPackageById();
@@ -95,6 +106,10 @@ const EditPackages = () => {
       ...new Set(currentPackageResponse.payload.packageLessons.map((item) => item.lesson.classroom.id)),
     ];
 
+    let currentGroupRole = [
+      ...new Set(currentPackageResponse.payload.packageGroups.map((item) => item.groupId)),
+    ];
+
     setCurrentClassroomIds(currentClassrooms);
 
     currentClassrooms.map((item) => {
@@ -111,6 +126,7 @@ const EditPackages = () => {
     form.setFieldsValue({
       gradeLevel: currentClassrooms,
       lesson: currentPackageResponse.payload.packageLessons.map((item) => item.lesson.id),
+      packageGroups: currentGroupRole
     });
 
     currentPackageResponse.payload.imageOfPackages.forEach((item) => {
@@ -215,6 +231,13 @@ const EditPackages = () => {
       return { lessonId: item };
     });
 
+    const packageGroups = []
+    values.packageGroups.forEach(item => {
+      packageGroups.push({
+        groupId: item
+      })
+    })
+
     const data = {
       package: {
         // ...values,
@@ -230,6 +253,7 @@ const EditPackages = () => {
         packageLessons: lessonsArr,
         imageOfPackages: await handleUpload(newImageArray),
         examType: 10, //sınav tipi halihazırda inputtan alınmıyor
+        packageGroups: packageGroups
       },
     };
 
@@ -271,6 +295,12 @@ const EditPackages = () => {
 
   const onLessonChange = (value) => {
     setLessonId(value.at(-1));
+  };
+
+  const onPackageTypeChange = (value) => {
+    packageTypeList.forEach((item) => {
+      if (item.id === value) seTisDisableButtonMaxNetCount(item.isCanSeeTargetScreen ? true : false);
+    });
   };
 
   const onClassroomsDeselect = (value) => {
@@ -423,7 +453,7 @@ const EditPackages = () => {
             name="packageTypeId"
             rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}
           >
-            <CustomSelect className="form-filter-item" placeholder={'Seçiniz'}>
+            <CustomSelect className="form-filter-item" placeholder={'Seçiniz'} onChange={onPackageTypeChange}>
               {packageTypeList?.map((item) => {
                 return (
                   <Option key={`packageTypeList-${item.id}`} value={item.id}>
@@ -435,7 +465,27 @@ const EditPackages = () => {
           </CustomFormItem>
 
           <CustomFormItem label={<Text t="Max. Net Sayısı" />} name="maxNetCount">
-            <CustomInput type={'number'} placeholder={'Max. Net Sayısı'} className="max-net-count" />
+            <CustomInput type={'number'} placeholder={'Max. Net Sayısı'} className="max-net-count" disabled={!isDisableButtonMaxNetCount}
+            />
+          </CustomFormItem>
+
+          <CustomFormItem rules={[{ required: true }]} label="Rol" name="packageGroups">
+            <CustomSelect
+              filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
+              showArrow
+              mode="multiple"
+              placeholder="Rol"
+            >
+              {allGroupList
+                ?.filter((item) => item.isPackageRole)
+                ?.map((item) => {
+                  return (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.groupName}
+                    </Option>
+                  );
+                })}
+            </CustomSelect>
           </CustomFormItem>
 
           <div className="add-package-footer">

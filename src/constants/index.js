@@ -8,3 +8,18 @@ export const status = [
     value: 'Pasif',
   },
 ];
+
+export const declarationType = [
+  {
+    value: 1,
+    label: 'Uygulama Bildirimi',
+  },
+  {
+    value: 2,
+    label: 'Mail',
+  },
+  {
+    value: 3,
+    label: 'SMS',
+  },
+];

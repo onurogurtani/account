@@ -1,5 +1,13 @@
 import { api } from './api';
 
+const GetByFilterPagedGroups = (params) => {
+  return api({
+    url: `Groups/GetByFilterPagedGroups`,
+    method: 'POST',
+    params
+  });
+};
+
 const getGroupsList = () => {
   return api({
     url: `Groups/getall`,
@@ -46,7 +54,7 @@ const addGroupClaims = (data) => {
   })
 };
 
-const deleteGroupClaims = ({id}) => {
+const deleteGroupClaims = ({ id }) => {
   return api({
     url: `GroupClaims?id=${id}`,
     method: 'DELETE',
@@ -55,6 +63,7 @@ const deleteGroupClaims = ({id}) => {
 
 
 const groupsServices = {
+  GetByFilterPagedGroups,
   getGroupsList,
   getGroupClaims,
   addGroup,

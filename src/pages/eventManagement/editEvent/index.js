@@ -7,18 +7,13 @@ import {
   CustomForm,
   CustomPageHeader,
   errorDialog,
-  successDialog,
   Text,
 } from '../../../components';
 import EventForm from '../forms/EventForm';
 import '../../../styles/eventsManagement/addEvent.scss'; // farklı bi tasarım istenirse editEvent.scss oluşturulur
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  editEvent,
-  getByEventId,
-  getSurveyListWithSelectedSurveyCategory,
-} from '../../../store/slice/eventsSlice';
+import { editEvent, getByEventId, getSurveyListWithSelectedSurveyCategory } from '../../../store/slice/eventsSlice';
 import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { useLocation } from 'react-router-dom';
@@ -76,9 +71,20 @@ const EditEvent = () => {
       isDraft: currentEvent?.isDraft,
       formId: currentEvent?.formId,
       categoryOfFormId: currentEvent?.form?.categoryOfFormId,
+      eventTypeEnum: currentEvent?.eventTypeEnum,
+      locationType: currentEvent?.locationType,
+      physicalAddress: currentEvent?.physicalAddress,
       participantGroups: currentEvent?.participantGroups?.map((item) => item.participantGroupId),
-      startDate: dayjs(currentEvent?.startDate),
-      endDate: dayjs(currentEvent?.endDate),
+      eventTypeOfEvents: currentEvent?.eventTypeOfEvents?.map((item) => item.eventTypeId),
+      startDate: dayjs(currentEvent?.startDate).startOf('minute'),
+      endDate: dayjs(currentEvent?.endDate).startOf('minute'),
+      keyWords: currentEvent?.keyWords?.split(','),
+      ...(currentEvent?.declarations.length > 0 && {
+        declarationTypes: currentEvent?.declarations?.[0]?.declarationTypes,
+        declarations: currentEvent?.declarations?.map((item) => ({
+          day: item.day,
+        })),
+      }),
     });
 
     if (isDisableAllButDate) {
@@ -114,26 +120,40 @@ const EditEvent = () => {
     values.participantGroups = values.participantGroups.map((item) => ({
       participantGroupId: item,
     }));
-    values.startDate = values?.startDate.utc();
-    values.endDate = values?.endDate.utc();
+    values.startDate = values?.startDate.utc().startOf('minute');
+    values.endDate = values?.endDate.utc().startOf('minute');
+    values.keyWords = values.keyWords.join();
     if (!values.formId) {
       delete values?.categoryOfFormId;
+      delete values?.formId;
     }
-    console.log(values);
+    values.eventTypeOfEvents = values.eventTypeOfEvents.map((item) => ({
+      eventTypeId: item,
+    }));
+    if (values.declarations) {
+      values.declarations = values?.declarations.map((item) => ({
+        declarationTypes: values.declarationTypes,
+        declarationDateType: 1,
+        declarationPriorityType: 1,
+        day: item.day,
+      }));
+    }
     const action = await dispatch(editEvent({ event: values }));
     if (editEvent.fulfilled.match(action)) {
-      successDialog({
+      confirmDialog({
         title: <Text t="success" />,
-        message: 'Etkinlik Başarıyla Güncellendi',
+        message: 'Etkinlik Başarıyla Güncellendi. Duyuru Listesinde Gösterilsin İster Misiniz?',
         onOk: async () => {
+          history.push('/user-management/announcement-management/add');
+        },
+        onCancel: async () => {
           history.push('/event-management/list');
         },
+        okText: 'Evet',
+        cancelText: 'Hayır',
       });
     } else {
-      errorDialog({
-        title: <Text t="error" />,
-        message: action?.payload.message,
-      });
+      errorDialog({ title: <Text t="error" />, message: action?.payload.message });
     }
   };
 
@@ -170,20 +190,12 @@ const EditEvent = () => {
                 İptal
               </CustomButton>
               {!currentEvent?.isPublised && (
-                <CustomButton
-                  onClick={() => onFinish(false, true)}
-                  type="primary"
-                  className="save-draft-btn"
-                >
+                <CustomButton onClick={() => onFinish(false, true)} type="primary" className="save-draft-btn">
                   Taslak Olarak Kaydet
                 </CustomButton>
               )}
 
-              <CustomButton
-                onClick={() => onFinish(true, false)}
-                type="primary"
-                className="save-btn"
-              >
+              <CustomButton onClick={() => onFinish(true, false)} type="primary" className="save-btn">
                 Güncelle ve Yayınla
               </CustomButton>
             </div>

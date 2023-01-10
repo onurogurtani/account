@@ -1,5 +1,22 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { roleType } from '../../constants/role';
 import groupsServices from '../../services/groups.service';
+import { getByFilterPagedParamsHelper } from '../../utils/utils';
+
+export const getByFilterPagedGroups = createAsyncThunk(
+    'getByFilterPagedGroups',
+    async (data = {}, { getState, dispatch, rejectWithValue }) => {
+        try {
+            const params = getByFilterPagedParamsHelper(data, 'GroupDetailSearch.');
+            const response = await groupsServices.GetByFilterPagedGroups(params);
+            dispatch(setFilterObject(data));
+            return response;
+        } catch (error) {
+            return rejectWithValue(error?.data);
+        }
+    },
+);
+
 
 export const getGroupsList = createAsyncThunk(
     'getGroupsList',
@@ -28,7 +45,7 @@ export const addGroup = createAsyncThunk(
     async (data, { dispatch, rejectWithValue }) => {
         try {
             const response = await groupsServices.addGroup(data);
-            dispatch(getGroupsList());
+            dispatch(getByFilterPagedGroups());
             return response;
         } catch (error) {
             return rejectWithValue(error?.data);
@@ -53,7 +70,7 @@ export const updateGroup = createAsyncThunk(
     async (data, { dispatch, rejectWithValue }) => {
         try {
             const response = await groupsServices.updateGroup(data);
-            dispatch(getGroupsList());
+            dispatch(getByFilterPagedGroups());
             return response;
         } catch (error) {
             return rejectWithValue(error?.data);
@@ -86,13 +103,16 @@ export const deleteGroupClaims = createAsyncThunk(
 );
 
 const initialState = {
+    allGroupList: [],
     groupsList: [],
     groupClaims: [],
     selectedRole: null,
-    draftedTableProperty: {
+    isFilter: false,
+    filterObject: {},
+    tableProperty: {
         currentPage: 1,
         page: 1,
-        pageSize: 10,
+        pageSize: 0,
         totalCount: 0,
     },
 }
@@ -103,26 +123,33 @@ export const groupsSlice = createSlice({
     reducers: {
         selectedGroup: (state, action) => {
             state.selectedRole = action.payload
-        }
+        },
+        setFilterObject: (state, action) => {
+            state.filterObject = action.payload;
+        },
+        setIsFilter: (state, action) => {
+            state.isFilter = action.payload;
+        },
     },
     extraReducers: (builder) => {
-        builder.addCase(getGroupsList.fulfilled, (state, action) => {
-            state.groupsList = action?.payload?.data
-            state.draftedTableProperty = {
-                currentPage: 1,
-                page: 1,
-                pageSize: 10,
-                totalCount: action?.payload?.data?.length,
-            };
+        builder.addCase(getByFilterPagedGroups.fulfilled, (state, action) => {
+            state.groupsList = action?.payload?.data?.items || [];
+            state.tableProperty = action?.payload?.data?.pagedProperty || {};
         });
-        builder.addCase(getGroupsList.rejected, (state, action) => {
+        builder.addCase(getByFilterPagedGroups.rejected, (state, action) => {
             state.groupsList = [];
-            state.draftedTableProperty = {
+            state.tableProperty = {
                 currentPage: 1,
                 page: 1,
                 pageSize: 10,
                 totalCount: 0,
             };
+        });
+        builder.addCase(getGroupsList.fulfilled, (state, action) => {
+            state.allGroupList = action?.payload?.data
+        });
+        builder.addCase(getGroupsList.rejected, (state, action) => {
+            state.allGroupList = [];
         });
         builder.addCase(getGroupClaims.fulfilled, (state, action) => {
             state.groupClaims = action?.payload?.data
@@ -130,4 +157,4 @@ export const groupsSlice = createSlice({
     }
 })
 
-export const { selectedGroup } = groupsSlice.actions;
+export const { selectedGroup, setFilterObject, setIsFilter } = groupsSlice.actions;

@@ -20,6 +20,7 @@ import {
   setArchiveAnnouncements,
   setActiveAnnouncements,
   getByFilterPagedAnnouncements,
+  editAnnouncement
 } from '../../../../store/slice/announcementSlice';
 import dayjs from 'dayjs';
 const ShowAnnouncement = () => {
@@ -82,13 +83,15 @@ const ShowAnnouncement = () => {
         okText: <Text t="Evet" />,
         cancelText: 'Hayır',
         onOk: async () => {
-          const action = await dispatch(setPublishAnnouncements({ id }));
-          if (setPublishAnnouncements.fulfilled.match(action)) {
+          let data = {...currentAnnouncement, publishStatus:1  };
+
+          const action = await dispatch(editAnnouncement(data));
+          if (editAnnouncement.fulfilled.match(action)) {
             history.push({
               pathname: '/user-management/announcement-management/show',
-              state: { data: { ...currentAnnouncement, isPublished: true, isActive: true } },
+              state: { data: { ...currentAnnouncement, publishStatus:1, isActive: true } },
             });
-            setCurrentAnnouncement({ ...currentAnnouncement, isPublished: true, isActive: true });
+            setCurrentAnnouncement({ ...currentAnnouncement, publishStatus:1, isActive: true });
 
             successDialog({
               title: <Text t="success" />,
@@ -113,15 +116,16 @@ const ShowAnnouncement = () => {
       okText: <Text t="Evet" />,
       cancelText: 'Hayır',
       onOk: async () => {
-        let id = currentAnnouncement.id;
-        const action = await dispatch(setUnPublishAnnouncements({ id }));
-        if (setUnPublishAnnouncements.fulfilled.match(action)) {
+      let data = {...currentAnnouncement, publishStatus:2  };
+
+      const action = await dispatch(editAnnouncement(data));
+        if (editAnnouncement.fulfilled.match(action)) {
           history.push({
             pathname: '/user-management/announcement-management/show',
-            state: { data: { ...currentAnnouncement, isPublished: false } },
+            state: { data: { ...currentAnnouncement, publishStatus:2 } },
           });
 
-          setCurrentAnnouncement({ ...currentAnnouncement, isPublished: false });
+          setCurrentAnnouncement({ ...currentAnnouncement, publishStatus:2 });
 
           successDialog({
             title: <Text t="success" />,
@@ -141,7 +145,7 @@ const ShowAnnouncement = () => {
   const archiveAnnouncement = () => {
     confirmDialog({
       title: <Text t="attention" />,
-      message: 'Arşivlemek / Yayından Kaldırmak istediğinizden emin misiniz?',
+      message: 'Arşivlemek istediğinizden emin misiniz?',
       okText: <Text t="Evet" />,
       cancelText: 'Hayır',
       onOk: async () => {
@@ -235,7 +239,7 @@ const ShowAnnouncement = () => {
           Sil
         </CustomButton>
 
-        {currentAnnouncement.isPublished && (
+        {currentAnnouncement.publishStatus==1 && (
           <CustomButton
             type="primary"
             htmlType="submit"
@@ -245,7 +249,7 @@ const ShowAnnouncement = () => {
             {'Yayından Kaldır'}
           </CustomButton>
         )} 
-         {!currentAnnouncement.isPublished && currentAnnouncement.isActive && (
+         {currentAnnouncement.publishStatus!=1 && (
           <CustomButton
             type="primary"
             htmlType="submit"
@@ -256,7 +260,7 @@ const ShowAnnouncement = () => {
           </CustomButton>
         )} 
 
-        {currentAnnouncement.isActive && !currentAnnouncement.isPublished && (
+        {!currentAnnouncement.publishStatus==1 && !currentAnnouncement.isPublished && (
           <CustomButton
             type="primary"
             htmlType="submit"
@@ -266,7 +270,7 @@ const ShowAnnouncement = () => {
             Arşivle
           </CustomButton>
         ) }
-         {!currentAnnouncement.isActive && !currentAnnouncement.isPublished && (
+         {!currentAnnouncement.isActive && !currentAnnouncement.publishStatus==1 && (
           <CustomButton
           type="primary"
           htmlType="submit"
