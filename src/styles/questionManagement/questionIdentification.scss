@@ -31,4 +31,52 @@
       font-size: 15px !important;
     }
   }
+  .question-info {
+    display: flex;
+    width: 100%;
+    margin-top: 15px;
+    .quesiton-label {
+      min-width: 150px;
+    }
+    .ant-input {
+      height: 40px;
+      width: 200px;
+      margin-right: 2px;
+    }
+    .error-info {
+      margin-left: 150px;
+      .ant-select {
+        width: 200px;
+      }
+    }
+    .checkbox {
+      display: flex;
+      flex-direction: column;
+      margin-left: 150px;
+    }
+    .minute {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+    .minute-text {
+      position: absolute;
+      right: 30px;
+    }
+  }
+  .circle-reply {
+    border-radius: 100%;
+    padding: 3px;
+    padding-right: 10px;
+    padding-left: 10px;
+    border: 1px solid black;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+  .circle-reply-active {
+    background-color: black;
+    color: white;
+  }
 }
