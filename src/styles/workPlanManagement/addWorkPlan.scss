@@ -1,0 +1,96 @@
+.add-work-plan-wrapper {
+  .ant-tabs-tab {
+    cursor: no-drop;
+    color: #919191 !important;
+  }
+
+  .ant-tabs-tab-active {
+    .ant-tabs-tab-btn {
+      color: #1890ff;
+    }
+  }
+
+  .ant-tabs-card .ant-tabs-content {
+    margin-top: -16px;
+
+    .ant-tabs-tabpane {
+      padding: 16px 32px;
+      background: #fff;
+      box-shadow: 0 2px 4px 0 rgb(96 97 112 / 16%), 0 0 1px 0 rgb(40 41 61 / 4%);
+    }
+  }
+
+  .ant-tabs-card {
+    .ant-tabs-nav::before {
+      display: none;
+    }
+  }
+
+
+  .form-footer {
+    display: flex;
+    justify-content: end;
+    gap: 15px;
+
+    .ant-btn {
+      height: 36px;
+      font-size: 14px;
+    }
+
+    .next-btn {
+      background-color: #699a00;
+      border: none;
+    }
+
+    .back-btn {
+      background-color: gray;
+      border: none;
+    }
+
+  }
+
+  .subject-choose-add-form {
+
+    .filter-content {
+      display: flex;
+      gap: 24px;
+    }
+
+    .ant-form-item {
+      .ant-form-item-label {
+        label {
+          font-size: 14px;
+          width: 150px;
+        }
+      }
+
+      .ant-form-item-control {
+        .ant-form-item-control-input {
+          .ant-form-item-control-input-content {
+            .ant-select {
+              font-size: 14px;
+              width: 287px;
+
+              .ant-select-selector {
+                padding: 1px 10px !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .reinforcement-add-form {
+  }
+
+  .evaluation-test-add-form {
+
+  }
+
+  .out-question-add-form {
+  }
+
+  .practice-question-add-form {
+  }
+}
