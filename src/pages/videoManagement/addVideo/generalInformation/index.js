@@ -8,7 +8,7 @@ import BracketSection from './BracketSection';
 import CategorySection from './CategorySection';
 import IntroVideoSection from './IntroVideoSection';
 import LessonsSectionForm from './LessonsSectionForm';
-import StatusAndVideoTextSection from './StatusAndVideoTextSection';
+import VideoTextSection from './VideoTextSection';
 import SurveyAndKeywordSection from './SurveyAndKeywordSection';
 import UrlAndPdfSection from './UrlAndPdfSection';
 import VideoSection from './VideoSection';
@@ -37,6 +37,7 @@ const AddGeneralInformation = ({ sendValue }) => {
       lessonSubSubjectId: item,
     }));
     values.keyWords = values.keyWords.join();
+    values.isActive = true;
     values.beforeEducationSurvey = values?.survey === 'before' ? true : false;
     values.afterEducationSurvey = values?.survey === 'after' ? true : false;
     delete values.survey;
@@ -99,7 +100,7 @@ const AddGeneralInformation = ({ sendValue }) => {
           <div className="left-form">
             <CategorySection form={form} />
             <LessonsSectionForm form={form} />
-            <StatusAndVideoTextSection form={form} />
+            <VideoTextSection form={form} />
           </div>
           <div className="right-form">
             <VideoSection form={form} setKalturaVideoName={setKalturaVideoName} />
