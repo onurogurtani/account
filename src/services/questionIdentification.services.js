@@ -6,9 +6,17 @@ const getByFilterPagedQuestionOfExams = (data) => {
     params: data,
   });
 };
+const fileUpload = (data) => {
+  return api({
+    url: 'Files',
+    method: 'POST',
+    params: data,
+  });
+};
 
 const publisherServices = {
   getByFilterPagedQuestionOfExams,
+  fileUpload,
 };
 
 export default publisherServices;

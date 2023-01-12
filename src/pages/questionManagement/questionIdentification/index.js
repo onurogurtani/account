@@ -1,4 +1,4 @@
-import { Checkbox, Col, Form, Radio, Row } from 'antd';
+import { Checkbox, Col, Form, Radio, Row, Upload } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -13,6 +13,8 @@ import {
   CustomRadio,
   CustomRadioGroup,
   CustomSelect,
+  CustomTextArea,
+  Option,
   Text,
 } from '../../../components';
 import { getAllClassStages } from '../../../store/slice/classStageSlice';
@@ -37,15 +39,24 @@ const QuestionIdentification = () => {
   const [filterForm] = Form.useForm();
   const [filterForm2] = Form.useForm();
   const QuestionOfExamState = Form.useWatch('QuestionOfExamState', filterForm2);
+  const [years, setYears] = useState([]);
 
-  const StarSvg = () => {
+  const StarSvg = ({ fill }) => {
     return (
       <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 51 48">
         <title>Five Pointed Star</title>
-        <path fill="none" stroke="#000" d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z" />
+        <path fill={fill ? 'yellow' : 'none'} stroke="#000" d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z" />
       </svg>
     );
   };
+  useEffect(() => {
+    const currentYear = new Date().getFullYear();
+    let years = [];
+    for (let i = 0; i < 50; i++) {
+      years.push(currentYear + i);
+    }
+    setYears(years);
+  }, []);
   useEffect(() => {
     dispatch(getEducationYears());
   }, [dispatch]);
@@ -69,7 +80,6 @@ const QuestionIdentification = () => {
   const searchSumbit = () => {
     const form1 = filterForm.getFieldValue();
     const form2 = filterForm2.getFieldValue();
-    console.log(form2);
     dispatch(
       getByFilterPagedQuestionOfExamsList({
         'QuestionOfExamDetailSearch.IncludeQuestionFilesBase64': 'false',
@@ -194,7 +204,6 @@ const QuestionIdentification = () => {
                           }}
                           options={[
                             { label: 'Hepsi', value: null },
-
                             { label: 'Olanlar', value: true },
                             { label: 'Olmayanlar', value: false },
                           ]}
@@ -254,7 +263,7 @@ const QuestionIdentification = () => {
                 <Col span={12}>
                   <div className="quesiton-images">asdasdsa</div>
                 </Col>
-                <Col span={12}>
+                <Col className="infos" span={12}>
                   <div className="question-info">
                     <label className="quesiton-label">Ders:</label>
                   </div>
@@ -278,18 +287,34 @@ const QuestionIdentification = () => {
                     </div>
                   </div>
                   {formData.questionOfExamState === 1 && (
-                    <div className="question-info">
-                      <div className="error-info">
-                        <CustomSelect
-                          placeholder={'Soru hata durumunu seçiniz'}
-                          onChange={() => {}}
-                          options={[
-                            { label: 'İstenmeyen', value: 0 },
-                            { label: 'Yetersiz', value: 1 },
-                          ]}
-                        />
+                    <>
+                      <div className="question-info">
+                        <div className="error-info">
+                          <CustomSelect
+                            placeholder={'Soru hata durumunu seçiniz'}
+                            onChange={(e) => {
+                              setFormData({ ...formData, questionOfExamWrongKind: e });
+                            }}
+                            value={formData.questionOfExamWrongKind}
+                            options={[
+                              { label: 'İstenmeyen', value: 0 },
+                              { label: 'Yetersiz', value: 1 },
+                            ]}
+                          />
+                        </div>
                       </div>
-                    </div>
+                      <div className="question-info">
+                        <label className="quesiton-label">Not</label>
+                        <div className="questionStateNote">
+                          <CustomTextArea
+                            onChange={(e) => {
+                              setFormData({ ...formData, questionStateNote: e.target.value });
+                            }}
+                            value={formData.questionStateNote}
+                          />
+                        </div>
+                      </div>
+                    </>
                   )}
 
                   <div className="question-info">
@@ -339,37 +364,63 @@ const QuestionIdentification = () => {
                   </div>
                   <div className="question-info">
                     <label className="quesiton-label">Kalite</label>
-                    <div style={{ display: 'flex' }}>
-                      <div>
-                        <StarSvg />
+                    <div className="starts">
+                      <div
+                        onClick={() => {
+                          setFormData({ ...formData, quality: 1 });
+                        }}
+                      >
+                        <StarSvg fill={formData.quality > 0 ? true : false} />
                       </div>
-                      <div>
-                        <StarSvg />
+                      <div
+                        onClick={() => {
+                          setFormData({ ...formData, quality: 2 });
+                        }}
+                      >
+                        <StarSvg fill={formData.quality > 1 ? true : false} />
                       </div>
-                      <div>
-                        <StarSvg />
+                      <div
+                        onClick={() => {
+                          setFormData({ ...formData, quality: 3 });
+                        }}
+                      >
+                        <StarSvg fill={formData.quality > 2 ? true : false} />
                       </div>
-                      <div>
-                        <StarSvg />
+                      <div
+                        onClick={() => {
+                          setFormData({ ...formData, quality: 4 });
+                        }}
+                      >
+                        <StarSvg fill={formData.quality > 3 ? true : false} />
                       </div>
                     </div>
                   </div>
                   <div className="question-info">
                     <label className="quesiton-label">Soru Şekli:</label>
                     <div style={{ widht: '100%' }}>
-                      <CustomRadioGroup>
-                        <CustomRadio value="Klasik">Klasik</CustomRadio>
-                        <CustomRadio value="Yeni Nesil">Yeni Nesil</CustomRadio>
+                      <CustomRadioGroup
+                        onChange={(e) => {
+                          setFormData({ ...formData, questionOfExamFormal: e.target.value });
+                        }}
+                        value={formData.questionOfExamFormal}
+                      >
+                        <CustomRadio value={0}>Klasik</CustomRadio>
+                        <CustomRadio value={1}>Yeni Nesil</CustomRadio>
                       </CustomRadioGroup>
                     </div>
                   </div>
                   <div className="question-info">
                     <label className="quesiton-label">Soru Türü:</label>
                     <div style={{ widht: '100%' }}>
-                      <CustomRadioGroup>
-                        <CustomRadio value="Klasik">Pekiştirme Testi</CustomRadio>
-                        <CustomRadio value="Yeni Nesil">Ölçme&Değerlendirme Testi</CustomRadio>
-                        <CustomRadio value="Deneme">Deneme</CustomRadio>
+                      <CustomRadioGroup
+                        onChange={(e) => {
+                          setFormData({ ...formData, questionOfExamKind: e.target.value });
+                        }}
+                        value={formData.questionOfExamKind}
+                      >
+                        <CustomRadio value={0}>Pekiştirme Testi</CustomRadio>
+                        <CustomRadio value={1}>Ölçme&Değerlendirme Testi</CustomRadio>
+                        <CustomRadio value={2}>Deneme</CustomRadio>
                       </CustomRadioGroup>
                     </div>
                   </div>
@@ -377,7 +428,16 @@ const QuestionIdentification = () => {
                     <label className="quesiton-label">Soru Çözüm Süresi:</label>
                     <div className="minute">
                       <div>
-                        <CustomInput />
+                        <CustomInput
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (!isNaN(value[value.length - 1]) || value[value.length - 1] === undefined) {
+                              setFormData({ ...formData, solutionMinute: e.target.value });
+                            } else {
+                            }
+                          }}
+                          value={formData.solutionMinute}
+                        />
                       </div>
 
                       <div className="minute-text">Dk</div>
@@ -385,12 +445,84 @@ const QuestionIdentification = () => {
                   </div>
                   <div className="question-info">
                     <div className="checkbox">
-                      <CustomCheckbox style={{ marginLeft: '7px' }}>
+                      <CustomCheckbox
+                        onChange={(e) => {
+                          setFormData({ ...formData, usedInSolutionVideo: e.target.checked });
+                        }}
+                        checked={formData.usedInSolutionVideo}
+                        style={{ marginLeft: '7px' }}
+                      >
                         Soru Çözüm Videosunda Kullanılmıştır
                       </CustomCheckbox>
-                      <CustomCheckbox>Şıklar Karıştırılsınmı</CustomCheckbox>
-                      <CustomCheckbox>Çıkmış Sorumu</CustomCheckbox>
+                      <CustomCheckbox
+                        onChange={(e) => {
+                          setFormData({ ...formData, mix: e.target.checked });
+                        }}
+                        checked={formData.mix}
+                      >
+                        Şıklar Karıştırılsınmı
+                      </CustomCheckbox>
+                      <CustomCheckbox
+                        onChange={(e) => {
+                          setFormData({ ...formData, outQuestion: e.target.checked });
+                        }}
+                        checked={formData.outQuestion}
+                      >
+                        Çıkmış Sorumu
+                      </CustomCheckbox>
                     </div>
+                  </div>
+                  {formData.outQuestion && (
+                    <>
+                      <div className="question-info">
+                        <label className="quesiton-label">Soru Yılı Seçiniz :</label>
+                        <div className="checkbox-item">
+                          <CustomSelect
+                            onChange={(e) => {
+                              setFormData({ ...formData, yearOfOutQuestion: e });
+                            }}
+                            value={formData.yearOfOutQuestion}
+                            className=""
+                            placeholder="Seçiniz"
+                          >
+                            {years.map((item, index) => (
+                              <Option key={index} value={item}>
+                                {item}
+                              </Option>
+                            ))}
+                          </CustomSelect>{' '}
+                        </div>
+                      </div>
+                      <div className="question-info">
+                        <label className="quesiton-label"></label>
+                        <div className="checkbox-item">
+                          <CustomRadioGroup>
+                            <CustomRadio value={0}>Tyt</CustomRadio>
+                            <CustomRadio value={1}>Ayt</CustomRadio>
+                          </CustomRadioGroup>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  <div className="upload">
+                    <Upload.Dragger
+                      onChange={(e) => {
+                        console.log(e);
+                      }}
+                      accept="application/pdf"
+                      maxCount={1}
+                      beforeUpload={(e) => {
+                        console.log(e);
+                      }}
+                    >
+                      Video Ekle
+                    </Upload.Dragger>{' '}
+                    <Upload.Dragger accept="application/pdf" name="file" maxCount={1}>
+                      Resim Ekle
+                    </Upload.Dragger>{' '}
+                    <Upload.Dragger name="file" maxCount={1} accept="application/pdf">
+                      PDF Ekle
+                    </Upload.Dragger>{' '}
                   </div>
                 </Col>
               </Row>
