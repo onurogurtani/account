@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { CustomButton, CustomForm } from '../../../../components';
 import { onChangeActiveKey } from '../../../../store/slice/videoSlice';
-import BracketSection from './BracketSection';
 import CategorySection from './CategorySection';
 import IntroVideoSection from './IntroVideoSection';
 import LessonsSectionForm from './LessonsSectionForm';
@@ -33,9 +32,7 @@ const AddGeneralInformation = ({ sendValue }) => {
       return;
     }
 
-    values.lessonSubSubjects = values.lessonSubSubjects.map((item) => ({
-      lessonSubSubjectId: item,
-    }));
+    values.lessonSubSubjects = values.videoBrackets;
     values.keyWords = values.keyWords.join();
     values.isActive = true;
     values.beforeEducationSurvey = values?.survey === 'before' ? true : false;
@@ -100,12 +97,11 @@ const AddGeneralInformation = ({ sendValue }) => {
           <div className="left-form">
             <CategorySection form={form} />
             <LessonsSectionForm form={form} />
-            <VideoTextSection form={form} />
+            <VideoTextSection />
           </div>
           <div className="right-form">
             <VideoSection form={form} setKalturaVideoName={setKalturaVideoName} />
             <IntroVideoSection form={form} introVideoFile={introVideoFile} setIntroVideoFile={setIntroVideoFile} />
-            <BracketSection form={form} />
             <SurveyAndKeywordSection form={form} />
             <UrlAndPdfSection form={form} />
           </div>

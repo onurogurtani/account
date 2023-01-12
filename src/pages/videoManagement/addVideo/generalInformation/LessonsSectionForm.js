@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { CustomFormItem, CustomSelect, Option } from '../../../../components';
+import { CustomFormItem, CustomInput, CustomMaskInput, CustomSelect, Option } from '../../../../components';
 import useAcquisitionTree from '../../../../hooks/useAcquisitionTree';
+import { videoTimeValidator } from '../../../../utils/formRule';
 
 const LessonsSectionForm = ({ form }) => {
   const { classroomId, setClassroomId, lessonId, setLessonId, unitId, setUnitId, lessonSubjectId, setLessonSubjectId } =
@@ -15,35 +16,46 @@ const LessonsSectionForm = ({ form }) => {
   const { lessonUnits } = useSelector((state) => state?.lessonUnits);
   const { allClassList } = useSelector((state) => state?.classStages);
 
+  const [videoBrackets, setVideoBrackets] = useState([]);
   const onClassroomChange = (value) => {
     setClassroomId(value);
-    form.resetFields(['lessonId', 'lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects']);
+    form.resetFields(['lessonId', 'lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects', 'videoBrackets']);
+    setVideoBrackets([]);
   };
 
   const onLessonChange = (value) => {
     setLessonId(value);
-    form.resetFields(['lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects']);
+    form.resetFields(['lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects', 'videoBrackets']);
+    setVideoBrackets([]);
   };
 
   const onUnitChange = (value) => {
     setUnitId(value);
-    form.resetFields(['lessonSubjectId', 'lessonSubSubjects']);
+    form.resetFields(['lessonSubjectId', 'lessonSubSubjects', 'videoBrackets']);
+    setVideoBrackets([]);
   };
 
   const onLessonSubjectsChange = (value) => {
     setLessonSubjectId(value);
-    form.resetFields(['lessonSubSubjects']);
+    form.resetFields(['lessonSubSubjects', 'videoBrackets']);
+    setVideoBrackets([]);
+  };
+
+  const onLessonSubSubjectsSelect = (_, option) => {
+    setVideoBrackets((prev) => [
+      ...prev,
+      { bracketTime: '', header: option.children, lessonSubSubjectId: option.value },
+    ]);
+  };
+
+  const onLessonSubSubjectsDeselect = (_, option) => {
+    setVideoBrackets((prev) => prev.filter((item) => item.lessonSubSubjectId !== option.value));
   };
 
   return (
     <>
       <CustomFormItem
-        rules={[
-          {
-            required: true,
-            message: 'Lütfen Zorunlu Alanları Doldurunuz.',
-          },
-        ]}
+        rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
         label="Sınıf Seviyesi"
         name="classroomId"
       >
@@ -59,14 +71,8 @@ const LessonsSectionForm = ({ form }) => {
             })}
         </CustomSelect>
       </CustomFormItem>
-
       <CustomFormItem
-        rules={[
-          {
-            required: true,
-            message: 'Lütfen Zorunlu Alanları Doldurunuz.',
-          },
-        ]}
+        rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
         label="Ders"
         name="lessonId"
       >
@@ -83,14 +89,8 @@ const LessonsSectionForm = ({ form }) => {
             })}
         </CustomSelect>
       </CustomFormItem>
-
       <CustomFormItem
-        rules={[
-          {
-            required: true,
-            message: 'Lütfen Zorunlu Alanları Doldurunuz.',
-          },
-        ]}
+        rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
         label="Ünite"
         name="lessonUnitId"
       >
@@ -106,14 +106,8 @@ const LessonsSectionForm = ({ form }) => {
             })}
         </CustomSelect>
       </CustomFormItem>
-
       <CustomFormItem
-        rules={[
-          {
-            required: true,
-            message: 'Lütfen Zorunlu Alanları Doldurunuz.',
-          },
-        ]}
+        rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
         label="Konu"
         name="lessonSubjectId"
       >
@@ -129,13 +123,18 @@ const LessonsSectionForm = ({ form }) => {
             })}
         </CustomSelect>
       </CustomFormItem>
-
       <CustomFormItem
         rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
         label="Alt Başlık"
         name="lessonSubSubjects"
       >
-        <CustomSelect showArrow mode="multiple" placeholder="Alt Başlık">
+        <CustomSelect
+          onSelect={onLessonSubSubjectsSelect}
+          onDeselect={onLessonSubSubjectsDeselect}
+          showArrow
+          mode="multiple"
+          placeholder="Alt Başlık"
+        >
           {lessonSubSubjects
             ?.filter((item) => item.lessonSubjectId === lessonSubjectId)
             ?.map((item) => {
@@ -147,6 +146,48 @@ const LessonsSectionForm = ({ form }) => {
             })}
         </CustomSelect>
       </CustomFormItem>
+
+      {videoBrackets.length > 0 && (
+        <CustomFormItem className="requiredFieldLabelMark" label="Ayraç">
+          <div className="header-mark">
+            <div className="title-mark">Başlık</div>
+            <div className="time-mark">Dakika</div>
+          </div>
+          {videoBrackets.map((i, index) => (
+            <div key={index} className="video-mark">
+              <CustomFormItem
+                name={['videoBrackets', index, 'header']}
+                style={{ flex: 2 }}
+                rules={[{ required: true, message: 'Zorunlu Alan' }]}
+              >
+                <CustomInput disabled placeholder={i.header} />
+              </CustomFormItem>
+
+              <CustomFormItem
+                name={['videoBrackets', index, 'bracketTime']}
+                style={{ flex: 1 }}
+                rules={[
+                  { required: true, message: 'Zorunlu Alan' },
+                  { validator: videoTimeValidator, message: 'Lütfen Boş Bırakmayınız' },
+                ]}
+              >
+                <CustomMaskInput mask={'999:99'}>
+                  <CustomInput placeholder="000:00" />
+                </CustomMaskInput>
+              </CustomFormItem>
+
+              <CustomFormItem
+                name={['videoBrackets', index, 'lessonSubSubjectId']}
+                style={{ display: 'none' }}
+                initialValue={i.lessonSubSubjectId}
+                rules={[{ required: true, message: 'Zorunlu Alan' }]}
+              >
+                <CustomInput disabled />
+              </CustomFormItem>
+            </div>
+          ))}
+        </CustomFormItem>
+      )}
     </>
   );
 };
