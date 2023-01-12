@@ -13,7 +13,7 @@ import EventForm from '../forms/EventForm';
 import '../../../styles/eventsManagement/addEvent.scss'; // farklı bi tasarım istenirse editEvent.scss oluşturulur
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { editEvent, getByEventId, getSurveyListWithSelectedSurveyCategory } from '../../../store/slice/eventsSlice';
+import { editEvent, getByEventId } from '../../../store/slice/eventsSlice';
 import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { useLocation } from 'react-router-dom';
@@ -59,10 +59,6 @@ const EditEvent = () => {
   }, [currentEvent]);
 
   const setFormFieldsValue = async () => {
-    if (currentEvent?.formId) {
-      await dispatch(getSurveyListWithSelectedSurveyCategory(currentEvent?.form?.categoryOfFormId));
-    } // etkinliğe eklenen anket varsa
-
     form.setFieldsValue({
       name: currentEvent?.name,
       description: currentEvent?.description,
