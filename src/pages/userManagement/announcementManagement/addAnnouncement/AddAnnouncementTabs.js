@@ -1,21 +1,15 @@
-import { Tabs } from 'antd';
-import React, { useState } from 'react';
-import AddAnnouncementInfo from './AddAnnouncementInfo';
-import AddAnnouncementRole from './AddAnnouncementRole';
+import AnnouncementInfoForm from '../forms/AnnouncementInfoForm';
+import { CustomCollapseCard, Text } from '../../../../components';
 
-const { TabPane } = Tabs;
 
-const AddAnnouncementTabs = ({ step, setStep }) => {
-  const [announcementInfoData, setAnnouncementInfoData] = useState({});
+
+const AddAnnouncementTabs = () => {
   return (
-    <Tabs defaultActiveKey={'1'} activeKey={step} onChange={(key) => setStep(key)}>
-      <TabPane tab="Genel Bilgiler" key="1">
-        <AddAnnouncementInfo setStep={setStep} setAnnouncementInfoData={setAnnouncementInfoData} />
-      </TabPane>
-      <TabPane disabled={true} tab="Roller" key="2">
-        <AddAnnouncementRole setStep={setStep} announcementInfoData={announcementInfoData} />
-      </TabPane>
-    </Tabs>
+    <CustomCollapseCard cardTitle={<Text t="Genel Bilgiler" />}>
+      <div className="addAnnouncementInfo-container">
+        <AnnouncementInfoForm/>
+      </div>
+    </CustomCollapseCard>
   );
 };
 

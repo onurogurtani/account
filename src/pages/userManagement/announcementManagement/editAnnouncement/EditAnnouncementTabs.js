@@ -2,9 +2,7 @@ import { Tabs } from 'antd';
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import EditAnnouncementInfo from './EditAnnouncementInfo';
-import EditAnnouncementRole from './EditAnnouncementRole';
 
-const { TabPane } = Tabs;
 
 const EditAnnouncementTabs = ({ step, setStep, setUpdated, updated }) => {
   const location = useLocation();
@@ -14,8 +12,6 @@ const EditAnnouncementTabs = ({ step, setStep, setUpdated, updated }) => {
   const [updateId, setUpdateId] = useState('');
 
   return (
-    <Tabs defaultActiveKey={'1'} activeKey={step} onChange={(key) => setStep(key)}>
-      <TabPane tab="Genel Bilgiler" key="1">
         <EditAnnouncementInfo
           selectedRole={selectedRole}
           setStep={setStep}
@@ -27,20 +23,6 @@ const EditAnnouncementTabs = ({ step, setStep, setUpdated, updated }) => {
           updated={updated}
           setUpdated={setUpdated}
         />
-      </TabPane>
-      <TabPane tab="Roller" disabled={location?.state?.justDateEdit} key="2">
-        <EditAnnouncementRole
-          selectedRole={selectedRole}
-          setSelectedRole={setSelectedRole}
-          setStep={setStep}
-          step={step}
-          announcementInfoData={announcementInfoData}
-          formData={formData}
-          updated={updated}
-          setUpdated={setUpdated}
-        />
-      </TabPane>
-    </Tabs>
   );
 };
 

@@ -24,6 +24,15 @@
     padding: 15px 16px 26px;
     background-color: #fff;
 
+    .url-buttonName-Container {
+      .ant-form-item .ant-form-item-label {
+        width: fit-content !important;
+        label {
+          margin-top: 7px;
+        }
+      }
+    }
+
     .ant-form-item {
       .ant-form-item-label {
         width: 200px;

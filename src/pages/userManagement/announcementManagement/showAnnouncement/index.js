@@ -29,6 +29,7 @@ const ShowAnnouncement = () => {
   const { filterObject } = useSelector((state) => state?.announcement);
   const [dateVisible, setDateVisible] = useState(false);
   const showData = location?.state?.data;
+  console.log(showData);
   const [currentAnnouncement, setCurrentAnnouncement] = useState(showData);
 
 
