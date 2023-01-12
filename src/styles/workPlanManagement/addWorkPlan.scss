@@ -51,16 +51,32 @@
 
   .subject-choose-add-form {
 
+    padding-top: 25px;
+
     .filter-content {
       display: flex;
-      gap: 24px;
+      column-gap: 24px;
+      flex-wrap: wrap;
+      padding: 30px;
+      background-color: #f9f9f9;
+      border-radius: 15px;
+
+      .search-btn-content {
+        width: 1000%;
+
+        .search-btn {
+          height: 36px;
+          font-size: 14px;
+          border: none;
+        }
+      }
     }
+
 
     .ant-form-item {
       .ant-form-item-label {
         label {
           font-size: 14px;
-          width: 150px;
         }
       }
 

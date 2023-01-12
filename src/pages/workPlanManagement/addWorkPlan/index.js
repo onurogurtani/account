@@ -60,7 +60,7 @@ const AddWorkPlan = () => {
   };
 
   const subjectValue = (value) => {
-    console.log('setSubjectChooseData');
+    console.log('setSubjectChooseData',value);
     setSubjectChooseData(value);
   };
 
