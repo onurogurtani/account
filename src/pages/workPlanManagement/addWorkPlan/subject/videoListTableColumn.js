@@ -1,9 +1,11 @@
 import { Tag } from 'antd';
 import React from 'react';
-import { CustomButton, DeleteButton } from '../../../../components';
-import { deleteUser } from '../../../../store/slice/userListSlice';
+import { CustomButton } from '../../../../components';
+import { selectedSubjectTabRowVideo } from '../../../../store/slice/workPlanSlice';
 
-const videoListTableColumn = () => {
+const videoListTableColumn = (dispatch, subjectChooseTab) => {
+
+  const selectedRow = (row) => dispatch(selectedSubjectTabRowVideo(row));
 
   const columns = [
     {
@@ -36,12 +38,24 @@ const videoListTableColumn = () => {
       render: (_, record) => {
         return (
           <div className='action-btns'>
-            <CustomButton >
+            <CustomButton className='btn-show btn'>
               Önizleme Gör
             </CustomButton>
-            <CustomButton >
-              Seç
-            </CustomButton>
+
+            {
+              subjectChooseTab?.selectedRowVideo?.id === record.id ?
+                (
+                  <CustomButton className='btn-selected btn' disabled={true} onClick={() => selectedRow(record)}>
+                    Seçildi
+                  </CustomButton>
+                ) :
+                (
+                  <CustomButton className='btn-select btn' onClick={() => selectedRow(record)}>
+                    Seç
+                  </CustomButton>
+                )
+            }
+
           </div>
         );
       },

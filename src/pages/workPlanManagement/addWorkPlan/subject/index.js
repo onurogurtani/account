@@ -2,8 +2,16 @@ import React, { useEffect } from 'react';
 import { Form } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { CustomButton, CustomForm, CustomFormItem, CustomSelect, CustomTable, Option } from '../../../../components';
-import { onChangeActiveKey } from '../../../../store/slice/workPlanSlice';
+import {
+  CustomButton,
+  CustomForm,
+  CustomFormItem,
+  CustomSelect,
+  CustomTable,
+  errorDialog,
+  Option, Text,
+} from '../../../../components';
+import { onChangeActiveKey, selectedSubjectTabRowVideo } from '../../../../store/slice/workPlanSlice';
 import { getEducationYears } from '../../../../store/slice/questionFileSlice';
 import { getAllClassStages } from '../../../../store/slice/classStageSlice';
 import useAcquisitionTree from '../../../../hooks/useAcquisitionTree';
@@ -15,24 +23,25 @@ const SubjectChoose = ({ sendValue }) => {
   const [form] = Form.useForm();
   const history = useHistory();
   const dispatch = useDispatch();
-  const columns = videoListTableColumn();
 
-  const { classroomId, setClassroomId, lessonId, setLessonId, unitId, setUnitId, lessonSubjectId, setLessonSubjectId } =
+  const { classroomId, setClassroomId, lessonId, setLessonId, unitId, setUnitId } =
     useAcquisitionTree();
 
+  const { subjectChooseTab } = useSelector((state) => state?.workPlan);
   const { educationYears } = useSelector((state) => state?.questionManagement);
   const { allClassList } = useSelector((state) => state?.classStages);
   const { lessons } = useSelector((state) => state?.lessons);
   const { lessonUnits } = useSelector((state) => state?.lessonUnits);
   const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
   const { videos, tableProperty, filterObject } = useSelector((state) => state?.videos);
-
+  const columns = videoListTableColumn(dispatch, subjectChooseTab);
 
   useEffect(() => {
     dispatch(getEducationYears());
     dispatch(getAllClassStages());
   }, []);
 
+  // table pagination
   const paginationProps = {
     showSizeChanger: true,
     showQuickJumper: {
@@ -44,6 +53,7 @@ const SubjectChoose = ({ sendValue }) => {
     pageSize: tableProperty?.pageSize,
   };
 
+  // selects onchange
   const onChange = (value, fromEl) => {
     if (fromEl === 'classroomId') {
       setClassroomId(value);
@@ -61,15 +71,24 @@ const SubjectChoose = ({ sendValue }) => {
 
   // next step
   const onFinish = (values) => {
-    console.log('values', values);
-    sendValue(values);
-    dispatch(onChangeActiveKey('1'));
+    if (Object.keys(subjectChooseTab.selectedRowVideo).length > 0) {
+      console.log('values', values);
+      sendValue(values);
+      dispatch(onChangeActiveKey('1'));
+    } else {
+      errorDialog({
+        title: <Text t='error' />,
+        message: 'Lütfen video seçiniz.',
+      });
+    }
   };
 
   // filter search videolist
   const handleSearchVideo = async () => {
     const values = await form.validateFields(['ClassroomId', 'LessonIds', 'LessonUnitIds', 'LessonSubjectIds']);
-    console.log(values);
+    console.log('searc video filter', values);
+
+    dispatch(selectedSubjectTabRowVideo({}));
 
     const body = {
       ...filterObject,

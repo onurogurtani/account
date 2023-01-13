@@ -1,7 +1,15 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   activeKey: '0',
+  subjectChooseTab: {
+    selectedRowVideo: {},
+    formData: {},
+  },
+  reinforcementTab: {},
+  evaluationTab: {},
+  outQuestionTab: {},
+  practiceQuestionTab: {},
 };
 
 export const workPlanSlice = createSlice({
@@ -11,6 +19,12 @@ export const workPlanSlice = createSlice({
     onChangeActiveKey: (state, action) => {
       state.activeKey = action?.payload;
     },
+    selectedSubjectTabRowVideo: (state, action) => {
+      state.subjectChooseTab.selectedRowVideo = action?.payload;
+    },
+    setSubjectChooseData: (state, action) => {
+      state.subjectChooseTab.formData = action?.payload;
+    },
   },
   extraReducers: (builder) => {
 
@@ -19,4 +33,6 @@ export const workPlanSlice = createSlice({
 
 export const {
   onChangeActiveKey,
+  selectedSubjectTabRowVideo,
+  setSubjectChooseData,
 } = workPlanSlice.actions;

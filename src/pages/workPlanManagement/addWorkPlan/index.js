@@ -2,7 +2,7 @@ import { Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomPageHeader, errorDialog, successDialog, Text } from '../../../components';
-import { onChangeActiveKey } from '../../../store/slice/workPlanSlice';
+import { onChangeActiveKey, setSubjectChooseData } from '../../../store/slice/workPlanSlice';
 import '../../../styles/workPlanManagement/addWorkPlan.scss';
 import { useHistory } from 'react-router-dom';
 import SubjectChoose from './subject';
@@ -17,16 +17,22 @@ const AddWorkPlan = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const { activeKey } = useSelector((state) => state?.workPlan);
+  const {
+    activeKey,
+    subjectChooseTab,
+    reinforcementTab,
+    evaluationTab,
+    outQuestionTab,
+    practiceQuestionTab,
+  } = useSelector((state) => state?.workPlan);
 
-  const [subjectChooseData, setSubjectChooseData] = useState({});
   const [reinforcementData, setReinforcementData] = useState({});
   const [evaluationData, setEvaluationData] = useState({});
   const [outQuestionData, setOutQuestionData] = useState({});
   const [practiceQuestionData, setPracticeQuestionData] = useState({});
 
   const onFinish = async () => {
-    console.log('subjectChooseData', subjectChooseData);
+    console.log('subjectChooseTab', subjectChooseTab);
 
     // if (generalInformationData.introVideo && !kalturaIntroVideoId) {
     //   errorDialog({
@@ -60,8 +66,8 @@ const AddWorkPlan = () => {
   };
 
   const subjectValue = (value) => {
-    console.log('setSubjectChooseData',value);
-    setSubjectChooseData(value);
+    dispatch(setSubjectChooseData(value));
+    console.log('subjectChooseTab', subjectChooseTab);
   };
 
   const reinforcementValue = (value) => {
@@ -84,6 +90,9 @@ const AddWorkPlan = () => {
     setPracticeQuestionData(value);
   };
 
+  useEffect(() => {
+    console.log('subjectChooseTabEffect', subjectChooseTab);
+  }, [subjectChooseTab]);
 
   return (
     <CustomPageHeader title='Çalışma Planı Oluşturma' showBreadCrumb routes={['Çalışma Planları']}>
