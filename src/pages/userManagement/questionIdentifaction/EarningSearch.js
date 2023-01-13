@@ -1,13 +1,9 @@
 import { Input } from 'antd';
 import React from 'react';
 
-const EarningSearch = () => {
+const EarningSearch = (props) => {
   const { Search } = Input;
 
-  const onChange = (e) => {
-    console.log(e.target.value);
-  };
-
-  return <Search style={{ marginBottom: 8 }} placeholder="Kazanım Ara" onChange={onChange} />;
+  return <Search style={{ marginBottom: 8 }} placeholder="Ünite,Konu,Kazanım Ara" onChange={props.onSearch} />;
 };
 export default EarningSearch;

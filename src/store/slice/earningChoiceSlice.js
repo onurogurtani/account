@@ -13,3 +13,5 @@ export const earningChoiceSlice = createSlice({
       },
   },
 });
+
+export const { setEarningChoice } = earningChoiceSlice.actions; 
