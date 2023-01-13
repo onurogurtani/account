@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { api } from './api';
 const getByFilterPagedQuestionOfExams = (data) => {
   return api({
@@ -6,12 +7,8 @@ const getByFilterPagedQuestionOfExams = (data) => {
     params: data,
   });
 };
-const fileUpload = (data) => {
-  return api({
-    url: 'Files',
-    method: 'POST',
-    params: data,
-  });
+const fileUpload = (data, options) => {
+  return axios.post(`${process.env.PUBLIC_HOST_API}/Files`, data, { ...options });
 };
 
 const publisherServices = {

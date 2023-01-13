@@ -12,9 +12,18 @@ export const getByFilterPagedQuestionOfExamsList = createAsyncThunk(
     }
   },
 );
+export const getFileUpload = createAsyncThunk('getFileUpload', async (data = {}, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await questionIdentificationServices.fileUpload(data.data, data.options);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
 
 const initialState = {
-  questionOfExamsList: {},
+  questionOfExams: {},
+  pagedProperty: {},
 };
 
 export const questionIdentificationSlice = createSlice({
@@ -23,7 +32,8 @@ export const questionIdentificationSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getByFilterPagedQuestionOfExamsList.fulfilled, (state, action) => {
-      state.questionOfExamsList = action?.payload?.data;
+      state.questionOfExams = action?.payload?.data.items[0];
+      state.pagedProperty = action?.payload?.data.pagedProperty;
     });
   },
 });
