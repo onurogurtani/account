@@ -22,8 +22,34 @@
       width: 75%;
     }
     .quesiton-images {
-      height: 500px;
-      border: 1px solid gray;
+      .quesiton-image {
+        border: 1px solid black;
+        height: 350px;
+        width: 100%;
+        object-fit: contain;
+      }
+    }
+    .answer-item {
+      margin-top: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      img {
+        width: 50%;
+        height: 150px;
+        object-fit: contain;
+        border: 1px solid black;
+      }
+      .answer-item-e {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        img {
+          width: 45%;
+          height: 150px;
+        }
+      }
     }
   }
   .ant-form-item-label {

@@ -46,7 +46,7 @@ const QuestionIdentification = () => {
   const token = useSelector((state) => state?.auth?.token);
 
   useEffect(() => {
-    if (questionOfExams.questionOfExamDetail) {
+    if (questionOfExams?.questionOfExamDetail) {
       setFormData({ ...questionOfExams.questionOfExamDetail });
     }
   }, [questionOfExams]);
@@ -97,7 +97,7 @@ const QuestionIdentification = () => {
   useEffect(() => {
     dispatch(
       getByFilterPagedQuestionOfExamsList({
-        'QuestionOfExamDetailSearch.IncludeQuestionFilesBase64': 'false',
+        'QuestionOfExamDetailSearch.IncludeQuestionFilesBase64': 'true',
         'QuestionOfExamDetailSearch.ThenIncludeQuestionSolutionsFilesBase64': 'false',
         'QuestionOfExamDetailSearch.PageNumber': 1,
         'QuestionOfExamDetailSearch.PageSize': 1,
@@ -110,7 +110,7 @@ const QuestionIdentification = () => {
     const form2 = filterForm2.getFieldValue();
     dispatch(
       getByFilterPagedQuestionOfExamsList({
-        'QuestionOfExamDetailSearch.IncludeQuestionFilesBase64': 'false',
+        'QuestionOfExamDetailSearch.IncludeQuestionFilesBase64': 'true',
         'QuestionOfExamDetailSearch.ThenIncludeQuestionSolutionsFilesBase64': 'false',
         'QuestionOfExamDetailSearch.PageNumber': pageNumber ? pageNumber : 1,
         'QuestionOfExamDetailSearch.PageSize': 1,
@@ -286,392 +286,431 @@ const QuestionIdentification = () => {
                   </Row>
                 </CustomForm>
               </div>
-
-              <Row gutter={16}>
-                <Col span={12}>
-                  <div className="quesiton-images">asdasdsa</div>
-                </Col>
-                <Col className="infos" span={12}>
-                  <div className="question-info">
-                    <label className="quesiton-label">Ders:</label>
-                    <div>{questionOfExams?.groupOfQuestionOfExam?.lesson?.name}</div>
-                  </div>
-                  <div className="question-info">
-                    <label className="quesiton-label">Kazanımlar:</label>
-                    <CustomButton disabled={formData.questionOfExamState === 1}>Kazanım Ekle</CustomButton>
-                  </div>
-
-                  <div className="question-info">
-                    <label className="quesiton-label">Soru Durumu:</label>
-                    <div style={{ widht: '100%' }}>
-                      <CustomRadioGroup
-                        onChange={(e) => {
-                          let newData = { ...formData };
-
-                          if (e.target.value === 0) {
-                            delete newData.questionOfExamWrongKind;
-                            delete newData.questionStateNote;
-                          } else {
-                            delete newData.correctAnswerIndex;
-                            delete newData.quality;
-                          }
-                          setFormData({ ...newData, questionOfExamState: e.target.value });
-                        }}
-                        value={formData.questionOfExamState}
-                      >
-                        <CustomRadio value={0}>Kullanılabilir</CustomRadio>
-                        <CustomRadio value={1}>Hatalı</CustomRadio>
-                      </CustomRadioGroup>
-                    </div>
-                  </div>
-                  {formData.questionOfExamState === 1 && (
-                    <>
-                      <div className="question-info">
-                        <div className="error-info">
-                          <CustomSelect
-                            placeholder={'Soru hata durumunu seçiniz'}
-                            onChange={(e) => {
-                              setFormData({ ...formData, questionOfExamWrongKind: e });
-                            }}
-                            value={formData.questionOfExamWrongKind}
-                            options={[
-                              { label: 'İstenmeyen', value: 0 },
-                              { label: 'Yetersiz', value: 1 },
-                            ]}
+              {questionOfExams ? (
+                <Row gutter={16}>
+                  <Col span={12}>
+                    <div className="quesiton-images">
+                      <img
+                        src={`data:image/png;base64,${questionOfExams?.file?.fileBase64}`}
+                        className="quesiton-image"
+                        alt="Resim"
+                      />
+                      {questionOfExams?.answerOfQuestionOfExams && (
+                        <div className="answer-item">
+                          <img
+                            src={`data:image/png;base64,${questionOfExams?.answerOfQuestionOfExams[0]?.file?.fileBase64}`}
+                            alt="Resim"
                           />
-                        </div>
-                      </div>
-                      <div className="question-info">
-                        <label className="quesiton-label">Not</label>
-                        <div className="questionStateNote">
-                          <CustomTextArea
-                            onChange={(e) => {
-                              setFormData({ ...formData, questionStateNote: e.target.value });
-                            }}
-                            value={formData.questionStateNote}
+                          <img
+                            src={`data:image/png;base64,${questionOfExams?.answerOfQuestionOfExams[1]?.file?.fileBase64}`}
+                            alt="Resim"
                           />
+                          <img
+                            src={`data:image/png;base64,${questionOfExams?.answerOfQuestionOfExams[2]?.file?.fileBase64}`}
+                            alt="Resim"
+                          />
+                          <img
+                            src={`data:image/png;base64,${questionOfExams?.answerOfQuestionOfExams[3]?.file?.fileBase64}`}
+                            alt="Resim"
+                          />
+                          {questionOfExams?.answerOfQuestionOfExams[4]?.file?.fileBase64 && (
+                            <div className="answer-item-e">
+                              <img
+                                className=""
+                                src={`data:image/png;base64,${questionOfExams?.answerOfQuestionOfExams[4]?.file?.fileBase64}`}
+                                alt="Resim"
+                              />
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    </>
-                  )}
+                      )}
+                    </div>
+                  </Col>
+                  <Col className="infos" span={12}>
+                    <div className="question-info">
+                      <label className="quesiton-label">Ders:</label>
+                      <div>{questionOfExams?.groupOfQuestionOfExam?.lesson?.name}</div>
+                    </div>
+                    <div className="question-info">
+                      <label className="quesiton-label">Kazanımlar:</label>
+                      <CustomButton disabled={formData.questionOfExamState === 1}>Kazanım Ekle</CustomButton>
+                    </div>
 
-                  <div className="question-info">
-                    <label className="quesiton-label">Şık</label>
-                    <div style={{ display: 'flex' }}>
-                      <div
-                        onClick={() => {
-                          if (formData.questionOfExamState !== 1) {
-                            setFormData({ ...formData, correctAnswerIndex: 0 });
-                          }
-                        }}
-                        className={`circle-reply ${formData.correctAnswerIndex === 0 && 'circle-reply-active'} ${
-                          formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''
-                        }`}
-                      >
-                        A
-                      </div>
-                      <div
-                        onClick={() => {
-                          if (formData.questionOfExamState !== 1) {
-                            setFormData({ ...formData, correctAnswerIndex: 1 });
-                          }
-                        }}
-                        className={`circle-reply ${formData.correctAnswerIndex === 1 && 'circle-reply-active'} ${
-                          formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''
-                        }`}
-                      >
-                        B
-                      </div>
-                      <div
-                        onClick={() => {
-                          if (formData.questionOfExamState !== 1) {
-                            setFormData({ ...formData, correctAnswerIndex: 2 });
-                          }
-                        }}
-                        className={`circle-reply ${formData.correctAnswerIndex === 2 && 'circle-reply-active'} ${
-                          formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''
-                        }`}
-                      >
-                        C
-                      </div>
-                      <div
-                        onClick={() => {
-                          if (formData.questionOfExamState !== 1) {
-                            setFormData({ ...formData, correctAnswerIndex: 3 });
-                          }
-                        }}
-                        className={`circle-reply ${formData.correctAnswerIndex === 3 && 'circle-reply-active'} ${
-                          formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''
-                        }  `}
-                      >
-                        D
-                      </div>
-                      <div
-                        onClick={() => {
-                          if (formData.questionOfExamState !== 1) {
-                            setFormData({ ...formData, correctAnswerIndex: 4 });
-                          }
-                        }}
-                        className={`circle-reply ${formData.correctAnswerIndex === 4 && 'circle-reply-active'} ${
-                          formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''
-                        }`}
-                      >
-                        E
-                      </div>
-                    </div>
-                  </div>
-                  <div className="question-info">
-                    <label className="quesiton-label">Kalite</label>
-                    <div className="starts">
-                      <div
-                        className={`${formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''}`}
-                        onClick={() => {
-                          if (formData.questionOfExamState !== 1) {
-                            setFormData({ ...formData, quality: 1 });
-                          }
-                        }}
-                      >
-                        <StarSvg fill={formData.quality > 0 ? true : false} />
-                      </div>
-                      <div
-                        className={`${formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''}`}
-                        onClick={() => {
-                          if (formData.questionOfExamState !== 1) {
-                            setFormData({ ...formData, quality: 2 });
-                          }
-                        }}
-                      >
-                        <StarSvg fill={formData.quality > 1 ? true : false} />
-                      </div>
-                      <div
-                        className={`${formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''}`}
-                        onClick={() => {
-                          if (formData.questionOfExamState !== 1) {
-                            setFormData({ ...formData, quality: 3 });
-                          }
-                        }}
-                      >
-                        <StarSvg fill={formData.quality > 2 ? true : false} />
-                      </div>
-                      <div
-                        className={`${formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''}`}
-                        onClick={() => {
-                          if (formData.questionOfExamState !== 1) {
-                            setFormData({ ...formData, quality: 4 });
-                          }
-                        }}
-                      >
-                        <StarSvg fill={formData.quality > 3 ? true : false} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="question-info">
-                    <label className="quesiton-label">Soru Şekli:</label>
-                    <div style={{ widht: '100%' }}>
-                      <CustomRadioGroup
-                        disabled={formData.questionOfExamState === 1}
-                        onChange={(e) => {
-                          setFormData({ ...formData, questionOfExamFormal: e.target.value });
-                        }}
-                        value={formData.questionOfExamFormal}
-                      >
-                        <CustomRadio value={0}>Klasik</CustomRadio>
-                        <CustomRadio value={1}>Yeni Nesil</CustomRadio>
-                      </CustomRadioGroup>
-                    </div>
-                  </div>
-                  <div className="question-info">
-                    <label className="quesiton-label">Soru Türü:</label>
-                    <div style={{ widht: '100%' }}>
-                      <CustomRadioGroup
-                        onChange={(e) => {
-                          setFormData({ ...formData, questionOfExamKind: e.target.value });
-                        }}
-                        disabled={formData.questionOfExamState === 1}
-                        value={formData.questionOfExamKind}
-                      >
-                        <CustomRadio value={0}>Pekiştirme Testi</CustomRadio>
-                        <CustomRadio value={1}>Ölçme&Değerlendirme Testi</CustomRadio>
-                        <CustomRadio value={2}>Deneme</CustomRadio>
-                      </CustomRadioGroup>
-                    </div>
-                  </div>
-                  <div className="question-info">
-                    <label className="quesiton-label">Soru Çözüm Süresi:</label>
-                    <div className="minute">
-                      <div>
-                        <CustomInput
-                          disabled={formData.questionOfExamState === 1}
+                    <div className="question-info">
+                      <label className="quesiton-label">Soru Durumu:</label>
+                      <div style={{ widht: '100%' }}>
+                        <CustomRadioGroup
                           onChange={(e) => {
-                            const value = e.target.value;
-                            if (!isNaN(value[value.length - 1]) || value[value.length - 1] === undefined) {
-                              setFormData({ ...formData, solutionMinute: e.target.value });
+                            let newData = { ...formData };
+
+                            if (e.target.value === 0) {
+                              delete newData.questionOfExamWrongKind;
+                              delete newData.questionStateNote;
                             } else {
+                              delete newData.correctAnswerIndex;
+                              delete newData.quality;
+                            }
+                            setFormData({ ...newData, questionOfExamState: e.target.value });
+                          }}
+                          value={formData.questionOfExamState}
+                        >
+                          <CustomRadio value={0}>Kullanılabilir</CustomRadio>
+                          <CustomRadio value={1}>Hatalı</CustomRadio>
+                        </CustomRadioGroup>
+                      </div>
+                    </div>
+                    {formData.questionOfExamState === 1 && (
+                      <>
+                        <div className="question-info">
+                          <div className="error-info">
+                            <CustomSelect
+                              placeholder={'Soru hata durumunu seçiniz'}
+                              onChange={(e) => {
+                                setFormData({ ...formData, questionOfExamWrongKind: e });
+                              }}
+                              value={formData.questionOfExamWrongKind}
+                              options={[
+                                { label: 'İstenmeyen', value: 0 },
+                                { label: 'Yetersiz', value: 1 },
+                              ]}
+                            />
+                          </div>
+                        </div>
+                        <div className="question-info">
+                          <label className="quesiton-label">Not</label>
+                          <div className="questionStateNote">
+                            <CustomTextArea
+                              onChange={(e) => {
+                                setFormData({ ...formData, questionStateNote: e.target.value });
+                              }}
+                              value={formData.questionStateNote}
+                            />
+                          </div>
+                        </div>
+                      </>
+                    )}
+
+                    <div className="question-info">
+                      <label className="quesiton-label">Şık</label>
+                      <div style={{ display: 'flex' }}>
+                        <div
+                          onClick={() => {
+                            if (formData.questionOfExamState !== 1) {
+                              setFormData({ ...formData, correctAnswerIndex: 0 });
                             }
                           }}
-                          value={formData.solutionMinute}
-                        />
-                      </div>
-
-                      <div className="minute-text">Dk</div>
-                    </div>
-                  </div>
-                  <div className="question-info">
-                    <div className="checkbox">
-                      <CustomCheckbox
-                        disabled={formData.questionOfExamState === 1}
-                        onChange={(e) => {
-                          setFormData({ ...formData, usedInSolutionVideo: e.target.checked });
-                        }}
-                        checked={formData.usedInSolutionVideo}
-                        style={{ marginLeft: '7px' }}
-                      >
-                        Soru Çözüm Videosunda Kullanılmıştır
-                      </CustomCheckbox>
-                      <CustomCheckbox
-                        onChange={(e) => {
-                          setFormData({ ...formData, mix: e.target.checked });
-                        }}
-                        checked={formData.mix}
-                        disabled={
-                          !questionOfExams?.answerOfQuestionOfExams?.length === 4 || formData.questionOfExamState === 1
-                        }
-                      >
-                        Şıklar Karıştırılsınmı
-                      </CustomCheckbox>
-                      <CustomCheckbox
-                        disabled={formData.questionOfExamState === 1}
-                        onChange={(e) => {
-                          if (!e.target.checked) {
-                            const newData = { ...formData };
-                            delete newData.yearOfOutQuestion;
-                            delete newData.outInTYT;
-                            delete newData.outInAYT;
-                            setFormData({ ...newData, outQuestion: e.target.checked });
-                          } else {
-                            setFormData({ ...formData, outQuestion: e.target.checked });
-                          }
-                        }}
-                        checked={formData.outQuestion}
-                      >
-                        Çıkmış Sorumu
-                      </CustomCheckbox>
-                    </div>
-                  </div>
-
-                  {formData.outQuestion && (
-                    <>
-                      <div className="question-info">
-                        <label className="quesiton-label">Soru Yılı Seçiniz :</label>
-                        <div className="checkbox-item">
-                          <CustomSelect
-                            disabled={formData.questionOfExamState === 1}
-                            onChange={(e) => {
-                              setFormData({ ...formData, yearOfOutQuestion: e });
-                            }}
-                            value={formData.yearOfOutQuestion}
-                            className=""
-                            placeholder="Seçiniz"
-                          >
-                            {years.map((item, index) => (
-                              <Option key={index} value={item}>
-                                {item}
-                              </Option>
-                            ))}
-                          </CustomSelect>{' '}
+                          className={`circle-reply ${formData.correctAnswerIndex === 0 && 'circle-reply-active'} ${
+                            formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''
+                          }`}
+                        >
+                          A
+                        </div>
+                        <div
+                          onClick={() => {
+                            if (formData.questionOfExamState !== 1) {
+                              setFormData({ ...formData, correctAnswerIndex: 1 });
+                            }
+                          }}
+                          className={`circle-reply ${formData.correctAnswerIndex === 1 && 'circle-reply-active'} ${
+                            formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''
+                          }`}
+                        >
+                          B
+                        </div>
+                        <div
+                          onClick={() => {
+                            if (formData.questionOfExamState !== 1) {
+                              setFormData({ ...formData, correctAnswerIndex: 2 });
+                            }
+                          }}
+                          className={`circle-reply ${formData.correctAnswerIndex === 2 && 'circle-reply-active'} ${
+                            formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''
+                          }`}
+                        >
+                          C
+                        </div>
+                        <div
+                          onClick={() => {
+                            if (formData.questionOfExamState !== 1) {
+                              setFormData({ ...formData, correctAnswerIndex: 3 });
+                            }
+                          }}
+                          className={`circle-reply ${formData.correctAnswerIndex === 3 && 'circle-reply-active'} ${
+                            formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''
+                          }  `}
+                        >
+                          D
+                        </div>
+                        <div
+                          onClick={() => {
+                            if (formData.questionOfExamState !== 1) {
+                              setFormData({ ...formData, correctAnswerIndex: 4 });
+                            }
+                          }}
+                          className={`circle-reply ${formData.correctAnswerIndex === 4 && 'circle-reply-active'} ${
+                            formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''
+                          }`}
+                        >
+                          E
                         </div>
                       </div>
-                      <div className="question-info">
-                        <label className="quesiton-label"></label>
-                        <div className="checkbox-item">
-                          <CustomRadioGroup
+                    </div>
+                    <div className="question-info">
+                      <label className="quesiton-label">Kalite</label>
+                      <div className="starts">
+                        <div
+                          className={`${formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''}`}
+                          onClick={() => {
+                            if (formData.questionOfExamState !== 1) {
+                              setFormData({ ...formData, quality: 1 });
+                            }
+                          }}
+                        >
+                          <StarSvg fill={formData.quality > 0 ? true : false} />
+                        </div>
+                        <div
+                          className={`${formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''}`}
+                          onClick={() => {
+                            if (formData.questionOfExamState !== 1) {
+                              setFormData({ ...formData, quality: 2 });
+                            }
+                          }}
+                        >
+                          <StarSvg fill={formData.quality > 1 ? true : false} />
+                        </div>
+                        <div
+                          className={`${formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''}`}
+                          onClick={() => {
+                            if (formData.questionOfExamState !== 1) {
+                              setFormData({ ...formData, quality: 3 });
+                            }
+                          }}
+                        >
+                          <StarSvg fill={formData.quality > 2 ? true : false} />
+                        </div>
+                        <div
+                          className={`${formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''}`}
+                          onClick={() => {
+                            if (formData.questionOfExamState !== 1) {
+                              setFormData({ ...formData, quality: 4 });
+                            }
+                          }}
+                        >
+                          <StarSvg fill={formData.quality > 3 ? true : false} />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="question-info">
+                      <label className="quesiton-label">Soru Şekli:</label>
+                      <div style={{ widht: '100%' }}>
+                        <CustomRadioGroup
+                          disabled={formData.questionOfExamState === 1}
+                          onChange={(e) => {
+                            setFormData({ ...formData, questionOfExamFormal: e.target.value });
+                          }}
+                          value={formData.questionOfExamFormal}
+                        >
+                          <CustomRadio value={0}>Klasik</CustomRadio>
+                          <CustomRadio value={1}>Yeni Nesil</CustomRadio>
+                        </CustomRadioGroup>
+                      </div>
+                    </div>
+                    <div className="question-info">
+                      <label className="quesiton-label">Soru Türü:</label>
+                      <div style={{ widht: '100%' }}>
+                        <CustomRadioGroup
+                          onChange={(e) => {
+                            setFormData({ ...formData, questionOfExamKind: e.target.value });
+                          }}
+                          disabled={formData.questionOfExamState === 1}
+                          value={formData.questionOfExamKind}
+                        >
+                          <CustomRadio value={0}>Pekiştirme Testi</CustomRadio>
+                          <CustomRadio value={1}>Ölçme&Değerlendirme Testi</CustomRadio>
+                          <CustomRadio value={2}>Deneme</CustomRadio>
+                        </CustomRadioGroup>
+                      </div>
+                    </div>
+                    <div className="question-info">
+                      <label className="quesiton-label">Soru Çözüm Süresi:</label>
+                      <div className="minute">
+                        <div>
+                          <CustomInput
                             disabled={formData.questionOfExamState === 1}
                             onChange={(e) => {
                               const value = e.target.value;
-                              if (value === 'outInTYT') {
-                                setFormData({ ...formData, outInTYT: true });
-                                setFormData({ ...formData, outInAYT: false });
+                              if (!isNaN(value[value.length - 1]) || value[value.length - 1] === undefined) {
+                                setFormData({ ...formData, solutionMinute: e.target.value });
                               } else {
-                                setFormData({ ...formData, outInTYT: false });
-                                setFormData({ ...formData, outInAYT: true });
                               }
                             }}
-                          >
-                            <CustomRadio value={'outInTYT'}>Tyt</CustomRadio>
-                            <CustomRadio value={'outInAYT d'}>Ayt</CustomRadio>
-                          </CustomRadioGroup>
+                            value={formData.solutionMinute}
+                          />
                         </div>
+
+                        <div className="minute-text">Dk</div>
                       </div>
-                    </>
-                  )}
-                  <div className="upload">
-                    <UploadFile
-                      disabled={formData.questionOfExamState === 1}
-                      onChange={(e) => {
-                        setFormData({ ...formData, videoSolutionFile: e });
-                      }}
-                      accept="video/mp4,video/x-m4v,video/*"
-                      title={'Video Ekle'}
-                    />
-                    <UploadFile
-                      disabled={formData.questionOfExamState === 1}
-                      onChange={(e) => {
-                        setFormData({ ...formData, imageSolutionFile: e });
-                      }}
-                      accept="image/*"
-                      title={'Resim Ekle'}
-                    />
-                    <UploadFile
-                      disabled={formData.questionOfExamState === 1}
-                      onChange={(e) => {
-                        setFormData({ ...formData, pdfSolutionFile: e });
-                      }}
-                      accept=".pdf"
-                      title={'Pdf Ekle'}
-                    />
-                  </div>
-                </Col>
-                <Col span={24}>
-                  <div className=" save-button">
-                    <CustomButton className="save-q" type="primary">
-                      Kaydet
-                    </CustomButton>
-                  </div>
-                </Col>
-                <Col span={24}>
-                  <div className=" q-pagination">
-                    <CustomButton
-                      onClick={() => {
-                        searchSumbit(pagedProperty.currentPage - 1);
-                      }}
-                      disabled={!pagedProperty.hasPrevious}
-                    >
-                      Geri
-                    </CustomButton>
-                    <div>
-                      {pagedProperty.currentPage}/{pagedProperty.totalPages}
                     </div>
-                    <CustomButton
-                      onClick={() => {
-                        searchSumbit(pagedProperty.currentPage + 1);
-                      }}
-                      disabled={!pagedProperty.hasNext}
-                    >
-                      İleri
-                    </CustomButton>
-                    <Pagination
-                      current={pagedProperty.currentPage}
-                      showQuickJumper={true}
-                      showLessItems={true}
-                      total={pagedProperty.totalPages}
-                      pageSize={1}
-                      onChange={(e, e2) => {
-                        searchSumbit(e);
-                      }}
-                    />
-                  </div>
-                </Col>
-              </Row>
+                    <div className="question-info">
+                      <div className="checkbox">
+                        <CustomCheckbox
+                          disabled={formData.questionOfExamState === 1}
+                          onChange={(e) => {
+                            setFormData({ ...formData, usedInSolutionVideo: e.target.checked });
+                          }}
+                          checked={formData.usedInSolutionVideo}
+                          style={{ marginLeft: '7px' }}
+                        >
+                          Soru Çözüm Videosunda Kullanılmıştır
+                        </CustomCheckbox>
+                        <CustomCheckbox
+                          onChange={(e) => {
+                            setFormData({ ...formData, mix: e.target.checked });
+                          }}
+                          checked={formData.mix}
+                          disabled={
+                            !questionOfExams?.answerOfQuestionOfExams?.length === 4 ||
+                            formData.questionOfExamState === 1
+                          }
+                        >
+                          Şıklar Karıştırılsınmı
+                        </CustomCheckbox>
+                        <CustomCheckbox
+                          disabled={formData.questionOfExamState === 1}
+                          onChange={(e) => {
+                            if (!e.target.checked) {
+                              const newData = { ...formData };
+                              delete newData.yearOfOutQuestion;
+                              delete newData.outInTYT;
+                              delete newData.outInAYT;
+                              setFormData({ ...newData, outQuestion: e.target.checked });
+                            } else {
+                              setFormData({ ...formData, outQuestion: e.target.checked });
+                            }
+                          }}
+                          checked={formData.outQuestion}
+                        >
+                          Çıkmış Sorumu
+                        </CustomCheckbox>
+                      </div>
+                    </div>
+
+                    {formData.outQuestion && (
+                      <>
+                        <div className="question-info">
+                          <label className="quesiton-label">Soru Yılı Seçiniz :</label>
+                          <div className="checkbox-item">
+                            <CustomSelect
+                              disabled={formData.questionOfExamState === 1}
+                              onChange={(e) => {
+                                setFormData({ ...formData, yearOfOutQuestion: e });
+                              }}
+                              value={formData.yearOfOutQuestion}
+                              className=""
+                              placeholder="Seçiniz"
+                            >
+                              {years.map((item, index) => (
+                                <Option key={index} value={item}>
+                                  {item}
+                                </Option>
+                              ))}
+                            </CustomSelect>{' '}
+                          </div>
+                        </div>
+                        <div className="question-info">
+                          <label className="quesiton-label"></label>
+                          <div className="checkbox-item">
+                            <CustomRadioGroup
+                              disabled={formData.questionOfExamState === 1}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                if (value === 'outInTYT') {
+                                  setFormData({ ...formData, outInTYT: true });
+                                  setFormData({ ...formData, outInAYT: false });
+                                } else {
+                                  setFormData({ ...formData, outInTYT: false });
+                                  setFormData({ ...formData, outInAYT: true });
+                                }
+                              }}
+                            >
+                              <CustomRadio value={'outInTYT'}>Tyt</CustomRadio>
+                              <CustomRadio value={'outInAYT d'}>Ayt</CustomRadio>
+                            </CustomRadioGroup>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    <div className="upload">
+                      <UploadFile
+                        disabled={formData.questionOfExamState === 1}
+                        onChange={(e) => {
+                          setFormData({ ...formData, videoSolutionFile: e });
+                        }}
+                        accept="video/mp4,video/x-m4v,video/*"
+                        title={'Video Ekle'}
+                      />
+                      <UploadFile
+                        disabled={formData.questionOfExamState === 1}
+                        onChange={(e) => {
+                          setFormData({ ...formData, imageSolutionFile: e });
+                        }}
+                        accept="image/*"
+                        title={'Resim Ekle'}
+                      />
+                      <UploadFile
+                        disabled={formData.questionOfExamState === 1}
+                        onChange={(e) => {
+                          setFormData({ ...formData, pdfSolutionFile: e });
+                        }}
+                        accept=".pdf"
+                        title={'Pdf Ekle'}
+                      />
+                    </div>
+                  </Col>
+                  <Col span={24}>
+                    <div className=" save-button">
+                      <CustomButton className="save-q" type="primary">
+                        Kaydet
+                      </CustomButton>
+                    </div>
+                  </Col>
+                  <Col span={24}>
+                    <div className=" q-pagination">
+                      <CustomButton
+                        onClick={() => {
+                          searchSumbit(pagedProperty.currentPage - 1);
+                        }}
+                        disabled={!pagedProperty.hasPrevious}
+                      >
+                        Geri
+                      </CustomButton>
+                      <div>
+                        {pagedProperty.currentPage}/{pagedProperty.totalPages}
+                      </div>
+                      <CustomButton
+                        onClick={() => {
+                          searchSumbit(pagedProperty.currentPage + 1);
+                        }}
+                        disabled={!pagedProperty.hasNext}
+                      >
+                        İleri
+                      </CustomButton>
+                      <Pagination
+                        current={pagedProperty.currentPage}
+                        showQuickJumper={true}
+                        showLessItems={true}
+                        total={pagedProperty.totalPages}
+                        pageSize={1}
+                        onChange={(e, e2) => {
+                          searchSumbit(e);
+                        }}
+                      />
+                    </div>
+                  </Col>
+                </Row>
+              ) : (
+                'Soru Bulunamadı'
+              )}
             </div>
           </div>
         </div>
