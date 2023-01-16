@@ -45,7 +45,7 @@ export const addGroup = createAsyncThunk(
     async (data, { dispatch, rejectWithValue }) => {
         try {
             const response = await groupsServices.addGroup(data);
-            dispatch(getGroupsList());
+            dispatch(getByFilterPagedGroups());
             return response;
         } catch (error) {
             return rejectWithValue(error?.data);
@@ -70,7 +70,7 @@ export const updateGroup = createAsyncThunk(
     async (data, { dispatch, rejectWithValue }) => {
         try {
             const response = await groupsServices.updateGroup(data);
-            dispatch(getGroupsList());
+            dispatch(getByFilterPagedGroups());
             return response;
         } catch (error) {
             return rejectWithValue(error?.data);
@@ -103,15 +103,10 @@ export const deleteGroupClaims = createAsyncThunk(
 );
 
 const initialState = {
+    allGroupList: [],
     groupsList: [],
     groupClaims: [],
     selectedRole: null,
-    draftedTableProperty: {
-        currentPage: 1,
-        page: 1,
-        pageSize: 10,
-        totalCount: 0,
-    },
     isFilter: false,
     filterObject: {},
     tableProperty: {
@@ -151,22 +146,10 @@ export const groupsSlice = createSlice({
             };
         });
         builder.addCase(getGroupsList.fulfilled, (state, action) => {
-            state.groupsList = action?.payload?.data
-            state.draftedTableProperty = {
-                currentPage: 1,
-                page: 1,
-                pageSize: 10,
-                totalCount: action?.payload?.data?.length,
-            };
+            state.allGroupList = action?.payload?.data
         });
         builder.addCase(getGroupsList.rejected, (state, action) => {
-            state.groupsList = [];
-            state.draftedTableProperty = {
-                currentPage: 1,
-                page: 1,
-                pageSize: 10,
-                totalCount: 0,
-            };
+            state.allGroupList = [];
         });
         builder.addCase(getGroupClaims.fulfilled, (state, action) => {
             state.groupClaims = action?.payload?.data

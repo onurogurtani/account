@@ -1,4 +1,4 @@
-import { Form } from 'antd';
+import { Form, Tag } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomButton, CustomCollapseCard, CustomTable } from '../../../components';
@@ -123,6 +123,22 @@ const PackagesList = () => {
       },
       render: (text, record) => {
         return <div>{text?.name}</div>;
+      },
+    },
+    {
+      title: 'Paket Rolleri',
+      dataIndex: 'packageGroups',
+      key: 'packageGroups',
+      render: (text, record) => {
+        return (
+          <div>
+            {text?.map((item) => (
+              <Tag color="green" key={item?.groupId}>
+                {item?.group.groupName}
+              </Tag>
+            ))}
+          </div>
+        );
       },
     },
     {
