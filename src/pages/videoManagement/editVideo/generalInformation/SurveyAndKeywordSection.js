@@ -26,10 +26,16 @@ const SurveyAndKeywordSection = ({ form }) => {
     });
     if (currentVideo?.beforeEducationSurvey) {
       setSelectedSurveyOption('before');
+      form.setFieldsValue({
+        survey: 'before',
+      });
       return;
     }
     if (currentVideo?.afterEducationSurvey) {
       setSelectedSurveyOption('after');
+      form.setFieldsValue({
+        survey: 'after',
+      });
       return;
     }
     setSelectedSurveyOption(undefined);
@@ -51,18 +57,10 @@ const SurveyAndKeywordSection = ({ form }) => {
   return (
     <>
       <CustomFormItem label="Anket Ekle" name="survey">
-        <CustomCheckbox
-          onChange={handleChangeSurveyOption}
-          checked={selectedSurveyOption === 'before'}
-          value="before"
-        >
+        <CustomCheckbox onChange={handleChangeSurveyOption} checked={selectedSurveyOption === 'before'} value="before">
           Eğitim Başında
         </CustomCheckbox>
-        <CustomCheckbox
-          onChange={handleChangeSurveyOption}
-          checked={selectedSurveyOption === 'after'}
-          value="after"
-        >
+        <CustomCheckbox onChange={handleChangeSurveyOption} checked={selectedSurveyOption === 'after'} value="after">
           Eğitim Sonunda
         </CustomCheckbox>
       </CustomFormItem>

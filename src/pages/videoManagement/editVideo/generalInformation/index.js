@@ -5,7 +5,6 @@ import { useParams } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { CustomButton, CustomForm } from '../../../../components';
 import { onChangeActiveKey } from '../../../../store/slice/videoSlice';
-import BracketSection from './BracketSection';
 import CategorySection from './CategorySection';
 import IntroVideoSection from './IntroVideoSection';
 import LessonsSectionForm from './LessonsSectionForm';
@@ -36,9 +35,7 @@ const EditGeneralInformation = ({ sendValue }) => {
       return;
     }
 
-    values.lessonSubSubjects = values.lessonSubSubjects.map((item) => ({
-      lessonSubSubjectId: item,
-    }));
+    values.lessonSubSubjects = values.videoBrackets;
     values.keyWords = values.keyWords.join();
     values.beforeEducationSurvey = values?.survey === 'before' ? true : false;
     values.afterEducationSurvey = values?.survey === 'after' ? true : false;
@@ -107,7 +104,7 @@ const EditGeneralInformation = ({ sendValue }) => {
           <div className="right-form">
             <VideoSection form={form} kalturaVideoName={kalturaVideoName} setKalturaVideoName={setKalturaVideoName} />
             <IntroVideoSection form={form} introVideoFile={introVideoFile} setIntroVideoFile={setIntroVideoFile} />
-            <BracketSection form={form} />
+
             <SurveyAndKeywordSection form={form} />
             <UrlAndPdfSection form={form} />
           </div>
