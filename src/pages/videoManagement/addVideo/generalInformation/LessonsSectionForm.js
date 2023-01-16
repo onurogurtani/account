@@ -49,7 +49,25 @@ const LessonsSectionForm = ({ form }) => {
   };
 
   const onLessonSubSubjectsDeselect = (_, option) => {
-    setVideoBrackets((prev) => prev.filter((item) => item.lessonSubSubjectId !== option.value));
+    const filteredVideoBrackets = videoBrackets.filter((item) => item.lessonSubSubjectId !== option.value);
+    setVideoBrackets(filteredVideoBrackets);
+    form.resetFields(['videoBrackets']);
+    form.setFields(
+      filteredVideoBrackets.map((item, index) => ({
+        name: ['videoBrackets', index, 'bracketTime'],
+        value: item?.bracketTime,
+      })),
+    );
+    form.setFields(
+      filteredVideoBrackets.map((item, index) => ({
+        name: ['videoBrackets', index, 'lessonSubSubjectId'],
+        value: item?.lessonSubSubjectId,
+      })),
+    );
+  };
+
+  const onBracketTimeValueChange = (e, index) => {
+    setVideoBrackets((prev) => prev.map((item, i) => (index === i ? { ...item, bracketTime: e.target.value } : item)));
   };
 
   return (
@@ -162,12 +180,13 @@ const LessonsSectionForm = ({ form }) => {
               <CustomFormItem
                 name={['videoBrackets', index, 'bracketTime']}
                 style={{ flex: 1 }}
+                // initialValue={i.bracketTime}
                 rules={[
                   { required: true, message: 'Zorunlu Alan' },
                   { validator: videoTimeValidator, message: 'Lütfen Boş Bırakmayınız' },
                 ]}
               >
-                <CustomMaskInput mask={'999:99'}>
+                <CustomMaskInput onChange={(e) => onBracketTimeValueChange(e, index)} mask={'999:99'}>
                   <CustomInput placeholder="000:00" />
                 </CustomMaskInput>
               </CustomFormItem>
