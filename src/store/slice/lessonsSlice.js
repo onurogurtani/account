@@ -17,6 +17,16 @@ export const getLessons = createAsyncThunk('getLessons', async (body, { dispatch
   }
 });
 
+export const getByClassromIdLessons = createAsyncThunk('getByClassromIdLessons', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await lessonsServices.getByClassromIdLessons(data);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+
+
 export const addLessons = createAsyncThunk('addLessons', async (data, { dispatch, rejectWithValue }) => {
   try {
     const response = await lessonsServices.addLessons(data);
@@ -73,6 +83,7 @@ export const uploadLessonsExcel = createAsyncThunk(
 
 const initialState = {
   lessons: [],
+  lessonsGetByClassroom: []
 };
 
 export const lessonsSlice = createSlice({
@@ -84,6 +95,9 @@ export const lessonsSlice = createSlice({
       if (action?.payload?.data?.items.length) {
         state.lessons = state.lessons.concat(action?.payload?.data?.items).reverse();
       }
+    });
+    builder.addCase(getByClassromIdLessons.fulfilled, (state, action) => {
+       state.lessonsGetByClassroom = action?.payload?.data
     });
     builder.addCase(uploadLessonsExcel.fulfilled, (state, action) => {
       const { arg } = action.meta;
