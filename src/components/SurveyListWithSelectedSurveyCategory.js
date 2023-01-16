@@ -15,6 +15,7 @@ const SurveyListWithSelectedSurveyCategory = ({ disabled, form, required }) => {
   const [surveyListWithSelectedSurveyCategory, setSurveyListWithSelectedSurveyCategory] = useState([]);
 
   const categoryOfFormIdValue = Form.useWatch('categoryOfFormId', form);
+  const formId = Form.useWatch('formId', form);
 
   useEffect(() => {
     loadSurveyCategories();
@@ -23,6 +24,12 @@ const SurveyListWithSelectedSurveyCategory = ({ disabled, form, required }) => {
   useEffect(() => {
     surveyCategroyChange(categoryOfFormIdValue);
   }, [categoryOfFormIdValue]);
+
+  useEffect(() => {
+    form.setFieldsValue({
+      formId: formId,
+    });
+  }, [formId]);
 
   const loadSurveyCategories = async () => {
     try {
@@ -65,6 +72,7 @@ const SurveyListWithSelectedSurveyCategory = ({ disabled, form, required }) => {
           <Option key={false} value={false}>
             Anket Kategorisi Seçiniz
           </Option>
+          {console.log(formCategories)}
           {formCategories
             ?.filter((item) => item.isActive)
             ?.map((item) => {
@@ -92,6 +100,7 @@ const SurveyListWithSelectedSurveyCategory = ({ disabled, form, required }) => {
           <Option key={false} value={false}>
             Anket Seçiniz
           </Option>
+          {console.log(surveyListWithSelectedSurveyCategory)}
           {surveyListWithSelectedSurveyCategory
             // ?.filter((item) => item.isActive)
             ?.map((item) => {

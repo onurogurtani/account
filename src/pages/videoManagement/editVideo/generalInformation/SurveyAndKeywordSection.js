@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomCheckbox, CustomFormItem, CustomSelect, Option } from '../../../../components';
 import { getAllVideoKeyword } from '../../../../store/slice/videoSlice';
+import SurveyListWithSelectedSurveyCategory from '../../../../components/SurveyListWithSelectedSurveyCategory';
 
 const SurveyAndKeywordSection = ({ form }) => {
   const dispatch = useDispatch();
@@ -23,6 +24,8 @@ const SurveyAndKeywordSection = ({ form }) => {
   useEffect(() => {
     form.setFieldsValue({
       keyWords: currentVideo?.keyWords?.split(','),
+      categoryOfFormId: currentVideo?.categoryOfFormId,
+      formId: currentVideo?.formId,
     });
     if (currentVideo?.beforeEducationSurvey) {
       setSelectedSurveyOption('before');
@@ -64,6 +67,8 @@ const SurveyAndKeywordSection = ({ form }) => {
           Eğitim Sonunda
         </CustomCheckbox>
       </CustomFormItem>
+
+      {selectedSurveyOption && <SurveyListWithSelectedSurveyCategory form={form} required />}
 
       <CustomFormItem
         rules={[
