@@ -1,23 +1,19 @@
-import { Tabs, Tag } from 'antd';
-import {useState} from 'react';
 import dayjs from 'dayjs';
-import React from 'react';
+import React, { useState } from 'react';
 import { CustomCollapseCard, Text } from '../../../../components';
 
-const formPublicationPlacesEnum = {
+const announcementPublicationPlacesEnum = {
   1: 'Anasayfa',
   2: 'Anketler Sayfası',
-  3: 'Pop-up',
-  4: 'Bildirimler',
+  4: 'Pop-up',
+  3: 'Bildirimler',
 };
-const ShowAnnouncementTabs = ({ showData }) => {
-  console.log(showData, showData?.file?.thumbUrl);
+const ShowAnnouncementCard = ({ showData }) => {
   const [imageSrc, setImageSrc] = useState(
     showData?.file?.thumbUrl
       ? showData?.file?.thumbUrl
       : `data:${showData?.file?.contentType};base64,${showData?.file?.file}`,
   );
-  console.log(imageSrc);
   return (
     <CustomCollapseCard cardTitle={<Text t="Genel Bilgiler" />}>
       <ul className="announcement-show">
@@ -35,12 +31,7 @@ const ShowAnnouncementTabs = ({ showData }) => {
           <Text t="Duyuru Anasayfa Metni" /> : <span>{showData?.homePageContent}</span>
         </li>
         <li>
-          <Text t="Duyuru İkonu" /> :{' '}
-          <img
-            src={imageSrc}
-            alt="Duyuru ikonu"
-            width="100"
-          />
+          <Text t="Duyuru İkonu" /> : <img src={imageSrc} alt="Duyuru ikonu" width="100" />
         </li>
         {showData?.buttonName && showData?.buttonUrl && (
           <>
@@ -79,7 +70,7 @@ const ShowAnnouncementTabs = ({ showData }) => {
               <ul className="rolesList">
                 {showData?.announcementPublicationPlaces?.map((p) => (
                   <li key={p} className="roles">
-                    {formPublicationPlacesEnum[p]}
+                    {announcementPublicationPlacesEnum[p]}
                   </li>
                 ))}
               </ul>
@@ -117,4 +108,4 @@ const ShowAnnouncementTabs = ({ showData }) => {
   );
 };
 
-export default ShowAnnouncementTabs;
+export default ShowAnnouncementCard;

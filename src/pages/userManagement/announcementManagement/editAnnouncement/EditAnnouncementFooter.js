@@ -1,26 +1,34 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { errorDialog } from '../../../../components';
 import dayjs from 'dayjs';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { editAnnouncement, getAvatarUpload } from '../../../../store/slice/announcementSlice';
-import { useLocation } from 'react-router-dom';
-import { confirmDialog, CustomButton, CustomImage, CustomFormItem, Text, CustomModal } from '../../../../components';
 import modalSuccessIcon from '../../../../assets/icons/icon-modal-success.svg';
-import { getGroupsList } from '../../../../store/slice/groupsSlice';
+import {
+  confirmDialog,
+  CustomButton,
+  CustomFormItem,
+  CustomImage,
+  CustomModal,
+  errorDialog,
+  Text
+} from '../../../../components';
+import { editAnnouncement, getAvatarUpload } from '../../../../store/slice/announcementSlice';
+import { getByFilterPagedGroups } from '../../../../store/slice/groupsSlice';
 import '../../../../styles/announcementManagement/saveAndFinish.scss';
 const EditAnnouncementFooter = ({ form, history, currentId, fileImage, initialValues }) => {
   const dispatch = useDispatch();
   const [updatedAnnouncement, setUpdatedAnnouncement] = useState({});
   const [isVisible, setIsVisible] = useState(false);
   const { announcementTypes, updateAnnouncementObject } = useSelector((state) => state?.announcement);
-  const location = useLocation();
+
   const loadGroupsList = useCallback(async () => {
-    await dispatch(getGroupsList());
+    let data = {
+      ShowAtAnnouncement: true,
+    };
+    await dispatch(getByFilterPagedGroups(data));
   }, [dispatch]);
   useEffect(() => {
     loadGroupsList();
   }, []);
-  useEffect(() => {}, [updatedAnnouncement]);
 
   const { groupsList } = useSelector((state) => state?.groups);
 
@@ -61,7 +69,7 @@ const EditAnnouncementFooter = ({ form, history, currentId, fileImage, initialVa
 
         const transFormedType = [];
         for (let i = 0; i < announcementTypes.length; i++) {
-          if (announcementTypes[i].name == typeName) {
+          if (announcementTypes[i].name === typeName) {
             transFormedType.push(announcementTypes[i]);
           }
         }

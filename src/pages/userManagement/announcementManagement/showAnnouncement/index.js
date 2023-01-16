@@ -1,37 +1,30 @@
-import React, {useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
+import dayjs from 'dayjs';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
 import {
   confirmDialog,
   CustomButton,
   CustomPageHeader,
   errorDialog,
-  Text,
   successDialog,
+  Text,
 } from '../../../../components';
-import ShowAnnouncementTabs from './ShowAnnouncementTabs';
-import UpdateAnnouncementDate from './updateAnnouncementDate';
-import '../../../../styles/announcementManagement/showAnnouncement.scss';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   deleteAnnouncement,
-  setPublishAnnouncements,
-  setUnPublishAnnouncements,
-  setArchiveAnnouncements,
+  editAnnouncement,
   setActiveAnnouncements,
-  getByFilterPagedAnnouncements,
-  editAnnouncement
+  setArchiveAnnouncements,
 } from '../../../../store/slice/announcementSlice';
-import dayjs from 'dayjs';
+import '../../../../styles/announcementManagement/showAnnouncement.scss';
+import ShowAnnouncementCard from './ShowAnnouncementCard';
+import UpdateAnnouncementDate from './updateAnnouncementDate';
 const ShowAnnouncement = () => {
   const location = useLocation();
   const history = useHistory();
-  const { filterObject } = useSelector((state) => state?.announcement);
   const [dateVisible, setDateVisible] = useState(false);
   const showData = location?.state?.data;
-  console.log(showData);
   const [currentAnnouncement, setCurrentAnnouncement] = useState(showData);
-
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -84,15 +77,15 @@ const ShowAnnouncement = () => {
         okText: <Text t="Evet" />,
         cancelText: 'Hayır',
         onOk: async () => {
-          let data = {...currentAnnouncement, publishStatus:1  };
+          let data = { ...currentAnnouncement, publishStatus: 1 };
 
           const action = await dispatch(editAnnouncement(data));
           if (editAnnouncement.fulfilled.match(action)) {
             history.push({
               pathname: '/user-management/announcement-management/show',
-              state: { data: { ...currentAnnouncement, publishStatus:1, isActive: true } },
+              state: { data: { ...currentAnnouncement, publishStatus: 1, isActive: true } },
             });
-            setCurrentAnnouncement({ ...currentAnnouncement, publishStatus:1, isActive: true });
+            setCurrentAnnouncement({ ...currentAnnouncement, publishStatus: 1, isActive: true });
 
             successDialog({
               title: <Text t="success" />,
@@ -117,16 +110,16 @@ const ShowAnnouncement = () => {
       okText: <Text t="Evet" />,
       cancelText: 'Hayır',
       onOk: async () => {
-      let data = {...currentAnnouncement, publishStatus:2  };
+        let data = { ...currentAnnouncement, publishStatus: 2 };
 
-      const action = await dispatch(editAnnouncement(data));
+        const action = await dispatch(editAnnouncement(data));
         if (editAnnouncement.fulfilled.match(action)) {
           history.push({
             pathname: '/user-management/announcement-management/show',
-            state: { data: { ...currentAnnouncement, publishStatus:2 } },
+            state: { data: { ...currentAnnouncement, publishStatus: 2 } },
           });
 
-          setCurrentAnnouncement({ ...currentAnnouncement, publishStatus:2 });
+          setCurrentAnnouncement({ ...currentAnnouncement, publishStatus: 2 });
 
           successDialog({
             title: <Text t="success" />,
@@ -155,15 +148,10 @@ const ShowAnnouncement = () => {
         if (setArchiveAnnouncements.fulfilled.match(action)) {
           history.push({
             pathname: '/user-management/announcement-management/show',
-            state: { data: { ...currentAnnouncement, isActive: false, isPublished: false } },
+            state: { data: { ...currentAnnouncement, isActive: false } },
           });
-          setCurrentAnnouncement({ ...currentAnnouncement, isActive: false, isPublished: false });
-          await dispatch(
-            getByFilterPagedAnnouncements({
-              ...filterObject,
-              IsActive: false,
-            }),
-          );
+          setCurrentAnnouncement({ ...currentAnnouncement, isActive: false });
+
           successDialog({
             title: <Text t="success" />,
             message: action.payload?.message,
@@ -191,15 +179,9 @@ const ShowAnnouncement = () => {
         if (setActiveAnnouncements.fulfilled.match(action)) {
           history.push({
             pathname: '/user-management/announcement-management/show',
-            state: { data: { ...currentAnnouncement, isActive: true, isPublished: false } },
+            state: { data: { ...currentAnnouncement, isActive: true } },
           });
-          setCurrentAnnouncement({ ...currentAnnouncement, isActive: true, isPublished: false });
-          await dispatch(
-            getByFilterPagedAnnouncements({
-              ...filterObject,
-              IsActive: true,
-            }),
-          );
+          setCurrentAnnouncement({ ...currentAnnouncement, isActive: true });
           successDialog({
             title: <Text t="success" />,
             message: action.payload?.message,
@@ -230,59 +212,33 @@ const ShowAnnouncement = () => {
         <CustomButton type="primary" htmlType="submit" className="edit-btn" onClick={handleEdit}>
           Düzenle
         </CustomButton>
-        <CustomButton
-          type="primary"
-          htmlType="submit"
-          className="submit-btn"
-          onClick={onDelete}
-          danger
-        >
+        <CustomButton type="primary" htmlType="submit" className="submit-btn" onClick={onDelete} danger>
           Sil
         </CustomButton>
 
-        {currentAnnouncement.publishStatus==1 && (
-          <CustomButton
-            type="primary"
-            htmlType="submit"
-            className="shared-btn"
-            onClick={unPublishAnnouncement}
-          >
+        {currentAnnouncement.publishStatus === 1 && (
+          <CustomButton type="primary" htmlType="submit" className="shared-btn" onClick={unPublishAnnouncement}>
             {'Yayından Kaldır'}
           </CustomButton>
-        )} 
-         {currentAnnouncement.publishStatus!=1 && (
-          <CustomButton
-            type="primary"
-            htmlType="submit"
-            className="shared-btn"
-            onClick={publishAnnouncement}
-          >
+        )}
+        {currentAnnouncement.publishStatus !== 1 && (
+          <CustomButton type="primary" htmlType="submit" className="shared-btn" onClick={publishAnnouncement}>
             {'Yayınla'}
           </CustomButton>
-        )} 
+        )}
 
-        {!currentAnnouncement.publishStatus==1 && !currentAnnouncement.isPublished && (
-          <CustomButton
-            type="primary"
-            htmlType="submit"
-            className="archieveButton"
-            onClick={archiveAnnouncement}
-          >
+        {currentAnnouncement.publishStatus !== 1 && currentAnnouncement.isActive && (
+          <CustomButton type="primary" htmlType="submit" className="archieveButton" onClick={archiveAnnouncement}>
             Arşivle
           </CustomButton>
-        ) }
-         {!currentAnnouncement.isActive && !currentAnnouncement.publishStatus==1 && (
-          <CustomButton
-          type="primary"
-          htmlType="submit"
-          className="archieveButton"
-          onClick={activeAnnouncement}
-        >
-          Arşivden Kaldır
-        </CustomButton>
-        ) }
+        )}
+        {currentAnnouncement.publishStatus !== 1 && !currentAnnouncement.isActive && (
+          <CustomButton type="primary" htmlType="submit" className="archieveButton" onClick={activeAnnouncement}>
+            Arşivden Kaldır
+          </CustomButton>
+        )}
       </div>
-      <ShowAnnouncementTabs showData={currentAnnouncement} />
+      <ShowAnnouncementCard showData={currentAnnouncement} />
       <UpdateAnnouncementDate
         setCurrentAnnouncement={setCurrentAnnouncement}
         currentAnnouncement={currentAnnouncement}

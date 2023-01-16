@@ -1,35 +1,26 @@
+import { Form } from 'antd';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
 import {
   CustomButton,
   CustomDatePicker,
   CustomForm,
   CustomFormItem,
   CustomImage,
-  CustomInput,
-  Option,
   CustomSelect,
+  Option,
   Text,
 } from '../../../components';
-import '../../../styles/announcementManagement/announcementFilter.scss';
-import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
-import { Form } from 'antd';
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import {
-  getAll,
-  setPublishAnnouncements,
   getByFilterPagedAnnouncements,
   getByFilterPagedAnnouncementTypes,
 } from '../../../store/slice/announcementSlice';
-import { getGroupsList } from '../../../store/slice/groupsSlice';
+import { getByFilterPagedGroups } from '../../../store/slice/groupsSlice';
+import '../../../styles/announcementManagement/announcementFilter.scss';
 
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
-const formPublicationPlacesEnum = {
-  1: 'Anasayfa',
-  2: 'Anketler Sayfası',
-  3: 'Pop-up',
-  4: 'Bildirimler',
-};
 
 const publishStatusObj = [
   { id: 1, name: 'Yayında' },
@@ -42,8 +33,12 @@ const AnnouncementFilter = () => {
   const dispatch = useDispatch();
   const { announcements, filterObject, announcementTypes } = useSelector((state) => state?.announcement);
   const loadGroupsList = useCallback(async () => {
-    await dispatch(getGroupsList());
+    let data = {
+      ShowAtAnnouncement: true,
+    };
+    await dispatch(getByFilterPagedGroups(data));
   }, [dispatch]);
+
   useEffect(() => {
     loadGroupsList();
   }, []);
@@ -75,7 +70,6 @@ const AnnouncementFilter = () => {
   const handleSearch = useCallback(async () => {
     try {
       const values = await form.validateFields();
-      console.log(values);
       const type = values.announcementType;
 
       const body = {

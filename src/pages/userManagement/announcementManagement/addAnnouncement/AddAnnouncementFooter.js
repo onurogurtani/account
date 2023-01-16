@@ -1,11 +1,14 @@
 import dayjs from 'dayjs';
-import React, { useCallback, useEffect, useState } from 'react';
-import { confirmDialog, CustomButton, CustomFormItem, Text, errorDialog, successDialog } from '../../../../components';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getByFilterPagedAnnouncementTypes, getAvatarUpload } from '../../../../store/slice/announcementSlice';
-import { addAnnouncement} from '../../../../store/slice/announcementSlice';
-import { getGroupsList } from '../../../../store/slice/groupsSlice';
 import { useHistory } from 'react-router-dom';
+import { confirmDialog, CustomButton, CustomFormItem, errorDialog, successDialog, Text } from '../../../../components';
+import {
+  addAnnouncement,
+  getAvatarUpload,
+  getByFilterPagedAnnouncementTypes,
+} from '../../../../store/slice/announcementSlice';
+import { getByFilterPagedGroups } from '../../../../store/slice/groupsSlice';
 import '../../../../styles/announcementManagement/saveAndFinish.scss';
 
 const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileImage }) => {
@@ -14,7 +17,10 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileIma
   const dispatch = useDispatch();
   const { announcementTypes } = useSelector((state) => state?.announcement);
   const loadGroupsList = useCallback(async () => {
-    await dispatch(getGroupsList());
+    let data = {
+      ShowAtAnnouncement: true,
+    };
+    await dispatch(getByFilterPagedGroups(data));
   }, [dispatch]);
   useEffect(() => {
     loadGroupsList();
@@ -26,7 +32,6 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileIma
     async (status) => {
       dispatch(getByFilterPagedAnnouncementTypes());
       const values = await form.validateFields();
-      console.log(values);
 
       const startOfAnnouncement = values?.startDate
         ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD-HH-mm')
@@ -43,8 +48,6 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileIma
       }
       try {
         const values = await form.validateFields();
-        console.log(values);
-
         const startDate = values?.startDate ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD') : undefined;
         const startHour = values?.startDate ? dayjs(values?.startDate)?.utc().format('HH:mm:ss') : undefined;
         const endDate = values?.endDate ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD') : undefined;
@@ -58,7 +61,7 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileIma
           }
         }
         let rolesArray = groupsList.filter(function (e) {
-          return values.roles.indexOf(e.id) != -1;
+          return values.roles.indexOf(e.id) !== -1;
         });
         const fileId = await dispatch(getAvatarUpload(fileImage));
         let data = {
@@ -120,7 +123,7 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileIma
       <CustomButton className="cancel-btn" onClick={onCancel}>
         İptal
       </CustomButton>
-      <CustomButton  className="draft-btn" onClick={() => onFinish(3)}>
+      <CustomButton className="draft-btn" onClick={() => onFinish(3)}>
         Taslak Olarak Kaydet
       </CustomButton>
       <CustomButton type="primary" className="save-and-finish-btn" onClick={() => onFinish(1)}>

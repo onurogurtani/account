@@ -1,30 +1,31 @@
-import { Col, Form, Row, Upload } from 'antd';
+import { Col, Form, Row } from 'antd';
 import dayjs from 'dayjs';
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
-import { getGroupsList } from '../../../../store/slice/groupsSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import {
+  CustomCheckbox,
   CustomDatePicker,
   CustomForm,
   CustomFormItem,
   CustomInput,
   CustomSelect,
   Option,
-  Text,
-  CustomCheckbox,
+  Text
 } from '../../../../components';
-import { useDispatch, useSelector } from 'react-redux';
+import { getByFilterPagedAnnouncementTypes } from '../../../../store/slice/announcementSlice';
+import { getByFilterPagedGroups } from '../../../../store/slice/groupsSlice';
+import '../../../../styles/announcementManagement/addAnnouncementInfo.scss';
 import { dateValidator, reactQuillValidator } from '../../../../utils/formRule';
 import AddAnnouncementFooter from '../addAnnouncement/AddAnnouncementFooter';
 import EditAnnouncementFooter from '../editAnnouncement/EditAnnouncementFooter';
-import { getByFilterPagedAnnouncementTypes } from '../../../../store/slice/announcementSlice';
 import AnnouncementIcon from './AnnouncementIcon';
 
-const formPublicationPlaces = [
+const announcementPublicationPlaces = [
   { id: 1, name: 'Anasayfa' },
-  { id: 2, name: 'Anketler Sayfası' },
-  { id: 3, name: 'Pop-up' },
-  { id: 4, name: 'Bildirimler' },
+  { id: 2, name: 'Tüm Duyurular Sayfası' },
+  { id: 3, name: 'Bildirimler' },
+  { id: 4, name: 'Pop-up' },
 ];
 
 const AnnouncementInfoForm = ({
@@ -32,10 +33,10 @@ const AnnouncementInfoForm = ({
   history,
   initialValues,
   announcementInfoData,
-  setFormData,
   updated,
   setUpdated,
 }) => {
+  const [formData, setFormData] = useState({});
   const dispatch = useDispatch();
   const urlRef = useRef('');
   const nameRef = useRef('');
@@ -44,7 +45,10 @@ const AnnouncementInfoForm = ({
   useEffect(() => {}, [required]);
 
   const loadGroupsList = useCallback(async () => {
-    await dispatch(getGroupsList());
+    let data = {
+      ShowAtAnnouncement: true,
+    };
+    await dispatch(getByFilterPagedGroups(data));
   }, [dispatch]);
   useEffect(() => {
     loadGroupsList();
@@ -53,14 +57,13 @@ const AnnouncementInfoForm = ({
   const { groupsList } = useSelector((state) => state?.groups);
 
   const [form] = Form.useForm();
-  const { announcementTypes, updateAnnouncementObject } = useSelector((state) => state?.announcement);
+  const { announcementTypes } = useSelector((state) => state?.announcement);
 
-  const [quillValue, setQuillValue] = useState('');
+  const [quillValue] = useState('');
   const [fileImage, setFileImage] = useState(null);
   useEffect(() => {
     dispatch(getByFilterPagedAnnouncementTypes());
     if (initialValues) {
-      console.log(initialValues?.isReadCheckbox)
       const currentDate = dayjs().utc().format('YYYY-MM-DD-HH-mm');
       const startDate = dayjs(initialValues?.startDate).utc().format('YYYY-MM-DD-HH-mm');
       const endDate = dayjs(initialValues?.endDate).utc().format('YYYY-MM-DD-HH-mm');
@@ -80,7 +83,7 @@ const AnnouncementInfoForm = ({
         homePageContent: initialValues?.homePageContent,
         content: initialValues?.content,
         roles: idsOfRolesArr,
-        isReadCheckbox:initialValues?.isReadCheckbox
+        isReadCheckbox: initialValues?.isReadCheckbox,
       };
       form.setFieldsValue({ ...initialData });
       setAnnouncementInfoData(initialValues.id);
@@ -315,7 +318,7 @@ const AnnouncementInfoForm = ({
             width: '100%',
           }}
         >
-          {groupsList.map((item, i) => {
+          {groupsList?.map((item, i) => {
             return (
               <Option key={item?.id} value={item?.id}>
                 {item?.groupName}
@@ -343,7 +346,7 @@ const AnnouncementInfoForm = ({
             width: '100%',
           }}
         >
-          {formPublicationPlaces.map((item, i) => {
+          {announcementPublicationPlaces.map((item, i) => {
             return (
               <Option key={item?.id} value={item?.id}>
                 {item?.name}
@@ -352,16 +355,14 @@ const AnnouncementInfoForm = ({
           })}
         </CustomSelect>
       </CustomFormItem>
-      {(selectedPlaces?.includes(3) || initialValues?.announcementPublicationPlaces?.includes(3)) && (
+      {(selectedPlaces?.includes(4) || initialValues?.announcementPublicationPlaces?.includes(4)) && (
         <CustomFormItem
           name="isReadCheckbox"
           className="custom-form-item"
           valuePropName="checked"
           style={{ marginLeft: '200px' }}
         >
-          <CustomCheckbox
-            value="true"
-          >
+          <CustomCheckbox value="true">
             <p style={{ fontSize: '16px', fontWeight: '500' }}>Okundu onayı alınsın</p>
           </CustomCheckbox>
         </CustomFormItem>
