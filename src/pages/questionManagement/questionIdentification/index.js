@@ -1,7 +1,7 @@
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Col, Form, Row, Pagination } from 'antd';
+import { Col, Form, Row, Pagination, Spin } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import {
   CustomButton,
   CustomCheckbox,
@@ -9,26 +9,35 @@ import {
   CustomForm,
   CustomFormItem,
   CustomInput,
+  CustomModal,
   CustomPageHeader,
   CustomRadio,
   CustomRadioGroup,
   CustomSelect,
   CustomTextArea,
+  errorDialog,
   Option,
+  successDialog,
   Text,
 } from '../../../components';
+import { LoadingOutlined } from '@ant-design/icons';
+
 import { getAllClassStages } from '../../../store/slice/classStageSlice';
-import { getLessons } from '../../../store/slice/lessonsSlice';
+import { getLessonsQuesiton } from '../../../store/slice/lessonsSlice';
 import { getEducationYears } from '../../../store/slice/preferencePeriodSlice';
 import { getPublisherList, getBookList } from '../../../store/slice/questionFileSlice';
 import {
   getAddQuestion,
   getByFilterPagedQuestionOfExamsList,
   getFileUpload,
+  getUpdateQuestion,
 } from '../../../store/slice/questionIdentificationSlice';
 import '../../../styles/questionManagement/questionIdentification.scss';
+import EarningsChoice from '../../userManagement/questionIdentifaction/EarningsChoice';
 import UploadFile from './UploadFile';
 const QuestionIdentification = () => {
+  const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+
   const dispatch = useDispatch();
   const [educationYearsData, setEducationYearsData] = useState([]);
   const [classListData, setClassListData] = useState([]);
@@ -36,23 +45,40 @@ const QuestionIdentification = () => {
   const [bookData, setBookData] = useState([]);
   const [lessonsData, setLessonsData] = useState([]);
   const [formData, setFormData] = useState({});
-  const [files, setFiles] = useState({});
-
+  const [showModal, setShowModal] = useState(false);
+  const [fileUploadLoading, setFileUploadLoading] = useState(false);
   const { educationYears } = useSelector((state) => state.preferencePeriod);
   const { allClassList } = useSelector((state) => state.classStages);
   const { questionOfExams, pagedProperty } = useSelector((state) => state.questionIdentification);
-
   const { publisherList, bookList } = useSelector((state) => state.questionManagement);
   const { lessons } = useSelector((state) => state.lessons);
   const [filterForm] = Form.useForm();
   const [filterForm2] = Form.useForm();
   const QuestionOfExamState = Form.useWatch('QuestionOfExamState', filterForm2);
+  const classroomId = Form.useWatch('classroomId', filterForm);
   const [years, setYears] = useState([]);
   const token = useSelector((state) => state?.auth?.token);
+  const { earningChoice } = useSelector((state) => state?.earningChoice);
 
   useEffect(() => {
     if (questionOfExams?.questionOfExamDetail) {
-      setFormData({ ...questionOfExams.questionOfExamDetail });
+      const newData = { ...questionOfExams.questionOfExamDetail };
+      newData.questionOfExamDetailLessonSubSubjects = [];
+      newData.questionOfExamDetailLessonSubjects = [];
+      newData.questionOfExamDetailLessonUnits = [];
+      questionOfExams?.questionOfExamDetail?.questionOfExamDetailLessonSubSubjects?.forEach((item, index) => {
+        newData.questionOfExamDetailLessonSubSubjects.push({ lessonSubSubjectId: item.lessonSubSubjectId });
+      });
+      questionOfExams?.questionOfExamDetail?.questionOfExamDetailLessonSubjects?.forEach((item, index) => {
+        newData.questionOfExamDetailLessonSubjects.push({ lessonSubjectId: item.lessonSubjectId });
+      });
+      questionOfExams?.questionOfExamDetail?.questionOfExamDetailLessonUnits?.forEach((item, index) => {
+        newData.questionOfExamDetailLessonUnits.push({ lessonUnitId: item.lessonUnitId });
+      });
+
+      setFormData(newData);
+    } else {
+      setFormData({});
     }
   }, [questionOfExams]);
   const addFile = async (file, fileType) => {
@@ -100,7 +126,8 @@ const QuestionIdentification = () => {
   useEffect(() => {
     dispatch(getPublisherList());
   }, [dispatch]);
-  useEffect(() => {
+  /* useEffect(() => {
+  
     dispatch(
       getByFilterPagedQuestionOfExamsList({
         'QuestionOfExamDetailSearch.IncludeQuestionFilesBase64': 'true',
@@ -109,28 +136,32 @@ const QuestionIdentification = () => {
         'QuestionOfExamDetailSearch.PageSize': 1,
       }),
     );
-  }, [dispatch]);
+  }, [dispatch]);*/
 
   const searchSumbit = (pageNumber) => {
     const form1 = filterForm.getFieldValue();
     const form2 = filterForm2.getFieldValue();
-    dispatch(
-      getByFilterPagedQuestionOfExamsList({
-        'QuestionOfExamDetailSearch.IncludeQuestionFilesBase64': 'true',
-        'QuestionOfExamDetailSearch.ThenIncludeQuestionSolutionsFilesBase64': 'false',
-        'QuestionOfExamDetailSearch.PageNumber': pageNumber ? pageNumber : 1,
-        'QuestionOfExamDetailSearch.PageSize': 1,
-        'QuestionOfExamDetailSearch.EducationYearId': form1.EducationYearId,
-        'QuestionOfExamDetailSearch.ClassroomId': form1.ClassroomId,
-        'QuestionOfExamDetailSearch.LessonId': form1.LessonId,
-        'QuestionOfExamDetailSearch.PublisherId': form1.PublisherId,
-        'QuestionOfExamDetailSearch.Difficulty': form2.Difficulty,
-        'QuestionOfExamDetailSearch.HasAcquisitionTree': form2.HasAcquisitionTree,
-        'QuestionOfExamDetailSearch.QuestionOfExamState': form2.QuestionOfExamState,
-        'QuestionOfExamDetailSearch.QuestionOfExamWrongKind': form2.QuestionOfExamWrongKind,
-        'QuestionOfExamDetailSearch.QuestionOfExamKind': form2.QuestionOfExamKind,
-      }),
-    );
+    if (form1.ClassroomId) {
+      dispatch(
+        getByFilterPagedQuestionOfExamsList({
+          'QuestionOfExamDetailSearch.IncludeQuestionFilesBase64': 'true',
+          'QuestionOfExamDetailSearch.ThenIncludeQuestionSolutionsFilesBase64': 'false',
+          'QuestionOfExamDetailSearch.PageNumber': pageNumber ? pageNumber : 1,
+          'QuestionOfExamDetailSearch.PageSize': 1,
+          'QuestionOfExamDetailSearch.EducationYearId': form1.EducationYearId,
+          'QuestionOfExamDetailSearch.ClassroomId': form1.ClassroomId,
+          'QuestionOfExamDetailSearch.LessonId': form1.LessonId,
+          'QuestionOfExamDetailSearch.PublisherId': form1.PublisherId,
+          'QuestionOfExamDetailSearch.Difficulty': form2.Difficulty,
+          'QuestionOfExamDetailSearch.HasAcquisitionTree': form2.HasAcquisitionTree,
+          'QuestionOfExamDetailSearch.QuestionOfExamState': form2.QuestionOfExamState,
+          'QuestionOfExamDetailSearch.QuestionOfExamWrongKind': form2.QuestionOfExamWrongKind,
+          'QuestionOfExamDetailSearch.QuestionOfExamKind': form2.QuestionOfExamKind,
+        }),
+      );
+    } else {
+      errorDialog({ title: 'Hata', message: 'Sınıf seviyesi boş olamaz!' });
+    }
   };
   useEffect(() => {
     const newData = [];
@@ -148,13 +179,16 @@ const QuestionIdentification = () => {
   }, [allClassList]);
   useEffect(() => {
     const newData = [];
+    newData.push({ value: null, label: 'Hepsi' });
     publisherList?.forEach((element, item) => {
       newData.push({ value: element.id, label: element.name });
     });
+
     setPublishersData(newData);
   }, [publisherList]);
   useEffect(() => {
     const newData = [];
+    newData.push({ value: null, label: 'Hepsi' });
     bookList?.forEach((element, item) => {
       newData.push({ value: element.id, label: element.name });
     });
@@ -162,9 +196,11 @@ const QuestionIdentification = () => {
   }, [bookList]);
   useEffect(() => {
     const newData = [];
+    newData.push({ value: null, label: 'Hepsi' });
     lessons?.forEach((element, item) => {
       newData.push({ value: element.id, label: element.name });
     });
+
     setLessonsData(newData);
   }, [lessons]);
 
@@ -173,12 +209,23 @@ const QuestionIdentification = () => {
     delete newFormData.pdfSolutionFile;
     delete newFormData.videoSolutionFile;
     delete newFormData.imageSolutionFile;
-
-    const action = dispatch(getAddQuestion({ data: newFormData }));
-    if (getAddQuestion.fulfilled.match(action)) {
-      alert('okey');
+    newFormData.questionOfExamId = questionOfExams.id;
+    if (questionOfExams.questionOfExamDetail) {
+      const action = await dispatch(getUpdateQuestion({ data: { questionOfExamDetail: newFormData } }));
+      if (getUpdateQuestion.fulfilled.match(action)) {
+        successDialog({ title: 'Onay', message: 'Güncelledi' });
+        searchSumbit(pagedProperty.currentPage);
+      } else {
+        errorDialog({ title: 'Hata', message: action?.payload?.message });
+      }
     } else {
-      console.log('hata');
+      const action = await dispatch(getAddQuestion({ data: { questionOfExamDetail: newFormData } }));
+      if (getAddQuestion.fulfilled.match(action)) {
+        successDialog({ title: 'Onay', message: 'Eklendi' });
+        searchSumbit(pagedProperty.currentPage);
+      } else {
+        errorDialog({ title: 'Hata', message: action?.payload?.message });
+      }
     }
   };
   return (
@@ -194,7 +241,7 @@ const QuestionIdentification = () => {
                 <CustomFormItem label="Sınıf Seviyesi" name="ClassroomId">
                   <CustomSelect
                     onChange={(e) => {
-                      dispatch(getLessons([{ field: 'classroomId', value: e, compareType: 0 }]));
+                      dispatch(getLessonsQuesiton([{ field: 'classroomId', value: e, compareType: 0 }]));
                     }}
                     options={classListData}
                   />
@@ -202,7 +249,11 @@ const QuestionIdentification = () => {
                 <CustomFormItem label="Yayın Adı" name="PublisherId">
                   <CustomSelect
                     onChange={(e) => {
-                      dispatch(getBookList([{ field: 'publisherId', value: e, compareType: 0 }]));
+                      if (e !== null) {
+                        dispatch(getBookList([{ field: 'publisherId', value: e, compareType: 0 }]));
+                      } else {
+                        setBookData([]);
+                      }
                     }}
                     options={publishersData}
                   />
@@ -305,7 +356,7 @@ const QuestionIdentification = () => {
                   </Row>
                 </CustomForm>
               </div>
-              {questionOfExams ? (
+              {questionOfExams && questionOfExams?.id ? (
                 <Row gutter={16}>
                   <Col span={12}>
                     <div className="quesiton-images">
@@ -350,7 +401,7 @@ const QuestionIdentification = () => {
                       <label className="quesiton-label">Ders:</label>
                       <div>{questionOfExams?.groupOfQuestionOfExam?.lesson?.name}</div>
                     </div>
-                    <div className="question-info">
+                    <div onClick={() => setShowModal(true)} className="question-info">
                       <label className="quesiton-label">Kazanımlar:</label>
                       <CustomButton disabled={formData.questionOfExamState === 1}>Kazanım Ekle</CustomButton>
                     </div>
@@ -365,9 +416,6 @@ const QuestionIdentification = () => {
                             if (e.target.value === 0) {
                               delete newData.questionOfExamWrongKind;
                               delete newData.questionStateNote;
-                            } else {
-                              delete newData.correctAnswerIndex;
-                              delete newData.quality;
                             }
                             setFormData({ ...newData, questionOfExamState: e.target.value });
                           }}
@@ -475,6 +523,71 @@ const QuestionIdentification = () => {
                       </div>
                     </div>
                     <div className="question-info">
+                      <label className="quesiton-label">Zorluk</label>
+                      <div style={{ display: 'flex' }}>
+                        <div
+                          onClick={() => {
+                            if (formData.questionOfExamState !== 1) {
+                              setFormData({ ...formData, difficulty: 1 });
+                            }
+                          }}
+                          className={`circle-reply ${formData.difficulty === 1 && 'circle-reply-active'} ${
+                            formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''
+                          }`}
+                        >
+                          1
+                        </div>
+                        <div
+                          onClick={() => {
+                            if (formData.questionOfExamState !== 1) {
+                              setFormData({ ...formData, difficulty: 2 });
+                            }
+                          }}
+                          className={`circle-reply ${formData.difficulty === 2 && 'circle-reply-active'} ${
+                            formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''
+                          }`}
+                        >
+                          2
+                        </div>
+                        <div
+                          onClick={() => {
+                            if (formData.questionOfExamState !== 1) {
+                              setFormData({ ...formData, difficulty: 3 });
+                            }
+                          }}
+                          className={`circle-reply ${formData.difficulty === 3 && 'circle-reply-active'} ${
+                            formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''
+                          }`}
+                        >
+                          3
+                        </div>
+                        <div
+                          onClick={() => {
+                            if (formData.questionOfExamState !== 1) {
+                              setFormData({ ...formData, difficulty: 4 });
+                            }
+                          }}
+                          className={`circle-reply ${formData.difficulty === 4 && 'circle-reply-active'} ${
+                            formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''
+                          }  `}
+                        >
+                          4
+                        </div>
+                        <div
+                          onClick={() => {
+                            if (formData.questionOfExamState !== 1) {
+                              setFormData({ ...formData, difficulty: 5 });
+                            }
+                          }}
+                          className={`circle-reply ${formData.difficulty === 5 && 'circle-reply-active'} ${
+                            formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''
+                          }`}
+                        >
+                          5
+                        </div>
+                      </div>
+                    </div>
+                    <div className="question-info">
                       <label className="quesiton-label">Kalite</label>
                       <div className="starts">
                         <div
@@ -558,7 +671,11 @@ const QuestionIdentification = () => {
                             disabled={formData.questionOfExamState === 1}
                             onChange={(e) => {
                               const value = e.target.value;
-                              if (!isNaN(value[value.length - 1]) || value[value.length - 1] === undefined) {
+                              if (
+                                !isNaN(value[value.length - 1]) ||
+                                value[value.length - 1] === undefined ||
+                                value[value.length - 1] === '.'
+                              ) {
                                 setFormData({ ...formData, solutionMinute: e.target.value });
                               } else {
                               }
@@ -568,6 +685,25 @@ const QuestionIdentification = () => {
                         </div>
 
                         <div className="minute-text">Dk</div>
+                      </div>
+                    </div>
+                    <div className="question-info">
+                      <label className="quesiton-label">Kelime Adet:</label>
+                      <div className="minute">
+                        <div>
+                          <CustomInput
+                            disabled={formData.questionOfExamState === 1}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              console.log(value[value.length - 1]);
+                              if (!isNaN(value[value.length - 1]) || value[value.length - 1] === undefined) {
+                                setFormData({ ...formData, wordCount: e.target.value });
+                              } else {
+                              }
+                            }}
+                            value={formData.wordCount}
+                          />
+                        </div>
                       </div>
                     </div>
                     <div className="question-info">
@@ -636,60 +772,111 @@ const QuestionIdentification = () => {
                             </CustomSelect>{' '}
                           </div>
                         </div>
+
                         <div className="question-info">
                           <label className="quesiton-label"></label>
                           <div className="checkbox-item">
                             <CustomRadioGroup
+                              value={formData.outInTYT ? 'outInTYT' : formData.outInAYT ? 'outInAYT' : ''}
                               disabled={formData.questionOfExamState === 1}
                               onChange={(e) => {
                                 const value = e.target.value;
                                 if (value === 'outInTYT') {
-                                  setFormData({ ...formData, outInTYT: true });
-                                  setFormData({ ...formData, outInAYT: false });
+                                  setFormData({ ...formData, outInTYT: true, outInAYT: false });
                                 } else {
-                                  setFormData({ ...formData, outInTYT: false });
-                                  setFormData({ ...formData, outInAYT: true });
+                                  setFormData({ ...formData, outInTYT: false, outInAYT: true });
                                 }
                               }}
                             >
                               <CustomRadio value={'outInTYT'}>Tyt</CustomRadio>
-                              <CustomRadio value={'outInAYT d'}>Ayt</CustomRadio>
+                              <CustomRadio value={'outInAYT'}>Ayt</CustomRadio>
                             </CustomRadioGroup>
                           </div>
                         </div>
                       </>
                     )}
                     <div className="upload">
+                      <div className=" update-file-name">
+                        {questionOfExams?.questionOfExamDetail?.videoSolutionFile?.fileName}
+                      </div>
                       <UploadFile
                         disabled={formData.questionOfExamState === 1}
-                        onChange={(e) => {
-                          setFormData({ ...formData, videoSolutionFile: e });
+                        onChange={async (e) => {
+                          setFileUploadLoading(true);
+                          const action = await addFile(e, 4);
+                          if (getFileUpload.fulfilled.match(action)) {
+                            setFileUploadLoading(false);
+                            setFormData({ ...formData, videoSolutionFileId: action.payload.data.data.id });
+                            successDialog({ title: 'Başarılı', message: 'Eklendi' });
+                          } else {
+                            setFileUploadLoading(false);
+                            errorDialog({
+                              title: 'Hata',
+                              message: action?.payload?.message,
+                            });
+                          }
                         }}
                         accept="video/mp4,video/x-m4v,video/*"
                         title={'Video Ekle'}
                       />
+                      <div className=" update-file-name">
+                        {questionOfExams?.questionOfExamDetail?.imageSolutionFile?.fileName}
+                      </div>
                       <UploadFile
                         disabled={formData.questionOfExamState === 1}
-                        onChange={(e) => {
-                          setFormData({ ...formData, imageSolutionFile: e });
+                        onChange={async (e) => {
+                          setFileUploadLoading(true);
+                          const action = await addFile(e, 0);
+                          if (getFileUpload.fulfilled.match(action)) {
+                            setFileUploadLoading(false);
+                            setFormData({ ...formData, imageSolutionFileId: action.payload.data.data.id });
+                            successDialog({ title: 'Başarılı', message: 'Eklendi' });
+                          } else {
+                            setFileUploadLoading(false);
+                            errorDialog({
+                              title: 'Hata',
+                              message: action?.payload?.message,
+                            });
+                          }
                         }}
                         accept="image/*"
                         title={'Resim Ekle'}
                       />
+                      <div className=" update-file-name">
+                        {questionOfExams?.questionOfExamDetail?.pdfSolutionFile?.fileName}
+                      </div>
                       <UploadFile
                         disabled={formData.questionOfExamState === 1}
-                        onChange={(e) => {
-                          setFormData({ ...formData, pdfSolutionFile: e });
+                        onChange={async (e) => {
+                          setFileUploadLoading(true);
+                          const action = await addFile(e, 1);
+                          if (getFileUpload.fulfilled.match(action)) {
+                            setFormData({ ...formData, pdfSolutionFileId: action.payload.data.data.id });
+                            successDialog({ title: 'Başarılı', message: 'Eklendi' });
+                            setFileUploadLoading(false);
+                          } else {
+                            setFileUploadLoading(false);
+                            errorDialog({
+                              title: 'Hata',
+                              message: action?.payload?.message,
+                            });
+                          }
                         }}
                         accept=".pdf"
                         title={'Pdf Ekle'}
                       />
                     </div>
+                    {fileUploadLoading && (
+                      <div className=" upload-file-loading">
+                        {' '}
+                        <Spin indicator={antIcon} />
+                      </div>
+                    )}
                   </Col>
                   <Col span={24}>
-                    <div onClick={addData} className=" save-button">
-                      <CustomButton className="save-q" type="primary">
-                        Kaydet
+                    <div className=" save-button">
+                      <CustomButton onClick={addData} disabled={fileUploadLoading} className="save-q" type="primary">
+                        {questionOfExams?.questionOfExamDetail ? 'Güncelle' : 'Kaydet'}
                       </CustomButton>
                     </div>
                   </Col>
@@ -734,6 +921,36 @@ const QuestionIdentification = () => {
           </div>
         </div>
       </CustomCollapseCard>
+      <div className="earnings-modal">
+        <CustomModal
+          title="Kazanım Seç"
+          visible={showModal}
+          onOk={() => {
+            const newData = { ...formData };
+            newData.questionOfExamDetailLessonUnits = [];
+            newData.questionOfExamDetailLessonSubjects = [];
+            newData.questionOfExamDetailLessonSubSubjects = [];
+
+            earningChoice?.unitId?.forEach((item, index) => {
+              newData.questionOfExamDetailLessonUnits.push({ lessonUnitId: item });
+            });
+            earningChoice?.subjectId?.forEach((item, index) => {
+              newData.questionOfExamDetailLessonSubjects.push({ lessonSubjectId: item });
+            });
+            earningChoice?.subSubjectId?.forEach((item, index) => {
+              newData.questionOfExamDetailLessonSubSubjects.push({ lessonSubSubjectId: item });
+            });
+            setFormData(newData);
+            setShowModal(false);
+          }}
+          onCancel={() => setShowModal(false)}
+          okText="Kaydet"
+          cancelText="Vazgeç"
+          bodyStyle={{ overflowY: 'auto' }}
+        >
+          <EarningsChoice classroomId={classroomId} />
+        </CustomModal>
+      </div>
     </CustomPageHeader>
   );
 };

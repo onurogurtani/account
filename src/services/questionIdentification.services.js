@@ -9,9 +9,16 @@ const getByFilterPagedQuestionOfExams = (data) => {
 };
 const getAddQuestionOfExams = (data) => {
   return api({
-    url: 'QuestionOfExams',
+    url: 'QuestionOfExamDetails/Add',
     method: 'POST',
-    params: data,
+    data: data,
+  });
+};
+const getUpdateQuestionOfExams = (data) => {
+  return api({
+    url: 'QuestionOfExamDetails/Update',
+    method: 'PUT',
+    data: data,
   });
 };
 const fileUpload = (data, options) => {
@@ -22,6 +29,7 @@ const publisherServices = {
   getByFilterPagedQuestionOfExams,
   fileUpload,
   getAddQuestionOfExams,
+  getUpdateQuestionOfExams,
 };
 
 export default publisherServices;

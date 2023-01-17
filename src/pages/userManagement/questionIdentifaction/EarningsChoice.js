@@ -6,7 +6,7 @@ import EarningSearch from './EarningSearch';
 import CustomSelect, { Option } from '../../../components/CustomSelect';
 import { getByClassromIdLessons } from '../../../store/slice/lessonsSlice';
 
-const EarningsChoice = () => {
+const EarningsChoice = ({ classroomId = 63 }) => {
   const { lessonUnits } = useSelector((state) => state?.lessonUnits);
   const { lessonsGetByClassroom } = useSelector((state) => state?.lessons);
 
@@ -19,8 +19,8 @@ const EarningsChoice = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getByClassromIdLessons(63));
-  }, []);
+    dispatch(getByClassromIdLessons(classroomId));
+  }, [dispatch, classroomId]);
 
   const onSearch = (event) => {
     const expandedLevel = [];

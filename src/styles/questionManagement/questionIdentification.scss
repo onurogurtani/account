@@ -89,7 +89,7 @@
     }
     .minute-text {
       position: absolute;
-      right: 30px;
+      right: 40px;
     }
     .starts {
       display: flex;
@@ -201,4 +201,23 @@
 }
 .cursor-disabled-q {
   cursor: not-allowed !important;
+}
+.earnings-modal {
+  .ant-modal {
+    width: 100% !important;
+  }
+}
+
+.upload-file-loading {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+.update-file-name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }

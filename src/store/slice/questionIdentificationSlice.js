@@ -28,6 +28,17 @@ export const getAddQuestion = createAsyncThunk('getAddQuestion', async (data = {
     return rejectWithValue(error?.data);
   }
 });
+export const getUpdateQuestion = createAsyncThunk(
+  'getUpdateQuestion',
+  async (data = {}, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await questionIdentificationServices.getUpdateQuestionOfExams(data.data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 
 const initialState = {
   questionOfExams: {},
