@@ -40,10 +40,17 @@ const AnnouncementIcon = ({
   fileImage,
 }) => {
   const [fileList, setFileList] = useState([]);
-  console.log(initialValues)
   useEffect(() => {
-    (initialValues?.file &&
-      initialValues?.fileId) &&
+    if (initialValues?.file?.thumbUrl) {
+      setFileList([
+        {
+          uid: initialValues?.fileId,
+          name: initialValues?.file?.name,
+          url: initialValues.file.thumbUrl,
+          status: 'done',
+        },
+      ]);
+    } else if (initialValues?.file && initialValues?.fileId) {
       setFileList([
         {
           uid: initialValues?.fileId,
@@ -52,14 +59,8 @@ const AnnouncementIcon = ({
           status: 'done',
         },
       ]);
+    }
   }, []);
-
-
-  // FILE SHOW
-  // const [previewOpen, setPreviewOpen] = useState(true);
-  // const [previewImage, setPreviewImage] = useState('');
-  // const [previewTitle, setPreviewTitle] = useState('');
-  // const handleCancel = () => setPreviewOpen(false);
   const handlePreview = async (file) => {
     return false;
     // // if (!file.url && !file.preview) {
@@ -70,8 +71,6 @@ const AnnouncementIcon = ({
     // setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
   };
 
-  //FILE SHOW
-
   const getFile = (e) => {
     if (Array.isArray(e)) {
       return e;
@@ -80,13 +79,10 @@ const AnnouncementIcon = ({
     setFileList(e.fileList);
     return e && e.fileList;
   };
-  // const  handleChange= ({ fileList: newFileList }) => setFileList(...newFileList);
-  console.log(fileList);
-
   return (
     <>
       <CustomFormItem
-        label={<Text t="Duyuru İkon" />}
+        label={<Text t="Duyuru İkonu" />}
         value={fileList}
         onChange={(e) => {
           setFileList(fileList);
@@ -106,14 +102,23 @@ const AnnouncementIcon = ({
             showRemoveIcon: true,
           }}
           defaultFileList={
-            initialValues?.file && [
-              {
-                uid: initialValues?.fileId,
-                name: initialValues?.file?.fileName,
-                url: `data:${initialValues?.file?.contentType};base64,${initialValues?.file?.file}`,
-                status: 'done',
-              },
-            ]
+            initialValues?.file?.thumbUrl
+              ? [
+                  {
+                    uid: initialValues?.fileId,
+                    name: initialValues?.file?.name,
+                    url: initialValues.file.thumbUrl,
+                    status: 'done',
+                  },
+                ]
+              : initialValues?.file && [
+                  {
+                    uid: initialValues?.fileId,
+                    name: initialValues?.file?.fileName,
+                    url: `data:${initialValues?.file?.contentType};base64,${initialValues?.file?.file}`,
+                    status: 'done',
+                  },
+                ]
           }
           listType="picture"
           beforeUpload={(e) => {
@@ -122,18 +127,13 @@ const AnnouncementIcon = ({
           onPreview={handlePreview}
           accept=".png,.jpeg,.jpg,.webp"
           onChange={async (e) => {
-            console.log(e.fileList);
-            // handleChange();
-            // setDefaultFileList(e.fileList);
             setFileList(e.fileList);
             let data = new FormData();
-            console.log(e.file,e.file.name)
             data.append('File', e.file);
             data.append('FileType', 4);
             data.append('FileName', e.file.name);
             data.append('Description', e.file.name);
             setFileImage(data);
-            console.log(data);
           }}
           maxCount={1}
           onRemove={() => setFileList([])}

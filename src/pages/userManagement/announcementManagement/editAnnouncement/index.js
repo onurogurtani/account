@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import EditAnnouncementTabs from './EditAnnouncementTabs';
-import { CustomButton, Text, CustomPageHeader } from '../../../../components';
+import { CustomButton, CustomPageHeader, Text } from '../../../../components';
 import '../../../../styles/announcementManagement/saveAndFinish.scss';
+import EditAnnouncementInfo from './EditAnnouncementInfo';
 
 const EditAnnouncement = () => {
-  const [step, setStep] = useState('1');
+  const [announcementInfoData, setAnnouncementInfoData] = useState({});
   const [updated, setUpdated] = useState(false);
   const history = useHistory();
 
@@ -29,13 +29,14 @@ const EditAnnouncement = () => {
         htmlType="submit"
         className="submit-btn"
         onClick={handleBackButton}
+        style={{ marginBottom: '1em' }}
       >
         Geri
       </CustomButton>
 
-      <EditAnnouncementTabs
-        step={step}
-        setStep={setStep}
+      <EditAnnouncementInfo
+        setAnnouncementInfoData={setAnnouncementInfoData}
+        announcementInfoData={announcementInfoData}
         updated={updated}
         setUpdated={setUpdated}
       />

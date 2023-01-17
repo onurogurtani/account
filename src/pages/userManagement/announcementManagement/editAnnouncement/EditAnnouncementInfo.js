@@ -1,21 +1,13 @@
 import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { CustomCollapseCard, Text } from '../../../../components';
 
 import '../../../../styles/announcementManagement/addAnnouncementInfo.scss';
 import AnnouncementInfoForm from '../forms/AnnouncementInfoForm';
 
-const AddAnnouncementInfo = ({
-  setStep,
-  step,
-  setAnnouncementInfoData,
-  selectedRole,
-  announcementInfoData,
-  setFormData,
-  updated,
-  setUpdated
-}) => {
+const AddAnnouncementInfo = ({ setAnnouncementInfoData, announcementInfoData,
+  
+  updated, setUpdated }) => {
   const history = useHistory();
   const location = useLocation();
   useEffect(() => {
@@ -29,13 +21,9 @@ const AddAnnouncementInfo = ({
       <div className="addAnnouncementInfo-container">
         <AnnouncementInfoForm
           setAnnouncementInfoData={setAnnouncementInfoData}
-          setStep={setStep}
-          step={step}
           history={history}
           initialValues={location?.state?.data}
-          selectedRole={selectedRole}
           announcementInfoData={announcementInfoData}
-          setFormData={setFormData}
           updated={updated}
           setUpdated={setUpdated}
         />

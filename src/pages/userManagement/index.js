@@ -72,6 +72,11 @@ const EditAnnouncement = lazy(() =>
     default: Component,
   })),
 );
+const EarningsChoice = lazy(() =>
+  import('./questionIdentifaction/EarningsChoice').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 
 const UserManagement = {
   SurveyManagement,
@@ -86,7 +91,8 @@ const UserManagement = {
   AddAnnouncement,
   ShowAnnouncement,
   EditAnnouncement,
-  PasswordManagement
+  PasswordManagement,
+  EarningsChoice
 };
 
 export default UserManagement;

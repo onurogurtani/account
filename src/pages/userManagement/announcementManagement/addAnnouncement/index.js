@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { CustomButton, CustomPageHeader, Text } from '../../../../components';
-import AddAnnouncementTabs from './AddAnnouncementTabs';
+import AddAnnouncementInfo from './AddAnnouncementInfo';
 
 const AddAnnouncement = () => {
-  const [step, setStep] = useState('1');
   const history = useHistory();
 
   useEffect(() => {
@@ -27,10 +26,11 @@ const AddAnnouncement = () => {
         htmlType="submit"
         className="submit-btn"
         onClick={handleBackButton}
+        style={{ marginBottom: '1em' }}
       >
         Geri
       </CustomButton>
-      <AddAnnouncementTabs step={step} setStep={setStep} />
+      <AddAnnouncementInfo />
     </>
   );
 };
