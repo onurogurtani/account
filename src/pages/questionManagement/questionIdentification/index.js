@@ -21,7 +21,11 @@ import { getAllClassStages } from '../../../store/slice/classStageSlice';
 import { getLessons } from '../../../store/slice/lessonsSlice';
 import { getEducationYears } from '../../../store/slice/preferencePeriodSlice';
 import { getPublisherList, getBookList } from '../../../store/slice/questionFileSlice';
-import { getByFilterPagedQuestionOfExamsList, getFileUpload } from '../../../store/slice/questionIdentificationSlice';
+import {
+  getAddQuestion,
+  getByFilterPagedQuestionOfExamsList,
+  getFileUpload,
+} from '../../../store/slice/questionIdentificationSlice';
 import '../../../styles/questionManagement/questionIdentification.scss';
 import UploadFile from './UploadFile';
 const QuestionIdentification = () => {
@@ -32,6 +36,7 @@ const QuestionIdentification = () => {
   const [bookData, setBookData] = useState([]);
   const [lessonsData, setLessonsData] = useState([]);
   const [formData, setFormData] = useState({});
+  const [files, setFiles] = useState({});
 
   const { educationYears } = useSelector((state) => state.preferencePeriod);
   const { allClassList } = useSelector((state) => state.classStages);
@@ -56,7 +61,7 @@ const QuestionIdentification = () => {
     fileData.append('FileType', fileType);
     fileData.append('FileName', file.name);
     fileData.append('Description', file.name);
-    dispatch(
+    const action = dispatch(
       getFileUpload({
         data: fileData,
         options: {
@@ -67,6 +72,7 @@ const QuestionIdentification = () => {
         },
       }),
     );
+    return action;
   };
   const StarSvg = ({ fill }) => {
     return (
@@ -162,6 +168,19 @@ const QuestionIdentification = () => {
     setLessonsData(newData);
   }, [lessons]);
 
+  const addData = async () => {
+    const newFormData = { ...formData };
+    delete newFormData.pdfSolutionFile;
+    delete newFormData.videoSolutionFile;
+    delete newFormData.imageSolutionFile;
+
+    const action = dispatch(getAddQuestion({ data: newFormData }));
+    if (getAddQuestion.fulfilled.match(action)) {
+      alert('okey');
+    } else {
+      console.log('hata');
+    }
+  };
   return (
     <CustomPageHeader>
       <CustomCollapseCard cardTitle={'Soru Kimliklendirme'}>
@@ -668,7 +687,7 @@ const QuestionIdentification = () => {
                     </div>
                   </Col>
                   <Col span={24}>
-                    <div className=" save-button">
+                    <div onClick={addData} className=" save-button">
                       <CustomButton className="save-q" type="primary">
                         Kaydet
                       </CustomButton>

@@ -7,6 +7,13 @@ const getByFilterPagedQuestionOfExams = (data) => {
     params: data,
   });
 };
+const getAddQuestionOfExams = (data) => {
+  return api({
+    url: 'QuestionOfExams',
+    method: 'POST',
+    params: data,
+  });
+};
 const fileUpload = (data, options) => {
   return axios.post(`${process.env.PUBLIC_HOST_API}/Files`, data, { ...options });
 };
@@ -14,6 +21,7 @@ const fileUpload = (data, options) => {
 const publisherServices = {
   getByFilterPagedQuestionOfExams,
   fileUpload,
+  getAddQuestionOfExams,
 };
 
 export default publisherServices;

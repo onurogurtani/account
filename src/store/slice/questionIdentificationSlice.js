@@ -20,6 +20,14 @@ export const getFileUpload = createAsyncThunk('getFileUpload', async (data = {},
     return rejectWithValue(error?.data);
   }
 });
+export const getAddQuestion = createAsyncThunk('getAddQuestion', async (data = {}, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await questionIdentificationServices.getAddQuestionOfExams(data.data);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
 
 const initialState = {
   questionOfExams: {},
