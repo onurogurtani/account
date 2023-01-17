@@ -43,6 +43,7 @@ import { questionManagementSlice } from './slice/questionFileSlice';
 import { lessonUnitsSlice } from './slice/lessonUnitsSlice';
 import { lessonSubjectsSlice } from './slice/lessonSubjectsSlice';
 import { lessonSubSubjectsSlice } from './slice/lessonSubSubjectsSlice';
+import { earningChoiceSlice } from './slice/earningChoiceSlice';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -81,6 +82,7 @@ const reducers = combineReducers({
   publisher: publisherSlice.reducer,
   publisherBook: publisherBookSlice.reducer,
   questionManagement: questionManagementSlice.reducer,
+  earningChoice:earningChoiceSlice.reducer
 });
 
 const persistConfig = {
