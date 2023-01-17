@@ -1,10 +1,10 @@
-import { Tag } from 'antd';
+import { Tag, Tooltip } from 'antd';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import ReactPlayer from 'react-player';
 import { CustomButton } from '../../../components';
 import { DownloadOutlined } from '@ant-design/icons';
 import { downloadFile } from '../../../store/slice/fileSlice';
+import VideoWatchModal from '../../../components/videoPlayer/VideoWatchModal';
 
 const ShowVideoGeneralInformation = () => {
   const dispatch = useDispatch();
@@ -13,6 +13,17 @@ const ShowVideoGeneralInformation = () => {
   const download = (file) => {
     dispatch(downloadFile(file));
   };
+  const marks = {};
+
+  currentVideo?.lessonSubSubjects.map((item) => {
+    const bracket = item.bracketTime?.replace(':', '.') * 100;
+    marks[bracket] = (
+      <Tooltip title={item.lessonSubSubject?.name}>
+        <span className="ant-slider-dot"></span>
+      </Tooltip>
+    );
+  });
+
   return (
     <div>
       <ul className="list">
@@ -48,29 +59,26 @@ const ShowVideoGeneralInformation = () => {
         </li>
         <li>
           Video:{' '}
-          <ReactPlayer
-            width="380px"
-            height="auto"
-            controls={true}
-            url={`https://trkcll-dijital-dersane-demo.ercdn.net/${currentVideo?.kalturaVideoId}.smil/playlist.m3u8`}
+          <VideoWatchModal
+            marks={marks}
+            name={currentVideo?.kalturaVideoName}
+            kalturaVideoId={currentVideo?.kalturaVideoId}
           />
         </li>
         <li>
           Intro Video:{' '}
-          <ReactPlayer
-            width="380px"
-            height="auto"
-            controls={true}
-            url={`https://trkcll-dijital-dersane-demo.ercdn.net/${currentVideo?.introVideo?.kalturaIntroVideoId}.smil/playlist.m3u8`}
+          <VideoWatchModal
+            name={currentVideo?.introVideo?.name}
+            kalturaVideoId={currentVideo?.introVideo?.kalturaIntroVideoId}
           />
         </li>
         <li>
           Ayraçlar:{' '}
           <span>
-            {currentVideo?.videoBrackets?.map((item, id) => {
+            {currentVideo?.lessonSubSubjects?.map((item, id) => {
               return (
                 <Tag className="m-1" color="magenta" key={id}>
-                  {item?.value} {'=>'} {item?.header}
+                  {item?.bracketTime} {'=>'} {item?.lessonSubSubject?.name}
                 </Tag>
               );
             })}
@@ -86,6 +94,15 @@ const ShowVideoGeneralInformation = () => {
               : 'Yok'}
           </span>
         </li>
+
+        <li>
+          Anket Kategorisi: <span>{currentVideo?.form?.categoryOfForm?.name || 'Anket Eklenmedi'}</span>
+        </li>
+
+        <li>
+          Anket: <span>{currentVideo?.form?.name || 'Anket Eklenmedi'}</span>
+        </li>
+
         <li>
           Anahtar Kelimeler:{' '}
           <span>
