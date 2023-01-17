@@ -1,75 +1,111 @@
 import dayjs from 'dayjs';
-import React, { useCallback, useEffect, useState } from 'react';
-import { confirmDialog, CustomButton, CustomFormItem, Text, errorDialog } from '../../../../components';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getByFilterPagedAnnouncementTypes, getAvatarUpload } from '../../../../store/slice/announcementSlice';
-import { FORM_DATA_CONVERT } from '../../../../utils/utils';
-import fileServices from '../../../../services/file.services';
+import { useHistory } from 'react-router-dom';
+import { confirmDialog, CustomButton, CustomFormItem, errorDialog, successDialog, Text } from '../../../../components';
+import {
+  addAnnouncement,
+  getAvatarUpload,
+  getByFilterPagedAnnouncementTypes,
+} from '../../../../store/slice/announcementSlice';
+import { getByFilterPagedGroups } from '../../../../store/slice/groupsSlice';
+import '../../../../styles/announcementManagement/saveAndFinish.scss';
 
-const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, history, fileImage }) => {
+const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileImage }) => {
+  const history = useHistory();
+
   const dispatch = useDispatch();
   const { announcementTypes } = useSelector((state) => state?.announcement);
+  const loadGroupsList = useCallback(async () => {
+    let data = {
+      ShowAtAnnouncement: true,
+    };
+    await dispatch(getByFilterPagedGroups(data));
+  }, [dispatch]);
+  useEffect(() => {
+    loadGroupsList();
+  }, []);
 
-  const onFinish = useCallback(async () => {
-    // CONTROLLİNG START AND END DATE
-    dispatch(getByFilterPagedAnnouncementTypes());
-    const values = await form.validateFields();
-    console.log(values);
+  const { groupsList } = useSelector((state) => state?.groups);
 
-    const startOfAnnouncement = values?.startDate
-      ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD-HH-mm')
-      : undefined;
-
-    const endOfAnnouncement = values?.endDate ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD-HH-mm') : undefined;
-
-    if (startOfAnnouncement >= endOfAnnouncement) {
-      errorDialog({
-        title: <Text t="error" />,
-        message: 'Başlangıç Tarihi Bitiş Tarihinden Önce Olmalıdır',
-      });
-      return;
-    }
-    try {
+  const onFinish = useCallback(
+    async (status) => {
+      dispatch(getByFilterPagedAnnouncementTypes());
       const values = await form.validateFields();
-      console.log(values);
 
-      const startDate = values?.startDate ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD') : undefined;
-      const startHour = values?.startDate ? dayjs(values?.startDate)?.utc().format('HH:mm:ss') : undefined;
-      const endDate = values?.endDate ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD') : undefined;
-      const endHour = values?.endDate ? dayjs(values?.endDate)?.utc().format('HH:mm:ss') : undefined;
-      const typeName = values.announcementType;
+      const startOfAnnouncement = values?.startDate
+        ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD-HH-mm')
+        : undefined;
 
-      const hop = [];
-      for (let i = 0; i < announcementTypes.length; i++) {
-        if (announcementTypes[i].name == typeName) {
-          hop.push(announcementTypes[i]);
-        }
+      const endOfAnnouncement = values?.endDate ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD-HH-mm') : undefined;
+
+      if (startOfAnnouncement >= endOfAnnouncement) {
+        errorDialog({
+          title: <Text t="error" />,
+          message: 'Başlangıç Tarihi Bitiş Tarihinden Önce Olmalıdır',
+        });
+        return;
       }
-      const fileId = await dispatch(getAvatarUpload(fileImage));
-      let data = {
-        announcementType: hop[0],
-        headText: values.headText.trim(),
-        content: values.content,
-        homePageContent: values.homePageContent,
-        startDate: startDate + 'T' + startHour + '.000Z',
-        endDate: endDate + 'T' + endHour + '.000Z',
-        isArchived: false,
-        fileId: fileId?.payload?.data?.id,
-        buttonName: values.buttonName,
-        buttonUrl: values.buttonUrl,
-        announcementPublicationPlaces:values?.announcementPublicationPlaces,
-        isPopupAvailable: values?.announcementPublicationPlaces.includes(3),
-        isReadCheckbox: values?.isReadCheckbox,
-      };
-      setAnnouncementInfoData(data);
-      setStep('2');
-    } catch (error) {
-      errorDialog({
-        title: <Text t="error" />,
-        message: 'error',
-      });
-    }
-  }, [announcementTypes, dispatch, fileImage, form, setAnnouncementInfoData, setStep]);
+      try {
+        const values = await form.validateFields();
+        const startDate = values?.startDate ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD') : undefined;
+        const startHour = values?.startDate ? dayjs(values?.startDate)?.utc().format('HH:mm:ss') : undefined;
+        const endDate = values?.endDate ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD') : undefined;
+        const endHour = values?.endDate ? dayjs(values?.endDate)?.utc().format('HH:mm:ss') : undefined;
+        const typeName = values.announcementType;
+
+        const foundType = [];
+        for (let i = 0; i < announcementTypes.length; i++) {
+          if (announcementTypes[i].name == typeName) {
+            foundType.push(announcementTypes[i]);
+          }
+        }
+        let rolesArray = groupsList.filter(function (e) {
+          return values.roles.indexOf(e.id) !== -1;
+        });
+        const fileId = await dispatch(getAvatarUpload(fileImage));
+        let data = {
+          roles: rolesArray,
+          announcementType: foundType[0],
+          headText: values.headText.trim(),
+          content: values.content,
+          homePageContent: values.homePageContent,
+          startDate: startDate + 'T' + startHour + '.000Z',
+          endDate: endDate + 'T' + endHour + '.000Z',
+          isArchived: false,
+          fileId: fileId?.payload?.data?.id,
+          buttonName: values.buttonName,
+          buttonUrl: values.buttonUrl,
+          publishStatus: status,
+          announcementPublicationPlaces: values?.announcementPublicationPlaces,
+          isPopupAvailable: values?.announcementPublicationPlaces.includes(3),
+          isReadCheckbox: values?.isReadCheckbox,
+        };
+        const action = await dispatch(addAnnouncement(data));
+
+        if (addAnnouncement.fulfilled.match(action)) {
+          successDialog({
+            title: <Text t="success" />,
+            message: 'Yeni Duyuru Başarıyla Eklendi',
+            onOk: () => {
+              history.push('/user-management/announcement-management');
+            },
+          });
+        } else {
+          errorDialog({
+            title: <Text t="error" />,
+            message: action?.payload?.message,
+          });
+        }
+      } catch (error) {
+        errorDialog({
+          title: <Text t="error" />,
+          message: 'error',
+        });
+      }
+    },
+    [announcementTypes, dispatch, fileImage, form, setAnnouncementInfoData, setStep],
+  );
 
   const onCancel = () => {
     confirmDialog({
@@ -87,8 +123,11 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, history
       <CustomButton className="cancel-btn" onClick={onCancel}>
         İptal
       </CustomButton>
-      <CustomButton type="primary" className="submit-btn" onClick={onFinish}>
-        Kaydet ve İlerle
+      <CustomButton className="draft-btn" onClick={() => onFinish(3)}>
+        Taslak Olarak Kaydet
+      </CustomButton>
+      <CustomButton type="primary" className="save-and-finish-btn" onClick={() => onFinish(1)}>
+        Kaydet ve Yayınla
       </CustomButton>
     </CustomFormItem>
   );

@@ -8,10 +8,11 @@ const announcementGetList = () => {
   });
 };
 // Announcements with filter
-const getByFilterPagedAnnouncements = (urlString) => {
+const getByFilterPagedAnnouncements = (params) => {
   return api({
-    url: `Announcements/GetByFilterPagedAnnouncements?${urlString}`,
+    url: `Announcements/GetByFilterPagedAnnouncements`,
     method: 'POST',
+    params,
   });
 };
 
@@ -80,7 +81,7 @@ const setActiveAnnouncements = (data) => {
 const announcementServices = {
   announcementGetList,
   getByFilterPagedAnnouncements,
-  getByFilterAnnouncementTypes ,
+  getByFilterAnnouncementTypes,
   addAnnouncement,
   createOrUpdateAnnouncementRole,
   editAnnouncement,
@@ -88,7 +89,7 @@ const announcementServices = {
   setPublishedAnnouncements,
   setArchiveAnnouncements,
   setUnPublishedAnnouncements,
-  setActiveAnnouncements
+  setActiveAnnouncements,
 };
 
 export default announcementServices;
