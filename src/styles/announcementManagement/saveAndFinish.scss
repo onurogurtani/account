@@ -24,3 +24,36 @@
     }
   }
 }
+.edit-footer{.edit-announcement-footer{
+  .cancel-btn{
+    color:white !important;
+    background-color: gray;
+    margin-right: 1em;
+  }
+  .draft-btn{
+    color:white !important;
+    background-color: darkgoldenrod;
+    margin-right: 1em;
+  }
+  .save-and-finish-btn{
+    color:white;
+    background-color: rgb(69, 69, 227)
+  }
+}
+}
+.add-announcement-footer{
+  .cancel-btn{
+    color:white !important;
+    background-color: gray;
+    margin-right: 1em;
+  }
+  .draft-btn{
+    color:white !important;
+    background-color: darkgoldenrod;
+    margin-right: 1em;
+  }
+  .save-and-finish-btn{
+    color:white;
+    background-color: rgb(69, 69, 227)
+  }
+}

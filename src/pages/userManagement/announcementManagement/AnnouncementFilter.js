@@ -1,58 +1,63 @@
+import { Form } from 'antd';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
 import {
   CustomButton,
   CustomDatePicker,
   CustomForm,
   CustomFormItem,
   CustomImage,
-  CustomInput,
-  Option,
   CustomSelect,
+  Option,
   Text,
 } from '../../../components';
-import '../../../styles/announcementManagement/announcementFilter.scss';
-import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
-import { Form } from 'antd';
-import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import {
-  getAll,
-  setPublishAnnouncements,
   getByFilterPagedAnnouncements,
   getByFilterPagedAnnouncementTypes,
 } from '../../../store/slice/announcementSlice';
+import { getByFilterPagedGroups } from '../../../store/slice/groupsSlice';
+import '../../../styles/announcementManagement/announcementFilter.scss';
+
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
-const formPublicationPlacesEnum = {
-  1: 'Anasayfa',
-  2: 'Anketler Sayfası',
-  3: 'Pop-up',
-  4: 'Bildirimler',
-};
 
-const publishStatusObj=[
+const publishStatusObj = [
   { id: 1, name: 'Yayında' },
   { id: 2, name: 'Yayında Değil' },
   { id: 3, name: 'Taslak' },
-]
+];
 
 const AnnouncementFilter = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
-  const {announcements ,filterObject, announcementTypes} = useSelector((state) => state?.announcement);
+  const { announcements, filterObject, announcementTypes } = useSelector((state) => state?.announcement);
+  const loadGroupsList = useCallback(async () => {
+    let data = {
+      ShowAtAnnouncement: true,
+    };
+    await dispatch(getByFilterPagedGroups(data));
+  }, [dispatch]);
 
+  useEffect(() => {
+    loadGroupsList();
+  }, []);
+
+  const { groupsList } = useSelector((state) => state?.groups);
 
   useEffect(() => {
     form.resetFields();
-    dispatch(getByFilterPagedAnnouncementTypes()); 
+    dispatch(getByFilterPagedAnnouncementTypes());
   }, []);
 
   const handleClear = useCallback(async () => {
     form.resetFields();
     const body = {
-      HeadText: '',
-      AnnouncementType: '', 
-      StartDate: '',
-      EndDate: '',
+      headText: '',
+      announcementType: '',
+      startDate: '',
+      endDate: '',
+      role: '',
     };
     await dispatch(
       getByFilterPagedAnnouncements({
@@ -65,21 +70,18 @@ const AnnouncementFilter = () => {
   const handleSearch = useCallback(async () => {
     try {
       const values = await form.validateFields();
-      const type=values.announcementType;
+      const type = values.announcementType;
 
       const body = {
-        AnnouncementTypeId: type,
+        announcementTypeId: type,
         headText: values?.headText || undefined,
-        publishStatus:values.publishStatus,
-        startDate: values?.startDate
-          ? dayjs(values?.startDate)?.format('YYYY-MM-DDT00:00:00')
-          : undefined,
+        publishStatus: values.publishStatus,
+        startDate: values?.startDate ? dayjs(values?.startDate)?.format('YYYY-MM-DDT00:00:00') : undefined,
         endDate: values?.endDate && dayjs(values?.endDate)?.format('YYYY-MM-DDT23:59:59'),
+        role: values.role,
       };
       await dispatch(getByFilterPagedAnnouncements({ ...filterObject, ...body }));
-
-    } catch (e) {
-    }
+    } catch (e) {}
     form.resetFields();
   }, [dispatch, filterObject, form, announcementTypes]);
 
@@ -103,37 +105,36 @@ const AnnouncementFilter = () => {
     <div className="announcement-filter-card">
       <CustomForm name="filterForm" autoComplete="off" layout={'vertical'} form={form}>
         <div className="filter-form">
-        <CustomFormItem
-              label={
-                <div>
-                  <Text t="Duyuru Başlığı" />
-                </div>
-              }
-              name="headText"
-              className="filter-item"
-            >
-              <CustomSelect
+          <CustomFormItem
+            label={
+              <div>
+                <Text t="Duyuru Başlığı" />
+              </div>
+            }
+            name="headText"
+            className="filter-item"
+          >
+            <CustomSelect
               className="form-filter-item"
               placeholder={'Seçiniz'}
               style={{
                 width: '100%',
               }}
-                showSearch
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  option.children.toLocaleLowerCase().includes(input.toLocaleLowerCase())
-                }
-              >
-                {announcements?.map(({id, headText}) => (
-                  <Option key={id} value={headText}>
-                    {headText}
-                  </Option>
-                ))}
-                <Option key={11111} value={null}>
-                  Hepsi
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) => option.children.toLocaleLowerCase().includes(input.toLocaleLowerCase())}
+            >
+              {announcements?.map(({ id, headText }) => (
+                <Option key={id} value={headText}>
+                  {headText}
                 </Option>
-              </CustomSelect>
-            </CustomFormItem>
+              ))}
+              <Option key={11111} value={null}>
+                Hepsi
+              </Option>
+            </CustomSelect>
+          </CustomFormItem>
+
           <CustomFormItem
             label={
               <div>
@@ -142,7 +143,9 @@ const AnnouncementFilter = () => {
             }
             name="announcementType"
             className="filter-item"
-            onClick={ (value)=>{ return value==''; } }
+            onClick={(value) => {
+              return value == '';
+            }}
           >
             <CustomSelect
               className="form-filter-item"
@@ -169,7 +172,9 @@ const AnnouncementFilter = () => {
             }
             name="publishStatus"
             className="filter-item"
-            onClick={ (value)=>{ return value==''; } }
+            onClick={(value) => {
+              return value == '';
+            }}
           >
             <CustomSelect
               className="form-filter-item"
@@ -186,6 +191,34 @@ const AnnouncementFilter = () => {
               <Option key={null} value={null}>
                 <Text t="Hepsi" />
               </Option>
+            </CustomSelect>
+          </CustomFormItem>
+          <CustomFormItem
+            label={
+              <div>
+                <Text t="Duyuru Rolleri" />
+              </div>
+            }
+            name="role"
+            className="filter-item"
+          >
+            <CustomSelect
+              className="form-filter-item"
+              placeholder={'Seçiniz'}
+              mode="multiple"
+              showArrow
+              style={{
+                width: '100%',
+              }}
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) => option.children.toLocaleLowerCase().includes(input.toLocaleLowerCase())}
+            >
+              {groupsList?.map(({ id, groupName }) => (
+                <Option key={id} value={groupName}>
+                  {groupName}
+                </Option>
+              ))}
             </CustomSelect>
           </CustomFormItem>
           <CustomFormItem

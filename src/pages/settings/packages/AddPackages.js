@@ -26,27 +26,38 @@ import { useHistory } from 'react-router-dom';
 import useAcquisitionTree from '../../../hooks/useAcquisitionTree';
 import { removeFromArray, turkishToLower } from '../../../utils/utils';
 import DateSection from '../../eventManagement/forms/DateSection';
+import { getGroupsList } from '../../../store/slice/groupsSlice';
 
 const AddPackages = () => {
   const [form] = Form.useForm();
+
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const cancelFileUpload = useRef(null);
+
   const [isErrorReactQuill, setIsErrorReactQuill] = useState(false);
   const [isDisable, setIsDisable] = useState(false);
   const [errorList, setErrorList] = useState([]);
   const [errorUpload, setErrorUpload] = useState();
   const [selectedClassrooms, setSelectedClassrooms] = useState([]);
   const [lessonsOptions, setLessonsOptions] = useState([]);
-  const cancelFileUpload = useRef(null);
+  const [isDisableButtonMaxNetCount, seTisDisableButtonMaxNetCount] = useState(false);
+
   const token = useSelector((state) => state?.auth?.token);
   const { packageTypeList } = useSelector((state) => state?.packageType);
   const { allClassList } = useSelector((state) => state?.classStages);
   const { lessons } = useSelector((state) => state?.lessons);
-  const [isDisableButtonMaxNetCount, seTisDisableButtonMaxNetCount] = useState(false);
-  const dispatch = useDispatch();
-  const history = useHistory();
+  const { allGroupList } = useSelector((state) => state?.groups);
+
 
   const { setClassroomId, setLessonId } = useAcquisitionTree();
-
   const lessonIds = Form.useWatch('lesson', form) || [];
+
+  useEffect(() => {
+    if (allGroupList.length) return false;
+    dispatch(getGroupsList());
+  }, []);
 
   useEffect(() => {
     loadPackageType();
@@ -65,14 +76,7 @@ const AddPackages = () => {
 
   const beforeUpload = async (file) => {
     const isValidType = [
-      '.csv',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'application/vnd.ms-excel',
-      '.doc',
-      '.docx',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'application/pdf',
+      ".jpg", ".jpeg", ".bmp", ".gif", ".png"
     ].includes(file.type.toLowerCase());
 
     const isImage = file.type.toLowerCase().includes('image');
@@ -131,7 +135,12 @@ const AddPackages = () => {
     let lessonsArr = values.lesson.map((item) => {
       return { lessonId: item };
     });
-
+    const packageGroups = []
+    values.packageGroups.forEach(item => {
+      packageGroups.push({
+        groupId: item
+      })
+    })
     const data = {
       package: {
         name: values.name,
@@ -145,6 +154,7 @@ const AddPackages = () => {
         packageLessons: lessonsArr,
         imageOfPackages: await handleUpload(values.imageOfPackages),
         examType: 10, //sınav tipi halihazırda inputtan alınmıyor
+        packageGroups: packageGroups
       },
     };
 
@@ -294,7 +304,7 @@ const AddPackages = () => {
                 }}
                 beforeUpload={beforeUpload}
                 onChange={(e) => (e.fileList.length >= 5 ? setIsDisable(true) : setIsDisable(false))}
-                accept=".csv, .doc, .docx, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, application/pdf, image/*"
+                accept="image/*"
               >
                 <Button disabled={isDisable} icon={<UploadOutlined />}>
                   Upload
@@ -385,6 +395,25 @@ const AddPackages = () => {
               className="max-net-count"
               disabled={!isDisableButtonMaxNetCount}
             />
+          </CustomFormItem>
+
+          <CustomFormItem rules={[{ required: true }]} label="Rol" name="packageGroups">
+            <CustomSelect
+              filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
+              showArrow
+              mode="multiple"
+              placeholder="Rol"
+            >
+              {allGroupList
+                ?.filter((item) => item.isPackageRole)
+                ?.map((item) => {
+                  return (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.groupName}
+                    </Option>
+                  );
+                })}
+            </CustomSelect>
           </CustomFormItem>
 
           <div className="add-package-footer">

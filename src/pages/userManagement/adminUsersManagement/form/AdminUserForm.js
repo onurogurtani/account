@@ -28,10 +28,10 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { id } = useParams();
-  const { groupsList } = useSelector((state) => state?.groups);
+  const { allGroupList } = useSelector((state) => state?.groups);
 
   useEffect(() => {
-    if (groupsList.length) return false;
+    if (allGroupList.length) return false;
     dispatch(getGroupsList());
   }, []);
 
@@ -145,7 +145,7 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
               mode="multiple"
               placeholder="Rol"
             >
-              {groupsList
+              {allGroupList
                 // ?.filter((item) => item.isActive)
                 ?.map((item) => {
                   return (

@@ -1,49 +1,30 @@
+import { RightOutlined } from '@ant-design/icons';
+import { Button, Col, Row } from 'antd';
+import dayjs from 'dayjs';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
 import {
   CustomButton,
   CustomCollapseCard,
-  CustomTable,
-  CustomFormItem,
-  CustomSelect,
-  Option,
-  Text,
-  CustomPagination,
   CustomImage,
+  CustomPagination,
+  CustomSelect,
+  CustomTable,
+  Option,
+  Text
 } from '../../../components';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { getByFilterPagedAnnouncements, setUpdateAnnouncementObject } from '../../../store/slice/announcementSlice';
 import '../../../styles/announcementManagement/announcementList.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  getByFilterPagedAnnouncements,
-  setUpdateAnnouncementObject,
-} from '../../../store/slice/announcementSlice';
-import { Col, Row, Tag, Button } from 'antd';
-import { NodeExpandOutlined, RightOutlined } from '@ant-design/icons';
 import AnnouncementFilter from './AnnouncementFilter';
-import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
-import dayjs from 'dayjs';
-import FormItem from 'antd/lib/form/FormItem';
-const formPublicationPlacesEnum = {
-  1: 'Anasayfa',
-  2: 'Anketler Sayfası',
-  3: 'Pop-up',
-  4: 'Bildirimler',
-};
-const formPublicationPlaces = [
-  { id: 1, name: 'Anasayfa' },
-  { id: 2, name: 'Anketler Sayfası' },
-  { id: 3, name: 'Pop-up' },
-  { id: 4, name: 'Bildirimler' },
-];
 
 const AnnouncementList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [announcementFilterIsShow, setAnnouncementFilterIsShow] = useState(false);
   const [activeValue, setActiveValue] = useState();
-  const { announcements, tableProperty, filterObject } = useSelector(
-    (state) => state?.announcement,
-  );
+  const { announcements, tableProperty, filterObject } = useSelector((state) => state?.announcement);
 
   const listRoles = useCallback((record) => {
     if (record.roles.length == 0) {
@@ -188,7 +169,7 @@ const AnnouncementList = () => {
       key: 'publishStatus',
       align: 'center',
       render: (publishStatus) => {
-        return publishStatus==1 ? (
+        return publishStatus === 1 ? (
           <span
             style={{
               backgroundColor: '#00a483',
@@ -200,9 +181,9 @@ const AnnouncementList = () => {
               textAlign: 'center',
             }}
           >
-            Yayınlandı
+            Yayında
           </span>
-        ) : (publishStatus==2 ?
+        ) : publishStatus === 2 ? (
           <span
             style={{
               backgroundColor: '#E6E624',
@@ -214,8 +195,10 @@ const AnnouncementList = () => {
               textAlign: 'center',
             }}
           >
-            Yayınlanmadı
-          </span> :  <span
+            Yayında Değil
+          </span>
+        ) : (
+          <span
             style={{
               backgroundColor: '#ff8c00',
               borderRadius: '5px',
