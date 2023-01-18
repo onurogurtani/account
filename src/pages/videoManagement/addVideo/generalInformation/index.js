@@ -4,11 +4,10 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { CustomButton, CustomForm } from '../../../../components';
 import { onChangeActiveKey } from '../../../../store/slice/videoSlice';
-import BracketSection from './BracketSection';
 import CategorySection from './CategorySection';
 import IntroVideoSection from './IntroVideoSection';
 import LessonsSectionForm from './LessonsSectionForm';
-import StatusAndVideoTextSection from './StatusAndVideoTextSection';
+import VideoTextSection from './VideoTextSection';
 import SurveyAndKeywordSection from './SurveyAndKeywordSection';
 import UrlAndPdfSection from './UrlAndPdfSection';
 import VideoSection from './VideoSection';
@@ -19,7 +18,7 @@ const AddGeneralInformation = ({ sendValue }) => {
   const dispatch = useDispatch();
 
   const [introVideoFile, setIntroVideoFile] = useState();
-  const [kalturaVideoName, setKalturaVideoName] = useState();
+  // const [kalturaVideoName, setKalturaVideoName] = useState();
 
   const onFinish = (values) => {
     const introVideoObj = form.getFieldValue('introVideoObj');
@@ -33,10 +32,9 @@ const AddGeneralInformation = ({ sendValue }) => {
       return;
     }
 
-    values.lessonSubSubjects = values.lessonSubSubjects.map((item) => ({
-      lessonSubSubjectId: item,
-    }));
+    values.lessonSubSubjects = values.videoBrackets;
     values.keyWords = values.keyWords.join();
+    values.isActive = true;
     values.beforeEducationSurvey = values?.survey === 'before' ? true : false;
     values.afterEducationSurvey = values?.survey === 'after' ? true : false;
     delete values.survey;
@@ -47,7 +45,7 @@ const AddGeneralInformation = ({ sendValue }) => {
     } else {
       values.introVideoId = introVideoObj.id; //İntro video kayıtlılardan seçti ise
     }
-    values.kalturaVideoName = kalturaVideoName;
+    // values.kalturaVideoName = kalturaVideoName;
     const urlAndPdfAttach = form.getFieldValue('urlAndPdfAttach');
     if (urlAndPdfAttach) {
       let videoAttachments = [];
@@ -99,12 +97,14 @@ const AddGeneralInformation = ({ sendValue }) => {
           <div className="left-form">
             <CategorySection form={form} />
             <LessonsSectionForm form={form} />
-            <StatusAndVideoTextSection form={form} />
+            <VideoTextSection />
           </div>
           <div className="right-form">
-            <VideoSection form={form} setKalturaVideoName={setKalturaVideoName} />
+            <VideoSection
+              form={form}
+              // setKalturaVideoName={setKalturaVideoName}
+            />
             <IntroVideoSection form={form} introVideoFile={introVideoFile} setIntroVideoFile={setIntroVideoFile} />
-            <BracketSection form={form} />
             <SurveyAndKeywordSection form={form} />
             <UrlAndPdfSection form={form} />
           </div>

@@ -16,7 +16,7 @@ const EarningsChoice = ({ classroomId = 63 }) => {
   const [lessonId, setLessonId] = useState(null);
   const [checkedKeys, setCheckedKeys] = useState([]);
   const [expandedKeys, setExpandedKeys] = useState([]);
-
+  const [chackedChange, setChackedChange] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -106,21 +106,24 @@ const EarningsChoice = ({ classroomId = 63 }) => {
   };
 
   useEffect(() => {
-    const newData = [];
-    earningChoice?.unitId?.forEach((element) => {
-      newData.push(element);
-    });
-    earningChoice?.subjectId?.forEach((element) => {
-      newData.push(element);
-    });
-    earningChoice?.subSubjectId?.forEach((element) => {
-      newData.push(element);
-    });
-    setCheckedKeys(newData);
-  }, [earningChoice]);
+    if (!chackedChange) {
+      let newData = [];
+      earningChoice?.unitId?.forEach((element) => {
+        newData.push(element);
+      });
+      earningChoice?.subjectId?.forEach((element) => {
+        newData.push(element);
+      });
+      earningChoice?.subSubjectId?.forEach((element) => {
+        newData.push(element);
+      });
+      setCheckedKeys(newData);
+    }
+  }, [chackedChange, earningChoice]);
   const onCheck = (checkedKeysValue, info) => {
     console.log(checkedKeysValue);
     setCheckedKeys(checkedKeysValue);
+    setChackedChange(true);
     const earningChoice = {
       unitId: [],
       subjectId: [],

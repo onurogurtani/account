@@ -78,7 +78,7 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileIma
           buttonUrl: values.buttonUrl,
           publishStatus: status,
           announcementPublicationPlaces: values?.announcementPublicationPlaces,
-          isPopupAvailable: values?.announcementPublicationPlaces.includes(3),
+          isPopupAvailable: values?.announcementPublicationPlaces.includes(4),
           isReadCheckbox: values?.isReadCheckbox,
         };
         const action = await dispatch(addAnnouncement(data));

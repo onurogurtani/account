@@ -52,7 +52,7 @@ const ShowAnnouncement = () => {
         if (deleteAnnouncement.fulfilled.match(action)) {
           successDialog({
             title: <Text t="success" />,
-            message: action.payload?.message,
+            message: 'Duyuru başarıyla silinmiştir.',
           });
           history.push('/user-management/announcement-management');
         } else {
@@ -89,7 +89,7 @@ const ShowAnnouncement = () => {
 
             successDialog({
               title: <Text t="success" />,
-              message: action.payload?.message,
+              message: 'Duyuru başarıyla yayınlanmıştır.',
             });
           } else {
             if (action?.payload?.message) {
@@ -123,7 +123,7 @@ const ShowAnnouncement = () => {
 
           successDialog({
             title: <Text t="success" />,
-            message: action.payload?.message,
+            message: 'Duyuru başarıyla yayından kaldırılmıştır.',
           });
         } else {
           if (action?.payload?.message) {
@@ -154,7 +154,7 @@ const ShowAnnouncement = () => {
 
           successDialog({
             title: <Text t="success" />,
-            message: action.payload?.message,
+            message: 'Duyuru başarıyla arşivlenmiştir.',
           });
         } else {
           if (action?.payload?.message) {
@@ -184,7 +184,7 @@ const ShowAnnouncement = () => {
           setCurrentAnnouncement({ ...currentAnnouncement, isActive: true });
           successDialog({
             title: <Text t="success" />,
-            message: action.payload?.message,
+            message: 'Duyuru başarıyla arşivden kaldırılmıştır.',
           });
         } else {
           if (action?.payload?.message) {

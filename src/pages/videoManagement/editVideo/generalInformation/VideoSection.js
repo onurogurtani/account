@@ -3,15 +3,16 @@ import { Upload } from 'antd';
 import { CancelToken, isCancel } from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CustomButton, CustomFormItem, errorDialog, Text } from '../../../../components';
+import { CustomButton, CustomFormItem, CustomInput, errorDialog, Text } from '../../../../components';
 import kalturaServices from '../../../../services/kaltura.services';
 import { getKalturaSessionKey, setKalturaVideoId } from '../../../../store/slice/videoSlice';
 
-const VideoSection = ({ form, setKalturaVideoName, kalturaVideoName }) => {
+const VideoSection = ({ form }) => {
   const cancelVideoFileUpload = useRef(null);
   const dispatch = useDispatch();
 
   const { currentVideo } = useSelector((state) => state?.videos);
+  const [kalturaVideoName, setKalturaVideoName] = useState();
 
   const [isError, setIsError] = useState();
   const [kalturaSessionKey, setKalturaSessionKey] = useState();
@@ -25,6 +26,9 @@ const VideoSection = ({ form, setKalturaVideoName, kalturaVideoName }) => {
 
   useEffect(() => {
     setKalturaVideoName(currentVideo?.kalturaVideoName);
+    form.setFieldsValue({
+      kalturaVideoName: currentVideo?.kalturaVideoName,
+    });
     dispatch(setKalturaVideoId(currentVideo?.kalturaVideoId));
   }, [currentVideo]);
 
@@ -36,8 +40,7 @@ const VideoSection = ({ form, setKalturaVideoName, kalturaVideoName }) => {
   };
 
   const cancelVideoUpload = () => {
-    if (cancelVideoFileUpload.current)
-      cancelVideoFileUpload.current('User has canceled the file upload.');
+    if (cancelVideoFileUpload.current) cancelVideoFileUpload.current('User has canceled the file upload.');
   };
   const getUploadToken = async (kalturaSessionKey) => {
     try {
@@ -176,6 +179,14 @@ const VideoSection = ({ form, setKalturaVideoName, kalturaVideoName }) => {
 
   return (
     <>
+      <CustomFormItem
+        rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
+        label="Video Adı"
+        name="kalturaVideoName"
+      >
+        <CustomInput placeholder="Video Adı" />
+      </CustomFormItem>
+
       <CustomFormItem className="requiredFieldLabelMark" label="Video Ekle">
         {kalturaVideoName ? (
           <div className="ant-upload-list ant-upload-list-text">
@@ -183,11 +194,7 @@ const VideoSection = ({ form, setKalturaVideoName, kalturaVideoName }) => {
               <div className="ant-upload-list-item-info">
                 <span className="ant-upload-span">
                   <div className="ant-upload-text-icon">
-                    {
-                      <PaperClipOutlined
-                        style={{ color: isError ? 'red' : 'rgba(0, 0, 0, 0.45)' }}
-                      />
-                    }
+                    {<PaperClipOutlined style={{ color: isError ? 'red' : 'rgba(0, 0, 0, 0.45)' }} />}
                   </div>
                   <span
                     className="ant-upload-list-item-name"
@@ -196,10 +203,7 @@ const VideoSection = ({ form, setKalturaVideoName, kalturaVideoName }) => {
                     {kalturaVideoName}
                   </span>
                   <span className="ant-upload-list-item-card-actions">
-                    <CustomButton
-                      className="ant-btn ant-btn-text ant-btn-sm ant-btn-icon-only"
-                      onClick={handleDelete}
-                    >
+                    <CustomButton className="ant-btn ant-btn-text ant-btn-sm ant-btn-icon-only" onClick={handleDelete}>
                       <DeleteOutlined style={{ color: 'red' }} />
                     </CustomButton>
                   </span>
@@ -225,9 +229,7 @@ const VideoSection = ({ form, setKalturaVideoName, kalturaVideoName }) => {
               maxCount={1}
               showUploadList={{
                 showRemoveIcon: true,
-                removeIcon: (
-                  <DeleteOutlined style={{ color: 'red' }} onClick={(e) => cancelVideoUpload()} />
-                ),
+                removeIcon: <DeleteOutlined style={{ color: 'red' }} onClick={(e) => cancelVideoUpload()} />,
               }}
               customRequest={uploadVideo}
               beforeUpload={beforeVideoUpload}
@@ -236,9 +238,7 @@ const VideoSection = ({ form, setKalturaVideoName, kalturaVideoName }) => {
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>
-              <p className="ant-upload-text">
-                Dosya yüklemek için tıklayın veya dosyayı bu alana sürükleyin.
-              </p>
+              <p className="ant-upload-text">Dosya yüklemek için tıklayın veya dosyayı bu alana sürükleyin.</p>
               <p className="ant-upload-hint">Sadece bir adet dosya yükleyebilirsiniz.</p>
             </Upload.Dragger>
           </CustomFormItem>
