@@ -9,6 +9,7 @@ import { getByClassromIdLessons } from '../../../store/slice/lessonsSlice';
 const EarningsChoice = ({ classroomId = 63 }) => {
   const { lessonUnits } = useSelector((state) => state?.lessonUnits);
   const { lessonsGetByClassroom } = useSelector((state) => state?.lessons);
+  const { earningChoice } = useSelector((state) => state.earningChoice);
 
   const [treeData, setTreeData] = useState(lessonUnits);
   const [copyFilterData, setCopyFilterData] = useState(lessonUnits);
@@ -104,7 +105,22 @@ const EarningsChoice = ({ classroomId = 63 }) => {
     setCopyFilterData(modifiedLessonUnits);
   };
 
+  /*useEffect(() => {
+    const newData = [];
+    earningChoice.unitId.forEach((element) => {
+      newData.push(element);
+    });
+    earningChoice.subjectId.forEach((element) => {
+      newData.push(element);
+    });
+    earningChoice.subSubjectId.forEach((element) => {
+      newData.push(element);
+    });
+    console.log(newData);
+    setCheckedKeys(newData);
+  }, [earningChoice]);*/
   const onCheck = (checkedKeysValue, info) => {
+    console.log(checkedKeysValue);
     setCheckedKeys(checkedKeysValue);
     const earningChoice = {
       unitId: [],

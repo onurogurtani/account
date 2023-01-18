@@ -35,6 +35,7 @@ import {
 import '../../../styles/questionManagement/questionIdentification.scss';
 import EarningsChoice from '../../userManagement/questionIdentifaction/EarningsChoice';
 import UploadFile from './UploadFile';
+import { setEarningChoice } from '../../../store/slice/earningChoiceSlice';
 const QuestionIdentification = () => {
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
@@ -66,16 +67,20 @@ const QuestionIdentification = () => {
       newData.questionOfExamDetailLessonSubSubjects = [];
       newData.questionOfExamDetailLessonSubjects = [];
       newData.questionOfExamDetailLessonUnits = [];
+      const newEarningChoice = { unitId: [], subjectId: [], subSubjectId: [] };
       questionOfExams?.questionOfExamDetail?.questionOfExamDetailLessonSubSubjects?.forEach((item, index) => {
         newData.questionOfExamDetailLessonSubSubjects.push({ lessonSubSubjectId: item.lessonSubSubjectId });
+        newEarningChoice.subSubjectId.push(item.lessonSubSubjectId);
       });
       questionOfExams?.questionOfExamDetail?.questionOfExamDetailLessonSubjects?.forEach((item, index) => {
         newData.questionOfExamDetailLessonSubjects.push({ lessonSubjectId: item.lessonSubjectId });
+        newEarningChoice.subjectId.push(item.lessonSubjectId);
       });
       questionOfExams?.questionOfExamDetail?.questionOfExamDetailLessonUnits?.forEach((item, index) => {
         newData.questionOfExamDetailLessonUnits.push({ lessonUnitId: item.lessonUnitId });
+        newEarningChoice.unitId.push(item.lessonUnitId);
       });
-
+      dispatch(setEarningChoice(newEarningChoice));
       setFormData(newData);
     } else {
       setFormData({});
@@ -412,7 +417,6 @@ const QuestionIdentification = () => {
                         <CustomRadioGroup
                           onChange={(e) => {
                             let newData = { ...formData };
-
                             if (e.target.value === 0) {
                               delete newData.questionOfExamWrongKind;
                               delete newData.questionStateNote;
@@ -508,18 +512,20 @@ const QuestionIdentification = () => {
                         >
                           D
                         </div>
-                        <div
-                          onClick={() => {
-                            if (formData.questionOfExamState !== 1) {
-                              setFormData({ ...formData, correctAnswerIndex: 4 });
-                            }
-                          }}
-                          className={`circle-reply ${formData.correctAnswerIndex === 4 && 'circle-reply-active'} ${
-                            formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''
-                          }`}
-                        >
-                          E
-                        </div>
+                        {questionOfExams?.answerOfQuestionOfExams[4]?.file?.fileBase64 && (
+                          <div
+                            onClick={() => {
+                              if (formData.questionOfExamState !== 1) {
+                                setFormData({ ...formData, correctAnswerIndex: 4 });
+                              }
+                            }}
+                            className={`circle-reply ${formData.correctAnswerIndex === 4 && 'circle-reply-active'} ${
+                              formData.questionOfExamState === 1 ? 'cursor-disabled-q' : ''
+                            }`}
+                          >
+                            E
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="question-info">
@@ -666,23 +672,21 @@ const QuestionIdentification = () => {
                     <div className="question-info">
                       <label className="quesiton-label">Soru Çözüm Süresi:</label>
                       <div className="minute">
-                        <div>
-                          <CustomInput
-                            disabled={formData.questionOfExamState === 1}
-                            onChange={(e) => {
-                              const value = e.target.value;
-                              if (
-                                !isNaN(value[value.length - 1]) ||
-                                value[value.length - 1] === undefined ||
-                                value[value.length - 1] === '.'
-                              ) {
-                                setFormData({ ...formData, solutionMinute: e.target.value });
-                              } else {
-                              }
-                            }}
-                            value={formData.solutionMinute}
-                          />
-                        </div>
+                        <CustomInput
+                          disabled={formData.questionOfExamState === 1}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (
+                              !isNaN(value[value.length - 1]) ||
+                              value[value.length - 1] === undefined ||
+                              value[value.length - 1] === '.'
+                            ) {
+                              setFormData({ ...formData, solutionMinute: e.target.value });
+                            } else {
+                            }
+                          }}
+                          value={formData.solutionMinute}
+                        />
 
                         <div className="minute-text">Dk</div>
                       </div>
@@ -690,20 +694,18 @@ const QuestionIdentification = () => {
                     <div className="question-info">
                       <label className="quesiton-label">Kelime Adet:</label>
                       <div className="minute">
-                        <div>
-                          <CustomInput
-                            disabled={formData.questionOfExamState === 1}
-                            onChange={(e) => {
-                              const value = e.target.value;
-                              console.log(value[value.length - 1]);
-                              if (!isNaN(value[value.length - 1]) || value[value.length - 1] === undefined) {
-                                setFormData({ ...formData, wordCount: e.target.value });
-                              } else {
-                              }
-                            }}
-                            value={formData.wordCount}
-                          />
-                        </div>
+                        <CustomInput
+                          disabled={formData.questionOfExamState === 1}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            console.log(value[value.length - 1]);
+                            if (!isNaN(value[value.length - 1]) || value[value.length - 1] === undefined) {
+                              setFormData({ ...formData, wordCount: e.target.value });
+                            } else {
+                            }
+                          }}
+                          value={formData.wordCount}
+                        />
                       </div>
                     </div>
                     <div className="question-info">
@@ -941,6 +943,10 @@ const QuestionIdentification = () => {
               newData.questionOfExamDetailLessonSubSubjects.push({ lessonSubSubjectId: item });
             });
             setFormData(newData);
+
+            if (questionOfExams.questionOfExamDetail) {
+              addData();
+            }
             setShowModal(false);
           }}
           onCancel={() => setShowModal(false)}
