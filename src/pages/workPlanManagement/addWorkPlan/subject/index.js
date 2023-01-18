@@ -15,8 +15,10 @@ import { onChangeActiveKey, selectedSubjectTabRowVideo } from '../../../../store
 import { getEducationYears } from '../../../../store/slice/questionFileSlice';
 import { getAllClassStages } from '../../../../store/slice/classStageSlice';
 import useAcquisitionTree from '../../../../hooks/useAcquisitionTree';
-import { getByFilterPagedVideos } from '../../../../store/slice/videoSlice';
+import { getByFilterPagedVideos, resetVideoList } from '../../../../store/slice/videoSlice';
 import videoListTableColumn from './videoListTableColumn';
+import useOnchangeTable from '../../../../hooks/useOnchangeTable';
+import '../../../../styles/table.scss';
 
 const SubjectChoose = ({ sendValue }) => {
 
@@ -36,9 +38,12 @@ const SubjectChoose = ({ sendValue }) => {
   const { videos, tableProperty, filterObject } = useSelector((state) => state?.videos);
   const columns = videoListTableColumn(dispatch, subjectChooseTab);
 
+  const onChangeTable = useOnchangeTable({ filterObject, action: getByFilterPagedVideos });
+
   useEffect(() => {
     dispatch(getEducationYears());
     dispatch(getAllClassStages());
+    dispatch(resetVideoList())
   }, []);
 
   // table pagination
@@ -93,6 +98,7 @@ const SubjectChoose = ({ sendValue }) => {
     const body = {
       ...filterObject,
       ...values,
+      CategoryCode: 'lectureVideo',
       PageNumber: 1,
     };
     await dispatch(getByFilterPagedVideos(body));
@@ -250,6 +256,7 @@ const SubjectChoose = ({ sendValue }) => {
         <div className='video-list-content'>
           <CustomTable
             dataSource={videos}
+            onChange={onChangeTable}
             columns={columns}
             pagination={paginationProps}
             rowKey={(record) => `video-list-${record?.id || record?.headText}`}
