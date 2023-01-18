@@ -20,7 +20,6 @@ const EditGeneralInformation = ({ sendValue }) => {
   const { id } = useParams();
 
   const [introVideoFile, setIntroVideoFile] = useState();
-  const [kalturaVideoName, setKalturaVideoName] = useState();
 
   const onFinish = (values) => {
     const introVideoObj = form.getFieldValue('introVideoObj');
@@ -47,7 +46,7 @@ const EditGeneralInformation = ({ sendValue }) => {
     } else {
       values.introVideoId = introVideoObj.id; //İntro video kayıtlılardan seçti ise
     }
-    values.kalturaVideoName = kalturaVideoName;
+
     const urlAndPdfAttach = form.getFieldValue('urlAndPdfAttach');
     if (urlAndPdfAttach) {
       let videoAttachments = [];
@@ -102,7 +101,7 @@ const EditGeneralInformation = ({ sendValue }) => {
             <StatusAndVideoTextSection form={form} />
           </div>
           <div className="right-form">
-            <VideoSection form={form} kalturaVideoName={kalturaVideoName} setKalturaVideoName={setKalturaVideoName} />
+            <VideoSection form={form} />
             <IntroVideoSection form={form} introVideoFile={introVideoFile} setIntroVideoFile={setIntroVideoFile} />
 
             <SurveyAndKeywordSection form={form} />

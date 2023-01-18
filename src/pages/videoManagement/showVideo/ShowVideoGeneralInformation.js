@@ -28,6 +28,9 @@ const ShowVideoGeneralInformation = () => {
     <div>
       <ul className="list">
         <li>
+          Video Adı: <span>{currentVideo?.kalturaVideoName}</span>
+        </li>
+        <li>
           Video Kategorisi: <span>{currentVideo?.categoryOfVideo?.name}</span>
         </li>
         <li>
