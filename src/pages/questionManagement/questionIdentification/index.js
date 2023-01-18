@@ -209,10 +209,10 @@ const QuestionIdentification = () => {
     setLessonsData(newData);
   }, [lessons]);
 
-  const addData = useCallback(
-    async (privateData) => {
+  const addData = async (privateData = null) => {
+    try {
       let newFormData = {};
-      if (privateData) {
+      if (privateData !== null) {
         newFormData = { ...privateData };
       } else {
         newFormData = { ...formData };
@@ -227,6 +227,8 @@ const QuestionIdentification = () => {
           successDialog({ title: 'Onay', message: 'Güncelledi' });
           searchSumbit(pagedProperty.currentPage);
         } else {
+          alert('dasdsa');
+
           errorDialog({ title: 'Hata', message: action?.payload?.message });
         }
       } else {
@@ -238,16 +240,11 @@ const QuestionIdentification = () => {
           errorDialog({ title: 'Hata', message: action?.payload?.message });
         }
       }
-    },
-    [
-      dispatch,
-      formData,
-      pagedProperty.currentPage,
-      questionOfExams.id,
-      questionOfExams.questionOfExamDetail,
-      searchSumbit,
-    ],
-  );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <CustomPageHeader>
       <CustomCollapseCard cardTitle={'Soru Kimliklendirme'}>
@@ -696,7 +693,7 @@ const QuestionIdentification = () => {
                               value[value.length - 1] === undefined ||
                               value[value.length - 1] === '.'
                             ) {
-                              setFormData({ ...formData, solutionMinute: e.target.value });
+                              setFormData({ ...formData, solutionMinute: parseFloat(e.target.value) });
                             } else {
                             }
                           }}
@@ -715,7 +712,7 @@ const QuestionIdentification = () => {
                             const value = e.target.value;
                             console.log(value[value.length - 1]);
                             if (!isNaN(value[value.length - 1]) || value[value.length - 1] === undefined) {
-                              setFormData({ ...formData, wordCount: e.target.value });
+                              setFormData({ ...formData, wordCount: parseInt(e.target.value) });
                             } else {
                             }
                           }}
@@ -892,7 +889,14 @@ const QuestionIdentification = () => {
                   </Col>
                   <Col span={24}>
                     <div className=" save-button">
-                      <CustomButton onClick={addData} disabled={fileUploadLoading} className="save-q" type="primary">
+                      <CustomButton
+                        onClick={() => {
+                          addData();
+                        }}
+                        disabled={fileUploadLoading}
+                        className="save-q"
+                        type="primary"
+                      >
                         {questionOfExams?.questionOfExamDetail ? 'Güncelle' : 'Kaydet'}
                       </CustomButton>
                     </div>
