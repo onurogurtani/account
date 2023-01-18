@@ -16,16 +16,9 @@ import {
   Text,
 } from '../../../components';
 import '../../../styles/settings/categories.scss';
-import {
-  addVideoCategory,
-  editVideoCategory,
-  getVideoCategoryList,
-} from '../../../store/slice/videoSlice';
-import {
-  addFormCategory,
-  editFormCategory,
-  getFormCategoryList,
-} from '../../../store/slice/categoryOfFormsSlice';
+import { addVideoCategory, editVideoCategory, getVideoCategoryList } from '../../../store/slice/videoSlice';
+import { addFormCategory, editFormCategory, getFormCategoryList } from '../../../store/slice/categoryOfFormsSlice';
+import { categoryCodes } from '../../../constants/settings/category';
 
 const Categories = () => {
   const [form] = Form.useForm();
@@ -36,13 +29,16 @@ const Categories = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [categoryType, setCategoryType] = useState();
   const [subCategryList, setSubCategryList] = useState([]);
-  const [selectedSubCategoryId, setSelectedSubCategoryId] = useState();
+
+  const selectedSubCategoryId = Form.useWatch('subCategoryName', parentForm);
 
   const addSubCategory = () => {
     setIsEdit(false);
     setOpen(true);
   };
   const editSubCategory = () => {
+    const mainCategoryType = parentForm.getFieldValue('mainCategory');
+    setCategoryType(mainCategoryType);
     setOpen(true);
     setIsEdit(true);
     const selectedSubCategory = subCategryList?.filter((item) => item.id === selectedSubCategoryId);
@@ -51,6 +47,7 @@ const Categories = () => {
 
   const handleClose = () => {
     form.resetFields();
+    setCategoryType();
     setOpen(false);
   };
 
@@ -60,24 +57,24 @@ const Categories = () => {
     const data = {
       entity: {
         name: values?.name,
-        isActive: values?.isActive,
+        code: values?.code,
+        isActive: true,
       },
     };
     if (isEdit) {
       data.entity.id = selectedSubCategoryId;
+      data.entity.isActive = values?.isActive;
+      data.entity.recordStatus = values?.recordStatus;
+
       const action = await dispatch(category[0].edit(data));
-      // const action = await dispatch(editVideoCategory(data));
       if (category[0].edit.fulfilled.match(action)) {
         successDialog({
           title: <Text t="success" />,
           message: action?.payload.message,
           onOk: async () => {
             await handleClose();
+            handleChange(categoryType);
           },
-        });
-        handleChange(categoryType);
-        parentForm.setFieldsValue({
-          subCategoryName: data.entity.id,
         });
       } else {
         errorDialog({
@@ -94,9 +91,13 @@ const Categories = () => {
         message: action?.payload.message,
         onOk: async () => {
           await handleClose();
+          await handleChange(categoryType);
+          parentForm.setFieldsValue({
+            mainCategory: categoryType,
+            subCategoryName: action?.payload?.data?.id,
+          });
         },
       });
-      handleChange(categoryType);
     } else {
       errorDialog({
         title: <Text t="error" />,
@@ -115,13 +116,11 @@ const Categories = () => {
       setSubCategryList([]);
     }
   };
-  const onSubCategoryChange = (value) => {
-    setSelectedSubCategoryId(value);
-  };
+
   const onCategoryTypeChange = (value) => {
     setCategoryType(value);
   };
-  //yeni kategori eklenicekse buraya eklemeniz yeterli
+
   const categories = [
     {
       id: 1,
@@ -142,9 +141,12 @@ const Categories = () => {
     <CustomPageHeader title="Kategoriler" showBreadCrumb routes={['Ayarlar']}>
       <CustomCollapseCard cardTitle="Kategoriler">
         <div className="categories-container">
+          <CustomButton className="mb-3" type="primary" onClick={addSubCategory}>
+            Yeni Kategori Ekle
+          </CustomButton>
           <CustomForm form={parentForm} layout="vertical" name="form">
-            <CustomFormItem label="Kategori Türü">
-              <CustomSelect onChange={handleChange} placeholder="Kategori Türü">
+            <CustomFormItem label="Ana Kategori" name="mainCategory">
+              <CustomSelect onChange={handleChange} placeholder="Ana Kategori">
                 {categories?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>
@@ -155,8 +157,8 @@ const Categories = () => {
               </CustomSelect>
             </CustomFormItem>
 
-            <CustomFormItem label="Alt Kategori Adı" name="subCategoryName">
-              <CustomSelect placeholder="Alt Kategori Adı" onChange={onSubCategoryChange}>
+            <CustomFormItem label="Kategori Adı" name="subCategoryName">
+              <CustomSelect placeholder="Kategori Adı">
                 {subCategryList?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>
@@ -167,12 +169,9 @@ const Categories = () => {
               </CustomSelect>
             </CustomFormItem>
             <div className="btn-group">
-              <CustomButton type="primary" onClick={addSubCategory}>
-                Alt Kategori Ekle
-              </CustomButton>
               {selectedSubCategoryId && (
                 <CustomButton type="secondary" onClick={editSubCategory}>
-                  Alt Kategori Düzenle
+                  Kategori Düzenle
                 </CustomButton>
               )}
             </div>
@@ -180,13 +179,14 @@ const Categories = () => {
         </div>
 
         <CustomModal
-          title="Alt Kategori Ekle"
+          title={isEdit ? 'Kategori Düzenle' : 'Kategori Ekle'}
           visible={open}
           onOk={() => form.submit()}
           okText="Kaydet"
           cancelText="Vazgeç"
           onCancel={() => {
             form.resetFields();
+            setCategoryType();
             setOpen(false);
           }}
           bodyStyle={{ overflowY: 'auto', maxHeight: 'calc(100vh - 300px)' }}
@@ -202,13 +202,26 @@ const Categories = () => {
                     message: 'Lütfen Zorunlu Alanları Doldurunuz.',
                   },
                 ]}
-                label="Kategori Türü"
+                label="Ana Kategori"
               >
-                <CustomSelect placeholder="Kategori Türü" onChange={onCategoryTypeChange}>
+                <CustomSelect placeholder="Ana Kategori" onChange={onCategoryTypeChange}>
                   {categories?.map((item) => {
                     return (
                       <Option key={item?.id} value={item?.id}>
                         {item?.name}
+                      </Option>
+                    );
+                  })}
+                </CustomSelect>
+              </CustomFormItem>
+            )}
+            {categoryType === 1 && (
+              <CustomFormItem name="code" label="Kategori Tipi">
+                <CustomSelect allowClear placeholder="Kategori Tipi">
+                  {categoryCodes?.map((item) => {
+                    return (
+                      <Option key={item?.code} value={item?.code}>
+                        {item?.value}
                       </Option>
                     );
                   })}
@@ -223,31 +236,32 @@ const Categories = () => {
                   message: 'Lütfen Zorunlu Alanları Doldurunuz.',
                 },
               ]}
-              label="Alt Kategori Adı"
+              label="Kategori Adı"
               name="name"
             >
-              <CustomInput placeholder="Alt Kategori Adı" />
+              <CustomInput placeholder="Kategori Adı" />
             </CustomFormItem>
-
-            <CustomFormItem
-              rules={[
-                {
-                  required: true,
-                  message: 'Lütfen Zorunlu Alanları Doldurunuz.',
-                },
-              ]}
-              label="Durumu"
-              name="isActive"
-            >
-              <CustomSelect placeholder="Durumu">
-                <Option key="true" value={true}>
-                  Aktif
-                </Option>
-                <Option key="false" value={false}>
-                  Pasif
-                </Option>
-              </CustomSelect>
-            </CustomFormItem>
+            {isEdit && (
+              <CustomFormItem
+                rules={[
+                  {
+                    required: true,
+                    message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                  },
+                ]}
+                label="Durumu"
+                name={categoryType === 1 ? 'recordStatus' : 'isActive'}
+              >
+                <CustomSelect placeholder="Durumu">
+                  <Option key="true" value={categoryType === 1 ? 1 : true}>
+                    Aktif
+                  </Option>
+                  <Option key="false" value={categoryType === 1 ? 0 : false}>
+                    Pasif
+                  </Option>
+                </CustomSelect>
+              </CustomFormItem>
+            )}
           </CustomForm>
         </CustomModal>
       </CustomCollapseCard>

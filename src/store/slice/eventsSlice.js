@@ -109,7 +109,6 @@ export const getAllEventsKeyword = createAsyncThunk(
 const initialState = {
   events: [],
   currentEvent: {},
-  surveyListWithSelectedSurveyCategory: [], //seçilen anket kategorisindeki anketler
   tableProperty: {
     currentPage: 1,
     page: 1,
@@ -133,9 +132,6 @@ export const eventsSlice = createSlice({
     },
     setIsFilter: (state, action) => {
       state.isFilter = action.payload;
-    },
-    setSurveyListWithSelectedSurveyCategory: (state, action) => {
-      state.surveyListWithSelectedSurveyCategory = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -161,14 +157,7 @@ export const eventsSlice = createSlice({
     builder.addCase(deleteEvent.fulfilled, (state, action) => {
       state.currentEvent = {};
     });
-    builder.addCase(getSurveyListWithSelectedSurveyCategory.fulfilled, (state, action) => {
-      state.surveyListWithSelectedSurveyCategory = action?.payload?.data?.items;
-    });
-    builder.addCase(getSurveyListWithSelectedSurveyCategory.rejected, (state) => {
-      state.surveyListWithSelectedSurveyCategory = [];
-    });
   },
 });
 
-export const { setFilterObject, setSorterObject, setIsFilter, setSurveyListWithSelectedSurveyCategory } =
-  eventsSlice.actions;
+export const { setFilterObject, setSorterObject, setIsFilter } = eventsSlice.actions;

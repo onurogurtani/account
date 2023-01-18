@@ -38,7 +38,7 @@ const CategorySection = ({ form }) => {
       >
         <CustomSelect placeholder="Video Kategorisi">
           {categories
-            // ?.filter((item) => item.isActive)
+            ?.filter((item) => item.recordStatus === 1)
             ?.map((item) => {
               return (
                 <Option key={item?.id} value={item?.id}>

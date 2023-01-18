@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomCheckbox, CustomFormItem, CustomSelect, Option } from '../../../../components';
 import { getAllVideoKeyword } from '../../../../store/slice/videoSlice';
+import SurveyListWithSelectedSurveyCategory from '../../../../components/SurveyListWithSelectedSurveyCategory';
 
 const SurveyAndKeywordSection = ({ form }) => {
   const dispatch = useDispatch();
@@ -23,13 +24,21 @@ const SurveyAndKeywordSection = ({ form }) => {
   useEffect(() => {
     form.setFieldsValue({
       keyWords: currentVideo?.keyWords?.split(','),
+      categoryOfFormId: currentVideo?.categoryOfFormId,
+      formId: currentVideo?.formId,
     });
     if (currentVideo?.beforeEducationSurvey) {
       setSelectedSurveyOption('before');
+      form.setFieldsValue({
+        survey: 'before',
+      });
       return;
     }
     if (currentVideo?.afterEducationSurvey) {
       setSelectedSurveyOption('after');
+      form.setFieldsValue({
+        survey: 'after',
+      });
       return;
     }
     setSelectedSurveyOption(undefined);
@@ -51,21 +60,15 @@ const SurveyAndKeywordSection = ({ form }) => {
   return (
     <>
       <CustomFormItem label="Anket Ekle" name="survey">
-        <CustomCheckbox
-          onChange={handleChangeSurveyOption}
-          checked={selectedSurveyOption === 'before'}
-          value="before"
-        >
+        <CustomCheckbox onChange={handleChangeSurveyOption} checked={selectedSurveyOption === 'before'} value="before">
           Eğitim Başında
         </CustomCheckbox>
-        <CustomCheckbox
-          onChange={handleChangeSurveyOption}
-          checked={selectedSurveyOption === 'after'}
-          value="after"
-        >
+        <CustomCheckbox onChange={handleChangeSurveyOption} checked={selectedSurveyOption === 'after'} value="after">
           Eğitim Sonunda
         </CustomCheckbox>
       </CustomFormItem>
+
+      {selectedSurveyOption && <SurveyListWithSelectedSurveyCategory form={form} required />}
 
       <CustomFormItem
         rules={[
