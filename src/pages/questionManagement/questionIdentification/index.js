@@ -118,7 +118,7 @@ const QuestionIdentification = () => {
     const currentYear = new Date().getFullYear();
     let years = [];
     for (let i = 0; i < 50; i++) {
-      years.push(currentYear + i);
+      years.push(currentYear - i);
     }
     setYears(years);
   }, []);
