@@ -51,7 +51,7 @@ export const questionIdentificationSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getByFilterPagedQuestionOfExamsList.fulfilled, (state, action) => {
-      state.questionOfExams = action?.payload?.data.items[0];
+      state.questionOfExams = action?.payload?.data.items[0] ? action?.payload?.data.items[0] : {};
       state.pagedProperty = action?.payload?.data.pagedProperty;
     });
   },
