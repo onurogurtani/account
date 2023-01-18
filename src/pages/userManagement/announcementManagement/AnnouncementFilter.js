@@ -57,7 +57,7 @@ const AnnouncementFilter = () => {
       announcementType: '',
       startDate: '',
       endDate: '',
-      role: '',
+      roleIds: '',
     };
     await dispatch(
       getByFilterPagedAnnouncements({
@@ -78,7 +78,7 @@ const AnnouncementFilter = () => {
         publishStatus: values.publishStatus,
         startDate: values?.startDate ? dayjs(values?.startDate)?.format('YYYY-MM-DDT00:00:00') : undefined,
         endDate: values?.endDate && dayjs(values?.endDate)?.format('YYYY-MM-DDT23:59:59'),
-        role: values.role,
+        roleIds: values.roleIds,
       };
       await dispatch(getByFilterPagedAnnouncements({ ...filterObject, ...body }));
     } catch (e) {}
@@ -199,7 +199,7 @@ const AnnouncementFilter = () => {
                 <Text t="Duyuru Rolleri" />
               </div>
             }
-            name="role"
+            name="roleIds"
             className="filter-item"
           >
             <CustomSelect
@@ -215,7 +215,7 @@ const AnnouncementFilter = () => {
               filterOption={(input, option) => option.children.toLocaleLowerCase().includes(input.toLocaleLowerCase())}
             >
               {groupsList?.map(({ id, groupName }) => (
-                <Option key={id} value={groupName}>
+                <Option key={id} value={id}>
                   {groupName}
                 </Option>
               ))}
