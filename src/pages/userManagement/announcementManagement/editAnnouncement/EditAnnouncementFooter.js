@@ -9,7 +9,7 @@ import {
   CustomImage,
   CustomModal,
   errorDialog,
-  Text
+  Text,
 } from '../../../../components';
 import { editAnnouncement, getAvatarUpload } from '../../../../store/slice/announcementSlice';
 import { getByFilterPagedGroups } from '../../../../store/slice/groupsSlice';
@@ -98,6 +98,7 @@ const EditAnnouncementFooter = ({ form, history, currentId, fileImage, initialVa
           isPublished: true,
           publishStatus: status,
           announcementPublicationPlaces: values.announcementPublicationPlaces,
+          isPopupAvailable: values?.announcementPublicationPlaces.includes(4),
           isReadCheckbox: values?.isReadCheckbox,
         };
 

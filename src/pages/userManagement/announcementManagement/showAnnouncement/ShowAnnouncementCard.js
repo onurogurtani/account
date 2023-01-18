@@ -5,8 +5,8 @@ import { CustomCollapseCard, Text } from '../../../../components';
 const announcementPublicationPlacesEnum = {
   1: 'Anasayfa',
   2: 'Anketler Sayfası',
-  4: 'Pop-up',
   3: 'Bildirimler',
+  4: 'Pop-up',
 };
 const ShowAnnouncementCard = ({ showData }) => {
   const [imageSrc, setImageSrc] = useState(

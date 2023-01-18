@@ -1,5 +1,5 @@
 import { Col, Form, Row, Pagination, Spin } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -85,7 +85,7 @@ const QuestionIdentification = () => {
     } else {
       setFormData({});
     }
-  }, [questionOfExams]);
+  }, [dispatch, questionOfExams]);
   const addFile = async (file, fileType) => {
     const fileData = new FormData();
     fileData.append('File', file);
@@ -209,30 +209,42 @@ const QuestionIdentification = () => {
     setLessonsData(newData);
   }, [lessons]);
 
-  const addData = async () => {
-    const newFormData = { ...formData };
-    delete newFormData.pdfSolutionFile;
-    delete newFormData.videoSolutionFile;
-    delete newFormData.imageSolutionFile;
-    newFormData.questionOfExamId = questionOfExams.id;
-    if (questionOfExams.questionOfExamDetail) {
-      const action = await dispatch(getUpdateQuestion({ data: { questionOfExamDetail: newFormData } }));
-      if (getUpdateQuestion.fulfilled.match(action)) {
-        successDialog({ title: 'Onay', message: 'Güncelledi' });
-        searchSumbit(pagedProperty.currentPage);
+  const addData = async (privateData = null) => {
+    try {
+      let newFormData = {};
+      if (privateData !== null) {
+        newFormData = { ...privateData };
       } else {
-        errorDialog({ title: 'Hata', message: action?.payload?.message });
+        newFormData = { ...formData };
       }
-    } else {
-      const action = await dispatch(getAddQuestion({ data: { questionOfExamDetail: newFormData } }));
-      if (getAddQuestion.fulfilled.match(action)) {
-        successDialog({ title: 'Onay', message: 'Eklendi' });
-        searchSumbit(pagedProperty.currentPage);
+      delete newFormData.pdfSolutionFile;
+      delete newFormData.videoSolutionFile;
+      delete newFormData.imageSolutionFile;
+      newFormData.questionOfExamId = questionOfExams.id;
+      if (questionOfExams.questionOfExamDetail) {
+        const action = await dispatch(getUpdateQuestion({ data: { questionOfExamDetail: newFormData } }));
+        if (getUpdateQuestion.fulfilled.match(action)) {
+          successDialog({ title: 'Onay', message: 'Güncelledi' });
+          searchSumbit(pagedProperty.currentPage);
+        } else {
+          alert('dasdsa');
+
+          errorDialog({ title: 'Hata', message: action?.payload?.message });
+        }
       } else {
-        errorDialog({ title: 'Hata', message: action?.payload?.message });
+        const action = await dispatch(getAddQuestion({ data: { questionOfExamDetail: newFormData } }));
+        if (getAddQuestion.fulfilled.match(action)) {
+          successDialog({ title: 'Onay', message: 'Eklendi' });
+          searchSumbit(pagedProperty.currentPage);
+        } else {
+          errorDialog({ title: 'Hata', message: action?.payload?.message });
+        }
       }
+    } catch (err) {
+      console.log(err);
     }
   };
+
   return (
     <CustomPageHeader>
       <CustomCollapseCard cardTitle={'Soru Kimliklendirme'}>
@@ -681,7 +693,7 @@ const QuestionIdentification = () => {
                               value[value.length - 1] === undefined ||
                               value[value.length - 1] === '.'
                             ) {
-                              setFormData({ ...formData, solutionMinute: e.target.value });
+                              setFormData({ ...formData, solutionMinute: parseFloat(e.target.value) });
                             } else {
                             }
                           }}
@@ -700,7 +712,7 @@ const QuestionIdentification = () => {
                             const value = e.target.value;
                             console.log(value[value.length - 1]);
                             if (!isNaN(value[value.length - 1]) || value[value.length - 1] === undefined) {
-                              setFormData({ ...formData, wordCount: e.target.value });
+                              setFormData({ ...formData, wordCount: parseInt(e.target.value) });
                             } else {
                             }
                           }}
@@ -877,7 +889,14 @@ const QuestionIdentification = () => {
                   </Col>
                   <Col span={24}>
                     <div className=" save-button">
-                      <CustomButton onClick={addData} disabled={fileUploadLoading} className="save-q" type="primary">
+                      <CustomButton
+                        onClick={() => {
+                          addData();
+                        }}
+                        disabled={fileUploadLoading}
+                        className="save-q"
+                        type="primary"
+                      >
                         {questionOfExams?.questionOfExamDetail ? 'Güncelle' : 'Kaydet'}
                       </CustomButton>
                     </div>
@@ -943,9 +962,8 @@ const QuestionIdentification = () => {
               newData.questionOfExamDetailLessonSubSubjects.push({ lessonSubSubjectId: item });
             });
             setFormData(newData);
-
             if (questionOfExams.questionOfExamDetail) {
-              addData();
+              addData(newData);
             }
             setShowModal(false);
           }}

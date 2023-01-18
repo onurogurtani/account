@@ -105,20 +105,19 @@ const EarningsChoice = ({ classroomId = 63 }) => {
     setCopyFilterData(modifiedLessonUnits);
   };
 
-  /*useEffect(() => {
+  useEffect(() => {
     const newData = [];
-    earningChoice.unitId.forEach((element) => {
+    earningChoice?.unitId?.forEach((element) => {
       newData.push(element);
     });
-    earningChoice.subjectId.forEach((element) => {
+    earningChoice?.subjectId?.forEach((element) => {
       newData.push(element);
     });
-    earningChoice.subSubjectId.forEach((element) => {
+    earningChoice?.subSubjectId?.forEach((element) => {
       newData.push(element);
     });
-    console.log(newData);
     setCheckedKeys(newData);
-  }, [earningChoice]);*/
+  }, [earningChoice]);
   const onCheck = (checkedKeysValue, info) => {
     console.log(checkedKeysValue);
     setCheckedKeys(checkedKeysValue);
