@@ -16,6 +16,13 @@ const addLessons = (data) => {
   });
 };
 
+const getByClassromIdLessons = (classroomId) => {
+  return api({
+    url: `Lessons/getByClassromIdLessons?ClassroomId=${classroomId}`,
+    method: 'POST',
+  });
+};
+
 const editLessons = (data) => {
   return api({
     url: `Lessons`,
@@ -54,6 +61,7 @@ const lessonsServices = {
   downloadLessonsExcel,
   uploadLessonsExcel,
   addLessons,
+  getByClassromIdLessons
 };
 
 export default lessonsServices;

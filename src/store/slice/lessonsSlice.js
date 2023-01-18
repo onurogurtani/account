@@ -16,6 +16,32 @@ export const getLessons = createAsyncThunk('getLessons', async (body, { dispatch
     return rejectWithValue(error?.data);
   }
 });
+export const getLessonsQuesiton = createAsyncThunk(
+  'getLessonsQuesiton',
+  async (body, { dispatch, getState, rejectWithValue }) => {
+    try {
+      //statede varsa request iptal
+      const findLessons = getState()?.lessons.lessons.find((i) => i.classroomId === body[0]?.value);
+      if (findLessons) return rejectWithValue();
+
+      return await lessonsServices.getLessons(body);
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
+export const getByClassromIdLessons = createAsyncThunk(
+  'getByClassromIdLessons',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await lessonsServices.getByClassromIdLessons(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 
 export const addLessons = createAsyncThunk('addLessons', async (data, { dispatch, rejectWithValue }) => {
   try {
@@ -73,6 +99,7 @@ export const uploadLessonsExcel = createAsyncThunk(
 
 const initialState = {
   lessons: [],
+  lessonsGetByClassroom: [],
 };
 
 export const lessonsSlice = createSlice({
@@ -84,6 +111,12 @@ export const lessonsSlice = createSlice({
       if (action?.payload?.data?.items.length) {
         state.lessons = state.lessons.concat(action?.payload?.data?.items).reverse();
       }
+    });
+    builder.addCase(getLessonsQuesiton.fulfilled, (state, action) => {
+      state.lessons = action?.payload?.data?.items;
+    });
+    builder.addCase(getByClassromIdLessons.fulfilled, (state, action) => {
+      state.lessonsGetByClassroom = action?.payload?.data;
     });
     builder.addCase(uploadLessonsExcel.fulfilled, (state, action) => {
       const { arg } = action.meta;

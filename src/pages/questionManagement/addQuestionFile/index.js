@@ -1,4 +1,4 @@
-import { CustomPageHeader, Text,CustomCollapseCard } from '../../../components';
+import { CustomPageHeader, Text, CustomCollapseCard } from '../../../components';
 import { useEffect } from 'react';
 import QuestionFileCreate from './QuestionFileCreate';
 

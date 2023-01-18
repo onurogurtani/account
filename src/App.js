@@ -27,7 +27,7 @@ import EventManagement from './pages/eventManagement';
 import UserListManagement from './pages/userManagement/userListManagement';
 import WorkPlanManagement from './pages/workPlanManagement';
 import AdminUsersManagement from './pages/userManagement/adminUsersManagement';
-import QuestionManagement from './pages/userManagement/questionManagement';
+import QuestionManagement from './pages/questionManagement/index';
 
 const PrivateRoute = lazy(() =>
   import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -427,7 +427,13 @@ const App = () => {
                         <PrivateRoute
                           path={`${match?.path}/add-question-file`}
                           exact
-                          Component={QuestionManagement}
+                          Component={QuestionManagement.AdQuestinFile}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/question-identification`}
+                          exact
+                          Component={QuestionManagement.QuestionIdentification}
                           authority="dashboard"
                         />
                         <Route

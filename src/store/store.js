@@ -43,6 +43,8 @@ import { questionManagementSlice } from './slice/questionFileSlice';
 import { lessonUnitsSlice } from './slice/lessonUnitsSlice';
 import { lessonSubjectsSlice } from './slice/lessonSubjectsSlice';
 import { lessonSubSubjectsSlice } from './slice/lessonSubSubjectsSlice';
+import { questionIdentificationSlice } from './slice/questionIdentificationSlice';
+import { earningChoiceSlice } from './slice/earningChoiceSlice';
 import { workPlanSlice } from './slice/workPlanSlice';
 
 const reducers = combineReducers({
@@ -83,6 +85,8 @@ const reducers = combineReducers({
   publisherBook: publisherBookSlice.reducer,
   questionManagement: questionManagementSlice.reducer,
   workPlan: workPlanSlice.reducer,
+  questionIdentification: questionIdentificationSlice.reducer,
+  earningChoice: earningChoiceSlice.reducer,
 });
 
 const persistConfig = {

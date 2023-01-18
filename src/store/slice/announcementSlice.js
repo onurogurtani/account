@@ -1,38 +1,14 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import announcementServices from '../../services/announcement.services';
 import fileServices from '../../services/file.services';
+import { getByFilterPagedParamsHelper } from '../../utils/utils';
 
 export const getByFilterPagedAnnouncements = createAsyncThunk(
   'announcement/GetByFilterPagedAnnouncements',
   async (data, { getState, dispatch, rejectWithValue }) => {
     try {
-      let urlString;
-      if (data) {
-        let urlArr = [];
-        for (let item in data) {
-          if (!!data[item]) {
-            let newStr = `AnnouncementDetailSearch.${item}=${data[item]}`;
-            urlArr.push(newStr);
-          }
-        }
-        if (!data.OrderBy) {
-          let newStr = `AnnouncementDetailSearch.OrderBy=idDESC`;
-          urlArr.push(newStr);
-        }
-        if (!data.PageNumber) {
-          let newStr = `AnnouncementDetailSearch.PageNumber=1`;
-          urlArr.push(newStr);
-        }
-        if (!data.PageSize) {
-          let newStr = `AnnouncementDetailSearch.PageSize=10`;
-          urlArr.push(newStr);
-        }
-        urlString = urlArr.join('&');
-      } else {
-        urlString =
-          'AnnouncementDetailSearch.OrderBy=insertDESC&AnnouncementDetailSearch.PageNumber=1&AnnouncementDetailSearch.PageSize=10';
-      }
-      const response = await announcementServices.getByFilterPagedAnnouncements(urlString);
+      const params = getByFilterPagedParamsHelper(data, 'AnnouncementDetailSearch.');
+      const response = await announcementServices.getByFilterPagedAnnouncements(params);
       dispatch(setFilterObject(data));
       return response;
     } catch (error) {
