@@ -1,5 +1,5 @@
 import { Col, Form, Row, Pagination, Spin } from 'antd';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -56,7 +56,8 @@ const QuestionIdentification = () => {
   const [filterForm] = Form.useForm();
   const [filterForm2] = Form.useForm();
   const QuestionOfExamState = Form.useWatch('QuestionOfExamState', filterForm2);
-  const classroomId = Form.useWatch('classroomId', filterForm);
+  const classroomId = Form.useWatch('ClassroomId', filterForm);
+  const [activeYearClass, setActiveClass] = useState(false);
   const [years, setYears] = useState([]);
   const token = useSelector((state) => state?.auth?.token);
   const { earningChoice } = useSelector((state) => state?.earningChoice);
@@ -160,7 +161,12 @@ const QuestionIdentification = () => {
           'QuestionOfExamDetailSearch.Difficulty': form2.Difficulty,
           'QuestionOfExamDetailSearch.HasAcquisitionTree': form2.HasAcquisitionTree,
           'QuestionOfExamDetailSearch.QuestionOfExamState': form2.QuestionOfExamState,
-          'QuestionOfExamDetailSearch.QuestionOfExamWrongKind': form2.QuestionOfExamWrongKind,
+          'QuestionOfExamDetailSearch.QuestionOfExamWrongKind':
+            form2.QuestionOfExamState === 0
+              ? null
+              : form2.QuestionOfExamState === null
+              ? null
+              : form2.QuestionOfExamWrongKind,
           'QuestionOfExamDetailSearch.QuestionOfExamKind': form2.QuestionOfExamKind,
         }),
       );
@@ -170,6 +176,8 @@ const QuestionIdentification = () => {
   };
   useEffect(() => {
     const newData = [];
+    newData.push({ value: null, label: 'Hepsi' });
+
     educationYears?.items?.forEach((element, item) => {
       newData.push({ value: element.id, label: element.startYear + '-' + element.endYear });
     });
@@ -693,7 +701,7 @@ const QuestionIdentification = () => {
                               value[value.length - 1] === undefined ||
                               value[value.length - 1] === '.'
                             ) {
-                              setFormData({ ...formData, solutionMinute: parseFloat(e.target.value) });
+                              setFormData({ ...formData, solutionMinute: e.target.value });
                             } else {
                             }
                           }}
@@ -766,47 +774,78 @@ const QuestionIdentification = () => {
 
                     {formData.outQuestion && (
                       <>
-                        <div className="question-info">
-                          <label className="quesiton-label">Soru Yılı Seçiniz :</label>
-                          <div className="checkbox-item">
-                            <CustomSelect
-                              disabled={formData.questionOfExamState === 1}
-                              onChange={(e) => {
-                                setFormData({ ...formData, yearOfOutQuestion: e });
-                              }}
-                              value={formData.yearOfOutQuestion}
-                              className=""
-                              placeholder="Seçiniz"
-                            >
-                              {years.map((item, index) => (
-                                <Option key={index} value={item}>
-                                  {item}
-                                </Option>
-                              ))}
-                            </CustomSelect>{' '}
+                        {classListData?.find((q) => q.value === classroomId)?.label?.toLowerCase() === 'lgs' && (
+                          <div>
+                            <div className="question-info">
+                              <label className="quesiton-label">Soru Yılı Seçiniz :</label>
+                              <div className="checkbox-item">
+                                <CustomSelect
+                                  disabled={formData.questionOfExamState === 1}
+                                  onChange={(e) => {
+                                    setFormData({ ...formData, yearOfOutQuestion: e });
+                                  }}
+                                  value={formData.yearOfOutQuestion}
+                                  className=""
+                                  placeholder="Seçiniz"
+                                >
+                                  {years.map((item, index) => (
+                                    <Option key={index} value={item}>
+                                      {item}
+                                    </Option>
+                                  ))}
+                                </CustomSelect>{' '}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-
-                        <div className="question-info">
-                          <label className="quesiton-label"></label>
-                          <div className="checkbox-item">
-                            <CustomRadioGroup
-                              value={formData.outInTYT ? 'outInTYT' : formData.outInAYT ? 'outInAYT' : ''}
-                              disabled={formData.questionOfExamState === 1}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                if (value === 'outInTYT') {
-                                  setFormData({ ...formData, outInTYT: true, outInAYT: false });
-                                } else {
-                                  setFormData({ ...formData, outInTYT: false, outInAYT: true });
-                                }
-                              }}
-                            >
-                              <CustomRadio value={'outInTYT'}>Tyt</CustomRadio>
-                              <CustomRadio value={'outInAYT'}>Ayt</CustomRadio>
-                            </CustomRadioGroup>
+                        )}
+                        {classListData?.find((q) => q.value === classroomId)?.label?.toLowerCase() === 'yks' && (
+                          <div>
+                            <div className="question-info">
+                              <label className="quesiton-label">Soru Yılı Seçiniz :</label>
+                              <div className="checkbox-item">
+                                <CustomSelect
+                                  disabled={formData.questionOfExamState === 1}
+                                  onChange={(e) => {
+                                    setFormData({ ...formData, yearOfOutQuestion: e });
+                                  }}
+                                  value={formData.yearOfOutQuestion}
+                                  className=""
+                                  placeholder="Seçiniz"
+                                >
+                                  {years.map((item, index) => (
+                                    <Option key={index} value={item}>
+                                      {item}
+                                    </Option>
+                                  ))}
+                                </CustomSelect>{' '}
+                              </div>
+                            </div>
                           </div>
-                        </div>
+                        )}
+                        {classListData?.find((q) => q.value === classroomId)?.label?.toLowerCase() === 'yks' && (
+                          <div>
+                            <div className="question-info">
+                              <label className="quesiton-label"></label>
+                              <div className="checkbox-item">
+                                <CustomRadioGroup
+                                  value={formData.outInTYT ? 'outInTYT' : formData.outInAYT ? 'outInAYT' : ''}
+                                  disabled={formData.questionOfExamState === 1}
+                                  onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (value === 'outInTYT') {
+                                      setFormData({ ...formData, outInTYT: true, outInAYT: false });
+                                    } else {
+                                      setFormData({ ...formData, outInTYT: false, outInAYT: true });
+                                    }
+                                  }}
+                                >
+                                  <CustomRadio value={'outInTYT'}>Tyt</CustomRadio>
+                                  <CustomRadio value={'outInAYT'}>Ayt</CustomRadio>
+                                </CustomRadioGroup>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </>
                     )}
                     <div className="upload">
