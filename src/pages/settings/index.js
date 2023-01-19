@@ -86,6 +86,11 @@ const Publisher = lazy(() =>
     default: Component,
   })),
 );
+const ParticipantGroups = lazy(() =>
+  import('./participantGroups').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 const Settings = {
   Categories,
   Packages,
@@ -103,6 +108,7 @@ const Settings = {
   PreferencePeriod,
   PublisherBook,
   Publisher,
+  ParticipantGroups
 };
 
 export default Settings;

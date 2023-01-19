@@ -363,6 +363,11 @@ const App = () => {
                           Component={Settings?.Publisher}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/participantGroups`}
+                          Component={Settings?.ParticipantGroups}
+                          authority="dashboard"
+                        />
                         <Route
                           component={() => (
                             <Redirect
