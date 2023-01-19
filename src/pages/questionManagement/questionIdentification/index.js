@@ -57,11 +57,11 @@ const QuestionIdentification = () => {
   const [filterForm2] = Form.useForm();
   const QuestionOfExamState = Form.useWatch('QuestionOfExamState', filterForm2);
   const classroomId = Form.useWatch('ClassroomId', filterForm);
-  const [activeYearClass, setActiveClass] = useState(false);
   const [years, setYears] = useState([]);
   const token = useSelector((state) => state?.auth?.token);
   const { earningChoice } = useSelector((state) => state?.earningChoice);
   const [fileInputInfo, setFileInputInfo] = useState({ video: {}, image: {}, pdf: {} });
+  const [classroomIdInfo, setClassroomIdInfo] = useState('');
 
   useEffect(() => {
     if (questionOfExams?.questionOfExamDetail) {
@@ -171,6 +171,7 @@ const QuestionIdentification = () => {
           'QuestionOfExamDetailSearch.QuestionOfExamKind': form2.QuestionOfExamKind,
         }),
       );
+      setClassroomIdInfo(classroomId);
       setFileInputInfo({ image: {}, video: {}, pdf: {} });
     } else {
       errorDialog({ title: 'Hata', message: 'Sınıf seviyesi boş olamaz!' });
@@ -1080,7 +1081,7 @@ const QuestionIdentification = () => {
           cancelText="Vazgeç"
           bodyStyle={{ overflowY: 'auto' }}
         >
-          <EarningsChoice classroomId={classroomId} />
+          <EarningsChoice classroomId={classroomIdInfo} />
         </CustomModal>
       </div>
     </CustomPageHeader>

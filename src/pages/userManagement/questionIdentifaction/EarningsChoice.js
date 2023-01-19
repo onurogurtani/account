@@ -6,7 +6,7 @@ import EarningSearch from './EarningSearch';
 import CustomSelect, { Option } from '../../../components/CustomSelect';
 import { getByClassromIdLessons } from '../../../store/slice/lessonsSlice';
 
-const EarningsChoice = ({ classroomId = 63 }) => {
+const EarningsChoice = ({ classroomId }) => {
   const { lessonUnits } = useSelector((state) => state?.lessonUnits);
   const { lessonsGetByClassroom } = useSelector((state) => state?.lessons);
   const { earningChoice } = useSelector((state) => state.earningChoice);
