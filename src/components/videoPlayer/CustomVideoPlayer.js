@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import '../../styles/components/customVideoPlayer.scss';
-import { Col, Row, Button, Popover, List, Tooltip } from 'antd';
+import { Col, Row, Button, Popover, List, Tooltip, Spin } from 'antd';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import {
   middleControlButton,
@@ -33,7 +33,10 @@ const CustomVideoPlayer = (props) => {
   const [playbackRate, setPlaybackRate] = useState(1);
   const [played, setPlayed] = useState(0);
   const [videoTime, setVideoTime] = useState(0);
+  const [buffer, setBuffer] = useState(true);
   const [isReady, setIsReady] = useState(false);
+  const [volume, setVolume] = useState(10);
+
   const [pip, setPip] = useState(false);
   const handle = useFullScreenHandle();
 
@@ -41,6 +44,7 @@ const CustomVideoPlayer = (props) => {
     const handler = (e) => {
       if (e.keyCode === 32) {
         e.preventDefault();
+        controlsRef.current.style.display = 'flex';
         setPlaying((prev) => !prev);
       }
     };
@@ -74,17 +78,13 @@ const CustomVideoPlayer = (props) => {
   };
 
   const sliderChange = (value) => {
-    ref.current.seekTo(value);
+    ref.current.seekTo(value / videoTime);
     setPlayed(value);
   };
 
-  const pauseIcon = (
-    <CustomImage src={pause} onClick={playVideo} style={middleControlButton} className="controls-icon" />
-  );
+  const pauseIcon = <CustomImage src={pause} style={middleControlButton} className="controls-icon" />;
 
-  const playIcon = (
-    <CustomImage src={start} onClick={playVideo} style={middleControlButton} className="controls-icon" />
-  );
+  const playIcon = <CustomImage src={start} style={middleControlButton} className="controls-icon" />;
 
   const content = (
     <List
@@ -128,8 +128,9 @@ const CustomVideoPlayer = (props) => {
     setPlayed(progress.playedSeconds);
 
     if (progress.loadedSeconds > 0) {
-      setIsReady(true);
+      !isReady && setIsReady(true);
     }
+
     if (count > 15) {
       controlsRef.current.style.display = 'none';
       count = 0;
@@ -139,8 +140,30 @@ const CustomVideoPlayer = (props) => {
       count += 1;
     }
   };
+  const bufferStartHandler = () => {
+    setBuffer(false);
+  };
+
+  const bufferEndHandler = () => {
+    setBuffer(true);
+  };
+
+  const onPlayerWrapperClick = () => {
+    handleMouseMove();
+    playVideo();
+  };
+  const volumeChange = (value) => {
+    setVolume(value);
+    // setMuted(Number(value) === 0 ? true : false);
+  };
+
   return (
-    <div onMouseMove={handleMouseMove} style={{ position: 'relative' }} className="player-wrapper">
+    <div
+      onMouseMove={handleMouseMove}
+      onClick={onPlayerWrapperClick}
+      style={{ position: 'relative' }}
+      className="player-wrapper"
+    >
       <FullScreen handle={handle}>
         <ReactPlayer
           className="react-player"
@@ -148,6 +171,7 @@ const CustomVideoPlayer = (props) => {
           height={'100%'}
           ref={ref}
           progressInterval={100}
+          volume={volume / 100}
           muted={muted}
           playing={playing}
           pip={pip}
@@ -155,23 +179,33 @@ const CustomVideoPlayer = (props) => {
           onDisablePIP={handleDisablePIP}
           playbackRate={playbackRate}
           onEnded={handleEnded}
+          onBuffer={bufferStartHandler}
+          onBufferEnd={bufferEndHandler}
           onDuration={(duration) => setVideoTime(duration)}
           onProgress={onProgress}
         />
-
+        <div className="loading-wrapper">{(!buffer || !isReady) && <Spin />}</div>
         <div className="controls-wrapper" ref={controlsRef}>
           <Row style={rowHeaderStyle}>
             <Col>
               <label style={labelStyle}>{props.name}</label>
             </Col>
           </Row>
-          <Row onClick={playVideo} style={{ flex: 1 }}>
-            {isReady ? null : 'Yükleniyor...'}
-          </Row>
-          <Row style={rowStyle}>
+          <Row style={{ flex: 1 }}></Row>
+          <Row
+            style={rowStyle}
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
+          >
             <Col>
               <Tooltip placement="top" title={!playing ? 'Oynat' : 'Durdur'}>
-                <CustomButton icon={playing ? pauseIcon : playIcon} height="15px" type="link"></CustomButton>
+                <CustomButton
+                  onClick={playVideo}
+                  icon={playing ? pauseIcon : playIcon}
+                  height="15px"
+                  type="link"
+                ></CustomButton>
               </Tooltip>
             </Col>
             <Col>
@@ -188,6 +222,9 @@ const CustomVideoPlayer = (props) => {
                 type="link"
                 onClick={mutedVideo}
               ></CustomButton>
+            </Col>
+            <Col>
+              <CustomSlider onChange={volumeChange} value={volume} style={{ width: '50px' }} />
             </Col>
             <Col style={{ marginTop: '4px', color: 'white', paddingLeft: '6px' }}>
               {format(played)} / {format(videoTime)}
