@@ -6,7 +6,7 @@ import EarningSearch from './EarningSearch';
 import CustomSelect, { Option } from '../../../components/CustomSelect';
 import { getByClassromIdLessons } from '../../../store/slice/lessonsSlice';
 
-const EarningsChoice = ({ classroomId = 63 }) => {
+const EarningsChoice = ({ classroomId }) => {
   const { lessonUnits } = useSelector((state) => state?.lessonUnits);
   const { lessonsGetByClassroom } = useSelector((state) => state?.lessons);
   const { earningChoice } = useSelector((state) => state.earningChoice);
@@ -112,7 +112,7 @@ const EarningsChoice = ({ classroomId = 63 }) => {
     setCopyFilterData(modifiedLessonUnits);
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (!chackedChange) {
       let newData = [];
       earningChoice?.unitId?.forEach((element) => {
@@ -126,7 +126,7 @@ const EarningsChoice = ({ classroomId = 63 }) => {
       });
       setCheckedKeys(newData);
     }
-  }, [chackedChange, earningChoice]);
+  }, [chackedChange, earningChoice]);*/
   const onCheck = (checkedKeysValue, info) => {
     setCheckedKeys(checkedKeysValue);
     setChackedChange(true);
@@ -143,7 +143,6 @@ const EarningsChoice = ({ classroomId = 63 }) => {
           if (subItem.slice(0, difIndex).includes(item.id.toString())) {
             earningChoice.unitId.push(item?.id);
           }
-        
         });
       });
       info.halfCheckedKeys.map((item) => {
@@ -153,7 +152,7 @@ const EarningsChoice = ({ classroomId = 63 }) => {
         }
       });
     }
-  
+
     info.checkedNodes.map((item) => {
       if (item?.lessonId) {
         earningChoice.unitId.push(item?.id);

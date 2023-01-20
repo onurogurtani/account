@@ -223,4 +223,12 @@
   justify-content: center;
   align-items: center;
   width: 100%;
+  span {
+    margin-right: 5px;
+    padding: 5px 20px;
+    background-color: red;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+  }
 }
