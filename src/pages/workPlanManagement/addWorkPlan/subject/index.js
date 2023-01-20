@@ -11,11 +11,17 @@ import {
   errorDialog,
   Option, Text,
 } from '../../../../components';
-import { onChangeActiveKey, selectedSubjectTabRowVideo } from '../../../../store/slice/workPlanSlice';
+import {
+  onChangeActiveKey,
+  selectedSubjectTabRowVideo, setSubjectChooseData,
+  setSubjectChooseVideoFilteredList, setSubjectChooseFilterData, resetSubjectChooseVideoList,
+  resetPracticeQuestionVideoList,
+  selectedPracticeQuestionTabRowsVideo,
+} from '../../../../store/slice/workPlanSlice';
 import { getEducationYears } from '../../../../store/slice/questionFileSlice';
 import { getAllClassStages } from '../../../../store/slice/classStageSlice';
 import useAcquisitionTree from '../../../../hooks/useAcquisitionTree';
-import { getByFilterPagedVideos, resetVideoList } from '../../../../store/slice/videoSlice';
+import { getByFilterPagedVideos } from '../../../../store/slice/videoSlice';
 import videoListTableColumn from './videoListTableColumn';
 import useOnchangeTable from '../../../../hooks/useOnchangeTable';
 import '../../../../styles/table.scss';
@@ -35,15 +41,23 @@ const SubjectChoose = ({ sendValue }) => {
   const { lessons } = useSelector((state) => state?.lessons);
   const { lessonUnits } = useSelector((state) => state?.lessonUnits);
   const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
-  const { videos, tableProperty, filterObject } = useSelector((state) => state?.videos);
   const columns = videoListTableColumn(dispatch, subjectChooseTab);
 
-  const onChangeTable = useOnchangeTable({ filterObject, action: getByFilterPagedVideos });
+  const paginationSetFilteredVideoList = (res) => {
+    dispatch(setSubjectChooseVideoFilteredList(res?.payload));
+  };
+
+  const onChangeTable = useOnchangeTable({
+    filterObject: subjectChooseTab?.filterObject,
+    action: getByFilterPagedVideos,
+    callback: paginationSetFilteredVideoList,
+  });
+
 
   useEffect(() => {
     dispatch(getEducationYears());
     dispatch(getAllClassStages());
-    dispatch(resetVideoList())
+    dispatch(resetSubjectChooseVideoList());
   }, []);
 
   // table pagination
@@ -53,9 +67,9 @@ const SubjectChoose = ({ sendValue }) => {
       goButton: <CustomButton className='go-button'>Git</CustomButton>,
     },
     position: 'bottomRight',
-    total: tableProperty?.totalCount,
-    current: tableProperty?.currentPage,
-    pageSize: tableProperty?.pageSize,
+    total: subjectChooseTab?.tableProperty?.totalCount,
+    current: subjectChooseTab?.tableProperty?.currentPage,
+    pageSize: 2,
   };
 
   // selects onchange
@@ -75,10 +89,11 @@ const SubjectChoose = ({ sendValue }) => {
   };
 
   // next step
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
+
+    dispatch(setSubjectChooseData(values));
+
     if (Object.keys(subjectChooseTab.selectedRowVideo).length > 0) {
-      console.log('values', values);
-      sendValue(values);
       dispatch(onChangeActiveKey('1'));
     } else {
       errorDialog({
@@ -91,17 +106,32 @@ const SubjectChoose = ({ sendValue }) => {
   // filter search videolist
   const handleSearchVideo = async () => {
     const values = await form.validateFields(['ClassroomId', 'LessonIds', 'LessonUnitIds', 'LessonSubjectIds']);
-    console.log('searc video filter', values);
+    console.log('search video filter', values);
 
     dispatch(selectedSubjectTabRowVideo({}));
+    dispatch(selectedPracticeQuestionTabRowsVideo([]));
+    dispatch(resetPracticeQuestionVideoList());
+    dispatch(setSubjectChooseData(values));
+
+    let data = {
+      ...values,
+      isActive: true,
+      CategoryCode: 'lectureVideo',
+    };
+    dispatch(setSubjectChooseFilterData(data));
+    console.log('subjectChooseTab.filterObject', subjectChooseTab.filterObject);
 
     const body = {
-      ...filterObject,
-      ...values,
-      CategoryCode: 'lectureVideo',
+      ...data,
       PageNumber: 1,
     };
-    await dispatch(getByFilterPagedVideos(body));
+
+    const action = await dispatch(getByFilterPagedVideos(body));
+    if (getByFilterPagedVideos?.fulfilled?.match(action)) {
+      await dispatch(setSubjectChooseVideoFilteredList(action?.payload));
+
+      console.log('subjectChooseTab.videos', subjectChooseTab.videos);
+    }
   };
 
   return (
@@ -255,7 +285,7 @@ const SubjectChoose = ({ sendValue }) => {
 
         <div className='video-list-content'>
           <CustomTable
-            dataSource={videos}
+            dataSource={subjectChooseTab?.videos}
             onChange={onChangeTable}
             columns={columns}
             pagination={paginationProps}

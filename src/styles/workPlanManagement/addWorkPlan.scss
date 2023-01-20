@@ -142,5 +142,40 @@
   }
 
   .practice-question-add-form {
+    padding-top: 25px;
+
+    .video-list-content{
+      .action-btns{
+        display: flex;
+        column-gap: 24px;
+
+        .btn {
+          display: flex;
+          height: 36px;
+          align-items: center;
+          justify-content: center;
+          color: #fff;
+          font-family: UbuntuMedium, sans-serif;
+          font-size: 12px;
+          line-height: 12px;
+          border-radius: 4px;
+          box-shadow: none;
+
+
+          &.btn-selected{
+            background-color: #818587;
+          }
+          &.btn-select{
+            background-color: #42464a;
+          }
+        }
+
+        .btn-show{
+          background-color: #cd921d;
+        }
+
+
+      }
+    }
   }
 }
