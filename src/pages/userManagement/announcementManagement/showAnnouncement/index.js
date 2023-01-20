@@ -68,7 +68,7 @@ const ShowAnnouncement = () => {
   };
   const publishAnnouncement = () => {
     const id = currentAnnouncement.id;
-    if (!dayjs().isBefore(dayjs(currentAnnouncement?.endDate))) {
+    if (dayjs(currentAnnouncement?.endDate).isBefore(dayjs())) {
       setDateVisible(true);
     } else {
       confirmDialog({
