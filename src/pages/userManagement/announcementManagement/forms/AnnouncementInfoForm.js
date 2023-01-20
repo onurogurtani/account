@@ -11,7 +11,7 @@ import {
   CustomInput,
   CustomSelect,
   Option,
-  Text
+  Text,
 } from '../../../../components';
 import { getByFilterPagedAnnouncementTypes } from '../../../../store/slice/announcementSlice';
 import { getByFilterPagedGroups } from '../../../../store/slice/groupsSlice';
@@ -269,11 +269,11 @@ const AnnouncementInfoForm = ({
               showTime={true}
             />
           </CustomFormItem>
-          <p style={{ color: 'red', marginTop: '5px' }}>
-            Başlangıç Tarihi Duyurunun, Arayüzünden görüntüleneceği tarihi belirlemenizi sağlar.
-          </p>
         </Col>
       </Row>
+      <p style={{ color: 'red', marginTop: '5px', marginLeft: '200px' }}>
+        Başlangıç Tarihi Duyurunun, Arayüzünden görüntüleneceği tarihi belirlemenizi sağlar.
+      </p>
       <Row gutter={16}>
         <Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} lg={{ span: 16 }}>
           <CustomFormItem
@@ -295,11 +295,11 @@ const AnnouncementInfoForm = ({
               showTime={true}
             />
           </CustomFormItem>
-          <p style={{ color: 'red', marginTop: '5px' }}>
-            Bitiş Tarihi Duyurunun, Arayüzünden kaldırılacağı tarihi belirlemenizi sağlar.
-          </p>
         </Col>
       </Row>
+      <p style={{ color: 'red', marginTop: '5px', marginLeft: '200px' }}>
+        Bitiş Tarihi Duyurunun, Arayüzünden kaldırılacağı tarihi belirlemenizi sağlar.
+      </p>
       <CustomFormItem
         rules={[
           {
