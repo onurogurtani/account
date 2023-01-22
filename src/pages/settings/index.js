@@ -86,6 +86,11 @@ const Publisher = lazy(() =>
     default: Component,
   })),
 );
+const TrialType = lazy(() =>
+  import('./trialType').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 const Settings = {
   Categories,
   Packages,
@@ -103,6 +108,7 @@ const Settings = {
   PreferencePeriod,
   PublisherBook,
   Publisher,
+  TrialType,
 };
 
 export default Settings;
