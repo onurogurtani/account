@@ -32,11 +32,12 @@ const deleteParticipantGroups = (data) => {
   });
 };
 
-const getParticipantGroupsPagedList = () => {
+const getParticipantGroupsPagedList = (params = {}) => {
   return api({
     url: `ParticipantGroups/getPagedList`,
     method: 'POST',
     data: null,
+    params: params,
   });
 };
 
