@@ -1,17 +1,28 @@
-import { Form, Tag } from 'antd';
+import { Tag } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CustomButton, CustomCollapseCard, CustomTable } from '../../../components';
+import { CustomButton, CustomCollapseCard, CustomImage, CustomTable } from '../../../components';
 import '../../../styles/settings/packages.scss';
 import '../../../styles/table.scss';
-import { getPackageList, addPackage, updatePackage } from '../../../store/slice/packageSlice';
+import { getByFilterPagedPackages } from '../../../store/slice/packageSlice';
 import { useHistory } from 'react-router-dom';
+import useGetPackages from './hooks/useGetPackages';
+import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
+import PackageFilter from './PackageFilter';
+import usePaginationProps from '../../../hooks/usePaginationProps';
+import useOnchangeTable from '../../../hooks/useOnchangeTable';
 
 const PackagesList = () => {
-  const [form] = Form.useForm();
   const dispatch = useDispatch();
   const history = useHistory();
-  const { packages, tableProperty } = useSelector((state) => state?.packages);
+  const { packages, tableProperty, filterObject } = useSelector((state) => state?.packages);
+
+  const paginationProps = usePaginationProps(tableProperty);
+  const onChangeTable = useOnchangeTable({ filterObject, action: getByFilterPagedPackages });
+
+
+  useGetPackages((data) => setIsPackageFilter(data));
+  const [isPackageFilter, setIsPackageFilter] = useState(false);
 
   useEffect(() => {
     loadPackages();
@@ -19,7 +30,7 @@ const PackagesList = () => {
 
   const loadPackages = useCallback(
     async (data = null) => {
-      dispatch(getPackageList(data));
+      dispatch(getByFilterPagedPackages(data));
     },
     [dispatch],
   );
@@ -41,6 +52,27 @@ const PackagesList = () => {
       sorter: (a, b) => b.isActive - a.isActive,
       render: (text, record) => {
         return <div>{text ? 'Aktif' : 'Pasif'}</div>;
+      },
+    },
+    {
+      title: 'Paket Tipi',
+      key: 'isActive',
+      sorter: (a, b) => b.isActive - a.isActive,
+      render: (text, record) => {
+        return (
+          <div>
+            {record.isCorporate &&
+              <Tag Tag color="green" >
+                Kurumsal
+              </Tag>
+            }
+            {record.isPersonal &&
+              <Tag Tag color="green" >
+                Bireysel
+              </Tag>
+            }
+          </div >
+        )
       },
     },
     {
@@ -142,6 +174,32 @@ const PackagesList = () => {
       },
     },
     {
+      title: 'Koçluk Hizmeti',
+      dataIndex: 'hasCoachService',
+      key: 'maxNetCount',
+      render: (text, record) => {
+        return <div>{text ? "Var" : "Yok"}</div>;
+      },
+    },
+    {
+      title: 'Deneme Sınavı',
+      dataIndex: 'hasTryingTest',
+      key: 'hasTryingTest',
+      sorter: (a, b) => a.hasTryingTest - b.hasTryingTest,
+      render: (text, record) => {
+        return <div>{text ? "Var" : "Yok"}</div>;
+      },
+    },
+    {
+      title: 'Motivasyon Etkinlikleri',
+      dataIndex: 'hasMotivationEvent',
+      key: 'hasMotivationEvent',
+      sorter: (a, b) => a.hasMotivationEvent - b.hasMotivationEvent,
+      render: (text, record) => {
+        return <div>{text ? "Var" : "Yok"}</div>;
+      },
+    },
+    {
       title: 'Max. Net Sayısı',
       dataIndex: 'maxNetCount',
       key: 'maxNetCount',
@@ -181,29 +239,20 @@ const PackagesList = () => {
         <CustomButton className="add-btn" onClick={handleAddPackage}>
           Yeni
         </CustomButton>
+        <div className="drafts-count-title">
+          <CustomButton data-testid="search" className="search-btn" onClick={() => setIsPackageFilter((prev) => !prev)}>
+            <CustomImage src={iconSearchWhite} />
+          </CustomButton>
+        </div>
       </div>
+      {isPackageFilter && <PackageFilter />}
       <CustomTable
         dataSource={packages}
         columns={columns}
-        pagination={{
-          showSizeChanger: true,
-          showQuickJumper: {
-            goButton: <CustomButton className="go-button">Git</CustomButton>,
-          },
-          position: 'bottomRight',
-          total: tableProperty.totalCount,
-          current: tableProperty.currentPage,
-          pageSize: tableProperty.pageSize,
-          onChange: (page, pageSize) => {
-            const data = {
-              PageNumber: page,
-              PageSize: pageSize,
-            };
-            loadPackages(data);
-          },
-        }}
+        pagination={paginationProps}
         rowKey={(record) => `packages-${record?.id || record?.headText}`}
         scroll={{ x: false }}
+        onChange={onChangeTable}
       />
     </CustomCollapseCard>
   );

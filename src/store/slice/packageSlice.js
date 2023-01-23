@@ -1,31 +1,21 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import packageServices from '../../services/package.services';
+import { getByFilterPagedParamsHelper } from '../../utils/utils';
 
-export const getPackageList = createAsyncThunk('getPackageList', async (data, { dispatch, rejectWithValue }) => {
-  let urlString = '';
-  if (data) {
-    let urlArr = [];
-    for (let item in data) {
-      if (data[item] !== undefined) {
-        if (Array.isArray(data[item])) {
-          data[item]?.map((element, idx) => {
-            let newStr = `PackageDetailSearch.${item}=${data[item][idx]}`;
-            urlArr.push(newStr);
-          });
-        } else {
-          let newStr = `PackageDetailSearch.${item}=${data[item]}`;
-          urlArr.push(newStr);
-        }
-      }
-      urlString = '?' + urlArr.join('&');
+export const getByFilterPagedPackages = createAsyncThunk(
+  'getByFilterPagedPackages',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const params = getByFilterPagedParamsHelper(data, 'PackageDetailSearch.');
+      const response = await packageServices.getByFilterPagedPackages(params);
+
+      dispatch(setFilterObject(data));
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
     }
-  }
-  try {
-    return await packageServices.getPackageList(urlString);
-  } catch (error) {
-    return rejectWithValue(error?.data);
-  }
-});
+  },
+);
 export const getPackageById = createAsyncThunk('getPackageById', async (id, { dispatch, rejectWithValue }) => {
   try {
     const response = await packageServices.getPackageById(id);
@@ -38,7 +28,7 @@ export const getPackageById = createAsyncThunk('getPackageById', async (id, { di
 export const addPackage = createAsyncThunk('addPackage', async (data, { dispatch, rejectWithValue }) => {
   try {
     const response = await packageServices.addPackage(data);
-    await dispatch(getPackageList());
+    await dispatch(getByFilterPagedPackages());
     return response;
   } catch (error) {
     return rejectWithValue(error?.data);
@@ -48,7 +38,16 @@ export const addPackage = createAsyncThunk('addPackage', async (data, { dispatch
 export const updatePackage = createAsyncThunk('updatePackage', async (data, { dispatch, rejectWithValue }) => {
   try {
     const response = await packageServices.updatePackage(data);
-    await dispatch(getPackageList());
+    await dispatch(getByFilterPagedPackages());
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+
+export const getPackageNames = createAsyncThunk('getPackageNames', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await packageServices.getPackageNames();
     return response;
   } catch (error) {
     return rejectWithValue(error?.data);
@@ -63,19 +62,45 @@ const initialState = {
     pageSize: 10,
     totalCount: 0,
   },
+  selectedPackages: [],
+  isFilter: false,
+  filterObject: {},
+  allPackagesName: [],
 };
 
 export const packageSlice = createSlice({
   name: 'packageSlice',
   initialState,
-  reducers: {},
+  reducers: {
+    setIsFilter: (state, action) => {
+      state.isFilter = action.payload;
+    },
+    setFilterObject: (state, action) => {
+      state.filterObject = action.payload;
+    },
+  },
   extraReducers: (builder) => {
-    builder.addCase(getPackageList.fulfilled, (state, action) => {
+    builder.addCase(getByFilterPagedPackages.fulfilled, (state, action) => {
       state.packages = action?.payload?.data?.items.reverse();
       state.tableProperty = action?.payload?.data?.pagedProperty;
     });
-    builder.addCase(getPackageList.rejected, (state) => {
+    builder.addCase(getByFilterPagedPackages.rejected, (state) => {
       state.packages = [];
+    });
+    builder.addCase(getPackageById.fulfilled, (state, action) => {
+      state.selectedPackages = action?.payload;
+      state.tableProperty = action?.payload?.data?.pagedProperty;
+    });
+    builder.addCase(getPackageById.rejected, (state) => {
+      state.selectedPackages = [];
+    });
+    builder.addCase(getPackageNames.fulfilled, (state, action) => {
+      state.allPackagesName = action?.payload?.data;
+    });
+    builder.addCase(getPackageNames.rejected, (state) => {
+      state.allPackagesName = [];
     });
   },
 });
+
+export const { setFilterObject, setIsFilter } = packageSlice.actions;
