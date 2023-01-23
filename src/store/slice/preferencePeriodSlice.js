@@ -41,16 +41,13 @@ export const getPreferencePeriodDelete = createAsyncThunk(
     }
   },
 );
-export const getEducationYears = createAsyncThunk(
-  'getEducationYears',
-  async (data, { dispatch, rejectWithValue }) => {
-    try {
-      return await preferencePeriodServices.getEducationYears();
-    } catch (error) {
-      return rejectWithValue(error?.data);
-    }
-  },
-);
+export const getEducationYears = createAsyncThunk('getEducationYears', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    return await preferencePeriodServices.getEducationYears(data);
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
 const initialState = {
   preferencePeriod: [],
   educationYears: [],

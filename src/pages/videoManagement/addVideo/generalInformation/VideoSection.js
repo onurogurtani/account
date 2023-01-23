@@ -3,7 +3,7 @@ import { Upload } from 'antd';
 import { CancelToken, isCancel } from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { CustomFormItem, errorDialog, Text } from '../../../../components';
+import { CustomFormItem, CustomInput, errorDialog, Text } from '../../../../components';
 import kalturaServices from '../../../../services/kaltura.services';
 import { getKalturaSessionKey, setKalturaVideoId } from '../../../../store/slice/videoSlice';
 
@@ -30,12 +30,11 @@ const VideoSection = ({ form, setKalturaVideoName }) => {
   const handleDelete = () => {
     cancelVideoUpload();
     dispatch(setKalturaVideoId());
-    setKalturaVideoName();
+    // setKalturaVideoName();
   };
 
   const cancelVideoUpload = () => {
-    if (cancelVideoFileUpload.current)
-      cancelVideoFileUpload.current('User has canceled the file upload.');
+    if (cancelVideoFileUpload.current) cancelVideoFileUpload.current('User has canceled the file upload.');
   };
   const getUploadToken = async (kalturaSessionKey) => {
     try {
@@ -153,7 +152,7 @@ const VideoSection = ({ form, setKalturaVideoName }) => {
       }
       setVideoUploadToken();
       dispatch(setKalturaVideoId(kalturaID?.data?.id));
-      setKalturaVideoName(file?.name);
+      // setKalturaVideoName(file?.name);
       onSuccess('Ok');
     } catch (err) {
       if (isCancel(err)) {
@@ -170,6 +169,14 @@ const VideoSection = ({ form, setKalturaVideoName }) => {
 
   return (
     <>
+      <CustomFormItem
+        rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
+        label="Video Adı"
+        name="kalturaVideoName"
+      >
+        <CustomInput placeholder="Video Adı" />
+      </CustomFormItem>
+
       <CustomFormItem className="requiredFieldLabelMark" label="Video Ekle">
         <CustomFormItem
           rules={[
@@ -197,9 +204,7 @@ const VideoSection = ({ form, setKalturaVideoName }) => {
             <p className="ant-upload-drag-icon">
               <InboxOutlined />
             </p>
-            <p className="ant-upload-text">
-              Dosya yüklemek için tıklayın veya dosyayı bu alana sürükleyin.
-            </p>
+            <p className="ant-upload-text">Dosya yüklemek için tıklayın veya dosyayı bu alana sürükleyin.</p>
             <p className="ant-upload-hint">Sadece bir adet dosya yükleyebilirsiniz.</p>
           </Upload.Dragger>
         </CustomFormItem>

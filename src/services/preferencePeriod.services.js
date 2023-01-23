@@ -31,7 +31,7 @@ const preferencePeriodDelete = (data) => {
 };
 const getEducationYears = (data) => {
   return api({
-    url: `EducationYears/getList?PageSize=20`,
+    url: `EducationYears/getList?PageSize=0&PageNumber=0`,
     method: 'POST',
     data: null,
   });

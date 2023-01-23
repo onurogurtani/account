@@ -1,22 +1,19 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { Form } from 'antd';
 import dayjs from 'dayjs';
+import React, { useCallback, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
+import { editAnnouncement } from '../../../../store/slice/announcementSlice';
 import { dateValidator } from '../../../../utils/formRule';
-import { editAnnouncement, setPublishAnnouncements } from '../../../../store/slice/announcementSlice';
-import modalSuccessIcon from '../../../../assets/icons/icon-modal-success.svg';
 
 import {
   CustomDatePicker,
   CustomForm,
   CustomFormItem,
-  Text,
-  confirmDialog,
-  CustomButton,
   CustomModal,
   errorDialog,
   successDialog,
+  Text,
 } from '../../../../components';
 
 const UpdateAnnouncementDate = ({
@@ -28,7 +25,6 @@ const UpdateAnnouncementDate = ({
 }) => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
-  const location = useLocation();
   const history = useHistory();
 
   useEffect(() => {
@@ -63,22 +59,21 @@ const UpdateAnnouncementDate = ({
       const data = {
         startDate: startDate + 'T' + startHour + '.000Z',
         endDate: endDate + 'T' + endHour + '.000Z',
+        publishStatus: 1,
+        isActive: true,
       };
       const newData = { ...currentAnnouncement, ...data };
-      let id = currentAnnouncement.id;
-
       const action = await dispatch(editAnnouncement(newData));
-      const actionPublish = await dispatch(setPublishAnnouncements({ id }));
 
-      if (editAnnouncement.fulfilled.match(action) && setPublishAnnouncements.fulfilled.match(actionPublish)) {
+      if (editAnnouncement.fulfilled.match(action)) {
         history.push({
           pathname: '/user-management/announcement-management/show',
-          state: { data: { ...newData, isPublished: true, isActive: true } },
+          state: { data: { ...newData, publishStatus: 1, isActive: true } },
         });
-        setCurrentAnnouncement({ ...newData, isPublished: true, isActive: true });
+        setCurrentAnnouncement({ ...newData, publishStatus: 1, isActive: true });
         successDialog({
           title: <Text t="success" />,
-          message: action.payload?.message,
+          message: 'Duyuru başarıyla yayınlanmıştır',
         });
         setDateVisible(false);
       } else {

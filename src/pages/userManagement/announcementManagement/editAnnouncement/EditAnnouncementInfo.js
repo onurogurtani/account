@@ -5,9 +5,13 @@ import { CustomCollapseCard, Text } from '../../../../components';
 import '../../../../styles/announcementManagement/addAnnouncementInfo.scss';
 import AnnouncementInfoForm from '../forms/AnnouncementInfoForm';
 
-const AddAnnouncementInfo = ({ setAnnouncementInfoData, announcementInfoData,
-  
-  updated, setUpdated }) => {
+const AddAnnouncementInfo = ({
+  setAnnouncementInfoData,
+  announcementInfoData,
+
+  updated,
+  setUpdated,
+}) => {
   const history = useHistory();
   const location = useLocation();
   useEffect(() => {
@@ -18,7 +22,7 @@ const AddAnnouncementInfo = ({ setAnnouncementInfoData, announcementInfoData,
 
   return (
     <CustomCollapseCard cardTitle={<Text t="Genel Bilgiler" />}>
-      <div className="addAnnouncementInfo-container">
+      <div className="form-container">
         <AnnouncementInfoForm
           setAnnouncementInfoData={setAnnouncementInfoData}
           history={history}

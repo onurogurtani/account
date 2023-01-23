@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomCheckbox, CustomFormItem, CustomSelect, Option } from '../../../../components';
+import SurveyListWithSelectedSurveyCategory from '../../../../components/SurveyListWithSelectedSurveyCategory';
 import { getAllVideoKeyword } from '../../../../store/slice/videoSlice';
 
 const SurveyAndKeywordSection = ({ form }) => {
@@ -36,29 +37,18 @@ const SurveyAndKeywordSection = ({ form }) => {
   return (
     <>
       <CustomFormItem label="Anket Ekle" name="survey">
-        <CustomCheckbox
-          onChange={handleChangeSurveyOption}
-          checked={selectedSurveyOption === 'before'}
-          value="before"
-        >
+        <CustomCheckbox onChange={handleChangeSurveyOption} checked={selectedSurveyOption === 'before'} value="before">
           Eğitim Başında
         </CustomCheckbox>
-        <CustomCheckbox
-          onChange={handleChangeSurveyOption}
-          checked={selectedSurveyOption === 'after'}
-          value="after"
-        >
+        <CustomCheckbox onChange={handleChangeSurveyOption} checked={selectedSurveyOption === 'after'} value="after">
           Eğitim Sonunda
         </CustomCheckbox>
       </CustomFormItem>
 
+      {selectedSurveyOption && <SurveyListWithSelectedSurveyCategory form={form} required />}
+
       <CustomFormItem
-        rules={[
-          {
-            required: true,
-            message: 'Lütfen Zorunlu Alanları Doldurunuz.',
-          },
-        ]}
+        rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
         label="Anahtar Kelimeler"
         name="keyWords"
       >

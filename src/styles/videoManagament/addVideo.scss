@@ -82,11 +82,11 @@
     .header-mark {
       font-size: 16px;
       display: flex;
-      margin-left: 165px;
       justify-content: space-between;
       margin-bottom: 10px;
       font-weight: 500;
       padding-right: 20px;
+      padding-top: 7px;
       .title-mark {
         flex: 2;
       }
@@ -110,7 +110,6 @@
       align-items: baseline;
       gap: 15px;
       justify-content: space-between;
-      margin-left: 165px;
     }
   }
   .general-information-add-form-footer {

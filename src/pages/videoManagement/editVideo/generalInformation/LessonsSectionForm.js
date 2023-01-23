@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { CustomFormItem, CustomSelect, Option } from '../../../../components';
+import { CustomFormItem, CustomInput, CustomMaskInput, CustomSelect, Option } from '../../../../components';
 import useAcquisitionTree from '../../../../hooks/useAcquisitionTree';
+import { videoTimeValidator } from '../../../../utils/formRule';
 
 const LessonsSectionForm = ({ form }) => {
   const { classroomId, setClassroomId, lessonId, setLessonId, unitId, setUnitId, lessonSubjectId, setLessonSubjectId } =
@@ -17,12 +18,29 @@ const LessonsSectionForm = ({ form }) => {
 
   const { allClassList } = useSelector((state) => state?.classStages);
 
+  const [videoBrackets, setVideoBrackets] = useState([]);
+
   useEffect(() => {
     if (Object.keys(currentVideo).length) {
       setClassroomId(currentVideo?.classroomId);
       setLessonId(currentVideo.lessonId);
       setUnitId(currentVideo.lessonUnitId);
       setLessonSubjectId(currentVideo.lessonSubjectId);
+      setVideoBrackets(
+        currentVideo?.lessonSubSubjects?.map((item) => ({
+          bracketTime: item?.bracketTime,
+          header: item?.lessonSubSubject?.name,
+          lessonSubSubjectId: item?.lessonSubSubject?.id,
+        })),
+      );
+
+      form.setFields(
+        currentVideo?.lessonSubSubjects?.map((item, index) => ({
+          name: ['videoBrackets', index, 'bracketTime'],
+          value: item?.bracketTime,
+        })),
+      );
+
       form.setFieldsValue({
         classroomId: currentVideo?.classroomId,
         lessonId: currentVideo?.lessonId,
@@ -35,24 +53,56 @@ const LessonsSectionForm = ({ form }) => {
 
   const onClassroomChange = (value) => {
     setClassroomId(value);
-    form.resetFields(['lessonId', 'lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects']);
+    form.resetFields(['lessonId', 'lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects', 'videoBrackets']);
+    setVideoBrackets([]);
   };
 
   const onLessonChange = (value) => {
     setLessonId(value);
-    form.resetFields(['lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects']);
+    form.resetFields(['lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects', 'videoBrackets']);
+    setVideoBrackets([]);
   };
 
   const onUnitChange = (value) => {
     setUnitId(value);
-    form.resetFields(['lessonSubjectId', 'lessonSubSubjects']);
+    form.resetFields(['lessonSubjectId', 'lessonSubSubjects', 'videoBrackets']);
+    setVideoBrackets([]);
   };
 
   const onLessonSubjectsChange = (value) => {
     setLessonSubjectId(value);
-    form.resetFields(['lessonSubSubjects']);
+    form.resetFields(['lessonSubSubjects', 'videoBrackets']);
+    setVideoBrackets([]);
   };
 
+  const onLessonSubSubjectsSelect = (_, option) => {
+    setVideoBrackets((prev) => [
+      ...prev,
+      { bracketTime: '', header: option?.children, lessonSubSubjectId: option?.value },
+    ]);
+  };
+
+  const onLessonSubSubjectsDeselect = (_, option) => {
+    const filteredVideoBrackets = videoBrackets.filter((item) => item.lessonSubSubjectId !== option.value);
+    setVideoBrackets(filteredVideoBrackets);
+    form.resetFields(['videoBrackets']);
+    form.setFields(
+      filteredVideoBrackets.map((item, index) => ({
+        name: ['videoBrackets', index, 'bracketTime'],
+        value: item?.bracketTime,
+      })),
+    );
+    form.setFields(
+      filteredVideoBrackets.map((item, index) => ({
+        name: ['videoBrackets', index, 'lessonSubSubjectId'],
+        value: item?.lessonSubSubjectId,
+      })),
+    );
+  };
+
+  const onBracketTimeValueChange = (e, index) => {
+    setVideoBrackets((prev) => prev.map((item, i) => (index === i ? { ...item, bracketTime: e.target.value } : item)));
+  };
   return (
     <>
       <CustomFormItem
@@ -114,7 +164,7 @@ const LessonsSectionForm = ({ form }) => {
       >
         <CustomSelect onChange={onUnitChange} placeholder="Ünite">
           {lessonUnits
-            ?.filter((item) => item.lessonId === lessonId)
+            ?.filter((item) => item.lessonId === lessonId || item.lessonId === currentVideo.lessonId)
             .map((item) => {
               return (
                 <Option key={item?.id} value={item?.id}>
@@ -137,7 +187,7 @@ const LessonsSectionForm = ({ form }) => {
       >
         <CustomSelect onChange={onLessonSubjectsChange} placeholder="Konu">
           {lessonSubjects
-            ?.filter((item) => item.lessonUnitId === unitId)
+            ?.filter((item) => item.lessonUnitId === unitId || item.lessonUnitId === currentVideo.lessonUnitId)
             .map((item) => {
               return (
                 <Option key={item?.id} value={item?.id}>
@@ -153,9 +203,18 @@ const LessonsSectionForm = ({ form }) => {
         label="Alt Başlık"
         name="lessonSubSubjects"
       >
-        <CustomSelect showArrow mode="multiple" placeholder="Alt Başlık">
+        <CustomSelect
+          onSelect={onLessonSubSubjectsSelect}
+          onDeselect={onLessonSubSubjectsDeselect}
+          showArrow
+          mode="multiple"
+          placeholder="Alt Başlık"
+        >
           {lessonSubSubjects
-            ?.filter((item) => item.lessonSubjectId === lessonSubjectId)
+            ?.filter(
+              (item) =>
+                item.lessonSubjectId === lessonSubjectId || item.lessonSubjectId === currentVideo.lessonSubjectId,
+            )
             .map((item) => {
               return (
                 <Option key={item?.id} value={item?.id}>
@@ -165,6 +224,43 @@ const LessonsSectionForm = ({ form }) => {
             })}
         </CustomSelect>
       </CustomFormItem>
+
+      {videoBrackets.length > 0 && (
+        <CustomFormItem className="requiredFieldLabelMark" label="Ayraç">
+          <div className="header-mark">
+            <div className="title-mark">Başlık</div>
+            <div className="time-mark">Dakika</div>
+          </div>
+          {videoBrackets.map((i, index) => (
+            <div key={index} className="video-mark">
+              <CustomFormItem name={['videoBrackets', index, 'header']} style={{ flex: 2 }}>
+                <CustomInput disabled placeholder={i.header} />
+              </CustomFormItem>
+
+              <CustomFormItem
+                name={['videoBrackets', index, 'bracketTime']}
+                style={{ flex: 1 }}
+                rules={[
+                  { required: true, message: 'Zorunlu Alan' },
+                  { validator: videoTimeValidator, message: 'Lütfen Boş Bırakmayınız' },
+                ]}
+              >
+                <CustomMaskInput onChange={(e) => onBracketTimeValueChange(e, index)} mask={'999:99'}>
+                  <CustomInput placeholder="000:00" />
+                </CustomMaskInput>
+              </CustomFormItem>
+
+              <CustomFormItem
+                name={['videoBrackets', index, 'lessonSubSubjectId']}
+                style={{ display: 'none' }}
+                initialValue={i.lessonSubSubjectId}
+              >
+                <CustomInput disabled />
+              </CustomFormItem>
+            </div>
+          ))}
+        </CustomFormItem>
+      )}
     </>
   );
 };
