@@ -175,7 +175,10 @@ const TrialType = () => {
               showSizeChanger: true,
             }}
             onChange={(pagination, filters, sorter) => {
-              let field = sorter.field[0].toUpperCase() + sorter.field.substring(1);
+              let field = '';
+              if (sorter.field) {
+                field = sorter?.field[0]?.toUpperCase() + sorter?.field?.substring(1);
+              }
               dispatch(
                 getTrialTypeList({
                   data: {
@@ -199,7 +202,7 @@ const TrialType = () => {
           onOk={() => {
             form.submit();
           }}
-          title={'Yayın Tanımlama'}
+          title={'Deneme Türü Tanımlama'}
           onCancel={() => {
             form.resetFields();
             setShowAddModal(false);
