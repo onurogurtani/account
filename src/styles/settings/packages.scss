@@ -1,8 +1,7 @@
 .add-packages-container {
-  align-items: center;
-  justify-content: center;
   display: flex;
   width: 100%;
+  margin: 15px;
   .quill-error .ql-snow {
     border: 1px solid red;
   }
@@ -24,9 +23,22 @@
     padding: 15px 16px 26px;
     background-color: #fff;
 
+    .has-trying-test-wrapper {
+      display: flex;
+      gap: 40px;
+      .has-tryin-test-count {
+        width: 300px;
+      }
+    }
+
+    .package-books-wrapper {
+      display: flex;
+      gap: 50px;
+    }
+
     .ant-form-item {
       .ant-form-item-label {
-        width: 200px;
+        min-width: 200px;
 
         label {
           margin-top: 7px;

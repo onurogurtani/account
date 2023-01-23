@@ -6,10 +6,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   confirmDialog,
   CustomButton,
+  CustomCheckbox,
   CustomCollapseCard,
   CustomForm,
   CustomFormItem,
   CustomInput,
+  CustomModal,
   CustomSelect,
   errorDialog,
   Option,
@@ -28,6 +30,9 @@ import useAcquisitionTree from '../../../hooks/useAcquisitionTree';
 import DateSection from '../../eventManagement/forms/DateSection';
 import dayjs from 'dayjs';
 import { getGroupsList } from '../../../store/slice/groupsSlice';
+import { packageKind } from '../../../constants/package';
+import { getListDocuments } from '../../../store/slice/documentsSlice';
+import { getByFilterPagedBooks } from '../../../store/slice/booksSlice';
 
 const EditPackages = () => {
   const [form] = Form.useForm();
@@ -46,17 +51,23 @@ const EditPackages = () => {
   const [lessonsOptions, setLessonsOptions] = useState([]);
   const [currentClassroomIds, setCurrentClassroomIds] = useState([]);
   const [isDisableButtonMaxNetCount, seTisDisableButtonMaxNetCount] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false)
+  const [filteredDocumentList, setFilteredDocumentList] = useState([])
 
   const { lessons } = useSelector((state) => state?.lessons);
   const token = useSelector((state) => state?.auth?.token);
   const { packageTypeList } = useSelector((state) => state?.packageType);
   const { allClassList } = useSelector((state) => state?.classStages);
   const { allGroupList } = useSelector((state) => state?.groups);
+  const { documentsList } = useSelector((state) => state?.documents);
+  const { booksList } = useSelector((state) => state?.books);
+  const { selectedPackages } = useSelector((state) => state?.packages);
 
   const { id } = useParams();
 
   const { setClassroomId, setLessonId } = useAcquisitionTree();
   const lessonIds = Form.useWatch('lesson', form) || [];
+  const changedPackageKind = Form.useWatch('packageKind', form) || [];
 
   useEffect(() => {
     if (allGroupList.length) return false;
@@ -67,6 +78,45 @@ const EditPackages = () => {
     loadPackageById();
     loadPackageList();
   }, []);
+
+  useEffect(() => {
+    const checkedList = []
+    booksList?.forEach((item) => {
+      checkedList.push(item.id)
+    })
+    form.setFieldsValue({ packageBooks: checkedList })
+  }, [booksList]);
+
+  useEffect(() => {
+    if (documentsList.length) return false;
+    dispatch(getListDocuments());
+  }, []);
+
+  useEffect(() => {
+    if (booksList?.length) return false;
+    dispatch(getByFilterPagedBooks())
+  }, []);
+
+  useEffect(async () => {
+    const checkedList = []
+    booksList?.forEach((item) => {
+      if (selectedPackages?.packageBooks.find((elmt) => elmt.bookId === item.id))
+        checkedList.push(item.id)
+    })
+    form.setFieldsValue({ packageBooks: checkedList })
+  }, [booksList]);
+
+  useEffect(() => {
+    if (changedPackageKind?.includes(["isPersonal", "isCorporate"])) {
+      setFilteredDocumentList(documentsList.filter((item) => item.isPersonal || item.isCorporate))
+    } else if (changedPackageKind?.includes("isCorporate")) {
+      setFilteredDocumentList(documentsList.filter((item) => item.isCorporate))
+    } else if (changedPackageKind?.includes("isPersonal")) {
+      setFilteredDocumentList(documentsList.filter((item) => item.isPersonal))
+    } else {
+      setFilteredDocumentList([])
+    }
+  }, [changedPackageKind]);
 
   useEffect(() => {
     const selectedLessonsOptions = selectedClassrooms.map((item) => {
@@ -123,10 +173,18 @@ const EditPackages = () => {
       imageOfPackages: currentImageArray,
     });
 
+    let convertedPackageKind = []
+    currentPackageResponse.payload.isCorporate && convertedPackageKind.push('isCorporate')
+    currentPackageResponse.payload.isPersonal && convertedPackageKind.push('isPersonal')
+
     form.setFieldsValue({
       gradeLevel: currentClassrooms,
       lesson: currentPackageResponse.payload.packageLessons.map((item) => item.lesson.id),
-      packageGroups: currentGroupRole
+      packageGroups: currentGroupRole,
+      packageKind: convertedPackageKind,
+      hasMotivationEvent: currentPackageResponse.payload.hasMotivationEvent,
+      hasTryingTest: currentPackageResponse.payload.hasTryingTest,
+      packageDocuments: currentPackageResponse.payload.packageDocuments.map((item) => item.document.id)
     });
 
     currentPackageResponse.payload.imageOfPackages.forEach((item) => {
@@ -139,6 +197,7 @@ const EditPackages = () => {
       ]);
     });
   };
+
   const loadPackageList = async () => {
     dispatch(getPackageTypeList());
   };
@@ -240,7 +299,6 @@ const EditPackages = () => {
 
     const data = {
       package: {
-        // ...values,
         id: id,
         name: values.name,
         summary: values.summary,
@@ -253,7 +311,15 @@ const EditPackages = () => {
         packageLessons: lessonsArr,
         imageOfPackages: await handleUpload(newImageArray),
         examType: 10, //sınav tipi halihazırda inputtan alınmıyor
-        packageGroups: packageGroups
+        packageGroups: packageGroups,
+        hasCoachService: values.hasCoachService,
+        hasTryingTest: values.hasTryingTest,
+        tryingTestQuestionCount: Number(values?.tryingTestQuestionCount),
+        hasMotivationEvent: values.hasMotivationEvent,
+        packageBooks: values.packageBooks?.map((item) => { return { bookId: item } }),
+        packageDocuments: values.packageDocuments.map((item) => { return { documentId: item } }),
+        isPersonal: values.packageKind.includes("isPersonal"),
+        isCorporate: values.packageKind.includes("isCorporate")
       },
     };
 
@@ -333,6 +399,26 @@ const EditPackages = () => {
           </CustomFormItem>
 
           <CustomFormItem
+            label="Paket Tipi"
+            name="packageKind"
+            rules={[
+              { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+            ]}>
+            <CustomCheckbox.Group
+              style={{ display: 'flex', flexDirection: 'row' }}
+            >
+              {packageKind
+                ?.map((item, i) => {
+                  return (
+                    <CustomCheckbox key={item.value} value={item.value} >
+                      {item.label}
+                    </CustomCheckbox>
+                  )
+                })}
+            </CustomCheckbox.Group>
+          </CustomFormItem>
+
+          <CustomFormItem
             label={<Text t="Paket Özeti" />}
             name="summary"
             rules={[
@@ -389,6 +475,80 @@ const EditPackages = () => {
             </CustomFormItem>
           </CustomFormItem>
           {errorUpload && <div className="ant-form-item-explain-error">{errorUpload}</div>}
+
+          <CustomFormItem
+            label={false}
+            name="hasCoachService"
+            valuePropName="checked"
+          >
+            <CustomCheckbox>
+              <Text t="Koçluk Hizmeti Vardır" />
+            </CustomCheckbox>
+          </CustomFormItem>
+
+          <div className='has-trying-test-wrapper'>
+            <CustomFormItem
+              label={false}
+              name="hasTryingTest"
+              valuePropName="checked"
+            >
+              <CustomCheckbox>
+                <Text t="Paket İçinde Deneme Sınavı Vardır" />
+              </CustomCheckbox>
+            </CustomFormItem>
+
+            <CustomFormItem
+              label={false}
+              noStyle
+              shouldUpdate={(prevValues, curValues) => prevValues.hasTryingTest !== curValues.hasTryingTest}
+            >
+              {({ getFieldValue }) =>
+                <CustomFormItem label={false} name="tryingTestQuestionCount">
+                  <CustomInput
+                    type={'number'}
+                    className='has-tryin-test-count'
+                    placeholder={'Deneme sınavı adedini giriniz'}
+                    disabled={!getFieldValue('hasTryingTest')}
+                  />
+                </CustomFormItem>
+              }
+            </CustomFormItem>
+          </div>
+
+          <CustomFormItem
+            label={false}
+            name="hasMotivationEvent"
+            valuePropName="checked"
+          >
+            <CustomCheckbox>
+              <Text t="Motivasyon Etkinliklerine Paket Satın Alan Kullanıcıların Erişimi Vardır" />
+            </CustomCheckbox>
+          </CustomFormItem>
+
+          <div className='package-books-wrapper'>
+            <CustomFormItem
+              label={false}
+              name="packageBooksOpen"
+              valuePropName="checked"
+            >
+              <CustomCheckbox>
+                <Text t="Soru Bankası Yayınından Çıkar" />
+              </CustomCheckbox>
+            </CustomFormItem>
+
+            <CustomFormItem
+              noStyle
+              shouldUpdate={(prevValues, curValues) => prevValues.packageBooksOpen !== curValues.packageBooksOpen}
+            >
+              {({ getFieldValue }) =>
+                <CustomFormItem label={false}  >
+                  <span>Yayınlar   </span>
+                  <CustomButton height={36} onClick={() => setIsOpenModal(!isOpenModal)} disabled={!getFieldValue('packageBooksOpen')}
+                  >Seç</CustomButton>
+                </CustomFormItem>
+              }
+            </CustomFormItem>
+          </div>
 
           <CustomFormItem
             label={<Text t="Durumu" />}
@@ -487,6 +647,60 @@ const EditPackages = () => {
                 })}
             </CustomSelect>
           </CustomFormItem>
+
+          <CustomFormItem rules={[{ required: true }]} label="Paketi Satın Alan Kullanıcılara Onaylatılacak Evraklar" name="packageDocuments">
+            <CustomSelect
+              showArrow
+              mode="multiple"
+              placeholder="Seçiniz"
+            >
+              {filteredDocumentList
+                ?.map((item) => {
+                  return (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.name}
+                    </Option>
+                  );
+
+                })}
+            </CustomSelect>
+          </CustomFormItem>
+
+          <CustomModal
+            title="Yayın Evleri Listesi"
+            visible={isOpenModal}
+            onOk={(val) => setIsOpenModal(false)}
+            okText="Kaydet"
+            cancelText="Vazgeç"
+            onCancel={() => {
+              setIsOpenModal(false);
+            }}
+            bodyStyle={{ overflowY: 'auto', maxHeight: 'calc(100vh - 300px)' }}
+          >
+            <CustomFormItem
+              rules={[
+                {
+                  required: true,
+                  message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                },
+              ]}
+              name="packageBooks"
+
+            >
+              <CustomCheckbox.Group
+                style={{ display: 'flex', flexDirection: 'column' }}
+              >
+                {booksList
+                  ?.map((item, i) => {
+                    return (
+                      <CustomCheckbox key={item.id} value={item.id} >
+                        {item.name}
+                      </CustomCheckbox>
+                    )
+                  })}
+              </CustomCheckbox.Group>
+            </CustomFormItem>
+          </CustomModal>
 
           <div className="add-package-footer">
             <CustomButton type="primary" className="cancel-btn" onClick={onCancel}>

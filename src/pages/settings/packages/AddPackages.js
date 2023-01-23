@@ -1,15 +1,19 @@
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Form, Upload, Space } from 'antd';
+import { Button, Form, Upload } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   confirmDialog,
   CustomButton,
+  CustomCheckbox,
   CustomCollapseCard,
   CustomForm,
   CustomFormItem,
   CustomInput,
+  CustomModal,
+  CustomRadio,
+  CustomRadioGroup,
   CustomSelect,
   errorDialog,
   Option,
@@ -27,6 +31,9 @@ import useAcquisitionTree from '../../../hooks/useAcquisitionTree';
 import { removeFromArray, turkishToLower } from '../../../utils/utils';
 import DateSection from '../../eventManagement/forms/DateSection';
 import { getGroupsList } from '../../../store/slice/groupsSlice';
+import { packageKind } from '../../../constants/package';
+import { getListDocuments } from '../../../store/slice/documentsSlice';
+import { getByFilterPagedBooks } from '../../../store/slice/booksSlice';
 
 const AddPackages = () => {
   const [form] = Form.useForm();
@@ -43,21 +50,56 @@ const AddPackages = () => {
   const [selectedClassrooms, setSelectedClassrooms] = useState([]);
   const [lessonsOptions, setLessonsOptions] = useState([]);
   const [isDisableButtonMaxNetCount, seTisDisableButtonMaxNetCount] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false)
+  const [selectedPackgeKind, setSelectedPackageKind] = useState([])
+  const [filteredDocumentList, setFilteredDocumentList] = useState([])
 
   const token = useSelector((state) => state?.auth?.token);
   const { packageTypeList } = useSelector((state) => state?.packageType);
   const { allClassList } = useSelector((state) => state?.classStages);
   const { lessons } = useSelector((state) => state?.lessons);
   const { allGroupList } = useSelector((state) => state?.groups);
-
+  const { documentsList } = useSelector((state) => state?.documents);
+  const { booksList } = useSelector((state) => state?.books);
 
   const { setClassroomId, setLessonId } = useAcquisitionTree();
   const lessonIds = Form.useWatch('lesson', form) || [];
+
 
   useEffect(() => {
     if (allGroupList.length) return false;
     dispatch(getGroupsList());
   }, []);
+
+  useEffect(() => {
+    if (documentsList.length) return false;
+    dispatch(getListDocuments());
+  }, []);
+
+  useEffect(() => {
+    if (booksList.length) return false;
+    dispatch(getByFilterPagedBooks())
+  }, []);
+
+  useEffect(() => {
+    if (selectedPackgeKind?.includes(["isPersonal", "isCorporate"])) {
+      setFilteredDocumentList(documentsList.filter((item) => item.isPersonal || item.isCorporate))
+    } else if (selectedPackgeKind?.includes("isCorporate")) {
+      setFilteredDocumentList(documentsList.filter((item) => item.isCorporate))
+    } else if (selectedPackgeKind?.includes("isPersonal")) {
+      setFilteredDocumentList(documentsList.filter((item) => item.isPersonal))
+    } else {
+      setFilteredDocumentList([])
+    }
+  }, [selectedPackgeKind]);
+
+  useEffect(() => {
+    const checkedList = []
+    booksList.forEach((item) => {
+      checkedList.push(item.id)
+    })
+    form.setFieldsValue({ packageBooks: checkedList })
+  }, [booksList]);
 
   useEffect(() => {
     loadPackageType();
@@ -154,7 +196,15 @@ const AddPackages = () => {
         packageLessons: lessonsArr,
         imageOfPackages: await handleUpload(values.imageOfPackages),
         examType: 10, //sınav tipi halihazırda inputtan alınmıyor
-        packageGroups: packageGroups
+        packageGroups: packageGroups,
+        hasCoachService: values.hasCoachService,
+        hasTryingTest: values.hasTryingTest,
+        tryingTestQuestionCount: Number(values?.tryingTestQuestionCount),
+        hasMotivationEvent: values.hasMotivationEvent,
+        packageBooks: values.packageBooks.map((item) => { return { bookId: item } }),
+        packageDocuments: values.packageDocuments.map((item) => { return { documentId: item } }),
+        isPersonal: values.packageKind.includes("isPersonal"),
+        isCorporate: values.packageKind.includes("isCorporate")
       },
     };
 
@@ -252,6 +302,19 @@ const AddPackages = () => {
           </CustomFormItem>
 
           <CustomFormItem
+            label="Paket Tipi"
+            name="packageKind"
+            rules={[
+              { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+            ]}>
+            <CustomCheckbox.Group
+              options={packageKind}
+              onChange={(val) => setSelectedPackageKind(val)}
+              style={{ display: 'flex', flexDirection: 'row' }}
+            />
+          </CustomFormItem>
+
+          <CustomFormItem
             label={<Text t="Paket Özeti" />}
             name="summary"
             rules={[
@@ -282,37 +345,110 @@ const AddPackages = () => {
             <ReactQuill className={isErrorReactQuill ? 'quill-error' : ''} theme="snow" />
           </CustomFormItem>
 
-          <CustomFormItem label="Dosya">
-            <CustomFormItem
-              rules={[
-                {
-                  required: true,
-                  message: 'Lütfen dosya seçiniz.',
-                },
-              ]}
-              name="imageOfPackages"
-              valuePropName="fileList"
-              getValueFromEvent={normFile}
+          <CustomFormItem
+            rules={[
+              {
+                required: true,
+                message: 'Lütfen dosya seçiniz.',
+              },
+            ]}
+            name="imageOfPackages"
+            valuePropName="fileList"
+            getValueFromEvent={normFile}
+            label="Paket Görseli"
+          >
+            <Upload
+              name="files"
+              maxCount={5}
+              multiple={true}
+              showUploadList={{
+                showRemoveIcon: true,
+                removeIcon: <DeleteOutlined onClick={(e) => cancelIntroVideoUpload()} />,
+              }}
+              beforeUpload={beforeUpload}
+              onChange={(e) => (e.fileList.length >= 5 ? setIsDisable(true) : setIsDisable(false))}
+              accept="image/*"
             >
-              <Upload
-                name="files"
-                maxCount={5}
-                multiple={true}
-                showUploadList={{
-                  showRemoveIcon: true,
-                  removeIcon: <DeleteOutlined onClick={(e) => cancelIntroVideoUpload()} />,
-                }}
-                beforeUpload={beforeUpload}
-                onChange={(e) => (e.fileList.length >= 5 ? setIsDisable(true) : setIsDisable(false))}
-                accept="image/*"
-              >
-                <Button disabled={isDisable} icon={<UploadOutlined />}>
-                  Upload
-                </Button>
-              </Upload>
-            </CustomFormItem>
+              <Button disabled={isDisable} icon={<UploadOutlined />}>
+                Upload
+              </Button>
+            </Upload>
           </CustomFormItem>
           {errorUpload && <div className="ant-form-item-explain-error">{errorUpload}</div>}
+
+          <CustomFormItem
+            label={false}
+            name="hasCoachService"
+            valuePropName="checked"
+          >
+            <CustomCheckbox>
+              <Text t="Koçluk Hizmeti Vardır" />
+            </CustomCheckbox>
+          </CustomFormItem>
+
+          <div className='has-trying-test-wrapper'>
+            <CustomFormItem
+              label={false}
+              name="hasTryingTest"
+              valuePropName="checked"
+            >
+              <CustomCheckbox>
+                <Text t="Paket İçinde Deneme Sınavı Vardır" />
+              </CustomCheckbox>
+            </CustomFormItem>
+
+            <CustomFormItem
+              label={false}
+              noStyle
+              shouldUpdate={(prevValues, curValues) => prevValues.hasTryingTest !== curValues.hasTryingTest}
+            >
+              {({ getFieldValue }) =>
+                <CustomFormItem label={false} name="tryingTestQuestionCount">
+                  <CustomInput
+                    type={'number'}
+                    className='has-tryin-test-count'
+                    placeholder={'Deneme sınavı adedini giriniz'}
+                    disabled={!getFieldValue('hasTryingTest')}
+                  />
+                </CustomFormItem>
+              }
+            </CustomFormItem>
+          </div>
+
+          <CustomFormItem
+            label={false}
+            name="hasMotivationEvent"
+            valuePropName="checked"
+          >
+            <CustomCheckbox>
+              <Text t="Motivasyon Etkinliklerine Paket Satın Alan Kullanıcıların Erişimi Vardır" />
+            </CustomCheckbox>
+          </CustomFormItem>
+
+          <div className='package-books-wrapper'>
+            <CustomFormItem
+              label={false}
+              name="packageBooksOpen"
+              valuePropName="checked"
+            >
+              <CustomCheckbox>
+                <Text t="Soru Bankası Yayınından Çıkar" />
+              </CustomCheckbox>
+            </CustomFormItem>
+
+            <CustomFormItem
+              noStyle
+              shouldUpdate={(prevValues, curValues) => prevValues.packageBooksOpen !== curValues.packageBooksOpen}
+            >
+              {({ getFieldValue }) =>
+                <CustomFormItem label={false}  >
+                  <span>Yayınlar   </span>
+                  <CustomButton height={36} onClick={() => setIsOpenModal(!isOpenModal)} disabled={!getFieldValue('packageBooksOpen')}
+                  >Seç</CustomButton>
+                </CustomFormItem>
+              }
+            </CustomFormItem>
+          </div>
 
           <CustomFormItem
             label={<Text t="Durumu" />}
@@ -322,7 +458,7 @@ const AddPackages = () => {
             <CustomSelect className="form-filter-item" placeholder={'Seçiniz'}>
               <Option key={'true'} value={true}>
                 <Text t={'Aktif'} />
-              </Option>{' '}
+              </Option>
               <Option key={false} value={false}>
                 <Text t={'Pasive'} />
               </Option>
@@ -369,7 +505,7 @@ const AddPackages = () => {
               // onDeselect={onLessonDeselect}
               onChange={onLessonChange}
               options={lessonsOptions}
-            ></CustomSelect>
+            />
           </CustomFormItem>
 
           <CustomFormItem
@@ -415,6 +551,59 @@ const AddPackages = () => {
                 })}
             </CustomSelect>
           </CustomFormItem>
+          <CustomFormItem rules={[{ required: true }]} label="Paketi Satın Alan Kullanıcılara Onaylatılacak Evraklar" name="packageDocuments">
+            <CustomSelect
+              showArrow
+              mode="multiple"
+              placeholder="Seçiniz"
+            >
+              {filteredDocumentList
+                ?.map((item) => {
+                  return (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.name}
+                    </Option>
+                  );
+
+                })}
+            </CustomSelect>
+          </CustomFormItem>
+
+          <CustomModal
+            title="Yayın Evleri Listesi"
+            visible={isOpenModal}
+            onOk={(val) => setIsOpenModal(false)}
+            okText="Kaydet"
+            cancelText="Vazgeç"
+            onCancel={() => {
+              setIsOpenModal(false);
+            }}
+            bodyStyle={{ overflowY: 'auto', maxHeight: 'calc(100vh - 300px)' }}
+          >
+            <CustomFormItem
+              rules={[
+                {
+                  required: true,
+                  message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                },
+              ]}
+              name="packageBooks"
+
+            >
+              <CustomCheckbox.Group
+                style={{ display: 'flex', flexDirection: 'column' }}
+              >
+                {booksList
+                  ?.map((item, i) => {
+                    return (
+                      <CustomCheckbox key={item.id} value={item.id} >
+                        {item.name}
+                      </CustomCheckbox>
+                    )
+                  })}
+              </CustomCheckbox.Group>
+            </CustomFormItem>
+          </CustomModal>
 
           <div className="add-package-footer">
             <CustomButton type="primary" className="cancel-btn" onClick={onCancel}>
@@ -425,8 +614,8 @@ const AddPackages = () => {
             </CustomButton>
           </div>
         </CustomForm>
-      </div>
-    </CustomCollapseCard>
+      </div >
+    </CustomCollapseCard >
   );
 };
 

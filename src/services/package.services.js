@@ -1,10 +1,11 @@
 import { api } from './api';
 
-const getPackageList = (urlString) => {
+const getByFilterPagedPackages = (params) => {
   return api({
-    url: `Packages/GetByFilterPagedPackages${urlString}`,
+    url: `Packages/GetByFilterPagedPackages`,
     method: 'POST',
-  }); 
+    params
+  });
 };
 
 
@@ -31,12 +32,19 @@ const updatePackage = (data) => {
     data,
   });
 };
+const getPackageNames = () => {
+  return api({
+    url: `Packages/getPackageNames`,
+    method: 'GET'
+  });
+};
 
 const packageServices = {
-  getPackageList,
+  getByFilterPagedPackages,
   addPackage,
   updatePackage,
   getPackageById,
+  getPackageNames
 };
 
 export default packageServices;

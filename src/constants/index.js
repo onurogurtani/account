@@ -23,3 +23,21 @@ export const declarationType = [
     label: 'SMS',
   },
 ];
+
+export const selectedStatus = [
+  {
+    id: 1,
+    value: "all",
+    label: 'Hepsi',
+  },
+  {
+    id: 2,
+    value: true,
+    label: 'Var',
+  },
+  {
+    id: 3,
+    value: false,
+    label: 'Yok',
+  },
+];
