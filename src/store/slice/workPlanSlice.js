@@ -3,12 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   activeKey: '0',
   subjectChooseTab: {
-    formData: {
-      // ClassroomId: 63,
-      // LessonIds: 135,
-      // LessonSubjectIds: 164,
-      // LessonUnitIds: 140
-    },
+    formData: {},
     selectedRowVideo: {},
     filterObject: {},
     videos: [],
@@ -65,7 +60,18 @@ export const workPlanSlice = createSlice({
       state.practiceQuestionTab.videos = [];
     },
     selectedPracticeQuestionTabRowsVideo: (state, action) => {
-      state.practiceQuestionTab.selectedRowsVideo =[ ...state.practiceQuestionTab.selectedRowsVideo , action?.payload]
+
+      if (action.payload === undefined) {
+        state.practiceQuestionTab.selectedRowsVideo = [];
+      } else {
+        const res = state.practiceQuestionTab?.selectedRowsVideo.filter((item) => item.id === action.payload.id);
+
+        if (res.length > 0) {
+          state.practiceQuestionTab.selectedRowsVideo = state.practiceQuestionTab?.selectedRowsVideo.filter((item) => item.id !== action.payload.id);
+        } else {
+          state.practiceQuestionTab.selectedRowsVideo = [...state.practiceQuestionTab.selectedRowsVideo, action?.payload];
+        }
+      }
     },
   },
   extraReducers: (builder) => {

@@ -6,24 +6,10 @@ import { selectedPracticeQuestionTabRowsVideo } from '../../../../store/slice/wo
 const videoTableColumn = (dispatch, practiceQuestionTab) => {
 
   const selectedRow = (row) => {
+    dispatch(selectedPracticeQuestionTabRowsVideo(row));
+  };
 
-    if(practiceQuestionTab?.selectedRowsVideo.length > 0 ){
-      const data = practiceQuestionTab?.selectedRowsVideo.filter((item)=>item.id === row.id)
-
-      if(data.length> 0){
-        console.log('var',data , row)
-      }
-
-      if(data.length === 0){
-        dispatch(selectedPracticeQuestionTabRowsVideo(row));
-      }
-
-    }else{
-      dispatch(selectedPracticeQuestionTabRowsVideo(row));
-    }
-  }
-
-console.log(practiceQuestionTab)
+  console.log(practiceQuestionTab);
 
   const columns = [
     {
@@ -54,17 +40,17 @@ console.log(practiceQuestionTab)
       width: 100,
       align: 'center',
       render: (_, record) => {
-        let btnName= '';
+        let btnName = '';
 
-        const data = practiceQuestionTab?.selectedRowsVideo.filter((item)=>item.id === record.id)
+        const data = practiceQuestionTab?.selectedRowsVideo.filter((item) => item.id === record.id);
 
-          if (data.length > 0){
-            btnName= 'Çalışma Planı Eklendi'
-          }
+        if (data.length > 0) {
+          btnName = 'Çalışma Planı Eklendi';
+        }
 
-          if(data.length === 0 ){
-            btnName= 'Çalışma Planı Ekle'
-          }
+        if (data.length === 0) {
+          btnName = 'Çalışma Planı Ekle';
+        }
 
         return (
           <div className='action-btns'>
@@ -72,10 +58,9 @@ console.log(practiceQuestionTab)
               Önizleme Gör
             </CustomButton>
 
-            <CustomButton className='btn-select btn'  onClick={() => selectedRow(record)}>
+            <CustomButton className='btn-select btn' onClick={() => selectedRow(record)}>
               {btnName}
             </CustomButton>
-            {/*{renderBtn(record)}*/}
           </div>
         );
       },

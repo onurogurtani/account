@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -25,12 +25,15 @@ import { getByFilterPagedVideos } from '../../../../store/slice/videoSlice';
 import videoListTableColumn from './videoListTableColumn';
 import useOnchangeTable from '../../../../hooks/useOnchangeTable';
 import '../../../../styles/table.scss';
+import { getListFilterParams } from '../../../../utils/utils';
 
 const SubjectChoose = ({ sendValue }) => {
 
   const [form] = Form.useForm();
   const history = useHistory();
   const dispatch = useDispatch();
+
+  const [activeFilter, setActiveFilter] = useState(getListFilterParams('isActive', true))
 
   const { classroomId, setClassroomId, lessonId, setLessonId, unitId, setUnitId } =
     useAcquisitionTree();
@@ -56,7 +59,7 @@ const SubjectChoose = ({ sendValue }) => {
 
   useEffect(() => {
     dispatch(getEducationYears());
-    dispatch(getAllClassStages());
+    dispatch(getAllClassStages(activeFilter));
     dispatch(resetSubjectChooseVideoList());
   }, []);
 
@@ -109,7 +112,7 @@ const SubjectChoose = ({ sendValue }) => {
     console.log('search video filter', values);
 
     dispatch(selectedSubjectTabRowVideo({}));
-    dispatch(selectedPracticeQuestionTabRowsVideo([]));
+    dispatch(selectedPracticeQuestionTabRowsVideo());
     dispatch(resetPracticeQuestionVideoList());
     dispatch(setSubjectChooseData(values));
 
@@ -210,7 +213,7 @@ const SubjectChoose = ({ sendValue }) => {
               placeholder='Ders'
             >
               {lessons
-                ?.filter((item) => item.classroomId === classroomId)
+                ?.filter((item) => item.classroomId === classroomId && item.isActive === true)
                 ?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>
@@ -237,7 +240,7 @@ const SubjectChoose = ({ sendValue }) => {
               placeholder='Ünite'
             >
               {lessonUnits
-                ?.filter((item) => item.lessonId === lessonId)
+                ?.filter((item) => item.lessonId === lessonId && item.isActive === true)
                 ?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>
@@ -264,7 +267,7 @@ const SubjectChoose = ({ sendValue }) => {
               placeholder='Konu'
             >
               {lessonSubjects
-                ?.filter((item) => item.lessonUnitId === unitId)
+                ?.filter((item) => item.lessonUnitId === unitId && item.isActive === true)
                 ?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>
