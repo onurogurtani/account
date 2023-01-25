@@ -2,6 +2,7 @@ import { Tag } from 'antd';
 import React from 'react';
 import { CustomButton } from '../../../../components';
 import { selectedSubjectTabRowVideo } from '../../../../store/slice/workPlanSlice';
+import VideoWatchModal from '../../../../components/videoPlayer/VideoWatchModal';
 
 const videoListTableColumn = (dispatch, subjectChooseTab) => {
 
@@ -38,9 +39,13 @@ const videoListTableColumn = (dispatch, subjectChooseTab) => {
       render: (_, record) => {
         return (
           <div className='action-btns'>
-            <CustomButton className='btn-show btn'>
-              Önizleme Gör
-            </CustomButton>
+
+            <VideoWatchModal
+              // marks={marks}
+              className='btn-show btn'
+              name={record?.kalturaVideoName}
+              kalturaVideoId={record?.kalturaVideoId}
+            />
 
             {
               subjectChooseTab?.selectedRowVideo?.id === record.id ?
