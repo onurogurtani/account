@@ -1,5 +1,5 @@
-import React, {useEffect, useState } from 'react';
-import { Form } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Form, Popconfirm } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   CustomButton,
@@ -19,6 +19,7 @@ import {
 } from '../../../components';
 import {
   createParticipantGroups,
+  deleteParticipantGroups,
   getParticipantGroupsPagedList,
   updateParticipantGroups,
 } from '../../../store/slice/participantGroupsSlice';
@@ -41,9 +42,9 @@ const ParticipantGroups = () => {
     dispatch(getPackageTypeList());
   }, [dispatch]);
 
-  const submit = (values) => {
+  const submit = async (values) => {
     if (updateData) {
-      const action = dispatch(updateParticipantGroups(values));
+      const action = await dispatch(updateParticipantGroups(updateData));
       if (updateParticipantGroups.fulfilled.match(action)) {
         successDialog({
           title: <Text t="success" />,
@@ -61,7 +62,7 @@ const ParticipantGroups = () => {
         });
       }
     } else {
-      const action = dispatch(createParticipantGroups(values));
+      const action = await dispatch(createParticipantGroups(values));
       if (createParticipantGroups.fulfilled.match(action)) {
         successDialog({
           title: <Text t="success" />,
@@ -142,13 +143,19 @@ const ParticipantGroups = () => {
             >
               DÜZENLE
             </CustomButton>
-            <CustomButton
-              type="primary"
-              danger
-              className="delete-button"
+            <Popconfirm
+              onConfirm={() => {
+                dispatch(deleteParticipantGroups(record.id));
+                dispatch(getParticipantGroupsPagedList());
+              }}
+              title="Silmek İstediğinizden Emin Misiniz?"
+              okText="Evet"
+              cancelText="Hayır"
             >
-              SİL
-            </CustomButton>
+              <CustomButton type="primary" danger className="delete-button">
+                SİL
+              </CustomButton>
+            </Popconfirm>
           </div>
         );
       },
@@ -162,7 +169,13 @@ const ParticipantGroups = () => {
           <div className=" table-head">
             <CustomButton
               onClick={() => setShowAddModal(true)}
-              style={{ paddingRight: '40px', paddingLeft: '40px', marginBottom: '5px' }}
+              style={{
+                paddingRight: '40px',
+                paddingLeft: '40px',
+                marginBottom: '5px',
+                backgroundColor: 'green',
+                border: 'none',
+              }}
               type="primary"
             >
               Yeni Ekle
@@ -172,10 +185,11 @@ const ParticipantGroups = () => {
                 setShowFilter(!showFilter);
               }}
               type="primary"
+              style={{ float: 'right', marginRight: '15px' }}
             >
               <CustomImage src={iconFilter} />
             </CustomButton>
-            {showFilter && <ParticipantGroupsFilter/>}
+            {showFilter && <ParticipantGroupsFilter />}
 
             <CustomTable
               pagination={{

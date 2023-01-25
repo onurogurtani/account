@@ -14,6 +14,7 @@ import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
 import '../../../styles/tableFilter.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPackageTypeList } from '../../../store/slice/packageTypeSlice';
+import {getParticipantGroupsPagedList} from '../../../store/slice/participantGroupsSlice';
 
 const ParticipantGroupsFilter = () => {
   const [form] = Form.useForm();
@@ -23,6 +24,15 @@ const ParticipantGroupsFilter = () => {
 
   const onFinish = useCallback(
     async (values) => {
+      dispatch(
+        getParticipantGroupsPagedList({
+          params: {
+            'ParticipantGroupDetailSearch.Name': values.name,
+            'ParticipantGroupDetailSearch.PackageIds': values.packageIds,
+            'ParticipantGroupDetailSearch.ParticipantType': values.participantType
+          },
+        }),
+      );
     },
     [dispatch],
   );
@@ -32,6 +42,7 @@ const ParticipantGroupsFilter = () => {
   };
 
   const clearFilter = () => {
+    dispatch(getParticipantGroupsPagedList())
     form.resetFields()
   };
 
@@ -78,8 +89,8 @@ const ParticipantGroupsFilter = () => {
         <div className="form-footer">
           <div className="action-buttons">
             <CustomButton onClick={clearFilter} className="clear-btn">Temizle</CustomButton>
-            <CustomButton className="search-btn">
-              <CustomImage onClick={handleFilter}  className="icon-search" src={iconSearchWhite} />
+            <CustomButton onClick={handleFilter} className="search-btn">
+              <CustomImage className="icon-search" src={iconSearchWhite} />
               Filtrele
             </CustomButton>
           </div>

@@ -26,9 +26,9 @@ const createParticipantGroups = (data) => {
 
 const deleteParticipantGroups = (data) => {
   return api({
-    url: `ParticipantGroups`,
+    url: `ParticipantGroups?id=${data}`,
     method: 'DELETE',
-    data: data,
+    data:null
   });
 };
 
