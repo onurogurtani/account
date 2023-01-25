@@ -21,44 +21,43 @@
       color: #f72717;
       font-weight: bold;
     }
-    
   }
   > li:last-child {
     margin-bottom: 0;
   }
 
-  .roleListContainer{
+  .roleListContainer {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: flex-start;
-  
-  
-  .rolesList{
-    list-style-type:decimal;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    padding: 0;
-    margin-left: 1.5rem;
-    .roles{
-      margin: 0;
-      margin-bottom: 5px;
+
+    .rolesList {
+      list-style-type: decimal;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      padding: 0;
+      margin-left: 1.5rem;
+      .roles {
+        margin: 0;
+        margin-bottom: 5px;
+      }
     }
   }
-  }
-
-
 }
 .announcement-show-footer {
   font-family: UbuntuRegular, sans-serif;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
   list-style: none;
   color: #3485fd;
-  span {
-    color: #6b7789;
+  li {
+    margin-left: 16px;
+    span {
+      color: #6b7789;
+    }
   }
   padding-left: 0;
 }
@@ -76,25 +75,25 @@
   .edit-btn {
     background-color: #d5b803;
   }
-  .archieveButton{
+  .archieveButton {
     background-color: #635b60;
   }
 }
 
-.content-text-container{
+.content-text-container {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-content: space-between;
-  justify-content:space-between;
+  justify-content: space-between;
   padding: 0;
 
   .announcement-content-text {
     border: 1px solid gray;
-    box-shadow:  1px 2px 0 0 gray;
+    box-shadow: 1px 2px 0 0 gray;
     width: 70%;
-    height:200px;
-    margin:5px;
+    height: 200px;
+    margin: 5px;
     margin-right: 15%;
     padding: 5px;
     word-wrap: break-word;

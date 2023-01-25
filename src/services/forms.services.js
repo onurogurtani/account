@@ -2,7 +2,7 @@ import { api } from './api';
 //ADD NEW FORM
 const addNewForm = (data) => {
   return api({
-    url: `Forms`,
+    url: `Survey/Forms`,
     method: 'POST',
     data,
   });
@@ -10,14 +10,14 @@ const addNewForm = (data) => {
 
 const copyForm = (data) => {
   return api({
-    url: `Forms/copyForm`,
+    url: `Survey/Forms/copyForm`,
     method: 'POST',
     data,
   });
 };
 const updateForm = (data) => {
   return api({
-    url: `Forms`,
+    url: `Survey/Forms`,
     method: 'PUT',
     data,
   });
@@ -25,69 +25,69 @@ const updateForm = (data) => {
 
 const addNewGroupToForm = (data) => {
   return api({
-    url: `GroupOfQuestions`,
+    url: `Survey/GroupOfQuestions`,
     method: 'POST',
     data,
   });
 };
 const updateGroupOfForm = (data) => {
   return api({
-    url: `GroupOfQuestions`,
+    url: `Survey/GroupOfQuestions`,
     method: 'PUT',
     data,
   });
 };
 const deleteGroupOfForm = (data) => {
   return api({
-    url: `GroupOfQuestions?id=${data}`,
+    url: `Survey/GroupOfQuestions?id=${data}`,
     method: 'DELETE',
   });
 };
 const getGroupsOfForm = (data) => {
   return api({
-    url: `GroupOfQuestions/getList?PageNumber=1&PageSize=1000`,
+    url: `Survey/GroupOfQuestions/getList?PageNumber=1&PageSize=1000`,
     method: 'POST',
     data: [], // BURADA GEÇİCİ OLARAK BOŞ ARRAY YAZILDI, FORM ID si gönderebilmem lazım
   });
 }; // burada aslında tüm gruplar geliyor;
 const addNewQuestionToForm = (data) => {
   return api({
-    url: `Questions/AddWithGroupId`,
+    url: `Survey/Questions/AddWithGroupId`,
     method: 'POST',
     data,
   });
 };
 const addNewQuestionToGroup = (data) => {
   return api({
-    url: `QuestionGroupOfQuestions`,
+    url: `Survey/QuestionGroupOfQuestions`,
     method: 'POST',
     data,
   });
 };
 const updateQuestion = (data) => {
   return api({
-    url: `FormQuestions`,
+    url: `Survey/FormQuestions`,
     method: 'PUT',
     data,
   });
 };
 const getAllQuestionsOfForm = (data) => {
   return api({
-    url: `FormQuestions/getByFormIdQuestions`,
+    url: `Survey/FormQuestions/getByFormIdQuestions`,
     method: 'POST',
     data,
   });
 };
 const deleteQuestion = (data) => {
   return api({
-    url: `FormQuestions?id=${data.id}`,
+    url: `Survey/FormQuestions?id=${data.id}`,
     method: 'DELETE',
     data,
   });
 };
-const deleteQuestionFromGroup=(data) => {
+const deleteQuestionFromGroup = (data) => {
   return api({
-    url: `QuestionGroupOfQuestions?id=${data.id}`,
+    url: `Survey/QuestionGroupOfQuestions?id=${data.id}`,
     method: 'DELETE',
   });
 };
@@ -96,7 +96,7 @@ const deleteQuestionFromGroup=(data) => {
 
 const getByFilterPagedForms = (urlString) => {
   return api({
-    url: `Forms/GetByFilterPagedForms?${urlString}`,
+    url: `Survey/Forms/GetByFilterPagedForms?${urlString}`,
     method: 'POST',
   });
 };
@@ -105,7 +105,7 @@ const getByFilterPagedForms = (urlString) => {
 
 const getFormCategories = () => {
   return api({
-    url: `CategoryOfForms/getList`,
+    url: `Survey/CategoryOfForms/getList`,
     method: 'POST',
     data: [],
   });
@@ -113,7 +113,7 @@ const getFormCategories = () => {
 
 const getFormPackages = () => {
   return api({
-    url: `Packages/getList`,
+    url: `Mono/Packages/getList?PageSize=0`,
     method: 'POST',
     data: [],
   });
@@ -122,7 +122,7 @@ const getFormPackages = () => {
 // Forms targetgroup
 const getTargetGroup = (data) => {
   return api({
-    url: `TargetGroups/getList?PageNumber=1&PageSize=50`,
+    url: `Mono/TargetGroups/getList?PageNumber=1&PageSize=0`,
     method: 'POST',
     data,
   });
@@ -131,7 +131,7 @@ const getTargetGroup = (data) => {
 // Forms anket kısıtı
 const getSurveyConstraint = (data) => {
   return api({
-    url: `SurveyConstraints/getList?PageNumber=1&PageSize=50`,
+    url: `Survey/SurveyConstraints/getList?PageNumber=1&PageSize=50`,
     method: 'POST',
     data,
   });
@@ -139,7 +139,7 @@ const getSurveyConstraint = (data) => {
 
 const updateQuestionsOrder = (data) => {
   return api({
-    url: `FormQuestions/updateQuestionsOrder`,
+    url: `Survey/FormQuestions/updateQuestionsOrder`,
     method: 'POST',
     data,
   });
@@ -148,13 +148,14 @@ const updateQuestionsOrder = (data) => {
 // Form Delete
 const formDelete = (data) => {
   return api({
-    url: `Forms/deleteForms`,
+    url: `Survey/Forms/deleteForms`,
     method: 'DELETE',
     data,
   });
 };
 
 // Change Forms Status Active
+//kullanılmıyor
 const formActive = (data) => {
   return api({
     url: `Forms/SetActiveForms`,
@@ -164,6 +165,7 @@ const formActive = (data) => {
 };
 
 // Change Forms Status Passive
+//kullanılmıyor
 const formPassive = (data) => {
   return api({
     url: `Forms/SetPassiveForms`,
@@ -173,7 +175,7 @@ const formPassive = (data) => {
 };
 const setScore = (data) => {
   return api({
-    url: `FormQuestions/setScore`,
+    url: `Survey/FormQuestions/setScore`,
     method: 'POST',
     data,
   });

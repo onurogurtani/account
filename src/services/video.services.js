@@ -2,7 +2,7 @@ import { api } from './api';
 
 const addVideo = (data) => {
   return api({
-    url: `Videos`,
+    url: `Content/Videos`,
     method: 'POST',
     data,
   });
@@ -10,7 +10,7 @@ const addVideo = (data) => {
 
 const editVideo = (data) => {
   return api({
-    url: `Videos/updateVideo`,
+    url: `Content/Videos/updateVideo`,
     method: 'POST',
     data,
   });
@@ -18,7 +18,7 @@ const editVideo = (data) => {
 
 const deleteVideoDocumentFile = (data) => {
   return api({
-    url: `/Files`,
+    url: `Mono/Files`,
     method: 'DELETE',
     data,
   });
@@ -26,7 +26,7 @@ const deleteVideoDocumentFile = (data) => {
 
 const addVideoQuestionsExcel = (data) => {
   return api({
-    url: `/Videos/uploadVideoQuestionExcel`,
+    url: `Content/Videos/uploadVideoQuestionExcel`,
     method: 'POST',
     data,
   });
@@ -34,7 +34,7 @@ const addVideoQuestionsExcel = (data) => {
 
 const downloadVideoQuestionsExcel = () => {
   return api({
-    url: `/Videos/downloadVideoQuestionExcel`,
+    url: `Content/Videos/downloadVideoQuestionExcel`,
     method: 'GET',
     responseType: 'blob',
   });
@@ -42,14 +42,14 @@ const downloadVideoQuestionsExcel = () => {
 
 const getKalturaSessionKey = () => {
   return api({
-    url: `KalturaPlatform/getSessionKey`,
+    url: `Mono/KalturaPlatform/getSessionKey`,
     method: 'POST',
   });
 };
 
 const getAllIntroVideoList = () => {
   return api({
-    url: `IntroVideos/getList?PageSize=0`,
+    url: `Mono/IntroVideos/getList?PageSize=0`,
     method: 'POST',
     data: null,
   });
@@ -57,27 +57,27 @@ const getAllIntroVideoList = () => {
 
 const getAllVideoKeyword = () => {
   return api({
-    url: `Videos/getVideoKeyWords`,
+    url: `Content/Videos/getVideoKeyWords`,
     method: 'GET',
   });
 };
 const getByVideoId = (id) => {
   return api({
-    url: `Videos/getByVideo?Id=${id}`,
+    url: `Content/Videos/getByVideo?Id=${id}`,
     method: 'POST',
   });
 };
 
 const getByFilterPagedVideos = (urlString) => {
   return api({
-    url: `Videos/getByFilterPagedVideos?${urlString}`,
+    url: `Content/Videos/getByFilterPagedVideos?${urlString}`,
     method: 'POST',
   });
 };
 
 const deleteVideo = (id) => {
   return api({
-    url: `Videos?id=${id}`,
+    url: `Content/Videos?id=${id}`,
     method: 'DELETE',
   });
 };

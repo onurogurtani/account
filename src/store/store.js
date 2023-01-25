@@ -20,7 +20,6 @@ import { videoSlice } from './slice/videoSlice';
 import { lessonsSlice } from './slice/lessonsSlice';
 import { packageSlice } from './slice/packageSlice';
 import { categorySlice } from './slice/categorySlice';
-import { subCategorySlice } from './slice/subCategorySlice ';
 import { eventTypeSlice } from './slice/eventTypeSlice';
 import { eventsSlice } from './slice/eventsSlice';
 import { classStageSlice } from './slice/classStageSlice';
@@ -46,6 +45,9 @@ import { lessonSubSubjectsSlice } from './slice/lessonSubSubjectsSlice';
 import { questionIdentificationSlice } from './slice/questionIdentificationSlice';
 import { earningChoiceSlice } from './slice/earningChoiceSlice';
 import { participantGroupsSlice } from './slice/participantGroupsSlice'
+import { trialTypeSlice } from './slice/trialTypeSlice';
+import { documentsSlice } from './slice/documentsSlice';
+import { booksSlice } from './slice/booksSlice';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -67,7 +69,6 @@ const reducers = combineReducers({
   lessonSubSubjects: lessonSubSubjectsSlice.reducer,
   packages: packageSlice.reducer,
   category: categorySlice.reducer,
-  subCategory: subCategorySlice.reducer,
   eventType: eventTypeSlice.reducer,
   events: eventsSlice.reducer,
   classStages: classStageSlice.reducer,
@@ -86,7 +87,10 @@ const reducers = combineReducers({
   questionManagement: questionManagementSlice.reducer,
   questionIdentification: questionIdentificationSlice.reducer,
   earningChoice: earningChoiceSlice.reducer,
-  participantGroups: participantGroupsSlice.reducer
+  participantGroups: participantGroupsSlice.reducer,
+  trialType: trialTypeSlice.reducer,
+  documents: documentsSlice.reducer,
+  books: booksSlice.reducer,
 });
 
 const persistConfig = {

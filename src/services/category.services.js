@@ -2,13 +2,11 @@ import { api } from './api';
 
 const getByFilterPagedCategoriesQuery = (data) => {
   return api({
-    url: `Category/getByFilterPagedCategoriesQuery`,
+    url: `Mono/Category/GetByFilterPagedCategoriesQuery`,
     method: 'POST',
     data,
   });
 };
-
-
 
 const categoryServices = {
   getByFilterPagedCategoriesQuery,

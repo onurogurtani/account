@@ -2,14 +2,14 @@ import { api } from './api';
 
 const getCurrentUser = () => {
   return api({
-    url: 'Users/getCurrentUser',
+    url: 'Identity/Users/getCurrentUser',
     method: 'GET',
   });
 };
 
 const currentUserUpdate = (data) => {
   return api({
-    url: 'Users',
+    url: 'Identity/Users',
     method: 'PUT',
     data,
   });

@@ -414,12 +414,20 @@ const Menus = () => {
             </span>
           </MenuItemText>
         </CustomItem>
+        <CustomItem key="/settings/trialType">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Deneme Türü  Tanımlama" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
         <CustomItem key="/settings/participantGroups">
           <MenuItemText>
             <CustomImage src={menuIcons} />
             <span>
               <Text t="Katılımcı Grubu  Tanımlama" />
-            </span>
+              </span>
           </MenuItemText>
         </CustomItem>
       </CustomSubMenu>

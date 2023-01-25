@@ -2,7 +2,7 @@ import { api } from './api';
 
 const addVideoCategory = (data) => {
   return api({
-    url: `CategoryOfVideos`,
+    url: `Content/CategoryOfVideos`,
     method: 'POST',
     data,
   });
@@ -10,7 +10,7 @@ const addVideoCategory = (data) => {
 
 const editVideoCategory = (data) => {
   return api({
-    url: `CategoryOfVideos`,
+    url: `Content/CategoryOfVideos`,
     method: 'PUT',
     data,
   });
@@ -18,7 +18,7 @@ const editVideoCategory = (data) => {
 
 const getVideoCategoryList = (data = null) => {
   return api({
-    url: `CategoryOfVideos/getList?PageSize=0`,
+    url: `Content/CategoryOfVideos/getList?PageSize=0`,
     method: 'POST',
     data,
   });

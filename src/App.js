@@ -364,10 +364,14 @@ const App = () => {
                           authority="dashboard"
                         />
                         <PrivateRoute
-                          path={`${match?.path}/participantGroups`}
-                          Component={Settings?.ParticipantGroups}
+                          path={`${match?.path}/trialType`}
+                          Component={Settings?.TrialType}
                           authority="dashboard"
                         />
+                         <PrivateRoute
+                          path={`${match?.path}/participantGroups`}
+                          Component={Settings?.ParticipantGroups}
+                          />
                         <Route
                           component={() => (
                             <Redirect

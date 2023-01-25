@@ -91,6 +91,11 @@ const ParticipantGroups = lazy(() =>
     default: Component,
   })),
 );
+const TrialType = lazy(() =>
+  import('./trialType').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 const Settings = {
   Categories,
   Packages,
@@ -108,7 +113,8 @@ const Settings = {
   PreferencePeriod,
   PublisherBook,
   Publisher,
-  ParticipantGroups
+  ParticipantGroups,
+  TrialType,
 };
 
 export default Settings;
