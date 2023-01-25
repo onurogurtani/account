@@ -2,7 +2,7 @@ import { api } from './api';
 
 const announcementGetList = () => {
   return api({
-    url: `Announcements/getList?PageNumber=0&PageSize=0`,
+    url: `Event/Announcements/getAnnouncamentsList?PageNumber=0&PageSize=0`,
     method: 'POST',
     data: null,
   });
@@ -10,7 +10,7 @@ const announcementGetList = () => {
 // Announcements with filter
 const getByFilterPagedAnnouncements = (params) => {
   return api({
-    url: `Announcements/GetByFilterPagedAnnouncements`,
+    url: `Event/Announcements/GetByFilterPagedAnnouncements`,
     method: 'POST',
     params,
   });
@@ -18,38 +18,40 @@ const getByFilterPagedAnnouncements = (params) => {
 
 const getByFilterAnnouncementTypes = (urlString) => {
   return api({
-    url: `AnnouncementType/GetByFilterPagedAnnouncementTypes?${urlString}`,
+    url: `Event/AnnouncementType/GetByFilterPagedAnnouncementTypes?${urlString}`,
     method: 'POST',
   });
 };
 const addAnnouncement = (data) => {
   return api({
-    url: `Announcements/Add`,
+    url: `Event/Announcements/Add`,
     method: 'POST',
     data,
   });
 };
 const createOrUpdateAnnouncementRole = (data) => {
   return api({
-    url: `AnnouncementGroupss/CreateUpdateAnnouncementGroups`,
+    url: `Event/AnnouncementGroups/CreateUpdateAnnouncementGroups`,
     method: 'POST',
     data,
   });
 };
 const editAnnouncement = (data) => {
   return api({
-    url: `Announcements/Update`,
+    url: `Event/Announcements/Update`,
     method: 'PUT',
     data,
   });
 };
 const deleteAnnouncement = (data) => {
   return api({
-    url: `Announcements/delete`,
+    url: `Event/Announcements/Delete`,
     method: 'DELETE',
     data,
   });
 };
+
+//kullanılmıyor
 const setPublishedAnnouncements = (data) => {
   return api({
     url: `Announcements/SetPublishedAnnouncements`,
@@ -57,6 +59,8 @@ const setPublishedAnnouncements = (data) => {
     data,
   });
 };
+
+//kullanılmıyor
 const setUnPublishedAnnouncements = (data) => {
   return api({
     url: `Announcements/SetUnPublishedAnnouncements`,
@@ -64,16 +68,17 @@ const setUnPublishedAnnouncements = (data) => {
     data,
   });
 };
+
 const setArchiveAnnouncements = (data) => {
   return api({
-    url: `Announcements/SetArchiveAnnouncements`,
+    url: `Event/Announcements/SetArchiveAnnouncements`,
     method: 'POST',
     data,
   });
 };
 const setActiveAnnouncements = (data) => {
   return api({
-    url: `Announcements/SetActiveAnnouncement`,
+    url: `Event/Announcements/SetActiveAnnouncement`,
     method: 'POST',
     data,
   });

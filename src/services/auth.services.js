@@ -2,7 +2,7 @@ import { api } from './api';
 
 const login = (data) => {
   return api({
-    url: 'Auth/login',
+    url: 'Identity/Identity/login',
     method: 'POST',
     data,
   });
@@ -10,7 +10,7 @@ const login = (data) => {
 
 const loginOtp = (data) => {
   return api({
-    url: 'Auth/loginOtp',
+    url: 'Identity/Identity/loginOtp',
     method: 'POST',
     data,
   });
@@ -18,7 +18,7 @@ const loginOtp = (data) => {
 
 const forgotPassword = (data) => {
   return api({
-    url: 'Auth/forgotpassword',
+    url: 'Identity/Identity/forgotpassword',
     method: 'PUT',
     data,
   });
@@ -26,7 +26,7 @@ const forgotPassword = (data) => {
 
 const forgotPasswordChange = (data) => {
   return api({
-    url: 'Auth/forgottenpasswordchange',
+    url: 'Identity/Identity/forgottenpasswordchange',
     method: 'PUT',
     data,
   });
@@ -34,14 +34,14 @@ const forgotPasswordChange = (data) => {
 
 const getPasswordRules = () => {
   return api({
-    url: 'Auth/getpasswordrules',
+    url: 'Identity/Identity/getpasswordrules',
     method: 'GET',
   });
 };
 
 const reSendOtpSms = (data) => {
   return api({
-    url: 'Auth/resendotpsms',
+    url: 'Identity/Identity/resendotpsms',
     method: 'POST',
     data,
   });
@@ -49,7 +49,7 @@ const reSendOtpSms = (data) => {
 
 const forgottenPasswordTokenCheck = (data) => {
   return api({
-    url: 'Auth/forgottenPasswordTokenCheck',
+    url: 'Identity/Identity/forgottenPasswordTokenCheck',
     method: 'PUT',
     data,
   });
@@ -57,14 +57,14 @@ const forgottenPasswordTokenCheck = (data) => {
 
 const changeUserPassword = (data) => {
   return api({
-    url: 'Auth/changeuserpassword',
+    url: 'Identity/Identity/changeuserpassword',
     method: 'PUT',
     data,
   });
 };
 const behalfOfLogin = (data) => {
   return api({
-    url: 'Auth/BehalfOfLogin',
+    url: 'Identity/Identity/BehalfOfLogin',
     method: 'POST',
     data,
   });
@@ -72,7 +72,7 @@ const behalfOfLogin = (data) => {
 
 const logout = () => {
   return api({
-    url: 'Auth/logout',
+    url: 'Identity/Identity/logout',
     method: 'POST',
     data: {},
   });
@@ -80,18 +80,18 @@ const logout = () => {
 
 const getPasswordRuleAndPeriod = () => {
   return api({
-    url: 'AppSettings/getPasswordRuleAndPeriod',
+    url: 'Mono/AppSettings/GetPasswordRuleAndPeriod',
     method: 'GET',
-  })
-}
+  });
+};
 
 const setPasswordRuleAndPeriodValue = (data) => {
   return api({
-    url: 'AppSettings/setPasswordRuleAndPeriodValue',
+    url: 'Mono/AppSettings/SetPasswordRuleAndPeriodValue',
     method: 'POST',
-    data
-  })
-}
+    data,
+  });
+};
 
 const authServices = {
   login,
@@ -105,7 +105,7 @@ const authServices = {
   behalfOfLogin,
   logout,
   getPasswordRuleAndPeriod,
-  setPasswordRuleAndPeriodValue
+  setPasswordRuleAndPeriodValue,
 };
 
 export default authServices;

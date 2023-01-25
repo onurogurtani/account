@@ -2,21 +2,21 @@ import { api } from './api';
 
 const getByFilterPagedUsers = (urlString) => {
   return api({
-    url: `Users/getByFilterPaged?${urlString}`,
+    url: `Identity/Users/getByFilterPaged?${urlString}`,
     method: 'POST',
   });
 };
 
 const getByUserId = (id) => {
   return api({
-    url: `Users/getbyid?id=${id}`,
+    url: `Identity/Users/getbyid?id=${id}`,
     method: 'GET',
   });
 };
 
 const editUser = (data) => {
   return api({
-    url: `Users/edit`,
+    url: `Identity/Users/edit`,
     method: 'PUT',
     data,
   });
@@ -24,7 +24,7 @@ const editUser = (data) => {
 
 const addUser = (data) => {
   return api({
-    url: `Users/add`,
+    url: `Identity/Users/add`,
     method: 'POST',
     data,
   });
@@ -32,14 +32,14 @@ const addUser = (data) => {
 
 const deleteUser = (data) => {
   return api({
-    url: `Users/delete`,
+    url: `Identity/Users/delete`,
     method: 'DELETE',
     data,
   });
 };
 const setUserStatus = (data) => {
   return api({
-    url: `Users/setStatus`,
+    url: `Identity/Users/setStatus`,
     method: 'POST',
     data,
   });

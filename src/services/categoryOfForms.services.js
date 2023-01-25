@@ -2,7 +2,7 @@ import { api } from './api';
 
 const addFormCategory = (data) => {
   return api({
-    url: `CategoryOfForms`,
+    url: `Survey/CategoryOfForms`,
     method: 'POST',
     data,
   });
@@ -10,7 +10,7 @@ const addFormCategory = (data) => {
 
 const editFormCategory = (data) => {
   return api({
-    url: `CategoryOfForms`,
+    url: `Survey/CategoryOfForms`,
     method: 'PUT',
     data,
   });
@@ -18,7 +18,7 @@ const editFormCategory = (data) => {
 
 const getFormCategoryList = (data = null) => {
   return api({
-    url: `CategoryOfForms/getList?PageSize=0`,
+    url: `Survey/CategoryOfForms/getList?PageSize=0`,
     method: 'POST',
     data,
   });

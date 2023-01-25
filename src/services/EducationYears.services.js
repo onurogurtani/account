@@ -1,30 +1,32 @@
 import { api } from './api';
 
-const getEducationYearList = (data, params) => {
+const getEducationYearList = (data = null, params) => {
   return api({
-    url: `EducationYears/getList`,
+    url: `Mono/EducationYears/getList`,
     method: 'POST',
-    data: null,
+    data,
     params,
   });
 };
 const getEducationYearAdd = (data) => {
   return api({
-    url: `EducationYears`,
+    url: `Mono/EducationYears`,
     method: 'POST',
     data: data,
   });
 };
 const getEducationYearUpdate = (data) => {
   return api({
-    url: `EducationYears`,
+    url: `Mono/EducationYears`,
     method: 'PUT',
     data: data,
   });
 };
+
+//kullanılmıyor
 const getEducationYearDelete = (data) => {
   return api({
-    url: `EducationYears`,
+    url: `Mono/EducationYears`,
     method: 'DELETE',
     data: data,
   });
