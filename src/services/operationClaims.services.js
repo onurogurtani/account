@@ -2,7 +2,7 @@ import { api } from './api';
 
 const getOperationClaimsList = () => {
   return api({
-    url: `OperationClaims/getList?PageSize=0`,
+    url: `Identity/OperationClaims/getList?PageSize=0`,
     method: 'POST',
     data: null,
   });
@@ -10,7 +10,7 @@ const getOperationClaimsList = () => {
 
 const addOperationClaims = (data) => {
   return api({
-    url: `OperationClaims`,
+    url: `Identity/OperationClaims`,
     method: 'POST',
     data,
   });
@@ -18,7 +18,7 @@ const addOperationClaims = (data) => {
 
 const updateOperationClaims = (data) => {
   return api({
-    url: `OperationClaims`,
+    url: `Identity/OperationClaims`,
     method: 'PUT',
     data,
   });
@@ -26,7 +26,7 @@ const updateOperationClaims = (data) => {
 
 const deleteOperationClaims = ({ id }) => {
   return api({
-    url: `OperationClaims?id=${id}`,
+    url: `Identity/OperationClaims?id=${id}`,
     method: 'DELETE',
   });
 };

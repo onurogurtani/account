@@ -2,7 +2,7 @@ import { api } from './api';
 
 const getLessonSubjects = (data = null) => {
   return api({
-    url: `LessonSubjects/getList?PageSize=0`,
+    url: `Shared/LessonSubjects/getList?PageSize=0`,
     method: 'POST',
     data,
   });
@@ -10,7 +10,7 @@ const getLessonSubjects = (data = null) => {
 
 const addLessonSubjects = (data) => {
   return api({
-    url: `LessonSubjects`,
+    url: `Shared/LessonSubjects`,
     method: 'POST',
     data,
   });
@@ -18,7 +18,7 @@ const addLessonSubjects = (data) => {
 
 const editLessonSubjects = (data) => {
   return api({
-    url: `LessonSubjects`,
+    url: `Shared/LessonSubjects`,
     method: 'PUT',
     data,
   });
@@ -26,7 +26,7 @@ const editLessonSubjects = (data) => {
 
 const deleteLessonSubjects = (id) => {
   return api({
-    url: `LessonSubjects?id=${id}`,
+    url: `Shared/LessonSubjects?id=${id}`,
     method: 'DELETE',
   });
 };

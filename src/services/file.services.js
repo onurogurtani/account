@@ -3,18 +3,18 @@ import axios from 'axios';
 
 const downloadFile = (id) => {
   return api({
-    url: `/Files/getbyid?id=${id}`,
+    url: `/Mono/Files/getbyid?id=${id}`,
     method: 'GET',
     responseType: 'blob',
   });
 };
 
 const uploadFile = (data, options) => {
-  return axios.post(`${process.env.PUBLIC_HOST_API}/Files`, data, { ...options });
+  return axios.post(`${process.env.PUBLIC_HOST_API}/Mono/Files`, data, { ...options });
 };
 const uploadFileBaseApi = (data) => {
   return api({
-    url: `/Files`,
+    url: `/Mono/Files`,
     method: 'POST',
     data,
   });
@@ -22,7 +22,7 @@ const uploadFileBaseApi = (data) => {
 
 const deleteFile = (data) => {
   return api({
-    url: `/Files`,
+    url: `/Mono/Files`,
     method: 'DELETE',
     data,
   });

@@ -2,29 +2,29 @@ import { api } from './api';
 
 const GetByFilterPagedGroups = (params) => {
   return api({
-    url: `Groups/GetByFilterPagedGroups`,
+    url: `Identity/Groups/GetByFilterPagedGroups`,
     method: 'POST',
-    params
+    params,
   });
 };
 
 const getGroupsList = () => {
   return api({
-    url: `Groups/getall`,
+    url: `Identity/Groups/getall`,
     method: 'GET',
   });
 };
 
 const getGroupClaims = ({ id }) => {
   return api({
-    url: `GroupClaims/getgroupclaimsbygroupid?groupId=${id}`,
+    url: `Identity/GroupClaims/getgroupclaimsbygroupid?groupId=${id}`,
     method: 'GET',
   });
 };
 
 const addGroup = (data) => {
   return api({
-    url: `Groups`,
+    url: `Identity/Groups`,
     method: 'POST',
     data,
   });
@@ -32,7 +32,7 @@ const addGroup = (data) => {
 
 const updateGroup = (data) => {
   return api({
-    url: `Groups`,
+    url: `Identity/Groups`,
     method: 'PUT',
     data,
   });
@@ -40,7 +40,7 @@ const updateGroup = (data) => {
 
 const deleteGroup = (data) => {
   return api({
-    url: `Groups`,
+    url: `Identity/Groups`,
     method: 'DELETE',
     data,
   });
@@ -48,19 +48,18 @@ const deleteGroup = (data) => {
 
 const addGroupClaims = (data) => {
   return api({
-    url: `GroupClaims`,
+    url: `Identity/GroupClaims`,
     method: 'POST',
     data,
-  })
+  });
 };
 
 const deleteGroupClaims = ({ id }) => {
   return api({
-    url: `GroupClaims?id=${id}`,
+    url: `Identity/GroupClaims?id=${id}`,
     method: 'DELETE',
-  })
-}
-
+  });
+};
 
 const groupsServices = {
   GetByFilterPagedGroups,
@@ -70,7 +69,7 @@ const groupsServices = {
   updateGroup,
   deleteGroup,
   addGroupClaims,
-  deleteGroupClaims
+  deleteGroupClaims,
 };
 
 export default groupsServices;
