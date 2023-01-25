@@ -27,6 +27,7 @@ import EventManagement from './pages/eventManagement';
 import UserListManagement from './pages/userManagement/userListManagement';
 import AdminUsersManagement from './pages/userManagement/adminUsersManagement';
 import QuestionManagement from './pages/questionManagement/index';
+import Exam from './pages/exam';
 
 const PrivateRoute = lazy(() =>
   import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -440,6 +441,34 @@ const App = () => {
                           Component={QuestionManagement.QuestionIdentification}
                           authority="dashboard"
                         />
+                        <Route
+                          component={() => (
+                            <Redirect
+                              to={{
+                                pathname: '/not-found',
+                                state: { status: 404 },
+                              }}
+                            />
+                          )}
+                        />
+                      </Switch>
+                    );
+                  }}
+                  authority="dashboard"
+                  isLayout={false}
+                />
+                <PrivateRoute
+                  path={'/exam'}
+                  Component={({ match }) => {
+                    return (
+                      <Switch>
+                        <PrivateRoute
+                          path={`${match?.path}/trial-exam`}
+                          exact
+                          Component={Exam.TrialExam}
+                          authority="dashboard"
+                        />
+
                         <Route
                           component={() => (
                             <Redirect
