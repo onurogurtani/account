@@ -2,7 +2,7 @@ import { api } from './api';
 
 const getEducationYears = () => {
   return api({
-    url: `EducationYears/getList?PageNumber=0&PageSize=0`,
+    url: `Mono/EducationYears/getList?PageNumber=0&PageSize=0`,
     method: 'POST',
     data: null,
   });
@@ -10,7 +10,7 @@ const getEducationYears = () => {
 
 const uploadZipFileOfQuestion = (data) => {
   return api({
-    url: `GroupOfQuestionOfExams/UploadZipFileGroupOfQuestionOfExam`,
+    url: `Mono/GroupOfQuestionOfExams/UploadZipFileGroupOfQuestionOfExam`,
     method: 'POST',
     data: data,
   });
@@ -18,17 +18,17 @@ const uploadZipFileOfQuestion = (data) => {
 
 const getPublisherList = () => {
   return api({
-    url: `Publishers/getList?PageNumber=0&PageSize=0`,
+    url: `Mono/Publishers/getList?PageNumber=0&PageSize=0`,
     method: 'POST',
-    data:null
+    data: null,
   });
 };
 
 const getBookList = (data) => {
   return api({
-    url: `Books/getList?PageNumber=0&PageSize=0`,
+    url: `Mono/Books/getList?PageNumber=0&PageSize=0`,
     method: 'POST',
-    data:data
+    data: data,
   });
 };
 

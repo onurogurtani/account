@@ -2,21 +2,21 @@ import { api } from './api';
 
 const getByFilterPagedAdminUsers = (urlString) => {
   return api({
-    url: `Admins/GetByFilterPagedAdmins?${urlString}`,
+    url: `Identity/Admins/GetByFilterPagedAdmins?${urlString}`,
     method: 'POST',
   });
 };
 
 const getByAdminUserId = (id) => {
   return api({
-    url: `Admins/getbyid?Id=${id}`,
+    url: `Identity/Admins/getbyid?Id=${id}`,
     method: 'GET',
   });
 };
 
 const addAdminUser = (data) => {
   return api({
-    url: `Admins/Add`,
+    url: `Identity/Admins/Add`,
     method: 'POST',
     data,
   });
@@ -24,7 +24,7 @@ const addAdminUser = (data) => {
 
 const editAdminUser = (data) => {
   return api({
-    url: `Admins/Update`,
+    url: `Identity/Admins/Update`,
     method: 'PUT',
     data,
   });
@@ -32,7 +32,7 @@ const editAdminUser = (data) => {
 
 const deleteAdminUser = (data) => {
   return api({
-    url: `Admins/Delete`,
+    url: `Identity/Admins/Delete`,
     method: 'DELETE',
     data,
   });
@@ -40,7 +40,7 @@ const deleteAdminUser = (data) => {
 
 const setAdminUserStatus = (data) => {
   return api({
-    url: `Admins/setStatus`,
+    url: `Identity/Admins/setStatus`,
     method: 'POST',
     data,
   });

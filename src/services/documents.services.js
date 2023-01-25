@@ -2,9 +2,9 @@ import { api } from './api';
 
 const getListDocuments = () => {
   return api({
-    url: 'Documents/getList',
+    url: 'Mono/Documents/getList',
     method: 'POST',
-    data: []
+    data: [],
   });
 };
 

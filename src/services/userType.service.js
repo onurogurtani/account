@@ -2,7 +2,7 @@ import { api } from './api';
 
 const getUserTypesList = () => {
   return api({
-    url: `UserTypes/getList`,
+    url: `Identity/UserTypes/getList`,
     method: 'GET',
   });
 };

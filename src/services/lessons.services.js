@@ -2,7 +2,7 @@ import { api } from './api';
 
 const getLessons = (data = null) => {
   return api({
-    url: `Lessons/getList?PageSize=0`,
+    url: `Shared/Lessons/getList?PageSize=0`,
     method: 'POST',
     data,
   });
@@ -10,7 +10,7 @@ const getLessons = (data = null) => {
 
 const addLessons = (data) => {
   return api({
-    url: `Lessons`,
+    url: `Shared/Lessons`,
     method: 'POST',
     data,
   });
@@ -18,14 +18,14 @@ const addLessons = (data) => {
 
 const getByClassromIdLessons = (classroomId) => {
   return api({
-    url: `Lessons/getByClassromIdLessons?ClassroomId=${classroomId}`,
+    url: `Shared/Lessons/getByClassromIdLessons?ClassroomId=${classroomId}`,
     method: 'POST',
   });
 };
 
 const editLessons = (data) => {
   return api({
-    url: `Lessons`,
+    url: `Shared/Lessons`,
     method: 'PUT',
     data,
   });
@@ -33,14 +33,14 @@ const editLessons = (data) => {
 
 const deleteLessons = (id) => {
   return api({
-    url: `Lessons?id=${id}`,
+    url: `Shared/Lessons?id=${id}`,
     method: 'DELETE',
   });
 };
 
 const downloadLessonsExcel = () => {
   return api({
-    url: `/Lessons/downloadLessonExcel`,
+    url: `/Shared/Lessons/downloadLessonExcel`,
     method: 'GET',
     responseType: 'blob',
   });
@@ -48,7 +48,7 @@ const downloadLessonsExcel = () => {
 
 const uploadLessonsExcel = (data) => {
   return api({
-    url: `/Lessons/uploadLessonExcel`,
+    url: `/Shared/Lessons/uploadLessonExcel`,
     method: 'POST',
     data,
   });
@@ -61,7 +61,7 @@ const lessonsServices = {
   downloadLessonsExcel,
   uploadLessonsExcel,
   addLessons,
-  getByClassromIdLessons
+  getByClassromIdLessons,
 };
 
 export default lessonsServices;

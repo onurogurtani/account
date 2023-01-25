@@ -2,7 +2,7 @@ import { api } from './api';
 
 const addImage = (data) => {
   return api({
-    url: `AvatarFiles`,
+    url: `Member/AvatarFiles`,
     method: 'POST',
     data,
   });
@@ -10,7 +10,7 @@ const addImage = (data) => {
 
 const getAllImages = () => {
   return api({
-    url: `AvatarFiles/getList?PageSize=0`,
+    url: `Member/AvatarFiles/getList?PageSize=0`,
     method: 'POST',
     data: null,
   });
@@ -18,14 +18,14 @@ const getAllImages = () => {
 
 const getImage = ({ id }) => {
   return api({
-    url: `AvatarFiles/getbyid?id=${id}`,
+    url: `Member/AvatarFiles/getbyid?id=${id}`,
     method: 'GET',
   });
 };
 
 const deleteImage = (data) => {
   return api({
-    url: `AvatarFiles`,
+    url: `Member/AvatarFiles`,
     method: 'DELETE',
     data,
   });

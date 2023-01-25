@@ -20,7 +20,6 @@ import { videoSlice } from './slice/videoSlice';
 import { lessonsSlice } from './slice/lessonsSlice';
 import { packageSlice } from './slice/packageSlice';
 import { categorySlice } from './slice/categorySlice';
-import { subCategorySlice } from './slice/subCategorySlice ';
 import { eventTypeSlice } from './slice/eventTypeSlice';
 import { eventsSlice } from './slice/eventsSlice';
 import { classStageSlice } from './slice/classStageSlice';
@@ -69,7 +68,6 @@ const reducers = combineReducers({
   lessonSubSubjects: lessonSubSubjectsSlice.reducer,
   packages: packageSlice.reducer,
   category: categorySlice.reducer,
-  subCategory: subCategorySlice.reducer,
   eventType: eventTypeSlice.reducer,
   events: eventsSlice.reducer,
   classStages: classStageSlice.reducer,
