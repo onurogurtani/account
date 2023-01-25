@@ -2,7 +2,7 @@ import { api } from './api';
 
 const getClassList = (data = null) => {
   return api({
-    url: 'Classrooms/getList?PageSize=0',
+    url: 'Shared/Classrooms/getList?PageSize=0',
     method: 'POST',
     data,
   });
@@ -10,7 +10,7 @@ const getClassList = (data = null) => {
 
 const addClass = (data) => {
   return api({
-    url: 'Classrooms',
+    url: 'Shared/Classrooms',
     method: 'POST',
     data,
   });
@@ -18,14 +18,14 @@ const addClass = (data) => {
 
 const updateClass = (data) => {
   return api({
-    url: 'Classrooms',
+    url: 'Shared/Classrooms',
     method: 'PUT',
     data,
   });
 };
 const deleteClass = (data) => {
   return api({
-    url: `Classrooms?id=${data}`,
+    url: `Shared/Classrooms?id=${data}`,
     method: 'DELETE',
   });
 };

@@ -1,7 +1,4 @@
-import { useState } from 'react';
-
-const UploadFile = ({ accept, title, onChange, disabled }) => {
-  const [file, setFile] = useState(null);
+const UploadFile = ({ accept, title, onChange, disabled, file }) => {
   return (
     <div className="file-upload">
       <input
@@ -9,18 +6,11 @@ const UploadFile = ({ accept, title, onChange, disabled }) => {
         disabled={disabled}
         accept={accept}
         onChange={(e) => {
-          if (e.target.files.length > 0) {
-            setFile(e.target.files[0]);
-            if (onChange) {
-              onChange(e.target.files[0]);
-            }
-          }
+          onChange(e);
         }}
         type={'file'}
       />
-      <div className={`title ${disabled ? 'title-disabled' : ''}`}>
-        {file !== null ? <span>{file.name}</span> : title}
-      </div>
+      <div className={`title ${disabled ? 'title-disabled' : ''}`}>{file.name ? <span>{file.name}</span> : title}</div>
     </div>
   );
 };

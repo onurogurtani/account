@@ -6,7 +6,7 @@ import EarningSearch from './EarningSearch';
 import CustomSelect, { Option } from '../../../components/CustomSelect';
 import { getByClassromIdLessons } from '../../../store/slice/lessonsSlice';
 
-const EarningsChoice = ({ classroomId = 63 }) => {
+const EarningsChoice = ({ classroomId }) => {
   const { lessonUnits } = useSelector((state) => state?.lessonUnits);
   const { lessonsGetByClassroom } = useSelector((state) => state?.lessons);
   const { earningChoice } = useSelector((state) => state.earningChoice);
@@ -16,7 +16,7 @@ const EarningsChoice = ({ classroomId = 63 }) => {
   const [lessonId, setLessonId] = useState(null);
   const [checkedKeys, setCheckedKeys] = useState([]);
   const [expandedKeys, setExpandedKeys] = useState([]);
-
+  const [chackedChange, setChackedChange] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -85,15 +85,22 @@ const EarningsChoice = ({ classroomId = 63 }) => {
     const modifiedLessonUnits = lessonUnits.map((item) => {
       return {
         title: item.name,
-        key: item.id,
+        key: item.id.toString() + '/unit',
+        id: item?.id,
         lessonId: item.lessonId,
         children: item.lessonSubjects.map((x) => {
           return {
             title: x.name,
-            key: x.id,
+            key: x.id.toString() + '/lessonSubject',
+            id: x.id,
             lessonUnitId: x.lessonUnitId,
             children: x.lessonSubSubjects.map((y) => {
-              return { title: y.name, key: y.id, lessonSubjectId: y.lessonSubjectId };
+              return {
+                title: y.name,
+                key: y.id.toString() + '/lessonSubSubject',
+                id: y.id,
+                lessonSubjectId: y.lessonSubjectId,
+              };
             }),
           };
         }),
@@ -105,22 +112,24 @@ const EarningsChoice = ({ classroomId = 63 }) => {
     setCopyFilterData(modifiedLessonUnits);
   };
 
-  useEffect(() => {
-    const newData = [];
-    earningChoice?.unitId?.forEach((element) => {
-      newData.push(element);
-    });
-    earningChoice?.subjectId?.forEach((element) => {
-      newData.push(element);
-    });
-    earningChoice?.subSubjectId?.forEach((element) => {
-      newData.push(element);
-    });
-    setCheckedKeys(newData);
-  }, [earningChoice]);
+  /*useEffect(() => {
+    if (!chackedChange) {
+      let newData = [];
+      earningChoice?.unitId?.forEach((element) => {
+        newData.push(element);
+      });
+      earningChoice?.subjectId?.forEach((element) => {
+        newData.push(element);
+      });
+      earningChoice?.subSubjectId?.forEach((element) => {
+        newData.push(element);
+      });
+      setCheckedKeys(newData);
+    }
+  }, [chackedChange, earningChoice]);*/
   const onCheck = (checkedKeysValue, info) => {
-    console.log(checkedKeysValue);
     setCheckedKeys(checkedKeysValue);
+    setChackedChange(true);
     const earningChoice = {
       unitId: [],
       subjectId: [],
@@ -129,28 +138,33 @@ const EarningsChoice = ({ classroomId = 63 }) => {
 
     if (info.halfCheckedKeys.length > 0) {
       treeData.map((item) => {
-        if (info.halfCheckedKeys.includes(item.key)) {
-          earningChoice.unitId.push(item?.key);
-        }
+        info.halfCheckedKeys.map((subItem) => {
+          const difIndex = subItem.search('/');
+          if (subItem.slice(0, difIndex).includes(item.id.toString())) {
+            earningChoice.unitId.push(item?.id);
+          }
+        });
       });
       info.halfCheckedKeys.map((item) => {
-        if (!earningChoice.unitId.includes(item)) {
-          earningChoice.subjectId.push(item);
+        const difIndex = item.search('/');
+        if (!earningChoice.unitId.includes(parseInt(item.slice(0, difIndex)))) {
+          earningChoice.subjectId.push(parseInt(item.slice(0, difIndex)));
         }
       });
     }
+
     info.checkedNodes.map((item) => {
       if (item?.lessonId) {
-        earningChoice.unitId.push(item?.key);
+        earningChoice.unitId.push(item?.id);
       }
       if (item?.lessonSubjectId) {
-        earningChoice.subSubjectId.push(item?.key);
+        earningChoice.subSubjectId.push(item?.id);
         if (info.halfCheckedKeys.includes(item?.lessonSubSubjectId)) {
-          earningChoice.subjectId.push(item?.key);
+          earningChoice.subjectId.push(item?.id);
         }
       }
       if (item?.lessonUnitId) {
-        earningChoice.subjectId.push(item?.key);
+        earningChoice.subjectId.push(item?.id);
       }
     });
 

@@ -414,6 +414,14 @@ const Menus = () => {
             </span>
           </MenuItemText>
         </CustomItem>
+        <CustomItem key="/settings/trialType">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Deneme Türü  Tanımlama" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
       </CustomSubMenu>
 
       <CustomSubMenu key="QuestionMenu" title="Soru Yönetimi" icon={<CustomImage src={menuIcons} />}>

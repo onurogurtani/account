@@ -364,6 +364,11 @@ const App = () => {
                           Component={Settings?.Publisher}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/trialType`}
+                          Component={Settings?.TrialType}
+                          authority="dashboard"
+                        />
                         <Route
                           component={() => (
                             <Redirect

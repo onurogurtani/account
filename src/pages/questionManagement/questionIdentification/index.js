@@ -1,5 +1,5 @@
 import { Col, Form, Row, Pagination, Spin } from 'antd';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -56,10 +56,12 @@ const QuestionIdentification = () => {
   const [filterForm] = Form.useForm();
   const [filterForm2] = Form.useForm();
   const QuestionOfExamState = Form.useWatch('QuestionOfExamState', filterForm2);
-  const classroomId = Form.useWatch('classroomId', filterForm);
+  const classroomId = Form.useWatch('ClassroomId', filterForm);
   const [years, setYears] = useState([]);
   const token = useSelector((state) => state?.auth?.token);
   const { earningChoice } = useSelector((state) => state?.earningChoice);
+  const [fileInputInfo, setFileInputInfo] = useState({ video: {}, image: {}, pdf: {} });
+  const [classroomIdInfo, setClassroomIdInfo] = useState('');
 
   useEffect(() => {
     if (questionOfExams?.questionOfExamDetail) {
@@ -118,7 +120,7 @@ const QuestionIdentification = () => {
     const currentYear = new Date().getFullYear();
     let years = [];
     for (let i = 0; i < 50; i++) {
-      years.push(currentYear + i);
+      years.push(currentYear - i);
     }
     setYears(years);
   }, []);
@@ -160,16 +162,25 @@ const QuestionIdentification = () => {
           'QuestionOfExamDetailSearch.Difficulty': form2.Difficulty,
           'QuestionOfExamDetailSearch.HasAcquisitionTree': form2.HasAcquisitionTree,
           'QuestionOfExamDetailSearch.QuestionOfExamState': form2.QuestionOfExamState,
-          'QuestionOfExamDetailSearch.QuestionOfExamWrongKind': form2.QuestionOfExamWrongKind,
+          'QuestionOfExamDetailSearch.QuestionOfExamWrongKind':
+            form2.QuestionOfExamState === 0
+              ? null
+              : form2.QuestionOfExamState === null
+              ? null
+              : form2.QuestionOfExamWrongKind,
           'QuestionOfExamDetailSearch.QuestionOfExamKind': form2.QuestionOfExamKind,
         }),
       );
+      setClassroomIdInfo(classroomId);
+      setFileInputInfo({ image: {}, video: {}, pdf: {} });
     } else {
       errorDialog({ title: 'Hata', message: 'Sınıf seviyesi boş olamaz!' });
     }
   };
   useEffect(() => {
     const newData = [];
+    newData.push({ value: null, label: 'Hepsi' });
+
     educationYears?.items?.forEach((element, item) => {
       newData.push({ value: element.id, label: element.startYear + '-' + element.endYear });
     });
@@ -221,24 +232,34 @@ const QuestionIdentification = () => {
       delete newFormData.videoSolutionFile;
       delete newFormData.imageSolutionFile;
       newFormData.questionOfExamId = questionOfExams.id;
-      if (questionOfExams.questionOfExamDetail) {
-        const action = await dispatch(getUpdateQuestion({ data: { questionOfExamDetail: newFormData } }));
-        if (getUpdateQuestion.fulfilled.match(action)) {
-          successDialog({ title: 'Onay', message: 'Güncelledi' });
-          searchSumbit(pagedProperty.currentPage);
-        } else {
-          alert('dasdsa');
+      if (!newFormData.videoSolutionFileId) {
+        errorDialog({ title: 'Gerekli', message: 'Video eklemeniz gereklidir.' });
+        return;
+      }
+      if (newFormData.imageSolutionFileId || newFormData.pdfSolutionFileId) {
+        if (questionOfExams.questionOfExamDetail) {
+          const action = await dispatch(getUpdateQuestion({ data: { questionOfExamDetail: newFormData } }));
+          if (getUpdateQuestion.fulfilled.match(action)) {
+            successDialog({ title: 'Onay', message: 'Güncelledi' });
+            searchSumbit(pagedProperty.currentPage);
+            setFileInputInfo({ image: {}, video: {}, pdf: {} });
+          } else {
+            alert('dasdsa');
 
-          errorDialog({ title: 'Hata', message: action?.payload?.message });
+            errorDialog({ title: 'Hata', message: action?.payload?.message });
+          }
+        } else {
+          const action = await dispatch(getAddQuestion({ data: { questionOfExamDetail: newFormData } }));
+          if (getAddQuestion.fulfilled.match(action)) {
+            successDialog({ title: 'Onay', message: 'Eklendi' });
+            searchSumbit(pagedProperty.currentPage);
+            setFileInputInfo({ image: {}, video: {}, pdf: {} });
+          } else {
+            errorDialog({ title: 'Hata', message: action?.payload?.message });
+          }
         }
       } else {
-        const action = await dispatch(getAddQuestion({ data: { questionOfExamDetail: newFormData } }));
-        if (getAddQuestion.fulfilled.match(action)) {
-          successDialog({ title: 'Onay', message: 'Eklendi' });
-          searchSumbit(pagedProperty.currentPage);
-        } else {
-          errorDialog({ title: 'Hata', message: action?.payload?.message });
-        }
+        errorDialog({ title: 'Gerekli', message: 'En az resim veya pdf gerekli.' });
       }
     } catch (err) {
       console.log(err);
@@ -420,7 +441,9 @@ const QuestionIdentification = () => {
                     </div>
                     <div onClick={() => setShowModal(true)} className="question-info">
                       <label className="quesiton-label">Kazanımlar:</label>
-                      <CustomButton disabled={formData.questionOfExamState === 1}>Kazanım Ekle</CustomButton>
+                      <CustomButton disabled={formData.questionOfExamState === 1}>
+                        Kazanım {questionOfExams?.questionOfExamDetail ? 'Güncelle' : 'Ekle'}
+                      </CustomButton>
                     </div>
 
                     <div className="question-info">
@@ -693,7 +716,7 @@ const QuestionIdentification = () => {
                               value[value.length - 1] === undefined ||
                               value[value.length - 1] === '.'
                             ) {
-                              setFormData({ ...formData, solutionMinute: parseFloat(e.target.value) });
+                              setFormData({ ...formData, solutionMinute: e.target.value });
                             } else {
                             }
                           }}
@@ -766,47 +789,78 @@ const QuestionIdentification = () => {
 
                     {formData.outQuestion && (
                       <>
-                        <div className="question-info">
-                          <label className="quesiton-label">Soru Yılı Seçiniz :</label>
-                          <div className="checkbox-item">
-                            <CustomSelect
-                              disabled={formData.questionOfExamState === 1}
-                              onChange={(e) => {
-                                setFormData({ ...formData, yearOfOutQuestion: e });
-                              }}
-                              value={formData.yearOfOutQuestion}
-                              className=""
-                              placeholder="Seçiniz"
-                            >
-                              {years.map((item, index) => (
-                                <Option key={index} value={item}>
-                                  {item}
-                                </Option>
-                              ))}
-                            </CustomSelect>{' '}
+                        {classListData?.find((q) => q.value === classroomId)?.label?.toLowerCase() === 'lgs' && (
+                          <div>
+                            <div className="question-info">
+                              <label className="quesiton-label">Soru Yılı Seçiniz :</label>
+                              <div className="checkbox-item">
+                                <CustomSelect
+                                  disabled={formData.questionOfExamState === 1}
+                                  onChange={(e) => {
+                                    setFormData({ ...formData, yearOfOutQuestion: e });
+                                  }}
+                                  value={formData.yearOfOutQuestion}
+                                  className=""
+                                  placeholder="Seçiniz"
+                                >
+                                  {years.map((item, index) => (
+                                    <Option key={index} value={item}>
+                                      {item}
+                                    </Option>
+                                  ))}
+                                </CustomSelect>{' '}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-
-                        <div className="question-info">
-                          <label className="quesiton-label"></label>
-                          <div className="checkbox-item">
-                            <CustomRadioGroup
-                              value={formData.outInTYT ? 'outInTYT' : formData.outInAYT ? 'outInAYT' : ''}
-                              disabled={formData.questionOfExamState === 1}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                if (value === 'outInTYT') {
-                                  setFormData({ ...formData, outInTYT: true, outInAYT: false });
-                                } else {
-                                  setFormData({ ...formData, outInTYT: false, outInAYT: true });
-                                }
-                              }}
-                            >
-                              <CustomRadio value={'outInTYT'}>Tyt</CustomRadio>
-                              <CustomRadio value={'outInAYT'}>Ayt</CustomRadio>
-                            </CustomRadioGroup>
+                        )}
+                        {classListData?.find((q) => q.value === classroomId)?.label?.toLowerCase() === 'yks' && (
+                          <div>
+                            <div className="question-info">
+                              <label className="quesiton-label">Soru Yılı Seçiniz :</label>
+                              <div className="checkbox-item">
+                                <CustomSelect
+                                  disabled={formData.questionOfExamState === 1}
+                                  onChange={(e) => {
+                                    setFormData({ ...formData, yearOfOutQuestion: e });
+                                  }}
+                                  value={formData.yearOfOutQuestion}
+                                  className=""
+                                  placeholder="Seçiniz"
+                                >
+                                  {years.map((item, index) => (
+                                    <Option key={index} value={item}>
+                                      {item}
+                                    </Option>
+                                  ))}
+                                </CustomSelect>{' '}
+                              </div>
+                            </div>
                           </div>
-                        </div>
+                        )}
+                        {classListData?.find((q) => q.value === classroomId)?.label?.toLowerCase() === 'yks' && (
+                          <div>
+                            <div className="question-info">
+                              <label className="quesiton-label"></label>
+                              <div className="checkbox-item">
+                                <CustomRadioGroup
+                                  value={formData.outInTYT ? 'outInTYT' : formData.outInAYT ? 'outInAYT' : ''}
+                                  disabled={formData.questionOfExamState === 1}
+                                  onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (value === 'outInTYT') {
+                                      setFormData({ ...formData, outInTYT: true, outInAYT: false });
+                                    } else {
+                                      setFormData({ ...formData, outInTYT: false, outInAYT: true });
+                                    }
+                                  }}
+                                >
+                                  <CustomRadio value={'outInTYT'}>Tyt</CustomRadio>
+                                  <CustomRadio value={'outInAYT'}>Ayt</CustomRadio>
+                                </CustomRadioGroup>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </>
                     )}
                     <div className="upload">
@@ -814,65 +868,119 @@ const QuestionIdentification = () => {
                         {questionOfExams?.questionOfExamDetail?.videoSolutionFile?.fileName}
                       </div>
                       <UploadFile
+                        file={fileInputInfo.video}
                         disabled={formData.questionOfExamState === 1}
                         onChange={async (e) => {
-                          setFileUploadLoading(true);
-                          const action = await addFile(e, 4);
-                          if (getFileUpload.fulfilled.match(action)) {
-                            setFileUploadLoading(false);
-                            setFormData({ ...formData, videoSolutionFileId: action.payload.data.data.id });
-                            successDialog({ title: 'Başarılı', message: 'Eklendi' });
+                          if (e.target.files.length > 0) {
+                            setFileUploadLoading(true);
+                            setFileInputInfo({ ...fileInputInfo, video: e.target.files[0] });
+                            const action = await addFile(e.target.files[0], 4);
+                            if (getFileUpload.fulfilled.match(action)) {
+                              setFileUploadLoading(false);
+                              setFormData({ ...formData, videoSolutionFileId: action.payload.data.data.id });
+                              successDialog({ title: 'Başarılı', message: 'Eklendi' });
+                            } else {
+                              setFileUploadLoading(false);
+                              errorDialog({
+                                title: 'Hata',
+                                message: action?.payload?.message,
+                              });
+                            }
                           } else {
-                            setFileUploadLoading(false);
-                            errorDialog({
-                              title: 'Hata',
-                              message: action?.payload?.message,
+                            setFileInputInfo({ ...fileInputInfo, video: {} });
+                            setFormData({
+                              ...formData,
+                              videoSolutionFileId: questionOfExams?.questionOfExamDetail?.videoSolutionFile?.id,
                             });
                           }
                         }}
                         accept="video/mp4,video/x-m4v,video/*"
                         title={'Video Ekle'}
                       />
-                      <div className=" update-file-name">
-                        {questionOfExams?.questionOfExamDetail?.imageSolutionFile?.fileName}
-                      </div>
+                      {questionOfExams?.questionOfExamDetail?.imageSolutionFile?.fileName && (
+                        <div className=" update-file-name">
+                          <span
+                            onClick={() => {
+                              const newData = { ...formData };
+                              delete newData.imageSolutionFileId;
+                              addData(newData);
+                            }}
+                          >
+                            Sil
+                          </span>
+                          {questionOfExams?.questionOfExamDetail?.imageSolutionFile?.fileName}
+                        </div>
+                      )}
+
                       <UploadFile
+                        file={fileInputInfo.image}
                         disabled={formData.questionOfExamState === 1}
                         onChange={async (e) => {
-                          setFileUploadLoading(true);
-                          const action = await addFile(e, 0);
-                          if (getFileUpload.fulfilled.match(action)) {
-                            setFileUploadLoading(false);
-                            setFormData({ ...formData, imageSolutionFileId: action.payload.data.data.id });
-                            successDialog({ title: 'Başarılı', message: 'Eklendi' });
+                          if (e.target.files.length > 0) {
+                            setFileInputInfo({ ...fileInputInfo, image: e.target.files[0] });
+                            setFileUploadLoading(true);
+                            const action = await addFile(e.target.files[0], 0);
+                            if (getFileUpload.fulfilled.match(action)) {
+                              setFileUploadLoading(false);
+                              setFormData({ ...formData, imageSolutionFileId: action.payload.data.data.id });
+                              successDialog({ title: 'Başarılı', message: 'Eklendi güncelleyebilirsiniz.' });
+                            } else {
+                              setFileUploadLoading(false);
+                              errorDialog({
+                                title: 'Hata',
+                                message: action?.payload?.message,
+                              });
+                            }
                           } else {
-                            setFileUploadLoading(false);
-                            errorDialog({
-                              title: 'Hata',
-                              message: action?.payload?.message,
+                            setFileInputInfo({ ...fileInputInfo, image: {} });
+                            setFormData({
+                              ...formData,
+                              imageSolutionFileId: questionOfExams?.questionOfExamDetail?.imageSolutionFile?.id,
                             });
                           }
                         }}
                         accept="image/*"
                         title={'Resim Ekle'}
                       />
-                      <div className=" update-file-name">
-                        {questionOfExams?.questionOfExamDetail?.pdfSolutionFile?.fileName}
-                      </div>
+                      {formData.pdfSolutionFileId && (
+                        <div className=" update-file-name">
+                          <span
+                            onClick={() => {
+                              const newData = { ...formData };
+                              delete newData.pdfSolutionFileId;
+                              addData(newData);
+                            }}
+                          >
+                            Sil
+                          </span>
+                          {questionOfExams?.questionOfExamDetail?.pdfSolutionFile?.fileName}
+                        </div>
+                      )}
+
                       <UploadFile
+                        file={fileInputInfo.pdf}
                         disabled={formData.questionOfExamState === 1}
                         onChange={async (e) => {
-                          setFileUploadLoading(true);
-                          const action = await addFile(e, 1);
-                          if (getFileUpload.fulfilled.match(action)) {
-                            setFormData({ ...formData, pdfSolutionFileId: action.payload.data.data.id });
-                            successDialog({ title: 'Başarılı', message: 'Eklendi' });
-                            setFileUploadLoading(false);
+                          if (e.target.files.length > 0) {
+                            setFileInputInfo({ ...fileInputInfo, pdf: e.target.files[0] });
+                            setFileUploadLoading(true);
+                            const action = await addFile(e.target.files[0], 1);
+                            if (getFileUpload.fulfilled.match(action)) {
+                              setFormData({ ...formData, pdfSolutionFileId: action.payload.data.data.id });
+                              successDialog({ title: 'Başarılı', message: 'Eklendi' });
+                              setFileUploadLoading(false);
+                            } else {
+                              setFileUploadLoading(false);
+                              errorDialog({
+                                title: 'Hata',
+                                message: action?.payload?.message,
+                              });
+                            }
                           } else {
-                            setFileUploadLoading(false);
-                            errorDialog({
-                              title: 'Hata',
-                              message: action?.payload?.message,
+                            setFileInputInfo({ ...fileInputInfo, pdf: {} });
+                            setFormData({
+                              ...formData,
+                              pdfSolutionFileId: questionOfExams?.questionOfExamDetail?.pdfSolutionFile?.id,
                             });
                           }
                         }}
@@ -944,6 +1052,7 @@ const QuestionIdentification = () => {
       </CustomCollapseCard>
       <div className="earnings-modal">
         <CustomModal
+          width={'1200px'}
           title="Kazanım Seç"
           visible={showModal}
           onOk={() => {
@@ -972,7 +1081,7 @@ const QuestionIdentification = () => {
           cancelText="Vazgeç"
           bodyStyle={{ overflowY: 'auto' }}
         >
-          <EarningsChoice classroomId={classroomId} />
+          <EarningsChoice classroomId={classroomIdInfo} />
         </CustomModal>
       </div>
     </CustomPageHeader>

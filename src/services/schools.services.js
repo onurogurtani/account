@@ -2,7 +2,7 @@ import { api } from './api';
 
 const loadSchools = (data) => {
   return api({
-    url: `Schools/uploadSchoolExcel`,
+    url: `Member/Schools/uploadSchoolExcel`,
     method: 'POST',
     data,
   });
@@ -10,7 +10,7 @@ const loadSchools = (data) => {
 
 const getSchools = (data) => {
   return api({
-    url: `Schools/getPagedList?PageNumber=${data.pageNumber || 0}&PageSize=${data.pageSize || 0}`,
+    url: `Member/Schools/getPagedList?PageNumber=${data.pageNumber || 0}&PageSize=${data.pageSize || 0}`,
     method: 'POST',
     data,
   });
@@ -18,14 +18,14 @@ const getSchools = (data) => {
 
 const getSchoolById = ({ id }) => {
   return api({
-    url: `Schools/getbyid?id=${id}`,
+    url: `Member/Schools/getbyid?id=${id}`,
     method: 'GET',
   });
 };
 
 const addSchool = (data) => {
   return api({
-    url: `Schools`,
+    url: `Member/Schools`,
     method: 'POST',
     data,
   });
@@ -33,7 +33,7 @@ const addSchool = (data) => {
 
 const updateSchool = (data) => {
   return api({
-    url: `Schools`,
+    url: `Member/Schools`,
     method: 'PUT',
     data,
   });
@@ -41,22 +41,22 @@ const updateSchool = (data) => {
 
 const deleteSchool = ({ id }) => {
   return api({
-    url: `Schools?id=${id}`,
+    url: `Member/Schools?id=${id}`,
     method: 'DELETE',
   });
 };
-const getInstitutionTypes = () => {
+const getInstitutionTypes = (data = null) => {
   return api({
-    url: `InstitutionTypes/getList?PageSize=0`,
+    url: `Member/InstitutionTypes/getList?PageSize=0`,
     method: 'POST',
-    data: null,
+    data,
   });
 };
 
 const downloadSchoolExcel = () => {
   const headers = { 'Content-Type': 'blob' };
   return api({
-    url: 'Schools/downloadSchoolExcel',
+    url: 'Member/Schools/downloadSchoolExcel',
     method: 'GET',
     responseType: 'arraybuffer',
     headers,

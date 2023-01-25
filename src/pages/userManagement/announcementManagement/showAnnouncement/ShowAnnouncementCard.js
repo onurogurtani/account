@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { CustomCollapseCard, Text } from '../../../../components';
+import '../../../../styles/announcementManagement/showAnnouncement.scss';
 
 const announcementPublicationPlacesEnum = {
   1: 'Anasayfa',
@@ -91,18 +92,26 @@ const ShowAnnouncementCard = ({ showData }) => {
         </li>
       </ul>
       <ul className="announcement-show-footer">
-        <li>
-          <Text t="Oluşturma Tarihi" /> : <span>...</span>
-        </li>
-        <li>
-          <Text t="Oluşturan" /> : <span>...</span>
-        </li>
-        <li>
-          <Text t="Güncelleme Tarihi" /> : <span>...</span>
-        </li>
-        <li>
-          <Text t="Güncelleyen" /> : <span>...</span>
-        </li>
+        {showData?.insertTime && (
+          <li>
+            <Text t="Oluşturma Tarihi" /> : <span>{dayjs(showData?.insertTime)?.format('YYYY-MM-DD HH:mm')}</span>
+          </li>
+        )}
+        {showData?.insertName && (
+          <li>
+            <Text t="Oluşturan" /> : <span>...</span>
+          </li>
+        )}
+        {showData?.updateTime && (
+          <li>
+            <Text t="Güncelleme Tarihi" /> : <span>{dayjs(showData?.updateTime)?.format('YYYY-MM-DD HH:mm')}</span>
+          </li>
+        )}
+        {showData?.updateName && (
+          <li>
+            <Text t="Güncelleyen" /> : <span>...</span>
+          </li>
+        )}
       </ul>
     </CustomCollapseCard>
   );

@@ -2,14 +2,14 @@ import { api } from './api';
 
 const getEventTypeList = (urlString) => {
   return api({
-    url: `EventType/GetByFilterPagedEventTypes?${urlString}`,
+    url: `Event/EventType/GetByFilterPagedEventTypes?${urlString}`,
     method: 'POST',
   });
 };
 
 const addEventType = (data) => {
   return api({
-    url: 'EventType/Add',
+    url: 'Event/EventType/Add',
     method: 'POST',
     data,
   });
@@ -17,7 +17,7 @@ const addEventType = (data) => {
 
 const updateEventType = (data) => {
   return api({
-    url: 'EventType/Update',
+    url: 'Event/EventType/Update',
     method: 'PUT',
     data,
   });
