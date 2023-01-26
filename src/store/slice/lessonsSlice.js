@@ -21,8 +21,8 @@ export const getLessonsQuesiton = createAsyncThunk(
   async (body, { dispatch, getState, rejectWithValue }) => {
     try {
       //statede varsa request iptal
-      const findLessons = getState()?.lessons.lessons.find((i) => i.classroomId === body[0]?.value);
-      if (findLessons) return rejectWithValue();
+      //  const findLessons = getState()?.lessons.lessons.find((i) => i.classroomId === body[0]?.value);
+      //  if (findLessons) return rejectWithValue();
 
       return await lessonsServices.getLessons(body);
     } catch (error) {

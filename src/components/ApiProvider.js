@@ -37,7 +37,7 @@ const ApiProvider = ({ children }) => {
       },
       async function (error) {
         setRequestCount((r) => r - 1);
-        if (error.response.status === 401) await persistLogin(dispatch, true);
+        //   if (error.response.status === 401) await persistLogin(dispatch, true);
         return Promise.reject(error.response);
       },
     );

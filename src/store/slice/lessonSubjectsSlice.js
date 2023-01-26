@@ -22,6 +22,9 @@ export const lessonSubjectsSlice = createSlice({
     builder.addCase(addLessonSubjects.fulfilled, (state, action) => {
       state.lessonSubjects = state.lessonSubjects.concat(action?.payload?.data);
     });
+    builder.addCase(getLessonSubjectsList.fulfilled, (state, action) => {
+      state.lessonSubjects = action?.payload?.data?.items;
+    });
     builder.addCase(editLessonSubjects.fulfilled, (state, action) => {
       const {
         arg: {
@@ -53,6 +56,16 @@ export const getLessonSubjects = createAsyncThunk(
       );
       if (findLessonSubjects) return rejectWithValue();
 
+      return await lessonSubjectsServices.getLessonSubjects(body);
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+export const getLessonSubjectsList = createAsyncThunk(
+  'getLessonSubjectsList',
+  async (body, { dispatch, getState, rejectWithValue }) => {
+    try {
       return await lessonSubjectsServices.getLessonSubjects(body);
     } catch (error) {
       return rejectWithValue(error?.data);

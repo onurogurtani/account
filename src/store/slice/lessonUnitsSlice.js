@@ -38,6 +38,9 @@ export const lessonUnitsSlice = createSlice({
         state.lessonUnits = state.lessonUnits.filter((item) => item.id !== arg);
       }
     });
+    builder.addCase(getUnitsList.fulfilled, (state, action) => {
+      state.lessonUnits = action?.payload?.data?.items;
+    });
   },
 });
 
@@ -49,6 +52,13 @@ export const getUnits = createAsyncThunk('getUnits', async (body, { dispatch, ge
     const findUnits = getState()?.lessonUnits.lessonUnits.find((i) => i.lessonId === body[0]?.value);
     if (findUnits) return rejectWithValue();
 
+    return await lessonUnitsServices.getUnits(body);
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+export const getUnitsList = createAsyncThunk('getUnitsList', async (body, { dispatch, getState, rejectWithValue }) => {
+  try {
     return await lessonUnitsServices.getUnits(body);
   } catch (error) {
     return rejectWithValue(error?.data);
