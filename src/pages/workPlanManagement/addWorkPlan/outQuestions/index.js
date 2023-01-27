@@ -1,41 +1,255 @@
-import React from 'react';
-import { Form } from 'antd';
-import { useDispatch } from 'react-redux';
-import { CustomButton, CustomForm } from '../../../../components';
-import { onChangeActiveKey } from '../../../../store/slice/workPlanSlice';
+import React, { useEffect, useState } from 'react';
+import { List, Tag } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  CustomButton,
+  CustomForm,
+  CustomFormItem,
+  CustomSelect,
+  errorDialog,
+  Option,
+  Text,
+} from '../../../../components';
+import {
+  getByFilterPagedQuestionOfExams,
+  onChangeActiveKey, selectedOutQuestionTabRowsVideo,
+  setOutQuestionTabLessonSubSubjectList,
+} from '../../../../store/slice/workPlanSlice';
+import { getLessonSubSubjects } from '../../../../store/slice/lessonSubSubjectsSlice';
+import { getListFilterParams } from '../../../../utils/utils';
 
-const OutQuestion = ({ sendValue }) => {
+const OutQuestion = ({ outQuestionForm }) => {
 
-  const [form] = Form.useForm();
   const dispatch = useDispatch();
+  const [yearOfQuestion, setYearOfQuestion] = useState([]);
+
+  const { activeKey, subjectChooseTab, outQuestionTab } = useSelector((state) => state?.workPlan);
+
+  useEffect(async () => {
+    //soru yılı 1975 den bulunduğu senenin listenin oluşturulması
+    if (activeKey === '3' && yearOfQuestion.length === 0) {
+      const currentYear = new Date().getFullYear();
+      let years = [];
+      for (let i = 1974; i < currentYear; i++) {
+        years.push(i + 1);
+      }
+      setYearOfQuestion(years.sort().reverse());
+
+    }
+
+    // kazanımlar listesi çekilmesi
+    if (activeKey === '3' && outQuestionTab?.lessonSubSubjectList?.length === 0) {
+      const action = await dispatch(getLessonSubSubjects(getListFilterParams('lessonSubjectId', subjectChooseTab?.filterObject?.LessonSubjectIds)));
+      if (getLessonSubSubjects?.fulfilled?.match(action)) {
+        dispatch(setOutQuestionTabLessonSubSubjectList(action?.payload));
+      }
+    }
+
+    if (activeKey === '3' && outQuestionTab.dataList.length === 0) {
+      const body = {
+        ...subjectChooseTab?.filterObject,
+        UnitIds: subjectChooseTab?.filterObject?.LessonUnitIds,
+        SubjectIds: subjectChooseTab?.filterObject?.LessonSubjectIds,
+        OutQuestion: true,
+        IncludeQuestionFilesBase64: true,
+      };
+      delete body.CategoryCode;
+
+      await dispatch(getByFilterPagedQuestionOfExams(body));
+    }
+
+  }, [activeKey]);
 
   const onFinish = (values) => {
-    console.log('values', values);
-    dispatch(onChangeActiveKey('4'));
+    if (outQuestionTab.selectedRowsData.length > 0) {
+      dispatch(onChangeActiveKey('4'));
+    } else {
+      errorDialog({
+        title: <Text t='error' />,
+        message: 'Lütfen Soru seçiniz.',
+      });
+    }
+  };
+
+  const handleSearch = async () => {
+    const values = await outQuestionForm.validateFields(['YearOfOutQuestions', 'OutIn', 'SubSubjectIds']);
+
+    const body = {
+      ...subjectChooseTab?.filterObject,
+      ...values,
+      UnitIds: subjectChooseTab?.filterObject?.LessonUnitIds,
+      SubjectIds: subjectChooseTab?.filterObject?.LessonSubjectIds,
+      OutQuestion: true,
+      IncludeQuestionFilesBase64: true,
+    };
+
+    if (values.OutIn === 'outInTYT') {
+      body.OutInTYT = true;
+    }
+    if (values.OutIn === 'outInAYT') {
+      body.OutInAYT = true;
+    }
+
+    delete body.CategoryCode;
+    delete body.LessonUnitIds;
+    delete body.LessonSubjectIds;
+    delete body.isActive;
+    delete body.OutIn;
+
+    console.log('body', body);
+    dispatch(selectedOutQuestionTabRowsVideo());
+
+    await dispatch(getByFilterPagedQuestionOfExams(body));
   };
 
   return (
     <>
       <CustomForm
-        labelCol={{ flex: '165px' }}
         autoComplete='off'
         layout='horizontal'
         className='out-question-add-form'
-        form={form}
+        form={outQuestionForm}
         name='form'
         onFinish={onFinish}
       >
 
-        <h5>
-          Çıkmış Soru Ekleme
-        </h5>
+        <div className='filter-content'>
+          <CustomFormItem
+            label='Soru Yılı'
+            name='YearOfOutQuestions'
+          >
+            <CustomSelect
+              showArrow
+              mode='multiple'
+              height={36}
+              placeholder='Seçiniz'
+            >
+              {yearOfQuestion?.map((item, index) => {
+                return (
+                  <Option key={index} value={item}>
+                    {item}
+                  </Option>
+                );
+              })}
+            </CustomSelect>
+          </CustomFormItem>
+
+          <CustomFormItem
+            label='Sınav Türü'
+            name='OutIn'
+          >
+            <CustomSelect
+              showArrow
+              height={36}
+              placeholder='Seçiniz'
+              allowClear
+            >
+              <Option value={'outInTYT'}>TYT</Option>
+              <Option value={'outInAYT'}>AYT</Option>
+            </CustomSelect>
+          </CustomFormItem>
+
+
+          <CustomFormItem
+            label='Kazanımlar'
+            name='SubSubjectIds'
+          >
+            <CustomSelect
+              showArrow
+              mode='multiple'
+              height={36}
+              placeholder='Seçiniz'
+            >
+              {outQuestionTab?.lessonSubSubjectList
+                // ?.filter((item) => item.isActive === true)
+                ?.map((item, index) => {
+                  return (
+                    <Option key={index} value={item?.id}>
+                      {item?.name}
+                    </Option>
+                  );
+                })}
+            </CustomSelect>
+          </CustomFormItem>
+
+          <CustomButton type='primary' onClick={() => handleSearch()} className='search-btn'>
+            Filtrele
+          </CustomButton>
+        </div>
+
+        <List
+          itemLayout='vertical'
+          className='out-question-list'
+          size='large'
+          pagination={{
+            onChange: (page) => {
+              console.log(page);
+            },
+            // pageSize: 2,
+          }}
+
+          dataSource={outQuestionTab?.dataList}
+          renderItem={(item) => (
+            <List.Item
+              key={item.id}
+            >
+              <div className='item-content'>
+
+                <img
+                  width={550}
+                  alt='logo'
+                  src={`data:image/png;base64,${item?.file?.fileBase64}`}
+                />
+                <div className='info-content'>
+                  <div className='info-item'>
+                    <h5>Soru Yılı:</h5>
+                    <span>
+                        {item?.questionOfExamDetail?.yearOfOutQuestion}
+                      </span>
+                  </div>
+                  <div className='info-item'>
+                    <h5>Sınav Türü:</h5>
+                    <span className='item-list'>
+                      (
+                      {item?.questionOfExamDetail?.outInAYT && <span> AYT</span>}
+                      {item?.questionOfExamDetail?.outInTYT && <span> TYT</span>}
+                      )
+                    </span>
+                  </div>
+                  <div className='info-item'>
+                    <h5>Kazanım Bilgisi:</h5>
+                    <span>
+                      {item.questionOfExamDetail?.questionOfExamDetailLessonSubSubjects.map((item, id) => {
+                        return (
+                          <Tag className='m-1' color='gold' key={id}>
+                            {item.lessonSubSubject.name}
+                          </Tag>
+                        );
+                      })}
+                      </span>
+                  </div>
+                  <div className='info-item'>
+
+                    <CustomButton
+                      type='primary'
+                      className='btn-select btn'
+                      onClick={() => dispatch(selectedOutQuestionTabRowsVideo(item))}
+                    >
+                      {outQuestionTab?.selectedRowsData.some((el) => el.id === item.id) ? 'Çalışma Planı Eklendi' : 'Çalışma Planı Ekle'}
+                    </CustomButton>
+                  </div>
+                </div>
+              </div>
+            </List.Item>
+          )}
+        />
 
         <div className='out-question-add-form-footer form-footer'>
           <CustomButton type='primary' onClick={() => dispatch(onChangeActiveKey('2'))} className='back-btn'>
             Geri
           </CustomButton>
 
-          <CustomButton type='primary' onClick={() => form.submit()} className='next-btn'>
+          <CustomButton type='primary' onClick={() => outQuestionForm.submit()} className='next-btn'>
             İlerle
           </CustomButton>
         </div>

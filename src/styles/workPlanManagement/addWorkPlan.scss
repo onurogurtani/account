@@ -72,8 +72,8 @@
       }
     }
 
-    .video-list-content{
-      .action-btns{
+    .video-list-content {
+      .action-btns {
         display: flex;
         column-gap: 24px;
 
@@ -90,15 +90,16 @@
           box-shadow: none;
 
 
-          &.btn-selected{
+          &.btn-selected {
             background-color: #818587;
           }
-          &.btn-select{
+
+          &.btn-select {
             background-color: #42464a;
           }
         }
 
-        .btn-show{
+        .btn-show {
           background-color: #cd921d;
         }
 
@@ -139,13 +140,102 @@
   }
 
   .out-question-add-form {
+    padding-top: 25px;
+
+
+    .filter-content {
+      display: flex;
+      column-gap: 24px;
+      flex-wrap: wrap;
+
+      .search-btn {
+        height: 36px;
+        font-size: 14px;
+      }
+    }
+
+    .out-question-list {
+      .item-content {
+        display: flex;
+        column-gap: 24px;
+
+        .info-content {
+          display: flex;
+          flex-direction: column;
+
+          .info-item {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            column-gap: 12px;
+            flex-wrap: wrap;
+
+            h5 {
+              margin-bottom: 0;
+              font-size: 16px;
+            }
+
+            .item-list {
+              display: inline-flex;
+              column-gap: 5px;
+            }
+
+            .btn {
+              display: flex;
+              height: 36px;
+              align-items: center;
+              justify-content: center;
+              color: #fff;
+              font-family: UbuntuMedium, sans-serif;
+              font-size: 12px;
+              line-height: 12px;
+              border-radius: 4px;
+              box-shadow: none;
+
+
+              &.btn-selected {
+                background-color: #818587;
+              }
+
+              &.btn-select {
+                background-color: #42464a;
+              }
+            }
+
+          }
+        }
+      }
+    }
+
+    .ant-form-item {
+      .ant-form-item-label {
+        label {
+          font-size: 14px;
+        }
+      }
+
+      .ant-form-item-control {
+        .ant-form-item-control-input {
+          .ant-form-item-control-input-content {
+            .ant-select {
+              font-size: 14px;
+              width: 287px;
+
+              .ant-select-selector {
+                padding: 1px 10px !important;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   .practice-question-add-form {
     padding-top: 25px;
 
-    .video-list-content{
-      .action-btns{
+    .video-list-content {
+      .action-btns {
         display: flex;
         column-gap: 24px;
 
@@ -162,15 +252,16 @@
           box-shadow: none;
 
 
-          &.btn-selected{
+          &.btn-selected {
             background-color: #818587;
           }
-          &.btn-select{
+
+          &.btn-select {
             background-color: #42464a;
           }
         }
 
-        .btn-show{
+        .btn-show {
           background-color: #cd921d;
         }
 

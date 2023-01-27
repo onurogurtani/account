@@ -1,38 +1,42 @@
 import React, { useEffect } from 'react';
-import { Form } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { CustomButton, CustomForm, CustomTable } from '../../../../components';
+import { confirmDialog, CustomButton, CustomForm, CustomTable, Text } from '../../../../components';
 import {
-  onChangeActiveKey,
+  onChangeActiveKey, resetAllData,
   setPracticeQuestionVideoFilteredList,
 } from '../../../../store/slice/workPlanSlice';
 import { getByFilterPagedVideos } from '../../../../store/slice/videoSlice';
 import videoTableColumn from './videoTableColumn';
 import '../../../../styles/table.scss';
 import useOnchangeTable from '../../../../hooks/useOnchangeTable';
+import { useHistory } from 'react-router-dom';
 
-const PracticeQuestion = ({ sendValue }) => {
+const PracticeQuestion = ({ subjectForm, practiceForm, outQuestionForm }) => {
 
-  const [form] = Form.useForm();
   const dispatch = useDispatch();
+  const history = useHistory();
 
-  const { activeKey,subjectChooseTab, practiceQuestionTab } = useSelector((state) => state?.workPlan);
+  const { activeKey, subjectChooseTab, practiceQuestionTab, outQuestionTab } = useSelector((state) => state?.workPlan);
 
   const paginationSetFilteredVideoList = (res) => {
-    dispatch(setPracticeQuestionVideoFilteredList(res?.payload))
-  }
+    dispatch(setPracticeQuestionVideoFilteredList(res?.payload));
+  };
 
-  const onChangeTable = useOnchangeTable({ filterObject: {
-    ...subjectChooseTab.filterObject,
+  const onChangeTable = useOnchangeTable({
+    filterObject: {
+      ...subjectChooseTab.filterObject,
       CategoryCode: 'solutionVideo',
       isActive: true,
-    }, action: getByFilterPagedVideos, callback: paginationSetFilteredVideoList });
+    }, action: getByFilterPagedVideos, callback: paginationSetFilteredVideoList,
+  });
 
-  const columns = videoTableColumn(dispatch,practiceQuestionTab)
+  const columns = videoTableColumn(dispatch, practiceQuestionTab);
 
   const onFinish = (values) => {
 
-    console.log("saved data : ", subjectChooseTab, practiceQuestionTab)
+    console.log('saved data subjectChooseTab : ', subjectChooseTab);
+    console.log('saved data practiceQuestionTab : ', practiceQuestionTab);
+    console.log('saved data outQuestionTab : ', outQuestionTab);
 
   };
 
@@ -48,9 +52,8 @@ const PracticeQuestion = ({ sendValue }) => {
     pageSize: 2,
   };
 
-  useEffect(async ()=> {
-    if (activeKey === "4" && practiceQuestionTab.videos.length === 0){
-      console.log("alıştırma girildi")
+  useEffect(async () => {
+    if (activeKey === '4' && practiceQuestionTab.videos.length === 0) {
 
       const body = {
         ...subjectChooseTab.filterObject,
@@ -61,11 +64,32 @@ const PracticeQuestion = ({ sendValue }) => {
 
       const action = await dispatch(getByFilterPagedVideos(body));
       if (getByFilterPagedVideos?.fulfilled?.match(action)) {
-        dispatch(setPracticeQuestionVideoFilteredList(action?.payload))
+        dispatch(setPracticeQuestionVideoFilteredList(action?.payload));
       }
 
     }
-  })
+  });
+
+  const handleBackButton = async () => {
+    await dispatch(resetAllData());
+    subjectForm.resetFields();
+    practiceForm.resetFields();
+    outQuestionForm.resetFields();
+    // dispatch(onChangeActiveKey('0'));
+    history.push('/work-plan-management/list');
+  };
+
+  const onCancel = () => {
+    confirmDialog({
+      title: <Text t='attention' />,
+      message: 'İptal etmek istediğinizden emin misiniz?',
+      okText: 'Evet',
+      cancelText: 'Hayır',
+      onOk: async () => {
+        handleBackButton();
+      },
+    });
+  };
 
   return (
     <>
@@ -74,7 +98,7 @@ const PracticeQuestion = ({ sendValue }) => {
         autoComplete='off'
         layout='horizontal'
         className='practice-question-add-form'
-        form={form}
+        form={practiceForm}
         name='form'
         onFinish={onFinish}
       >
@@ -95,15 +119,19 @@ const PracticeQuestion = ({ sendValue }) => {
         </div>
 
         <div className='practice-question-add-form-footer form-footer'>
+          <CustomButton type='primary' onClick={() => onCancel()} className='back-btn'>
+            İptal
+          </CustomButton>
+
           <CustomButton type='primary' onClick={() => dispatch(onChangeActiveKey('3'))} className='back-btn'>
             Geri
           </CustomButton>
 
-          <CustomButton type='primary' onClick={() => form.submit()} className='next-btn'>
+          <CustomButton type='primary' onClick={() => practiceForm.submit()} className='next-btn'>
             Taslak Olarak Kaydet
           </CustomButton>
 
-          <CustomButton type='primary' onClick={() => form.submit()} className='next-btn'>
+          <CustomButton type='primary' onClick={() => practiceForm.submit()} className='next-btn'>
             Kaydet ve Kullanıma Aç
           </CustomButton>
         </div>

@@ -1,10 +1,8 @@
-import { Tabs } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { CustomPageHeader, errorDialog, successDialog, Text } from '../../../components';
-import { onChangeActiveKey, setSubjectChooseData } from '../../../store/slice/workPlanSlice';
+import { Form, Tabs } from 'antd';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { CustomPageHeader } from '../../../components';
 import '../../../styles/workPlanManagement/addWorkPlan.scss';
-import { useHistory } from 'react-router-dom';
 import SubjectChoose from './subject';
 import ReinforcementTest from './reinforcement';
 import EvaluationTest from './evaluation';
@@ -14,81 +12,15 @@ import PracticeQuestion from './practiceQuestion';
 const AddWorkPlan = () => {
   const { TabPane } = Tabs;
 
-  const dispatch = useDispatch();
-  const history = useHistory();
+  const [subjectForm] = Form.useForm();
+  const [outQuestionForm] = Form.useForm();
+  const [practiceForm] = Form.useForm();
 
   const {
     activeKey,
     subjectChooseTab,
-    reinforcementTab,
-    evaluationTab,
-    outQuestionTab,
-    practiceQuestionTab,
   } = useSelector((state) => state?.workPlan);
 
-  const [reinforcementData, setReinforcementData] = useState({});
-  const [evaluationData, setEvaluationData] = useState({});
-  const [outQuestionData, setOutQuestionData] = useState({});
-  const [practiceQuestionData, setPracticeQuestionData] = useState({});
-
-  const onFinish = async () => {
-    console.log('subjectChooseTab', subjectChooseTab);
-
-    // if (generalInformationData.introVideo && !kalturaIntroVideoId) {
-    //   errorDialog({
-    //     title: <Text t="error" />,
-    //     message: 'Intro Video Henüz Yüklenmedi',
-    //     onOk: () => {
-    //       dispatch(onChangeActiveKey('0'));
-    //     },
-    //   });
-    //   return;
-    // }
-
-
-    // const action = await dispatch(addVideo(body));
-    // if (addVideo.fulfilled.match(action)) {
-    //   successDialog({
-    //     title: <Text t="success" />,
-    //     message: 'Video Başarılı Şekilde Eklendi',
-    //     // message: action?.payload.message,
-    //     onOk: async () => {
-    //       dispatch(onChangeActiveKey('0'));
-    //       history.push('/video-management/list');
-    //     },
-    //   });
-    // } else {
-    //   errorDialog({
-    //     title: <Text t="error" />,
-    //     message: action?.payload.message,
-    //   });
-    // }
-  };
-
-  const subjectValue = (value) => {
-    dispatch(setSubjectChooseData(value));
-    console.log('subjectChooseTab', subjectChooseTab);
-  };
-
-  const reinforcementValue = (value) => {
-    console.log('setReinforcementData');
-    setReinforcementData(value);
-  };
-
-  const evaluationValue = (value) => {
-    console.log('setEvaluationData');
-    setEvaluationData(value);
-  };
-
-  const outQuestionValue = (value) => {
-    console.log('setOutQuestionData');
-    setOutQuestionData(value);
-  };
-
-  const practiceQuestionValue = (value) => {
-    console.log(setPracticeQuestionData);
-    setPracticeQuestionData(value);
-  };
 
   useEffect(() => {
     console.log('subjectChooseTabEffect', subjectChooseTab);
@@ -106,19 +38,19 @@ const AddWorkPlan = () => {
           }}
         >
           <TabPane tab='Konu Seçimi' key='0'>
-            <SubjectChoose sendValue={subjectValue} />
+            <SubjectChoose subjectForm={subjectForm} outQuestionForm={outQuestionForm} practiceForm={practiceForm} />
           </TabPane>
           <TabPane tab='Pekiştirme Test Ekleme' key='1'>
-            <ReinforcementTest sendValue={reinforcementValue} />
+            <ReinforcementTest />
           </TabPane>
           <TabPane tab='Ölçme ve Değerlendirme Testi Ekleme' key='2'>
-            <EvaluationTest sendValue={evaluationValue} />
+            <EvaluationTest />
           </TabPane>
           <TabPane tab='Çıkmış Soru Ekleme' key='3'>
-            <OutQuestion sendValue={outQuestionValue} />
+            <OutQuestion outQuestionForm={outQuestionForm} />
           </TabPane>
           <TabPane tab='Alıştırma Sorusu Ekleme' key='4'>
-            <PracticeQuestion sendValue={practiceQuestionValue} />
+            <PracticeQuestion subjectForm={subjectForm} outQuestionForm={outQuestionForm} practiceForm={practiceForm} />
           </TabPane>
         </Tabs>
       </div>

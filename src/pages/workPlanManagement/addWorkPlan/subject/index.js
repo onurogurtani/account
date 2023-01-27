@@ -16,7 +16,8 @@ import {
   selectedSubjectTabRowVideo, setSubjectChooseData,
   setSubjectChooseVideoFilteredList, setSubjectChooseFilterData, resetSubjectChooseVideoList,
   resetPracticeQuestionVideoList,
-  selectedPracticeQuestionTabRowsVideo,
+  selectedPracticeQuestionTabRowsVideo, setOutQuestionTabLessonSubSubjectList, resetOutQuestionTabVideoList,
+  selectedOutQuestionTabRowsVideo,
 } from '../../../../store/slice/workPlanSlice';
 import { getEducationYears } from '../../../../store/slice/questionFileSlice';
 import { getAllClassStages } from '../../../../store/slice/classStageSlice';
@@ -27,13 +28,12 @@ import useOnchangeTable from '../../../../hooks/useOnchangeTable';
 import '../../../../styles/table.scss';
 import { getListFilterParams } from '../../../../utils/utils';
 
-const SubjectChoose = ({ sendValue }) => {
+const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
 
-  const [form] = Form.useForm();
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [activeFilter, setActiveFilter] = useState(getListFilterParams('isActive', true))
+  const [activeFilter, setActiveFilter] = useState(getListFilterParams('isActive', true));
 
   const { classroomId, setClassroomId, lessonId, setLessonId, unitId, setUnitId } =
     useAcquisitionTree();
@@ -72,22 +72,22 @@ const SubjectChoose = ({ sendValue }) => {
     position: 'bottomRight',
     total: subjectChooseTab?.tableProperty?.totalCount,
     current: subjectChooseTab?.tableProperty?.currentPage,
-    pageSize: 2,
+    pageSize: subjectChooseTab?.tableProperty?.pageSize,
   };
 
   // selects onchange
   const onChange = (value, fromEl) => {
     if (fromEl === 'classroomId') {
       setClassroomId(value);
-      form.resetFields(['LessonIds', 'LessonUnitIds', 'LessonSubjectIds']);
+      subjectForm.resetFields(['LessonIds', 'LessonUnitIds', 'LessonSubjectIds']);
     }
     if (fromEl === 'lessonId') {
       setLessonId(value);
-      form.resetFields(['LessonUnitIds', 'LessonSubjectIds']);
+      subjectForm.resetFields(['LessonUnitIds', 'LessonSubjectIds']);
     }
     if (fromEl === 'lessonUnitId') {
       setUnitId(value);
-      form.resetFields(['LessonSubjectIds']);
+      subjectForm.resetFields(['LessonSubjectIds']);
     }
   };
 
@@ -108,13 +108,18 @@ const SubjectChoose = ({ sendValue }) => {
 
   // filter search videolist
   const handleSearchVideo = async () => {
-    const values = await form.validateFields(['ClassroomId', 'LessonIds', 'LessonUnitIds', 'LessonSubjectIds']);
-    console.log('search video filter', values);
+    const values = await subjectForm.validateFields(['ClassroomId', 'LessonIds', 'LessonUnitIds', 'LessonSubjectIds']);
 
     dispatch(selectedSubjectTabRowVideo({}));
     dispatch(selectedPracticeQuestionTabRowsVideo());
     dispatch(resetPracticeQuestionVideoList());
     dispatch(setSubjectChooseData(values));
+    dispatch(setOutQuestionTabLessonSubSubjectList());
+    dispatch(resetOutQuestionTabVideoList());
+    dispatch(selectedOutQuestionTabRowsVideo());
+
+    practiceForm.resetFields();
+    outQuestionForm.resetFields();
 
     let data = {
       ...values,
@@ -132,7 +137,6 @@ const SubjectChoose = ({ sendValue }) => {
     const action = await dispatch(getByFilterPagedVideos(body));
     if (getByFilterPagedVideos?.fulfilled?.match(action)) {
       await dispatch(setSubjectChooseVideoFilteredList(action?.payload));
-
       console.log('subjectChooseTab.videos', subjectChooseTab.videos);
     }
   };
@@ -143,7 +147,7 @@ const SubjectChoose = ({ sendValue }) => {
         autoComplete='off'
         layout='horizontal'
         className='subject-choose-add-form'
-        form={form}
+        form={subjectForm}
         name='form'
         onFinish={onFinish}
       >
@@ -302,7 +306,7 @@ const SubjectChoose = ({ sendValue }) => {
             Geri
           </CustomButton>
 
-          <CustomButton type='primary' onClick={() => form.submit()} className='next-btn'>
+          <CustomButton type='primary' onClick={() => subjectForm.submit()} className='next-btn'>
             İlerle
           </CustomButton>
         </div>

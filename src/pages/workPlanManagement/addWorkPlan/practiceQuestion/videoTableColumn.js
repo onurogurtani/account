@@ -41,18 +41,6 @@ const videoTableColumn = (dispatch, practiceQuestionTab) => {
       width: 100,
       align: 'center',
       render: (_, record) => {
-        let btnName = '';
-
-        const data = practiceQuestionTab?.selectedRowsVideo.filter((item) => item.id === record.id);
-
-        if (data.length > 0) {
-          btnName = 'Çalışma Planı Eklendi';
-        }
-
-        if (data.length === 0) {
-          btnName = 'Çalışma Planı Ekle';
-        }
-
         return (
           <div className='action-btns'>
             <VideoWatchModal
@@ -62,7 +50,7 @@ const videoTableColumn = (dispatch, practiceQuestionTab) => {
             />
 
             <CustomButton className='btn-select btn' onClick={() => selectedRow(record)}>
-              {btnName}
+              {practiceQuestionTab?.selectedRowsVideo.some((el) => el.id === record.id) ? 'Çalışma Planı Eklendi' : 'Çalışma Planı Ekle'}
             </CustomButton>
           </div>
         );
