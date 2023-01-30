@@ -29,10 +29,10 @@ const OrganisationTypesListTable = () => {
     },
     {
       title: 'Durumu',
-      dataIndex: 'isActive',
-      key: 'isActive',
-      sorter: (a, b) => b.isActive - a.isActive,
-      sortOrder: sortedInfo.columnKey === 'isActive' ? sortedInfo.order : null,
+      dataIndex: 'recordStatus',
+      key: 'recordStatus',
+      sorter: (a, b) => b.recordStatus - a.recordStatus,
+      sortOrder: sortedInfo.columnKey === 'recordStatus' ? sortedInfo.order : null,
       render: (text, record) => {
         return <div>{text ? 'Aktif' : 'Pasif'}</div>;
       },
@@ -89,17 +89,16 @@ const OrganisationTypesListTable = () => {
   function alphabetically(ascending) {
     return function (a, b) {
       // equal items sort equally
-      // debugger;
-      console.log(a.description);
+
       if (a.description === b.description) {
         return 0;
       }
 
       // nulls sort after anything else
-      if (a.description === undefined) {
+      if (a.description === undefined || a.description === null || a.description === '') {
         return 1;
       }
-      if (b.description === undefined) {
+      if (b.description === undefined || b.description === null || b.description === '') {
         return -1;
       }
 
@@ -125,11 +124,11 @@ const OrganisationTypesListTable = () => {
             await dispatch(setOrganisationTypes([...organisationTypes].sort(alphabetically(false))));
             break;
           default:
-            await dispatch(setOrganisationTypes([...organisationTypes].sort((a, b) => a.id - b.id)));
+            await dispatch(setOrganisationTypes([...organisationTypes].sort((a, b) => b.id - a.id)));
             break;
         }
       } else {
-        await dispatch(setOrganisationTypes([...organisationTypes].sort((a, b) => a.id - b.id)));
+        await dispatch(setOrganisationTypes([...organisationTypes].sort((a, b) => b.id - a.id)));
       }
     }
   };

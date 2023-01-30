@@ -2,6 +2,7 @@ import { Form, Space } from 'antd';
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import {
+  confirmDialog,
   CustomButton,
   CustomForm,
   CustomFormItem,
@@ -13,7 +14,7 @@ import {
   successDialog,
   Text,
 } from '../../../../components';
-import { status } from '../../../../constants';
+import { recordStatus } from '../../../../constants';
 import {
   addOrganisationTypes,
   closeModal,
@@ -28,6 +29,23 @@ const OrganisationTypesForm = ({ onCancel, organisationType }) => {
     if (organisationType) form.setFieldsValue(organisationType);
     if (!organisationType) form.resetFields();
   }, [organisationType]);
+
+  const onFinish = (values) => {
+    if (organisationType?.id) {
+      confirmDialog({
+        title: 'Dikkat',
+        message:
+          'Güncellemekte olduğunuz kayıt Kurumlar ekranında tanımlı olan kayıtları etkileyeceği için Güncelleme yapmak istediğinizden Emin misiniz ?',
+        okText: 'Evet',
+        cancelText: 'Hayır',
+        onOk: async () => {
+          onSubmit(values);
+        },
+      });
+      return false;
+    }
+    onSubmit(values);
+  };
 
   const onSubmit = useCallback(
     async (values) => {
@@ -52,7 +70,7 @@ const OrganisationTypesForm = ({ onCancel, organisationType }) => {
   );
 
   return (
-    <CustomForm form={form} autoComplete="off" layout={'horizontal'} labelCol={{ flex: '165px' }} onFinish={onSubmit}>
+    <CustomForm form={form} autoComplete="off" layout={'horizontal'} labelCol={{ flex: '165px' }} onFinish={onFinish}>
       <CustomFormItem
         rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
         label="Kurum Türü Adı"
@@ -65,9 +83,9 @@ const OrganisationTypesForm = ({ onCancel, organisationType }) => {
         <CustomTextArea />
       </CustomFormItem>
       {organisationType?.id && (
-        <CustomFormItem rules={[{ required: true }]} label="Durumu" name="isActive">
+        <CustomFormItem rules={[{ required: true }]} label="Durumu" name="recordStatus">
           <CustomSelect placeholder="Seçiniz">
-            {status.map((item) => (
+            {recordStatus.map((item) => (
               <Option key={item.id} value={item.id}>
                 {item.value}
               </Option>
@@ -78,10 +96,10 @@ const OrganisationTypesForm = ({ onCancel, organisationType }) => {
       <CustomFormItem>
         <Space style={{ width: '100%', justifyContent: 'end' }}>
           <CustomButton onClick={onCancel} type="danger">
-            İptal
+            İptal Et
           </CustomButton>
           <CustomButton type="primary" htmlType="submit">
-            {organisationType?.id ? 'Güncelle' : 'Kaydet ve Bitir'}
+            {organisationType?.id ? 'Güncelle ve Kaydet' : 'Kaydet ve Bitir'}
           </CustomButton>
         </Space>
       </CustomFormItem>
