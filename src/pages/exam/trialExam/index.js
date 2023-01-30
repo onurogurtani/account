@@ -2,6 +2,7 @@ import { Form, Tabs } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  CustomButton,
   CustomCheckbox,
   CustomCollapseCard,
   CustomDatePicker,
@@ -14,26 +15,29 @@ import {
 } from '../../../components';
 import { getAllClassStages } from '../../../store/slice/classStageSlice';
 import { getLessonsQuesiton } from '../../../store/slice/lessonsSlice';
-import { getLessonSubjectsList } from '../../../store/slice/lessonSubjectsSlice';
-import { getLessonSubSubjectsList } from '../../../store/slice/lessonSubSubjectsSlice';
-import { getUnitsList } from '../../../store/slice/lessonUnitsSlice';
+import { getLessonSubjectsList, resetLessonSubjects } from '../../../store/slice/lessonSubjectsSlice';
+import { getLessonSubSubjectsList, resetLessonSubSubjects } from '../../../store/slice/lessonSubSubjectsSlice';
+import { getUnitsList, resetLessonUnits } from '../../../store/slice/lessonUnitsSlice';
 import { getTrialTypeList } from '../../../store/slice/trialTypeSlice';
+import { getByFilterPagedVideosList, setVideos } from '../../../store/slice/videoSlice';
 import '../../../styles/exam/trialExam.scss';
 import { dateFormat } from '../../../utils/keys';
+import AddQuestion from './AddQuestion';
 
 const TrialExam = () => {
   const { TabPane } = Tabs;
   const [activeKey, setActiveKey] = useState('0');
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-
   const { trialTypeList } = useSelector((state) => state.trialType);
   const { allClassList } = useSelector((state) => state.classStages);
   const { lessons } = useSelector((state) => state.lessons);
   const { lessonUnits } = useSelector((state) => state?.lessonUnits);
   const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
   const { lessonSubSubjects } = useSelector((state) => state?.lessonSubSubjects);
-
+  const { videos } = useSelector((state) => state?.videos);
+  const [formData, setFormData] = useState({});
+  const [dependLecturingVideo, setDependLecturingVideo] = useState(false);
   const disabledEndDate = useCallback(
     (endValue) => {
       const { startDate } = form?.getFieldsValue(['startDate']);
@@ -56,6 +60,9 @@ const TrialExam = () => {
     [form],
   );
 
+  useEffect(() => {
+    console.log(dependLecturingVideo);
+  }, [dependLecturingVideo]);
   useEffect(() => {
     dispatch(getTrialTypeList({ testExamTypeDetailSearch: { pageNumber: 1, pageSize: 200 } }));
   }, [dispatch]);
@@ -140,77 +147,141 @@ const TrialExam = () => {
                     <CustomDatePicker disabledDate={disabledEndDate} format={dateFormat} />
                   </CustomFormItem>
                   <CustomFormItem name={'dependLecturingVideo'}>
-                    <CustomCheckbox>Konu anlatım vidosunda bağlı oluştur</CustomCheckbox>
-                  </CustomFormItem>
-                  <CustomFormItem name={'classId'} label="Sınıf">
-                    <CustomSelect
+                    <CustomCheckbox
                       onChange={(e) => {
-                        dispatch(getLessonsQuesiton([{ field: 'classroomId', value: e, compareType: 0 }]));
+                        setDependLecturingVideo(e.target.checked);
                       }}
                     >
-                      {allClassList?.map((item, index) => (
-                        <Option value={item.id} key={item.id}>
-                          {item.name}
-                        </Option>
-                      ))}
-                    </CustomSelect>
+                      Konu anlatım vidosunda bağlı oluştur
+                    </CustomCheckbox>
                   </CustomFormItem>
-                  <CustomFormItem name={'lessonId'} label="Ders">
-                    <CustomSelect
-                      onChange={(e) => {
-                        dispatch(getUnitsList([{ field: 'lessonId', value: e, compareType: 0 }]));
-                      }}
-                    >
-                      {lessons?.map((item, index) => (
-                        <Option value={item.id} key={item.id}>
-                          {item.name}
-                        </Option>
-                      ))}
-                    </CustomSelect>
+                  {dependLecturingVideo && (
+                    <>
+                      <CustomFormItem name={'classId'} label="Sınıf">
+                        <CustomSelect
+                          onChange={(e) => {
+                            dispatch(resetLessonUnits());
+                            dispatch(resetLessonSubjects());
+                            dispatch(resetLessonSubSubjects());
+                            dispatch(setVideos([]));
+                            form.resetFields([
+                              'lessonId',
+                              'lessonUnitId',
+                              'lessonSubjectId',
+                              'lessonSubSubjectId',
+                              'videoId',
+                            ]);
+                            dispatch(getLessonsQuesiton([{ field: 'classroomId', value: e, compareType: 0 }]));
+                          }}
+                        >
+                          {allClassList?.map((item, index) => (
+                            <Option value={item.id} key={item.id}>
+                              {item.name}
+                            </Option>
+                          ))}
+                        </CustomSelect>
+                      </CustomFormItem>
+                      <CustomFormItem name={'lessonId'} label="Ders">
+                        <CustomSelect
+                          onChange={(e) => {
+                            dispatch(resetLessonUnits());
+                            dispatch(resetLessonSubjects());
+                            dispatch(resetLessonSubSubjects());
+                            dispatch(setVideos([]));
+                            form.resetFields(['lessonUnitId', 'lessonSubjectId', 'lessonSubSubjectId', 'videoId']);
+
+                            dispatch(getUnitsList([{ field: 'lessonId', value: e, compareType: 0 }]));
+                          }}
+                        >
+                          {lessons?.map((item, index) => (
+                            <Option value={item.id} key={item.id}>
+                              {item.name}
+                            </Option>
+                          ))}
+                        </CustomSelect>
+                      </CustomFormItem>
+                      <CustomFormItem name={'lessonUnitId'} label="Ünite">
+                        <CustomSelect
+                          onChange={(e) => {
+                            dispatch(resetLessonSubjects());
+                            dispatch(resetLessonSubSubjects());
+                            dispatch(setVideos([]));
+                            form.resetFields(['lessonSubjectId', 'lessonSubSubjectId', 'videoId']);
+                            dispatch(getLessonSubjectsList([{ field: 'lessonUnitId', value: e, compareType: 0 }]));
+                          }}
+                        >
+                          {lessonUnits?.map((item, index) => (
+                            <Option value={item.id} key={item.id}>
+                              {item.name}
+                            </Option>
+                          ))}
+                        </CustomSelect>
+                      </CustomFormItem>
+                      <CustomFormItem name={'lessonSubjectId'} label="Konu">
+                        <CustomSelect
+                          onChange={(e) => {
+                            dispatch(resetLessonSubSubjects());
+                            dispatch(setVideos([]));
+                            form.resetFields(['lessonSubSubjectId', 'videoId']);
+                            dispatch(
+                              getLessonSubSubjectsList([{ field: 'lessonSubjectId', value: e, compareType: 0 }]),
+                            );
+                          }}
+                        >
+                          {lessonSubjects?.map((item, index) => (
+                            <Option value={item.id} key={item.id}>
+                              {item.name}
+                            </Option>
+                          ))}
+                        </CustomSelect>
+                      </CustomFormItem>
+                      <CustomFormItem name={'lessonSubSubjectId'} label="Alt Başlık">
+                        <CustomSelect
+                          mode="multiple"
+                          onChange={(e) => {
+                            dispatch(setVideos([]));
+                            form.resetFields(['videoId']);
+                            const newData = {};
+                            e.forEach((element, index) => {
+                              newData[`VideoDetailSearch.LessonSubSubjectIds[${index}]`] = element;
+                            });
+                            dispatch(
+                              getByFilterPagedVideosList({
+                                ...newData,
+                                'VideoDetailSearch.PageSize:': 999999,
+                              }),
+                            );
+                          }}
+                        >
+                          {lessonSubSubjects?.map((item, index) => (
+                            <Option value={item.id} key={item.id}>
+                              {item.name}
+                            </Option>
+                          ))}
+                        </CustomSelect>
+                      </CustomFormItem>
+                      <CustomFormItem name={'videoId'} label="Video">
+                        <CustomSelect>
+                          {videos?.map((item, index) => (
+                            <Option value={item.id} key={item.id}>
+                              {item.kalturaVideoName}
+                            </Option>
+                          ))}
+                        </CustomSelect>
+                      </CustomFormItem>
+                    </>
+                  )}
+                  <CustomFormItem name={'transitionBetweenQuestions'}>
+                    <CustomCheckbox name>Sorular Arası Geçise İzin Ver</CustomCheckbox>
                   </CustomFormItem>
-                  <CustomFormItem name={'lessonUnitId'} label="Ünite">
-                    <CustomSelect
-                      onChange={(e) => {
-                        dispatch(getLessonSubjectsList([{ field: 'lessonUnitId', value: e, compareType: 0 }]));
-                      }}
-                    >
-                      {lessonUnits?.map((item, index) => (
-                        <Option value={item.id} key={item.id}>
-                          {item.name}
-                        </Option>
-                      ))}
-                    </CustomSelect>
+                  <CustomFormItem name={'transitionBetweenSections'}>
+                    <CustomCheckbox name>Bölümler Arası Geçise İzin Ver</CustomCheckbox>
                   </CustomFormItem>
-                  <CustomFormItem name={'lessonSubjectId'} label="Konu">
-                    <CustomSelect
-                      onChange={(e) => {
-                        dispatch(getLessonSubSubjectsList([{ field: 'lessonSubjectId', value: e, compareType: 0 }]));
-                      }}
-                    >
-                      {lessonSubjects?.map((item, index) => (
-                        <Option value={item.id} key={item.id}>
-                          {item.name}
-                        </Option>
-                      ))}
-                    </CustomSelect>
-                  </CustomFormItem>
-                  <CustomFormItem name={'lessonSubSubjectId'} label="Alt Başlık">
-                    <CustomSelect
-                      onChange={(e) => {
-                        //   dispatch(getLessonSubSubjectsList([{ field: 'lessonSubSubjectId', value: e, compareType: 0 }]));
-                      }}
-                    >
-                      {lessonSubSubjects?.map((item, index) => (
-                        <Option value={item.id} key={item.id}>
-                          {item.name}
-                        </Option>
-                      ))}
-                    </CustomSelect>
-                  </CustomFormItem>
+                  <CustomButton type={'sumbit'}>İleri</CustomButton>
                 </CustomForm>
               </TabPane>
               <TabPane tab="Soru Seçimi" key={'1'}>
-                sadasdasda
+                <AddQuestion />
               </TabPane>
             </Tabs>
           </div>

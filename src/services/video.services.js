@@ -68,10 +68,11 @@ const getByVideoId = (id) => {
   });
 };
 
-const getByFilterPagedVideos = (urlString) => {
+const getByFilterPagedVideos = (urlString = '', params = {}) => {
   return api({
     url: `Content/Videos/getByFilterPagedVideos?${urlString}`,
     method: 'POST',
+    params: params,
   });
 };
 
