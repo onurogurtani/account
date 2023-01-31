@@ -55,7 +55,16 @@ const PublisherBook = () => {
       },
     },
     {
-      title: 'İsim',
+      title: 'Yayın Adı',
+      dataIndex: 'publisher',
+      key: 'publisher',
+      sorter: true,
+      render: (text, record) => {
+        return <div>{text.name}</div>;
+      },
+    },
+    {
+      title: 'Eser Adı',
       dataIndex: 'name',
       key: 'name',
       sorter: true,
@@ -64,7 +73,7 @@ const PublisherBook = () => {
       },
     },
     {
-      title: 'Basım Yılı',
+      title: 'Baskı Yılı',
       dataIndex: 'pressYear',
       key: 'pressYear',
       sorter: true,
