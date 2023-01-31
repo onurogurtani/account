@@ -96,6 +96,11 @@ const OrganisationTypes = lazy(() =>
     default: Component,
   })),
 );
+const Contracts = lazy(() =>
+  import('./contracts').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 const Settings = {
   Categories,
   Packages,
@@ -115,6 +120,7 @@ const Settings = {
   Publisher,
   TrialType,
   OrganisationTypes,
+  Contracts,
 };
 
 export default Settings;
