@@ -12,8 +12,6 @@ import {
   CustomFormItem,
   CustomInput,
   CustomModal,
-  CustomRadio,
-  CustomRadioGroup,
   CustomSelect,
   errorDialog,
   Option,
@@ -83,11 +81,11 @@ const AddPackages = () => {
 
   useEffect(() => {
     if (selectedPackgeKind?.includes(["isPersonal", "isCorporate"])) {
-      setFilteredDocumentList(documentsList.filter((item) => item.isPersonal || item.isCorporate))
+      setFilteredDocumentList(documentsList?.filter((item) => item.isPersonal || item.isCorporate))
     } else if (selectedPackgeKind?.includes("isCorporate")) {
-      setFilteredDocumentList(documentsList.filter((item) => item.isCorporate))
+      setFilteredDocumentList(documentsList?.filter((item) => item.isCorporate))
     } else if (selectedPackgeKind?.includes("isPersonal")) {
-      setFilteredDocumentList(documentsList.filter((item) => item.isPersonal))
+      setFilteredDocumentList(documentsList?.filter((item) => item.isPersonal))
     } else {
       setFilteredDocumentList([])
     }
@@ -95,7 +93,7 @@ const AddPackages = () => {
 
   useEffect(() => {
     const checkedList = []
-    booksList.forEach((item) => {
+    booksList?.forEach((item) => {
       checkedList.push(item.id)
     })
     form.setFieldsValue({ packageBooks: checkedList })
@@ -127,7 +125,7 @@ const AddPackages = () => {
         ...state,
         {
           id: errorList.length,
-          message: 'İzin verilen dosyalar; Word, Excel, PDF, Görsel',
+          message: 'İzin verilen dosyalar; Görsel',
         },
       ]);
     } else {
