@@ -1,4 +1,4 @@
-import { Form } from 'antd';
+import { Form, Radio } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
@@ -11,6 +11,8 @@ import {
   CustomInput,
   CustomModal,
   CustomPageHeader,
+  CustomRadio,
+  CustomRadioGroup,
   CustomSelect,
   CustomTable,
   errorDialog,
@@ -32,8 +34,8 @@ const ClassStages = () => {
     dispatch(getAllClassStages());
   }, []);
 
-  const { allClassList} = useSelector((state) => state?.classStages);
- 
+  const { allClassList } = useSelector((state) => state?.classStages);
+
 
   const [form] = Form.useForm();
 
@@ -46,6 +48,11 @@ const ClassStages = () => {
     { id: 10, value: 'İlkokul', text: 'İlkokul' },
     { id: 20, value: 'Ortaokul', text: 'Ortaokul' },
     { id: 30, value: 'Lise', text: 'Lise' },
+  ];
+
+  const classroom = [
+    { id: 1, value: 'Lisans' },
+    { id: 2, value: 'Önlisans' },
   ];
 
   const schoolLevelReverseEnum = {
@@ -73,6 +80,16 @@ const ClassStages = () => {
       align: 'center',
       render: (text, record) => {
         return <div>{text}</div>;
+      },
+    },
+    {
+      title: 'Durumu',
+      dataIndex: 'isActive',
+      key: 'isActive',
+      sorter: (a, b) => b.isActive - a.isActive,
+      align: 'center',
+      render: (text, record) => {
+        return <div>{text ? 'Aktif' : 'Pasif'}</div>;
       },
     },
     {
@@ -154,6 +171,7 @@ const ClassStages = () => {
     form.setFieldsValue({
       name: record.name,
       schoolLevel: schoolLevelReverseEnum[record.schoolLevel],
+      isActive: record.isActive
     });
   });
   const handleaddNewClassStage = () => {
@@ -168,11 +186,12 @@ const ClassStages = () => {
     const data = {
       Classroom: {
         name: values?.name,
-        isActive: true,
+        isActive: isEdit ? values?.isActive : true,
         schoolLevel: schoolLevelEnum[values.schoolLevel],
         id: isEdit ? selectedClassId : undefined,
       },
     };
+
     if (isEdit) {
       if (_.isEqual(data.entity, updateObject)) {
         errorDialog({
@@ -264,7 +283,6 @@ const ClassStages = () => {
       },
     });
   };
- 
 
   return (
     <CustomPageHeader title="Sınıf Seviye Tanım Bilgileri" showBreadCrumb routes={['Ayarlar']}>
@@ -293,7 +311,6 @@ const ClassStages = () => {
         cancelText="İptal"
         onCancel={onCancel}
         bodyStyle={{ overflowY: 'auto', maxHeight: 'calc(100vh - 300px)' }}
-        
       >
         <CustomForm form={form} layout="vertical" name="form" onFinish={onFinish}>
           <CustomFormItem
@@ -314,6 +331,7 @@ const ClassStages = () => {
               ))}
             </CustomSelect>
           </CustomFormItem>
+
           <CustomFormItem
             rules={[
               {
@@ -326,6 +344,50 @@ const ClassStages = () => {
           >
             <CustomInput placeholder="Sınıf Adı" />
           </CustomFormItem>
+          <CustomFormItem
+            label={false}
+            noStyle
+            shouldUpdate={(prevValues, curValues) => prevValues.schoolLevel !== curValues.schoolLevel}
+          >
+            {({ getFieldValue }) =>
+              getFieldValue("schoolLevel") === "Lise" &&
+              <CustomFormItem
+                name="eventTypeEnum"
+                rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
+              >
+                <CustomRadioGroup >
+                  {classroom.map((item) => (
+                    <CustomRadio key={item.id} value={item.id}>
+                      {item.value}
+                    </CustomRadio>
+                  ))}
+                </CustomRadioGroup>
+              </CustomFormItem>
+            }
+          </CustomFormItem>
+
+          {
+            isEdit &&
+            <CustomFormItem
+              rules={[
+                {
+                  required: true,
+                  message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                },
+              ]}
+              label="Durumu"
+              name="isActive"
+            >
+              <CustomSelect placeholder="Seçiniz">
+                <Option key={1} value={true}>
+                  Aktif
+                </Option>
+                <Option key={2} value={false}>
+                  Pasif
+                </Option>
+              </CustomSelect>
+            </CustomFormItem>
+          }
         </CustomForm>
       </CustomModal>
     </CustomPageHeader>
