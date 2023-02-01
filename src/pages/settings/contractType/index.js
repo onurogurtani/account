@@ -26,6 +26,8 @@ import {
   getContractTypeUpdate,
 } from '../../../store/slice/contractTypeSlice';
 import useResetFormOnCloseModal from '../../../hooks/useResetFormOnCloseModal';
+import { recordStatus } from '../../../constants';
+import usePaginationProps from '../../../hooks/usePaginationProps';
 
 const ContractTypes = () => {
   const [form] = Form.useForm();
@@ -33,24 +35,32 @@ const ContractTypes = () => {
 
   const [open, setOpen] = useState(false);
   const [selectedContractTypeId, setSelectedContractTypeId] = useState();
-  const { contractTypes } = useSelector((state) => state?.contractTypes);
+  const { contractTypeList, tableProperty } = useSelector((state) => state?.contractTypes);
+  const paginationProps = usePaginationProps(tableProperty);
 
   useResetFormOnCloseModal({ form, open });
 
   useEffect(() => {
-    loadContractType();
+    loadContractType(tableProperty);
   }, []);
 
-  const loadContractType = useCallback(async () => {
-    dispatch(getContractTypeList({ data: null, params: { 'ContractTypeDetailSearch.PageSize': 999999 } }));
-  }, [dispatch]);
+  const loadContractType = useCallback(
+    async (data = null) => {
+      dispatch(getContractTypeList({
+        data: {
+          contractTypeDto: {
+            ...data
+          }
+        }
+      }));
+    }, [dispatch]);
 
   const columns = [
     {
       title: 'No',
       dataIndex: 'id',
       key: 'id',
-      sorter: (a, b) => a.id - b.id,
+      sorter: true,
       render: (text, record) => {
         return <div>{text}</div>;
       },
@@ -59,7 +69,7 @@ const ContractTypes = () => {
       title: 'Durumu',
       dataIndex: 'recordStatus',
       key: 'recordStatus',
-      sorter: (a, b) => b.recordStatus - a.recordStatus,
+      sorter: true,
       render: (text, record) => {
         return <div>{text ? 'Aktif' : 'Pasif'}</div>;
       },
@@ -68,7 +78,7 @@ const ContractTypes = () => {
       title: 'Sözleşme Tipi',
       dataIndex: 'name',
       key: 'name',
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      sorter: true,
       render: (text, record) => {
         return <div>{text}</div>;
       },
@@ -77,7 +87,7 @@ const ContractTypes = () => {
       title: 'Açıklama',
       dataIndex: 'description',
       key: 'description',
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      sorter: true,
       render: (text, record) => {
         return <div>{text}</div>;
       },
@@ -116,13 +126,12 @@ const ContractTypes = () => {
 
   const onFinish = async (values) => {
     const data = {
-      contractTypeDto: {
+      contractType: {
         ...values,
-        recordStatus: 1
       }
     };
 
-    selectedContractTypeId && (data.contractTypeDto.id = selectedContractTypeId)
+    selectedContractTypeId ? (data.contractType.id = selectedContractTypeId) : (data.contractType.recordStatus = 1)
 
     const action = await dispatch(
       selectedContractTypeId ? getContractTypeUpdate(data) : getContractTypeAdd(data),
@@ -133,11 +142,11 @@ const ContractTypes = () => {
       successDialog({
         title: <Text t="success" />,
         message: selectedContractTypeId ? 'Kayıt Güncellenmiştir' : 'Kaydedildi',
-        // message: action?.payload.message,
         onOk: async () => {
           await handleClose();
         },
       });
+      loadContractType(tableProperty)
     } else {
       errorDialog({
         title: <Text t="error" />,
@@ -181,15 +190,26 @@ const ContractTypes = () => {
           </CustomButton>
         </div>
         <CustomTable
-          dataSource={contractTypes}
+          dataSource={contractTypeList}
           columns={columns}
-          pagination={{
-            showSizeChanger: true,
-            showQuickJumper: {
-              goButton: <CustomButton className="go-button">Git</CustomButton>,
-            },
-            position: 'bottomRight',
+          onChange={(pagination, _, sorter) => {
+            if (JSON.stringify(sorter) !== '{}') {
+              let field = sorter.field[0].toUpperCase() + sorter.field.substring(1);
+              const data = {
+                PageNumber: pagination.current,
+                PageSize: pagination.pageSize,
+                orderBy: field + (sorter.order === 'descend' ? 'DESC' : 'ASC')
+              };
+              loadContractType(data);
+            } else {
+              const data = {
+                PageNumber: pagination.current,
+                PageSize: pagination.pageSize,
+              };
+              loadContractType(data);
+            }
           }}
+          pagination={paginationProps}
           rowKey={(record) => `contractType-${record?.id || record?.name}`}
           scroll={{ x: false }}
         />
@@ -240,12 +260,11 @@ const ContractTypes = () => {
               name="recordStatus"
             >
               <CustomSelect placeholder="Durumu">
-                <Option key={1} value={true}>
-                  Aktif
-                </Option>
-                <Option key={0} value={false}>
-                  Pasif
-                </Option>
+                {recordStatus.map((item) => (
+                  <Option key={item.id} value={item.id}>
+                    {item.value}
+                  </Option>
+                ))}
               </CustomSelect>
             </CustomFormItem>
           }

@@ -36,6 +36,12 @@ export const getContractTypeUpdate = createAsyncThunk(
 
 const initialState = {
   contractTypeList: [],
+  tableProperty: {
+    currentPage: 1,
+    page: 1,
+    pageSize: 10,
+    totalCount: 0,
+  },
 };
 
 export const contractTypeSlice = createSlice({
@@ -44,7 +50,8 @@ export const contractTypeSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getContractTypeList.fulfilled, (state, action) => {
-      state.contractTypeList = action?.payload?.data;
+      state.contractTypeList = action?.payload?.data?.items;
+      state.tableProperty = action?.payload?.data?.pagedProperty;
     });
   },
 });
