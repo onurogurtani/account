@@ -134,7 +134,7 @@ const AddPackages = () => {
     return false;
   };
 
-  const cancelIntroVideoUpload = () => {
+  const handleCancelFileUpload = () => {
     if (cancelFileUpload.current) cancelFileUpload.current('User has canceled the file upload.');
   };
 
@@ -201,8 +201,8 @@ const AddPackages = () => {
         hasMotivationEvent: values.hasMotivationEvent,
         packageBooks: values.packageBooks?.map((item) => { return { bookId: item } }),
         packageDocuments: values.packageDocuments?.map((item) => { return { documentId: item } }),
-        isPersonal: values.packageKind.includes("isPersonal"),
-        isCorporate: values.packageKind.includes("isCorporate")
+        isPersonal: values.packageKind?.includes("isPersonal"),
+        isCorporate: values.packageKind?.includes("isCorporate")
       },
     };
 
@@ -361,7 +361,7 @@ const AddPackages = () => {
               multiple={true}
               showUploadList={{
                 showRemoveIcon: true,
-                removeIcon: <DeleteOutlined onClick={(e) => cancelIntroVideoUpload()} />,
+                removeIcon: <DeleteOutlined onClick={(e) => handleCancelFileUpload()} />,
               }}
               beforeUpload={beforeUpload}
               onChange={(e) => (e.fileList.length >= 5 ? setIsDisable(true) : setIsDisable(false))}

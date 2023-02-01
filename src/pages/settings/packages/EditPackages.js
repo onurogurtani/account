@@ -595,7 +595,6 @@ const EditPackages = () => {
               filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
               showArrow
               mode="multiple"
-              // onDeselect={onLessonDeselect}
               onChange={onLessonChange}
               options={lessonsOptions}
             ></CustomSelect>
