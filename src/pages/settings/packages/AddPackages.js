@@ -199,8 +199,8 @@ const AddPackages = () => {
         hasTryingTest: values.hasTryingTest,
         tryingTestQuestionCount: Number(values?.tryingTestQuestionCount),
         hasMotivationEvent: values.hasMotivationEvent,
-        packageBooks: values.packageBooks.map((item) => { return { bookId: item } }),
-        packageDocuments: values.packageDocuments.map((item) => { return { documentId: item } }),
+        packageBooks: values.packageBooks?.map((item) => { return { bookId: item } }),
+        packageDocuments: values.packageDocuments?.map((item) => { return { documentId: item } }),
         isPersonal: values.packageKind.includes("isPersonal"),
         isCorporate: values.packageKind.includes("isCorporate")
       },
