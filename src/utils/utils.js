@@ -133,3 +133,7 @@ export const getByFilterPagedParamsHelper = (data, prefix) => {
   );
   return result;
 };
+
+export const capitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};

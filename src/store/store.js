@@ -48,6 +48,7 @@ import { trialTypeSlice } from './slice/trialTypeSlice';
 import { documentsSlice } from './slice/documentsSlice';
 import { booksSlice } from './slice/booksSlice';
 import { organisationTypesSlice } from './slice/organisationTypesSlice';
+import { organisationsSlice } from './slice/organisationsSlice';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -91,6 +92,7 @@ const reducers = combineReducers({
   documents: documentsSlice.reducer,
   books: booksSlice.reducer,
   organisationTypes: organisationTypesSlice.reducer,
+  organisations: organisationsSlice.reducer,
 });
 
 const persistConfig = {

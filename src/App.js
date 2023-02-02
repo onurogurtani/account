@@ -473,6 +473,24 @@ const App = () => {
                           Component={OrganisationManagement?.OrganisationList}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/show/:id`}
+                          exact
+                          Component={OrganisationManagement?.OrganisationShow}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/add`}
+                          exact
+                          Component={OrganisationManagement?.OrganisationCreateOrUpdate}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/edit/:id`}
+                          exact
+                          Component={OrganisationManagement?.OrganisationCreateOrUpdate}
+                          authority="dashboard"
+                        />
                         <Route
                           component={() => (
                             <Redirect
