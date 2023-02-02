@@ -373,6 +373,11 @@ const App = () => {
                           Component={Settings?.OrganisationTypes}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/contract-types`}
+                          Component={Settings?.ContractTypes}
+                          authority="dashboard"
+                        />
                         <Route
                           component={() => (
                             <Redirect
