@@ -93,7 +93,11 @@ const OrganisationForm = ({ onFinish, isEdit }) => {
           </CustomSelect>
         </CustomFormItem>
 
-        <CustomFormItem label="Kurum Yöneticisi" name="???" rules={[{ required: true }, { whitespace: true }]}>
+        <CustomFormItem
+          label="Kurum Yöneticisi"
+          name="organisationManager"
+          rules={[{ required: true }, { whitespace: true }]}
+        >
           <CustomTextInput placeholder="Kurum Yöneticisi" />
         </CustomFormItem>
 

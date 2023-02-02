@@ -23,7 +23,7 @@ const OrganisationShow = () => {
       const action = await dispatch(getByOrganisationId({ Id: id })).unwrap();
       setOrganisation(action?.data);
     } catch (err) {
-      // history.push('/organisation-management/list');
+      history.push('/organisation-management/list');
     }
   };
 

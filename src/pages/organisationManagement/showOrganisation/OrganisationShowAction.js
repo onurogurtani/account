@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
@@ -9,14 +9,18 @@ const OrganisationShowAction = ({ organisation }) => {
   const history = useHistory();
   const { id } = useParams();
   const dispatch = useDispatch();
-  const [status, setStatus] = useState(organisation?.recordStatus);
+  const [status, setStatus] = useState();
   const handleEdit = () => {
     history.push(`/organisation-management/edit/${id}`);
   };
+  useEffect(() => {
+    setStatus(organisation?.recordStatus);
+  }, [organisation?.recordStatus]);
+
   const handleUpdateOrganisationIsActive = async () => {
     confirmDialog({
       title: <Text t="attention" />,
-      message: 'Seçili olan kurumu pasifleştirmek istediğinizden emin misiniz?',
+      message: `Seçili olan kurumu  ${status ? 'pasifleştirmek' : 'aktifleştirmek'} istediğinizden emin misiniz?`,
       onOk: async () => {
         const data = {
           id,
@@ -46,9 +50,11 @@ const OrganisationShowAction = ({ organisation }) => {
       <CustomButton type="primary" className="edit-btn" onClick={handleEdit}>
         Düzenle
       </CustomButton>
-      <CustomButton type="danger" className={status ? null : 'active-btn'} onClick={handleUpdateOrganisationIsActive}>
-        {status ? 'Pasifleştir' : 'Aktifleştir'}
-      </CustomButton>
+      {status !== undefined && (
+        <CustomButton type="danger" className={status ? null : 'active-btn'} onClick={handleUpdateOrganisationIsActive}>
+          {status ? 'Pasifleştir' : 'Aktifleştir'}
+        </CustomButton>
+      )}
     </div>
   );
 };

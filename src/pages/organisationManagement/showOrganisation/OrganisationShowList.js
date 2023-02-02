@@ -1,5 +1,6 @@
 import React from 'react';
 import { CustomCollapseCard } from '../../../components';
+import { maskedPhone } from '../../../utils/utils';
 
 const OrganisationShowList = ({ organisation }) => {
   return (
@@ -13,7 +14,7 @@ const OrganisationShowList = ({ organisation }) => {
             Kurum Türü: <span>{organisation?.organisationType?.name}</span>
           </li>
           <li>
-            Kurum Yöneticisi: <span>{organisation?.name}???</span>
+            Kurum Yöneticisi: <span>{organisation?.organisationManager}</span>
           </li>
           <li>
             Müşteri Numarası: <span>{organisation?.customerNumber}</span>
@@ -22,13 +23,13 @@ const OrganisationShowList = ({ organisation }) => {
             Müşteri Yöneticisi: <span>{organisation?.customerManager}</span>
           </li>
           <li>
-            Segment Bilgisi: <span>{organisation?.name}???</span>
+            Segment Bilgisi: <span>{organisation?.segmentName}</span>
           </li>
           <li>
-            Şehir: <span>{organisation?.name}???</span>
+            Şehir: <span>{organisation?.cityName}</span>
           </li>
           <li>
-            İlçe: <span>{organisation?.name}???</span>
+            İlçe: <span>{organisation?.countyName}</span>
           </li>
           <li>
             Kurum Adresi: <span>{organisation?.organisationAddress}</span>
@@ -40,7 +41,7 @@ const OrganisationShowList = ({ organisation }) => {
             Kurum Kontakt Mail: <span>{organisation?.contactMail}</span>
           </li>
           <li>
-            Kurum Kontakt Telefon: <span>{organisation?.contactPhone}</span>
+            Kurum Kontakt Telefon: <span>{organisation?.contactPhone && maskedPhone(organisation?.contactPhone)}</span>
           </li>
         </ul>
       </div>

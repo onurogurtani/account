@@ -12,6 +12,7 @@ import {
   Text,
 } from '../../components';
 import { addOrganisation, updateOrganisation } from '../../store/slice/organisationsSlice';
+import { getUnmaskedPhone } from '../../utils/utils';
 import OrganisationForm from './form/OrganisationForm';
 
 const OrganisationCreateOrUpdate = () => {
@@ -22,7 +23,6 @@ const OrganisationCreateOrUpdate = () => {
   const { id } = useParams();
 
   const onFinish = (values) => {
-    console.log(values);
     if (isEdit) {
       confirmDialog({
         title: 'Dikkat',
@@ -41,6 +41,7 @@ const OrganisationCreateOrUpdate = () => {
 
   const onSubmit = useCallback(
     async (values) => {
+      values.contactPhone = getUnmaskedPhone(values.contactPhone);
       try {
         let action;
         if (isEdit) {

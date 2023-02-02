@@ -45,7 +45,11 @@ const useOrganisationListTableColumns = () => {
       dataIndex: 'recordStatus',
       key: 'recordStatus',
       render: (text, record) => {
-        return <div>{<Tag color={record.recordStatus ? 'green' : 'red'}>Aktif</Tag>}</div>;
+        return (
+          <div>
+            {<Tag color={record.recordStatus ? 'green' : 'red'}>{record.recordStatus ? 'Aktif' : 'Pasif'}</Tag>}
+          </div>
+        );
       },
     },
 
