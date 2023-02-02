@@ -91,6 +91,11 @@ const TrialType = lazy(() =>
     default: Component,
   })),
 );
+const OrganisationTypes = lazy(() =>
+  import('./organisationTypes/OrganisationTypesList').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 const Settings = {
   Categories,
   Packages,
@@ -109,6 +114,7 @@ const Settings = {
   PublisherBook,
   Publisher,
   TrialType,
+  OrganisationTypes,
 };
 
 export default Settings;
