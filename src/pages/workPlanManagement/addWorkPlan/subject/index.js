@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Form } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -17,7 +16,8 @@ import {
   setSubjectChooseVideoFilteredList, setSubjectChooseFilterData, resetSubjectChooseVideoList,
   resetPracticeQuestionVideoList,
   selectedPracticeQuestionTabRowsVideo, setOutQuestionTabLessonSubSubjectList, resetOutQuestionTabVideoList,
-  selectedOutQuestionTabRowsVideo,
+  selectedOutQuestionTabRowsData,
+  setSubjectChooseSchoolLevel
 } from '../../../../store/slice/workPlanSlice';
 import { getEducationYears } from '../../../../store/slice/questionFileSlice';
 import { getAllClassStages } from '../../../../store/slice/classStageSlice';
@@ -27,6 +27,7 @@ import videoListTableColumn from './videoListTableColumn';
 import useOnchangeTable from '../../../../hooks/useOnchangeTable';
 import '../../../../styles/table.scss';
 import { getListFilterParams } from '../../../../utils/utils';
+import { resetLessonSubSubjects } from '../../../../store/slice/lessonSubSubjectsSlice';
 
 const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
 
@@ -78,6 +79,12 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
   // selects onchange
   const onChange = (value, fromEl) => {
     if (fromEl === 'classroomId') {
+
+      allClassList.map((item)=>{
+        if(item.id === value){
+          dispatch(setSubjectChooseSchoolLevel(item.schoolLevel))
+        }
+      })
       setClassroomId(value);
       subjectForm.resetFields(['LessonIds', 'LessonUnitIds', 'LessonSubjectIds']);
     }
@@ -116,7 +123,8 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
     dispatch(setSubjectChooseData(values));
     dispatch(setOutQuestionTabLessonSubSubjectList());
     dispatch(resetOutQuestionTabVideoList());
-    dispatch(selectedOutQuestionTabRowsVideo());
+    dispatch(selectedOutQuestionTabRowsData());
+    dispatch(resetLessonSubSubjects());
 
     practiceForm.resetFields();
     outQuestionForm.resetFields();

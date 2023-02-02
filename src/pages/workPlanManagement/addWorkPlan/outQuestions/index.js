@@ -12,7 +12,7 @@ import {
 } from '../../../../components';
 import {
   getByFilterPagedQuestionOfExams,
-  onChangeActiveKey, selectedOutQuestionTabRowsVideo,
+  onChangeActiveKey, selectedOutQuestionTabRowsData,
   setOutQuestionTabLessonSubSubjectList,
 } from '../../../../store/slice/workPlanSlice';
 import { getLessonSubSubjects } from '../../../../store/slice/lessonSubSubjectsSlice';
@@ -52,8 +52,12 @@ const OutQuestion = ({ outQuestionForm }) => {
         SubjectIds: subjectChooseTab?.filterObject?.LessonSubjectIds,
         OutQuestion: true,
         IncludeQuestionFilesBase64: true,
+        PageSize: 1
       };
       delete body.CategoryCode;
+      delete body.LessonSubjectIds;
+      delete body.LessonUnitIds;
+      delete body.isActive;
 
       await dispatch(getByFilterPagedQuestionOfExams(body));
     }
@@ -71,7 +75,7 @@ const OutQuestion = ({ outQuestionForm }) => {
     }
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (pageNumber) => {
     const values = await outQuestionForm.validateFields(['YearOfOutQuestions', 'OutIn', 'SubSubjectIds']);
 
     const body = {
@@ -81,6 +85,7 @@ const OutQuestion = ({ outQuestionForm }) => {
       SubjectIds: subjectChooseTab?.filterObject?.LessonSubjectIds,
       OutQuestion: true,
       IncludeQuestionFilesBase64: true,
+      PageSize: 1,
     };
 
     if (values.OutIn === 'outInTYT') {
@@ -90,6 +95,10 @@ const OutQuestion = ({ outQuestionForm }) => {
       body.OutInAYT = true;
     }
 
+    if (pageNumber){
+      body.PageNumber = pageNumber;
+    }
+
     delete body.CategoryCode;
     delete body.LessonUnitIds;
     delete body.LessonSubjectIds;
@@ -97,7 +106,9 @@ const OutQuestion = ({ outQuestionForm }) => {
     delete body.OutIn;
 
     console.log('body', body);
-    dispatch(selectedOutQuestionTabRowsVideo());
+    if(!pageNumber){
+      dispatch(selectedOutQuestionTabRowsData());
+    }
 
     await dispatch(getByFilterPagedQuestionOfExams(body));
   };
@@ -134,21 +145,22 @@ const OutQuestion = ({ outQuestionForm }) => {
             </CustomSelect>
           </CustomFormItem>
 
-          <CustomFormItem
-            label='Sınav Türü'
-            name='OutIn'
-          >
-            <CustomSelect
-              showArrow
-              height={36}
-              placeholder='Seçiniz'
-              allowClear
+          {subjectChooseTab?.schoolLevel === 30 && (
+            <CustomFormItem
+              label='Sınav Türü'
+              name='OutIn'
             >
-              <Option value={'outInTYT'}>TYT</Option>
-              <Option value={'outInAYT'}>AYT</Option>
-            </CustomSelect>
-          </CustomFormItem>
-
+              <CustomSelect
+                showArrow
+                height={36}
+                placeholder='Seçiniz'
+                allowClear
+              >
+                <Option value={'outInTYT'}>TYT</Option>
+                <Option value={'outInAYT'}>AYT</Option>
+              </CustomSelect>
+            </CustomFormItem>
+          )}
 
           <CustomFormItem
             label='Kazanımlar'
@@ -182,10 +194,10 @@ const OutQuestion = ({ outQuestionForm }) => {
           className='out-question-list'
           size='large'
           pagination={{
-            onChange: (page) => {
-              console.log(page);
-            },
-            // pageSize: 2,
+            onChange: (page) => handleSearch(page),
+            pageSize: outQuestionTab?.tableProperty.pageSize,
+            total: outQuestionTab?.tableProperty.totalCount,
+            current: outQuestionTab?.tableProperty.currentPage
           }}
 
           dataSource={outQuestionTab?.dataList}
@@ -207,15 +219,17 @@ const OutQuestion = ({ outQuestionForm }) => {
                         {item?.questionOfExamDetail?.yearOfOutQuestion}
                       </span>
                   </div>
-                  <div className='info-item'>
-                    <h5>Sınav Türü:</h5>
-                    <span className='item-list'>
+                  {subjectChooseTab?.schoolLevel === 30 && (
+                    <div className='info-item'>
+                      <h5>Sınav Türü:</h5>
+                      <span className='item-list'>
                       (
-                      {item?.questionOfExamDetail?.outInAYT && <span> AYT</span>}
-                      {item?.questionOfExamDetail?.outInTYT && <span> TYT</span>}
-                      )
+                        {item?.questionOfExamDetail?.outInAYT && <span> AYT</span>}
+                        {item?.questionOfExamDetail?.outInTYT && <span> TYT</span>}
+                        )
                     </span>
-                  </div>
+                    </div>
+                  )}
                   <div className='info-item'>
                     <h5>Kazanım Bilgisi:</h5>
                     <span>
@@ -233,9 +247,9 @@ const OutQuestion = ({ outQuestionForm }) => {
                     <CustomButton
                       type='primary'
                       className='btn-select btn'
-                      onClick={() => dispatch(selectedOutQuestionTabRowsVideo(item))}
+                      onClick={() => dispatch(selectedOutQuestionTabRowsData(item))}
                     >
-                      {outQuestionTab?.selectedRowsData.some((el) => el.id === item.id) ? 'Çalışma Planı Eklendi' : 'Çalışma Planı Ekle'}
+                      {outQuestionTab?.selectedRowsData.some((el) => el.id === item.id) ? 'Çalışma Planına Eklendi' : 'Çalışma Planına Ekle'}
                     </CustomButton>
                   </div>
                 </div>

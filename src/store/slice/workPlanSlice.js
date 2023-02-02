@@ -21,6 +21,7 @@ const initialState = {
     formData: {},
     selectedRowVideo: {},
     filterObject: {},
+    schoolLevel:{},
     videos: [],
     tableProperty: {
       currentPage: 1,
@@ -63,6 +64,7 @@ export const workPlanSlice = createSlice({
       state.subjectChooseTab.selectedRowVideo = {};
       state.subjectChooseTab.formData = {};
       state.subjectChooseTab.filterObject = {};
+      state.subjectChooseTab.schoolLevel = {};
       state.subjectChooseTab.videos = [];
       state.subjectChooseTab.tableProperty = { currentPage: 1, pageSize: 10, totalCount: 0 };
       state.practiceQuestionTab.videos = [];
@@ -91,6 +93,9 @@ export const workPlanSlice = createSlice({
     },
     resetSubjectChooseVideoList: (state, action) => {
       state.subjectChooseTab.videos = [];
+    },
+    setSubjectChooseSchoolLevel: (state, action) => {
+      state.subjectChooseTab.schoolLevel = action?.payload;
     },
     setPracticeQuestionVideoFilteredList: (state, action) => {
       state.practiceQuestionTab.videos = action?.payload?.data?.items;
@@ -123,7 +128,8 @@ export const workPlanSlice = createSlice({
     resetOutQuestionTabVideoList: (state, action) => {
       state.outQuestionTab.dataList = [];
     },
-    selectedOutQuestionTabRowsVideo: (state, action) => {
+    selectedOutQuestionTabRowsData: (state, action) => {
+      console.log("selectedRowsDataOut", state.outQuestionTab.selectedRowsData);
       if (action.payload === undefined) {
         state.outQuestionTab.selectedRowsData = [];
       } else {
@@ -156,11 +162,12 @@ export const {
   setSubjectChooseFilterData,
   setSubjectChooseVideoFilteredList,
   resetSubjectChooseVideoList,
+  setSubjectChooseSchoolLevel,
   setPracticeQuestionVideoFilteredList,
   resetPracticeQuestionVideoList,
   selectedPracticeQuestionTabRowsVideo,
   resetAllData,
   setOutQuestionTabLessonSubSubjectList,
   resetOutQuestionTabVideoList,
-  selectedOutQuestionTabRowsVideo,
+  selectedOutQuestionTabRowsData,
 } = workPlanSlice.actions;
