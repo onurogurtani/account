@@ -44,11 +44,13 @@ import { lessonSubjectsSlice } from './slice/lessonSubjectsSlice';
 import { lessonSubSubjectsSlice } from './slice/lessonSubSubjectsSlice';
 import { questionIdentificationSlice } from './slice/questionIdentificationSlice';
 import { earningChoiceSlice } from './slice/earningChoiceSlice';
+import { workPlanSlice } from './slice/workPlanSlice';
 import { trialTypeSlice } from './slice/trialTypeSlice';
 import { documentsSlice } from './slice/documentsSlice';
 import { booksSlice } from './slice/booksSlice';
 import { organisationTypesSlice } from './slice/organisationTypesSlice';
 import { organisationsSlice } from './slice/organisationsSlice';
+import { contractTypeSlice } from './slice/contractTypeSlice';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -86,6 +88,7 @@ const reducers = combineReducers({
   publisher: publisherSlice.reducer,
   publisherBook: publisherBookSlice.reducer,
   questionManagement: questionManagementSlice.reducer,
+  workPlan: workPlanSlice.reducer,
   questionIdentification: questionIdentificationSlice.reducer,
   earningChoice: earningChoiceSlice.reducer,
   trialType: trialTypeSlice.reducer,
@@ -93,6 +96,7 @@ const reducers = combineReducers({
   books: booksSlice.reducer,
   organisationTypes: organisationTypesSlice.reducer,
   organisations: organisationsSlice.reducer,
+  contractTypes: contractTypeSlice.reducer,
 });
 
 const persistConfig = {

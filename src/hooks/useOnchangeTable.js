@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
 
 const useOnchangeTable = (props) => {
-  const { filterObject, action, sortFields, setSorterObject } = props;
+  const { filterObject, action, sortFields, setSorterObject, callback } = props;
 
   const dispatch = useDispatch();
 
@@ -23,7 +23,9 @@ const useOnchangeTable = (props) => {
       data.PageNumber = 1;
     }
 
-    await dispatch(action(data));
+    const res = await dispatch(action(data));
+
+    callback && callback(res);
   };
   return onChangeTable;
 };

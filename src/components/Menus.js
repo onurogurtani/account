@@ -438,6 +438,14 @@ const Menus = () => {
             </span>
           </MenuItemText>
         </CustomItem>
+        <CustomItem key="/settings/contract-types">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Sözleşme Tipi" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
       </CustomSubMenu>
 
       <CustomSubMenu key="QuestionMenu" title="Soru Yönetimi" icon={<CustomImage src={menuIcons} />}>
@@ -458,6 +466,14 @@ const Menus = () => {
           </MenuItemText>
         </CustomItem>
       </CustomSubMenu>
+      <CustomItem key="/work-plan-management/list">
+        <MenuItemText>
+          <CustomImage src={menuIcons} />
+          <span>
+            <Text t="Çalışma Planları" />
+          </span>
+        </MenuItemText>
+      </CustomItem>
     </CustomMenu>
   );
 };

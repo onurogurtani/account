@@ -16,7 +16,6 @@ export const getPublisherListAdd = createAsyncThunk(
   'getPublisherListAdd',
   async (data = {}, { dispatch, rejectWithValue }) => {
     try {
-      alert('dsadsa');
       const response = await publisherServices.getPublisherAdd(data);
       return response;
     } catch (error) {
