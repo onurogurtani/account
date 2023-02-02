@@ -25,6 +25,7 @@ import Settings from './pages/settings';
 
 import EventManagement from './pages/eventManagement';
 import UserListManagement from './pages/userManagement/userListManagement';
+import WorkPlanManagement from './pages/workPlanManagement';
 import AdminUsersManagement from './pages/userManagement/adminUsersManagement';
 import QuestionManagement from './pages/questionManagement/index';
 
@@ -466,6 +467,45 @@ const App = () => {
                   authority="dashboard"
                   isLayout={false}
                 />
+
+
+                <PrivateRoute
+                  path={'/work-plan-management'}
+                  Component={({ match }) => {
+                    return (
+                      <Switch>
+                        <PrivateRoute
+                          path={`${match?.path}/list`}
+                          Component={WorkPlanManagement.WorkPlanList}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/add`}
+                          Component={WorkPlanManagement?.AddWorkPlan}
+                          authority="dashboard"
+                        />
+                        {/*<PrivateRoute*/}
+                        {/*  path={`${match?.path}/edit/:id`}*/}
+                        {/*  Component={WorkPlanManagement?.EditWorkPlan}*/}
+                        {/*  authority="dashboard"*/}
+                        {/*/>*/}
+                        <Route
+                          component={() => (
+                            <Redirect
+                              to={{
+                                pathname: '/not-found',
+                                state: { status: 404 },
+                              }}
+                            />
+                          )}
+                        />
+                      </Switch>
+                    );
+                  }}
+                  authority="dashboard"
+                  isLayout={false}
+                />
+
               </HomeLayout>
 
               <Route component={() => <Redirect to={{ pathname: '/not-found', state: { status: 404 } }} />} />
