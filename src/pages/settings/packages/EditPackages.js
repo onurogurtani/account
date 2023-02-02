@@ -160,6 +160,7 @@ const EditPackages = () => {
       ...new Set(currentPackageResponse?.payload?.packageGroups?.map((item) => item.groupId)),
     ];
 
+    seTisDisableButtonMaxNetCount(currentPackageResponse.payload.packageType.isCanSeeTargetScreen)
     setCurrentClassroomIds(currentClassrooms);
 
     currentClassrooms.map((item) => {
