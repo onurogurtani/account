@@ -113,7 +113,7 @@ const getFormCategories = () => {
 
 const getFormPackages = () => {
   return api({
-    url: `Mono/Packages/getList?PageSize=0`,
+    url: `Payment/Packages/getList?PageSize=0`,
     method: 'POST',
     data: [],
   });
@@ -122,7 +122,7 @@ const getFormPackages = () => {
 // Forms targetgroup
 const getTargetGroup = (data) => {
   return api({
-    url: `Mono/TargetGroups/getList?PageNumber=1&PageSize=0`,
+    url: `Target/TargetGroups/getList?PageNumber=1&PageSize=0`,
     method: 'POST',
     data,
   });

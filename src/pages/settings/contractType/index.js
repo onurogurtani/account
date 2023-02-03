@@ -164,10 +164,12 @@ const ContractTypes = () => {
     await form.validateFields();
     confirmDialog({
       title: 'Uyarı',
-      message: 'Seçtiğiniz Kayıt Üzerinde Değişiklik Yapılacaktır. Emin misiniz?',
+      message: 'Güncellemekte olduğunuz kayıt Sözleşme Türü, Paket Yönetimi, Sözleşmeler ekranında tanımlı olan kayıtları etkileyeceği için Güncelleme yapmak istediğinizden Emin misiniz ?',
       onOk: () => {
         form.submit();
       },
+      okText: 'Evet',
+      cancelText: 'Hayır',
     });
   };
 
@@ -240,7 +242,6 @@ const ContractTypes = () => {
             <CustomInput placeholder="Sözleşme Tipi Adı" />
           </CustomFormItem>
           <CustomFormItem
-            rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
             name={'description'}
             label={<Text t="Açıklama" />}
           >

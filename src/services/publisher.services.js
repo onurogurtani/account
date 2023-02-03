@@ -1,7 +1,7 @@
 import { api } from './api';
 const getPublisherList = (params = {}) => {
   return api({
-    url: 'Mono/Publishers/getByFilterPagedPublishers',
+    url: 'Question/Publishers/getByFilterPagedPublishers',
     method: 'POST',
     data: null,
     params: params,
@@ -9,14 +9,14 @@ const getPublisherList = (params = {}) => {
 };
 const getPublisherAdd = (data) => {
   return api({
-    url: 'Mono/Publishers',
+    url: 'Question/Publishers',
     method: 'POST',
     data: data,
   });
 };
 const getPublisherUpdate = (data) => {
   return api({
-    url: 'Mono/Publishers',
+    url: 'Question/Publishers',
     method: 'PUT',
     data: data,
   });
