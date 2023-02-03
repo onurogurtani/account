@@ -22,6 +22,7 @@ import { formMailRegex, formPhoneRegex } from '../../../utils/formRule';
 import '../../../styles/organisationManagement/organisationForm.scss';
 import { useHistory, useParams } from 'react-router-dom';
 import { getByOrganisationId } from '../../../store/slice/organisationsSlice';
+import { maskedPhone } from '../../../utils/utils';
 
 const OrganisationForm = ({ onFinish, isEdit }) => {
   const [form] = Form.useForm();
@@ -39,7 +40,7 @@ const OrganisationForm = ({ onFinish, isEdit }) => {
   const loadByOrganisationId = async () => {
     try {
       const action = await dispatch(getByOrganisationId({ Id: id })).unwrap();
-      form.setFieldsValue(action?.data);
+      form.setFieldsValue({ ...action?.data, contactPhone: maskedPhone(action?.data?.contactPhone) });
       setSelectedCityId(action?.data?.cityId);
     } catch (err) {
       history.push('/organisation-management/list');
