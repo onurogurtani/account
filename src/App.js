@@ -25,8 +25,10 @@ import Settings from './pages/settings';
 
 import EventManagement from './pages/eventManagement';
 import UserListManagement from './pages/userManagement/userListManagement';
+import WorkPlanManagement from './pages/workPlanManagement';
 import AdminUsersManagement from './pages/userManagement/adminUsersManagement';
 import QuestionManagement from './pages/questionManagement/index';
+import OrganisationManagement from './pages/organisationManagement';
 
 const PrivateRoute = lazy(() =>
   import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -373,6 +375,11 @@ const App = () => {
                           Component={Settings?.OrganisationTypes}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/contract-types`}
+                          Component={Settings?.ContractTypes}
+                          authority="dashboard"
+                        />
                         <Route
                           component={() => (
                             <Redirect
@@ -443,6 +450,89 @@ const App = () => {
                           path={`${match?.path}/question-identification`}
                           exact
                           Component={QuestionManagement.QuestionIdentification}
+                          authority="dashboard"
+                        />
+                        <Route
+                          component={() => (
+                            <Redirect
+                              to={{
+                                pathname: '/not-found',
+                                state: { status: 404 },
+                              }}
+                            />
+                          )}
+                        />
+                      </Switch>
+                    );
+                  }}
+                  authority="dashboard"
+                  isLayout={false}
+                />
+
+                <PrivateRoute
+                  path={'/work-plan-management'}
+                  Component={({ match }) => {
+                    return (
+                      <Switch>
+                        <PrivateRoute
+                          path={`${match?.path}/list`}
+                          Component={WorkPlanManagement.WorkPlanList}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/add`}
+                          Component={WorkPlanManagement?.AddWorkPlan}
+                          authority="dashboard"
+                        />
+                        {/*<PrivateRoute*/}
+                        {/*  path={`${match?.path}/edit/:id`}*/}
+                        {/*  Component={WorkPlanManagement?.EditWorkPlan}*/}
+                        {/*  authority="dashboard"*/}
+                        {/*/>*/}
+                        <Route
+                          component={() => (
+                            <Redirect
+                              to={{
+                                pathname: '/not-found',
+                                state: { status: 404 },
+                              }}
+                            />
+                          )}
+                        />
+                      </Switch>
+                    );
+                  }}
+                  authority="dashboard"
+                  isLayout={false}
+                />
+
+                <PrivateRoute
+                  path={'/organisation-management'}
+                  Component={({ match }) => {
+                    return (
+                      <Switch>
+                        <PrivateRoute
+                          path={`${match?.path}/list`}
+                          exact
+                          Component={OrganisationManagement?.OrganisationList}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/show/:id`}
+                          exact
+                          Component={OrganisationManagement?.OrganisationShow}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/add`}
+                          exact
+                          Component={OrganisationManagement?.OrganisationCreateOrUpdate}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/edit/:id`}
+                          exact
+                          Component={OrganisationManagement?.OrganisationCreateOrUpdate}
                           authority="dashboard"
                         />
                         <Route

@@ -100,7 +100,7 @@ const EditPackages = () => {
   useEffect(async () => {
     const checkedList = []
     booksList?.forEach((item) => {
-      if (selectedPackages?.packageBooks.find((elmt) => elmt.bookId === item.id))
+      if (selectedPackages?.packageBooks?.find((elmt) => elmt?.bookId === item?.id))
         checkedList.push(item.id)
     })
     form.setFieldsValue({ packageBooks: checkedList })
@@ -108,18 +108,18 @@ const EditPackages = () => {
 
   useEffect(() => {
     if (changedPackageKind?.includes(["isPersonal", "isCorporate"])) {
-      setFilteredDocumentList(documentsList.filter((item) => item.isPersonal || item.isCorporate))
+      setFilteredDocumentList(documentsList?.filter((item) => item.isPersonal || item.isCorporate))
     } else if (changedPackageKind?.includes("isCorporate")) {
-      setFilteredDocumentList(documentsList.filter((item) => item.isCorporate))
+      setFilteredDocumentList(documentsList?.filter((item) => item.isCorporate))
     } else if (changedPackageKind?.includes("isPersonal")) {
-      setFilteredDocumentList(documentsList.filter((item) => item.isPersonal))
+      setFilteredDocumentList(documentsList?.filter((item) => item.isPersonal))
     } else {
       setFilteredDocumentList([])
     }
   }, [changedPackageKind]);
 
   useEffect(() => {
-    const selectedLessonsOptions = selectedClassrooms.map((item) => {
+    const selectedLessonsOptions = selectedClassrooms?.map((item) => {
       return {
         label: item.name,
         options: lessons
@@ -137,7 +137,7 @@ const EditPackages = () => {
   }, [lessons, selectedClassrooms]);
 
   useEffect(() => {
-    let selectedClass = allClassList.filter((item) => currentClassroomIds.includes(item.id));
+    let selectedClass = allClassList?.filter((item) => currentClassroomIds?.includes(item.id));
     setSelectedClassrooms(selectedClass);
   }, [allClassList, currentClassroomIds]);
 
@@ -146,20 +146,21 @@ const EditPackages = () => {
 
     const currentImageArray = [];
 
-    currentPackageResponse.payload.imageOfPackages.forEach((item) => {
+    currentPackageResponse?.payload?.imageOfPackages?.forEach((item) => {
       currentImageArray.push({
         name: item.file.fileName,
       });
     });
 
     let currentClassrooms = [
-      ...new Set(currentPackageResponse.payload.packageLessons.map((item) => item.lesson.classroom.id)),
+      ...new Set(currentPackageResponse?.payload?.packageLessons?.map((item) => item.lesson.classroom.id)),
     ];
 
     let currentGroupRole = [
-      ...new Set(currentPackageResponse.payload.packageGroups.map((item) => item.groupId)),
+      ...new Set(currentPackageResponse?.payload?.packageGroups?.map((item) => item.groupId)),
     ];
 
+    seTisDisableButtonMaxNetCount(currentPackageResponse.payload.packageType.isCanSeeTargetScreen)
     setCurrentClassroomIds(currentClassrooms);
 
     currentClassrooms.map((item) => {
@@ -174,8 +175,8 @@ const EditPackages = () => {
     });
 
     let convertedPackageKind = []
-    currentPackageResponse.payload.isCorporate && convertedPackageKind.push('isCorporate')
-    currentPackageResponse.payload.isPersonal && convertedPackageKind.push('isPersonal')
+    currentPackageResponse?.payload?.isCorporate && convertedPackageKind.push('isCorporate')
+    currentPackageResponse?.payload?.isPersonal && convertedPackageKind.push('isPersonal')
 
     form.setFieldsValue({
       gradeLevel: currentClassrooms,
@@ -211,14 +212,7 @@ const EditPackages = () => {
 
   const beforeUpload = async (file) => {
     const isValidType = [
-      '.csv',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'application/vnd.ms-excel',
-      '.doc',
-      '.docx',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'application/pdf',
+      ".jpg", ".jpeg", ".bmp", ".gif", ".png"
     ].includes(file.type.toLowerCase());
 
     const isImage = file.type.toLowerCase().includes('image');
@@ -277,21 +271,21 @@ const EditPackages = () => {
 
   const onFinish = async (values) => {
     let newImageArray = [];
-    let diffOldImages = values.imageOfPackages;
-    diffOldImages.forEach((item) => {
-      currentImages.forEach((img) => {
+    let diffOldImages = values?.imageOfPackages;
+    diffOldImages?.forEach((item) => {
+      currentImages?.forEach((img) => {
         img.name === item.name && diffOldImages.pop(item);
       });
     });
 
-    newImageArray = currentImages.concat(diffOldImages);
+    newImageArray = currentImages?.concat(diffOldImages);
 
-    let lessonsArr = values.lesson.map((item) => {
+    let lessonsArr = values?.lesson?.map((item) => {
       return { lessonId: item };
     });
 
     const packageGroups = []
-    values.packageGroups.forEach(item => {
+    values?.packageGroups?.forEach(item => {
       packageGroups.push({
         groupId: item
       })
@@ -317,9 +311,9 @@ const EditPackages = () => {
         tryingTestQuestionCount: Number(values?.tryingTestQuestionCount),
         hasMotivationEvent: values.hasMotivationEvent,
         packageBooks: values.packageBooks?.map((item) => { return { bookId: item } }),
-        packageDocuments: values.packageDocuments.map((item) => { return { documentId: item } }),
-        isPersonal: values.packageKind.includes("isPersonal"),
-        isCorporate: values.packageKind.includes("isCorporate")
+        packageDocuments: values.packageDocuments?.map((item) => { return { documentId: item } }),
+        isPersonal: values.packageKind?.includes("isPersonal"),
+        isCorporate: values.packageKind?.includes("isCorporate")
       },
     };
 
@@ -466,7 +460,7 @@ const EditPackages = () => {
                   }
                   e.fileList.length >= 5 ? setIsDisable(true) : setIsDisable(false);
                 }}
-                accept=" application/pdf, image/*"
+                accept="image/*"
               >
                 <Button disabled={isDisable} icon={<UploadOutlined />}>
                   Upload
@@ -602,7 +596,6 @@ const EditPackages = () => {
               filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
               showArrow
               mode="multiple"
-              // onDeselect={onLessonDeselect}
               onChange={onLessonChange}
               options={lessonsOptions}
             ></CustomSelect>
