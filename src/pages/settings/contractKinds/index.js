@@ -133,7 +133,7 @@ const ContractKinds = () => {
     form.setFieldsValue(record);
   };
 
-  const handleAddContractType = () => {
+  const handleAddContractKind = () => {
     setSelectedContractKindsId();
     setOpen(true);
   };
@@ -205,7 +205,7 @@ const ContractKinds = () => {
     <CustomPageHeader title="Sözleşme Türü" showBreadCrumb routes={['Tanımlamalar']}>
       <CustomCollapseCard cardTitle="Sözleşme Türü">
         <div className="table-header">
-          <CustomButton className="add-btn" onClick={handleAddContractType}>
+          <CustomButton className="add-btn" onClick={handleAddContractKind}>
             Yeni
           </CustomButton>
         </div>
@@ -230,7 +230,7 @@ const ContractKinds = () => {
             }
           }}
           pagination={paginationProps}
-          rowKey={(record) => `contractType-${record?.id || record?.name}`}
+          rowKey={(record) => `contractKinds-${record?.id || record?.name}`}
           scroll={{ x: false }}
         />
       </CustomCollapseCard>
