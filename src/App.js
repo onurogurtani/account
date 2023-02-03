@@ -380,6 +380,11 @@ const App = () => {
                           Component={Settings?.ContractTypes}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/contract-kinds`}
+                          Component={Settings?.ContractKinds}
+                          authority="dashboard"
+                        />
                         <Route
                           component={() => (
                             <Redirect
