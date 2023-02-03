@@ -7,7 +7,7 @@ const VideoWatchModal = (props) => {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <CustomButton onClick={() => setOpen(!open)} height="15px">
+      <CustomButton className={props.className} onClick={() => setOpen(!open)} height="15px">
         Önizle
       </CustomButton>
 

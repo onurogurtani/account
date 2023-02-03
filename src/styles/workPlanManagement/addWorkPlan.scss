@@ -1,0 +1,274 @@
+.add-work-plan-wrapper {
+  .ant-tabs-tab {
+    cursor: no-drop;
+    color: #919191 !important;
+  }
+
+  .ant-tabs-tab-active {
+    .ant-tabs-tab-btn {
+      color: #1890ff;
+    }
+  }
+
+  .ant-tabs-card .ant-tabs-content {
+    margin-top: -16px;
+
+    .ant-tabs-tabpane {
+      padding: 16px 32px;
+      background: #fff;
+      box-shadow: 0 2px 4px 0 rgb(96 97 112 / 16%), 0 0 1px 0 rgb(40 41 61 / 4%);
+    }
+  }
+
+  .ant-tabs-card {
+    .ant-tabs-nav::before {
+      display: none;
+    }
+  }
+
+
+  .form-footer {
+    display: flex;
+    justify-content: end;
+    gap: 15px;
+
+    .ant-btn {
+      height: 36px;
+      font-size: 14px;
+    }
+
+    .next-btn {
+      background-color: #699a00;
+      border: none;
+    }
+
+    .back-btn {
+      background-color: gray;
+      border: none;
+    }
+
+  }
+
+  .subject-choose-add-form {
+
+    padding-top: 25px;
+
+    .filter-content {
+      display: flex;
+      column-gap: 24px;
+      flex-wrap: wrap;
+      padding: 30px;
+      background-color: #f9f9f9;
+      border-radius: 15px;
+
+      .search-btn-content {
+        width: 1000%;
+
+        .search-btn {
+          height: 36px;
+          font-size: 14px;
+          border: none;
+        }
+      }
+    }
+
+    .video-list-content {
+      .action-btns {
+        display: flex;
+        column-gap: 24px;
+
+        .btn {
+          display: flex;
+          height: 36px;
+          align-items: center;
+          justify-content: center;
+          color: #fff;
+          font-family: UbuntuMedium, sans-serif;
+          font-size: 12px;
+          line-height: 12px;
+          border-radius: 4px;
+          box-shadow: none;
+
+
+          &.btn-selected {
+            background-color: #818587;
+          }
+
+          &.btn-select {
+            background-color: #42464a;
+          }
+        }
+
+        .btn-show {
+          background-color: #cd921d;
+        }
+
+
+      }
+    }
+
+
+    .ant-form-item {
+      .ant-form-item-label {
+        label {
+          font-size: 14px;
+        }
+      }
+
+      .ant-form-item-control {
+        .ant-form-item-control-input {
+          .ant-form-item-control-input-content {
+            .ant-select {
+              font-size: 14px;
+              width: 287px;
+
+              .ant-select-selector {
+                padding: 1px 10px !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .reinforcement-add-form {
+  }
+
+  .evaluation-test-add-form {
+
+  }
+
+  .out-question-add-form {
+    padding-top: 25px;
+
+
+    .filter-content {
+      display: flex;
+      column-gap: 24px;
+      flex-wrap: wrap;
+
+      .search-btn {
+        height: 36px;
+        font-size: 14px;
+      }
+    }
+
+    .out-question-list {
+      margin-bottom: 15px;
+
+      .item-content {
+        display: flex;
+        column-gap: 24px;
+
+        .info-content {
+          display: flex;
+          flex-direction: column;
+
+          .info-item {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            column-gap: 12px;
+            flex-wrap: wrap;
+
+            h5 {
+              margin-bottom: 0;
+              font-size: 16px;
+            }
+
+            .item-list {
+              display: inline-flex;
+              column-gap: 5px;
+            }
+
+            .btn {
+              display: flex;
+              height: 36px;
+              align-items: center;
+              justify-content: center;
+              color: #fff;
+              font-family: UbuntuMedium, sans-serif;
+              font-size: 12px;
+              line-height: 12px;
+              border-radius: 4px;
+              box-shadow: none;
+
+
+              &.btn-selected {
+                background-color: #818587;
+              }
+
+              &.btn-select {
+                background-color: #42464a;
+              }
+            }
+
+          }
+        }
+      }
+    }
+
+    .ant-form-item {
+      .ant-form-item-label {
+        label {
+          font-size: 14px;
+        }
+      }
+
+      .ant-form-item-control {
+        .ant-form-item-control-input {
+          .ant-form-item-control-input-content {
+            .ant-select {
+              font-size: 14px;
+              width: 287px;
+
+              .ant-select-selector {
+                padding: 1px 10px !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .practice-question-add-form {
+    padding-top: 25px;
+
+    .video-list-content {
+      .action-btns {
+        display: flex;
+        column-gap: 24px;
+
+        .btn {
+          display: flex;
+          height: 36px;
+          align-items: center;
+          justify-content: center;
+          color: #fff;
+          font-family: UbuntuMedium, sans-serif;
+          font-size: 12px;
+          line-height: 12px;
+          border-radius: 4px;
+          box-shadow: none;
+
+
+          &.btn-selected {
+            background-color: #818587;
+          }
+
+          &.btn-select {
+            background-color: #42464a;
+          }
+        }
+
+        .btn-show {
+          background-color: #cd921d;
+        }
+
+
+      }
+    }
+  }
+}

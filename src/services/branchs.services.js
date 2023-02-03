@@ -2,14 +2,14 @@ import { api } from './api';
 
 const getBranchs = (urlString) => {
   return api({
-    url: `Mono/Branchs/GetByFilterPagedBranchs${urlString}`,
+    url: `Shared/Branchs/GetByFilterPagedBranchs${urlString}`,
     method: 'POST',
   });
 };
 
 const addBranchs = (data) => {
   return api({
-    url: 'Mono/Branchs',
+    url: 'Shared/Branchs',
     method: 'POST',
     data,
   });
@@ -17,14 +17,14 @@ const addBranchs = (data) => {
 
 const updateBranchs = (data) => {
   return api({
-    url: 'Mono/Branchs',
+    url: 'Shared/Branchs',
     method: 'PUT',
     data,
   });
 };
 const deleteBranchs = (data) => {
   return api({
-    url: `Mono/Branchs`,
+    url: `Shared/Branchs`,
     method: 'DELETE',
     data,
   });

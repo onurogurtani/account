@@ -270,6 +270,14 @@ const Menus = () => {
           </span>
         </MenuItemText>
       </CustomItem>
+      <CustomItem key="/organisation-management/list">
+        <MenuItemText>
+          <CustomImage src={menuIcons} />
+          <span>
+            <Text t="Kurum Yönetimi" />
+          </span>
+        </MenuItemText>
+      </CustomItem>
       <CustomSubMenu key="SubMenu" title="Tanımlamalar" icon={<CustomImage src={menuIcons} />}>
         <CustomItem key="/user-management/school-management">
           <MenuItemText>
@@ -422,6 +430,22 @@ const Menus = () => {
             </span>
           </MenuItemText>
         </CustomItem>
+        <CustomItem key="/settings/organisation-types">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Kurum Türü  Tanımlama" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+        <CustomItem key="/settings/contract-types">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Sözleşme Tipi" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
       </CustomSubMenu>
 
       <CustomSubMenu key="QuestionMenu" title="Soru Yönetimi" icon={<CustomImage src={menuIcons} />}>
@@ -442,6 +466,14 @@ const Menus = () => {
           </MenuItemText>
         </CustomItem>
       </CustomSubMenu>
+      <CustomItem key="/work-plan-management/list">
+        <MenuItemText>
+          <CustomImage src={menuIcons} />
+          <span>
+            <Text t="Çalışma Planları" />
+          </span>
+        </MenuItemText>
+      </CustomItem>
     </CustomMenu>
   );
 };

@@ -248,8 +248,12 @@ export const videoSlice = createSlice({
     setIsFilter: (state, action) => {
       state.isFilter = action.payload;
     },
+
     setVideos: (state, action) => {
       state.videos = action.payload;
+    },
+    resetVideoList: (state, action) => {
+      state.videos = [];
     },
   },
   extraReducers: (builder) => {
@@ -300,5 +304,7 @@ export const {
   setIsFilter,
   setKalturaIntroVideoId,
   setKalturaVideoId,
+
   setVideos,
+  resetVideoList,
 } = videoSlice.actions;

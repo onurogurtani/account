@@ -27,7 +27,7 @@ export const declarationType = [
 export const selectedStatus = [
   {
     id: 1,
-    value: "all",
+    value: 'all',
     label: 'Hepsi',
   },
   {
@@ -39,5 +39,18 @@ export const selectedStatus = [
     id: 3,
     value: false,
     label: 'Yok',
+  },
+];
+
+export const recordStatus = [
+  {
+    id: 1,
+    value: 'Aktif',
+    valueWithRecord: 'Aktif Kayıtlar',
+  },
+  {
+    id: 0,
+    value: 'Pasif',
+    valueWithRecord: 'Pasif Kayıtlar',
   },
 ];
