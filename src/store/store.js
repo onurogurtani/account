@@ -49,6 +49,7 @@ import { trialTypeSlice } from './slice/trialTypeSlice';
 import { documentsSlice } from './slice/documentsSlice';
 import { booksSlice } from './slice/booksSlice';
 import { organisationTypesSlice } from './slice/organisationTypesSlice';
+import { organisationsSlice } from './slice/organisationsSlice';
 import { contractTypeSlice } from './slice/contractTypeSlice';
 
 const reducers = combineReducers({
@@ -94,6 +95,7 @@ const reducers = combineReducers({
   documents: documentsSlice.reducer,
   books: booksSlice.reducer,
   organisationTypes: organisationTypesSlice.reducer,
+  organisations: organisationsSlice.reducer,
   contractTypes: contractTypeSlice.reducer,
 });
 

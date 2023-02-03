@@ -28,6 +28,7 @@ import UserListManagement from './pages/userManagement/userListManagement';
 import WorkPlanManagement from './pages/workPlanManagement';
 import AdminUsersManagement from './pages/userManagement/adminUsersManagement';
 import QuestionManagement from './pages/questionManagement/index';
+import OrganisationManagement from './pages/organisationManagement';
 
 const PrivateRoute = lazy(() =>
   import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -468,7 +469,6 @@ const App = () => {
                   isLayout={false}
                 />
 
-
                 <PrivateRoute
                   path={'/work-plan-management'}
                   Component={({ match }) => {
@@ -506,6 +506,51 @@ const App = () => {
                   isLayout={false}
                 />
 
+                <PrivateRoute
+                  path={'/organisation-management'}
+                  Component={({ match }) => {
+                    return (
+                      <Switch>
+                        <PrivateRoute
+                          path={`${match?.path}/list`}
+                          exact
+                          Component={OrganisationManagement?.OrganisationList}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/show/:id`}
+                          exact
+                          Component={OrganisationManagement?.OrganisationShow}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/add`}
+                          exact
+                          Component={OrganisationManagement?.OrganisationCreateOrUpdate}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/edit/:id`}
+                          exact
+                          Component={OrganisationManagement?.OrganisationCreateOrUpdate}
+                          authority="dashboard"
+                        />
+                        <Route
+                          component={() => (
+                            <Redirect
+                              to={{
+                                pathname: '/not-found',
+                                state: { status: 404 },
+                              }}
+                            />
+                          )}
+                        />
+                      </Switch>
+                    );
+                  }}
+                  authority="dashboard"
+                  isLayout={false}
+                />
               </HomeLayout>
 
               <Route component={() => <Redirect to={{ pathname: '/not-found', state: { status: 404 } }} />} />
