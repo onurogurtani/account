@@ -28,6 +28,7 @@ import UserListManagement from './pages/userManagement/userListManagement';
 import WorkPlanManagement from './pages/workPlanManagement';
 import AdminUsersManagement from './pages/userManagement/adminUsersManagement';
 import QuestionManagement from './pages/questionManagement/index';
+import QuestionDifficultyReports from './pages/reports/questionDifficulty';
 
 const PrivateRoute = lazy(() =>
   import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -468,7 +469,6 @@ const App = () => {
                   isLayout={false}
                 />
 
-
                 <PrivateRoute
                   path={'/work-plan-management'}
                   Component={({ match }) => {
@@ -506,6 +506,34 @@ const App = () => {
                   isLayout={false}
                 />
 
+                <PrivateRoute
+                  path={'/reports'}
+                  Component={({ match }) => {
+                    return (
+                      <Switch>
+                        <PrivateRoute
+                          path={`${match?.path}/question-difficulty/list`}
+                          exact
+                          Component={QuestionDifficultyReports.QuestionDifficultyList}
+                          authority="dashboard"
+                        />
+
+                        <Route
+                          component={() => (
+                            <Redirect
+                              to={{
+                                pathname: '/not-found',
+                                state: { status: 404 },
+                              }}
+                            />
+                          )}
+                        />
+                      </Switch>
+                    );
+                  }}
+                  authority="dashboard"
+                  isLayout={false}
+                />
               </HomeLayout>
 
               <Route component={() => <Redirect to={{ pathname: '/not-found', state: { status: 404 } }} />} />
