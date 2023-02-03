@@ -446,6 +446,14 @@ const Menus = () => {
             </span>
           </MenuItemText>
         </CustomItem>
+        <CustomItem key="/settings/contract-kinds">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Sözleşme Türleri" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
       </CustomSubMenu>
 
       <CustomSubMenu key="QuestionMenu" title="Soru Yönetimi" icon={<CustomImage src={menuIcons} />}>

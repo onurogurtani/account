@@ -21,39 +21,46 @@ import {
 import '../../../styles/settings/packages.scss';
 import '../../../styles/table.scss';
 import {
-  addContractType,
-  getContractTypeList,
-  updateContractType,
+  getContractTypeAll,
 } from '../../../store/slice/contractTypeSlice';
 import useResetFormOnCloseModal from '../../../hooks/useResetFormOnCloseModal';
 import { recordStatus } from '../../../constants';
 import usePaginationProps from '../../../hooks/usePaginationProps';
+import { addContractKinds, getContractKindsList, updateContractKinds } from '../../../store/slice/contractKindsSlice';
 
-const ContractTypes = () => {
+const ContractKinds = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
-  const [selectedContractTypeId, setSelectedContractTypeId] = useState();
-  const { contractTypeList, tableProperty } = useSelector((state) => state?.contractTypes);
+  const [selectedContractKindsId, setSelectedContractKindsId] = useState();
+  const { contractKindsList, tableProperty } = useSelector((state) => state?.contractKinds);
+  const { contractTypeAllList } = useSelector((state) => state?.contractTypes);
+
   const paginationProps = usePaginationProps(tableProperty);
 
   useResetFormOnCloseModal({ form, open });
 
   useEffect(() => {
-    loadContractType(tableProperty);
+    loadContractKinds(tableProperty);
+    loadContractType()
   }, []);
 
-  const loadContractType = useCallback(
+  const loadContractKinds = useCallback(
     async (data = null) => {
-      if (contractTypeList.length > 0) return false
-      dispatch(getContractTypeList({
+      dispatch(getContractKindsList({
         data: {
-          contractTypeDto: {
+          contractKindDto: {
             ...data
           }
         }
       }));
+    }, [dispatch]);
+
+  const loadContractType = useCallback(
+    async () => {
+      if (contractTypeAllList.length > 0) return false
+      dispatch(getContractTypeAll());
     }, [dispatch]);
 
   const columns = [
@@ -76,9 +83,18 @@ const ContractTypes = () => {
       },
     },
     {
-      title: 'Sözleşme Tipi',
+      title: 'Sözleşme Türü Adı',
       dataIndex: 'name',
       key: 'name',
+      sorter: true,
+      render: (text, record) => {
+        return <div>{text}</div>;
+      },
+    },
+    {
+      title: 'Sözleşme Tipi',
+      dataIndex: ['contractType', 'name'],
+      key: ['contractType', 'name'],
       sorter: true,
       render: (text, record) => {
         return <div>{text}</div>;
@@ -95,13 +111,13 @@ const ContractTypes = () => {
     },
     {
       title: 'İşlemler',
-      dataIndex: 'contractTypeUpdateAction',
-      key: 'contractTypeUpdateAction',
+      dataIndex: 'contractKindsUpdateAction',
+      key: 'contractKindsUpdateAction',
       align: 'center',
       render: (text, record) => {
         return (
           <div className="action-btns">
-            <CustomButton className="update-btn" onClick={() => editContractType(record)}>
+            <CustomButton className="update-btn" onClick={() => editContractKinds(record)}>
               Güncelle
             </CustomButton>
           </div>
@@ -110,14 +126,15 @@ const ContractTypes = () => {
     },
   ];
 
-  const editContractType = (record) => {
+  const editContractKinds = (record) => {
     setOpen(true);
-    setSelectedContractTypeId(record.id);
+    setSelectedContractKindsId(record.id);
+    console.log(record)
     form.setFieldsValue(record);
   };
 
   const handleAddContractType = () => {
-    setSelectedContractTypeId();
+    setSelectedContractKindsId();
     setOpen(true);
   };
 
@@ -127,27 +144,27 @@ const ContractTypes = () => {
 
   const onFinish = async (values) => {
     const data = {
-      contractType: {
+      contractKind: {
         ...values,
       }
     };
 
-    selectedContractTypeId ? (data.contractType.id = selectedContractTypeId) : (data.contractType.recordStatus = 1)
+    selectedContractKindsId ? (data.contractKind.id = selectedContractKindsId) : (data.contractKind.recordStatus = 1)
 
     const action = await dispatch(
-      selectedContractTypeId ? updateContractType(data) : addContractType(data),
+      selectedContractKindsId ? updateContractKinds(data) : addContractKinds(data),
     );
-    const reducer = selectedContractTypeId ? updateContractType : addContractType;
+    const reducer = selectedContractKindsId ? updateContractKinds : addContractKinds;
 
     if (reducer.fulfilled.match(action)) {
       successDialog({
         title: <Text t="success" />,
-        message: selectedContractTypeId ? 'Kayıt Güncellenmiştir' : 'Kaydedildi',
+        message: selectedContractKindsId ? 'Kayıt Güncellenmiştir' : 'Kaydedildi',
         onOk: async () => {
           await handleClose();
         },
       });
-      loadContractType(tableProperty)
+      loadContractKinds(tableProperty)
     } else {
       errorDialog({
         title: <Text t="error" />,
@@ -157,17 +174,19 @@ const ContractTypes = () => {
   };
 
   const onOk = async () => {
-    if (!selectedContractTypeId) {
+    if (!selectedContractKindsId) {
       form.submit();
       return;
     }
     await form.validateFields();
     confirmDialog({
       title: 'Uyarı',
-      message: 'Seçtiğiniz Kayıt Üzerinde Değişiklik Yapılacaktır. Emin misiniz?',
+      message: 'Güncellemekte olduğunuz kayıt Sözleşmeler ekranında tanımlı olan kayıtları etkileyeceği için Güncelleme yapmak istediğinizden Emin misiniz?',
       onOk: () => {
         form.submit();
       },
+      okText: 'Evet',
+      cancelText: 'Hayır',
     });
   };
 
@@ -183,15 +202,15 @@ const ContractTypes = () => {
     });
   };
   return (
-    <CustomPageHeader title="Sözleşme Tipi" showBreadCrumb routes={['Tanımlamalar']}>
-      <CustomCollapseCard cardTitle="Sözleşme Tipi">
+    <CustomPageHeader title="Sözleşme Türü" showBreadCrumb routes={['Tanımlamalar']}>
+      <CustomCollapseCard cardTitle="Sözleşme Türü">
         <div className="table-header">
           <CustomButton className="add-btn" onClick={handleAddContractType}>
             Yeni
           </CustomButton>
         </div>
         <CustomTable
-          dataSource={contractTypeList}
+          dataSource={contractKindsList}
           columns={columns}
           onChange={(pagination, _, sorter) => {
             if (JSON.stringify(sorter) !== '{}') {
@@ -201,13 +220,13 @@ const ContractTypes = () => {
                 PageSize: pagination.pageSize,
                 orderBy: field + (sorter.order === 'descend' ? 'DESC' : 'ASC')
               };
-              loadContractType(data);
+              loadContractKinds(data);
             } else {
               const data = {
                 PageNumber: pagination.current,
                 PageSize: pagination.pageSize,
               };
-              loadContractType(data);
+              loadContractKinds(data);
             }
           }}
           pagination={paginationProps}
@@ -217,10 +236,10 @@ const ContractTypes = () => {
       </CustomCollapseCard>
 
       <CustomModal
-        title={selectedContractTypeId ? 'Sözleşme Tipi Güncelleme' : 'Sözleşme Tipi Ekleme'}
+        title={selectedContractKindsId ? 'Sözleşme Türü Güncelleme' : 'Sözleşme Türü Ekleme'}
         visible={open}
         onOk={onOk}
-        okText={selectedContractTypeId ? 'Güncelle ve Kaydet' : 'Kaydet ve Bitir'}
+        okText={selectedContractKindsId ? 'Güncelle ve Kaydet' : 'Kaydet ve Bitir'}
         cancelText="İptal"
         onCancel={onCancel}
         bodyStyle={{ overflowY: 'auto', maxHeight: 'calc(100vh - 300px)' }}
@@ -234,21 +253,37 @@ const ContractTypes = () => {
                 message: 'Lütfen Zorunlu Alanları Doldurunuz.',
               },
             ]}
-            label="Sözleşme Tipi Adı"
+            label="Sözleşme Türü Adı"
             name="name"
           >
-            <CustomInput placeholder="Sözleşme Tipi Adı" />
+            <CustomInput placeholder="Sözleşme Türü Adı" />
           </CustomFormItem>
           <CustomFormItem
-            rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
+            rules={[
+              {
+                required: true,
+                message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+              },
+            ]}
+            label="Sözleşme Tipi"
+            name="contractTypeId"
+          >
+            <CustomSelect placeholder="Seçiniz">
+              {contractTypeAllList.map((item) => (
+                <Option key={item.id} value={item.id}>
+                  {item?.name}
+                </Option>
+              ))}
+            </CustomSelect>
+          </CustomFormItem>
+          <CustomFormItem
             name={'description'}
             label={<Text t="Açıklama" />}
           >
             <CustomTextArea />
           </CustomFormItem>
-
           {
-            selectedContractTypeId
+            selectedContractKindsId
             &&
             <CustomFormItem
               rules={[
@@ -276,4 +311,4 @@ const ContractTypes = () => {
   );
 };
 
-export default ContractTypes;
+export default ContractKinds;

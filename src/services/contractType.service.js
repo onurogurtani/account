@@ -7,14 +7,28 @@ const getContractType = (data = {}) => {
     data: data,
   });
 };
-const getContractTypeAdd = (data = {}) => {
+
+const getContractTypeAll = (
+  data = null,
+  params = {
+    PageSize: 0,
+  },
+) => {
+  return api({
+    url: `Crm/ContractTypes/getList`,
+    method: 'POST',
+    data,
+    params,
+  });
+}
+const addContractType = (data = {}) => {
   return api({
     url: `/Crm/ContractTypes/Add`,
     method: 'POST',
     data: data,
   });
 };
-const getContractTypeUpdate = (data = {}) => {
+const updateContractType = (data = {}) => {
   return api({
     url: `/Crm/ContractTypes/Update`,
     method: 'PUT',
@@ -23,8 +37,9 @@ const getContractTypeUpdate = (data = {}) => {
 };
 const contractTypeServices = {
   getContractType,
-  getContractTypeUpdate,
-  getContractTypeAdd,
+  updateContractType,
+  addContractType,
+  getContractTypeAll
 };
 
 export default contractTypeServices;
