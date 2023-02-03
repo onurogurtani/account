@@ -129,7 +129,6 @@ const ContractKinds = () => {
   const editContractKinds = (record) => {
     setOpen(true);
     setSelectedContractKindsId(record.id);
-    console.log(record)
     form.setFieldsValue(record);
   };
 
