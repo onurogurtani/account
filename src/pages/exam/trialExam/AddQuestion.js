@@ -17,6 +17,7 @@ import {
   resetLessonSubSubjectsFilter,
 } from '../../../store/slice/lessonSubSubjectsSlice';
 import { getUnitsListFilter, resetLessonUnitsFilter } from '../../../store/slice/lessonUnitsSlice';
+import { getByFilterPagedQuestionOfExamsList } from '../../../store/slice/questionIdentificationSlice';
 const AddQuestion = () => {
   const [step, setStep] = useState(1);
   const { allClassList } = useSelector((state) => state.classStages);
@@ -26,6 +27,26 @@ const AddQuestion = () => {
   const { lessonSubSubjectsFilter } = useSelector((state) => state?.lessonSubSubjects);
   const [form] = Form.useForm();
   const dispatch = useDispatch();
+  const searchQuesiton = (pageNumber) => {
+    const formValue = form.getFieldValue();
+    const data = {
+      'QuestionOfExamDetailSearch.IncludeQuestionFilesBase64': 'true',
+      'QuestionOfExamDetailSearch.ThenIncludeQuestionSolutionsFilesBase64': 'false',
+      'QuestionOfExamDetailSearch.PageNumber': pageNumber ? pageNumber : 1,
+      'QuestionOfExamDetailSearch.PageSize': 3,
+      'QuestionOfExamDetailSearch.ClassroomId': formValue.ClassroomId,
+      'QuestionOfExamDetailSearch.LessonId': formValue.lessonId,
+      'QuestionOfExamDetailSearch.UnitId:': formValue.lessonUnitId,
+      'QuestionOfExamDetailSearch.SubjectId:': formValue.lessonSubjectId,
+      //'QuestionOfExamDetailSearch.SubSubjectIds': [],
+      'QuestionOfExamDetailSearch.QuestionOfExamState': 0,
+    };
+    formValue?.lessonSubSubjectId?.forEach((element, index) => {
+      data[`VideoDetailSearch.LessonSubSubjectIds[${index}]`] = element;
+    });
+    dispatch(getByFilterPagedQuestionOfExamsList(data));
+  };
+
   return (
     <div className="add-question-trial">
       {step === 1 && (
@@ -60,10 +81,15 @@ const AddQuestion = () => {
             <CustomInput placeholder="Ara" />
           </div>
           <div className="filter">
-            <CustomForm form={form}>
+            <CustomForm
+              onFinish={() => {
+                dispatch(searchQuesiton());
+              }}
+              form={form}
+            >
               <Row gutter={[16, 16]}>
                 <Col span={8}>
-                  <CustomFormItem name={'classId'} label="Sınıf">
+                  <CustomFormItem name={'ClassroomId'} label="Sınıf">
                     <CustomSelect
                       onChange={(e) => {
                         dispatch(resetLessonUnitsFilter());
@@ -161,7 +187,14 @@ const AddQuestion = () => {
                 >
                   Temizle
                 </CustomButton>
-                <CustomButton type="primary">Filitrele</CustomButton>
+                <CustomButton
+                  onClick={() => {
+                    form.submit();
+                  }}
+                  type="primary"
+                >
+                  Filitrele
+                </CustomButton>
               </div>
             </CustomForm>
           </div>

@@ -15,6 +15,7 @@ export const getTrialExamList = createAsyncThunk(
 
 const initialState = {
   trialExamList: [],
+  trialExamFormData: {},
 };
 
 export const trialExamSlice = createSlice({
