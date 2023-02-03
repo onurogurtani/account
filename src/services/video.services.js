@@ -42,7 +42,7 @@ const downloadVideoQuestionsExcel = () => {
 
 const getKalturaSessionKey = () => {
   return api({
-    url: `Mono/KalturaPlatform/getSessionKey`,
+    url: `Content/KalturaPlatform/getSessionKey`,
     method: 'POST',
   });
 };
