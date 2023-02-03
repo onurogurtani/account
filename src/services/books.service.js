@@ -2,7 +2,7 @@ import { api } from './api';
 
 const GetByFilterPagedGroups = (params) => {
   return api({
-    url: `Mono/Books/getByFilterPagedBooks`,
+    url: `Question/Books/getByFilterPagedBooks`,
     method: 'POST',
     params,
   });

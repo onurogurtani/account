@@ -2,7 +2,7 @@ import { api } from './api';
 
 const preferencePeriodGetList = (data) => {
   return api({
-    url: `Mono/PreferencePeriod/getPagedList?PageSize=50`,
+    url: `Target/PreferencePeriod/getPagedList?PageSize=50`,
     method: 'POST',
     data: null,
   });
@@ -10,28 +10,28 @@ const preferencePeriodGetList = (data) => {
 
 const preferencePeriodAdd = (data) => {
   return api({
-    url: `Mono/PreferencePeriod`,
+    url: `Target/PreferencePeriod`,
     method: 'POST',
     data: data,
   });
 };
 const preferencePeriodUpdate = (data) => {
   return api({
-    url: `Mono/PreferencePeriod`,
+    url: `Target/PreferencePeriod`,
     method: 'PUT',
     data: data,
   });
 };
 const preferencePeriodDelete = (data) => {
   return api({
-    url: `Mono/PreferencePeriod`,
+    url: `Target/PreferencePeriod`,
     method: 'DELETE',
     params: data,
   });
 };
 const getEducationYears = (data = null) => {
   return api({
-    url: `Mono/EducationYears/getList?PageSize=0&PageNumber=0`,
+    url: `Target/EducationYears/getList?PageSize=0&PageNumber=0`,
     method: 'POST',
     data,
   });

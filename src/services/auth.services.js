@@ -34,7 +34,7 @@ const forgotPasswordChange = (data) => {
 
 const getPasswordRules = () => {
   return api({
-    url: 'Identity/Identity/getpasswordrules',
+    url: 'Admin/AppSettings/getPasswordRules',
     method: 'GET',
   });
 };
@@ -80,14 +80,14 @@ const logout = () => {
 
 const getPasswordRuleAndPeriod = () => {
   return api({
-    url: 'Mono/AppSettings/GetPasswordRuleAndPeriod',
+    url: 'Admin/AppSettings/GetPasswordRuleAndPeriod',
     method: 'GET',
   });
 };
 
 const setPasswordRuleAndPeriodValue = (data) => {
   return api({
-    url: 'Mono/AppSettings/SetPasswordRuleAndPeriodValue',
+    url: 'Admin/AppSettings/SetPasswordRuleAndPeriodValue',
     method: 'POST',
     data,
   });
