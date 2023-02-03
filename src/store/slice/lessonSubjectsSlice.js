@@ -3,6 +3,7 @@ import lessonSubjectsServices from '../../services/lessonSubjects.services';
 
 const initialState = {
   lessonSubjects: [],
+  lessonSubjectsFilter: [],
 };
 
 export const lessonSubjectsSlice = createSlice({
@@ -11,6 +12,9 @@ export const lessonSubjectsSlice = createSlice({
   reducers: {
     resetLessonSubjects: (state, action) => {
       state.lessonSubjects = [];
+    },
+    resetLessonSubjectsFilter: (state, action) => {
+      state.lessonSubjectsFilter = [];
     },
   },
   extraReducers: (builder) => {
@@ -24,6 +28,9 @@ export const lessonSubjectsSlice = createSlice({
     });
     builder.addCase(getLessonSubjectsList.fulfilled, (state, action) => {
       state.lessonSubjects = action?.payload?.data?.items;
+    });
+    builder.addCase(getLessonSubjectsListFilter.fulfilled, (state, action) => {
+      state.lessonSubjectsFilter = action?.payload?.data?.items;
     });
     builder.addCase(editLessonSubjects.fulfilled, (state, action) => {
       const {
@@ -44,7 +51,7 @@ export const lessonSubjectsSlice = createSlice({
   },
 });
 
-export const { resetLessonSubjects } = lessonSubjectsSlice.actions;
+export const { resetLessonSubjects, resetLessonSubjectsFilter } = lessonSubjectsSlice.actions;
 
 export const getLessonSubjects = createAsyncThunk(
   'getLessonSubjects',
@@ -64,6 +71,16 @@ export const getLessonSubjects = createAsyncThunk(
 );
 export const getLessonSubjectsList = createAsyncThunk(
   'getLessonSubjectsList',
+  async (body, { dispatch, getState, rejectWithValue }) => {
+    try {
+      return await lessonSubjectsServices.getLessonSubjects(body);
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+export const getLessonSubjectsListFilter = createAsyncThunk(
+  'getLessonSubjectsListFilter',
   async (body, { dispatch, getState, rejectWithValue }) => {
     try {
       return await lessonSubjectsServices.getLessonSubjects(body);

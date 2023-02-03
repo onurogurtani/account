@@ -30,6 +30,16 @@ export const getLessonsQuesiton = createAsyncThunk(
     }
   },
 );
+export const getLessonsQuesitonFilter = createAsyncThunk(
+  'getLessonsQuesitonFilter',
+  async (body, { dispatch, getState, rejectWithValue }) => {
+    try {
+      return await lessonsServices.getLessons(body);
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 
 export const getByClassromIdLessons = createAsyncThunk(
   'getByClassromIdLessons',
@@ -99,13 +109,18 @@ export const uploadLessonsExcel = createAsyncThunk(
 
 const initialState = {
   lessons: [],
+  lessonsFilterList: [],
   lessonsGetByClassroom: [],
 };
 
 export const lessonsSlice = createSlice({
   name: 'lessonsSlice',
   initialState,
-  reducers: {},
+  reducers: {
+    resetLessonsFilterList: (state, action) => {
+      state.lessonsFilterList = [];
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getLessons.fulfilled, (state, action) => {
       if (action?.payload?.data?.items.length) {
@@ -114,6 +129,9 @@ export const lessonsSlice = createSlice({
     });
     builder.addCase(getLessonsQuesiton.fulfilled, (state, action) => {
       state.lessons = action?.payload?.data?.items;
+    });
+    builder.addCase(getLessonsQuesitonFilter.fulfilled, (state, action) => {
+      state.lessonsFilterList = action?.payload?.data?.items;
     });
     builder.addCase(getByClassromIdLessons.fulfilled, (state, action) => {
       state.lessonsGetByClassroom = action?.payload?.data;
@@ -143,3 +161,4 @@ export const lessonsSlice = createSlice({
     });
   },
 });
+export const { resetLessonsFilterList } = lessonsSlice.actions;

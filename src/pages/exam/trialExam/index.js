@@ -70,6 +70,7 @@ const TrialExam = () => {
     dispatch(getAllClassStages());
   }, [dispatch]);
 
+  const filterSumbit = () => {};
   return (
     <div className=" trial-exam-add">
       <CustomPageHeader>

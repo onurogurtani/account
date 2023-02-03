@@ -34,3 +34,28 @@
     }
   }
 }
+.add-question-view {
+  .search-question {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    .ant-input {
+      width: 150px;
+    }
+  }
+  .filter {
+    width: 100%;
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid gray;
+    .ant-form-item-label {
+      width: 110px;
+    }
+    .filter-button {
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+      gap: 10px;
+    }
+  }
+}
