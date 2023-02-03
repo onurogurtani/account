@@ -169,7 +169,8 @@ const ClassStages = () => {
     form.setFieldsValue({
       name: record.name,
       schoolLevel: schoolLevelReverseEnum[record.schoolLevel],
-      isActive: record.isActive
+      isActive: record.isActive,
+      universityLevel: record?.universityLevel
     });
   });
   const handleaddNewClassStage = () => {
