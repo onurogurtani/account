@@ -2,7 +2,7 @@ import { api } from './api';
 
 const targetSentenceGetList = (params = {}) => {
   return api({
-    url: `Mono/TargetSentence/getList`,
+    url: `Target/TargetSentence/getList`,
     method: 'POST',
     data: null,
     params,
@@ -10,21 +10,21 @@ const targetSentenceGetList = (params = {}) => {
 };
 const targetSentenceAdd = (data) => {
   return api({
-    url: `Mono/TargetSentence`,
+    url: `Target/TargetSentence`,
     method: 'POST',
     data: data,
   });
 };
 const targetSentenceUpdate = (data) => {
   return api({
-    url: `Mono/TargetSentence`,
+    url: `Target/TargetSentence`,
     method: 'PUT',
     data: data,
   });
 };
 const targetSentenceDelete = (data) => {
   return api({
-    url: `Mono/TargetSentence`,
+    url: `Target/TargetSentence`,
     method: 'DELETE',
     data: data,
   });

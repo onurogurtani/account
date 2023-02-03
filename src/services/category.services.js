@@ -1,5 +1,6 @@
 import { api } from './api';
 
+//kullanılmıyor
 const getByFilterPagedCategoriesQuery = (data) => {
   return api({
     url: `Mono/Category/GetByFilterPagedCategoriesQuery`,

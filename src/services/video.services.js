@@ -18,7 +18,7 @@ const editVideo = (data) => {
 
 const deleteVideoDocumentFile = (data) => {
   return api({
-    url: `Mono/Files`,
+    url: `Shared/Files`,
     method: 'DELETE',
     data,
   });
@@ -49,7 +49,7 @@ const getKalturaSessionKey = () => {
 
 const getAllIntroVideoList = () => {
   return api({
-    url: `Mono/IntroVideos/getList?PageSize=0`,
+    url: `Content/IntroVideos/getList?PageSize=0`,
     method: 'POST',
     data: null,
   });
