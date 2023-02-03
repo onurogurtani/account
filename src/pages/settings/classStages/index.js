@@ -1,4 +1,4 @@
-import { Form, Radio } from 'antd';
+import { Form } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
@@ -36,7 +36,6 @@ const ClassStages = () => {
 
   const { allClassList } = useSelector((state) => state?.classStages);
 
-
   const [form] = Form.useForm();
 
   const [open, setOpen] = useState(false);
@@ -51,8 +50,8 @@ const ClassStages = () => {
   ];
 
   const classroom = [
-    { id: 1, value: 'Lisans' },
-    { id: 2, value: 'Önlisans' },
+    { id: 10, value: 'Önlisans' },
+    { id: 20, value: 'Lisans' },
   ];
 
   const schoolLevelReverseEnum = {
@@ -105,7 +104,6 @@ const ClassStages = () => {
         return <div className={classes.classContainer}>{text}</div>;
       },
     },
-
     {
       title: 'Okul Seviyesi',
       dataIndex: 'schoolLevel',
@@ -184,11 +182,12 @@ const ClassStages = () => {
   const onFinish = async () => {
     const values = await form.validateFields();
     const data = {
-      Classroom: {
+      classroom: {
         name: values?.name,
         isActive: isEdit ? values?.isActive : true,
         schoolLevel: schoolLevelEnum[values.schoolLevel],
         id: isEdit ? selectedClassId : undefined,
+        universityLevel: values.universityLevel ? values.universityLevel : null
       },
     };
 
@@ -352,7 +351,7 @@ const ClassStages = () => {
             {({ getFieldValue }) =>
               getFieldValue("schoolLevel") === "Lise" &&
               <CustomFormItem
-                name="eventTypeEnum"
+                name="universityLevel"
                 rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
               >
                 <CustomRadioGroup >
