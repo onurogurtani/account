@@ -15,16 +15,22 @@ export const getTrialExamList = createAsyncThunk(
 
 const initialState = {
   trialExamList: [],
-  trialExamFormData: {},
+  trialExamFormData: { sections: [] },
 };
 
 export const trialExamSlice = createSlice({
   name: 'trialExam',
   initialState,
-  reducers: {},
+  reducers: {
+    setTrialExamFormData: (state, action) => {
+      state.trialExamFormData = action?.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getTrialExamList.fulfilled, (state, action) => {
       state.trialExamList = action?.payload?.data;
     });
   },
 });
+
+export const { setTrialExamFormData } = trialExamSlice.actions;

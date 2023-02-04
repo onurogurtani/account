@@ -37,7 +37,6 @@ const TrialExam = () => {
   const { lessonSubSubjects } = useSelector((state) => state?.lessonSubSubjects);
   const { videos } = useSelector((state) => state?.videos);
 
-  const [formData, setFormData] = useState({});
   const [dependLecturingVideo, setDependLecturingVideo] = useState(false);
   const disabledEndDate = useCallback(
     (endValue) => {
@@ -62,16 +61,12 @@ const TrialExam = () => {
   );
 
   useEffect(() => {
-    console.log(dependLecturingVideo);
-  }, [dependLecturingVideo]);
-  useEffect(() => {
     dispatch(getTrialTypeList({ testExamTypeDetailSearch: { pageNumber: 1, pageSize: 200 } }));
   }, [dispatch]);
   useEffect(() => {
     dispatch(getAllClassStages());
   }, [dispatch]);
 
-  const filterSumbit = () => {};
   return (
     <div className=" trial-exam-add">
       <CustomPageHeader>
