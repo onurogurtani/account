@@ -3,6 +3,7 @@ import lessonUnitsServices from '../../services/lessonUnits.services.js';
 
 const initialState = {
   lessonUnits: [],
+  lessonUnitsFilter: [],
 };
 
 export const lessonUnitsSlice = createSlice({
@@ -11,6 +12,9 @@ export const lessonUnitsSlice = createSlice({
   reducers: {
     resetLessonUnits: (state, action) => {
       state.lessonUnits = [];
+    },
+    resetLessonUnitsFilter: (state, action) => {
+      state.lessonUnitsFilter = [];
     },
   },
   extraReducers: (builder) => {
@@ -38,10 +42,16 @@ export const lessonUnitsSlice = createSlice({
         state.lessonUnits = state.lessonUnits.filter((item) => item.id !== arg);
       }
     });
+    builder.addCase(getUnitsList.fulfilled, (state, action) => {
+      state.lessonUnits = action?.payload?.data?.items;
+    });
+    builder.addCase(getUnitsListFilter.fulfilled, (state, action) => {
+      state.lessonUnitsFilter = action?.payload?.data?.items;
+    });
   },
 });
 
-export const { resetLessonUnits } = lessonUnitsSlice.actions;
+export const { resetLessonUnits, resetLessonUnitsFilter } = lessonUnitsSlice.actions;
 
 export const getUnits = createAsyncThunk('getUnits', async (body, { dispatch, getState, rejectWithValue }) => {
   try {
@@ -54,6 +64,23 @@ export const getUnits = createAsyncThunk('getUnits', async (body, { dispatch, ge
     return rejectWithValue(error?.data);
   }
 });
+export const getUnitsList = createAsyncThunk('getUnitsList', async (body, { dispatch, getState, rejectWithValue }) => {
+  try {
+    return await lessonUnitsServices.getUnits(body);
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+export const getUnitsListFilter = createAsyncThunk(
+  'getUnitsListFilter',
+  async (body, { dispatch, getState, rejectWithValue }) => {
+    try {
+      return await lessonUnitsServices.getUnits(body);
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 
 export const addUnits = createAsyncThunk('addUnits', async (data, { dispatch, rejectWithValue }) => {
   try {

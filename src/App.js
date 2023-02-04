@@ -29,6 +29,7 @@ import WorkPlanManagement from './pages/workPlanManagement';
 import AdminUsersManagement from './pages/userManagement/adminUsersManagement';
 import QuestionManagement from './pages/questionManagement/index';
 import OrganisationManagement from './pages/organisationManagement';
+import Exam from './pages/exam/index';
 
 const PrivateRoute = lazy(() =>
   import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -540,6 +541,34 @@ const App = () => {
                           Component={OrganisationManagement?.OrganisationCreateOrUpdate}
                           authority="dashboard"
                         />
+                        <Route
+                          component={() => (
+                            <Redirect
+                              to={{
+                                pathname: '/not-found',
+                                state: { status: 404 },
+                              }}
+                            />
+                          )}
+                        />
+                      </Switch>
+                    );
+                  }}
+                  authority="dashboard"
+                  isLayout={false}
+                />
+                <PrivateRoute
+                  path={'/exam'}
+                  Component={({ match }) => {
+                    return (
+                      <Switch>
+                        <PrivateRoute
+                          path={`${match?.path}/trial-exam`}
+                          exact
+                          Component={Exam.TrialExam}
+                          authority="dashboard"
+                        />
+
                         <Route
                           component={() => (
                             <Redirect
