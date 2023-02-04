@@ -52,6 +52,7 @@ import { organisationTypesSlice } from './slice/organisationTypesSlice';
 import { organisationsSlice } from './slice/organisationsSlice';
 import { contractTypeSlice } from './slice/contractTypeSlice';
 import { trialExamSlice } from './slice/trialExamSlice';
+import { contractKindsSlice } from './slice/contractKindsSlice';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -99,6 +100,7 @@ const reducers = combineReducers({
   organisations: organisationsSlice.reducer,
   contractTypes: contractTypeSlice.reducer,
   tiralExam: trialExamSlice.reducer,
+  contractKinds: contractKindsSlice.reducer,
 });
 
 const persistConfig = {
