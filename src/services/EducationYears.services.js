@@ -2,7 +2,7 @@ import { api } from './api';
 
 const getEducationYearList = (data = null, params) => {
   return api({
-    url: `Mono/EducationYears/getList`,
+    url: `Target/EducationYears/getList`,
     method: 'POST',
     data,
     params,
@@ -10,14 +10,14 @@ const getEducationYearList = (data = null, params) => {
 };
 const getEducationYearAdd = (data) => {
   return api({
-    url: `Mono/EducationYears`,
+    url: `Target/EducationYears`,
     method: 'POST',
     data: data,
   });
 };
 const getEducationYearUpdate = (data) => {
   return api({
-    url: `Mono/EducationYears`,
+    url: `Target/EducationYears`,
     method: 'PUT',
     data: data,
   });
@@ -26,7 +26,7 @@ const getEducationYearUpdate = (data) => {
 //kullanılmıyor
 const getEducationYearDelete = (data) => {
   return api({
-    url: `Mono/EducationYears`,
+    url: `Target/EducationYears`,
     method: 'DELETE',
     data: data,
   });

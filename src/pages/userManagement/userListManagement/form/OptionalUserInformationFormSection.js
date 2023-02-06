@@ -104,26 +104,24 @@ const OptionalUserInformationFormSection = ({ form, selectedUserTypeCode }) => {
             marginBottom: 0,
           }}
         >
-          <CustomFormItem
+          <CitySelector
+            onChange={onCityChange}
             name="residenceCity"
             style={{
               display: 'inline-block',
               width: 'calc(50% - 8px)',
             }}
-          >
-            <CitySelector onChange={onCityChange} />
-          </CustomFormItem>
+          />
 
-          <CustomFormItem
+          <CountySelector
+            cityId={selectedCityId}
             name="residenceCounty"
             style={{
               display: 'inline-block',
               width: 'calc(50% - 8px)',
               margin: '0 0 0 16px',
             }}
-          >
-            <CountySelector cityId={selectedCityId} />
-          </CustomFormItem>
+          />
         </CustomFormItem>
       )}
 

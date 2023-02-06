@@ -119,8 +119,8 @@ const QuestionIdentification = () => {
   useEffect(() => {
     const currentYear = new Date().getFullYear();
     let years = [];
-    for (let i = 0; i < 50; i++) {
-      years.push(currentYear - i);
+    for (let i = 1975; i < currentYear + 1; i++) {
+      years.push(i);
     }
     setYears(years);
   }, []);
@@ -232,11 +232,11 @@ const QuestionIdentification = () => {
       delete newFormData.videoSolutionFile;
       delete newFormData.imageSolutionFile;
       newFormData.questionOfExamId = questionOfExams.id;
-      if (!newFormData.videoSolutionFileId) {
+      if (!newFormData.videoSolutionFileId && newFormData.questionOfExamState === 0) {
         errorDialog({ title: 'Gerekli', message: 'Video eklemeniz gereklidir.' });
         return;
       }
-      if (newFormData.imageSolutionFileId || newFormData.pdfSolutionFileId) {
+      if (newFormData.imageSolutionFileId || newFormData.pdfSolutionFileId || newFormData.questionOfExamState === 1) {
         if (questionOfExams.questionOfExamDetail) {
           const action = await dispatch(getUpdateQuestion({ data: { questionOfExamDetail: newFormData } }));
           if (getUpdateQuestion.fulfilled.match(action)) {
@@ -789,55 +789,29 @@ const QuestionIdentification = () => {
 
                     {formData.outQuestion && (
                       <>
-                        {classListData?.find((q) => q.value === classroomId)?.label?.toLowerCase() === 'lgs' && (
-                          <div>
-                            <div className="question-info">
-                              <label className="quesiton-label">Soru Yılı Seçiniz :</label>
-                              <div className="checkbox-item">
-                                <CustomSelect
-                                  disabled={formData.questionOfExamState === 1}
-                                  onChange={(e) => {
-                                    setFormData({ ...formData, yearOfOutQuestion: e });
-                                  }}
-                                  value={formData.yearOfOutQuestion}
-                                  className=""
-                                  placeholder="Seçiniz"
-                                >
-                                  {years.map((item, index) => (
-                                    <Option key={index} value={item}>
-                                      {item}
-                                    </Option>
-                                  ))}
-                                </CustomSelect>{' '}
-                              </div>
+                        <div>
+                          <div className="question-info">
+                            <label className="quesiton-label">Soru Yılı Seçiniz :</label>
+                            <div className="checkbox-item">
+                              <CustomSelect
+                                disabled={formData.questionOfExamState === 1}
+                                onChange={(e) => {
+                                  setFormData({ ...formData, yearOfOutQuestion: e });
+                                }}
+                                value={formData.yearOfOutQuestion}
+                                className=""
+                                placeholder="Seçiniz"
+                              >
+                                {years?.reverse()?.map((item, index) => (
+                                  <Option key={index} value={item}>
+                                    {item}
+                                  </Option>
+                                ))}
+                              </CustomSelect>
                             </div>
                           </div>
-                        )}
-                        {classListData?.find((q) => q.value === classroomId)?.label?.toLowerCase() === 'yks' && (
-                          <div>
-                            <div className="question-info">
-                              <label className="quesiton-label">Soru Yılı Seçiniz :</label>
-                              <div className="checkbox-item">
-                                <CustomSelect
-                                  disabled={formData.questionOfExamState === 1}
-                                  onChange={(e) => {
-                                    setFormData({ ...formData, yearOfOutQuestion: e });
-                                  }}
-                                  value={formData.yearOfOutQuestion}
-                                  className=""
-                                  placeholder="Seçiniz"
-                                >
-                                  {years.map((item, index) => (
-                                    <Option key={index} value={item}>
-                                      {item}
-                                    </Option>
-                                  ))}
-                                </CustomSelect>{' '}
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                        {classListData?.find((q) => q.value === classroomId)?.label?.toLowerCase() === 'yks' && (
+                        </div>
+                        {allClassList?.find((q) => q.id === classroomId)?.schoolLevel === 30 && (
                           <div>
                             <div className="question-info">
                               <label className="quesiton-label"></label>

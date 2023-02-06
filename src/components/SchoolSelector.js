@@ -71,12 +71,7 @@ const SchoolSelector = ({ form }) => {
   return (
     <>
       <CustomFormItem label={<Text t="Kurum Türü" />} name="institution">
-        <CustomSelect
-          placeholder="Seçiniz..."
-          optionFilterProp="children"
-          onChange={onInstitutionIdChange}
-          allowClear
-        >
+        <CustomSelect placeholder="Seçiniz..." optionFilterProp="children" onChange={onInstitutionIdChange} allowClear>
           {institutionType.map((item) => (
             <Option key={item.id} value={item.id}>
               {item.value}
@@ -92,26 +87,25 @@ const SchoolSelector = ({ form }) => {
             marginBottom: 0,
           }}
         >
-          <CustomFormItem
+          <CitySelector
+            onChange={onCityChange}
             name="schoolCity"
             style={{
               display: 'inline-block',
               width: 'calc(50% - 8px)',
             }}
-          >
-            <CitySelector onChange={onCityChange} />
-          </CustomFormItem>
+          />
 
-          <CustomFormItem
+          <CountySelector
+            cityId={currentCityId}
+            onChange={onTownChange}
             name="schoolCounty"
             style={{
               display: 'inline-block',
               width: 'calc(50% - 8px)',
               margin: '0 0 0 16px',
             }}
-          >
-            <CountySelector onChange={onTownChange} cityId={currentCityId} />
-          </CustomFormItem>
+          />
         </CustomFormItem>
       )}
 
@@ -120,9 +114,7 @@ const SchoolSelector = ({ form }) => {
           placeholder="Seçiniz"
           optionFilterProp="children"
           showSearch
-          filterOption={(input, option) =>
-            turkishToLower(option.children).includes(turkishToLower(input))
-          }
+          filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
           suffixIcon={searchIcon}
           showArrow={true}
           allowClear
