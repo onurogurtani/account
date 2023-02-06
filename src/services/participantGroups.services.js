@@ -11,7 +11,7 @@ const getParticipantGroupsList = () => {
 
 const updateParticipantGroups = (data) => {
   return api({
-    url: `ParticipantGroups`,
+    url: `Event/ParticipantGroups`,
     method: 'PUT',
     data: data,
   });
@@ -19,7 +19,7 @@ const updateParticipantGroups = (data) => {
 
 const createParticipantGroups = (data) => {
   return api({
-    url: `ParticipantGroups`,
+    url: `Event/ParticipantGroups`,
     method: 'POST',
     data: data,
   });
@@ -27,7 +27,7 @@ const createParticipantGroups = (data) => {
 
 const deleteParticipantGroups = (data) => {
   return api({
-    url: `ParticipantGroups?id=${data}`,
+    url: `Event/ParticipantGroups?id=${data}`,
     method: 'DELETE',
     data:null
   });
@@ -35,7 +35,7 @@ const deleteParticipantGroups = (data) => {
 
 const getParticipantGroupsPagedList = (params = {}) => {
   return api({
-    url: `ParticipantGroups/getPagedList`,
+    url: `Event/ParticipantGroups/getPagedList`,
     method: 'POST',
     data: null,
     params: params,
