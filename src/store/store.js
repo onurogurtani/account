@@ -44,6 +44,7 @@ import { lessonSubjectsSlice } from './slice/lessonSubjectsSlice';
 import { lessonSubSubjectsSlice } from './slice/lessonSubSubjectsSlice';
 import { questionIdentificationSlice } from './slice/questionIdentificationSlice';
 import { earningChoiceSlice } from './slice/earningChoiceSlice';
+import { participantGroupsSlice } from './slice/participantGroupsSlice'
 import { workPlanSlice } from './slice/workPlanSlice';
 import { trialTypeSlice } from './slice/trialTypeSlice';
 import { documentsSlice } from './slice/documentsSlice';
@@ -93,6 +94,7 @@ const reducers = combineReducers({
   workPlan: workPlanSlice.reducer,
   questionIdentification: questionIdentificationSlice.reducer,
   earningChoice: earningChoiceSlice.reducer,
+  participantGroups: participantGroupsSlice.reducer,
   trialType: trialTypeSlice.reducer,
   documents: documentsSlice.reducer,
   books: booksSlice.reducer,

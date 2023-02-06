@@ -371,6 +371,11 @@ const App = () => {
                           Component={Settings?.TrialType}
                           authority="dashboard"
                         />
+                         <PrivateRoute
+                          path={`${match?.path}/participantGroups`}
+                          Component={Settings?.ParticipantGroups}
+                          authority="dashboard"
+                          />
                         <PrivateRoute
                           path={`${match?.path}/organisation-types`}
                           Component={Settings?.OrganisationTypes}

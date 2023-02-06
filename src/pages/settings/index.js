@@ -86,6 +86,11 @@ const Publisher = lazy(() =>
     default: Component,
   })),
 );
+const ParticipantGroups = lazy(() =>
+  import('./participantGroups').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 const TrialType = lazy(() =>
   import('./trialType').then(({ default: Component }) => ({
     default: Component,
@@ -123,6 +128,7 @@ const Settings = {
   PreferencePeriod,
   PublisherBook,
   Publisher,
+  ParticipantGroups,
   TrialType,
   OrganisationTypes,
   ContractTypes,
