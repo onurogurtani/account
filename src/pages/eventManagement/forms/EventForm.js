@@ -56,7 +56,7 @@ const EventForm = ({ form }) => {
       </CustomFormItem>
       <SurveyListWithSelectedSurveyCategory form={form} disabled={isDisableAllButDate} />
 
-      <ParticipantGroupsSection />
+      <ParticipantGroupsSection form={form} />
 
       <DateSection form={form} />
 
