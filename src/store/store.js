@@ -44,7 +44,7 @@ import { lessonSubjectsSlice } from './slice/lessonSubjectsSlice';
 import { lessonSubSubjectsSlice } from './slice/lessonSubSubjectsSlice';
 import { questionIdentificationSlice } from './slice/questionIdentificationSlice';
 import { earningChoiceSlice } from './slice/earningChoiceSlice';
-import { participantGroupsSlice } from './slice/participantGroupsSlice'
+import { participantGroupsSlice } from './slice/participantGroupsSlice';
 import { workPlanSlice } from './slice/workPlanSlice';
 import { trialTypeSlice } from './slice/trialTypeSlice';
 import { documentsSlice } from './slice/documentsSlice';
@@ -54,6 +54,7 @@ import { organisationsSlice } from './slice/organisationsSlice';
 import { contractTypeSlice } from './slice/contractTypeSlice';
 import { trialExamSlice } from './slice/trialExamSlice';
 import { contractKindsSlice } from './slice/contractKindsSlice';
+import { difficultyLevelQuestionOfExamSlice } from './slice/difficultyLevelQuestionOfExamSlice';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -103,6 +104,7 @@ const reducers = combineReducers({
   contractTypes: contractTypeSlice.reducer,
   tiralExam: trialExamSlice.reducer,
   contractKinds: contractKindsSlice.reducer,
+  difficultyLevelQuestionOfExams: difficultyLevelQuestionOfExamSlice.reducer,
 });
 
 const persistConfig = {

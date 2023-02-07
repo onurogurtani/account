@@ -13,32 +13,32 @@ const useQuestionDifficultyListTableColumns = () => {
       children: [
         {
           title: '1',
-          dataIndex: 'a',
-          key: 'a',
+          dataIndex: 'difficulty1QuestionOfExamCount',
+          key: 'difficulty1QuestionOfExamCount',
           width: '5%',
         },
         {
           title: '2',
-          dataIndex: 'b',
-          key: 'b',
+          dataIndex: 'difficulty2QuestionOfExamCount',
+          key: 'difficulty2QuestionOfExamCount',
           width: '5%',
         },
         {
           title: '3',
-          dataIndex: 'c',
-          key: 'c',
+          dataIndex: 'difficulty3QuestionOfExamCount',
+          key: 'difficulty3QuestionOfExamCount',
           width: '5%',
         },
         {
           title: '4',
-          dataIndex: 'd',
-          key: 'd',
+          dataIndex: 'difficulty4QuestionOfExamCount',
+          key: 'difficulty4QuestionOfExamCount',
           width: '5%',
         },
         {
           title: '5',
-          dataIndex: 'e',
-          key: 'e',
+          dataIndex: 'difficulty5QuestionOfExamCount',
+          key: 'difficulty5QuestionOfExamCount',
           width: '5%',
         },
       ],
@@ -51,7 +51,7 @@ const useQuestionDifficultyListTableColumns = () => {
             type="danger"
             height="20px"
             style={{ backgroundColor: 'slateblue', border: 'none' }}
-            onClick={() => console.log(index)}
+            onClick={() => console.log(record)}
           >
             Detay Gör
           </CustomButton>
