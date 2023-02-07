@@ -18,7 +18,7 @@ const editVideo = (data) => {
 
 const deleteVideoDocumentFile = (data) => {
   return api({
-    url: `Mono/Files`,
+    url: `Shared/Files`,
     method: 'DELETE',
     data,
   });
@@ -42,14 +42,14 @@ const downloadVideoQuestionsExcel = () => {
 
 const getKalturaSessionKey = () => {
   return api({
-    url: `Mono/KalturaPlatform/getSessionKey`,
+    url: `Content/KalturaPlatform/getSessionKey`,
     method: 'POST',
   });
 };
 
 const getAllIntroVideoList = () => {
   return api({
-    url: `Mono/IntroVideos/getList?PageSize=0`,
+    url: `Content/IntroVideos/getList?PageSize=0`,
     method: 'POST',
     data: null,
   });
@@ -68,10 +68,11 @@ const getByVideoId = (id) => {
   });
 };
 
-const getByFilterPagedVideos = (urlString) => {
+const getByFilterPagedVideos = (urlString = '', params = {}) => {
   return api({
     url: `Content/Videos/getByFilterPagedVideos?${urlString}`,
     method: 'POST',
+    params: params,
   });
 };
 

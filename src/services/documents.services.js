@@ -2,7 +2,7 @@ import { api } from './api';
 
 const getListDocuments = () => {
   return api({
-    url: 'Mono/Documents/getList',
+    url: 'Crm/Documents/getList',
     method: 'POST',
     data: [],
   });

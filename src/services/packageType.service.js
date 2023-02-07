@@ -2,14 +2,14 @@ import { api } from './api';
 
 const getByFilterPagedPackageTypes = (urlString) => {
   return api({
-    url: `Mono/PackageTypes/GetByFilterPagedPackageTypes${urlString}`,
+    url: `Payment/PackageTypes/GetByFilterPagedPackageTypes${urlString}`,
     method: 'POST',
   });
 };
 
 const getList = (data = []) => {
   return api({
-    url: `Mono/PackageTypes/getList`,
+    url: `Payment/PackageTypes/getList`,
     method: 'POST',
     data,
   });
@@ -17,7 +17,7 @@ const getList = (data = []) => {
 
 const addPackageType = (data) => {
   return api({
-    url: 'Mono/PackageTypes/Add',
+    url: 'Payment/PackageTypes/Add',
     method: 'POST',
     data,
   });
@@ -25,14 +25,14 @@ const addPackageType = (data) => {
 
 const updatePackageType = (data) => {
   return api({
-    url: 'Mono/PackageTypes/Update',
+    url: 'Payment/PackageTypes/Update',
     method: 'PUT',
     data,
   });
 };
 const deletePackageType = (data) => {
   return api({
-    url: `Mono/PackageTypes/Delete`,
+    url: `Payment/PackageTypes/Delete`,
     method: 'DELETE',
     data,
   });

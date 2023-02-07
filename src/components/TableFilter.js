@@ -5,8 +5,12 @@ import { CustomButton, CustomForm, CustomImage } from './';
 import iconSearchWhite from '../assets/icons/icon-white-search.svg';
 import '../styles/tableFilter.scss';
 
-const TableFilter = ({ children, onFinish, reset, state }) => {
-  const [form] = Form.useForm();
+const TableFilter = ({ children, onFinish, reset, state, extra }) => {
+  let [form] = Form.useForm();
+  if (extra) {
+    [form] = extra;
+  }
+
   const { filterObject, isFilter } = useSelector(state);
 
   useEffect(() => {

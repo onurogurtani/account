@@ -66,7 +66,7 @@ const OrganisationTypesForm = ({ onCancel, organisationType }) => {
         errorDialog({ title: <Text t="error" />, message: error?.message });
       }
     },
-    [organisationType],
+    [dispatch, form, organisationType.id],
   );
 
   return (
