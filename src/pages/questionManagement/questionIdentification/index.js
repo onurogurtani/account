@@ -131,7 +131,11 @@ const QuestionIdentification = () => {
     dispatch(getAllClassStages());
   }, [dispatch]);
   useEffect(() => {
-    dispatch(getPublisherList());
+    dispatch(
+      getPublisherList({
+        params: { 'PublisherDetailSearch.RecordStatus': 1, 'PublisherDetailSearch.PageSize': 100000 },
+      }),
+    );
   }, [dispatch]);
   /* useEffect(() => {
   
