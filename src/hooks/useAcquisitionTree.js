@@ -8,7 +8,7 @@ import { getLessonSubSubjects } from '../store/slice/lessonSubSubjectsSlice';
 import { getUnits } from '../store/slice/lessonUnitsSlice';
 import { getListFilterParams } from '../utils/utils';
 
-const useAcquisitionTree = () => {
+const useAcquisitionTree = (isActive) => {
   const dispatch = useDispatch();
   const { allClassList } = useSelector((state) => state?.classStages);
   const [classroomId, setClassroomId] = useState();
@@ -16,8 +16,18 @@ const useAcquisitionTree = () => {
   const [unitId, setUnitId] = useState();
   const [lessonSubjectId, setLessonSubjectId] = useState();
 
+  const activeFilter = isActive
+    ? [
+        {
+          field: 'isActive',
+          value: isActive,
+          compareType: 0,
+        },
+      ]
+    : [];
+
   useEffect(() => {
-    if (!allClassList.length) dispatch(getAllClassStages());
+    dispatch(getAllClassStages(activeFilter));
   }, []);
 
   useEffect(() => {
@@ -25,25 +35,25 @@ const useAcquisitionTree = () => {
     setLessonId();
     setUnitId();
     setLessonSubjectId();
-    dispatch(getLessons(getListFilterParams('classroomId', classroomId)));
+    dispatch(getLessons(getListFilterParams('classroomId', classroomId).concat(activeFilter)));
   }, [classroomId]);
 
   useEffect(() => {
     if (!lessonId) return false;
     setUnitId();
     setLessonSubjectId();
-    dispatch(getUnits(getListFilterParams('lessonId', lessonId)));
+    dispatch(getUnits(getListFilterParams('lessonId', lessonId).concat(activeFilter)));
   }, [lessonId]);
 
   useEffect(() => {
     if (!unitId) return false;
     setLessonSubjectId();
-    dispatch(getLessonSubjects(getListFilterParams('lessonUnitId', unitId)));
+    dispatch(getLessonSubjects(getListFilterParams('lessonUnitId', unitId).concat(activeFilter)));
   }, [unitId]);
 
   useEffect(() => {
     if (!lessonSubjectId) return false;
-    dispatch(getLessonSubSubjects(getListFilterParams('lessonSubjectId', lessonSubjectId)));
+    dispatch(getLessonSubSubjects(getListFilterParams('lessonSubjectId', lessonSubjectId).concat(activeFilter)));
   }, [lessonSubjectId]);
 
   return {
@@ -55,6 +65,7 @@ const useAcquisitionTree = () => {
     setUnitId,
     lessonSubjectId,
     setLessonSubjectId,
+    allClassList,
   };
 };
 

@@ -3,6 +3,7 @@ import { CustomButton, CustomCollapseCard, CustomImage, CustomPageHeader } from 
 import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
 import '../../../styles/reports/questionDifficulty/questionDifficultyList.scss';
 import QuestionDifficultyListTable from './QuestionDifficultyListTable';
+import QuestionDifficultyFilter from './QuestionDifficultyFilter';
 
 const QuestionDifficultyList = () => {
   const [isFilter, setIsFilter] = useState(false);
@@ -22,7 +23,7 @@ const QuestionDifficultyList = () => {
           </CustomButton>
         </div>
 
-        {/* {isFilter && <OrganisationFilter />} */}
+        {isFilter && <QuestionDifficultyFilter />}
         <QuestionDifficultyListTable />
       </CustomCollapseCard>
     </CustomPageHeader>
