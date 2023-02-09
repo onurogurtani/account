@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Popconfirm } from 'antd';
+import { Form, Popconfirm, Tag } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   CustomButton,
@@ -17,13 +17,7 @@ import {
   CustomImage,
   Text,
 } from '../../../components';
-import {
-  createParticipantGroups,
-  deleteParticipantGroups,
-  getParticipantGroupsPagedList,
-  updateParticipantGroups,
-} from '../../../store/slice/participantGroupsSlice';
-import { getPackageTypeList } from '../../../store/slice/packageTypeSlice';
+import {createParticipantGroups,deleteParticipantGroups,getParticipantGroupsPagedList,updateParticipantGroups,getAllPackages} from '../../../store/slice/participantGroupsSlice';
 import '../../../styles/settings/participantGroups.scss';
 import iconFilter from '../../../assets/icons/icon-filter.svg';
 import ParticipantGroupsFilter from './ParticipantGroupsFilter';
@@ -32,19 +26,24 @@ const ParticipantGroups = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [updateData, setUpdateData] = useState(null);
   const [showFilter, setShowFilter] = useState(false);
-  const { participantsGroupList } = useSelector((state) => state.participantGroups);
-  const { packageTypeList } = useSelector((state) => state?.packageType);
+  const { participantsGroupList, packages } = useSelector((state) => state.participantGroups);
+
   const [form] = Form.useForm();
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getParticipantGroupsPagedList());
-    dispatch(getPackageTypeList());
+    dispatch(getAllPackages());
   }, [dispatch]);
 
   const submit = async (values) => {
+    const formData = {
+      "name": values.name,
+      "packageIds": values.participantGroupPackages,
+      "participantType":values.participantType
+    }
     if (updateData) {
-      const action = await dispatch(updateParticipantGroups(updateData));
+      const action = await dispatch(updateParticipantGroups({...formData,id : updateData.id}));
       if (updateParticipantGroups.fulfilled.match(action)) {
         successDialog({
           title: <Text t="success" />,
@@ -62,7 +61,7 @@ const ParticipantGroups = () => {
         });
       }
     } else {
-      const action = await dispatch(createParticipantGroups(values));
+      const action = await dispatch(createParticipantGroups(formData));
       if (createParticipantGroups.fulfilled.match(action)) {
         successDialog({
           title: <Text t="success" />,
@@ -115,12 +114,18 @@ const ParticipantGroups = () => {
     },
     {
       title: 'Dahil Olan Paketler',
-      dataIndex: 'packagesId',
-      key: 'packagesId',
+      dataIndex: 'packageId',
+      key: 'packageId',
       sorter: true,
 
       render: (text, record) => {
-        return <>{text}</>;
+        return (
+          <>
+            {record.participantGroupPackages.map((item) => {
+              return <Tag>{item.package.name}</Tag>;
+            })}
+          </>
+        );
       },
     },
     {
@@ -137,7 +142,10 @@ const ParticipantGroups = () => {
               onClick={() => {
                 setUpdateData(record);
                 setShowAddModal(true);
-                form.setFieldsValue({ ...record, participantType: record.participantType === 1 ? 'Öğrenci' : 'Veli' });
+                console.log(record)
+                form.setFieldsValue({ ...record, participantType: record.participantType === 1 ? 'Öğrenci' : 'Veli'
+                    ,participantGroupPackages: record.participantGroupPackages.map(item => {return item.packageId
+                }) });
               }}
               className="edit-button"
             >
@@ -168,17 +176,14 @@ const ParticipantGroups = () => {
         <CustomCollapseCard cardTitle={'Katılımcı Grubu'}>
           <div className=" table-head">
             <CustomButton
-              onClick={() => setShowAddModal(true)}
-              style={{
-                paddingRight: '40px',
-                paddingLeft: '40px',
-                marginBottom: '5px',
-                backgroundColor: 'green',
-                border: 'none',
+              onClick={() =>{
+                setShowAddModal(true)
+                setUpdateData(null)
               }}
               type="primary"
+              className="add-btn"
             >
-              Yeni Ekle
+              YENİ EKLE
             </CustomButton>
             <CustomButton
               onClick={() => {
@@ -193,6 +198,9 @@ const ParticipantGroups = () => {
 
             <CustomTable
               pagination={{
+                showQuickJumper: {
+                  goButton: <CustomButton className="go-button">Git</CustomButton>,
+                },
                 total: participantsGroupList?.pagedProperty?.totalCount,
                 current: participantsGroupList?.pagedProperty?.currentPage,
                 pageSize: participantsGroupList?.pagedProperty?.pageSize,
@@ -251,11 +259,11 @@ const ParticipantGroups = () => {
               </CustomFormItem>
               <CustomFormItem
                 rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
-                name={'packageIds'}
+                name={'participantGroupPackages'}
                 label={<Text t="Dahil Olan Paketler" />}
               >
                 <CustomSelect placeholder="Paket Seçiniz" mode="multiple">
-                  {packageTypeList?.map((item) => {
+                  {packages?.map((item) => {
                     return (
                       <Option key={`packageTypeList-${item.id}`} value={item.id}>
                         <Text t={item.name} />
