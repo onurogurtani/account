@@ -19,6 +19,7 @@ const LessonSubSubjects = ({ lessonSubject, selectedInsertKey, setSelectedInsert
     const entity = {
       entity: {
         name: value,
+        isActive: true,
         lessonSubjectId: lessonSubject.id,
       },
     };

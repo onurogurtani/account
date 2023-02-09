@@ -43,6 +43,7 @@ const AcquisitionTreeList = () => {
       const entity = {
         entity: {
           name: value,
+          isActive: true,
           classroomId,
         },
       };

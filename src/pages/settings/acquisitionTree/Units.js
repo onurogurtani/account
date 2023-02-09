@@ -29,6 +29,7 @@ const Units = ({ lesson, selectedInsertKey, setSelectedInsertKey }) => {
     const entity = {
       entity: {
         name: value,
+        isActive: true,
         lessonId: lesson.id,
       },
     };

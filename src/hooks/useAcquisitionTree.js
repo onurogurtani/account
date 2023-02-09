@@ -31,23 +31,23 @@ const useAcquisitionTree = (isActive) => {
   }, []);
 
   useEffect(() => {
-    if (!classroomId) return false;
     setLessonId();
     setUnitId();
     setLessonSubjectId();
+    if (!classroomId) return false;
     dispatch(getLessons(getListFilterParams('classroomId', classroomId).concat(activeFilter)));
   }, [classroomId]);
 
   useEffect(() => {
-    if (!lessonId) return false;
     setUnitId();
     setLessonSubjectId();
+    if (!lessonId) return false;
     dispatch(getUnits(getListFilterParams('lessonId', lessonId).concat(activeFilter)));
   }, [lessonId]);
 
   useEffect(() => {
-    if (!unitId) return false;
     setLessonSubjectId();
+    if (!unitId) return false;
     dispatch(getLessonSubjects(getListFilterParams('lessonUnitId', unitId).concat(activeFilter)));
   }, [unitId]);
 

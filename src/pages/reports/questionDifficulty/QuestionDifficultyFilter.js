@@ -4,12 +4,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CustomFormItem, CustomSelect, Option } from '../../../components';
 import TableFilter from '../../../components/TableFilter';
 import useAcquisitionTree from '../../../hooks/useAcquisitionTree';
+import { getByPagedListDifficultyLevelQuestionOfExam } from '../../../store/slice/difficultyLevelQuestionOfExamSlice';
 import { turkishToLower } from '../../../utils/utils';
 
 const QuestionDifficultyFilter = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const state = (state) => state?.difficultyLevelQuestionOfExams;
+  const { difficultyLevelQuestionOfExamDetailSearch } = useSelector((state) => state.difficultyLevelQuestionOfExams);
   const { lessons } = useSelector((state) => state?.lessons);
   const { lessonUnits } = useSelector((state) => state?.lessonUnits);
   const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
@@ -30,25 +32,17 @@ const QuestionDifficultyFilter = () => {
   const onFinish = useCallback(
     async (values) => {
       for (const [key, value] of Object.entries(values)) {
-        values[key] = [value];
+        if (value) {
+          values[key] = [value];
+        }
       }
-      console.log(values);
-
-      //   console.log(values);
-      //   try {
-      //     const action = await dispatch(
-      //       getByFilterPagedOrganisations({ ...organisationDetailSearch, pageNumber: 1, body: values }),
-      //     ).unwrap();
-
-      //     if (action?.data?.items?.length === 0) {
-      //       warningDialog({
-      //         title: <Text t="error" />,
-      //         message: 'Aradığınız kriterler uygun bilgiler bulunmamaktadır.',
-      //       });
-      //     }
-      //   } catch (e) {
-      //     console.log(e);
-      //   }
+      dispatch(
+        getByPagedListDifficultyLevelQuestionOfExam({
+          ...difficultyLevelQuestionOfExamDetailSearch,
+          pagination: { ...difficultyLevelQuestionOfExamDetailSearch.pagination, pageNumber: 1 },
+          body: values,
+        }),
+      );
     },
     [dispatch],
   );
@@ -58,33 +52,39 @@ const QuestionDifficultyFilter = () => {
     setLessonId();
     setUnitId();
     setLessonSubjectId();
-    // await dispatch(getByFilterPagedOrganisations({ ...organisationDetailSearch, pageNumber: 1, body: {} }));
+    await dispatch(
+      getByPagedListDifficultyLevelQuestionOfExam({
+        ...difficultyLevelQuestionOfExamDetailSearch,
+        pagination: { ...difficultyLevelQuestionOfExamDetailSearch.pagination, pageNumber: 1 },
+        body: {},
+      }),
+    );
   };
   const tableFilterProps = { onFinish, reset, state, extra: [form] };
 
   const onClassroomChange = (value) => {
     setClassroomId(value);
-    form.resetFields(['LessonIds', 'LessonUnitIds', 'LessonSubjectIds', 'LessonSubSubjectIds']);
+    form.resetFields(['lessonIds', 'unitIds', 'subjectIds', 'subSubjectIds']);
   };
 
   const onLessonChange = (value) => {
     setLessonId(value);
-    form.resetFields(['LessonUnitIds', 'LessonSubjectIds', 'LessonSubSubjectIds']);
+    form.resetFields(['unitIds', 'subjectIds', 'subSubjectIds']);
   };
   const onUnitChange = (value) => {
     setUnitId(value);
-    form.resetFields(['LessonSubjectIds', 'LessonSubSubjectIds']);
+    form.resetFields(['subjectIds', 'subSubjectIds']);
   };
 
   const onLessonSubjectsChange = (value) => {
     setLessonSubjectId(value);
-    form.resetFields(['LessonSubSubjectIds']);
+    form.resetFields(['subSubjectIds']);
   };
   return (
     <TableFilter {...tableFilterProps}>
       <div className="form-item">
         <CustomFormItem label="Sınıf Seviyesi" name="classroomIds">
-          <CustomSelect showSearch onChange={onClassroomChange} placeholder="Sınıf Seviyesi">
+          <CustomSelect allowClear showSearch onChange={onClassroomChange} placeholder="Sınıf Seviyesi">
             {allClassList?.map((item) => {
               return (
                 <Option key={item?.id} value={item?.id}>
@@ -100,6 +100,7 @@ const QuestionDifficultyFilter = () => {
             filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
             showArrow
             showSearch
+            allowClear
             placeholder="Ders"
             disabled={!classroomId}
             onChange={onLessonChange}
@@ -121,6 +122,7 @@ const QuestionDifficultyFilter = () => {
             filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
             showArrow
             showSearch
+            allowClear
             placeholder="Ünite"
             disabled={!lessonId}
             onChange={onUnitChange}
@@ -142,6 +144,7 @@ const QuestionDifficultyFilter = () => {
             filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
             showArrow
             showSearch
+            allowClear
             placeholder="Konu"
             disabled={!unitId}
             onChange={onLessonSubjectsChange}
@@ -163,6 +166,7 @@ const QuestionDifficultyFilter = () => {
             filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
             showArrow
             showSearch
+            allowClear
             disabled={!lessonSubjectId}
             placeholder="Alt Başlık"
           >

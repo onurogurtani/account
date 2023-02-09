@@ -16,10 +16,9 @@ const QuestionDifficultyList = () => {
       routes={['Raporlar']}
     >
       <CustomCollapseCard cardTitle="Zorluk Seviyelerine Göre Soru Dağılımı Raporu">
-        <div className="reports-filter">
+        <div className="table-header">
           <CustomButton className="search-btn" onClick={() => setIsFilter((prev) => !prev)}>
             <CustomImage className="icon-search" src={iconSearchWhite} />
-            Filtrele
           </CustomButton>
         </div>
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomTable } from '../../../components';
 import { getByPagedListDifficultyLevelQuestionOfExam } from '../../../store/slice/difficultyLevelQuestionOfExamSlice';
@@ -14,54 +14,66 @@ const QuestionDifficultyListTable = () => {
   useEffect(() => {
     dispatch(getByPagedListDifficultyLevelQuestionOfExam(difficultyLevelQuestionOfExamDetailSearch));
   }, []);
-  console.log('1', difficultyLevelQuestionOfExams);
-  const valueMap = {};
-  function loops(list, parent) {
-    return (list || []).map(({ childs, name }) => {
-      const node = (valueMap[name] = {
-        parent,
-        name,
-      });
-      node.children = loops(childs, node);
-      return node;
-    });
-  }
+  const [expandedRowKeys, setExpandedRowKeys] = useState([208]);
+  // console.log('1', difficultyLevelQuestionOfExams);
+  // const valueMap = {};
+  // function loops(list, parent) {
+  //   return (list || []).map(({ childs, name }) => {
+  //     const node = (valueMap[name] = {
+  //       parent,
+  //       name,
+  //     });
+  //     node.children = loops(childs, node);
+  //     return node;
+  //   });
+  // }
 
-  loops(difficultyLevelQuestionOfExams);
-  console.log('2', valueMap);
+  // loops(difficultyLevelQuestionOfExams);
+  // console.log('2', valueMap);
 
-  let key = 1;
-  const newObject = structuredClone(difficultyLevelQuestionOfExams);
-  newObject.forEach((item) => {
-    item.key = key++;
-    recurse(item.childs);
-  });
+  // let key = 1;
+  // let level = 1;
+  // const newObject = structuredClone(difficultyLevelQuestionOfExams);
+  // newObject.forEach((item) => {
+  //   item.key = key++;
+  //   level = 1;
+  //   recurse(item.childs, [item.id]);
+  // });
 
-  function recurse(obj = []) {
-    if (obj.length === 0) {
-      return false;
-    }
-    obj.forEach((child) => {
-      child.key = key++;
-      recurse(child.childs);
-    });
-  }
-  console.log(newObject);
+  // function recurse(obj = [], id = []) {
+  //   if (obj.length === 0) {
+  //     return false;
+  //   }
+  //   obj.forEach((child) => {
+  //     child.key = key++;
+  //     child.level = level < 4 ? level++ : level;
+  //     child.parentIds = id.concat([child.id]);
+  //     recurse(child.childs, child?.parentIds);
+  //   });
+  // }
+  // console.log(newObject);
   return (
     <CustomTable
-      dataSource={newObject}
+      dataSource={difficultyLevelQuestionOfExams}
       //   onChange={onChangeTable}
       className="organisation-table-list"
       columns={columns}
       onRow={(record, rowIndex) => {
         return {
-          onClick: (event) => console.log(record.key),
+          onClick: (event) => () => console.log(event),
         };
       }}
       //   pagination={paginationProps}
       // expandable={{ expandedRowKeys: [1, 11, 12], rowExpandable: (record) => true }}
-      expandable={{ childrenColumnName: 'childs' }}
-      rowKey={(record) => record?.key}
+      expandable={{
+        childrenColumnName: 'childs',
+        expandedRowKeys,
+        onExpandedRowsChange: (expandedRows) => {
+          console.log(expandedRows);
+          setExpandedRowKeys(expandedRows);
+        },
+      }}
+      rowKey={(record) => record?.id}
       scroll={{ x: false }}
     />
   );

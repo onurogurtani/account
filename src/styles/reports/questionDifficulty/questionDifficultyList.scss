@@ -2,18 +2,4 @@
   display: flex;
   justify-content: end;
   padding: 15px;
-  .search-btn {
-    width: 127px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #3f4957;
-    color: #fff;
-    line-height: 20px;
-    border-radius: 10px;
-
-    .icon-search {
-      margin-right: 15px;
-    }
-  }
 }
