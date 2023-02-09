@@ -1,26 +1,17 @@
 import React, { useEffect,useCallback } from 'react';
 import { Form } from 'antd';
-import {
-  CustomButton,
-  CustomForm,
-  CustomFormItem,
-  CustomImage,
-  CustomSelect,
-  Option,
-  Text,
-  CustomInput,
-} from '../../../components';
+import {CustomButton,CustomForm,CustomFormItem,CustomImage,CustomSelect,Option,Text,AutoCompleteOption,CustomAutoComplete} from '../../../components';
+import { turkishToLower } from '../../../utils/utils';
 import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
 import '../../../styles/tableFilter.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { getPackageTypeList } from '../../../store/slice/packageTypeSlice';
-import {getParticipantGroupsPagedList} from '../../../store/slice/participantGroupsSlice';
+import {getParticipantGroupsPagedList,getAllPackages} from '../../../store/slice/participantGroupsSlice';
 
 const ParticipantGroupsFilter = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
 
-  const { packageTypeList } = useSelector((state) => state?.packageType);
+  const { participantsGroupList, packages } = useSelector((state) => state.participantGroups);
 
   const onFinish = useCallback(
     async (values) => {
@@ -47,7 +38,7 @@ const ParticipantGroupsFilter = () => {
   };
 
   useEffect(() => {
-    dispatch(getPackageTypeList());
+    dispatch(getAllPackages());
   }, [dispatch]);
 
   return (
@@ -62,7 +53,16 @@ const ParticipantGroupsFilter = () => {
       >
         <div className="form-item">
           <CustomFormItem name={'name'} label={<Text t="Katılımcı Grubu Adı" />}>
-            <CustomInput />
+          <CustomAutoComplete
+            placeholder="Bir Kayıt Arayın"
+            filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
+          >
+            {participantsGroupList.items.map((item) => (
+              <AutoCompleteOption key={item.id} value={item.name}>
+                {item.name}
+              </AutoCompleteOption>
+            ))}
+          </CustomAutoComplete>
           </CustomFormItem>
           <CustomFormItem name={'participantType'} label={<Text t="Katılımcı Türü" />}>
             <CustomSelect placeholder="Katılımcı Türü">
@@ -76,7 +76,7 @@ const ParticipantGroupsFilter = () => {
           </CustomFormItem>
           <CustomFormItem name={'packageIds'} label={<Text t="Dahil Olan Paketler" />}>
             <CustomSelect placeholder="Paket Seçiniz" mode="multiple">
-              {packageTypeList?.map((item) => {
+              {packages?.map((item) => {
                 return (
                   <Option key={`packageTypeList-${item.id}`} value={item.id}>
                     <Text t={item.name} />

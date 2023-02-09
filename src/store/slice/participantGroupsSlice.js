@@ -12,11 +12,21 @@ export const getParticipantGroupsPagedList = createAsyncThunk(
     }
   },
 );
+export const getAllPackages = createAsyncThunk(
+  'getAllPackages',
+  async ({ params, data } = {}, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await participantGroupsServices.getAllPackages();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 export const createParticipantGroups = createAsyncThunk(
   'createParticipantGroups',
   async (data = {}, { dispatch, rejectWithValue }) => {
     try {
-      alert('dsadsa');
       const response = await participantGroupsServices.createParticipantGroups(data);
       return response;
     } catch (error) {
@@ -49,6 +59,7 @@ export const deleteParticipantGroups = createAsyncThunk(
 
 const initialState = {
   participantsGroupList: [],
+  packages: []
 };
 
 export const participantGroupsSlice = createSlice({
@@ -58,6 +69,9 @@ export const participantGroupsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getParticipantGroupsPagedList.fulfilled, (state, action) => {
       state.participantsGroupList = action?.payload?.data;
+    });
+    builder.addCase(getAllPackages.fulfilled, (state, action) => {
+      state.packages = action?.payload?.data?.items;
     });
   },
 });
