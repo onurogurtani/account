@@ -44,7 +44,7 @@ const Unit = ({ unit, open, setSelectedInsertKey }) => {
     setIsEdit,
     setSelectedInsertKey,
     deleteAction: deleteUnit,
-    selectedKey: unit.id,
+    selectedKey: { id: unit.id, type: 'unit' },
   };
   return (
     <>

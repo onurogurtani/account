@@ -40,7 +40,7 @@ const Units = ({ lesson, selectedInsertKey, setSelectedInsertKey }) => {
       {filteredLessonUnits.length > 0 && <Title level={3}>Üniteler</Title>}
       <EditableInput
         height="40"
-        isEdit={lesson.id === selectedInsertKey}
+        isEdit={lesson.id === selectedInsertKey?.id && selectedInsertKey?.type === 'lesson'}
         setIsEdit={setSelectedInsertKey}
         onEnter={addUnit}
       />

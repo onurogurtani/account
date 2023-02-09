@@ -35,12 +35,13 @@ const LessonSubjects = ({ unit, selectedInsertKey, setSelectedInsertKey }) => {
     };
     await dispatch(addLessonSubjects(entity));
   };
+  console.log(1, selectedInsertKey);
   return (
     <>
       {filteredLessonSubjects.length > 0 && <Title level={3}>Konular</Title>}
       <EditableInput
         height="40"
-        isEdit={unit.id === selectedInsertKey}
+        isEdit={unit.id === selectedInsertKey?.id && selectedInsertKey?.type === 'unit'}
         setIsEdit={setSelectedInsertKey}
         onEnter={addSubject}
       />

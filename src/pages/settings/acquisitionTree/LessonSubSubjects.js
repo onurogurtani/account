@@ -30,7 +30,7 @@ const LessonSubSubjects = ({ lessonSubject, selectedInsertKey, setSelectedInsert
       {filteredLessonSubSubjects.length > 0 && <Title level={3}>Alt Başlıklar</Title>}
       <EditableInput
         height="40"
-        isEdit={lessonSubject.id === selectedInsertKey}
+        isEdit={lessonSubject.id === selectedInsertKey?.id && selectedInsertKey?.type === 'lessonSubject'}
         setIsEdit={setSelectedInsertKey}
         onEnter={addLessonSubSubject}
       />
