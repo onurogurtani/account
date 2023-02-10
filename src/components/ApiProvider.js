@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { persistLogin, responseJsonIgnore } from '../utils/utils';
 
 const ApiProvider = ({ children }) => {
+  let count =0;
   const [requestCount, setRequestCount] = useState(0);
   const { language } = useLang();
   const dispatch = useDispatch();
@@ -37,7 +38,20 @@ const ApiProvider = ({ children }) => {
       },
       async function (error) {
         setRequestCount((r) => r - 1);
-        if (error.response.status === 401) await persistLogin(dispatch, true);
+        if (error.response.status === 401) {
+          count = 1;
+          persistLogin(dispatch, true);
+          setTimeout(function () {
+            if(count == 1) {
+              errorDialog({
+                title: <Text t="error" />,
+                message: "2 farklı cihazdan oturumunuz açık olduğu için giriş yapamazsınız. Diğer cihazlardan oturumunuzu kapatmanız gerekmektedir.",
+              });
+            }
+            count =0 ;
+          }, 1000);
+        
+        }
         return Promise.reject(error.response);
       },
     );
