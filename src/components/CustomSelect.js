@@ -78,12 +78,7 @@ const CustomSelectContent = styled(Select)(
 );
 
 const CustomSelect = ({ suffixIcon, ...props }) => {
-  return (
-    <CustomSelectContent
-      {...props}
-      suffixIcon={suffixIcon ? <CustomImage src={suffixIcon} /> : <CustomImage src={selectDown} />}
-    />
-  );
+  return <CustomSelectContent {...props} />;
 };
 
 export default CustomSelect;

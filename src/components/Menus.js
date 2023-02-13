@@ -491,6 +491,14 @@ const Menus = () => {
         </MenuItemText>
       </CustomItem>
       <CustomSubMenu key="ReportsMenu" title="Raporlar" icon={<CustomImage src={menuIcons} />}>
+        <CustomItem key="/reports/question-difficulty/list">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Zorluk Seviyelerine Göre Soru Dağılımı Raporu" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
         <CustomItem key="/reports/video-reports">
           <MenuItemText>
             <CustomImage src={menuIcons} />

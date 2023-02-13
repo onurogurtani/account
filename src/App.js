@@ -28,6 +28,7 @@ import UserListManagement from './pages/userManagement/userListManagement';
 import WorkPlanManagement from './pages/workPlanManagement';
 import AdminUsersManagement from './pages/userManagement/adminUsersManagement';
 import QuestionManagement from './pages/questionManagement/index';
+import QuestionDifficultyReports from './pages/reports/questionDifficulty';
 import OrganisationManagement from './pages/organisationManagement';
 import Exam from './pages/exam/index';
 import Reports from './pages/reports/index';
@@ -597,12 +598,17 @@ const App = () => {
                     return (
                       <Switch>
                         <PrivateRoute
+                          path={`${match?.path}/question-difficulty/list`}
+                          exact
+                          Component={QuestionDifficultyReports.QuestionDifficultyList}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
                           path={`${match?.path}/video-reports`}
                           exact
                           Component={Reports.VideoReports}
                           authority="dashboard"
                         />
-
                         <Route
                           component={() => (
                             <Redirect
