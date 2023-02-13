@@ -5,9 +5,11 @@ import { useLang } from '../context';
 import { languageOptions } from '../assets/language';
 import { useDispatch } from 'react-redux';
 import { persistLogin, responseJsonIgnore } from '../utils/utils';
+import { errorDialog } from './CustomDialog';
+import Text from './Text';
 
 const ApiProvider = ({ children }) => {
-  let count =0;
+  let count = 0;
   const [requestCount, setRequestCount] = useState(0);
   const { language } = useLang();
   const dispatch = useDispatch();
@@ -42,15 +44,15 @@ const ApiProvider = ({ children }) => {
           count = 1;
           persistLogin(dispatch, true);
           setTimeout(function () {
-            if(count == 1) {
+            if (count === 1) {
               errorDialog({
                 title: <Text t="error" />,
-                message: "2 farklı cihazdan oturumunuz açık olduğu için giriş yapamazsınız. Diğer cihazlardan oturumunuzu kapatmanız gerekmektedir.",
+                message:
+                  '2 farklı cihazdan oturumunuz açık olduğu için giriş yapamazsınız. Diğer cihazlardan oturumunuzu kapatmanız gerekmektedir.',
               });
             }
-            count =0 ;
+            count = 0;
           }, 1000);
-        
         }
         return Promise.reject(error.response);
       },
