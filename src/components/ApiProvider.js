@@ -1,4 +1,4 @@
-import { Loading, Text } from './index';
+import { Loading } from './index';
 import { useEffect, useState } from 'react';
 import { api } from '../services/api';
 import { useLang } from '../context';
@@ -6,6 +6,7 @@ import { languageOptions } from '../assets/language';
 import { useDispatch } from 'react-redux';
 import { persistLogin, responseJsonIgnore } from '../utils/utils';
 import { errorDialog } from './CustomDialog';
+import Text from './Text';
 
 const ApiProvider = ({ children }) => {
   let count = 0;
@@ -43,7 +44,7 @@ const ApiProvider = ({ children }) => {
           count = 1;
           persistLogin(dispatch, true);
           setTimeout(function () {
-            if (count == 1) {
+            if (count === 1) {
               errorDialog({
                 title: <Text t="error" />,
                 message:
