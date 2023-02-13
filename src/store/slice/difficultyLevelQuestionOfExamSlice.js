@@ -33,6 +33,7 @@ const initialState = {
     pageSize: 10,
     totalCount: 0,
   },
+  filterLevel: '',
 };
 
 export const difficultyLevelQuestionOfExamSlice = createSlice({
@@ -41,6 +42,9 @@ export const difficultyLevelQuestionOfExamSlice = createSlice({
   reducers: {
     setDifficultyLevelQuestionOfExamDetailSearch: (state, action) => {
       state.difficultyLevelQuestionOfExamDetailSearch = action.payload;
+    },
+    setfilterLevel: (state, action) => {
+      state.filterLevel = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -60,4 +64,5 @@ export const difficultyLevelQuestionOfExamSlice = createSlice({
   },
 });
 
-export const { setDifficultyLevelQuestionOfExamDetailSearch } = difficultyLevelQuestionOfExamSlice.actions;
+export const { setDifficultyLevelQuestionOfExamDetailSearch, setfilterLevel } =
+  difficultyLevelQuestionOfExamSlice.actions;

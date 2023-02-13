@@ -1,10 +1,13 @@
 import { Form } from 'antd';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomFormItem, CustomSelect, Option } from '../../../components';
 import TableFilter from '../../../components/TableFilter';
 import useAcquisitionTree from '../../../hooks/useAcquisitionTree';
-import { getByPagedListDifficultyLevelQuestionOfExam } from '../../../store/slice/difficultyLevelQuestionOfExamSlice';
+import {
+  getByPagedListDifficultyLevelQuestionOfExam,
+  setfilterLevel,
+} from '../../../store/slice/difficultyLevelQuestionOfExamSlice';
 import { turkishToLower } from '../../../utils/utils';
 
 const QuestionDifficultyFilter = () => {
@@ -16,7 +19,7 @@ const QuestionDifficultyFilter = () => {
   const { lessonUnits } = useSelector((state) => state?.lessonUnits);
   const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
   const { lessonSubSubjects } = useSelector((state) => state?.lessonSubSubjects);
-
+  const [selectedFilterLevel, setSelectedFilterLevel] = useState();
   const {
     classroomId,
     setClassroomId,
@@ -29,6 +32,12 @@ const QuestionDifficultyFilter = () => {
     lessonSubjectId,
   } = useAcquisitionTree(true);
 
+  useEffect(() => {
+    return () => {
+      dispatch(setfilterLevel(''));
+    };
+  }, []);
+
   const onFinish = useCallback(
     async (values) => {
       for (const [key, value] of Object.entries(values)) {
@@ -36,15 +45,16 @@ const QuestionDifficultyFilter = () => {
           values[key] = [value];
         }
       }
-      dispatch(
+      await dispatch(
         getByPagedListDifficultyLevelQuestionOfExam({
           ...difficultyLevelQuestionOfExamDetailSearch,
           pagination: { ...difficultyLevelQuestionOfExamDetailSearch.pagination, pageNumber: 1 },
           body: values,
         }),
       );
+      dispatch(setfilterLevel(selectedFilterLevel));
     },
-    [dispatch],
+    [dispatch, selectedFilterLevel],
   );
 
   const reset = async () => {
@@ -59,25 +69,30 @@ const QuestionDifficultyFilter = () => {
         body: {},
       }),
     );
+    dispatch(setfilterLevel(''));
   };
   const tableFilterProps = { onFinish, reset, state, extra: [form] };
 
   const onClassroomChange = (value) => {
     setClassroomId(value);
+    setSelectedFilterLevel(value ? 'lessonId' : '');
     form.resetFields(['lessonIds', 'unitIds', 'subjectIds', 'subSubjectIds']);
   };
 
   const onLessonChange = (value) => {
     setLessonId(value);
+    setSelectedFilterLevel(value ? 'unitId' : 'lessonId');
     form.resetFields(['unitIds', 'subjectIds', 'subSubjectIds']);
   };
   const onUnitChange = (value) => {
     setUnitId(value);
+    setSelectedFilterLevel(value ? 'subjectId' : 'unitId');
     form.resetFields(['subjectIds', 'subSubjectIds']);
   };
 
   const onLessonSubjectsChange = (value) => {
     setLessonSubjectId(value);
+    setSelectedFilterLevel(value ? 'subSubjectId' : 'subjectId');
     form.resetFields(['subSubjectIds']);
   };
   return (
