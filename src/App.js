@@ -31,6 +31,7 @@ import QuestionManagement from './pages/questionManagement/index';
 import QuestionDifficultyReports from './pages/reports/questionDifficulty';
 import OrganisationManagement from './pages/organisationManagement';
 import Exam from './pages/exam/index';
+import Reports from './pages/reports/index';
 
 const PrivateRoute = lazy(() =>
   import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -600,6 +601,12 @@ const App = () => {
                           path={`${match?.path}/question-difficulty/list`}
                           exact
                           Component={QuestionDifficultyReports.QuestionDifficultyList}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/video-reports`}
+                          exact
+                          Component={Reports.VideoReports}
                           authority="dashboard"
                         />
                         <Route
