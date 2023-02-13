@@ -28,6 +28,7 @@ import UserListManagement from './pages/userManagement/userListManagement';
 import WorkPlanManagement from './pages/workPlanManagement';
 import AdminUsersManagement from './pages/userManagement/adminUsersManagement';
 import QuestionManagement from './pages/questionManagement/index';
+import AsEv from './pages/temporaryFolder/asEv';
 
 const PrivateRoute = lazy(() =>
   import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -435,6 +436,52 @@ const App = () => {
                   isLayout={false}
                 />
                 <PrivateRoute
+                  path={'/test-management/assessment-and-evaluation'}
+                  Component={({ match }) => {
+                    return (
+                      <Switch>
+                        <PrivateRoute
+                          path={`${match?.path}/list`}
+                          exact
+                          Component={AsEv?.AsEvList}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/add`}
+                          exact
+                          Component={AsEv?.AddAsEv}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/edit`}
+                          exact
+                          Component={AsEv?.UpdateAsEv}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/show`}
+                          exact
+                          Component={AsEv?.ShowAsEv}
+                          authority="dashboard"
+                        />
+                        <Route
+                          component={() => (
+                            <Redirect
+                              to={{
+                                pathname: '/not-found',
+                                state: { status: 404 },
+                              }}
+                            />
+                          )}
+                        />
+                      </Switch>
+                    );
+                  }}
+                  authority="dashboard"
+                  isLayout={false}
+                />
+
+                <PrivateRoute
                   path={'/question-management'}
                   Component={({ match }) => {
                     return (
@@ -467,7 +514,6 @@ const App = () => {
                   authority="dashboard"
                   isLayout={false}
                 />
-
 
                 <PrivateRoute
                   path={'/work-plan-management'}
@@ -505,7 +551,6 @@ const App = () => {
                   authority="dashboard"
                   isLayout={false}
                 />
-
               </HomeLayout>
 
               <Route component={() => <Redirect to={{ pathname: '/not-found', state: { status: 404 } }} />} />

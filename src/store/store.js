@@ -50,6 +50,7 @@ import { documentsSlice } from './slice/documentsSlice';
 import { booksSlice } from './slice/booksSlice';
 import { organisationTypesSlice } from './slice/organisationTypesSlice';
 import { contractTypeSlice } from './slice/contractTypeSlice';
+import { asEvSlice } from './slice/asEvSlice';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -95,6 +96,7 @@ const reducers = combineReducers({
   books: booksSlice.reducer,
   organisationTypes: organisationTypesSlice.reducer,
   contractTypes: contractTypeSlice.reducer,
+  asEv: asEvSlice.reducer,
 });
 
 const persistConfig = {

@@ -27,11 +27,18 @@ const deleteFile = (data) => {
     data,
   });
 };
+const getBase64 = (data) => {
+  return api({
+    url: `Shared/Files/getBase64?id=${data.id}`,
+    method: 'GET',
+  });
+};
 const fileServices = {
   downloadFile,
   uploadFile,
   deleteFile,
   uploadFileBaseApi,
+  getBase64,
 };
 
 export default fileServices;

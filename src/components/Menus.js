@@ -196,7 +196,6 @@ const Menus = () => {
   return (
     <CustomMenu data-testid="menus-test" onClick={handleClick} mode="vertical" selectedKeys={selectedKey}>
       <CustomItemGroup title={<Text t="Kullanıcı Yönetimi" />} color="#ffffff" />
-
       <CustomItem key="/user-management/role-management">
         <MenuItemText>
           <CustomImage src={menuIcons} />
@@ -454,6 +453,24 @@ const Menus = () => {
             <CustomImage src={menuIcons} />
             <span>
               <Text t="Soru Kimliklendirme" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+      </CustomSubMenu>
+      <CustomSubMenu key="AsignMenu" title="Testler" icon={<CustomImage src={menuIcons} />}>
+        <CustomItem key="/test-management/assessment-and-evaluation/list">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Ölçme ve Değerlendirme" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+        <CustomItem key="/test-management/reinforcement-management">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Pekiştirme" />
             </span>
           </MenuItemText>
         </CustomItem>
