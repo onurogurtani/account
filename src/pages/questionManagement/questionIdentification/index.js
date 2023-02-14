@@ -407,7 +407,7 @@ const QuestionIdentification = () => {
                         className="quesiton-image"
                         alt="Resim"
                       />
-                      {questionOfExams?.answerOfQuestionOfExams && (
+                      {questionOfExams?.answerOfQuestionOfExams?.length > 0 && (
                         <div className="answer-item">
                           <img
                             src={`data:image/png;base64,${questionOfExams?.answerOfQuestionOfExams[0]?.file?.fileBase64}`}
@@ -759,18 +759,21 @@ const QuestionIdentification = () => {
                         >
                           Soru Çözüm Videosunda Kullanılmıştır
                         </CustomCheckbox>
-                        <CustomCheckbox
-                          onChange={(e) => {
-                            setFormData({ ...formData, mix: e.target.checked });
-                          }}
-                          checked={formData.mix}
-                          disabled={
-                            !questionOfExams?.answerOfQuestionOfExams?.length === 4 ||
-                            formData.questionOfExamState === 1
-                          }
-                        >
-                          Şıklar Karıştırılsınmı
-                        </CustomCheckbox>
+                        {questionOfExams?.answerOfQuestionOfExams?.length > 0 && (
+                          <CustomCheckbox
+                            onChange={(e) => {
+                              setFormData({ ...formData, mix: e.target.checked });
+                            }}
+                            checked={formData.mix}
+                            disabled={
+                              !questionOfExams?.answerOfQuestionOfExams?.length === 4 ||
+                              formData.questionOfExamState === 1
+                            }
+                          >
+                            Şıklar Karıştırılsınmı
+                          </CustomCheckbox>
+                        )}
+
                         <CustomCheckbox
                           disabled={formData.questionOfExamState === 1}
                           onChange={(e) => {
