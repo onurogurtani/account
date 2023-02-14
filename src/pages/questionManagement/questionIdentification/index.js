@@ -64,9 +64,13 @@ const QuestionIdentification = () => {
   const [classroomIdInfo, setClassroomIdInfo] = useState('');
 
   const resetFile = () => {
-    window.document.getElementById('video-file').value = '';
-    window.document.getElementById('image-file').value = '';
-    window.document.getElementById('pdf-file').value = '';
+    alert('doışarda');
+    if (window.document.getElementById('video-file')) {
+      alert('içerde');
+      window.document.getElementById('video-file').value = '';
+      window.document.getElementById('image-file').value = '';
+      window.document.getElementById('pdf-file').value = '';
+    }
   };
 
   useEffect(() => {
