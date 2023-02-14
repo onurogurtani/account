@@ -1,7 +1,8 @@
-const UploadFile = ({ accept, title, onChange, disabled, file }) => {
+const UploadFile = ({ accept, title, onChange, disabled, file, id }) => {
   return (
     <div className="file-upload">
       <input
+        id={id}
         className={` ${disabled ? 'title-disabled' : ''}`}
         disabled={disabled}
         accept={accept}
