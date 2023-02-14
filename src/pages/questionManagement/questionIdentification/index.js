@@ -63,6 +63,12 @@ const QuestionIdentification = () => {
   const [fileInputInfo, setFileInputInfo] = useState({ video: {}, image: {}, pdf: {} });
   const [classroomIdInfo, setClassroomIdInfo] = useState('');
 
+  const resetFile = () => {
+    window.document.getElementById('video-file').value = '';
+    window.document.getElementById('image-file').value = '';
+    window.document.getElementById('pdf-file').value = '';
+  };
+
   useEffect(() => {
     if (questionOfExams?.questionOfExamDetail) {
       const newData = { ...questionOfExams.questionOfExamDetail };
@@ -177,6 +183,7 @@ const QuestionIdentification = () => {
       );
       setClassroomIdInfo(classroomId);
       setFileInputInfo({ image: {}, video: {}, pdf: {} });
+      resetFile();
     } else {
       errorDialog({ title: 'Hata', message: 'Sınıf seviyesi boş olamaz!' });
     }
@@ -247,6 +254,7 @@ const QuestionIdentification = () => {
             successDialog({ title: 'Onay', message: 'Güncelledi' });
             searchSumbit(pagedProperty.currentPage);
             setFileInputInfo({ image: {}, video: {}, pdf: {} });
+            resetFile();
           } else {
             alert('dasdsa');
 
@@ -258,6 +266,7 @@ const QuestionIdentification = () => {
             successDialog({ title: 'Onay', message: 'Eklendi' });
             searchSumbit(pagedProperty.currentPage);
             setFileInputInfo({ image: {}, video: {}, pdf: {} });
+            resetFile();
           } else {
             errorDialog({ title: 'Hata', message: action?.payload?.message });
           }
@@ -849,6 +858,7 @@ const QuestionIdentification = () => {
                         {questionOfExams?.questionOfExamDetail?.videoSolutionFile?.fileName}
                       </div>
                       <UploadFile
+                        id="video-file"
                         file={fileInputInfo.video}
                         disabled={formData.questionOfExamState === 1}
                         onChange={async (e) => {
@@ -894,6 +904,7 @@ const QuestionIdentification = () => {
                       )}
 
                       <UploadFile
+                        id="image-file"
                         file={fileInputInfo.image}
                         disabled={formData.questionOfExamState === 1}
                         onChange={async (e) => {
@@ -939,6 +950,7 @@ const QuestionIdentification = () => {
                       )}
 
                       <UploadFile
+                        id="pdf-file"
                         file={fileInputInfo.pdf}
                         disabled={formData.questionOfExamState === 1}
                         onChange={async (e) => {
