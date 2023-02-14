@@ -393,6 +393,11 @@ const App = () => {
                           Component={Settings?.ContractKinds}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/max-net-number`}
+                          Component={Settings?.MaxNetNumber}
+                          authority="dashboard"
+                        />
                         <Route
                           component={() => (
                             <Redirect

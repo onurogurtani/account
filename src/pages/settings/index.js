@@ -111,6 +111,11 @@ const ContractKinds = lazy(() =>
     default: Component,
   })),
 );
+const MaxNetNumber = lazy(() =>
+  import('./maxNetNumber').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 const Settings = {
   Categories,
   Packages,
@@ -132,7 +137,8 @@ const Settings = {
   TrialType,
   OrganisationTypes,
   ContractTypes,
-  ContractKinds
+  ContractKinds,
+  MaxNetNumber,
 };
 
 export default Settings;
