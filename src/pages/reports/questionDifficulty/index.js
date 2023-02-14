@@ -5,9 +5,15 @@ const QuestionDifficultyList = lazy(() =>
     default: Component,
   })),
 );
+const QuestionDifficultyDetail = lazy(() =>
+  import('./QuestionDifficultyDetail').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 
 const QuestionDifficultyReports = {
   QuestionDifficultyList,
+  QuestionDifficultyDetail,
 };
 
 export default QuestionDifficultyReports;

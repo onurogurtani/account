@@ -60,11 +60,6 @@ const QuestionDifficultyListTable = () => {
       onChange={onChangeTable}
       className="question-difficulty-table-list"
       columns={columns}
-      // onRow={(record, rowIndex) => {
-      //   return {
-      //     onClick: (event) => console.log(rowIndex),
-      //   };
-      // }}
       pagination={paginationProps}
       expandable={{
         childrenColumnName: 'childs',
