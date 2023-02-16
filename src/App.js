@@ -604,6 +604,12 @@ const App = () => {
                           authority="dashboard"
                         />
                         <PrivateRoute
+                          path={`${match?.path}/question-difficulty/detail`}
+                          exact
+                          Component={QuestionDifficultyReports.QuestionDifficultyDetail}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
                           path={`${match?.path}/video-reports`}
                           exact
                           Component={Reports.VideoReports}

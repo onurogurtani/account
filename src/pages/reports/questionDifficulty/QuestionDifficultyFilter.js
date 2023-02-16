@@ -1,5 +1,5 @@
 import { Form } from 'antd';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomFormItem, CustomSelect, Option } from '../../../components';
 import TableFilter from '../../../components/TableFilter';
@@ -19,7 +19,7 @@ const QuestionDifficultyFilter = () => {
   const { lessonUnits } = useSelector((state) => state?.lessonUnits);
   const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
   const { lessonSubSubjects } = useSelector((state) => state?.lessonSubSubjects);
-  const [selectedFilterLevel, setSelectedFilterLevel] = useState();
+  const [selectedFilterLevel, setSelectedFilterLevel] = useState({ acquisitionTree: {}, key: '' });
   const {
     classroomId,
     setClassroomId,
@@ -38,24 +38,51 @@ const QuestionDifficultyFilter = () => {
     };
   }, []);
 
-  const onFinish = useCallback(
-    async (values) => {
-      for (const [key, value] of Object.entries(values)) {
-        if (value) {
-          values[key] = [value];
-        }
+  const createFilterText = () => {
+    const { acquisitionTree } = selectedFilterLevel;
+    let text = '';
+    if (acquisitionTree.classroom) {
+      text += acquisitionTree.classroom;
+    } else {
+      return text;
+    }
+    if (acquisitionTree.lesson) {
+      text += ' ' + acquisitionTree.lesson + ' Dersi';
+    } else {
+      return text + 'ne göre filtrelenmiştir';
+    }
+    if (acquisitionTree.unit) {
+      text += ' ' + acquisitionTree.unit + ' Ünitesi';
+    } else {
+      return text + 'ne göre filtrelenmiştir';
+    }
+    if (acquisitionTree.subject) {
+      text += ' ' + acquisitionTree.subject + ' Konusu';
+    } else {
+      return text + 'ne göre filtrelenmiştir';
+    }
+    if (acquisitionTree.subSubject) {
+      text += ' ' + acquisitionTree.subSubject + ' Kazanımına göre filtrelenmiştir';
+    } else {
+      return text + 'na göre filtrelenmiştir';
+    }
+  };
+
+  const onFinish = async (values) => {
+    for (const [key, value] of Object.entries(values)) {
+      if (value) {
+        values[key] = [value];
       }
-      await dispatch(
-        getByPagedListDifficultyLevelQuestionOfExam({
-          ...difficultyLevelQuestionOfExamDetailSearch,
-          pagination: { ...difficultyLevelQuestionOfExamDetailSearch.pagination, pageNumber: 1 },
-          body: values,
-        }),
-      );
-      dispatch(setfilterLevel(selectedFilterLevel));
-    },
-    [dispatch, selectedFilterLevel],
-  );
+    }
+    await dispatch(
+      getByPagedListDifficultyLevelQuestionOfExam({
+        ...difficultyLevelQuestionOfExamDetailSearch,
+        pagination: { ...difficultyLevelQuestionOfExamDetailSearch.pagination, pageNumber: 1 },
+        body: values,
+      }),
+    );
+    dispatch(setfilterLevel({ ...selectedFilterLevel, text: createFilterText() }));
+  };
 
   const reset = async () => {
     setClassroomId();
@@ -73,27 +100,67 @@ const QuestionDifficultyFilter = () => {
   };
   const tableFilterProps = { onFinish, reset, state, extra: [form] };
 
-  const onClassroomChange = (value) => {
+  function containsOnlyNumbers(str) {
+    if (/^\d+$/.test(str)) {
+      return str + '. Sınıf seviyesi';
+    }
+    return str + ' Sınıf seviyesi';
+  }
+
+  const onClassroomChange = (value, option) => {
     setClassroomId(value);
-    setSelectedFilterLevel(value ? 'lessonId' : '');
+    setSelectedFilterLevel({
+      key: value ? 'lessonId' : '',
+      acquisitionTree: {
+        ...selectedFilterLevel?.acquisitionTree,
+        classroom: option?.children && containsOnlyNumbers(option?.children),
+      },
+    });
     form.resetFields(['lessonIds', 'unitIds', 'subjectIds', 'subSubjectIds']);
   };
 
-  const onLessonChange = (value) => {
+  const onLessonChange = (value, option) => {
     setLessonId(value);
-    setSelectedFilterLevel(value ? 'unitId' : 'lessonId');
+    setSelectedFilterLevel({
+      key: value ? 'unitId' : 'lessonId',
+      acquisitionTree: {
+        ...selectedFilterLevel?.acquisitionTree,
+        lesson: option?.children,
+      },
+    });
     form.resetFields(['unitIds', 'subjectIds', 'subSubjectIds']);
   };
-  const onUnitChange = (value) => {
+  const onUnitChange = (value, option) => {
     setUnitId(value);
-    setSelectedFilterLevel(value ? 'subjectId' : 'unitId');
+    setSelectedFilterLevel({
+      key: value ? 'subjectId' : 'unitId',
+      acquisitionTree: {
+        ...selectedFilterLevel?.acquisitionTree,
+        unit: option?.children,
+      },
+    });
     form.resetFields(['subjectIds', 'subSubjectIds']);
   };
 
-  const onLessonSubjectsChange = (value) => {
+  const onLessonSubjectsChange = (value, option) => {
     setLessonSubjectId(value);
-    setSelectedFilterLevel(value ? 'subSubjectId' : 'subjectId');
+    setSelectedFilterLevel({
+      key: value ? 'subSubjectId' : 'subjectId',
+      acquisitionTree: {
+        ...selectedFilterLevel?.acquisitionTree,
+        subject: option?.children,
+      },
+    });
     form.resetFields(['subSubjectIds']);
+  };
+  const onLessonSubSubjectsChange = (value, option) => {
+    setSelectedFilterLevel({
+      key: value ? 'subSubjectId' : '',
+      acquisitionTree: {
+        ...selectedFilterLevel?.acquisitionTree,
+        subSubject: option?.children,
+      },
+    });
   };
   return (
     <TableFilter {...tableFilterProps}>
@@ -183,6 +250,7 @@ const QuestionDifficultyFilter = () => {
             showSearch
             allowClear
             disabled={!lessonSubjectId}
+            onChange={onLessonSubSubjectsChange}
             placeholder="Alt Başlık"
           >
             {lessonSubSubjects
