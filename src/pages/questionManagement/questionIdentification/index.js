@@ -157,7 +157,7 @@ const QuestionIdentification = () => {
     );
   }, [dispatch]);*/
 
-  const searchSumbit = (formDatas, pageNumber = null) => {
+  const searchSumbit = (pageNumber = null) => {
     const form1 = filterForm.getFieldValue();
     const form2 = filterForm2.getFieldValue();
     if (form1.ClassroomId) {
@@ -1036,7 +1036,7 @@ const QuestionIdentification = () => {
                         total={pagedProperty.totalPages}
                         pageSize={1}
                         onChange={(e, e2) => {
-                          searchSumbit(null, e);
+                          searchSumbit(e);
                         }}
                       />
                     </div>
