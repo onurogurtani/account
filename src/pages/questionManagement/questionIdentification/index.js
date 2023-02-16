@@ -157,7 +157,7 @@ const QuestionIdentification = () => {
     );
   }, [dispatch]);*/
 
-  const searchSumbit = (pageNumber) => {
+  const searchSumbit = (formDatas, pageNumber = null) => {
     const form1 = filterForm.getFieldValue();
     const form2 = filterForm2.getFieldValue();
     if (form1.ClassroomId) {
@@ -165,11 +165,12 @@ const QuestionIdentification = () => {
         getByFilterPagedQuestionOfExamsList({
           'QuestionOfExamDetailSearch.IncludeQuestionFilesBase64': 'true',
           'QuestionOfExamDetailSearch.ThenIncludeQuestionSolutionsFilesBase64': 'false',
-          'QuestionOfExamDetailSearch.PageNumber': pageNumber ? pageNumber : 1,
+          'QuestionOfExamDetailSearch.PageNumber': pageNumber !== null ? pageNumber : '1',
           'QuestionOfExamDetailSearch.PageSize': 1,
           'QuestionOfExamDetailSearch.EducationYearId': form1.EducationYearId,
           'QuestionOfExamDetailSearch.ClassroomId': form1.ClassroomId,
           'QuestionOfExamDetailSearch.LessonId': form1.LessonId,
+          'QuestionOfExamDetailSearch.BookId': form1.BookId,
           'QuestionOfExamDetailSearch.PublisherId': form1.PublisherId,
           'QuestionOfExamDetailSearch.Difficulty': form2.Difficulty,
           'QuestionOfExamDetailSearch.HasAcquisitionTree': form2.HasAcquisitionTree,
@@ -750,7 +751,10 @@ const QuestionIdentification = () => {
                             const value = e.target.value;
                             console.log(value[value.length - 1]);
                             if (!isNaN(value[value.length - 1]) || value[value.length - 1] === undefined) {
-                              setFormData({ ...formData, wordCount: parseInt(e.target.value) });
+                              setFormData({
+                                ...formData,
+                                wordCount: value[value.length - 1] === undefined ? '' : parseInt(e.target.value),
+                              });
                             } else {
                             }
                           }}
@@ -1032,7 +1036,7 @@ const QuestionIdentification = () => {
                         total={pagedProperty.totalPages}
                         pageSize={1}
                         onChange={(e, e2) => {
-                          searchSumbit(e);
+                          searchSumbit(null, e);
                         }}
                       />
                     </div>
