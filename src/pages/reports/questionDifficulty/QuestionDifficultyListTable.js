@@ -20,12 +20,12 @@ const QuestionDifficultyListTable = () => {
   }, []);
 
   useEffect(() => {
-    if (filterLevel) {
+    if (filterLevel?.key) {
       const getWillBeExpandedParentNodeKeys = (
         data = [], //filtreleme sonrası açılacak satırlar
       ) =>
         data.reduce(function (accumulator, item) {
-          if (item.hasOwnProperty(filterLevel)) {
+          if (item.hasOwnProperty(filterLevel.key)) {
             return accumulator;
           }
 
