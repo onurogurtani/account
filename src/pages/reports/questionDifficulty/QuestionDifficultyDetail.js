@@ -7,6 +7,7 @@ import QuestionDifficultyStatistic from './components/QuestionDifficultyStatisti
 import { CustomButton } from '../../../components';
 import { jsPDF } from 'jspdf';
 import * as htmlToImage from 'html-to-image';
+import dayjs from 'dayjs';
 
 const { Title } = Typography;
 const QuestionDifficultyDetail = () => {
@@ -106,7 +107,7 @@ const QuestionDifficultyDetail = () => {
       top += elHeight + marginTop;
     }
 
-    doc.save();
+    doc.save(dayjs()?.format('DD.MM.YYYY HH.mm') + ' Zorluk Seviyelerine Göre Soru Dağılımı Raporu.pdf');
   };
 
   return (
