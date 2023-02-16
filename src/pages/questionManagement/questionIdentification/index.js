@@ -194,6 +194,8 @@ const QuestionIdentification = () => {
       setClassroomIdInfo(classroomId);
       setFileInputInfo({ image: {}, video: {}, pdf: {} });
       resetFile();
+      // dispatch(setLessonIds([]));
+      //  dispatch(setEarningChoice({}));
     } else {
       errorDialog({ title: 'Hata', message: 'Sınıf seviyesi boş olamaz!' });
     }
@@ -304,6 +306,7 @@ const QuestionIdentification = () => {
                     onChange={(e) => {
                       dispatch(getLessonsQuesiton([{ field: 'classroomId', value: e, compareType: 0 }]));
                       dispatch(setLessonIds([]))
+                      dispatch(setEarningChoice({})); 
                     }}
                     options={classListData}
                   />

@@ -182,7 +182,6 @@ const EarningsChoice = ({ classroomId }) => {
      
       setCheckedKeys(newData);
       setTimeout(() => {
-        console.log("newData",newData)
         setExpandedKeys(newData)
       }, "500")
     
