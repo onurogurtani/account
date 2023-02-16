@@ -20,6 +20,7 @@ const useParticipantGroups = (form, selectBoxName) => {
       getParticipantGroupsList({
         params: {
           'ParticipantGroupDetailSearch.ParticipantType': value,
+          // TODO
           // 'ParticipantGroupDetailSearch.PageSize': 0,
         },
       }),

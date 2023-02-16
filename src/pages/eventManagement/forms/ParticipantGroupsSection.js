@@ -19,7 +19,7 @@ const ParticipantGroupsSection = ({ form }) => {
       <CustomFormItem
         rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
         label="Katılımcı Türü"
-        name="???"
+        name="participantTypeOfEvents"
       >
         <CustomSelect
           showArrow
