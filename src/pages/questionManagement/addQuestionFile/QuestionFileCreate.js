@@ -65,7 +65,7 @@ const QuestionFileCreate = ({}) => {
     } else {
       errorDialog({
         title: <Text t="error" />,
-        message: action?.payload.message,
+        message: action?.payload?.message,
       });
     }
   };

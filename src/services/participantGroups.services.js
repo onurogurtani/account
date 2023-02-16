@@ -33,11 +33,19 @@ const getParticipantGroupsPagedList = (params = {}) => {
   });
 };
 
+const getAllPackages = () => {
+  return api({
+    url: `Payment/Packages/GetByFilterPagedPackages?PackageDetailSearch.PageSize=1000`,
+    method: 'POST',
+  });
+};
+
 const participantGroupsServices = {
   getParticipantGroupsPagedList,
   deleteParticipantGroups,
   createParticipantGroups,
   updateParticipantGroups,
+  getAllPackages,
 };
 
 export default participantGroupsServices;

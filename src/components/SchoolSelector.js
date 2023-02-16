@@ -9,6 +9,7 @@ import { getSchools } from '../store/slice/userListSlice';
 import { institutionType } from '../constants/users';
 import CitySelector from './CitySelector';
 import CountySelector from './CountySelector';
+import CustomImage from './CustomImage';
 
 const SchoolSelector = ({ form }) => {
   const dispatch = useDispatch();
@@ -115,7 +116,7 @@ const SchoolSelector = ({ form }) => {
           optionFilterProp="children"
           showSearch
           filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
-          suffixIcon={searchIcon}
+          suffixIcon={<CustomImage src={searchIcon} />}
           showArrow={true}
           allowClear
           notFoundContent={'Veri Yok'}

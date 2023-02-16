@@ -25,7 +25,7 @@ import { Form } from 'antd';
 const OrganisationFilter = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const state = (state) => state?.events;
+  const state = (state) => state?.organisations;
   const { organisationTypes } = useSelector((state) => state.organisationTypes);
   const { organisationDetailSearch } = useSelector((state) => state.organisations);
   const [organisationNames, setOrganisationNames] = useState([]);
@@ -47,7 +47,7 @@ const OrganisationFilter = () => {
     async (values) => {
       try {
         const action = await dispatch(
-          getByFilterPagedOrganisations({ ...organisationDetailSearch, body: values }),
+          getByFilterPagedOrganisations({ ...organisationDetailSearch, pageNumber: 1, body: values }),
         ).unwrap();
 
         if (action?.data?.items?.length === 0) {
@@ -64,7 +64,7 @@ const OrganisationFilter = () => {
   );
 
   const reset = async () => {
-    await dispatch(getByFilterPagedOrganisations({ ...organisationDetailSearch, body: {} }));
+    await dispatch(getByFilterPagedOrganisations({ ...organisationDetailSearch, pageNumber: 1, body: {} }));
   };
 
   const tableFilterProps = { onFinish, reset, state, extra: [form] };
@@ -77,6 +77,7 @@ const OrganisationFilter = () => {
       console.log(err);
     }
   };
+
   return (
     <TableFilter {...tableFilterProps}>
       <div className="form-item">
