@@ -35,7 +35,7 @@ import {
 import '../../../styles/questionManagement/questionIdentification.scss';
 import EarningsChoice from '../../userManagement/questionIdentifaction/EarningsChoice';
 import UploadFile from './UploadFile';
-import { setEarningChoice } from '../../../store/slice/earningChoiceSlice';
+import { setEarningChoice,setLessonIds } from '../../../store/slice/earningChoiceSlice';
 const QuestionIdentification = () => {
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
@@ -62,6 +62,7 @@ const QuestionIdentification = () => {
   const { earningChoice } = useSelector((state) => state?.earningChoice);
   const [fileInputInfo, setFileInputInfo] = useState({ video: {}, image: {}, pdf: {} });
   const [classroomIdInfo, setClassroomIdInfo] = useState('');
+  const lessonIds = [];
 
   useEffect(() => {
     if (questionOfExams?.questionOfExamDetail) {
@@ -81,8 +82,14 @@ const QuestionIdentification = () => {
       questionOfExams?.questionOfExamDetail?.questionOfExamDetailLessonUnits?.forEach((item, index) => {
         newData.questionOfExamDetailLessonUnits.push({ lessonUnitId: item.lessonUnitId });
         newEarningChoice.unitId.push(item.lessonUnitId);
+        lessonIds.push(item.lessonUnit.lessonId)
       });
+
+      const uniqueLessonIds = lessonIds.filter((val, id, array) => {
+        return array.indexOf(val) == id;  
+     });
       dispatch(setEarningChoice(newEarningChoice));
+      dispatch(setLessonIds(uniqueLessonIds))
       setFormData(newData);
     } else {
       setFormData({});
@@ -1054,10 +1061,12 @@ const QuestionIdentification = () => {
             }
             setShowModal(false);
           }}
-          onCancel={() => setShowModal(false)}
+          onCancel={() => {
+            setShowModal(false)
+          }}
           okText="Kaydet"
           cancelText="Vazgeç"
-          bodyStyle={{ overflowY: 'auto' }}
+          bodyStyle={{ overflowY: 'auto',maxHeight:500 }}
         >
           <EarningsChoice classroomId={classroomIdInfo} />
         </CustomModal>

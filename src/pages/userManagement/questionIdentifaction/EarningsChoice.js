@@ -1,7 +1,7 @@
 import { Tree, Card, Result } from 'antd';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setEarningChoice, setExpandedEarningChoice } from '../../../store/slice/earningChoiceSlice';
+import { setEarningChoice} from '../../../store/slice/earningChoiceSlice';
 import EarningSearch from './EarningSearch';
 import CustomSelect, { Option } from '../../../components/CustomSelect';
 import { getByClassromIdLessons } from '../../../store/slice/lessonsSlice';
@@ -9,19 +9,68 @@ import { getByClassromIdLessons } from '../../../store/slice/lessonsSlice';
 const EarningsChoice = ({ classroomId }) => {
   const { lessonUnits } = useSelector((state) => state?.lessonUnits);
   const { lessonsGetByClassroom } = useSelector((state) => state?.lessons);
-  const { earningChoice } = useSelector((state) => state.earningChoice);
-
+  const { earningChoice,lessonIds} = useSelector((state) => state.earningChoice);
+  
   const [treeData, setTreeData] = useState(lessonUnits);
   const [copyFilterData, setCopyFilterData] = useState(lessonUnits);
-  const [lessonId, setLessonId] = useState(null);
+  const [lessonId, setLessonId] = useState([]);
   const [checkedKeys, setCheckedKeys] = useState([]);
   const [expandedKeys, setExpandedKeys] = useState([]);
   const [chackedChange, setChackedChange] = useState(false);
+  
   const dispatch = useDispatch();
 
   useEffect(() => {
+    setTreeData(loadTreeData())
+    setLessonId(lessonIds)
+  }, [lessonsGetByClassroom,lessonIds]);
+
+  useEffect(() => {
     dispatch(getByClassromIdLessons(classroomId));
-  }, [dispatch, classroomId]);
+  }, [dispatch,classroomId]);
+
+  const loadTreeData = () => {
+    const selectLessons = lessonsGetByClassroom.filter((item) => lessonId.includes(item.id));
+    
+    const lessonUnits = [];
+
+    selectLessons.map(item => lessonUnits.push(item.lessonUnits))
+
+    function flatten(arr) {
+      var flat = [];
+      for (var i = 0; i < arr.length; i++) {
+          flat = flat.concat(arr[i]);
+      }
+      return flat;
+  }
+
+    const modifiedLessonUnits = flatten(lessonUnits).map((item) => {
+      return {
+        title: item.name,
+        key: item.id.toString() + '/unit',
+        id: item?.id,
+        lessonId: item.lessonId,
+        children: item.lessonSubjects.map((x) => {
+          return {
+            title: x.name,
+            key: x.id.toString() + '/lessonSubject',
+            id: x.id,
+            lessonUnitId: x.lessonUnitId,
+            children: x.lessonSubSubjects.map((y) => {
+              return {
+                title: y.name,
+                key: y.id.toString() + '/lessonSubSubject',
+                id: y.id,
+                lessonSubjectId: y.lessonSubjectId,
+              };
+            }),
+          };
+        }),
+      };
+    });
+
+    return modifiedLessonUnits
+  }
 
   const onSearch = (event) => {
     const expandedLevel = [];
@@ -76,13 +125,25 @@ const EarningsChoice = ({ classroomId }) => {
 
   const onExpand = (expandedKeys, value) => {
     setExpandedKeys(expandedKeys);
-    dispatch(setExpandedEarningChoice(expandedKeys));
   };
 
   const handleLesson = (value) => {
-    const lessonUnits = lessonsGetByClassroom.filter((item) => item.id === value)[0].lessonUnits;
 
-    const modifiedLessonUnits = lessonUnits.map((item) => {
+    const selectLessons = lessonsGetByClassroom.filter((item) => value.includes(item.id));
+
+    const lessonUnits = [];
+
+    selectLessons.map(item => lessonUnits.push(item.lessonUnits))
+
+    function flatten(arr) {
+      var flat = [];
+      for (var i = 0; i < arr.length; i++) {
+          flat = flat.concat(arr[i]);
+      }
+      return flat;
+  }
+
+    const modifiedLessonUnits = flatten(lessonUnits).map((item) => {
       return {
         title: item.name,
         key: item.id.toString() + '/unit',
@@ -112,21 +173,22 @@ const EarningsChoice = ({ classroomId }) => {
     setCopyFilterData(modifiedLessonUnits);
   };
 
-  /*useEffect(() => {
+  useEffect(() => {
     if (!chackedChange) {
       let newData = [];
-      earningChoice?.unitId?.forEach((element) => {
-        newData.push(element);
-      });
-      earningChoice?.subjectId?.forEach((element) => {
-        newData.push(element);
-      });
       earningChoice?.subSubjectId?.forEach((element) => {
-        newData.push(element);
+        newData.push(element.toString() + "/lessonSubSubject");
       });
+     
       setCheckedKeys(newData);
+      setTimeout(() => {
+        console.log("newData",newData)
+        setExpandedKeys(newData)
+      }, "500")
+    
     }
-  }, [chackedChange, earningChoice]);*/
+  }, [chackedChange, earningChoice]);
+
   const onCheck = (checkedKeysValue, info) => {
     setCheckedKeys(checkedKeysValue);
     setChackedChange(true);
@@ -177,9 +239,10 @@ const EarningsChoice = ({ classroomId }) => {
       <br></br>
       <CustomSelect
         value={lessonId}
+        mode="multiple"
         onChange={handleLesson}
-        height={'14px'}
-        style={{ float: 'right', width: '200px' }}
+        height={'8px'}
+        style={{ float: 'right', width: '300px' }}
         placeholder="Ders Seçiniz"
       >
         {lessonsGetByClassroom.map((item) => {
