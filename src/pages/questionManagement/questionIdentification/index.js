@@ -303,6 +303,7 @@ const QuestionIdentification = () => {
                   <CustomSelect
                     onChange={(e) => {
                       dispatch(getLessonsQuesiton([{ field: 'classroomId', value: e, compareType: 0 }]));
+                      dispatch(setLessonIds([]))
                     }}
                     options={classListData}
                   />
@@ -1056,6 +1057,7 @@ const QuestionIdentification = () => {
           </div>
         </div>
       </CustomCollapseCard>
+      {showModal &&
       <div className="earnings-modal">
         <CustomModal
           width={'1200px'}
@@ -1092,6 +1094,7 @@ const QuestionIdentification = () => {
           <EarningsChoice classroomId={classroomIdInfo} />
         </CustomModal>
       </div>
+     }
     </CustomPageHeader>
   );
 };
