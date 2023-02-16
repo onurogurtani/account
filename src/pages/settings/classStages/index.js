@@ -42,6 +42,7 @@ const ClassStages = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [selectedClassId, setSelectedClassId] = useState();
   const [updateObject, setUpdateObject] = useState({});
+  const [selectedClassName, setSelectedClassName] = useState("")
 
   const stages = [
     { id: 10, value: 'İlkokul', text: 'İlkokul' },
@@ -342,15 +343,15 @@ const ClassStages = () => {
             label="Sınıf Adı"
             name="name"
           >
-            <CustomInput placeholder="Sınıf Adı" />
+            <CustomInput onChange={(e) => setSelectedClassName(e.target.value.toLowerCase())} placeholder="Sınıf Adı" />
           </CustomFormItem>
           <CustomFormItem
             label={false}
             noStyle
-            shouldUpdate={(prevValues, curValues) => prevValues.schoolLevel !== curValues.schoolLevel}
+            shouldUpdate={(prevValues, curValues) => prevValues.name !== curValues.name || prevValues.schoolLevel !== curValues.schoolLevel}
           >
             {({ getFieldValue }) =>
-              getFieldValue("schoolLevel") === "Lise" &&
+              getFieldValue("schoolLevel") === "Lise" && (selectedClassName === "ayt" || selectedClassName === "tyt") &&
               <CustomFormItem
                 name="universityLevel"
                 rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}

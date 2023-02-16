@@ -33,7 +33,7 @@ const initialState = {
     pageSize: 10,
     totalCount: 0,
   },
-  filterLevel: '',
+  filterLevel: null,
 };
 
 export const difficultyLevelQuestionOfExamSlice = createSlice({
