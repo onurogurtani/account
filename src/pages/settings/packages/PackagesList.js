@@ -11,6 +11,7 @@ import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
 import PackageFilter from './PackageFilter';
 import usePaginationProps from '../../../hooks/usePaginationProps';
 import useOnchangeTable from '../../../hooks/useOnchangeTable';
+import { packageKind } from '../../../constants/package';
 
 const PackagesList = () => {
   const dispatch = useDispatch();
@@ -56,21 +57,14 @@ const PackagesList = () => {
     },
     {
       title: 'Paket Tipi',
-      key: 'isActive',
-      sorter: (a, b) => b.isActive - a.isActive,
+      dataIndex: 'packageKind',
+      key: 'packageKind',
       render: (text, record) => {
         return (
           <div>
-            {record.isCorporate &&
-              <Tag Tag color="green" >
-                Kurumsal
-              </Tag>
-            }
-            {record.isPersonal &&
-              <Tag Tag color="green" >
-                Bireysel
-              </Tag>
-            }
+            {packageKind.map((item) =>
+              (item.value === text) && item.label
+            )}
           </div >
         )
       },

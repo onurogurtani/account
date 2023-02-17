@@ -192,7 +192,8 @@ const AddPackages = () => {
         packageBooks: values.packageBooks?.map((item) => { return { bookId: item } }),
         packageDocuments: values.packageDocuments?.map((item) => { return { documentId: item } }),
         packageKind: values.packageKind,
-        packageContractTypes: values.contractTypeId.map((item) => ({ id: item })),
+        contractTypeId: values.contractTypeId,
+        packageContractTypes: values.contractTypeId.map((item) => ({ contractTypeId: item })),
       },
     };
 

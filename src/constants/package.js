@@ -1,10 +1,10 @@
 export const packageKind = [
   {
     value: 1,
-    label: 'Bireysel',
+    label: 'Bireysel Paket',
   },
   {
     value: 2,
-    label: 'Kurumsal',
+    label: 'Kurumsal Paket',
   },
 ];
