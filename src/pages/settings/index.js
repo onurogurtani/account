@@ -153,7 +153,7 @@ const Settings = {
   TrialType,
   OrganisationTypes,
   ContractTypes,
-  ContractKinds
+  ContractKinds,
   Contracts,
   AddContract,
   EditContracts,
