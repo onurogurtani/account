@@ -1,15 +1,30 @@
 import { api } from './api';
 
-const getUnits = (data = null) => {
+const getMaxNetCounts = (data = null) => {
   return api({
-    url: `Shared/LessonUnits/getList?PageSize=0`,
+    url: 'Target/MaxNetCounts/GetByFilterPagedMaxNetCounts',
     method: 'POST',
     data,
   });
 };
-
+const getMaxNetCountsAdd = (data = null) => {
+  return api({
+    url: 'Target/MaxNetCounts/Add',
+    method: 'POST',
+    data,
+  });
+};
+const getMaxNetCountsUpdate = (data = null) => {
+  return api({
+    url: 'Target/MaxNetCounts/Update',
+    method: 'POST',
+    data,
+  });
+};
 const maxNetNumberServices = {
-  getUnits,
+  getMaxNetCounts,
+  getMaxNetCountsAdd,
+  getMaxNetCountsUpdate,
 };
 
 export default maxNetNumberServices;

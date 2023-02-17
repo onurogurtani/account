@@ -107,7 +107,9 @@ const MaxNetNumber = () => {
       successDialog({ title: 'Başırılı', message: 'Eklendi' });
     }
   };
-  const filterData = () => {};
+  const filterData = (e) => {
+    console.log(e);
+  };
   return (
     <CustomPageHeader>
       <CustomCollapseCard cardTitle={'Max Net Sayıları'}>
@@ -133,10 +135,10 @@ const MaxNetNumber = () => {
                 </CustomButton>
               </div>
               <div style={{ display: searchShow === true ? 'block' : 'none' }}>
-                <CustomForm form={form}>
+                <CustomForm onFinish={filterData} form={form}>
                   <div className=" search-form">
-                    <CustomFormItem label="Eğitim Öğretim Yılı">
-                      <CustomSelect>
+                    <CustomFormItem name="educationYearIds" label="Eğitim Öğretim Yılı">
+                      <CustomSelect mode="multiple">
                         {educationYearList?.items?.map((item, index) => (
                           <Option key={index}>
                             {item.startYear}-{item.endYear}
@@ -144,8 +146,8 @@ const MaxNetNumber = () => {
                         ))}
                       </CustomSelect>
                     </CustomFormItem>
-                    <CustomFormItem label="Sınıf Seviyesi">
-                      <CustomSelect>
+                    <CustomFormItem name="classroomIds" label="Sınıf Seviyesi">
+                      <CustomSelect mode="multiple">
                         {allClassList?.map((item, index) => (
                           <Option value={item.id} key={item.index}>
                             {item.name}
@@ -153,10 +155,10 @@ const MaxNetNumber = () => {
                         ))}
                       </CustomSelect>
                     </CustomFormItem>
-                    <CustomFormItem label="Durum">
+                    <CustomFormItem name="isActive" label="Durum">
                       <CustomSelect>
-                        <Option>Aktif</Option>
-                        <Option>Pasif</Option>
+                        <Option value="true">Aktif</Option>
+                        <Option value="false">Pasif</Option>
                       </CustomSelect>
                     </CustomFormItem>
                   </div>
