@@ -1,73 +1,44 @@
-import React, { useState, useContext, useEffect, useCallback, useMemo } from 'react';
 import { RightOutlined } from '@ant-design/icons';
-import { Button, Col, Row } from 'antd';
+import { Button } from 'antd';
 import dayjs from 'dayjs';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
-import {
-  CustomButton,
-  CustomImage,
-  CustomPagination,
-  CustomSelect,
-  CustomTable,
-  Option,
-  Text
-} from '../../../components';
-import { getByFilterPagedAnnouncements, setUpdateAnnouncementObject } from '../../../store/slice/announcementSlice';
-import '../../../styles/announcementManagement/announcementList.scss';
-import AnnouncementFilter from './AnnouncementFilter';
+import { CustomButton, CustomTable } from '../../../components';
+import { getByFilterPagedDocuments } from '../../../store/slice/contractsSlice';
+// import '../../../styles/announcementManagement/announcementList.scss';
+import '../../../styles/settings/contracts.scss';
 
 const ContractList = () => {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const history = useHistory();
-  const { announcements, tableProperty, filterObject } = useSelector((state) => state?.announcement);
-  useEffect(async () => {
-    await dispatch(getByFilterPagedAnnouncements());
-  }, []);
 
-  return (
-    <div>ContractList</div>
-  )
-}
-
-export default ContractList;
-
-
-  
-  
-
-
-
-  
+  useEffect(() => {
+    const ac = new AbortController();
+    dispatch(getByFilterPagedDocuments());
+    return () => {
+      ac.abort();
+    };
+  }, [dispatch]);
+  const { allDocuments, pagedProperty } = useSelector((state) => state?.contracts);
 
   const paginationProps = {
     showSizeChanger: true,
     showQuickJumper: {
       goButton: <CustomButton className="go-button">Git</CustomButton>,
     },
-    total: tableProperty.totalCount,
-    current: tableProperty.currentPage,
-    pageSize: tableProperty.pageSize,
+    total: pagedProperty?.totalCount,
+    current: pagedProperty?.current,
+    pageSize: pagedProperty?.pageSize,
+    position: 'bottomRight',
+    //TODO AŞ Kİ FONK ASLINDA GEREK YOK
     onChange: (page, pageSize) => {
       const data = {
-        ...filterObject,
         PageNumber: page,
         PageSize: pageSize,
       };
-      dispatch(getByFilterPagedAnnouncements(data));
+      // dispatch(getByFilterPagedAnnouncements(data));
     },
-  };
-  const TableFooter = ({ paginationProps }) => {
-    return (
-      <Row justify="space-between">
-        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 16 }} lg={{ span: 18 }}>
-          <Row justify="end">
-            <CustomPagination className="custom-pagination" {...paginationProps} />
-          </Row>
-        </Col>
-      </Row>
-    );
   };
 
   const columns = [
@@ -76,111 +47,80 @@ export default ContractList;
       dataIndex: 'id',
       key: 'id',
       sorter: true,
-      render: (text, record) => {
-        return <div>{text}</div>;
+      render: (id) => {
+        return <div>{id}</div>;
       },
     },
     {
       title: 'Durumu',
-      dataIndex: 'status',
-      key: 'status',
-      render: (text,record) => {
-        return <div>{text}</div>;
+      dataIndex: 'recordStatus',
+      key: 'recordStatus',
+      sorter: true,
+      //TODO BURAYA BİR ENUMDAN ALIP YAZABİLİRİZ
+      render: (recordStatus) => {
+        return recordStatus == 1 ? 'Aktif' : 'Pasif';
       },
     },
     {
-      title: 'Sözleşme Türü Adı',
-      dataIndex: 'contractTypeName',
-      key: 'contractTypeName',
-      render: (contractTypeName) => {
-        return <div>{contractTypeName}</div>;
+      title: 'Sözleşme Türü',
+      dataIndex: 'contractKind',
+      //TODO AŞ. VERİ BE YE GÖRE DÜZ.
+      key: 'contractKind',
+      sorter: true,
+      render: (contractKind) => {
+        return <span>{contractKind?.name}</span>;
       },
     },
-
     {
       title: 'Sözleşme Tipi',
-      dataIndex: 'contractType',
-      key: 'contractType',
+      dataIndex: 'contractTypes',
+      key: 'contractTypes',
+      width: '200px',
       sorter: true,
-      render: (insertTime) => {
-        const date = dayjs(insertTime)?.format('YYYY-MM-DD HH:mm');
-        return date;
+      render: (contractTypes) => {
+        let typeArr = [];
+        contractTypes?.map((c) => typeArr.push(c?.contractType?.name));
+        let typeStr = typeArr.join(' , ');
+        return (
+          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+            <span>{typeStr}</span>
+          </div>
+        );
       },
     },
     {
       title: 'Versiyon',
       dataIndex: 'version',
       key: 'version',
+      sorter: true,
       render: (version) => {
         return <div>{version}</div>;
       },
     },
     {
-      title: 'Bitiş Tarihi',
-      dataIndex: 'endDate',
-      key: 'endDate',
+      title: 'Geçerlilik Başlangıç Tarihi',
+      dataIndex: 'validStartDate',
+      key: 'validStartDate',
       sorter: true,
-      render: (insertTime) => {
-        const date = dayjs(insertTime)?.format('YYYY-MM-DD HH:mm');
+      render: (validStartDate) => {
+        const date = dayjs(validStartDate)?.format('YYYY-MM-DD HH:mm');
         return date;
       },
     },
-    
-    // {
-    //   title: 'Yayınlanma Durumu',
-    //   dataIndex: 'publishStatus',
-    //   key: 'publishStatus',
-    //   align: 'center',
-    //   render: (publishStatus) => {
-    //     return publishStatus === 1 ? (
-    //       <span
-    //         style={{
-    //           backgroundColor: '#00a483',
-    //           borderRadius: '5px',
-    //           boxShadow: '0 5px 5px 0',
-    //           padding: '5px',
-    //           width: '100px',
-    //           display: 'inline-block',
-    //           textAlign: 'center',
-    //         }}
-    //       >
-    //         Yayında
-    //       </span>
-    //     ) : publishStatus === 2 ? (
-    //       <span
-    //         style={{
-    //           backgroundColor: '#E6E624',
-    //           borderRadius: '5px',
-    //           boxShadow: '0 5px 5px 0',
-    //           padding: '5px',
-    //           width: '100px',
-    //           display: 'inline-block',
-    //           textAlign: 'center',
-    //         }}
-    //       >
-    //         Yayında Değil
-    //       </span>
-    //     ) : (
-    //       <span
-    //         style={{
-    //           backgroundColor: '#ff8c00',
-    //           borderRadius: '5px',
-    //           boxShadow: '0 5px 5px 0',
-    //           padding: '5px',
-    //           width: '100px',
-    //           display: 'inline-block',
-    //           textAlign: 'center',
-    //         }}
-    //       >
-    //         Taslak
-    //       </span>
-    //     );
-    //   },
-    // },
+    {
+      title: 'Geçerlilik Bitiş Tarihi',
+      dataIndex: 'validEndDate',
+      key: 'validEndDate',
+      sorter: true,
+      render: (validEndDate) => {
+        const date = dayjs(validEndDate)?.format('YYYY-MM-DD HH:mm');
+        return date;
+      },
+    },
     {
       title: '',
       dataIndex: '',
-      key: 'goToShowForm',
+      key: 'goToRecord',
       width: 30,
       align: 'center',
       bordered: false,
@@ -205,72 +145,73 @@ export default ContractList;
   const sortFields = [
     {
       key: 'id',
-      ascend: 'idASC',
-      descend: 'idDESC',
+      ascend: 'IdASC',
+      descend: 'IdDESC',
     },
     {
-      key: 'startDate',
-      ascend: 'startASC',
-      descend: 'startDESC',
+      key: 'recordStatus',
+      ascend: 'RecordStatusASC',
+      descend: 'RecordStatusDESC',
     },
     {
-      key: 'endDate',
-      ascend: 'endASC',
-      descend: 'endDESC',
+      key: 'version',
+      ascend: 'VersionASC',
+      descend: 'VersionDESC',
+    },
+    {
+      key: 'validStartDate',
+      ascend: 'ValidStartDateASC',
+      descend: 'ValidStartDateDESC',
+    },
+    {
+      key: 'validEndDate',
+      ascend: 'ValidEndDateASC',
+      descend: 'ValidEndDateDESC',
+    },
+    {
+      key: 'contractTypes',
+      ascend: 'ContractTypeASC',
+      descend: 'ContractTypeDESC',
+    },
+    //TODO KNT ET
+    {
+      key: 'contractKind',
+      ascend: 'ContractKindASC',
+      descend: 'ContractKindDESC',
     },
   ];
 
-  const handleSort = (pagination, filters, sorter) => {
+  const handleTableChange = (pagination, filters, sorter) => {
     const sortType = sortFields.filter((field) => field.key === sorter.columnKey);
     const data = {
-      ...filterObject,
       OrderBy: sortType.length ? sortType[0][sorter.order] : '',
-      PageNumber: '1',
+      PageSize: pagination?.pageSize || 10,
+      PageNumber: pagination?.pageNumber || 1,
     };
-    dispatch(getByFilterPagedAnnouncements(data));
+    dispatch(getByFilterPagedDocuments(data));
   };
-  const addAnnouncement = () => {
-    history.push('/user-management/announcement-management/add');
-  };
-  const showAnnouncement = (record) => {
-    dispatch(setUpdateAnnouncementObject(record));
+
+  const showContract = (record) => {
     history.push({
-      pathname: '/user-management/announcement-management/show',
+      pathname: '/settings/contracts/show',
       state: { data: record },
     });
   };
   return (
-    <CustomCollapseCard className="announcement-list-card" cardTitle={<Text t="Duyurular" />}>
-      <div className="add-announcement">
-        <CustomButton className="add-btn" onClick={addAnnouncement}>
-          YENİ DUYURU EKLE
-        </CustomButton>
-        <CustomButton
-          data-testid="search"
-          className="search-btn"
-          onClick={() => setAnnouncementFilterIsShow((prev) => !prev)}
-        >
-          <CustomImage src={iconSearchWhite} />
-        </CustomButton>
-      </div>
-
-      {announcementFilterIsShow && <AnnouncementFilter />}
-      <CustomTable
-        dataSource={announcements}
-        onChange={handleSort}
-        columns={columns}
-        onRow={(record, rowIndex) => {
-          return {
-            onClick: (event) => showAnnouncement(record),
-          };
-        }}
-        footer={() => <TableFooter paginationProps={paginationProps} />}
-        pagination={false}
-        rowKey={(record) => (record.id ? `${record?.id}` : `${record?.headText}`)}
-        scroll={{ x: false }}
-      />
-    </CustomCollapseCard>
+    <CustomTable
+      dataSource={allDocuments}
+      onChange={handleTableChange}
+      columns={columns}
+      onRow={(record, rowIndex) => {
+        return {
+          onClick: (event) => showContract(record),
+        };
+      }}
+      pagination={paginationProps}
+      rowKey={(record) => (record.id ? `${record?.id}` : `${record?.headText}`)}
+      scroll={{ x: false }}
+    />
   );
 };
 
-export default AnnouncementList;
+export default ContractList;
