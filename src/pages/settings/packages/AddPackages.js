@@ -1,5 +1,5 @@
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Form, Upload } from 'antd';
+import { Button, Form, Upload, message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import classes from '../../../styles/surveyManagement/addSurvey.module.scss';
 import ReactQuill from 'react-quill';
@@ -48,7 +48,6 @@ const AddPackages = () => {
   const [isErrorReactQuill, setIsErrorReactQuill] = useState(false);
   const [isDisable, setIsDisable] = useState(false);
   const [isFormSubmitDisable, setIsFormSubmitDisable] = useState(false);
-  const [errorList, setErrorList] = useState([]);
   const [errorUpload, setErrorUpload] = useState();
   const [selectedClassrooms, setSelectedClassrooms] = useState([]);
   const [lessonsOptions, setLessonsOptions] = useState([]);
@@ -106,23 +105,11 @@ const AddPackages = () => {
   };
 
   const beforeUpload = async (file) => {
-    const isValidType = [
-      ".jpg", ".jpeg", ".bmp", ".gif", ".png"
-    ].includes(file.type.toLowerCase());
-
     const isImage = file.type.toLowerCase().includes('image');
-    if (!isValidType && !isImage) {
-      setErrorList((state) => [
-        ...state,
-        {
-          id: errorList.length,
-          message: 'İzin verilen dosyalar; Görsel',
-        },
-      ]);
-    } else {
-      setErrorList([]);
+    if (!isImage) {
+      message.error(`${file.name} bir resim dosyası değil`);
     }
-    return false;
+    return isImage || Upload.LIST_IGNORE;
   };
 
   const handleCancelFileUpload = () => {
