@@ -162,7 +162,6 @@ const AddPackages = () => {
   };
 
   const onFinish = async (values) => {
-    console.log({values});
     let lessonsArr = values.lesson.map((item) => {
       return { lessonId: item };
     });
@@ -193,7 +192,7 @@ const AddPackages = () => {
         packageBooks: values.packageBooks?.map((item) => { return { bookId: item } }),
         packageDocuments: values.packageDocuments?.map((item) => { return { documentId: item } }),
         packageKind: values.packageKind,
-        packageContractTypes: values.contractTypeId.map((item) => ({id:item})),
+        packageContractTypes: values.contractTypeId.map((item) => ({ id: item })),
       },
     };
 
@@ -496,7 +495,6 @@ const AddPackages = () => {
               filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
               showArrow
               mode="multiple"
-              // onDeselect={onLessonDeselect}
               onChange={onLessonChange}
               options={lessonsOptions}
             />
@@ -555,19 +553,20 @@ const AddPackages = () => {
             label="Sözleşme Tipi"
             name="contractTypeId"
           >
-            <CustomSelect 
+            <CustomSelect
               placeholder="Seçiniz"
               mode="multiple"
-              onChange={(values)=>{
+              showArrow
+              onChange={(values) => {
                 form.resetFields(['packageDocuments']);
-                dispatch(getContractKindsByContractTypes({Ids:values}));
+                dispatch(getContractKindsByContractTypes({ Ids: values }));
               }}
-              >
-                {contractTypeAllList.map((item) => (
-                  <Option key={item.id} value={item.id}>
-                    {item?.name}
-                  </Option>
-                ))}
+            >
+              {contractTypeAllList.map((item) => (
+                <Option key={item.id} value={item.id}>
+                  {item?.name}
+                </Option>
+              ))}
             </CustomSelect>
           </CustomFormItem>
           <CustomFormItem rules={[{ required: true }]} label="Paketi Satın Alan Kullanıcılara Onaylatılacak Evraklar" name="packageDocuments">
