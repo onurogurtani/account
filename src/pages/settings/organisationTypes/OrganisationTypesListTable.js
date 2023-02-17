@@ -113,6 +113,10 @@ const OrganisationTypesListTable = () => {
   }
 
   const onChangeTable = async (pagination, filters, sorter, extra) => {
+    console.log('pagination', pagination);
+    console.log('filters', filters);
+    console.log('sorter', sorter);
+    console.log('extra', extra);
     dispatch(setSortedInfo({ order: sorter?.order, columnKey: sorter?.columnKey }));
     if (extra?.action === 'sort') {
       if (sorter?.field === 'description') {
@@ -139,6 +143,7 @@ const OrganisationTypesListTable = () => {
       columns={columns}
       rowKey={(record) => `institutionTypesListTable-${record?.id}`}
       scroll={{ x: false }}
+      sortDirections={['ASC', 'DESC']}
       pagination={{
         showSizeChanger: true,
         showQuickJumper: {

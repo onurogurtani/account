@@ -66,9 +66,11 @@ const Publisher = () => {
           <div className="action-btns">
             <CustomButton
               onClick={() => {
+                console.log(record);
+
                 setUpdateData(record);
                 setShowAddModal(true);
-                form.setFieldsValue({ ...record, recordStatus: record.recordStatus === 1 ? 'Aktif' : 'Pasif' });
+                form.setFieldsValue(record);
               }}
               className="edit-button"
             >
@@ -125,7 +127,11 @@ const Publisher = () => {
             onOk: () => {
               form.resetFields();
               setShowAddModal(false);
-              dispatch(getPublisherList());
+              dispatch(
+                getPublisherList({
+                  params: { 'PublisherDetailSearch.OrderBy': 'UpdateTimeDESC' },
+                }),
+              );
             },
           });
         } else {
@@ -139,7 +145,11 @@ const Publisher = () => {
     [dispatch, form, updateData],
   );
   useEffect(() => {
-    dispatch(getPublisherList());
+    dispatch(
+      getPublisherList({
+        params: { 'PublisherDetailSearch.OrderBy': 'UpdateTimeDESC' },
+      }),
+    );
   }, [dispatch]);
   return (
     <div>
@@ -164,7 +174,10 @@ const Publisher = () => {
                 showSizeChanger: true,
               }}
               onChange={(pagination, filters, sorter) => {
-                let field = sorter.field[0].toUpperCase() + sorter.field.substring(1);
+                let field = '';
+                if (sorter.field) {
+                  field = sorter?.field[0]?.toUpperCase() + sorter?.field?.substring(1);
+                }
                 dispatch(
                   getPublisherList({
                     params: {

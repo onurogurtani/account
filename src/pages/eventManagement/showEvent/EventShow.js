@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { CustomCollapseCard } from '../../../components';
 import { declarationType } from '../../../constants';
 import { eventLocations, eventTypes } from '../../../constants/events';
+import { participantGroupTypes } from '../../../constants/settings/participantGroups';
 import { dateTimeFormat } from '../../../utils/keys';
 
 const EventShow = () => {
@@ -63,7 +64,20 @@ const EventShow = () => {
           </li>
 
           <li>
-            Katılımcı Gruplar:{' '}
+            Katılımcı Türü:{' '}
+            <span>
+              {currentEvent?.participantTypeOfEvents?.map((item, id) => {
+                return (
+                  <Tag className="m-1" color="orange" key={id}>
+                    {participantGroupTypes[item.participantType - 1].value}
+                  </Tag>
+                );
+              })}
+            </span>
+          </li>
+
+          <li>
+            Katılımcı Grubu:{' '}
             <span>
               {currentEvent?.participantGroups?.map((item, id) => {
                 return (

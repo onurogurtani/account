@@ -41,7 +41,11 @@ const PublisherBook = () => {
   console.log(yearArray);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getPublisherList({ params: { PageSize: 100 } }));
+    dispatch(
+      getPublisherList({
+        params: { 'PublisherDetailSearch.RecordStatus': 1, 'PublisherDetailSearch.PageSize': 100000 },
+      }),
+    );
     dispatch(getPublisherBookList());
   }, [dispatch]);
   const columns = [
@@ -55,7 +59,16 @@ const PublisherBook = () => {
       },
     },
     {
-      title: 'İsim',
+      title: 'Yayın Adı',
+      dataIndex: 'publisher',
+      key: 'publisher',
+      sorter: true,
+      render: (text, record) => {
+        return <div>{text.name}</div>;
+      },
+    },
+    {
+      title: 'Eser Adı',
       dataIndex: 'name',
       key: 'name',
       sorter: true,
@@ -64,7 +77,7 @@ const PublisherBook = () => {
       },
     },
     {
-      title: 'Basım Yılı',
+      title: 'Baskı Yılı',
       dataIndex: 'pressYear',
       key: 'pressYear',
       sorter: true,
@@ -135,7 +148,7 @@ const PublisherBook = () => {
               form.resetFields();
               setShowAddModal(false);
               setUpdateData(null);
-              dispatch(getPublisherBookList());
+              dispatch(getPublisherBookList({ params: { 'BookDetailSearch.OrderBy': 'UpdateTimeDESC' } }));
             },
           });
         } else {
@@ -163,7 +176,7 @@ const PublisherBook = () => {
               form.resetFields();
               setShowAddModal(false);
               setUpdateData(null);
-              dispatch(getPublisherBookList());
+              dispatch(getPublisherBookList({ params: { 'BookDetailSearch.OrderBy': 'UpdateTimeDESC' } }));
             },
           });
         } else {
@@ -198,7 +211,10 @@ const PublisherBook = () => {
               showSizeChanger: true,
             }}
             onChange={(pagination, filters, sorter) => {
-              let field = sorter.field[0].toUpperCase() + sorter.field.substring(1);
+              let field = '';
+              if (sorter.field) {
+                field = sorter?.field[0]?.toUpperCase() + sorter?.field?.substring(1);
+              }
               dispatch(
                 getPublisherBookList({
                   params: {

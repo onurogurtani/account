@@ -28,9 +28,9 @@ const Branch = () => {
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
-  const [isfieldTypeDisable, SetIsfieldTypeDisable] = useState(true);
+  const [isfieldTypeDisable, setIsfieldTypeDisable] = useState(true);
   const [selectedBranchId, setSelectedBranchId] = useState();
-  const { allBranchs,tableProperty } = useSelector((state) => state?.branchs);
+  const { allBranchs, tableProperty } = useSelector((state) => state?.branchs);
   const { allClassList } = useSelector((state) => state?.classStages);
 
   useResetFormOnCloseModal({ form, open });
@@ -116,8 +116,8 @@ const Branch = () => {
 
   const editBranch = (record) => {
     record.classroom.name === '11' || record.classroom.name === '12'
-      ? SetIsfieldTypeDisable(false)
-      : SetIsfieldTypeDisable(true);
+      ? setIsfieldTypeDisable(false)
+      : setIsfieldTypeDisable(true);
     setOpen(true);
     setSelectedBranchId(record.id);
     form.setFieldsValue(record);
@@ -154,7 +154,7 @@ const Branch = () => {
           await handleClose();
         },
       });
-      SetIsfieldTypeDisable(true);
+      setIsfieldTypeDisable(true);
       loadBranchs();
     } else {
       errorDialog({
@@ -193,9 +193,9 @@ const Branch = () => {
 
   const checkClassroomAccess = (_, item) => {
     if (item.children === '11' || item.children === '12') {
-      SetIsfieldTypeDisable(false);
+      setIsfieldTypeDisable(false);
     } else {
-      SetIsfieldTypeDisable(true);
+      setIsfieldTypeDisable(true);
     }
   };
 

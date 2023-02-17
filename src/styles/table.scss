@@ -27,6 +27,7 @@
     line-height: 20px;
     font-family: UbuntuMedium, sans-serif;
     border-radius: 10px;
+    margin-left: auto;
   }
 }
 
@@ -74,7 +75,7 @@
     padding: 10px 4px;
   }
 }
-.eventDescriptionContainer{
+.eventDescriptionContainer {
   text-align: center;
   padding: 2px;
 }
@@ -92,9 +93,8 @@
   box-shadow: none;
   background-color: #f72717;
 }
-.delete-btn:hover{
-  border:1px solid darkblue !important;
-  color:white !important;
+.delete-btn:hover {
+  border: 1px solid darkblue !important;
+  color: white !important;
   background-color: #f72717 !important;
 }
-

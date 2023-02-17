@@ -12,8 +12,6 @@ import {
   CustomFormItem,
   CustomInput,
   CustomModal,
-  CustomRadio,
-  CustomRadioGroup,
   CustomSelect,
   errorDialog,
   Option,
@@ -83,11 +81,11 @@ const AddPackages = () => {
 
   useEffect(() => {
     if (selectedPackgeKind?.includes(["isPersonal", "isCorporate"])) {
-      setFilteredDocumentList(documentsList.filter((item) => item.isPersonal || item.isCorporate))
+      setFilteredDocumentList(documentsList?.filter((item) => item.isPersonal || item.isCorporate))
     } else if (selectedPackgeKind?.includes("isCorporate")) {
-      setFilteredDocumentList(documentsList.filter((item) => item.isCorporate))
+      setFilteredDocumentList(documentsList?.filter((item) => item.isCorporate))
     } else if (selectedPackgeKind?.includes("isPersonal")) {
-      setFilteredDocumentList(documentsList.filter((item) => item.isPersonal))
+      setFilteredDocumentList(documentsList?.filter((item) => item.isPersonal))
     } else {
       setFilteredDocumentList([])
     }
@@ -95,7 +93,7 @@ const AddPackages = () => {
 
   useEffect(() => {
     const checkedList = []
-    booksList.forEach((item) => {
+    booksList?.forEach((item) => {
       checkedList.push(item.id)
     })
     form.setFieldsValue({ packageBooks: checkedList })
@@ -127,7 +125,7 @@ const AddPackages = () => {
         ...state,
         {
           id: errorList.length,
-          message: 'İzin verilen dosyalar; Word, Excel, PDF, Görsel',
+          message: 'İzin verilen dosyalar; Görsel',
         },
       ]);
     } else {
@@ -136,7 +134,7 @@ const AddPackages = () => {
     return false;
   };
 
-  const cancelIntroVideoUpload = () => {
+  const handleCancelFileUpload = () => {
     if (cancelFileUpload.current) cancelFileUpload.current('User has canceled the file upload.');
   };
 
@@ -201,10 +199,10 @@ const AddPackages = () => {
         hasTryingTest: values.hasTryingTest,
         tryingTestQuestionCount: Number(values?.tryingTestQuestionCount),
         hasMotivationEvent: values.hasMotivationEvent,
-        packageBooks: values.packageBooks.map((item) => { return { bookId: item } }),
-        packageDocuments: values.packageDocuments.map((item) => { return { documentId: item } }),
-        isPersonal: values.packageKind.includes("isPersonal"),
-        isCorporate: values.packageKind.includes("isCorporate")
+        packageBooks: values.packageBooks?.map((item) => { return { bookId: item } }),
+        packageDocuments: values.packageDocuments?.map((item) => { return { documentId: item } }),
+        isPersonal: values.packageKind?.includes("isPersonal"),
+        isCorporate: values.packageKind?.includes("isCorporate")
       },
     };
 
@@ -363,7 +361,7 @@ const AddPackages = () => {
               multiple={true}
               showUploadList={{
                 showRemoveIcon: true,
-                removeIcon: <DeleteOutlined onClick={(e) => cancelIntroVideoUpload()} />,
+                removeIcon: <DeleteOutlined onClick={(e) => handleCancelFileUpload()} />,
               }}
               beforeUpload={beforeUpload}
               onChange={(e) => (e.fileList.length >= 5 ? setIsDisable(true) : setIsDisable(false))}

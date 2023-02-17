@@ -25,8 +25,13 @@ import Settings from './pages/settings';
 
 import EventManagement from './pages/eventManagement';
 import UserListManagement from './pages/userManagement/userListManagement';
+import WorkPlanManagement from './pages/workPlanManagement';
 import AdminUsersManagement from './pages/userManagement/adminUsersManagement';
 import QuestionManagement from './pages/questionManagement/index';
+import QuestionDifficultyReports from './pages/reports/questionDifficulty';
+import OrganisationManagement from './pages/organisationManagement';
+import Exam from './pages/exam/index';
+import Reports from './pages/reports/index';
 
 const PrivateRoute = lazy(() =>
   import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -369,8 +374,23 @@ const App = () => {
                           authority="dashboard"
                         />
                         <PrivateRoute
+                          path={`${match?.path}/participantGroups`}
+                          Component={Settings?.ParticipantGroups}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
                           path={`${match?.path}/organisation-types`}
                           Component={Settings?.OrganisationTypes}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/contract-types`}
+                          Component={Settings?.ContractTypes}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/contract-kinds`}
+                          Component={Settings?.ContractKinds}
                           authority="dashboard"
                         />
                         <PrivateRoute
@@ -466,6 +486,156 @@ const App = () => {
                           path={`${match?.path}/question-identification`}
                           exact
                           Component={QuestionManagement.QuestionIdentification}
+                          authority="dashboard"
+                        />
+                        <Route
+                          component={() => (
+                            <Redirect
+                              to={{
+                                pathname: '/not-found',
+                                state: { status: 404 },
+                              }}
+                            />
+                          )}
+                        />
+                      </Switch>
+                    );
+                  }}
+                  authority="dashboard"
+                  isLayout={false}
+                />
+
+                <PrivateRoute
+                  path={'/work-plan-management'}
+                  Component={({ match }) => {
+                    return (
+                      <Switch>
+                        <PrivateRoute
+                          path={`${match?.path}/list`}
+                          Component={WorkPlanManagement.WorkPlanList}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/add`}
+                          Component={WorkPlanManagement?.AddWorkPlan}
+                          authority="dashboard"
+                        />
+                        {/*<PrivateRoute*/}
+                        {/*  path={`${match?.path}/edit/:id`}*/}
+                        {/*  Component={WorkPlanManagement?.EditWorkPlan}*/}
+                        {/*  authority="dashboard"*/}
+                        {/*/>*/}
+                        <Route
+                          component={() => (
+                            <Redirect
+                              to={{
+                                pathname: '/not-found',
+                                state: { status: 404 },
+                              }}
+                            />
+                          )}
+                        />
+                      </Switch>
+                    );
+                  }}
+                  authority="dashboard"
+                  isLayout={false}
+                />
+
+                <PrivateRoute
+                  path={'/organisation-management'}
+                  Component={({ match }) => {
+                    return (
+                      <Switch>
+                        <PrivateRoute
+                          path={`${match?.path}/list`}
+                          exact
+                          Component={OrganisationManagement?.OrganisationList}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/show/:id`}
+                          exact
+                          Component={OrganisationManagement?.OrganisationShow}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/add`}
+                          exact
+                          Component={OrganisationManagement?.OrganisationCreateOrUpdate}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/edit/:id`}
+                          exact
+                          Component={OrganisationManagement?.OrganisationCreateOrUpdate}
+                          authority="dashboard"
+                        />
+                        <Route
+                          component={() => (
+                            <Redirect
+                              to={{
+                                pathname: '/not-found',
+                                state: { status: 404 },
+                              }}
+                            />
+                          )}
+                        />
+                      </Switch>
+                    );
+                  }}
+                  authority="dashboard"
+                  isLayout={false}
+                />
+                <PrivateRoute
+                  path={'/exam'}
+                  Component={({ match }) => {
+                    return (
+                      <Switch>
+                        <PrivateRoute
+                          path={`${match?.path}/trial-exam`}
+                          exact
+                          Component={Exam.TrialExam}
+                          authority="dashboard"
+                        />
+
+                        <Route
+                          component={() => (
+                            <Redirect
+                              to={{
+                                pathname: '/not-found',
+                                state: { status: 404 },
+                              }}
+                            />
+                          )}
+                        />
+                      </Switch>
+                    );
+                  }}
+                  authority="dashboard"
+                  isLayout={false}
+                />
+                <PrivateRoute
+                  path={'/reports'}
+                  Component={({ match }) => {
+                    return (
+                      <Switch>
+                        <PrivateRoute
+                          path={`${match?.path}/question-difficulty/list`}
+                          exact
+                          Component={QuestionDifficultyReports.QuestionDifficultyList}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/question-difficulty/detail`}
+                          exact
+                          Component={QuestionDifficultyReports.QuestionDifficultyDetail}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/video-reports`}
+                          exact
+                          Component={Reports.VideoReports}
                           authority="dashboard"
                         />
                         <Route

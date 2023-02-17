@@ -44,10 +44,17 @@ import { lessonSubjectsSlice } from './slice/lessonSubjectsSlice';
 import { lessonSubSubjectsSlice } from './slice/lessonSubSubjectsSlice';
 import { questionIdentificationSlice } from './slice/questionIdentificationSlice';
 import { earningChoiceSlice } from './slice/earningChoiceSlice';
+import { participantGroupsSlice } from './slice/participantGroupsSlice';
+import { workPlanSlice } from './slice/workPlanSlice';
 import { trialTypeSlice } from './slice/trialTypeSlice';
 import { documentsSlice } from './slice/documentsSlice';
 import { booksSlice } from './slice/booksSlice';
 import { organisationTypesSlice } from './slice/organisationTypesSlice';
+import { organisationsSlice } from './slice/organisationsSlice';
+import { contractTypeSlice } from './slice/contractTypeSlice';
+import { trialExamSlice } from './slice/trialExamSlice';
+import { contractKindsSlice } from './slice/contractKindsSlice';
+import { difficultyLevelQuestionOfExamSlice } from './slice/difficultyLevelQuestionOfExamSlice';
 import { contractsSlice } from './slice/contractsSlice';
 
 const reducers = combineReducers({
@@ -86,12 +93,19 @@ const reducers = combineReducers({
   publisher: publisherSlice.reducer,
   publisherBook: publisherBookSlice.reducer,
   questionManagement: questionManagementSlice.reducer,
+  workPlan: workPlanSlice.reducer,
   questionIdentification: questionIdentificationSlice.reducer,
   earningChoice: earningChoiceSlice.reducer,
+  participantGroups: participantGroupsSlice.reducer,
   trialType: trialTypeSlice.reducer,
   documents: documentsSlice.reducer,
   books: booksSlice.reducer,
   organisationTypes: organisationTypesSlice.reducer,
+  organisations: organisationsSlice.reducer,
+  contractTypes: contractTypeSlice.reducer,
+  tiralExam: trialExamSlice.reducer,
+  contractKinds: contractKindsSlice.reducer,
+  difficultyLevelQuestionOfExams: difficultyLevelQuestionOfExamSlice.reducer,
   contracts: contractsSlice.reducer,
 });
 

@@ -3,6 +3,7 @@ import lessonSubSubjectsServices from '../../services/lessonSubSubjects.services
 
 const initialState = {
   lessonSubSubjects: [],
+  lessonSubSubjectsFilter: [],
 };
 
 export const lessonSubSubjectsSlice = createSlice({
@@ -11,6 +12,9 @@ export const lessonSubSubjectsSlice = createSlice({
   reducers: {
     resetLessonSubSubjects: (state, action) => {
       state.lessonSubSubjects = [];
+    },
+    resetLessonSubSubjectsFilter: (state, action) => {
+      state.lessonSubSubjectsFilter = [];
     },
   },
   extraReducers: (builder) => {
@@ -21,6 +25,12 @@ export const lessonSubSubjectsSlice = createSlice({
     });
     builder.addCase(addLessonSubSubjects.fulfilled, (state, action) => {
       state.lessonSubSubjects = state.lessonSubSubjects.concat(action?.payload?.data);
+    });
+    builder.addCase(getLessonSubSubjectsList.fulfilled, (state, action) => {
+      state.lessonSubSubjects = action?.payload?.data?.items;
+    });
+    builder.addCase(getLessonSubSubjectsListFilter.fulfilled, (state, action) => {
+      state.lessonSubSubjectsFilter = action?.payload?.data?.items;
     });
     builder.addCase(editLessonSubSubjects.fulfilled, (state, action) => {
       const {
@@ -41,7 +51,7 @@ export const lessonSubSubjectsSlice = createSlice({
   },
 });
 
-export const { resetLessonSubSubjects } = lessonSubSubjectsSlice.actions;
+export const { resetLessonSubSubjects, resetLessonSubSubjectsFilter } = lessonSubSubjectsSlice.actions;
 export const getLessonSubSubjects = createAsyncThunk(
   'getLessonSubSubjects',
   async (body, { dispatch, getState, rejectWithValue }) => {
@@ -52,6 +62,26 @@ export const getLessonSubSubjects = createAsyncThunk(
       );
       if (findLessonSubSubjects) return rejectWithValue();
 
+      return await lessonSubSubjectsServices.getLessonSubSubjects(body);
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+export const getLessonSubSubjectsList = createAsyncThunk(
+  'getLessonSubSubjectsList',
+  async (body, { dispatch, getState, rejectWithValue }) => {
+    try {
+      return await lessonSubSubjectsServices.getLessonSubSubjects(body);
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+export const getLessonSubSubjectsListFilter = createAsyncThunk(
+  'getLessonSubSubjectsListFilter',
+  async (body, { dispatch, getState, rejectWithValue }) => {
+    try {
       return await lessonSubSubjectsServices.getLessonSubSubjects(body);
     } catch (error) {
       return rejectWithValue(error?.data);

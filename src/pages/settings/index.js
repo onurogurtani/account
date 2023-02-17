@@ -86,6 +86,11 @@ const Publisher = lazy(() =>
     default: Component,
   })),
 );
+const ParticipantGroups = lazy(() =>
+  import('./participantGroups').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
 const TrialType = lazy(() =>
   import('./trialType').then(({ default: Component }) => ({
     default: Component,
@@ -93,6 +98,16 @@ const TrialType = lazy(() =>
 );
 const OrganisationTypes = lazy(() =>
   import('./organisationTypes/OrganisationTypesList').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+const ContractTypes = lazy(() =>
+  import('./contractType').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+const ContractKinds = lazy(() =>
+  import('./contractKinds').then(({ default: Component }) => ({
     default: Component,
   })),
 );
@@ -116,6 +131,7 @@ const ShowContracts = lazy(() =>
     default: Component,
   })),
 );
+
 const Settings = {
   Categories,
   Packages,
@@ -133,8 +149,11 @@ const Settings = {
   PreferencePeriod,
   PublisherBook,
   Publisher,
+  ParticipantGroups,
   TrialType,
   OrganisationTypes,
+  ContractTypes,
+  ContractKinds
   Contracts,
   AddContract,
   EditContracts,

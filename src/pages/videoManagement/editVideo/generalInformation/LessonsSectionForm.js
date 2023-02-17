@@ -5,8 +5,7 @@ import useAcquisitionTree from '../../../../hooks/useAcquisitionTree';
 import { videoTimeValidator } from '../../../../utils/formRule';
 
 const LessonsSectionForm = ({ form }) => {
-  const { classroomId, setClassroomId, lessonId, setLessonId, unitId, setUnitId, lessonSubjectId, setLessonSubjectId } =
-    useAcquisitionTree();
+  const { classroomId, setClassroomId, setLessonId, setUnitId, setLessonSubjectId } = useAcquisitionTree();
 
   const { currentVideo } = useSelector((state) => state?.videos);
   const { lessons } = useSelector((state) => state?.lessons);
@@ -20,12 +19,19 @@ const LessonsSectionForm = ({ form }) => {
 
   const [videoBrackets, setVideoBrackets] = useState([]);
 
+  const [currentLessonId, setCurrentLessonId] = useState();
+  const [currentUnitId, setCurrentUnitId] = useState();
+  const [currentLessonSubjectId, setCurrentLessonSubjectId] = useState();
+
   useEffect(() => {
     if (Object.keys(currentVideo).length) {
       setClassroomId(currentVideo?.classroomId);
       setLessonId(currentVideo.lessonId);
       setUnitId(currentVideo.lessonUnitId);
       setLessonSubjectId(currentVideo.lessonSubjectId);
+      setCurrentLessonId(currentVideo.lessonId);
+      setCurrentUnitId(currentVideo.lessonUnitId);
+      setCurrentLessonSubjectId(currentVideo.lessonSubjectId);
       setVideoBrackets(
         currentVideo?.lessonSubSubjects?.map((item) => ({
           bracketTime: item?.bracketTime,
@@ -59,18 +65,21 @@ const LessonsSectionForm = ({ form }) => {
 
   const onLessonChange = (value) => {
     setLessonId(value);
+    setCurrentLessonId(value);
     form.resetFields(['lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects', 'videoBrackets']);
     setVideoBrackets([]);
   };
 
   const onUnitChange = (value) => {
     setUnitId(value);
+    setCurrentUnitId(value);
     form.resetFields(['lessonSubjectId', 'lessonSubSubjects', 'videoBrackets']);
     setVideoBrackets([]);
   };
 
   const onLessonSubjectsChange = (value) => {
     setLessonSubjectId(value);
+    setCurrentLessonSubjectId(value);
     form.resetFields(['lessonSubSubjects', 'videoBrackets']);
     setVideoBrackets([]);
   };
@@ -164,7 +173,7 @@ const LessonsSectionForm = ({ form }) => {
       >
         <CustomSelect onChange={onUnitChange} placeholder="Ünite">
           {lessonUnits
-            ?.filter((item) => item.lessonId === lessonId || item.lessonId === currentVideo.lessonId)
+            ?.filter((item) => item.lessonId === currentLessonId)
             .map((item) => {
               return (
                 <Option key={item?.id} value={item?.id}>
@@ -187,7 +196,7 @@ const LessonsSectionForm = ({ form }) => {
       >
         <CustomSelect onChange={onLessonSubjectsChange} placeholder="Konu">
           {lessonSubjects
-            ?.filter((item) => item.lessonUnitId === unitId || item.lessonUnitId === currentVideo.lessonUnitId)
+            ?.filter((item) => item.lessonUnitId === currentUnitId)
             .map((item) => {
               return (
                 <Option key={item?.id} value={item?.id}>
@@ -211,10 +220,7 @@ const LessonsSectionForm = ({ form }) => {
           placeholder="Alt Başlık"
         >
           {lessonSubSubjects
-            ?.filter(
-              (item) =>
-                item.lessonSubjectId === lessonSubjectId || item.lessonSubjectId === currentVideo.lessonSubjectId,
-            )
+            ?.filter((item) => item.lessonSubjectId === currentLessonSubjectId)
             .map((item) => {
               return (
                 <Option key={item?.id} value={item?.id}>

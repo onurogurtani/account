@@ -111,7 +111,7 @@ export const FORM_DATA_CONVERT = (data) => {
   return formData;
 };
 
-export const removeFromArray = (arr, ...args) => arr.filter((val) => !args.includes(val));
+export const removeFromArray = (arr, ...args) => arr?.filter((val) => !args.includes(val)); //difference arrays
 export const getListFilterParams = (field, value) => [{ field, value, compareType: 0 }];
 
 export const getByFilterPagedParamsHelper = (data, prefix) => {
@@ -132,4 +132,8 @@ export const getByFilterPagedParamsHelper = (data, prefix) => {
       .map(([k, v]) => [`${prefix}${k}`, v]),
   );
   return result;
+};
+
+export const capitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 };
