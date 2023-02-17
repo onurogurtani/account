@@ -1,10 +1,10 @@
 export const packageKind = [
   {
-    value: "isPersonal",
+    value: 1,
     label: 'Bireysel',
   },
   {
-    value: "isCorporate",
+    value: 2,
     label: 'Kurumsal',
   },
 ];
