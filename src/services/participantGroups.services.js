@@ -1,14 +1,5 @@
 import { api } from './api';
 
-// ??? güncellenicek
-const getParticipantGroupsList = () => {
-  return api({
-    url: `ParticipantGroups/getList?PageSize=0`,
-    method: 'POST',
-    data: null,
-  });
-};
-
 const updateParticipantGroups = (data) => {
   return api({
     url: `Event/ParticipantGroups`,
@@ -29,7 +20,7 @@ const deleteParticipantGroups = (data) => {
   return api({
     url: `Event/ParticipantGroups?id=${data}`,
     method: 'DELETE',
-    data:null
+    data: null,
   });
 };
 
@@ -50,12 +41,11 @@ const getAllPackages = () => {
 };
 
 const participantGroupsServices = {
-  getParticipantGroupsList,
   getParticipantGroupsPagedList,
   deleteParticipantGroups,
   createParticipantGroups,
   updateParticipantGroups,
-  getAllPackages
+  getAllPackages,
 };
 
 export default participantGroupsServices;

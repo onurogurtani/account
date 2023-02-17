@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   earningChoice: [],
-  expandedEarningChoice: [],
+  lessonIds: [],
 };
 
 export const earningChoiceSlice = createSlice({
@@ -12,10 +12,12 @@ export const earningChoiceSlice = createSlice({
     setEarningChoice: (state, action) => {
       state.earningChoice = action.payload;
     },
-    setExpandedEarningChoice: (state, action) => {
-      state.expandedEarningChoice = action.payload;
+    setLessonIds: (state, action) => {
+      state.lessonIds = action.payload;
     },
+  
+
   },
 });
 
-export const { setEarningChoice, setExpandedEarningChoice } = earningChoiceSlice.actions;
+export const { setEarningChoice,setLessonIds } = earningChoiceSlice.actions;

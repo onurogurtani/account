@@ -24,6 +24,9 @@ const EventShowAction = () => {
     eventTypeEnum: currentEvent?.eventTypeEnum,
     locationType: currentEvent?.locationType,
     physicalAddress: currentEvent?.physicalAddress,
+    participantTypeOfEvents: currentEvent?.participantTypeOfEvents?.map((item) => ({
+      participantType: item.participantType,
+    })),
     participantGroups: currentEvent?.participantGroups?.map((item) => ({
       participantGroupId: item.participantGroupId,
     })),

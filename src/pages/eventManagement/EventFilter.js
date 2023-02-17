@@ -10,17 +10,13 @@ import {
 } from '../../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { turkishToLower } from '../../utils/utils';
-import {
-  getAllEventsKeyword,
-  getByFilterPagedEvents,
-  getEventNames,
-  getParticipantGroupsList,
-  setIsFilter,
-} from '../../store/slice/eventsSlice';
+import { getAllEventsKeyword, getByFilterPagedEvents, getEventNames, setIsFilter } from '../../store/slice/eventsSlice';
 import { dateTimeFormat } from '../../utils/keys';
 import { getEventTypes } from '../../store/slice/eventTypeSlice';
 import TableFilter from '../../components/TableFilter';
 import dayjs from 'dayjs';
+import useParticipantGroups from './hooks/useParticipantGroups';
+import { participantGroupTypes } from '../../constants/settings/participantGroups';
 
 const EventFilter = () => {
   const [form] = Form.useForm();
@@ -29,13 +25,15 @@ const EventFilter = () => {
   const state = (state) => state?.events;
   const { filterObject, isFilter } = useSelector(state);
 
-  const [participantGroupsList, setParticipantGroupsList] = useState([]);
   const [eventNameList, setEventNameList] = useState([]);
   const [keywords, setKeywords] = useState([]);
   const { eventTypes } = useSelector((state) => state?.eventType);
+  const { onParticipantGroupTypeSelect, onParticipantGroupTypeDeSelect, participantGroupsList } = useParticipantGroups(
+    form,
+    'ParticipantGroupId',
+  );
 
   useEffect(() => {
-    loadparticipantGroups();
     loadEventNames();
     loadEventKeywords();
     dispatch(getEventTypes({ PageSize: 999999, IsActive: true }));
@@ -55,15 +53,6 @@ const EventFilter = () => {
       setKeywords([]);
     }
   };
-  const loadparticipantGroups = useCallback(async () => {
-    const action = await dispatch(getParticipantGroupsList());
-    if (getParticipantGroupsList?.fulfilled?.match(action)) {
-      setParticipantGroupsList(action?.payload?.data?.items);
-    } else {
-      setParticipantGroupsList([]);
-      console.log(action?.payload?.message);
-    }
-  }, [dispatch]);
 
   const loadEventNames = useCallback(async () => {
     const action = await dispatch(getEventNames());
@@ -109,7 +98,7 @@ const EventFilter = () => {
     await dispatch(setIsFilter(false));
   };
 
-  const tableFilterProps = { onFinish, reset, state };
+  const tableFilterProps = { onFinish, reset, state, extra: [form] };
 
   return (
     <TableFilter {...tableFilterProps}>
@@ -144,22 +133,39 @@ const EventFilter = () => {
           </CustomSelect>
         </CustomFormItem>
 
+        <CustomFormItem label="Katılımcı Türü" name="???">
+          <CustomSelect
+            showArrow
+            mode="multiple"
+            placeholder="Seçiniz"
+            onSelect={onParticipantGroupTypeSelect}
+            onDeselect={onParticipantGroupTypeDeSelect}
+          >
+            {participantGroupTypes?.map((item) => {
+              return (
+                <Option key={item?.id} value={item?.id}>
+                  {item?.value}
+                </Option>
+              );
+            })}
+          </CustomSelect>
+        </CustomFormItem>
+
         <CustomFormItem label="Katılımcı Grubu" name="ParticipantGroupId">
           <CustomSelect
             filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
             showArrow
             mode="multiple"
             placeholder="Katılımcı Grubu"
+            disabled={participantGroupsList.length === 0}
           >
-            {participantGroupsList
-              // ?.filter((item) => item.isActive)
-              ?.map((item) => {
-                return (
-                  <Option key={item?.id} value={item?.id}>
-                    {item?.name}
-                  </Option>
-                );
-              })}
+            {participantGroupsList?.map((item) => {
+              return (
+                <Option key={item?.id} value={item?.id}>
+                  {item?.name}
+                </Option>
+              );
+            })}
           </CustomSelect>
         </CustomFormItem>
 
