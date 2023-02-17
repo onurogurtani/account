@@ -47,6 +47,7 @@ const AddPackages = () => {
 
   const [isErrorReactQuill, setIsErrorReactQuill] = useState(false);
   const [isDisable, setIsDisable] = useState(false);
+  const [isFormSubmitDisable, setIsFormSubmitDisable] = useState(false);
   const [errorList, setErrorList] = useState([]);
   const [errorUpload, setErrorUpload] = useState();
   const [selectedClassrooms, setSelectedClassrooms] = useState([]);
@@ -162,6 +163,7 @@ const AddPackages = () => {
   };
 
   const onFinish = async (values) => {
+    setIsFormSubmitDisable(true);
     let lessonsArr = values.lesson.map((item) => {
       return { lessonId: item };
     });
@@ -213,6 +215,7 @@ const AddPackages = () => {
       });
     }
     setIsDisable(false);
+    setIsFormSubmitDisable(false);
   };
 
   const onCancel = () => {
@@ -628,7 +631,7 @@ const AddPackages = () => {
             <CustomButton type="primary" className="cancel-btn" onClick={onCancel}>
               İptal
             </CustomButton>
-            <CustomButton type="primary" className="save-btn" onClick={() => form.submit()}>
+            <CustomButton type="primary" className="save-btn" loading={isFormSubmitDisable} onClick={() => form.submit()}>
               Kaydet
             </CustomButton>
           </div>

@@ -49,6 +49,7 @@ const EditPackages = () => {
 
   const [isErrorReactQuill, setIsErrorReactQuill] = useState(false);
   const [isDisable, setIsDisable] = useState(false);
+    const [isFormSubmitDisable, setIsFormSubmitDisable] = useState(false);
   const [errorList, setErrorList] = useState([]);
   const [errorUpload, setErrorUpload] = useState();
   const [currentImages, setCurrenImages] = useState([]);
@@ -272,6 +273,7 @@ const EditPackages = () => {
   };
 
   const onFinish = async (values) => {
+    setIsFormSubmitDisable(true);
     let newImageArray = [];
     let diffOldImages = values?.imageOfPackages;
     diffOldImages?.forEach((item) => {
@@ -335,6 +337,7 @@ const EditPackages = () => {
       });
     }
     setIsDisable(false);
+    setIsFormSubmitDisable(false);
   };
 
   const onCancel = () => {
@@ -722,7 +725,7 @@ const EditPackages = () => {
             <CustomButton type="primary" className="cancel-btn" onClick={onCancel}>
               İptal
             </CustomButton>
-            <CustomButton type="primary" className="save-btn" onClick={() => form.submit()}>
+            <CustomButton type="primary" className="save-btn" loading={isFormSubmitDisable} onClick={() => form.submit()}>
               Güncelle
             </CustomButton>
           </div>
