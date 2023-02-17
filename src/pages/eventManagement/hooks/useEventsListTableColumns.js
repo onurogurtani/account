@@ -2,6 +2,7 @@ import { RightOutlined } from '@ant-design/icons';
 import { Tag } from 'antd';
 import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
+import { participantGroupTypes } from '../../../constants/settings/participantGroups';
 import { dateTimeFormat } from '../../../utils/keys';
 
 const useEventsListTableColumns = () => {
@@ -111,6 +112,22 @@ const useEventsListTableColumns = () => {
       render: (text, record) => {
         return <div>{dayjs(text)?.format(dateTimeFormat)}</div>;
       },
+    },
+    {
+      title: 'Katılıımcı Türü',
+      dataIndex: 'participantTypeOfEvents',
+      key: 'participantTypeOfEvents',
+      render: (_, record) => (
+        <>
+          {record.participantTypeOfEvents?.map((item, id) => {
+            return (
+              <Tag className="m-1" color="orange" key={id}>
+                {participantGroupTypes[item.participantType - 1].value}
+              </Tag>
+            );
+          })}
+        </>
+      ),
     },
     {
       title: 'Katılıımcı Grubu',

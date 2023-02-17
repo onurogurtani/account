@@ -57,9 +57,9 @@ export const getSurveyListWithSelectedSurveyCategory = createAsyncThunk(
 
 export const getParticipantGroupsList = createAsyncThunk(
   'events/getParticipantGroupsList',
-  async (data, { dispatch, rejectWithValue }) => {
+  async ({ params = {} }, { dispatch, rejectWithValue }) => {
     try {
-      const response = await participantGroupsServices.getParticipantGroupsList();
+      const response = await participantGroupsServices.getParticipantGroupsPagedList(params);
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -118,6 +118,7 @@ const initialState = {
   isFilter: false,
   filterObject: {},
   sorterObject: {},
+  participantGroupsList: [],
 };
 
 export const eventsSlice = createSlice({
@@ -132,6 +133,12 @@ export const eventsSlice = createSlice({
     },
     setIsFilter: (state, action) => {
       state.isFilter = action.payload;
+    },
+    handleParticipantGroupTypeDeSelect: (state, action) => {
+      state.participantGroupsList = state.participantGroupsList.filter((i) => i.participantType !== action.payload);
+    },
+    resetParticipantGroupsList: (state, action) => {
+      state.participantGroupsList = [];
     },
   },
   extraReducers: (builder) => {
@@ -157,7 +164,16 @@ export const eventsSlice = createSlice({
     builder.addCase(deleteEvent.fulfilled, (state, action) => {
       state.currentEvent = {};
     });
+    builder.addCase(getParticipantGroupsList.fulfilled, (state, action) => {
+      state.participantGroupsList = state.participantGroupsList.concat(action?.payload?.data?.items);
+    });
   },
 });
 
-export const { setFilterObject, setSorterObject, setIsFilter } = eventsSlice.actions;
+export const {
+  setFilterObject,
+  setSorterObject,
+  setIsFilter,
+  handleParticipantGroupTypeDeSelect,
+  resetParticipantGroupsList,
+} = eventsSlice.actions;
