@@ -55,6 +55,7 @@ import { contractTypeSlice } from './slice/contractTypeSlice';
 import { trialExamSlice } from './slice/trialExamSlice';
 import { contractKindsSlice } from './slice/contractKindsSlice';
 import { difficultyLevelQuestionOfExamSlice } from './slice/difficultyLevelQuestionOfExamSlice';
+import { contractsSlice } from './slice/contractsSlice';
 
 const reducers = combineReducers({
   auth: authSlice.reducer,
@@ -105,6 +106,7 @@ const reducers = combineReducers({
   tiralExam: trialExamSlice.reducer,
   contractKinds: contractKindsSlice.reducer,
   difficultyLevelQuestionOfExams: difficultyLevelQuestionOfExamSlice.reducer,
+  contracts: contractsSlice.reducer,
 });
 
 const persistConfig = {

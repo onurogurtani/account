@@ -111,6 +111,27 @@ const ContractKinds = lazy(() =>
     default: Component,
   })),
 );
+const Contracts = lazy(() =>
+  import('./contracts').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+const AddContract = lazy(() =>
+  import('./contracts/contractHandlers/AddContract').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+const EditContracts = lazy(() =>
+  import('./contracts/contractHandlers/EditContract').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+const ShowContracts = lazy(() =>
+  import('./contracts/contractHandlers/ShowContracts').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+
 const Settings = {
   Categories,
   Packages,
@@ -133,6 +154,10 @@ const Settings = {
   OrganisationTypes,
   ContractTypes,
   ContractKinds
+  Contracts,
+  AddContract,
+  EditContracts,
+  ShowContracts,
 };
 
 export default Settings;

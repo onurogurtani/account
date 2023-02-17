@@ -8,21 +8,21 @@ import {
   CustomPageHeader,
   errorDialog,
   successDialog,
-  Text,
+  Text
 } from '../../../../components';
 import {
   deleteAnnouncement,
   editAnnouncement,
   setActiveAnnouncements,
-  setArchiveAnnouncements,
+  setArchiveAnnouncements
 } from '../../../../store/slice/announcementSlice';
 import '../../../../styles/announcementManagement/showAnnouncement.scss';
 import ShowAnnouncementCard from './ShowAnnouncementCard';
 import UpdateAnnouncementDate from './updateAnnouncementDate';
 const ShowAnnouncement = () => {
-  const location = useLocation();
   const history = useHistory();
   const [dateVisible, setDateVisible] = useState(false);
+  const location = useLocation();
   const showData = location?.state?.data;
   const [currentAnnouncement, setCurrentAnnouncement] = useState(showData);
 

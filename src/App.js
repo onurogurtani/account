@@ -393,6 +393,29 @@ const App = () => {
                           Component={Settings?.ContractKinds}
                           authority="dashboard"
                         />
+                        <PrivateRoute
+                          path={`${match?.path}/contracts/show`}
+                          exact
+                          Component={Settings?.ShowContracts}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/contracts/edit`}
+                          exact
+                          Component={Settings?.EditContracts}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/contracts/add`}
+                          Component={Settings?.AddContract}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/contracts`}
+                          Component={Settings?.Contracts}
+                          authority="dashboard"
+                        />
+
                         <Route
                           component={() => (
                             <Redirect
