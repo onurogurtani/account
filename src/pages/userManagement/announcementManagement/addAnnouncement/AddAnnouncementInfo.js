@@ -1,7 +1,7 @@
 import React from 'react';
 import { CustomCollapseCard, Text } from '../../../../components';
 
-import '../../../../styles/announcementManagement/addAnnouncementInfo.scss';
+import '../../../../styles/temporaryFile/asEvGeneral.scss';
 import AnnouncementInfoForm from '../forms/AnnouncementInfoForm';
 
 const AddAnnouncementInfo = ({ setAnnouncementInfoData }) => {

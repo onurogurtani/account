@@ -28,6 +28,7 @@ import UserListManagement from './pages/userManagement/userListManagement';
 import WorkPlanManagement from './pages/workPlanManagement';
 import AdminUsersManagement from './pages/userManagement/adminUsersManagement';
 import QuestionManagement from './pages/questionManagement/index';
+import AsEv from './pages/temporaryFolder/asEv';
 import QuestionDifficultyReports from './pages/reports/questionDifficulty';
 import OrganisationManagement from './pages/organisationManagement';
 import Exam from './pages/exam/index';
@@ -471,6 +472,52 @@ const App = () => {
                   authority="dashboard"
                   isLayout={false}
                 />
+                <PrivateRoute
+                  path={'/test-management/assessment-and-evaluation'}
+                  Component={({ match }) => {
+                    return (
+                      <Switch>
+                        <PrivateRoute
+                          path={`${match?.path}/list`}
+                          exact
+                          Component={AsEv?.AsEvList}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/add`}
+                          exact
+                          Component={AsEv?.AddAsEv}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/edit`}
+                          exact
+                          Component={AsEv?.UpdateAsEv}
+                          authority="dashboard"
+                        />
+                        <PrivateRoute
+                          path={`${match?.path}/show`}
+                          exact
+                          Component={AsEv?.ShowAsEv}
+                          authority="dashboard"
+                        />
+                        <Route
+                          component={() => (
+                            <Redirect
+                              to={{
+                                pathname: '/not-found',
+                                state: { status: 404 },
+                              }}
+                            />
+                          )}
+                        />
+                      </Switch>
+                    );
+                  }}
+                  authority="dashboard"
+                  isLayout={false}
+                />
+
                 <PrivateRoute
                   path={'/question-management'}
                   Component={({ match }) => {
