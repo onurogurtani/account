@@ -1,5 +1,5 @@
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Form, Upload } from 'antd';
+import { Button, Form, Upload, message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import classes from '../../../styles/surveyManagement/addSurvey.module.scss';
 import ReactQuill from 'react-quill';
@@ -47,7 +47,7 @@ const AddPackages = () => {
 
   const [isErrorReactQuill, setIsErrorReactQuill] = useState(false);
   const [isDisable, setIsDisable] = useState(false);
-  const [errorList, setErrorList] = useState([]);
+  const [isFormSubmitDisable, setIsFormSubmitDisable] = useState(false);
   const [errorUpload, setErrorUpload] = useState();
   const [selectedClassrooms, setSelectedClassrooms] = useState([]);
   const [lessonsOptions, setLessonsOptions] = useState([]);
@@ -105,23 +105,11 @@ const AddPackages = () => {
   };
 
   const beforeUpload = async (file) => {
-    const isValidType = [
-      ".jpg", ".jpeg", ".bmp", ".gif", ".png"
-    ].includes(file.type.toLowerCase());
-
     const isImage = file.type.toLowerCase().includes('image');
-    if (!isValidType && !isImage) {
-      setErrorList((state) => [
-        ...state,
-        {
-          id: errorList.length,
-          message: 'İzin verilen dosyalar; Görsel',
-        },
-      ]);
-    } else {
-      setErrorList([]);
+    if (!isImage) {
+      message.error(`${file.name} bir resim dosyası değil`);
     }
-    return false;
+    return isImage || Upload.LIST_IGNORE;
   };
 
   const handleCancelFileUpload = () => {
@@ -162,6 +150,7 @@ const AddPackages = () => {
   };
 
   const onFinish = async (values) => {
+    setIsFormSubmitDisable(true);
     let lessonsArr = values.lesson.map((item) => {
       return { lessonId: item };
     });
@@ -213,6 +202,7 @@ const AddPackages = () => {
       });
     }
     setIsDisable(false);
+    setIsFormSubmitDisable(false);
   };
 
   const onCancel = () => {
@@ -628,7 +618,7 @@ const AddPackages = () => {
             <CustomButton type="primary" className="cancel-btn" onClick={onCancel}>
               İptal
             </CustomButton>
-            <CustomButton type="primary" className="save-btn" onClick={() => form.submit()}>
+            <CustomButton type="primary" className="save-btn" loading={isFormSubmitDisable} onClick={() => form.submit()}>
               Kaydet
             </CustomButton>
           </div>
