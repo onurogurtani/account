@@ -1,16 +1,15 @@
 import { api } from './api';
 
-
 const getByFilterPagedQuestionOfExams = (params) => {
   return api({
-    url: `Mono/QuestionOfExams/GetByFilterPagedQuestionOfExams`,
+    url: `Question/QuestionOfExams/GetByFilterPagedQuestionOfExams`,
     method: 'POST',
     params,
   });
 };
 
 const workPlanService = {
-  getByFilterPagedQuestionOfExams
+  getByFilterPagedQuestionOfExams,
 };
 
 export default workPlanService;

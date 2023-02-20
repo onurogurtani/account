@@ -32,7 +32,7 @@ const addUser = (data) => {
 
 const deleteUser = (data) => {
   return api({
-    url: `Identity/Users/delete`,
+    url: `Identity/Users`,
     method: 'DELETE',
     data,
   });

@@ -21,9 +21,9 @@ import {
 import '../../../styles/settings/packages.scss';
 import '../../../styles/table.scss';
 import {
-  getContractTypeAdd,
+  addContractType,
   getContractTypeList,
-  getContractTypeUpdate,
+  updateContractType,
 } from '../../../store/slice/contractTypeSlice';
 import useResetFormOnCloseModal from '../../../hooks/useResetFormOnCloseModal';
 import { recordStatus } from '../../../constants';
@@ -46,6 +46,7 @@ const ContractTypes = () => {
 
   const loadContractType = useCallback(
     async (data = null) => {
+      if (contractTypeList.length > 0) return false
       dispatch(getContractTypeList({
         data: {
           contractTypeDto: {
@@ -134,9 +135,9 @@ const ContractTypes = () => {
     selectedContractTypeId ? (data.contractType.id = selectedContractTypeId) : (data.contractType.recordStatus = 1)
 
     const action = await dispatch(
-      selectedContractTypeId ? getContractTypeUpdate(data) : getContractTypeAdd(data),
+      selectedContractTypeId ? updateContractType(data) : addContractType(data),
     );
-    const reducer = selectedContractTypeId ? getContractTypeUpdate : getContractTypeAdd;
+    const reducer = selectedContractTypeId ? updateContractType : addContractType;
 
     if (reducer.fulfilled.match(action)) {
       successDialog({
@@ -163,10 +164,12 @@ const ContractTypes = () => {
     await form.validateFields();
     confirmDialog({
       title: 'Uyarı',
-      message: 'Seçtiğiniz Kayıt Üzerinde Değişiklik Yapılacaktır. Emin misiniz?',
+      message: 'Güncellemekte olduğunuz kayıt Sözleşme Türü, Paket Yönetimi, Sözleşmeler ekranında tanımlı olan kayıtları etkileyeceği için Güncelleme yapmak istediğinizden Emin misiniz ?',
       onOk: () => {
         form.submit();
       },
+      okText: 'Evet',
+      cancelText: 'Hayır',
     });
   };
 
@@ -239,7 +242,6 @@ const ContractTypes = () => {
             <CustomInput placeholder="Sözleşme Tipi Adı" />
           </CustomFormItem>
           <CustomFormItem
-            rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
             name={'description'}
             label={<Text t="Açıklama" />}
           >

@@ -44,7 +44,7 @@ const Lesson = ({ lesson, open, setSelectedInsertKey }) => {
     setIsEdit,
     setSelectedInsertKey,
     deleteAction: deleteLesson,
-    selectedKey: lesson.id,
+    selectedKey: { id: lesson.id, type: 'lesson' },
   };
   return (
     <>

@@ -1,0 +1,64 @@
+.table-head {
+  padding-left: 20px;
+}
+.edit-button {
+  width: 100px;
+  font-size: 13px;
+  height: 35px;
+}
+.delete-button {
+  width: 100px;
+  font-size: 13px;
+  height: 35px;
+}
+
+.ant-form-item-label {
+  width: 160px;
+
+  label {
+    margin-top: 7px;
+  }
+}
+
+.add-btn {
+  width: 217px !important;
+  background: #00a483 !important;
+  border: 0;
+  text-align: center;
+  color: #fff;
+  border-radius: 6px;
+  line-height: 0.86;
+  padding: 9px 16px;
+
+  img {
+    margin-right: 10px;
+  }
+}
+
+.custom-pagination {
+  flex-wrap: wrap;
+  .ant-pagination-options-quick-jumper input {
+    margin-left: -20px;
+    margin-right: -40px;
+  }
+  .ant-pagination-options-quick-jumper {
+    .go-button {
+    background: #00a483 !important;
+    height: 24px;
+    font-size: 14px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    letter-spacing: normal;
+    text-align: center;
+    color: #fff;
+    border-radius: 6px;
+    line-height: 0.86;
+    margin-left: 12px;
+    margin-right: 12px;
+  }}
+  .ant-pagination-options {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+}

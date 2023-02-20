@@ -11,6 +11,8 @@ import {
   CustomInput,
   CustomModal,
   CustomPageHeader,
+  CustomRadio,
+  CustomRadioGroup,
   CustomSelect,
   CustomTable,
   errorDialog,
@@ -32,8 +34,7 @@ const ClassStages = () => {
     dispatch(getAllClassStages());
   }, []);
 
-  const { allClassList} = useSelector((state) => state?.classStages);
- 
+  const { allClassList } = useSelector((state) => state?.classStages);
 
   const [form] = Form.useForm();
 
@@ -41,11 +42,17 @@ const ClassStages = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [selectedClassId, setSelectedClassId] = useState();
   const [updateObject, setUpdateObject] = useState({});
+  const [selectedClassName, setSelectedClassName] = useState("")
 
   const stages = [
     { id: 10, value: 'İlkokul', text: 'İlkokul' },
     { id: 20, value: 'Ortaokul', text: 'Ortaokul' },
     { id: 30, value: 'Lise', text: 'Lise' },
+  ];
+
+  const classroom = [
+    { id: 10, value: 'Önlisans' },
+    { id: 20, value: 'Lisans' },
   ];
 
   const schoolLevelReverseEnum = {
@@ -76,6 +83,16 @@ const ClassStages = () => {
       },
     },
     {
+      title: 'Durumu',
+      dataIndex: 'isActive',
+      key: 'isActive',
+      sorter: (a, b) => b.isActive - a.isActive,
+      align: 'center',
+      render: (text, record) => {
+        return <div>{text ? 'Aktif' : 'Pasif'}</div>;
+      },
+    },
+    {
       title: 'Sınıf Adı',
       dataIndex: 'name',
       key: 'name',
@@ -88,7 +105,6 @@ const ClassStages = () => {
         return <div className={classes.classContainer}>{text}</div>;
       },
     },
-
     {
       title: 'Okul Seviyesi',
       dataIndex: 'schoolLevel',
@@ -154,6 +170,8 @@ const ClassStages = () => {
     form.setFieldsValue({
       name: record.name,
       schoolLevel: schoolLevelReverseEnum[record.schoolLevel],
+      isActive: record.isActive,
+      universityLevel: record?.universityLevel
     });
   });
   const handleaddNewClassStage = () => {
@@ -166,13 +184,15 @@ const ClassStages = () => {
   const onFinish = async () => {
     const values = await form.validateFields();
     const data = {
-      Classroom: {
+      classroom: {
         name: values?.name,
-        isActive: true,
+        isActive: isEdit ? values?.isActive : true,
         schoolLevel: schoolLevelEnum[values.schoolLevel],
         id: isEdit ? selectedClassId : undefined,
+        universityLevel: values.universityLevel ? values.universityLevel : null
       },
     };
+
     if (isEdit) {
       if (_.isEqual(data.entity, updateObject)) {
         errorDialog({
@@ -264,7 +284,6 @@ const ClassStages = () => {
       },
     });
   };
- 
 
   return (
     <CustomPageHeader title="Sınıf Seviye Tanım Bilgileri" showBreadCrumb routes={['Ayarlar']}>
@@ -293,7 +312,6 @@ const ClassStages = () => {
         cancelText="İptal"
         onCancel={onCancel}
         bodyStyle={{ overflowY: 'auto', maxHeight: 'calc(100vh - 300px)' }}
-        
       >
         <CustomForm form={form} layout="vertical" name="form" onFinish={onFinish}>
           <CustomFormItem
@@ -314,6 +332,7 @@ const ClassStages = () => {
               ))}
             </CustomSelect>
           </CustomFormItem>
+
           <CustomFormItem
             rules={[
               {
@@ -324,8 +343,52 @@ const ClassStages = () => {
             label="Sınıf Adı"
             name="name"
           >
-            <CustomInput placeholder="Sınıf Adı" />
+            <CustomInput onChange={(e) => setSelectedClassName(e.target.value.toLowerCase())} placeholder="Sınıf Adı" />
           </CustomFormItem>
+          <CustomFormItem
+            label={false}
+            noStyle
+            shouldUpdate={(prevValues, curValues) => prevValues.name !== curValues.name || prevValues.schoolLevel !== curValues.schoolLevel}
+          >
+            {({ getFieldValue }) =>
+              getFieldValue("schoolLevel") === "Lise" && (selectedClassName === "ayt" || selectedClassName === "tyt") &&
+              <CustomFormItem
+                name="universityLevel"
+                rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
+              >
+                <CustomRadioGroup >
+                  {classroom.map((item) => (
+                    <CustomRadio key={item.id} value={item.id}>
+                      {item.value}
+                    </CustomRadio>
+                  ))}
+                </CustomRadioGroup>
+              </CustomFormItem>
+            }
+          </CustomFormItem>
+
+          {
+            isEdit &&
+            <CustomFormItem
+              rules={[
+                {
+                  required: true,
+                  message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                },
+              ]}
+              label="Durumu"
+              name="isActive"
+            >
+              <CustomSelect placeholder="Seçiniz">
+                <Option key={1} value={true}>
+                  Aktif
+                </Option>
+                <Option key={2} value={false}>
+                  Pasif
+                </Option>
+              </CustomSelect>
+            </CustomFormItem>
+          }
         </CustomForm>
       </CustomModal>
     </CustomPageHeader>

@@ -65,12 +65,6 @@ const PackageFilter = () => {
           PageNumber: 1,
           ValidDate: selectedValidDate,
         };
-        if (values.packageKind === "all") {
-          delete body['packageKind']
-        } else if (values.packageKind) {
-          body[values.packageKind] = true
-          delete body['packageKind']
-        }
         if (values.HasCoachService === "all") delete body['HasCoachService']
         if (values.HasTryingTest === "all") delete body['HasTryingTest']
         if (values.HasMotivationEvent === "all") delete body['HasMotivationEvent']
@@ -107,7 +101,7 @@ const PackageFilter = () => {
         </CustomFormItem>
         <CustomFormItem label="Paket Tipi" name="packageKind" >
           <CustomSelect allowClear placeholder="Seçiniz">
-            <Option key={`allPackagesName-all`} value={"all"}>
+            <Option key={`allPackagesName-all`} value={[1, 2]}>
               Hepsi
             </Option>
             {packageKind.map((item, i) => (

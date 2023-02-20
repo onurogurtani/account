@@ -53,7 +53,7 @@ const OrganisationTypesForm = ({ onCancel, organisationType }) => {
         let action;
         if (organisationType?.id) {
           action = await dispatch(
-            updateOrganisationTypes({ organisationType: { ...values, id: organisationType.id } }),
+            updateOrganisationTypes({ organisationType: { ...values, id: organisationType?.id } }),
           ).unwrap();
         } else {
           action = await dispatch(addOrganisationTypes({ organisationType: values })).unwrap();
@@ -66,7 +66,7 @@ const OrganisationTypesForm = ({ onCancel, organisationType }) => {
         errorDialog({ title: <Text t="error" />, message: error?.message });
       }
     },
-    [organisationType],
+    [dispatch, form, organisationType?.id],
   );
 
   return (

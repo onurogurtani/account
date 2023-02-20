@@ -48,12 +48,11 @@ export const getByFilterPagedVideos = createAsyncThunk(
     }
   },
 );
-
-export const getByVideoId = createAsyncThunk(
-  'videos/getByVideoId',
-  async (data, { dispatch, rejectWithValue }) => {
+export const getByFilterPagedVideosList = createAsyncThunk(
+  'videos/getByFilterPagedVideosList',
+  async (data, { getState, dispatch, rejectWithValue }) => {
     try {
-      const response = await videoServices.getByVideoId(data);
+      const response = await videoServices.getByFilterPagedVideos('', data);
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -61,29 +60,32 @@ export const getByVideoId = createAsyncThunk(
   },
 );
 
-export const addVideo = createAsyncThunk(
-  'videos/addVideo',
-  async (data, { dispatch, rejectWithValue }) => {
-    try {
-      const response = await videoServices.addVideo(data);
-      return response;
-    } catch (error) {
-      return rejectWithValue(error?.data);
-    }
-  },
-);
+export const getByVideoId = createAsyncThunk('videos/getByVideoId', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await videoServices.getByVideoId(data);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
 
-export const editVideo = createAsyncThunk(
-  'videos/editVideo',
-  async (data, { dispatch, rejectWithValue }) => {
-    try {
-      const response = await videoServices.editVideo(data);
-      return response;
-    } catch (error) {
-      return rejectWithValue(error?.data);
-    }
-  },
-);
+export const addVideo = createAsyncThunk('videos/addVideo', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await videoServices.addVideo(data);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+
+export const editVideo = createAsyncThunk('videos/editVideo', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await videoServices.editVideo(data);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
 
 export const addVideoCategory = createAsyncThunk(
   'videos/addVideoCategory',
@@ -194,17 +196,14 @@ export const getAllVideoKeyword = createAsyncThunk(
   },
 );
 
-export const deleteVideo = createAsyncThunk(
-  'videos/deleteVideo',
-  async (data, { dispatch, rejectWithValue }) => {
-    try {
-      const response = await videoServices.deleteVideo(data);
-      return response;
-    } catch (error) {
-      return rejectWithValue(error?.data);
-    }
-  },
-);
+export const deleteVideo = createAsyncThunk('videos/deleteVideo', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await videoServices.deleteVideo(data);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
 
 const initialState = {
   activeKey: '0',
@@ -249,6 +248,10 @@ export const videoSlice = createSlice({
     setIsFilter: (state, action) => {
       state.isFilter = action.payload;
     },
+
+    setVideos: (state, action) => {
+      state.videos = action.payload;
+    },
     resetVideoList: (state, action) => {
       state.videos = [];
     },
@@ -264,6 +267,9 @@ export const videoSlice = createSlice({
     builder.addCase(getByFilterPagedVideos.fulfilled, (state, action) => {
       state.videos = action?.payload?.data?.items;
       state.tableProperty = action?.payload?.data?.pagedProperty;
+    });
+    builder.addCase(getByFilterPagedVideosList.fulfilled, (state, action) => {
+      state.videos = action?.payload?.data?.items;
     });
     builder.addCase(getByFilterPagedVideos.rejected, (state) => {
       state.videos = [];
@@ -298,5 +304,7 @@ export const {
   setIsFilter,
   setKalturaIntroVideoId,
   setKalturaVideoId,
-  resetVideoList
+
+  setVideos,
+  resetVideoList,
 } = videoSlice.actions;

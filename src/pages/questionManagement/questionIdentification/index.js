@@ -35,7 +35,7 @@ import {
 import '../../../styles/questionManagement/questionIdentification.scss';
 import EarningsChoice from '../../userManagement/questionIdentifaction/EarningsChoice';
 import UploadFile from './UploadFile';
-import { setEarningChoice } from '../../../store/slice/earningChoiceSlice';
+import { setEarningChoice,setLessonIds } from '../../../store/slice/earningChoiceSlice';
 const QuestionIdentification = () => {
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
@@ -62,6 +62,15 @@ const QuestionIdentification = () => {
   const { earningChoice } = useSelector((state) => state?.earningChoice);
   const [fileInputInfo, setFileInputInfo] = useState({ video: {}, image: {}, pdf: {} });
   const [classroomIdInfo, setClassroomIdInfo] = useState('');
+  const lessonIds = [];
+
+  const resetFile = () => {
+    if (window.document.getElementById('video-file')) {
+      window.document.getElementById('video-file').value = '';
+      window.document.getElementById('image-file').value = '';
+      window.document.getElementById('pdf-file').value = '';
+    }
+  };
 
   useEffect(() => {
     if (questionOfExams?.questionOfExamDetail) {
@@ -81,8 +90,14 @@ const QuestionIdentification = () => {
       questionOfExams?.questionOfExamDetail?.questionOfExamDetailLessonUnits?.forEach((item, index) => {
         newData.questionOfExamDetailLessonUnits.push({ lessonUnitId: item.lessonUnitId });
         newEarningChoice.unitId.push(item.lessonUnitId);
+        lessonIds.push(item.lessonUnit.lessonId)
       });
+
+      const uniqueLessonIds = lessonIds.filter((val, id, array) => {
+        return array.indexOf(val) == id;  
+     });
       dispatch(setEarningChoice(newEarningChoice));
+      dispatch(setLessonIds(uniqueLessonIds))
       setFormData(newData);
     } else {
       setFormData({});
@@ -131,7 +146,11 @@ const QuestionIdentification = () => {
     dispatch(getAllClassStages());
   }, [dispatch]);
   useEffect(() => {
-    dispatch(getPublisherList());
+    dispatch(
+      getPublisherList({
+        params: { 'PublisherDetailSearch.RecordStatus': 1, 'PublisherDetailSearch.PageSize': 100000 },
+      }),
+    );
   }, [dispatch]);
   /* useEffect(() => {
   
@@ -145,7 +164,7 @@ const QuestionIdentification = () => {
     );
   }, [dispatch]);*/
 
-  const searchSumbit = (pageNumber) => {
+  const searchSumbit = (pageNumber = null) => {
     const form1 = filterForm.getFieldValue();
     const form2 = filterForm2.getFieldValue();
     if (form1.ClassroomId) {
@@ -153,11 +172,12 @@ const QuestionIdentification = () => {
         getByFilterPagedQuestionOfExamsList({
           'QuestionOfExamDetailSearch.IncludeQuestionFilesBase64': 'true',
           'QuestionOfExamDetailSearch.ThenIncludeQuestionSolutionsFilesBase64': 'false',
-          'QuestionOfExamDetailSearch.PageNumber': pageNumber ? pageNumber : 1,
+          'QuestionOfExamDetailSearch.PageNumber': pageNumber !== null ? pageNumber : '1',
           'QuestionOfExamDetailSearch.PageSize': 1,
           'QuestionOfExamDetailSearch.EducationYearId': form1.EducationYearId,
           'QuestionOfExamDetailSearch.ClassroomId': form1.ClassroomId,
           'QuestionOfExamDetailSearch.LessonId': form1.LessonId,
+          'QuestionOfExamDetailSearch.BookId': form1.BookId,
           'QuestionOfExamDetailSearch.PublisherId': form1.PublisherId,
           'QuestionOfExamDetailSearch.Difficulty': form2.Difficulty,
           'QuestionOfExamDetailSearch.HasAcquisitionTree': form2.HasAcquisitionTree,
@@ -173,6 +193,9 @@ const QuestionIdentification = () => {
       );
       setClassroomIdInfo(classroomId);
       setFileInputInfo({ image: {}, video: {}, pdf: {} });
+      resetFile();
+      // dispatch(setLessonIds([]));
+      //  dispatch(setEarningChoice({}));
     } else {
       errorDialog({ title: 'Hata', message: 'Sınıf seviyesi boş olamaz!' });
     }
@@ -243,6 +266,7 @@ const QuestionIdentification = () => {
             successDialog({ title: 'Onay', message: 'Güncelledi' });
             searchSumbit(pagedProperty.currentPage);
             setFileInputInfo({ image: {}, video: {}, pdf: {} });
+            resetFile();
           } else {
             alert('dasdsa');
 
@@ -254,6 +278,7 @@ const QuestionIdentification = () => {
             successDialog({ title: 'Onay', message: 'Eklendi' });
             searchSumbit(pagedProperty.currentPage);
             setFileInputInfo({ image: {}, video: {}, pdf: {} });
+            resetFile();
           } else {
             errorDialog({ title: 'Hata', message: action?.payload?.message });
           }
@@ -280,6 +305,8 @@ const QuestionIdentification = () => {
                   <CustomSelect
                     onChange={(e) => {
                       dispatch(getLessonsQuesiton([{ field: 'classroomId', value: e, compareType: 0 }]));
+                      dispatch(setLessonIds([]))
+                      dispatch(setEarningChoice({})); 
                     }}
                     options={classListData}
                   />
@@ -403,7 +430,7 @@ const QuestionIdentification = () => {
                         className="quesiton-image"
                         alt="Resim"
                       />
-                      {questionOfExams?.answerOfQuestionOfExams && (
+                      {questionOfExams?.answerOfQuestionOfExams?.length > 0 && (
                         <div className="answer-item">
                           <img
                             src={`data:image/png;base64,${questionOfExams?.answerOfQuestionOfExams[0]?.file?.fileBase64}`}
@@ -735,7 +762,10 @@ const QuestionIdentification = () => {
                             const value = e.target.value;
                             console.log(value[value.length - 1]);
                             if (!isNaN(value[value.length - 1]) || value[value.length - 1] === undefined) {
-                              setFormData({ ...formData, wordCount: parseInt(e.target.value) });
+                              setFormData({
+                                ...formData,
+                                wordCount: value[value.length - 1] === undefined ? '' : parseInt(e.target.value),
+                              });
                             } else {
                             }
                           }}
@@ -755,18 +785,21 @@ const QuestionIdentification = () => {
                         >
                           Soru Çözüm Videosunda Kullanılmıştır
                         </CustomCheckbox>
-                        <CustomCheckbox
-                          onChange={(e) => {
-                            setFormData({ ...formData, mix: e.target.checked });
-                          }}
-                          checked={formData.mix}
-                          disabled={
-                            !questionOfExams?.answerOfQuestionOfExams?.length === 4 ||
-                            formData.questionOfExamState === 1
-                          }
-                        >
-                          Şıklar Karıştırılsınmı
-                        </CustomCheckbox>
+                        {questionOfExams?.answerOfQuestionOfExams?.length > 0 && (
+                          <CustomCheckbox
+                            onChange={(e) => {
+                              setFormData({ ...formData, mix: e.target.checked });
+                            }}
+                            checked={formData.mix}
+                            disabled={
+                              !questionOfExams?.answerOfQuestionOfExams?.length === 4 ||
+                              formData.questionOfExamState === 1
+                            }
+                          >
+                            Şıklar Karıştırılsınmı
+                          </CustomCheckbox>
+                        )}
+
                         <CustomCheckbox
                           disabled={formData.questionOfExamState === 1}
                           onChange={(e) => {
@@ -842,6 +875,7 @@ const QuestionIdentification = () => {
                         {questionOfExams?.questionOfExamDetail?.videoSolutionFile?.fileName}
                       </div>
                       <UploadFile
+                        id="video-file"
                         file={fileInputInfo.video}
                         disabled={formData.questionOfExamState === 1}
                         onChange={async (e) => {
@@ -887,6 +921,7 @@ const QuestionIdentification = () => {
                       )}
 
                       <UploadFile
+                        id="image-file"
                         file={fileInputInfo.image}
                         disabled={formData.questionOfExamState === 1}
                         onChange={async (e) => {
@@ -932,6 +967,7 @@ const QuestionIdentification = () => {
                       )}
 
                       <UploadFile
+                        id="pdf-file"
                         file={fileInputInfo.pdf}
                         disabled={formData.questionOfExamState === 1}
                         onChange={async (e) => {
@@ -1024,6 +1060,7 @@ const QuestionIdentification = () => {
           </div>
         </div>
       </CustomCollapseCard>
+      {showModal &&
       <div className="earnings-modal">
         <CustomModal
           width={'1200px'}
@@ -1050,14 +1087,17 @@ const QuestionIdentification = () => {
             }
             setShowModal(false);
           }}
-          onCancel={() => setShowModal(false)}
+          onCancel={() => {
+            setShowModal(false)
+          }}
           okText="Kaydet"
           cancelText="Vazgeç"
-          bodyStyle={{ overflowY: 'auto' }}
+          bodyStyle={{ overflowY: 'auto',maxHeight:500 }}
         >
           <EarningsChoice classroomId={classroomIdInfo} />
         </CustomModal>
       </div>
+     }
     </CustomPageHeader>
   );
 };

@@ -269,6 +269,14 @@ const Menus = () => {
           </span>
         </MenuItemText>
       </CustomItem>
+      <CustomItem key="/organisation-management/list">
+        <MenuItemText>
+          <CustomImage src={menuIcons} />
+          <span>
+            <Text t="Kurum Yönetimi" />
+          </span>
+        </MenuItemText>
+      </CustomItem>
       <CustomSubMenu key="SubMenu" title="Tanımlamalar" icon={<CustomImage src={menuIcons} />}>
         <CustomItem key="/user-management/school-management">
           <MenuItemText>
@@ -437,6 +445,30 @@ const Menus = () => {
             </span>
           </MenuItemText>
         </CustomItem>
+        <CustomItem key="/settings/contract-kinds">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Sözleşme Türleri" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+        <CustomItem key="/settings/participantGroups">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Katılımcı Grubu  Tanımlama" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+        <CustomItem key="/settings/contracts">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Sözleşme Tanımlama" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
       </CustomSubMenu>
 
       <CustomSubMenu key="QuestionMenu" title="Soru Yönetimi" icon={<CustomImage src={menuIcons} />}>
@@ -483,6 +515,24 @@ const Menus = () => {
           </span>
         </MenuItemText>
       </CustomItem>
+      <CustomSubMenu key="ReportsMenu" title="Raporlar" icon={<CustomImage src={menuIcons} />}>
+        <CustomItem key="/reports/question-difficulty/list">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Zorluk Seviyelerine Göre Soru Dağılımı Raporu" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+        <CustomItem key="/reports/video-reports">
+          <MenuItemText>
+            <CustomImage src={menuIcons} />
+            <span>
+              <Text t="Çalışma Planına Bağlanmamış Videolar Raporu" />
+            </span>
+          </MenuItemText>
+        </CustomItem>
+      </CustomSubMenu>
     </CustomMenu>
   );
 };

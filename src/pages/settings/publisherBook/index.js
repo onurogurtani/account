@@ -41,7 +41,11 @@ const PublisherBook = () => {
   console.log(yearArray);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getPublisherList({ params: { PageSize: 100 } }));
+    dispatch(
+      getPublisherList({
+        params: { 'PublisherDetailSearch.RecordStatus': 1, 'PublisherDetailSearch.PageSize': 100000 },
+      }),
+    );
     dispatch(getPublisherBookList());
   }, [dispatch]);
   const columns = [

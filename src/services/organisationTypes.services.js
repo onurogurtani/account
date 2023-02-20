@@ -7,7 +7,7 @@ const getOrganisationTypes = (
   },
 ) => {
   return api({
-    url: `Mono/OrganisationTypes/getList`,
+    url: `Crm/OrganisationTypes/getList`,
     method: 'POST',
     data,
     params,
@@ -16,14 +16,14 @@ const getOrganisationTypes = (
 
 const addOrganisationTypes = (data) => {
   return api({
-    url: `Mono/OrganisationTypes/Add`,
+    url: `Crm/OrganisationTypes/Add`,
     method: 'POST',
     data: data,
   });
 };
 const updateOrganisationTypes = (data) => {
   return api({
-    url: `Mono/OrganisationTypes/Update`,
+    url: `Crm/OrganisationTypes/Update`,
     method: 'PUT',
     data: data,
   });

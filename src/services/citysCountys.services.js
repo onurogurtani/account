@@ -2,7 +2,7 @@ import { api } from './api';
 
 const citysGetList = () => {
   return api({
-    url: `Member/Citys/getList?PageSize=0`,
+    url: `Shared/Citys/getList?PageSize=0`,
     method: 'POST',
     data: null,
   });
@@ -10,7 +10,7 @@ const citysGetList = () => {
 
 const countysGetList = () => {
   return api({
-    url: `Member/Countys/getList?PageSize=0`,
+    url: `Shared/Countys/getList?PageSize=0`,
     method: 'POST',
     data: null,
   });

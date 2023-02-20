@@ -1,0 +1,43 @@
+.show-organisation {
+  .organisation-actions-btn-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    button {
+      border: none;
+    }
+    .edit-btn {
+      background-color: #d5b803;
+    }
+    .active-btn {
+      background: cornflowerblue;
+    }
+  }
+  .list {
+    padding: 16px 45px 0 45px;
+    font-family: UbuntuRegular, sans-serif;
+    > li {
+      // height: 22px;
+      margin: 0 0 20px 0;
+      font-weight: bold;
+      letter-spacing: normal;
+      color: #050505;
+      list-style: none;
+      font-size: 16px;
+
+      > span {
+        color: #6b7789;
+      }
+    }
+    > li:last-child {
+      margin-bottom: 0;
+    }
+    .content-text {
+      word-wrap: break-word;
+      li {
+        list-style: disc;
+        margin-left: 20px;
+      }
+    }
+  }
+}

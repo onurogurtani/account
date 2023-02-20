@@ -46,9 +46,11 @@ export const recordStatus = [
   {
     id: 1,
     value: 'Aktif',
+    valueWithRecord: 'Aktif Kayıtlar',
   },
   {
     id: 0,
     value: 'Pasif',
+    valueWithRecord: 'Pasif Kayıtlar',
   },
 ];
