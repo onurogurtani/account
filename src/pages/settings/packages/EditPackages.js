@@ -261,15 +261,9 @@ const EditPackages = () => {
 
   const onFinish = async (values) => {
     setIsFormSubmitDisable(true);
-    let newImageArray = [];
-    let diffOldImages = values?.imageOfPackages;
-    diffOldImages?.forEach((item) => {
-      currentImages?.forEach((img) => {
-        img.name === item.name && diffOldImages.pop(item);
-      });
-    });
-
-    newImageArray = currentImages?.concat(diffOldImages);
+    
+    const currentImagesIDs = currentImages.map(i=>({fileId:i.fileId}));
+    const uploadedImagesIDs = await handleUpload(values.imageOfPackages);
 
     let lessonsArr = values?.lesson?.map((item) => {
       return { lessonId: item };
@@ -284,6 +278,7 @@ const EditPackages = () => {
 
     const data = {
       package: {
+        id:id,
         name: values.name,
         summary: values.summary,
         content: values.content,
@@ -293,7 +288,10 @@ const EditPackages = () => {
         startDate: values.startDate.$d,
         finishDate: values.endDate.$d,
         packageLessons: lessonsArr,
-        imageOfPackages: await handleUpload(values.imageOfPackages),
+        imageOfPackages: [
+          ...currentImagesIDs,
+          ...uploadedImagesIDs,
+        ],
         examType: 10, //sınav tipi halihazırda inputtan alınmıyor
         packageGroups: packageGroups,
         hasCoachService: values.hasCoachService,
