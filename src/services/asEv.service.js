@@ -32,7 +32,13 @@ const deleteAsEv = (data) => {
   return api({
     url: `/Exam/AsEvs?Id=${data}`,
     method: 'DELETE',
-    // data,
+  });
+};
+
+const getAsEvQuestionOfExamsByAsEvId = (data) => {
+  return api({
+    url: `/Exam/AsEvQuestionOfExams/getAsEvQuestionOfExamsByAsEvId?asEvId=${data}`,
+    method: 'POST',
   });
 };
 
@@ -42,6 +48,7 @@ const asEvServices = {
   adAsEv,
   getFilterPagedAsEvs,
   deleteAsEv,
+  getAsEvQuestionOfExamsByAsEvId,
 };
 
 export default asEvServices;

@@ -47,6 +47,17 @@ export const deleteAsEv = createAsyncThunk('getFilterPagedAsEvs', async (data, {
     return rejectWithValue(error?.data);
   }
 });
+export const getAsEvQuestionOfExamsByAsEvId = createAsyncThunk(
+  'getAsEvQuestionOfExamsByAsEvId',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await asEvServices.getAsEvQuestionOfExamsByAsEvId(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 
 const initialState = {
   videoNames: [],
@@ -56,6 +67,7 @@ const initialState = {
   asEvList: [],
   pagedProperty: {},
   asEvQuestions: [],
+  filteredPagedQuestions: [],
 };
 
 export const asEvSlice = createSlice({
@@ -97,6 +109,12 @@ export const asEvSlice = createSlice({
     builder.addCase(getFilterPagedAsEvs, (state, action) => {
       state.asEvList = [];
       state.pagedProperty = {};
+    });
+    builder.addCase(getAsEvQuestionOfExamsByAsEvId.fulfilled, (state, action) => {
+      state.filteredPagedQuestions = action?.payload?.data?.items || [];
+    });
+    builder.addCase(getAsEvQuestionOfExamsByAsEvId.rejected, (state, action) => {
+      state.filteredPagedQuestions = [];
     });
   },
 });
