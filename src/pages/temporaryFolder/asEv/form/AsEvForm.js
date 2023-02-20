@@ -1,6 +1,6 @@
 import { Form } from 'antd';
 import dayjs from 'dayjs';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   CustomButton,
@@ -8,19 +8,22 @@ import {
   CustomDatePicker,
   CustomForm,
   CustomFormItem,
-  CustomInput,
-  CustomSelect,
+  CustomInput, CustomSelect,
   errorDialog,
   Option,
-  Text,
+  Text
 } from '../../../../components';
-import useAcquisitionTree from '../../../../hooks/useAcquisitionTree';
 import { adAsEv, getCreatedNames, getVideoNames } from '../../../../store/slice/asEvSlice';
-import { getAllClassStages, getByIdClass } from '../../../../store/slice/classStageSlice';
-import { getLessons } from '../../../../store/slice/lessonsSlice';
+import { getAllClassStages } from '../../../../store/slice/classStageSlice';
+import { getByClassromIdLessons, getLessons } from '../../../../store/slice/lessonsSlice';
+import { getLessonSubjects } from '../../../../store/slice/lessonSubjectsSlice';
+import { getLessonSubSubjects } from '../../../../store/slice/lessonSubSubjectsSlice';
+import { getUnits } from '../../../../store/slice/lessonUnitsSlice';
 import { getByFilterPagedVideos } from '../../../../store/slice/videoSlice';
 import '../../../../styles/temporaryFile/asEvGeneral.scss';
+import { dateValidator } from '../../../../utils/formRule';
 import { dateTimeFormat } from '../../../../utils/keys';
+import { getListFilterParams } from '../../../../utils/utils';
 import DifficultiesModal from '../addAsEv/DifficultiesModal';
 
 const countsArr = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }];
@@ -39,101 +42,104 @@ const AsEvForm = ({
   setUpdated,
   disabled,
   setDisabled,
-  //TODO AŞ GİBİ GÜNCELLEME ADIMONDA PROPS GELMESİ LAZIM
+  //TODO AŞ GİBİ GÜNCELLEME ADIMINDA PROPS GELMESİ LAZIM
   updateAsEv,
 }) => {
+  console.log('initialValues', initialValues);
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
 
-  console.log('initialValues :>> ', initialValues);
-  const { allClassList, byIdClass } = useSelector((state) => state?.classStages);
+  const { allClassList } = useSelector((state) => state?.classStages);
   // const [asEvUpdate, setAsEvUpdate] = useState(true);
   const [totalCount, setTotalCount] = useState(2);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const [warningText, setWarningText] = useState(false);
   const [formDisabled, setFormDisabled] = useState(false);
+  const [difficultiesData, setDifficultiesData] = useState({});
   useEffect(() => {
     const ac = new AbortController();
-
     form.resetFields();
+    form.setFieldsValue({ questionCount: 2 });
     dispatch(getAllClassStages());
     dispatch(getLessons());
     dispatch(getVideoNames());
     dispatch(getCreatedNames());
-    form.setFieldsValue({ videoId: 'hnc' });
     //TODO BURADAKİ ÜNLEM KALKACAK
     if (initialValues) {
-      dispatch(getByIdClass({ id: 62 }));
-      console.log(byIdClass?.name);
-      form.setFieldsValue({ classroomId: byIdClass?.name });
-      updateAsEv && setFormDisabled(true);
+      setFormDisabled(true);
+
+      let initialData = {
+        ...initialValues,
+        classroomId: initialValues?.classroomName,
+        lessonId: initialValues?.lessonName,
+        lessonUnitId: initialValues?.lessonUnitName,
+        asEvLessonSubSubjects: initialValues?.subSubjectNames,
+        videoId: initialValues?.kalturaVideoName,
+        asEvLessonSubjects: initialValues?.subjectNames,
+        startDate: initialValues?.startDate,
+        endDate: initialValues?.endDate,
+        questionCount: initialValues?.questionCount,
+        // questionCountOfDifficulty1Level: initialValues?.questionCountOfDifficulty1Level,
+        // questionCountOfDifficulty2Level: initialValues?.questionCountOfDifficulty2Level,
+      };
+      // dispatch(getByIdClass({ id: 62 }));
+      form.setFieldsValue({ ...initialData });
+      form.setFieldsValue({ questionCountOfDifficulty1Level: 5 });
+      // updateAsEv && setFormDisabled(true);
     }
     return () => ac.abort();
-  }, [dispatch]);
+  }, [dispatch, form]);
 
-  const { classroomId, setClassroomId, lessonId, setLessonId, unitId, setUnitId, lessonSubjectId, setLessonSubjectId } =
-    useAcquisitionTree();
-
-  const { lessons } = useSelector((state) => state?.lessons);
+  const { lessonsGetByClassroom } = useSelector((state) => state?.lessons);
   const { lessonSubSubjects } = useSelector((state) => state?.lessonSubSubjects);
+  console.log('lessonSubSubjects', lessonSubSubjects);
   const { videos } = useSelector((state) => state?.videos);
   const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
   const { lessonUnits } = useSelector((state) => state?.lessonUnits);
+  // const [multipleSubjectArr, setmultipleSubjectArr] = useState([]);
 
   const onClassroomChange = (value) => {
-    setClassroomId(value);
+    dispatch(getByClassromIdLessons(value));
     form.resetFields(['lessonId', 'lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects']);
   };
 
   const onLessonChange = (value) => {
-    setLessonId(value);
+    console.log('value', value);
+    dispatch(getUnits(getListFilterParams('lessonId', value)));
+
     form.resetFields(['lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects']);
   };
 
   const onUnitChange = (value) => {
-    setUnitId(value);
+    dispatch(getLessonSubjects(getListFilterParams('lessonUnitId', value)));
+
     form.resetFields(['lessonSubjectId', 'lessonSubSubjects']);
   };
 
   const onLessonSubjectsChange = (value) => {
-    //todo aşağıdaki set kaldırılacak servis güncellendikten sonra;
-    setLessonSubjectId(value);
     form.resetFields(['asEvLessonSubSubjects']);
     //TODO Aşağıda birden fazla konu seçilme durumuna göre servis güncellendikten sonra data oluşturulup, alt konular seçilmeli, BURADA AYRICA useAc.. hook u da kullanmicaz
-    // let data = [
-    //   {
-    //     field: 'lessonSubjectId',
-    //     value: 230,
-    //     compareType: 0,
-    //   },
-    //   { field: 'lessonSubjectId', value: 231, compareType: 0 },
-    // ];
-    // dispatch(getLessonSubSubjects(data));
+    let data = [];
+    value?.map((item) => data.push({ field: 'lessonSubjectId', value: item, compareType: 0 }));
+    console.log('data', data);
+    dispatch(getLessonSubSubjects(data));
   };
-
-  const onLessonSubSubjectsSelect = (_, option) => {};
-
-  const onLessonSubSubjectsDeselect = (_, option) => {};
 
   const onLessonSubSubjectsChange = async (value) => {
-    console.log(value);
-    let data = { LessonSubjectIds: [...value] };
-    await dispatch(getByFilterPagedVideos(data));
+    console.log('value', value);
+    if (value) {
+      let data = { LessonSubjectIds: [...value] };
+      await dispatch(getByFilterPagedVideos(data));
+    }
   };
-
-  const [form] = Form.useForm();
 
   // TODO Burada güncelleme yapılacağı zaman gelen verilerin formda ilgili alanlara doldurulması için kod yazmak lazım, bunu yoruma aldım.
   // useEffect(() => {
   //   if (initialValues) {
-  //     console.log('1 :>> ', 1);
   //     dispatch(getByClassromIdLessons(initialValues.classroomId));
   //     // const currentDate = dayjs().utc().format('YYYY-MM-DD-HH-mm');
   //     // const startDate = dayjs(initialValues?.startDate).utc().format('YYYY-MM-DD-HH-mm');
-  //     // console.log('2 :>> ', startDate);
   //     // const endDate = dayjs(initialValues?.endDate).utc().format('YYYY-MM-DD-HH-mm');
-  //     // console.log('3 :>> ', endDate);
-  //     // console.log(startDate >= currentDate);
-  //     // console.log(endDate >= currentDate);
 
   //     // let initialData = {
   //     //   startDate: startDate,
@@ -161,56 +167,19 @@ const AsEvForm = ({
     };
   }
 
-  const disabledStartDate = useCallback((startValue) => {
+  const disabledStartDate = (startValue) => {
     const { endDate } = form?.getFieldsValue(['endDate']);
-    return startValue?.startOf('day') >= endDate?.startOf('day');
-  }, []);
+    return startValue?.startOf('day') > endDate?.startOf('day') || startValue < dayjs().startOf('day');
+  };
 
-  const disabledEndDate = useCallback((endValue) => {
+  const disabledEndDate = (endValue) => {
     const { startDate } = form?.getFieldsValue(['startDate']);
-    return endValue?.startOf('day') <= startDate?.startOf('day');
-  }, []);
 
-  //başlangıç yılı başlangıç tarihindeki yıla eşit mi?
-  const isTheStartYearEqualToTheYearOfTheStartDate = useCallback(async (field, value) => {
-    const { startYear } = form?.getFieldsValue(['startYear']);
-    try {
-      if (!startYear || value?.$y === startYear) {
-        return Promise.resolve();
-      }
-      return Promise.reject(new Error());
-    } catch (e) {
-      return Promise.reject(new Error());
-    }
-  }, []);
-
-  //bitiş yılı bitiş tarihindeki yıla eşit mi?
-  const isTheEndYearEqualToTheYearOfTheEndDate = useCallback(async (field, value) => {
-    const { endYear } = form?.getFieldsValue(['endYear']);
-    try {
-      if (!endYear || value?.$y === endYear) {
-        return Promise.resolve();
-      }
-      return Promise.reject(new Error());
-    } catch (e) {
-      return Promise.reject(new Error());
-    }
-  }, []);
-  const endDateCannotBeSelectedBeforeTheStartDate = async (field, value) => {
-    const { startDate } = form?.getFieldsValue(['startDate']);
-    try {
-      if (!startDate || dayjs(value).startOf('minute') > startDate) {
-        return Promise.resolve();
-      }
-      return Promise.reject(new Error());
-    } catch (e) {
-      return Promise.reject(new Error());
-    }
+    return endValue?.startOf('day') < startDate?.startOf('day') || endValue < dayjs().startOf('day');
   };
 
   const onFinish = async () => {
     const values = await form.validateFields();
-    console.log(values);
 
     const startOfTest = values?.startDate ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD-HH-mm') : undefined;
 
@@ -235,7 +204,6 @@ const AsEvForm = ({
     });
     let totalQuest = 0;
     Object.keys(difficultyObj).forEach((key) => (totalQuest += difficultyObj[key]));
-    console.log(totalQuest);
     if (values.questionCount != totalQuest) {
       setWarningText(true);
       return false;
@@ -271,11 +239,37 @@ const AsEvForm = ({
         ...difficultyObj,
       },
     };
-    console.log(data);
+    let temporaryData = {
+      entity: {
+        startDate: '2023-01-17T11:12:25.066Z',
+        endDate: '2023-01-27T11:12:25.066Z',
+        questionCount: 2,
+        questionCountOfDifficulty1Level: 0,
+        questionCountOfDifficulty2Level: 0,
+        questionCountOfDifficulty3Level: 2,
+        questionCountOfDifficulty4Level: 0,
+        questionCountOfDifficulty5Level: 0,
+        videoId: 145,
+        classroomId: 65,
+        lessonId: 205,
+        lessonUnitId: 208,
+        asEvLessonSubjects: [
+          {
+            lessonSubjectId: 232,
+          },
+        ],
+        asEvLessonSubSubjects: [
+          {
+            lessonSubSubjectId: 345,
+          },
+        ],
+      },
+    };
 
-    const action = await dispatch(adAsEv(data));
-
-    if (adAsEv.fulfilled.match(action)) {
+    const res = await dispatch(adAsEv(temporaryData));
+    console.log('res?.data', res?.payload?.data);
+    if (res?.payload?.success) {
+      setDifficultiesData(res?.payload?.data);
       setIsVisible(true);
 
       // successDialog({
@@ -286,10 +280,10 @@ const AsEvForm = ({
       //   },
       // });
     } else {
-      errorDialog({
-        title: <Text t="error" />,
-        message: action?.payload.message,
-      });
+      // errorDialog({
+      //   title: <Text t="error" />,
+      //   message: action?.payload.message,
+      // });
     }
   };
   return (
@@ -337,16 +331,13 @@ const AsEvForm = ({
                 placeholder="Ders"
                 style={{ width: '100%' }}
               >
-                {lessons
-                  // ?.filter((item) => item.isActive)
-                  ?.filter((item) => item.classroomId === classroomId)
-                  ?.map((item) => {
-                    return (
-                      <Option key={item?.id} value={item?.id}>
-                        {item?.name}
-                      </Option>
-                    );
-                  })}
+                {lessonsGetByClassroom?.map((item) => {
+                  return (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.name}
+                    </Option>
+                  );
+                })}
               </CustomSelect>
             </CustomFormItem>
             <CustomFormItem
@@ -360,15 +351,13 @@ const AsEvForm = ({
                 placeholder="Ünite"
                 style={{ width: '100%' }}
               >
-                {lessonUnits
-                  ?.filter((item) => item.lessonId === lessonId)
-                  ?.map((item) => {
-                    return (
-                      <Option key={item?.id} value={item?.id}>
-                        {item?.name}
-                      </Option>
-                    );
-                  })}
+                {lessonUnits?.map((item) => {
+                  return (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.name}
+                    </Option>
+                  );
+                })}
               </CustomSelect>
             </CustomFormItem>
             <CustomFormItem
@@ -382,18 +371,16 @@ const AsEvForm = ({
                 placeholder="Konu"
                 style={{ width: '100%' }}
                 //TODO BURAYA MULTIPLE EKLEMEK LAZIM BUNUN İÇİN DE onLessonSubjectsChange FONK YENİLENMESİ LAZIM
-                // showArrow
-                // mode="multiple"
+                showArrow
+                mode="multiple"
               >
-                {lessonSubjects
-                  ?.filter((item) => item.lessonUnitId === unitId)
-                  ?.map((item) => {
-                    return (
-                      <Option key={item?.id} value={item?.id}>
-                        {item?.name}
-                      </Option>
-                    );
-                  })}
+                {lessonSubjects?.map((item) => {
+                  return (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.name}
+                    </Option>
+                  );
+                })}
               </CustomSelect>
             </CustomFormItem>
             <CustomFormItem
@@ -403,21 +390,21 @@ const AsEvForm = ({
             >
               <CustomSelect
                 disabled={formDisabled}
-                onChange={onLessonSubSubjectsChange}
+                onBlur={(e) => {
+                  e.target.value !== '' && onLessonSubSubjectsChange(e.target.value);
+                }}
                 showArrow
                 mode="multiple"
                 placeholder="Alt Başlık"
                 style={{ width: '100%' }}
               >
-                {lessonSubSubjects
-                  ?.filter((item) => item.lessonSubjectId === lessonSubjectId)
-                  ?.map((item) => {
-                    return (
-                      <Option key={item?.id} value={item?.id}>
-                        {item?.name}
-                      </Option>
-                    );
-                  })}
+                {lessonSubSubjects?.map((item) => {
+                  return (
+                    <Option key={item?.id} value={item?.id}>
+                      {item?.name}
+                    </Option>
+                  );
+                })}
               </CustomSelect>
             </CustomFormItem>
             <div className="asEv-Extra-Style">
@@ -434,9 +421,9 @@ const AsEvForm = ({
                   placeholder={'Seçiniz'}
                   style={{ width: '100%' }}
                 >
-                  {videos?.map(({ id, name }) => (
-                    <Option id={id} key={id} value={name}>
-                      <Text t={name} />
+                  {videos?.map(({ id, kalturaVideoName }) => (
+                    <Option id={id} key={id} value={id}>
+                      <Text t={kalturaVideoName} />
                     </Option>
                   ))}
                 </CustomSelect>
@@ -446,14 +433,12 @@ const AsEvForm = ({
                 rules={[
                   { required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
                   {
-                    validator: isTheStartYearEqualToTheYearOfTheStartDate,
+                    validator: dateValidator,
                     message: 'Lütfen tarihleri kontrol ediniz.',
                   },
                 ]}
                 label={<Text style={{ border: '2px solid red' }} t="Döküman Tanımlama Başlangıç Tarihi" />}
                 name="startDate"
-                // getValueFromEvent={(onChange) => moment(onChange).format('YYYY-MM-DDTHH:mm:ssZ')}
-                // getValueProps={(i) => moment(i)}
               >
                 <CustomDatePicker disabledDate={disabledStartDate} showTime format={dateTimeFormat} />
               </CustomFormItem>
@@ -461,10 +446,8 @@ const AsEvForm = ({
               <CustomFormItem
                 rules={[
                   { required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
-                  { validator: isTheEndYearEqualToTheYearOfTheEndDate, message: 'Lütfen tarihleri kontrol ediniz.' },
+                  { validator: dateValidator, message: 'Lütfen tarihleri kontrol ediniz.' },
                 ]}
-                // getValueFromEvent={(onChange) => moment(onChange).format('YYYY-MM-DDTHH:mm:ssZ')}
-                // getValueProps={(i) => moment(i)}
                 dependencies={['startDate']}
                 label={<Text t="Döküman Tanımlama Bitiş Tarihi" />}
                 name="endDate"
@@ -473,27 +456,19 @@ const AsEvForm = ({
               </CustomFormItem>
               <CustomFormItem
                 label={`Soru Adedi`}
-                name={`questionCount`}
-                validateTrigger={['onChange', 'onBlur']}
-                onChange={(e) => {
-                  setTotalCount(e.target.value);
-                }}
+                name="questionCount"
+                validateTrigger={['onChange', 'onBlur', 'onFinish']}
                 rules={[
                   {
-                    required: true,
-                    message: 'Lütfen 2 veya üzeri bir değer girin',
-                    min: 2,
-                    pattern: new RegExp(/^[0-9]+$/),
+                    validator: async (_, questionCount) => {
+                      if (questionCount < 2) {
+                        return Promise.reject(new Error('Lütfen 2 veya daha fazla bir değer giriniz'));
+                      }
+                    },
                   },
                 ]}
               >
-                <CustomInput
-                  disabled={formDisabled}
-                  type="number"
-                  defaultValue={2}
-                  min={2}
-                  placeholder="Soru sayısı giriniz"
-                />
+                <CustomInput disabled={formDisabled} type="number" placeholder="Soru sayısı giriniz" />
               </CustomFormItem>
             </div>
             {/* //todo  */}
@@ -520,19 +495,16 @@ const AsEvForm = ({
                           pattern: new RegExp(/^[0-9]+$/),
                         },
                       ]}
-                      // onMouseLeave={() => console.log('hopp')}
                       name={`questionCountOfDifficulty${index + 1}level`}
                       //TODO AŞAĞIDA ARTIŞ VE AZALIŞTA STATE DOĞRU GELMİYOR
-                      onChange={(props) => {
-                        console.log(props);
-                      }}
+                      // onChange={(props) => {}}
                     >
                       {/* <CustomNumberInput /> */}
                       <CustomInput
-                        disabled={formDisabled}
                         type="number"
+                        disabled={formDisabled}
                         min={0}
-                        defaultValue={0}
+                        // defaultValue={0}
                         // className={classes.inputContainer}
                         // style={{ margin: '0 1em' }}
                       />
@@ -583,6 +555,7 @@ const AsEvForm = ({
       MANTIKLI: //TODO “Seçtiğiniz kriterlere uygun soru bulunamadı. Soru Yönetim modülünden soru ekleyin.”
        */}
       <DifficultiesModal
+        difficultiesData={difficultiesData}
         initialValues={initialValues}
         setDisabled={setDisabled}
         disabled={formDisabled}
@@ -590,6 +563,7 @@ const AsEvForm = ({
         step={step}
         isVisible={isVisible}
         setIsVisible={setIsVisible}
+        subjects={lessonSubjects}
       />
     </>
   );

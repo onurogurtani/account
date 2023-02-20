@@ -35,12 +35,17 @@ const AsEvFilter = () => {
     dispatch(getCreatedNames());
   }, [dispatch, form]);
 
-  const { allClassList } = useSelector((state) => state?.classStages);
   const { lessons } = useSelector((state) => state?.lessons);
-  console.log('lessons :>> ', lessons);
+  const [filteredLessons, setFilteredLessons] = useState([]);
+
+  useEffect(() => {
+    const ac = new AbortController();
+    setFilteredLessons([...lessons]);
+    return () => ac.abort();
+  }, [lessons]);
+
+  const { allClassList } = useSelector((state) => state?.classStages);
   const { videoNames, inserterNames } = useSelector((state) => state?.asEv);
-  const [filteredLessons, setFilteredLessons] = useState(lessons);
-  console.log('filteredLessons :>> ', filteredLessons);
 
   const handleClear = useCallback(async () => {
     form.resetFields();
@@ -54,11 +59,11 @@ const AsEvFilter = () => {
     try {
       const values = await form.validateFields();
       const body = {
-        classroomName: values?.classroomName,
+        classroomId: values?.classroomName,
         createdName: values?.createdName,
         isWorkPlanAttached: values?.isWorkPlanAttached,
         kalturaVideoName: values?.kalturaVideoName,
-        lessonName: values?.lessonName,
+        lessonId: values?.lessonName,
         startDate: values?.startDate ? dayjs(values?.startDate)?.format('YYYY-MM-DDT00:00:00') : undefined,
         endDate: values?.endDate ? dayjs(values?.endDate)?.format('YYYY-MM-DDT23:59:59') : undefined,
       };
@@ -91,8 +96,8 @@ const AsEvFilter = () => {
   const onClassRoomChange = async (value) => {
     if (value) {
       form.resetFields(['lessonName']);
-      let classId = allClassList?.filter((item) => item.name === value)[0]?.id;
-      let lessonsOfClass = lessons.filter((item) => item.classroomId === classId);
+      // let classId = allClassList?.filter((item) => item.id === value)[0]?.id;
+      let lessonsOfClass = lessons.filter((item) => item.classroomId === value);
       console.log('lessonsOfClass :>> ', lessonsOfClass);
       setFilteredLessons(lessonsOfClass);
     } else {
@@ -184,7 +189,7 @@ const AsEvFilter = () => {
             >
               {allClassList?.map(({ id, name }, index) => (
                 //todo aşağıdaki value id mi olacak kontrol etm lazım
-                <Option id={id} key={index} value={name}>
+                <Option id={id} key={index} value={id}>
                   <Text t={name} />
                 </Option>
               ))}
@@ -272,7 +277,7 @@ const AsEvFilter = () => {
               }}
             >
               {filteredLessons?.map(({ id, name }, index) => (
-                <Option id={id} key={index} value={name}>
+                <Option id={id} key={index} value={id}>
                   <Text t={name} />
                 </Option>
               ))}

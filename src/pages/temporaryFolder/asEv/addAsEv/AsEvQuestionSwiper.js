@@ -1,27 +1,14 @@
-import { Col, Form, Row, Upload, Modal } from 'antd';
-import dayjs from 'dayjs';
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
-import {
-  CustomButton,
-  CustomDatePicker,
-  CustomForm,
-  CustomFormItem,
-  CustomInput,
-  CustomSelect,
-  Option,
-  Text,
-  CustomImage,
-} from '../../../../components';
-import { useDispatch, useSelector } from 'react-redux';
-import { getBase64 } from '../../../../store/slice/fileSlice';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import SwiperCore, { Navigation, Pagination } from 'swiper';
+import 'swiper/components/navigation/navigation.scss';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import SingleQuestion from './SingleQuestion';
 import iconLeftNotify from '../../../../assets/icons/icon-left-notify.svg';
 import iconRightNotify from '../../../../assets/icons/icon-right-notify.svg';
-import 'swiper/components/navigation/navigation.scss';
+import {
+  CustomImage
+} from '../../../../components';
+import SingleQuestion from './SingleQuestion';
 // import 'swiper/swiper.css';
 import '../../../../styles/temporaryFile/asEvSwiper.scss';
 
@@ -40,8 +27,6 @@ const AsEvQuestionSwiper = ({ data, className, setCurrentSlideIndex }) => {
             prevEl: className ? '.prev-notify2' : '.prev-notify',
             nextEl: className ? '.next-notify2' : '.next-notify',
           }}
-          // allowSlideNext={false}
-          // allowSlidePrev={false}
           slideToClickedSlide={false}
           pagination={{
             el: className ? '.swiper-pagination2' : '.swiper-pagination1',
@@ -79,7 +64,6 @@ const AsEvQuestionSwiper = ({ data, className, setCurrentSlideIndex }) => {
             <div
               className={className ? 'swiper-paginations swiper-pagination2' : 'swiper-paginations swiper-pagination1'}
             />
-            {/* <span> 1/2 </span> */}
             <CustomImage className={className ? 'next-notify2' : 'next-notify'} src={iconRightNotify} />
           </div>
         </div>

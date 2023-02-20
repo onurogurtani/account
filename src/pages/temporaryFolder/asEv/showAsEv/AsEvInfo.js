@@ -40,58 +40,58 @@ const data = {
 };
 const countsArr = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }];
 
-const AsEvInfo = () => {
+const AsEvInfo = ({ showData }) => {
   //TODO AŞ. FONK OLARA DÜZENLENECEK
   const diffArr = [];
-  for (const key in data) {
+  for (const key in showData) {
     if (key.includes('questionCountOfDifficulty')) {
-      diffArr.push(data[key]);
+      diffArr.push(showData[key]);
     }
   }
-  console.log('diffArr :>> ', diffArr);
   return (
     <>
       <ul className="info-list">
         <li>
-          <Text t="Sınıf Seviyesi" /> : <span>{data?.classroomName}</span>
+          <Text t="Sınıf Seviyesi" /> : <span>{showData?.classroomName}</span>
         </li>
         <li>
-          <Text t="Ders" /> :<span>{data?.lessonName}</span>
+          <Text t="Ders" /> :<span>{showData?.lesson?.name}</span>
         </li>
         <li>
-          <Text t="Ünite" /> : <span>{data?.lessonUnitName}</span>
+          <Text t="Ünite" /> : <span>{showData?.lessonUnit?.name}</span>
         </li>
         <li>
           <Text t="Konu" />:{' '}
-          {data?.lessonSubjects.map((item, index) => (
+          {showData?.subjectNames.map((item, index) => (
             <Tag color="red" key={index}>
-              {item?.name}{' '}
+              {item}{' '}
             </Tag>
           ))}
         </li>
         <li>
           <Text t="Alt Başlık" />:{' '}
-          {data?.lessonSubSubjects.map((item, index) => (
+          {showData?.subSubjectNames.map((item, index) => (
             <Tag color="green" key={index}>
-              {item?.name}{' '}
+              {item}{' '}
             </Tag>
           ))}
         </li>
         <li>
-          <Text t="Ölçme Değerlendirme Test Adı" /> : <span>{data?.kalturaVideoName}</span>
+          <Text t="Ölçme Değerlendirme Test Adı" /> : <span>{showData?.kalturaVideoName}</span>
         </li>
         <li>
-          <Text t="Döküman Tanımlama Başlangıç Tarihi" /> : <span>{dayjs(data?.startDate)?.format('YYYY-MM-DD')}</span>
+          <Text t="Döküman Tanımlama Başlangıç Tarihi" /> :{' '}
+          <span>{dayjs(showData?.startDate)?.format('YYYY-MM-DD')}</span>
         </li>
         <li>
-          <Text t="Döküman Tanımlama Bitiş Tarihi" /> : <span>{dayjs(data?.endDate)?.format('YYYY-MM-DD')}</span>
+          <Text t="Döküman Tanımlama Bitiş Tarihi" /> : <span>{dayjs(showData?.endDate)?.format('YYYY-MM-DD')}</span>
         </li>
         <li>
-          <Text t="Soru Adedi" /> : <span>{data?.questionCount}</span>
+          <Text t="Soru Adedi" /> : <span>{showData?.questionCount}</span>
         </li>
       </ul>
       <div className="countsContainer">
-        <h3 className="counts-header">Seçilecek Soru Sayısı : {data?.questionCount} </h3>
+        <h3 className="counts-header">Seçilecek Soru Sayısı : {showData?.questionCount} </h3>
         <div className="counts">
           {countsArr.map((id, index) => (
             <div key={index}>

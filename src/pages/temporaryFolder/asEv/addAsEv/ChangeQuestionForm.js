@@ -5,30 +5,48 @@ import {
   CustomButton,
   CustomForm,
   CustomFormItem,
-  CustomSelect,
-  Option,
-  Text,
-  confirmDialog,
-  CustomInput,
-  errorDialog,
-  CustomCheckbox,
+  CustomSelect, errorDialog, Option,
+  Text
 } from '../../../../components';
-import { Col, Row } from 'antd';
 import '../../../../styles/temporaryFile/asEvGeneral.scss';
 
 import { getVideoNames } from '../../../../store/slice/asEvSlice';
 import { getAllClassStages } from '../../../../store/slice/classStageSlice';
-import { getLessonSubSubjects } from '../../../../store/slice/lessonSubSubjectsSlice';
-import { getListFilterParams } from '../../../../utils/utils';
 import { getLessons } from '../../../../store/slice/lessonsSlice';
 import '../../../../styles/temporaryFile/asEv.scss';
+import CustomCheckedFormItem from './CustomCheckedFormItem';
 
-const hardshipAndQualityArray = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }];
-const qualityArray = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
-
-const questionTypeArr = [
-  { id: 1, name: 'Klasik' },
-  { id: 2, name: 'Yeni Tip' },
+//TODO QUESTİONS İLE KONTROL ETMEK LAZIM BU SERVİSİ
+const questionAspects = [
+  {
+    label: 'Zorluk Derecesi',
+    name: 'difficulty',
+    data: [
+      { id: 1, name: 1 },
+      { id: 2, name: 2 },
+      { id: 3, name: 3 },
+      { id: 4, name: 4 },
+      { id: 5, name: 5 },
+    ],
+  },
+  {
+    label: 'Kalite',
+    name: 'quality',
+    data: [
+      { id: 1, name: 1 },
+      { id: 2, name: 2 },
+      { id: 3, name: 3 },
+      { id: 4, name: 4 },
+    ],
+  },
+  {
+    label: 'soru türü',
+    name: 'questionOfExamFormal',
+    data: [
+      { id: 0, name: 'Klasik' },
+      { id: 1, name: 'Yeni Nesil' },
+    ],
+  },
 ];
 const ChangeQuestionForm = ({
   setAnnouncementInfoData,
@@ -43,6 +61,7 @@ const ChangeQuestionForm = ({
   setDisabled,
   currentSlideIndex,
   data,
+  setSelectnewQuestion,
 }) => {
   const [componentDisabled, setComponentDisabled] = useState(true);
   const [form] = Form.useForm();
@@ -72,11 +91,10 @@ const ChangeQuestionForm = ({
     // dispatch(getLessonSubSubjects(data));
   };
 
-  //TODO BURAYA SIRAYLA SINIF SEVİYELERİ VS değerler girildikçe gelmesi lazım.
-
   const dispatch = useDispatch();
 
   useEffect(() => {
+    //TODO AŞAĞISI BE SERVİSİNDEN SORULAR GELDİKTEN SONRA DÜZELTİLMELİ
     // if (initialValues) {
     //   const currentDate = dayjs().utc().format('YYYY-MM-DD-HH-mm');
     //   const startDate = dayjs(initialValues?.startDate).utc().format('YYYY-MM-DD-HH-mm');
@@ -107,80 +125,18 @@ const ChangeQuestionForm = ({
   };
   const onFinish = async () => {
     const values = await form.validateFields();
-    console.log(values);
+    setSelectnewQuestion(true);
     // setIsVisible(true);
     // const subjectArray = [];
     // values?.asEvLessonSubject?.map((item) => subjectArray.push({ item }));
     const subSubjectArray = [];
     values?.asEvLessonSubSubjects?.map((item) => subSubjectArray.push({ item }));
-    console.log(subSubjectArray);
 
     try {
-      const values = await form.validateFields();
       const subjectArray = [];
       values?.asEvLessonSubject?.map((item) => subjectArray.push({ item }));
       const subSubjectArray = [];
       values?.asEvLessonSubSubjects?.map((item) => subSubjectArray.push({ item }));
-      console.log(subjectArray, subSubjectArray);
-
-      // let data = {
-      //   entity: {
-      //     // startDate: '2023-01-17T11:12:25.066Z',
-      //     // endDate: '2023-01-27T11:12:25.066Z',
-      //     startDate: startDate + 'T' + startHour + '.066Z',
-      //     endDate: endDate + 'T' + endHour + '.066Z',
-      //     questionCount: 3,
-      //     questionCountOfDifficulty1Level: 1,
-      //     questionCountOfDifficulty2Level: 1,
-      //     questionCountOfDifficulty3Level: 1,
-      //     questionCountOfDifficulty4Level: 0,
-      //     questionCountOfDifficulty5Level: 0,
-      //     videoId: 88,
-      //     // classroomId: values.classroomId,
-      //     // lessonId: values.lessonId,
-      //     // lessonUnitId: values.lessonUnitId,
-      //     //TODO BURADAKİ DEĞERLERİN DÜZENLENMESİ LAZIM;
-      //     asEvLessonSubject: [
-      //       {
-      //         lessonSubjectId: 222,
-      //       },
-      //       // {
-      //       //   lessonSubjectId: 98,
-      //       // },
-      //     ],
-      //     asEvLessonSubSubjects: [
-      //       {
-      //         lessonSubSubjectId: 331,
-      //       },
-      //       // {
-      //       //   lessonSubSubjectId: 153,
-      //       // },
-      //       // {
-      //       //   lessonSubSubjectId: 154,
-      //       // },
-      //     ],
-      //   },
-      // };
-      // console.log(data);
-
-      // const action = await dispatch(adAsEv(data));
-
-      // if (adAsEv.fulfilled.match(action)) {
-      //   alert('hoppp');
-      //   // successDialog({
-      //   //   title: <Text t="success" />,
-      //   //   message: 'Yeni Duyuru Başarıyla Eklendi',
-      //   //   onOk: () => {
-      //   //     history.push('/user-management/announcement-management');
-      //   //   },
-      //   // });
-      // } else {
-      //   errorDialog({
-      //     title: <Text t="error" />,
-      //     message: "",
-      //   });
-      // }
-      // setIsVisible(true);
     } catch (error) {
       errorDialog({
         title: <Text t="error" />,
@@ -202,10 +158,10 @@ const ChangeQuestionForm = ({
         onFinish={onFinish}
       >
         <CustomFormItem rules={[{ required: false }]} label="Ders" name="lessonId">
-          <CustomSelect defaultValue={'hnc'} style={{ width: '100%' }} disabled={true} />
+          <CustomSelect defaultValue={'Matematik'} style={{ width: '100%' }} disabled={true} />
         </CustomFormItem>
         <CustomFormItem rules={[{ required: false }]} label="Ünite" name="lessonUnitId">
-          <CustomSelect defaultValue={'hnc'} style={{ width: '100%' }} disabled={true} />
+          <CustomSelect defaultValue={'Problemler'} style={{ width: '100%' }} disabled={true} />
         </CustomFormItem>
         <CustomFormItem rules={[{ required: false }]} label="Konu" name="lessonSubjects">
           <CustomSelect
@@ -246,58 +202,17 @@ const ChangeQuestionForm = ({
               })}
           </CustomSelect>
         </CustomFormItem>
-        <CustomFormItem label="Zorluk Seviyesi" name="hardship">
-          <Row gutter={16}>
-            <Col xs={{ span: 4 }} sm={{ span: 4 }} md={{ span: 4 }} lg={{ span: 4 }}>
-              <CustomCheckbox
-                checked={componentDisabled}
-                onChange={(e) => {
-                  console.log(e.target.checked);
-                  setComponentDisabled(e.target.checked);
-                }}
-              />
-            </Col>
-            <Col xs={{ span: 20 }} sm={{ span: 20 }} md={{ span: 20 }} lg={{ span: 20 }}>
-              <CustomSelect disabled={componentDisabled}>
-                {hardshipAndQualityArray?.map((item) => {
-                  return (
-                    <Option key={item?.id} value={item?.id}>
-                      {item?.id}
-                    </Option>
-                  );
-                })}
-              </CustomSelect>
-            </Col>
-          </Row>
-        </CustomFormItem>
-        <CustomFormItem label="Kalite" name="quality">
-          <CustomSelect showArrow>
-            {hardshipAndQualityArray?.map((item) => {
-              return (
-                <Option key={item?.id * 0.1} value={item?.id}>
-                  {item?.id}
-                </Option>
-              );
-            })}
-          </CustomSelect>
-        </CustomFormItem>
-        <CustomFormItem rules={[{ required: false }]} label="Soru Şekli" name="questionType">
-          <CustomSelect>
-            {questionTypeArr?.map((item) => {
-              return (
-                <Option key={item?.id} value={item?.id}>
-                  {item?.name}
-                </Option>
-              );
-            })}
-          </CustomSelect>
-        </CustomFormItem>
+
+        {questionAspects.map(({ data, label, name }) => (
+          <CustomCheckedFormItem data={data} label={label} name={name} />
+        ))}
+
         <CustomButton
-        //todo burayı düzeltmek lazım
-        // onClick={() => {
-        //   openError();
-        //   onFinish();
-        // }}
+          //todo burayı düzeltmek lazım
+          onClick={() => {
+            // openError();
+            onFinish();
+          }}
         >
           {' '}
           Soruları Getir{' '}

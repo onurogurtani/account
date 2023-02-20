@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import SwiperCore, { Navigation, Pagination } from 'swiper';
 import 'swiper/components/navigation/navigation.scss';
 import 'swiper/swiper.scss';
@@ -14,13 +14,13 @@ SwiperCore.use([Pagination, Navigation]);
 
 const AsEvQuestions = ({ updateAsEv }) => {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  const dummyIds = [1400, 1402, 1403, 1404, 1405, 1406, 1407, 1408, 1409, 1410];
+  const dummyIds = [1490, 1491];
   const dummyIds2 = [1390, 1391, 1392, 1393, 1394, 1395, 1396, 1397, 1398, 1399];
   const [selectnewQuestion, setSelectnewQuestion] = useState(false);
+  const { newAsEv, asEvQuestions } = useSelector((state) => state?.asEv);
   const dispatch = useDispatch();
   const completeAsEv = async () => {
-    setSelectnewQuestion(true);
-    console.log('tammala');
+    setSelectnewQuestion(false);
   };
 
   return (
@@ -36,7 +36,7 @@ const AsEvQuestions = ({ updateAsEv }) => {
         <div
           style={{
             width: '100%',
-            border: '2px solid red',
+            // border: '2px solid red',
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'flex-end',
@@ -67,9 +67,7 @@ const AsEvQuestions = ({ updateAsEv }) => {
               />
             </div>
           </div>
-          <div
-          
-          >
+          <div>
             <CustomButton onClick={completeAsEv}>Soruyu Seç</CustomButton>
           </div>
         </NewQuestionModal>

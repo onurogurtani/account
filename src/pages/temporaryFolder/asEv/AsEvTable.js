@@ -12,7 +12,7 @@ import '../../../styles/temporaryFile/asEv.scss';
 const AsEvTable = () => {
   const dispatch = useDispatch();
 
-  const { asEvList, pagedProperty } = useSelector((state) => state?.asEv);
+  const { asEvList, pagedProperty, newAsEv } = useSelector((state) => state?.asEv);
 
   useEffect(() => {
     const ac = new AbortController();
@@ -50,12 +50,12 @@ const AsEvTable = () => {
     },
     {
       title: 'Test Adı',
-      dataIndex: 'video',
+      dataIndex: 'kalturaVideoName',
       sorter: true,
       align: 'center',
       key: 'video',
-      render: (video) => {
-        return <div>{video?.kalturaVideoName}</div>;
+      render: (kalturaVideoName) => {
+        return <div>{kalturaVideoName}</div>;
       },
     },
     {

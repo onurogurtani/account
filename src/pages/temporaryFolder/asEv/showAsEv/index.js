@@ -1,21 +1,18 @@
-import dayjs from 'dayjs';
-import { Tabs, Tag } from 'antd';
+import { Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
   confirmDialog,
-  CustomButton,
-  CustomPageHeader,
+  CustomButton, CustomCollapseCard, CustomPageHeader,
   errorDialog,
   successDialog,
-  Text,
-  CustomCollapseCard,
+  Text
 } from '../../../../components';
 import { deleteAsEv } from '../../../../store/slice/asEvSlice';
 import '../../../../styles/temporaryFile/asEv.scss';
-import ShowAsEvQuestions from './ShowAsEvQuestions';
 import AsEvInfo from './AsEvInfo';
+import ShowAsEvQuestions from './ShowAsEvQuestions';
 
 const { TabPane } = Tabs;
 
@@ -23,7 +20,6 @@ const ShowAsEv = () => {
   const location = useLocation();
   const history = useHistory();
   const showData = location?.state?.data;
-  console.log('showData :>> ', showData);
   const [currentAsEv, setCurrentAsEv] = useState(showData);
 
   useEffect(() => {
@@ -88,12 +84,12 @@ const ShowAsEv = () => {
       <Tabs defaultActiveKey={'1'}>
         <TabPane tab="Genel Bilgiler" key="1">
           <CustomCollapseCard cardTitle={<Text t="Genel Bilgiler" />}>
-            <AsEvInfo data={showData} />
+            <AsEvInfo showData={showData} />
           </CustomCollapseCard>
         </TabPane>
         <TabPane tab="Sorular" key="2">
           <CustomCollapseCard cardTitle={<Text t="Sorular" />}>
-            <ShowAsEvQuestions />
+            <ShowAsEvQuestions/>
           </CustomCollapseCard>
         </TabPane>
       </Tabs>

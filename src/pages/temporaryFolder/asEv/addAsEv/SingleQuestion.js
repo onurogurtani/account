@@ -1,22 +1,6 @@
-import { Col, Form, Row, Upload, Modal } from 'antd';
-import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { AiOutlineArrowLeft, AiOutlineArrowRight } from '@ant-design/icons';
-import {
-  CustomButton,
-  CustomDatePicker,
-  CustomForm,
-  CustomFormItem,
-  CustomInput,
-  CustomSelect,
-  Option,
-  Text,
-  CustomImage,
-} from '../../../../components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getBase64 } from '../../../../store/slice/fileSlice';
-import QuestionSideBar from './QuestionSideBar';
 import '../../../../styles/temporaryFile/asEvSwiper.scss';
 
 const SingleQuestion = ({ id, index }) => {
@@ -37,11 +21,12 @@ const SingleQuestion = ({ id, index }) => {
       style={{
         width: '100%',
         height: '750px',
-        border: '2px solid red',
         display: 'flex',
+        border: '2px solid black',
         flexDirection: 'row',
         flexWrap: 'wrap',
-        padding: '0',
+        borderRadius: '5px',
+        padding: '5px',
         margin: '0',
       }}
       className="single-image-container"

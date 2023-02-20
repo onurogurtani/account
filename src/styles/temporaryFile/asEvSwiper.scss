@@ -1,5 +1,4 @@
 .slider-filter-container {
-  border: 2px solid pink;
   padding: 0;
   display: flex;
   justify-content: space-between;
@@ -11,7 +10,6 @@
     margin: 0;
     padding: 0;
     width: 70%;
-    border: 2px solid blue;
     height: 820px;
     .notification-slider {
       .swiper-wrapper {
@@ -48,8 +46,6 @@
     }
     .notification-header,
     .notification-header2 {
-      // padding: 10px 0 0 0;
-      // border-top: solid 1px #d5d8de;
       display: flex;
       margin-top: 10px;
       justify-content: center;
@@ -63,7 +59,6 @@
       }
 
       .pagination-btns {
-        // border: 2px solid red;
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
@@ -86,7 +81,7 @@
 }
 
 .new-question-modal {
-  border: 2px solid purple;
+  // border: 2px solid purple;
   min-width: 1200px;
   min-height: 850px;
   padding: 0;

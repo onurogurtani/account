@@ -52,15 +52,17 @@ const initialState = {
   videoNames: [],
   inserterNames: [],
   //TODO BURAYA İHTİYAÇ OLMAYABİLİR
-  newAsEv: [],
+  newAsEv: {},
   asEvList: [],
   pagedProperty: {},
+  asEvQuestions: [],
 };
 
 export const asEvSlice = createSlice({
   name: 'asEvs',
   initialState,
   reducers: {
+    //todo burada benzeri bir state güncellemesi fonk yazabilirim
     // setFilterObject: (state, action) => {
     //   state.filterObject = action.payload;
     // },
@@ -81,9 +83,9 @@ export const asEvSlice = createSlice({
       state.inserterNames = [];
     });
     builder.addCase(adAsEv.fulfilled, (state, action) => {
-      // console.log(action?.payload?.data);
       //TODO BURAYI DÜZELT
-      // state.newAsEv = action?.payload?.data?.items || {};
+      state.newAsEv = action?.payload?.data || {};
+      state.asEvQuestions = action?.payload?.data?.asEvQuestionOfExams || [];
     });
     builder.addCase(adAsEv.rejected, (state, action) => {
       state.newAsEv = [];

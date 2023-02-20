@@ -1,43 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CustomModal, CustomTable } from '../../../../components';
 import '../../../../styles/temporaryFile/asEv.scss';
 //TODO DUMMY DATA KULLNILARAK TABLDA GÖSTERİLECEK VERİLER(BE DEN GELEN) BURADA DATA OLUŞTURMAK LAZIM
 const dummyTableData = [
   {
     id: 0,
-    subject: '',
-    difficulty1: 'Soru sayısı:1',
-    difficulty2: 'Soru sayısı:1',
-    difficulty3: 'Soru sayısı:1',
-    difficulty4: 'Soru sayısı:1',
-    difficulty5: 'Soru sayısı:1',
-  },
-  {
-    id: 1,
-    subject: 'konu 1',
-    difficulty1: '1',
-    difficulty2: '1',
-    difficulty3: '1',
-    difficulty4: '1',
-    difficulty5: '1',
-  },
-  {
-    id: 2,
-    subject: 'konu 2',
-    difficulty1: '1',
-    difficulty2: '1',
-    difficulty3: '1',
-    difficulty4: '1',
-    difficulty5: '1',
-  },
-  {
-    id: 3,
-    subject: 'konu 3',
-    difficulty1: '1',
-    difficulty2: '1',
-    difficulty3: '1',
-    difficulty4: '1',
-    difficulty5: '1',
+    subject: 'dairesel atışlar',
+    difficulty1: '0',
+    difficulty2: '0',
+    difficulty3: '2',
+    difficulty4: '0',
+    difficulty5: '0',
   },
 ];
 const columns = [
@@ -99,7 +72,31 @@ const columns = [
   },
 ];
 
-const DifficultiesModal = ({ initialValues, isVisible, setIsVisible, setStep, step, disabled, setDisabled }) => {
+const DifficultiesModal = ({
+  initialValues,
+  isVisible,
+  setIsVisible,
+  setStep,
+  step,
+  disabled,
+  setDisabled,
+  difficultiesData,
+  subjects,
+}) => {
+  useEffect(() => {
+    const relevantSubj = subjects.filter((item) => item.id === difficultiesData?.lessonId);
+    const difficultyObj = {};
+    Object.keys(difficultiesData).forEach((key) => {
+      if (key.includes('questionCountOfDifficulty')) {
+        if (difficultiesData[key] === undefined) {
+          difficultyObj[key] = 0;
+        } else {
+          difficultyObj[key] = Number(difficultiesData[key]);
+        }
+      }
+    });
+  }, [difficultiesData]);
+
   const onOk = async () => {
     //TODO BURADA BE TARAFINDA İSTEK ATIP SORULARI ÇEKMEK LAZIM
     setIsVisible(false);
