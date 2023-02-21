@@ -104,11 +104,12 @@ const getByFilterPagedForms = (params) => {
 
 //AŞAĞIDA YAZILI SERVİSLER ÖNCEDEN YAZILDIĞI VE SONRAKİ SPRINTLERDE DÜZELTİLEREK KULLANILMASI İÇİN SİLİNMEDİ:
 
-const getFormCategories = () => {
+const getFormCategories = (params) => {
     return api({
         url: `Survey/CategoryOfForms/getList`,
         method: 'POST',
         data: [],
+        params,
     });
 };
 
