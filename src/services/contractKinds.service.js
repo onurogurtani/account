@@ -7,6 +7,13 @@ const getContractKinds = (data = {}) => {
     data: data,
   });
 };
+const getContractKindsByContractTypes = (data = {}) => {
+  return api({
+    url: `Crm/ContractKinds/getContractKindsByContractTypes`,
+    method: 'POST',
+    params: data,
+  });
+};
 const addContractKinds = (data = {}) => {
   return api({
     url: `/Crm/ContractKinds/Add`,
@@ -23,6 +30,7 @@ const updateContractKinds = (data = {}) => {
 };
 const ContractKindservices = {
   getContractKinds,
+  getContractKindsByContractTypes,
   updateContractKinds,
   addContractKinds,
 };

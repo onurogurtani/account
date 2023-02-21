@@ -1,6 +1,7 @@
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Form, Upload } from 'antd';
+import { Button, Form, Upload, message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
+import classes from '../../../styles/surveyManagement/addSurvey.module.scss';
 import ReactQuill from 'react-quill';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -17,6 +18,8 @@ import {
   Option,
   successDialog,
   Text,
+  CustomRadioGroup,
+  CustomRadio,
 } from '../../../components';
 import fileServices from '../../../services/file.services';
 import '../../../styles/settings/packages.scss';
@@ -30,7 +33,8 @@ import { removeFromArray, turkishToLower } from '../../../utils/utils';
 import DateSection from '../../eventManagement/forms/DateSection';
 import { getGroupsList } from '../../../store/slice/groupsSlice';
 import { packageKind } from '../../../constants/package';
-import { getListDocuments } from '../../../store/slice/documentsSlice';
+import { getContractTypeAll } from '../../../store/slice/contractTypeSlice';
+import { getContractKindsByContractTypes } from '../../../store/slice/contractKindsSlice';
 import { getByFilterPagedBooks } from '../../../store/slice/booksSlice';
 
 const AddPackages = () => {
@@ -43,26 +47,24 @@ const AddPackages = () => {
 
   const [isErrorReactQuill, setIsErrorReactQuill] = useState(false);
   const [isDisable, setIsDisable] = useState(false);
-  const [errorList, setErrorList] = useState([]);
+  const [isFormSubmitDisable, setIsFormSubmitDisable] = useState(false);
   const [errorUpload, setErrorUpload] = useState();
   const [selectedClassrooms, setSelectedClassrooms] = useState([]);
   const [lessonsOptions, setLessonsOptions] = useState([]);
   const [isDisableButtonMaxNetCount, seTisDisableButtonMaxNetCount] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false)
-  const [selectedPackgeKind, setSelectedPackageKind] = useState([])
-  const [filteredDocumentList, setFilteredDocumentList] = useState([])
 
   const token = useSelector((state) => state?.auth?.token);
   const { packageTypeList } = useSelector((state) => state?.packageType);
   const { allClassList } = useSelector((state) => state?.classStages);
   const { lessons } = useSelector((state) => state?.lessons);
   const { allGroupList } = useSelector((state) => state?.groups);
-  const { documentsList } = useSelector((state) => state?.documents);
   const { booksList } = useSelector((state) => state?.books);
+  const { contractTypeAllList } = useSelector((state) => state?.contractTypes);
+  const { contractKindsByContractTypesList } = useSelector((state) => state?.contractKinds);
 
   const { setClassroomId, setLessonId } = useAcquisitionTree();
   const lessonIds = Form.useWatch('lesson', form) || [];
-
 
   useEffect(() => {
     if (allGroupList.length) return false;
@@ -70,26 +72,14 @@ const AddPackages = () => {
   }, []);
 
   useEffect(() => {
-    if (documentsList.length) return false;
-    dispatch(getListDocuments());
+    if (contractTypeAllList.length > 0) return false
+    dispatch(getContractTypeAll());
   }, []);
 
   useEffect(() => {
     if (booksList.length) return false;
     dispatch(getByFilterPagedBooks())
   }, []);
-
-  useEffect(() => {
-    if (selectedPackgeKind?.includes(["isPersonal", "isCorporate"])) {
-      setFilteredDocumentList(documentsList?.filter((item) => item.isPersonal || item.isCorporate))
-    } else if (selectedPackgeKind?.includes("isCorporate")) {
-      setFilteredDocumentList(documentsList?.filter((item) => item.isCorporate))
-    } else if (selectedPackgeKind?.includes("isPersonal")) {
-      setFilteredDocumentList(documentsList?.filter((item) => item.isPersonal))
-    } else {
-      setFilteredDocumentList([])
-    }
-  }, [selectedPackgeKind]);
 
   useEffect(() => {
     const checkedList = []
@@ -115,23 +105,11 @@ const AddPackages = () => {
   };
 
   const beforeUpload = async (file) => {
-    const isValidType = [
-      ".jpg", ".jpeg", ".bmp", ".gif", ".png"
-    ].includes(file.type.toLowerCase());
-
     const isImage = file.type.toLowerCase().includes('image');
-    if (!isValidType && !isImage) {
-      setErrorList((state) => [
-        ...state,
-        {
-          id: errorList.length,
-          message: 'İzin verilen dosyalar; Görsel',
-        },
-      ]);
-    } else {
-      setErrorList([]);
+    if (!isImage) {
+      message.error(`${file.name} bir resim dosyası değil`);
     }
-    return false;
+    return isImage || Upload.LIST_IGNORE;
   };
 
   const handleCancelFileUpload = () => {
@@ -172,6 +150,7 @@ const AddPackages = () => {
   };
 
   const onFinish = async (values) => {
+    setIsFormSubmitDisable(true);
     let lessonsArr = values.lesson.map((item) => {
       return { lessonId: item };
     });
@@ -201,8 +180,9 @@ const AddPackages = () => {
         hasMotivationEvent: values.hasMotivationEvent,
         packageBooks: values.packageBooks?.map((item) => { return { bookId: item } }),
         packageDocuments: values.packageDocuments?.map((item) => { return { documentId: item } }),
-        isPersonal: values.packageKind?.includes("isPersonal"),
-        isCorporate: values.packageKind?.includes("isCorporate")
+        packageKind: values.packageKind,
+        contractTypeId: values.contractTypeId,
+        packageContractTypes: values.contractTypeId.map((item) => ({ contractTypeId: item })),
       },
     };
 
@@ -222,6 +202,7 @@ const AddPackages = () => {
       });
     }
     setIsDisable(false);
+    setIsFormSubmitDisable(false);
   };
 
   const onCancel = () => {
@@ -300,16 +281,21 @@ const AddPackages = () => {
           </CustomFormItem>
 
           <CustomFormItem
-            label="Paket Tipi"
+            className={classes['ant-form-item']}
+            label={<Text t="Paket Tipi" />}
             name="packageKind"
-            rules={[
-              { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-            ]}>
-            <CustomCheckbox.Group
-              options={packageKind}
-              onChange={(val) => setSelectedPackageKind(val)}
+            rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}
+          >
+            <CustomRadioGroup
+              className={classes.radioGroup}
               style={{ display: 'flex', flexDirection: 'row' }}
-            />
+            >
+              {packageKind.map((radio, index) => (
+                <CustomRadio key={index} value={radio.value} className={classes.radio} checked={true}>
+                  {radio.label}
+                </CustomRadio>
+              ))}
+            </CustomRadioGroup>
           </CustomFormItem>
 
           <CustomFormItem
@@ -500,7 +486,6 @@ const AddPackages = () => {
               filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
               showArrow
               mode="multiple"
-              // onDeselect={onLessonDeselect}
               onChange={onLessonChange}
               options={lessonsOptions}
             />
@@ -549,17 +534,43 @@ const AddPackages = () => {
                 })}
             </CustomSelect>
           </CustomFormItem>
+          <CustomFormItem
+            rules={[
+              {
+                required: true,
+                message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+              },
+            ]}
+            label="Sözleşme Tipi"
+            name="contractTypeId"
+          >
+            <CustomSelect
+              placeholder="Seçiniz"
+              mode="multiple"
+              showArrow
+              onChange={(values) => {
+                form.resetFields(['packageDocuments']);
+                dispatch(getContractKindsByContractTypes({ Ids: values }));
+              }}
+            >
+              {contractTypeAllList.map((item) => (
+                <Option key={item.id} value={item.id}>
+                  {item?.name}
+                </Option>
+              ))}
+            </CustomSelect>
+          </CustomFormItem>
           <CustomFormItem rules={[{ required: true }]} label="Paketi Satın Alan Kullanıcılara Onaylatılacak Evraklar" name="packageDocuments">
             <CustomSelect
               showArrow
               mode="multiple"
               placeholder="Seçiniz"
             >
-              {filteredDocumentList
+              {contractKindsByContractTypesList
                 ?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>
-                      {item?.name}
+                      {item?.label}
                     </Option>
                   );
 
@@ -607,7 +618,7 @@ const AddPackages = () => {
             <CustomButton type="primary" className="cancel-btn" onClick={onCancel}>
               İptal
             </CustomButton>
-            <CustomButton type="primary" className="save-btn" onClick={() => form.submit()}>
+            <CustomButton type="primary" className="save-btn" loading={isFormSubmitDisable} onClick={() => form.submit()}>
               Kaydet
             </CustomButton>
           </div>

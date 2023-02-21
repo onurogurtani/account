@@ -56,7 +56,8 @@ import { trialExamSlice } from './slice/trialExamSlice';
 import { contractKindsSlice } from './slice/contractKindsSlice';
 import { difficultyLevelQuestionOfExamSlice } from './slice/difficultyLevelQuestionOfExamSlice';
 import { maxNetNumberSlice } from './slice/maxNetNumberSlice';
-
+import { contractsSlice } from './slice/contractsSlice';
+import { asEvSlice } from './slice/asEvSlice';
 const reducers = combineReducers({
     auth: authSlice.reducer,
     user: userSlice.reducer,
@@ -107,6 +108,8 @@ const reducers = combineReducers({
     contractKinds: contractKindsSlice.reducer,
     difficultyLevelQuestionOfExams: difficultyLevelQuestionOfExamSlice.reducer,
     maxNetNumber: maxNetNumberSlice.reducer,
+    contracts: contractsSlice.reducer,
+    asEv: asEvSlice.reducer,
 });
 
 const persistConfig = {

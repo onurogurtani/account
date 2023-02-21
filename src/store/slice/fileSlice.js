@@ -18,3 +18,11 @@ export const deleteFile = createAsyncThunk('deleteFile', async (body, { rejectWi
     return rejectWithValue(error?.data);
   }
 });
+export const getBase64 = createAsyncThunk('getBase64', async (data, { rejectWithValue }) => {
+  try {
+    const response = await fileServices.getBase64(data);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});

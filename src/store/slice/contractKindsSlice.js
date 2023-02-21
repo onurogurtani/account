@@ -12,6 +12,17 @@ export const getContractKindsList = createAsyncThunk(
     }
   },
 );
+export const getContractKindsByContractTypes = createAsyncThunk(
+  'getContractKindsByContractTypes',
+  async ( data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await contractKindsServices.getContractKindsByContractTypes(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
 export const addContractKinds = createAsyncThunk('addContractKinds', async (data = {}, { dispatch, rejectWithValue }) => {
   try {
     const response = await contractKindsServices.addContractKinds(data);
@@ -36,6 +47,7 @@ export const updateContractKinds = createAsyncThunk(
 
 const initialState = {
   contractKindsList: [],
+  contractKindsByContractTypesList:[],
   tableProperty: {
     currentPage: 1,
     page: 1,
@@ -52,6 +64,12 @@ export const contractKindsSlice = createSlice({
     builder.addCase(getContractKindsList.fulfilled, (state, action) => {
       state.contractKindsList = action?.payload?.data?.items;
       state.tableProperty = action?.payload?.data?.pagedProperty;
+    });
+    builder.addCase(getContractKindsByContractTypes.fulfilled, (state, action) => {
+      state.contractKindsByContractTypesList = action?.payload?.data;
+    });
+    builder.addCase(getContractKindsByContractTypes.rejected, (state) => {
+      state.contractKindsByContractTypesList = [];
     });
   },
 });

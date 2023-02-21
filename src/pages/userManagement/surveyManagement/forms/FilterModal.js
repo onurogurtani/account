@@ -18,7 +18,6 @@ import {getForms} from '../../../../store/slice/formsSlice'
 
 const FilterFormModal = ({ modalVisible, handleModalVisible, setFilterParams, filterParams, emptyFilterObj, forms }) => {
 
-    console.log(forms)
     const [form] = Form.useForm();
 
     const dispatch = useDispatch()
