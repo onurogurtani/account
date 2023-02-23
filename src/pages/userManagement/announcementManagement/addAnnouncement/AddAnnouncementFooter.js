@@ -18,7 +18,7 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileIma
   const { announcementTypes } = useSelector((state) => state?.announcement);
   const loadGroupsList = useCallback(async () => {
     let data = {
-      ShowAtAnnouncement: true,
+      pageSize: 10000,
     };
     await dispatch(getByFilterPagedGroups(data));
   }, [dispatch]);

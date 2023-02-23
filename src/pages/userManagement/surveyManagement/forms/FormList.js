@@ -32,7 +32,7 @@ const FormList = () => {
 
     useEffect(() => {
         dispatch(getFilteredPagedForms({}));
-        dispatch(getFormCategories());
+        dispatch(getFormCategories({ pageNumber: 0 }));
     }, []);
 
     const paginationProps = {

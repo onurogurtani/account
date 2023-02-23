@@ -1,5 +1,5 @@
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Form, Upload } from 'antd';
+import { Button, Form, Upload, message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import classes from '../../../styles/surveyManagement/addSurvey.module.scss';
 import ReactQuill from 'react-quill';
@@ -49,7 +49,7 @@ const EditPackages = () => {
 
   const [isErrorReactQuill, setIsErrorReactQuill] = useState(false);
   const [isDisable, setIsDisable] = useState(false);
-  const [errorList, setErrorList] = useState([]);
+  const [isFormSubmitDisable, setIsFormSubmitDisable] = useState(false);
   const [errorUpload, setErrorUpload] = useState();
   const [currentImages, setCurrenImages] = useState([]);
   const [selectedClassrooms, setSelectedClassrooms] = useState([]);
@@ -74,7 +74,6 @@ const EditPackages = () => {
 
   const { setClassroomId, setLessonId } = useAcquisitionTree();
   const lessonIds = Form.useWatch('lesson', form) || [];
-  const changedPackageKind = Form.useWatch('packageKind', form) || [];
 
   useEffect(() => {
     if (allGroupList.length) return false;
@@ -213,23 +212,12 @@ const EditPackages = () => {
   };
 
   const beforeUpload = async (file) => {
-    const isValidType = [
-      ".jpg", ".jpeg", ".bmp", ".gif", ".png"
-    ].includes(file.type.toLowerCase());
-
     const isImage = file.type.toLowerCase().includes('image');
-    if (!isValidType && !isImage) {
-      setErrorList((state) => [
-        ...state,
-        {
-          id: errorList.length,
-          message: 'İzin verilen dosyalar; Word, Excel, PDF, Görsel',
-        },
-      ]);
-    } else {
-      setErrorList([]);
+    if (!isImage) {
+      message.error(`${file.name} bir resim dosyası değil`);
     }
-    return false;
+
+    return isImage || Upload.LIST_IGNORE;
   };
 
   const handleCancelFileUpload = () => {
@@ -272,15 +260,10 @@ const EditPackages = () => {
   };
 
   const onFinish = async (values) => {
-    let newImageArray = [];
-    let diffOldImages = values?.imageOfPackages;
-    diffOldImages?.forEach((item) => {
-      currentImages?.forEach((img) => {
-        img.name === item.name && diffOldImages.pop(item);
-      });
-    });
-
-    newImageArray = currentImages?.concat(diffOldImages);
+    setIsFormSubmitDisable(true);
+    
+    const currentImagesIDs = currentImages.map(i=>({fileId:i.fileId}));
+    const uploadedImagesIDs = await handleUpload(values.imageOfPackages);
 
     let lessonsArr = values?.lesson?.map((item) => {
       return { lessonId: item };
@@ -295,6 +278,7 @@ const EditPackages = () => {
 
     const data = {
       package: {
+        id:id,
         name: values.name,
         summary: values.summary,
         content: values.content,
@@ -304,7 +288,10 @@ const EditPackages = () => {
         startDate: values.startDate.$d,
         finishDate: values.endDate.$d,
         packageLessons: lessonsArr,
-        imageOfPackages: await handleUpload(values.imageOfPackages),
+        imageOfPackages: [
+          ...currentImagesIDs,
+          ...uploadedImagesIDs,
+        ],
         examType: 10, //sınav tipi halihazırda inputtan alınmıyor
         packageGroups: packageGroups,
         hasCoachService: values.hasCoachService,
@@ -335,6 +322,7 @@ const EditPackages = () => {
       });
     }
     setIsDisable(false);
+    setIsFormSubmitDisable(false);
   };
 
   const onCancel = () => {
@@ -722,7 +710,7 @@ const EditPackages = () => {
             <CustomButton type="primary" className="cancel-btn" onClick={onCancel}>
               İptal
             </CustomButton>
-            <CustomButton type="primary" className="save-btn" onClick={() => form.submit()}>
+            <CustomButton type="primary" className="save-btn" loading={isFormSubmitDisable} onClick={() => form.submit()}>
               Güncelle
             </CustomButton>
           </div>
