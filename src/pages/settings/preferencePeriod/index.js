@@ -32,7 +32,7 @@ import dayjs from 'dayjs';
 const PreferencePeriod = () => {
     const [showModal, setShowModal] = useState(false);
     const [editInfo, setEditInfo] = useState(null);
-    const [allTime, setAllTime] = useState(false);
+    const [isAlways, setIsAlways] = useState(false);
     const [form] = Form.useForm();
     const { preferencePeriod, educationYears } = useSelector((state) => state?.preferencePeriod);
     const dispatch = useDispatch();
@@ -65,14 +65,17 @@ const PreferencePeriod = () => {
     const openEdit = (data) => {
         setShowModal(true);
         setEditInfo(data);
+        setIsAlways(data?.isAlways);
         const newData = {
             ...data,
-            period1StartDate: moment(data.period1StartDate),
-            period1EndDate: moment(data.period1EndDate),
-            period2StartDate: moment(data.period2StartDate),
-            period2EndDate: moment(data.period2EndDate),
-            period3StartDate: moment(data.period3StartDate),
-            period3EndDate: moment(data.period3EndDate),
+            ...(!data?.isAlways && {
+                period1StartDate: moment(data.period1StartDate),
+                period1EndDate: moment(data.period1EndDate),
+                period2StartDate: moment(data.period2StartDate),
+                period2EndDate: moment(data.period2EndDate),
+                period3StartDate: moment(data.period3StartDate),
+                period3EndDate: moment(data.period3EndDate),
+            }),
         };
         form.setFieldsValue(newData);
     };
@@ -81,13 +84,16 @@ const PreferencePeriod = () => {
         async (e) => {
             console.log(e);
             const data = {
+                isAlways: e?.isAlways,
                 educationYearId: e.educationYearId,
-                period1StartDate: e?.period1StartDate?.$d,
-                period2StartDate: e?.period2StartDate?.$d,
-                period3StartDate: e?.period3StartDate?.$d,
-                period3EndDate: e?.period3EndDate?.$d,
-                period2EndDate: e?.period2EndDate?.$d,
-                period1EndDate: e?.period1EndDate?.$d,
+                ...(!e?.isAlways && {
+                    period1StartDate: e?.period1StartDate?.$d,
+                    period2StartDate: e?.period2StartDate?.$d,
+                    period3StartDate: e?.period3StartDate?.$d,
+                    period3EndDate: e?.period3EndDate?.$d,
+                    period2EndDate: e?.period2EndDate?.$d,
+                    period1EndDate: e?.period1EndDate?.$d,
+                }),
             };
             if (editInfo) {
                 console.log(editInfo);
@@ -100,6 +106,7 @@ const PreferencePeriod = () => {
                         message: action?.payload?.message,
                         onOk: () => {
                             form.resetFields();
+                            setIsAlways(false);
                             setShowModal(false);
                             setEditInfo(null);
                             dispatch(getPreferencePeriod());
@@ -119,6 +126,7 @@ const PreferencePeriod = () => {
                         message: action?.payload?.message,
                         onOk: () => {
                             form.resetFields();
+                            setIsAlways(false);
                             setShowModal(false);
                             dispatch(getPreferencePeriod());
                         },
@@ -133,6 +141,7 @@ const PreferencePeriod = () => {
         },
         [editInfo, dispatch, form],
     );
+
     useEffect(() => {
         dispatch(getEducationYears());
     }, [dispatch]);
@@ -146,6 +155,7 @@ const PreferencePeriod = () => {
     };
 
     const dateValidator = async (field, value) => {
+        if (isAlways) return true;
         let dateValue;
         switch (field.field) {
             case 'period1EndDate':
@@ -175,6 +185,7 @@ const PreferencePeriod = () => {
     };
 
     const dateValidatorPeriodControl = async (field, value) => {
+        if (isAlways) return true;
         let dateValue;
         switch (field.field) {
             case 'period2StartDate':
@@ -198,6 +209,11 @@ const PreferencePeriod = () => {
             return Promise.reject(new Error());
         }
     };
+    const sortedList = useCallback(() => {
+        const list = preferencePeriod.items;
+        return list?.map((item) => item).sort((a, b) => a.educationStartYear - b.educationStartYear);
+    }, [preferencePeriod.items]);
+
     return (
         <CustomPageHeader title={'Tercih Dönemi Tanımlama'} showBreadCrumb routes={['Ayarlar']}>
             <CustomCollapseCard className={'preferencePeriod'} cardTitle={'Tercih Dönemleri Belirleme'}>
@@ -212,53 +228,63 @@ const PreferencePeriod = () => {
                     </CustomButton>
                 </div>
                 <div className=" list">
-                    {preferencePeriod?.items?.map((item, index) => (
-                        <CustomCollapseCard
-                            className={'list-col'}
-                            cardTitle={
-                                item.educationStartYear + '-' + item.educationEndYear + ' Öğretim Yılı Tercih Dönemleri'
-                            }
-                        >
-                            <div className="list-card">
-                                <div className=" list-card-items">
-                                    <div className=" list-card-item">
-                                        <div>{convertDate(item.period1StartDate)}</div>
-                                        <span>-</span>
-                                        <div>{convertDate(item.period1EndDate)}</div>
-                                    </div>
-                                    <div className=" list-card-item">
-                                        <div>{convertDate(item.period2StartDate)}</div>
-                                        <span>-</span>
+                    {preferencePeriod?.items?.length &&
+                        sortedList().map((item, index) => (
+                            <CustomCollapseCard
+                                className={'list-col'}
+                                key={index}
+                                cardTitle={
+                                    item.educationStartYear +
+                                    '-' +
+                                    item.educationEndYear +
+                                    ' Öğretim Yılı Tercih Dönemleri'
+                                }
+                            >
+                                <div className="list-card">
+                                    {item?.isAlways ? (
+                                        'HER ZAMAN'
+                                    ) : (
+                                        <div className=" list-card-items">
+                                            <div className=" list-card-item">
+                                                <div>{convertDate(item.period1StartDate)}</div>
+                                                <span>-</span>
+                                                <div>{convertDate(item.period1EndDate)}</div>
+                                            </div>
+                                            <div className=" list-card-item">
+                                                <div>{convertDate(item.period2StartDate)}</div>
+                                                <span>-</span>
 
-                                        <div>{convertDate(item.period2EndDate)}</div>
-                                    </div>
-                                    <div className=" list-card-item">
-                                        <div>{convertDate(item.period3StartDate)}</div>
-                                        <span>-</span>
+                                                <div>{convertDate(item.period2EndDate)}</div>
+                                            </div>
+                                            <div className=" list-card-item">
+                                                <div>{convertDate(item.period3StartDate)}</div>
+                                                <span>-</span>
 
-                                        <div>{convertDate(item.period3EndDate)}</div>
+                                                <div>{convertDate(item.period3EndDate)}</div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div className="prefencePeriodButton" style={{ display: 'flex' }}>
+                                        <div style={{ marginBottom: '10px' }}>
+                                            <CustomButton onClick={() => openEdit(item)} className="edit-button">
+                                                Düzenle
+                                            </CustomButton>
+                                        </div>
+                                        <div>
+                                            <CustomButton
+                                                onClick={() => {
+                                                    preferencePeriodDelete(item.preferencePeriodId);
+                                                }}
+                                                className="delete-button"
+                                            >
+                                                Sil
+                                            </CustomButton>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="prefencePeriodButton" style={{ display: 'flex' }}>
-                                    <div style={{ marginBottom: '10px' }}>
-                                        <CustomButton onClick={() => openEdit(item)} className="edit-button">
-                                            Düzenle
-                                        </CustomButton>
-                                    </div>
-                                    <div>
-                                        <CustomButton
-                                            onClick={() => {
-                                                preferencePeriodDelete(item.preferencePeriodId);
-                                            }}
-                                            className="delete-button"
-                                        >
-                                            Sil
-                                        </CustomButton>
-                                    </div>
-                                </div>
-                            </div>
-                        </CustomCollapseCard>
-                    ))}
+                            </CustomCollapseCard>
+                        ))}
                 </div>
             </CustomCollapseCard>
             <CustomModal
@@ -273,6 +299,7 @@ const PreferencePeriod = () => {
                     form.resetFields();
                     setShowModal(false);
                     setEditInfo(null);
+                    setIsAlways(false);
                 }}
             >
                 <CustomForm onFinish={sumbit} layout="vertical" form={form}>
@@ -295,29 +322,29 @@ const PreferencePeriod = () => {
                         </CustomSelect>
                     </CustomFormItem>
 
-                    <CustomFormItem valuePropName="checked" name="allTime">
+                    <CustomFormItem valuePropName="checked" name="isAlways">
                         <CustomCheckbox
                             onChange={(e) => {
-                                setAllTime((prev) => !prev);
+                                setIsAlways((prev) => !prev);
                             }}
                         >
                             HER ZAMAN
                         </CustomCheckbox>
                     </CustomFormItem>
-                    <div style={{ opacity: allTime ? 0.5 : 1 }}>
+                    <div style={{ opacity: isAlways ? 0.5 : 1 }}>
                         <CustomFormItem label="1. Tarih Aralığı" required>
                             <div className="date-form-item">
                                 <CustomFormItem
-                                    rules={[{ required: !allTime, message: 'Lütfen seçimleri yapınız.' }]}
+                                    rules={[{ required: !isAlways, message: 'Lütfen seçimleri yapınız.' }]}
                                     style={{ width: '50%' }}
                                     name="period1StartDate"
-                                    dependencies={['allTime']}
+                                    dependencies={['isAlways']}
                                 >
-                                    <CustomDatePicker disabled={allTime} height={35}></CustomDatePicker>
+                                    <CustomDatePicker disabled={isAlways} height={35}></CustomDatePicker>
                                 </CustomFormItem>
                                 <CustomFormItem
                                     rules={[
-                                        { required: !allTime, message: 'Lütfen seçimleri yapınız.' },
+                                        { required: !isAlways, message: 'Lütfen seçimleri yapınız.' },
                                         {
                                             validator: dateValidator,
                                             message:
@@ -326,9 +353,9 @@ const PreferencePeriod = () => {
                                     ]}
                                     style={{ width: '50%' }}
                                     name="period1EndDate"
-                                    dependencies={['allTime']}
+                                    dependencies={['isAlways']}
                                 >
-                                    <CustomDatePicker disabled={allTime} height={35}></CustomDatePicker>
+                                    <CustomDatePicker disabled={isAlways} height={35}></CustomDatePicker>
                                 </CustomFormItem>
                             </div>
                         </CustomFormItem>
@@ -336,7 +363,7 @@ const PreferencePeriod = () => {
                             <div className="date-form-item">
                                 <CustomFormItem
                                     rules={[
-                                        { required: !allTime, message: 'Lütfen seçimleri yapınız.' },
+                                        { required: !isAlways, message: 'Lütfen seçimleri yapınız.' },
                                         {
                                             validator: dateValidatorPeriodControl,
                                             message: 'Lütfen girilen tarihleri kontrol ediniz.',
@@ -344,13 +371,13 @@ const PreferencePeriod = () => {
                                     ]}
                                     style={{ width: '50%' }}
                                     name="period2StartDate"
-                                    dependencies={['allTime']}
+                                    dependencies={['isAlways']}
                                 >
-                                    <CustomDatePicker disabled={allTime} height={35}></CustomDatePicker>
+                                    <CustomDatePicker disabled={isAlways} height={35}></CustomDatePicker>
                                 </CustomFormItem>
                                 <CustomFormItem
                                     rules={[
-                                        { required: !allTime, message: 'Lütfen seçimleri yapınız.' },
+                                        { required: !isAlways, message: 'Lütfen seçimleri yapınız.' },
                                         {
                                             validator: dateValidator,
                                             message:
@@ -359,9 +386,9 @@ const PreferencePeriod = () => {
                                     ]}
                                     style={{ width: '50%' }}
                                     name="period2EndDate"
-                                    dependencies={['allTime']}
+                                    dependencies={['isAlways']}
                                 >
-                                    <CustomDatePicker disabled={allTime} height={35}></CustomDatePicker>
+                                    <CustomDatePicker disabled={isAlways} height={35}></CustomDatePicker>
                                 </CustomFormItem>
                             </div>
                         </CustomFormItem>
@@ -369,7 +396,7 @@ const PreferencePeriod = () => {
                             <div className="date-form-item">
                                 <CustomFormItem
                                     rules={[
-                                        { required: !allTime, message: 'Lütfen seçimleri yapınız.' },
+                                        { required: !isAlways, message: 'Lütfen seçimleri yapınız.' },
                                         {
                                             validator: dateValidatorPeriodControl,
                                             message: 'Lütfen girilen tarihleri kontrol ediniz.',
@@ -377,13 +404,13 @@ const PreferencePeriod = () => {
                                     ]}
                                     style={{ width: '50%' }}
                                     name="period3StartDate"
-                                    dependencies={['allTime']}
+                                    dependencies={['isAlways']}
                                 >
-                                    <CustomDatePicker disabled={allTime} height={35}></CustomDatePicker>
+                                    <CustomDatePicker disabled={isAlways} height={35}></CustomDatePicker>
                                 </CustomFormItem>
                                 <CustomFormItem
                                     rules={[
-                                        { required: !allTime, message: 'Lütfen seçimleri yapınız.' },
+                                        { required: !isAlways, message: 'Lütfen seçimleri yapınız.' },
                                         {
                                             validator: dateValidator,
                                             message:
@@ -392,9 +419,9 @@ const PreferencePeriod = () => {
                                     ]}
                                     style={{ width: '50%' }}
                                     name="period3EndDate"
-                                    dependencies={['allTime']}
+                                    dependencies={['isAlways']}
                                 >
-                                    <CustomDatePicker disabled={allTime} height={35}></CustomDatePicker>
+                                    <CustomDatePicker disabled={isAlways} height={35}></CustomDatePicker>
                                 </CustomFormItem>
                             </div>
                         </CustomFormItem>
