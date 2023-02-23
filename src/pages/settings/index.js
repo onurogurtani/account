@@ -10,13 +10,8 @@ const Packages = lazy(() =>
         default: Component,
     })),
 );
-const AddPackages = lazy(() =>
-    import('./packages/AddPackages').then(({ default: Component }) => ({
-        default: Component,
-    })),
-);
-const EditPackages = lazy(() =>
-    import('./packages/EditPackages').then(({ default: Component }) => ({
+const AddEditCopyPackages = lazy(() =>
+    import('./packages/AddEditCopyPackages').then(({ default: Component }) => ({
         default: Component,
     })),
 );
@@ -142,8 +137,7 @@ const ShowContracts = lazy(() =>
 const Settings = {
     Categories,
     Packages,
-    AddPackages,
-    EditPackages,
+    AddEditCopyPackages,
     Lessons,
     Activities,
     ClassStages,

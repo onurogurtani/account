@@ -213,6 +213,9 @@ const PackagesList = () => {
             <CustomButton className="update-btn" onClick={() => handleUpdatePackage(record)}>
               Güncelle
             </CustomButton>
+            <CustomButton className='btn copy-btn' onClick={()=> handleCopyPackage(record)}>
+              Kopyala
+            </CustomButton>
           </div>
         );
       },
@@ -225,6 +228,10 @@ const PackagesList = () => {
 
   const handleUpdatePackage = (record) => {
     history.push(`/settings/packages/edit/${record.id}`);
+  };
+
+  const handleCopyPackage = (record) => {
+    history.push(`/settings/packages/copy/${record.id}`);
   };
 
   return (
