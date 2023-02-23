@@ -109,3 +109,37 @@
     }
   }
 }
+
+.action-btns {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+
+  .btn {
+    display: flex;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-family: UbuntuMedium, sans-serif;
+    font-size: 12px;
+    line-height: 12px;
+    border-radius: 4px;
+    box-shadow: none;
+  }
+
+  .detail-btn {
+    width: 90px;
+    background-color: #3f4957;
+  }
+
+  .delete-btn {
+    width: 33px;
+    background-color: #f72717;
+  }
+
+  .copy-btn {
+    width: 90px;
+    background-color: #2d5f70;
+  }
+}
