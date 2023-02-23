@@ -195,7 +195,7 @@ const QuestionIdentification = () => {
       setFileInputInfo({ image: {}, video: {}, pdf: {} });
       resetFile();
       // dispatch(setLessonIds([]));
-      //  dispatch(setEarningChoice({}));
+      //dispatch(setEarningChoice({}));
     } else {
       errorDialog({ title: 'Hata', message: 'Sınıf seviyesi boş olamaz!' });
     }
@@ -469,7 +469,7 @@ const QuestionIdentification = () => {
                     <div onClick={() => setShowModal(true)} className="question-info">
                       <label className="quesiton-label">Kazanımlar:</label>
                       <CustomButton disabled={formData.questionOfExamState === 1}>
-                        Kazanım {questionOfExams?.questionOfExamDetail ? 'Güncelle' : 'Ekle'}
+                        Kazanım {questionOfExams?.questionOfExamDetail.questionOfExamDetailLessonUnits.length !==0 ? 'Güncelle' : 'Ekle'}
                       </CustomButton>
                     </div>
 
