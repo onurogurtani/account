@@ -1,14 +1,22 @@
-import { Tag } from 'antd';
 import React from 'react';
 import { CustomButton } from '../../../../components';
 import { getAsEvQuestionOfExamsByAsEvId, selectedEvaluationTabRowData } from '../../../../store/slice/workPlanSlice';
-import VideoWatchModal from '../../../../components/videoPlayer/VideoWatchModal';
 import dayjs from 'dayjs';
-import { dateTimeFormat, defaultDateFormat } from '../../../../utils/keys';
+import { defaultDateFormat } from '../../../../utils/keys';
 
-const dataListTableColumn = (dispatch, evaluationTab) => {
+const dataListTableColumn = (dispatch, evaluationTab, setQuestionListModalVisible,setModalTitle) => {
 
   const selectedRow = (row) => dispatch(selectedEvaluationTabRowData(row));
+
+  const handleDetail = async (row) => {
+    await dispatch(getAsEvQuestionOfExamsByAsEvId({
+      id:row.id,
+      includeQuestionFilesBase64: true,
+      pageSize: row.questionCount
+    }));
+    setModalTitle(row.kalturaVideoName)
+    setQuestionListModalVisible(true);
+  };
 
   const columns = [
     {
@@ -39,7 +47,7 @@ const dataListTableColumn = (dispatch, evaluationTab) => {
         return (
           <div className='action-btns'>
 
-            <CustomButton className='btn-detail btn' onClick={()=> dispatch(getAsEvQuestionOfExamsByAsEvId(record.id))}>
+            <CustomButton className='btn-detail btn' onClick={() => handleDetail(record)}>
               İncele
             </CustomButton>
 

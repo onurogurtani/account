@@ -33,7 +33,7 @@ export const getAsEvQuestionOfExamsByAsEvId = createAsyncThunk(
   'getAsEvQuestionOfExamsByAsEvId',
   async (data = {}, { getState, dispatch, rejectWithValue }) => {
     try {
-      const response = await asEvServices.getAsEvQuestionOfExamsByAsEvId(data);
+      const response = await workPlanService.getAsEvQuestionOfExamsByAsEvId(data);
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);

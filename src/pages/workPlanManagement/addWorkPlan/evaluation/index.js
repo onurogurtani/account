@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CustomButton, CustomForm, CustomTable, errorDialog, Text } from '../../../../components';
 import {
   getByFilterPagedAsEvs,
-  getAsEvQuestionOfExamsByAsEvId,
   onChangeActiveKey,
   setEvaluationFilteredList,
 } from '../../../../store/slice/workPlanSlice';
 import dataListTableColumn from './dataListTableColumn';
 import useOnchangeTable from '../../../../hooks/useOnchangeTable';
+import QuestionListModal from './QuestionListModal';
 
 const EvaluationTest = () => {
 
@@ -17,10 +17,12 @@ const EvaluationTest = () => {
   const dispatch = useDispatch();
 
   const [filterData, setFilterData] = useState();
+  const [questionListModalVisible, setQuestionListModalVisible] = useState(false);
+  const [modalTitle, setModalTitle] = useState(false);
 
   const { activeKey, evaluationTab, subjectChooseTab } = useSelector((state) => state?.workPlan);
 
-  const columns = dataListTableColumn(dispatch, evaluationTab);
+  const columns = dataListTableColumn(dispatch, evaluationTab, setQuestionListModalVisible,setModalTitle);
 
   const paginationSetFilteredDataList = (res) => {
     dispatch(setEvaluationFilteredList(res?.payload));
@@ -77,6 +79,12 @@ const EvaluationTest = () => {
 
   return (
     <>
+      <QuestionListModal
+        modalVisible={questionListModalVisible}
+        handleModalVisible={setQuestionListModalVisible}
+        modalTitle={modalTitle}
+      />
+
       <CustomForm
         labelCol={{ flex: '165px' }}
         autoComplete='off'

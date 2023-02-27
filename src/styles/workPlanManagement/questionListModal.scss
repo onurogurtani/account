@@ -1,0 +1,47 @@
+.question-list-modal {
+  color: #1d2228;
+
+  .ant-modal-content {
+    .ant-modal-body {
+      .question-list {
+        display: flex;
+        flex-direction: column;
+        row-gap: 15px;
+
+        .question-list-item {
+          display: flex;
+          column-gap: 10px;
+
+          span {
+            font-size: 16px;
+            font-weight: 400;
+          }
+
+          img {
+            width: 100%;
+            max-width: 90%;
+          }
+        }
+
+        .action-content {
+          display: flex;
+          justify-content: end;
+
+          .edit-btn {
+            display: inline-flex;
+            height: 36px;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: UbuntuMedium, sans-serif;
+            font-size: 12px;
+            line-height: 12px;
+            border-radius: 4px;
+            box-shadow: none;
+            background-color: #344e75;
+          }
+        }
+      }
+    }
+  }
+}

@@ -19,7 +19,8 @@ import {
   selectedOutQuestionTabRowsData,
   setSubjectChooseSchoolLevel,
   selectedEvaluationTabRowData,
-  resetEvaluationDataList
+  resetEvaluationDataList,
+  resetEvaluationQuestionList
 } from '../../../../store/slice/workPlanSlice';
 import { getEducationYears } from '../../../../store/slice/questionFileSlice';
 import { getAllClassStages } from '../../../../store/slice/classStageSlice';
@@ -129,6 +130,7 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
     dispatch(resetLessonSubSubjects());
     dispatch(selectedEvaluationTabRowData({}));
     dispatch(resetEvaluationDataList());
+    dispatch(resetEvaluationQuestionList());
 
     practiceForm.resetFields();
     outQuestionForm.resetFields();
