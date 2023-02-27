@@ -17,7 +17,9 @@ import {
   resetPracticeQuestionVideoList,
   selectedPracticeQuestionTabRowsVideo, setOutQuestionTabLessonSubSubjectList, resetOutQuestionTabVideoList,
   selectedOutQuestionTabRowsData,
-  setSubjectChooseSchoolLevel
+  setSubjectChooseSchoolLevel,
+  selectedEvaluationTabRowData,
+  resetEvaluationDataList
 } from '../../../../store/slice/workPlanSlice';
 import { getEducationYears } from '../../../../store/slice/questionFileSlice';
 import { getAllClassStages } from '../../../../store/slice/classStageSlice';
@@ -118,13 +120,15 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
     const values = await subjectForm.validateFields(['ClassroomId', 'LessonIds', 'LessonUnitIds', 'LessonSubjectIds']);
 
     dispatch(selectedSubjectTabRowVideo({}));
+    dispatch(setSubjectChooseData(values));
     dispatch(selectedPracticeQuestionTabRowsVideo());
     dispatch(resetPracticeQuestionVideoList());
-    dispatch(setSubjectChooseData(values));
     dispatch(setOutQuestionTabLessonSubSubjectList());
     dispatch(resetOutQuestionTabVideoList());
     dispatch(selectedOutQuestionTabRowsData());
     dispatch(resetLessonSubSubjects());
+    dispatch(selectedEvaluationTabRowData({}));
+    dispatch(resetEvaluationDataList());
 
     practiceForm.resetFields();
     outQuestionForm.resetFields();

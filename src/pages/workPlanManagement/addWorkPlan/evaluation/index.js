@@ -1,18 +1,79 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form } from 'antd';
-import { useDispatch } from 'react-redux';
-import { CustomButton, CustomForm } from '../../../../components';
-import { onChangeActiveKey } from '../../../../store/slice/workPlanSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { CustomButton, CustomForm, CustomTable, errorDialog, Text } from '../../../../components';
+import {
+  getByFilterPagedAsEvs,
+  getAsEvQuestionOfExamsByAsEvId,
+  onChangeActiveKey,
+  setEvaluationFilteredList,
+} from '../../../../store/slice/workPlanSlice';
+import dataListTableColumn from './dataListTableColumn';
+import useOnchangeTable from '../../../../hooks/useOnchangeTable';
 
-const EvaluationTest = ({ sendValue }) => {
+const EvaluationTest = () => {
 
   const [form] = Form.useForm();
   const dispatch = useDispatch();
 
+  const [filterData, setFilterData] = useState();
+
+  const { activeKey, evaluationTab, subjectChooseTab } = useSelector((state) => state?.workPlan);
+
+  const columns = dataListTableColumn(dispatch, evaluationTab);
+
+  const paginationSetFilteredDataList = (res) => {
+    dispatch(setEvaluationFilteredList(res?.payload));
+  };
+
+  const onChangeTable = useOnchangeTable({
+    filterObject: {
+      ...filterData,
+    }, action: getByFilterPagedAsEvs, callback: paginationSetFilteredDataList,
+  });
+
+
   const onFinish = (values) => {
     console.log('values', values);
-    dispatch(onChangeActiveKey('3'));
+
+    if (Object.keys(evaluationTab.selectedRowData).length > 0) {
+      dispatch(onChangeActiveKey('3'));
+    } else {
+      errorDialog({
+        title: <Text t='error' />,
+        message: 'Lütfen test seçiniz.',
+      });
+    }
   };
+
+  // table pagination
+  const paginationProps = {
+    showSizeChanger: true,
+    showQuickJumper: {
+      goButton: <CustomButton className='go-button'>Git</CustomButton>,
+    },
+    position: 'bottomRight',
+    total: evaluationTab?.tableProperty?.totalCount,
+    current: evaluationTab?.tableProperty?.currentPage,
+    pageSize: evaluationTab?.tableProperty?.pageSize,
+  };
+
+
+  useEffect(async () => {
+    if (activeKey === '2' && evaluationTab.dataList.length === 0) {
+      const body = {
+        ...subjectChooseTab?.filterObject,
+        LessonUnitId: subjectChooseTab?.filterObject?.LessonUnitIds,
+        LessonSubjectId: subjectChooseTab?.filterObject?.LessonSubjectIds,
+      };
+      delete body.CategoryCode;
+      delete body.LessonSubjectIds;
+      delete body.LessonUnitIds;
+      delete body.isActive;
+      setFilterData(body);
+      await dispatch(getByFilterPagedAsEvs(body));
+    }
+  }, [activeKey]);
 
   return (
     <>
@@ -26,9 +87,16 @@ const EvaluationTest = ({ sendValue }) => {
         onFinish={onFinish}
       >
 
-        <h5>
-          Ölçme ve Değerlendirme Testi Ekleme
-        </h5>
+        <div className='video-list-content'>
+          <CustomTable
+            dataSource={evaluationTab?.dataList}
+            onChange={onChangeTable}
+            columns={columns}
+            pagination={paginationProps}
+            rowKey={(record) => `video-list-${record?.id || record?.headText}`}
+            scroll={{ x: false }}
+          />
+        </div>
 
         <div className='evaluation-test-add-form-footer form-footer'>
           <CustomButton type='primary' onClick={() => dispatch(onChangeActiveKey('1'))} className='back-btn'>
