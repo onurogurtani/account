@@ -1,6 +1,7 @@
 import { Tag } from 'antd';
 import React from 'react';
 import { CustomButton } from '../../../components';
+import RoleAuthorizationCopy from '../RoleAuthorizationCopy';
 
 const useRoleAuthorizationListTableColumns = () => {
     const columns = [
@@ -42,9 +43,7 @@ const useRoleAuthorizationListTableColumns = () => {
                         <CustomButton className="update-btn" onClick={() => {}}>
                             Düzenle
                         </CustomButton>
-                        <CustomButton className="update-btn" onClick={() => {}}>
-                            Kopyala
-                        </CustomButton>
+                        <RoleAuthorizationCopy record={record} />
                     </div>
                 );
             },
