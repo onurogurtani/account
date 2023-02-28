@@ -3,7 +3,6 @@ import { CustomButton, CustomCollapseCard, CustomImage, CustomPageHeader } from 
 import iconSearchWhite from '../../assets/icons/icon-white-search.svg';
 import { useHistory } from 'react-router-dom';
 import RoleAuthorizationListTable from './RoleAuthorizationListTable';
-import QuestionDifficultyFilter from '../reports/questionDifficulty/QuestionDifficultyFilter';
 import RoleAuthorizationFilter from './RoleAuthorizationFilter';
 
 const RoleAuthorizationList = () => {
