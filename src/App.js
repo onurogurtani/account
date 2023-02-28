@@ -33,6 +33,7 @@ import QuestionDifficultyReports from './pages/reports/questionDifficulty';
 import OrganisationManagement from './pages/organisationManagement';
 import Exam from './pages/exam/index';
 import Reports from './pages/reports/index';
+import RoleAuthorizationManagement from './pages/roleAuthorizationManagement';
 
 const PrivateRoute = lazy(() =>
     import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -693,6 +694,33 @@ const App = () => {
                                                     path={`${match?.path}/video-reports`}
                                                     exact
                                                     Component={Reports.VideoReports}
+                                                    authority="dashboard"
+                                                />
+                                                <Route
+                                                    component={() => (
+                                                        <Redirect
+                                                            to={{
+                                                                pathname: '/not-found',
+                                                                state: { status: 404 },
+                                                            }}
+                                                        />
+                                                    )}
+                                                />
+                                            </Switch>
+                                        );
+                                    }}
+                                    authority="dashboard"
+                                    isLayout={false}
+                                />
+                                <PrivateRoute
+                                    path={'/role-authorization-management'}
+                                    Component={({ match }) => {
+                                        return (
+                                            <Switch>
+                                                <PrivateRoute
+                                                    path={`${match?.path}/list`}
+                                                    exact
+                                                    Component={RoleAuthorizationManagement?.RoleAuthorizationList}
                                                     authority="dashboard"
                                                 />
                                                 <Route

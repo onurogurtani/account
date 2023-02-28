@@ -3,10 +3,10 @@ import { Select } from 'antd';
 import { CustomImage } from './index';
 import selectDown from '../assets/icons/icon-select-down.svg';
 
-export const { Option } = Select;
+export const { Option, OptGroup } = Select;
 
 const CustomSelectContent = styled(Select)(
-  ({ height }) => ` 
+    ({ height }) => ` 
   font-size: 16px;
   font-family: UbuntuRegular;
   font-weight: normal;
@@ -78,7 +78,7 @@ const CustomSelectContent = styled(Select)(
 );
 
 const CustomSelect = ({ suffixIcon, ...props }) => {
-  return <CustomSelectContent {...props} />;
+    return <CustomSelectContent {...props} />;
 };
 
 export default CustomSelect;
