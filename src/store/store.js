@@ -58,6 +58,7 @@ import { difficultyLevelQuestionOfExamSlice } from './slice/difficultyLevelQuest
 import { maxNetNumberSlice } from './slice/maxNetNumberSlice';
 import { contractsSlice } from './slice/contractsSlice';
 import { asEvSlice } from './slice/asEvSlice';
+import { roleAuthorizationSlice } from './slice/roleAuthorizationSlice';
 const reducers = combineReducers({
     auth: authSlice.reducer,
     user: userSlice.reducer,
@@ -110,6 +111,7 @@ const reducers = combineReducers({
     maxNetNumber: maxNetNumberSlice.reducer,
     contracts: contractsSlice.reducer,
     asEv: asEvSlice.reducer,
+    roleAuthorization: roleAuthorizationSlice.reducer,
 });
 
 const persistConfig = {

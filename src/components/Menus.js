@@ -220,6 +220,14 @@ const Menus = () => {
                     </span>
                 </MenuItemText>
             </CustomItem>
+            <CustomItem key="/role-authorization-management/list">
+                <MenuItemText>
+                    <CustomImage src={menuIcons} />
+                    <span>
+                        <Text t="Rol - Yetki Yönetimi" />
+                    </span>
+                </MenuItemText>
+            </CustomItem>
             <CustomItem key="/user-management/user-list-management/list">
                 <MenuItemText>
                     <CustomImage src={menuIcons} />
