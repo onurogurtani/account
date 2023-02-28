@@ -41,8 +41,22 @@ export const getAsEvQuestionOfExamsByAsEvId = createAsyncThunk(
   },
 );
 
+export const getByFilterPagedWorkPlans = createAsyncThunk(
+  'getByFilterPagedWorkPlans',
+  async (data = {}, { getState, dispatch, rejectWithValue }) => {
+    try {
+      const response = await workPlanService.getByFilterPagedWorkPlans(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
 const initialState = {
   activeKey: '0',
+  isExit: false,
+  workPlanList: [],
   subjectChooseTab: {
     formData: {},
     selectedRowVideo: {},
@@ -97,6 +111,7 @@ export const workPlanSlice = createSlice({
   reducers: {
     resetAllData: (state, action) => {
       state.activeKey = '0';
+      // state.isExit = false;
       state.subjectChooseTab.selectedRowVideo = {};
       state.subjectChooseTab.formData = {};
       state.subjectChooseTab.filterObject = {};
@@ -116,6 +131,9 @@ export const workPlanSlice = createSlice({
     },
     onChangeActiveKey: (state, action) => {
       state.activeKey = action?.payload;
+    },
+    setIsExit: (state, action) => {
+      state.isExit = action?.payload;
     },
     selectedSubjectTabRowVideo: (state, action) => {
       state.subjectChooseTab.selectedRowVideo = action?.payload;
@@ -218,11 +236,18 @@ export const workPlanSlice = createSlice({
     builder.addCase(getAsEvQuestionOfExamsByAsEvId.rejected, (state, action) => {
       state.evaluationTab.questionList = [];
     });
+    builder.addCase(getByFilterPagedWorkPlans.fulfilled, (state, action) => {
+      state.workPlanList = action?.payload?.data?.items;
+    });
+    builder.addCase(getByFilterPagedWorkPlans.rejected, (state, action) => {
+      state.workPlanList = [];
+    });
   },
 });
 
 export const {
   onChangeActiveKey,
+  setIsExit,
   selectedSubjectTabRowVideo,
   setSubjectChooseData,
   setSubjectChooseFilterData,

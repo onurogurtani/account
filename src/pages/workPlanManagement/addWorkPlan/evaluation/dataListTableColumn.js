@@ -4,17 +4,19 @@ import { getAsEvQuestionOfExamsByAsEvId, selectedEvaluationTabRowData } from '..
 import dayjs from 'dayjs';
 import { defaultDateFormat } from '../../../../utils/keys';
 
-const dataListTableColumn = (dispatch, evaluationTab, setQuestionListModalVisible,setModalTitle) => {
+const dataListTableColumn = (dispatch, evaluationTab, setQuestionListModalVisible, setModalTitle, setSelectedRowData) => {
 
   const selectedRow = (row) => dispatch(selectedEvaluationTabRowData(row));
 
   const handleDetail = async (row) => {
     await dispatch(getAsEvQuestionOfExamsByAsEvId({
-      id:row.id,
+      id: row.id,
       includeQuestionFilesBase64: true,
-      pageSize: row.questionCount
+      pageSize: row.questionCount,
     }));
-    setModalTitle(row.kalturaVideoName)
+
+    setSelectedRowData(row);
+    setModalTitle(row.kalturaVideoName);
     setQuestionListModalVisible(true);
   };
 

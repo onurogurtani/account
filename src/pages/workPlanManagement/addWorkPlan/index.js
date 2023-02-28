@@ -1,14 +1,15 @@
 import { Form, Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { confirmDialog, CustomPageHeader, Text } from '../../../components';
+import { useDispatch, useSelector } from 'react-redux';
+import { confirmDialog, CustomPageHeader, errorDialog, Text } from '../../../components';
 import '../../../styles/workPlanManagement/addWorkPlan.scss';
 import SubjectChoose from './subject';
 import ReinforcementTest from './reinforcement';
 import EvaluationTest from './evaluation';
 import OutQuestion from './outQuestions';
 import PracticeQuestion from './practiceQuestion';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
+import { resetAllData } from '../../../store/slice/workPlanSlice';
 
 const AddWorkPlan = () => {
   const { TabPane } = Tabs;
@@ -18,6 +19,8 @@ const AddWorkPlan = () => {
   const [practiceForm] = Form.useForm();
   const history = useHistory();
   const [isExit, setIsExit] = useState(false);
+  const [count, setCount] = useState(0);
+  const dispatch = useDispatch();
 
   const {
     activeKey,
@@ -38,41 +41,84 @@ const AddWorkPlan = () => {
   );
 
   useEffect(() => {
-    const unblock = history.block((location) => {
-      if (isExit) {
-        return true;
-      }
+      const unblock = history.block((location) => {
+        if (isExit) {
+          return true;
+        }
 
-      if (activeKey === '0') {
-        confirmDialog({
-          title: <Text t='attention' />,
-          htmlContent: 'Bu sayfadan ayrıldığınızda girmiş olduğunuz bilgiler silinecektir. Kartlarınız taslak olarak kaydetmek ister misiniz?',
-          okText: 'Evet',
-          cancelText: 'Hayır',
-          onOk: async () => {
-            setIsExit(true);
-            await console.log('kaydedildi...');
-            history.push(location.pathname);
-          },
-          onCancel: async () => {
-            await console.log('kaydedilmedi...');
-            history.push(location.pathname);
-          },
-        });
+        // Konu seçimi sekmesinde ise
+        if (activeKey === '0') {
+          confirmDialog({
+            title: <Text t='attention' />,
+            htmlContent: 'Taslak olarak kaydetmeden çıkmak istediğinize emin misinizs?',
+            okText: 'Evet',
+            cancelText: 'Hayır',
+            onOk: async () => {
+              setIsExit(true);
+              await console.log('kaydedilmedi...');
+              await dispatch(resetAllData());
+              history.push(location.pathname);
+            },
+            onCancel: async () => {
+              setIsExit(false);
+              setCount(count +1);
 
-        unblock();
-      } else {
-        return true;
-      }
+              try {
+                // TODO: 'Veri kaydi yapılacak ve işlem devam edecek'
+                const values = await subjectForm.validateFields();
+                console.log('val', values);
+                console.log('kaydedildi...');
+                await dispatch(resetAllData());
+                history.push(location.pathname);
+              } catch (e) {
+                errorDialog({
+                  title: <Text t='error' />,
+                  message: 'Eğitim Öğretim Yılı seçimi ve video seçimlerini yapmalısınız',
+                });
+              }
 
-      return false;
-    });
+            },
+          });
 
-    return unblock;
+          unblock();
+        }
+        // Konu seçimi sekmesi dışında ise
+        else if (activeKey !== '0') {
+          confirmDialog({
+            title: <Text t='attention' />,
+            htmlContent: 'Taslak olarak kaydetmeden çıkmak istediğinize emin misiniz?',
+            okText: 'Evet',
+            cancelText: 'Hayır',
+            onOk: async () => {
+              setIsExit(true);
+              await dispatch(resetAllData());
+              history.push(location.pathname);
+            },
+            onCancel: async () => {
+              setIsExit(false);
+
+              // TODO: 'Veri kaydi yapılacak ve işlem devam edecek'
+              await console.log('kaydedildi...');
+              await dispatch(resetAllData());
+              history.push(location.pathname);
+            },
+          });
+
+          unblock();
+        }
+        else {
+          return true;
+        }
+
+        return false;
+      });
+
+      return unblock;
   }, [
     activeKey,
     history,
-    subjectChooseTab,
+    count,
+    isExit
   ]);
 
   return (
@@ -93,7 +139,7 @@ const AddWorkPlan = () => {
             <ReinforcementTest />
           </TabPane>
           <TabPane tab='Ölçme ve Değerlendirme Testi Ekleme' key='2'>
-            <EvaluationTest />
+            <EvaluationTest setIsExit={setIsExit}/>
           </TabPane>
           <TabPane tab='Çıkmış Soru Ekleme' key='3'>
             <OutQuestion outQuestionForm={outQuestionForm} />

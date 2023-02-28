@@ -11,7 +11,7 @@ import dataListTableColumn from './dataListTableColumn';
 import useOnchangeTable from '../../../../hooks/useOnchangeTable';
 import QuestionListModal from './QuestionListModal';
 
-const EvaluationTest = () => {
+const EvaluationTest = ({setIsExit}) => {
 
   const [form] = Form.useForm();
   const dispatch = useDispatch();
@@ -19,10 +19,11 @@ const EvaluationTest = () => {
   const [filterData, setFilterData] = useState();
   const [questionListModalVisible, setQuestionListModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState(false);
+  const [selectedRowData, setSelectedRowData] = useState(false);
 
   const { activeKey, evaluationTab, subjectChooseTab } = useSelector((state) => state?.workPlan);
 
-  const columns = dataListTableColumn(dispatch, evaluationTab, setQuestionListModalVisible,setModalTitle);
+  const columns = dataListTableColumn(dispatch, evaluationTab, setQuestionListModalVisible,setModalTitle,setSelectedRowData);
 
   const paginationSetFilteredDataList = (res) => {
     dispatch(setEvaluationFilteredList(res?.payload));
@@ -83,6 +84,8 @@ const EvaluationTest = () => {
         modalVisible={questionListModalVisible}
         handleModalVisible={setQuestionListModalVisible}
         modalTitle={modalTitle}
+        selectedRowData={selectedRowData}
+        setIsExit={setIsExit}
       />
 
       <CustomForm
