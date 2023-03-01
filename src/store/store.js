@@ -59,6 +59,8 @@ import { maxNetNumberSlice } from './slice/maxNetNumberSlice';
 import { contractsSlice } from './slice/contractsSlice';
 import { asEvSlice } from './slice/asEvSlice';
 import { roleAuthorizationSlice } from './slice/roleAuthorizationSlice';
+import { videoReportsNotConnectedSlice } from './slice/videoReportsNotConnectedSlice';
+
 const reducers = combineReducers({
     auth: authSlice.reducer,
     user: userSlice.reducer,
@@ -112,6 +114,7 @@ const reducers = combineReducers({
     contracts: contractsSlice.reducer,
     asEv: asEvSlice.reducer,
     roleAuthorization: roleAuthorizationSlice.reducer,
+    videoReportsNotConnected: videoReportsNotConnectedSlice.reducer,
 });
 
 const persistConfig = {
