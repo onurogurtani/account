@@ -288,6 +288,7 @@ const VideoReports = () => {
                                             dispatch(resetLessonSubjects());
                                             dispatch(resetLessonSubSubjects());
                                             form.resetFields();
+                                            dispatch(videoReportsNotConnectedGetList({ PageSize: 10, PageNumber: 1 }));
                                         }}
                                     >
                                         Temizle
