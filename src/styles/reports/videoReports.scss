@@ -1,16 +1,30 @@
 .video-reports-main {
-  padding: 27px;
-  .exports-button {
-    display: flex;
-    gap: 10px;
-    width: 100%;
-    justify-items: flex-end;
-    justify-content: flex-end;
-    align-items: center;
-    margin-bottom: 10px;
-    .excel-button {
-      background-color: green !important;
-      color: white;
+    padding: 27px;
+    .exports-button {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+        justify-items: flex-end;
+        justify-content: flex-end;
+        align-items: center;
+        margin-bottom: 10px;
+        .excel-button {
+            background-color: green !important;
+            color: white;
+        }
     }
-  }
+    .form-button {
+        display: flex;
+        width: 100%;
+        justify-content: flex-end;
+        gap: 15px;
+    }
+    .filter {
+        margin-bottom: 20px;
+        .filter-item {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+    }
 }
