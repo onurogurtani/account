@@ -147,3 +147,21 @@ export function groupBy(arr, property) {
         return memo;
     }, {});
 }
+
+export const validation = {
+    isNotEmpty: function (str) {
+        const pattern = /\S+/;
+        return pattern.test(str);
+    },
+    isNumber: function (str) {
+        const pattern = /^\d+\.?\d*$/;
+        return pattern.test(str);
+    },
+    isDouble: function (str) {
+        const pattern = /^\d{0,2}(\.\d{0,2}){0,1}$/;
+        return pattern.test(str);
+    },
+    isSame: function (str1, str2) {
+        return str1 === str2;
+    },
+};
