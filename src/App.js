@@ -696,6 +696,12 @@ const App = () => {
                                                     Component={Reports.VideoReports}
                                                     authority="dashboard"
                                                 />
+                                                <PrivateRoute
+                                                    path={`${match?.path}/work-plan-video-reports-add-info`}
+                                                    exact
+                                                    Component={Reports.WorkPlanVideoReportsAdd}
+                                                    authority="dashboard"
+                                                />
                                                 <Route
                                                     component={() => (
                                                         <Redirect

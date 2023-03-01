@@ -51,10 +51,8 @@ const VideoReports = () => {
             title: 'Sınıf Seviyesi',
             dataIndex: 'classroomName',
             key: 'classroomName',
-            render: (text, record) => {
-                return <div>{text}</div>;
-            },
         },
+
         {
             title: 'Ders Adı',
             dataIndex: 'lessonName',
@@ -68,7 +66,6 @@ const VideoReports = () => {
             title: 'Ünite Adı',
             dataIndex: 'lessonUnitName',
             key: 'lessonUnitName',
-
             render: (text, record) => {
                 return <div>{text}</div>;
             },
