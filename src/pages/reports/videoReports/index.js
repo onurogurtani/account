@@ -29,7 +29,7 @@ import '../../../styles/reports/videoReports.scss';
 const VideoReports = () => {
     const [form] = Form.useForm();
 
-    const [openVideo, setOpenVideo] = useState(false);
+    const [openVideo, setOpenVideo] = useState(null);
     const [openFilter, setOpenFilter] = useState(false);
     const { allClassList } = useSelector((state) => state.classStages);
     const { lessons } = useSelector((state) => state.lessons);
@@ -117,7 +117,7 @@ const VideoReports = () => {
                     <div className="action-btns">
                         <CustomButton
                             onClick={() => {
-                                setOpenVideo(true);
+                                setOpenVideo(record.kalturaVideoId);
                             }}
                             className="edit-button"
                         >
@@ -349,13 +349,13 @@ const VideoReports = () => {
             <CustomModal
                 footer={false}
                 onCancel={() => {
-                    setOpenVideo(false);
+                    setOpenVideo(null);
                 }}
                 width={'1000px'}
-                visible={openVideo}
+                visible={openVideo !== null ? true : false}
             >
                 <CustomVideoPlayer
-                    url={'https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4'}
+                    url={`https://trkcll-dijital-dersane-demo.ercdn.net/${openVideo}.smil/playlist.m3u8`}
                 />
             </CustomModal>
         </CustomPageHeader>
