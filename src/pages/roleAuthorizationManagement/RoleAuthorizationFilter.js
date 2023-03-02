@@ -6,15 +6,15 @@ import { recordStatus } from '../../constants';
 import { getByFilterPagedRoleAuthorization, getOperationClaimsList } from '../../store/slice/roleAuthorizationSlice';
 import { turkishToLower } from '../../utils/utils';
 
-const RoleAuthorizationFilter = () => {
+const RoleAuthorizationFilter = ({ isVisibleFilter }) => {
     const dispatch = useDispatch();
 
     const state = (state) => state?.roleAuthorization;
 
     const { roles, operationClaims, roleAuthorizationDetailSearch } = useSelector((state) => state.roleAuthorization);
     useEffect(() => {
-        dispatch(getOperationClaimsList());
-    }, []);
+        isVisibleFilter && dispatch(getOperationClaimsList());
+    }, [dispatch, isVisibleFilter]);
 
     const onFinish = useCallback(
         async (values) => {

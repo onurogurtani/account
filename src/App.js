@@ -723,6 +723,12 @@ const App = () => {
                                                     Component={RoleAuthorizationManagement?.RoleAuthorizationList}
                                                     authority="dashboard"
                                                 />
+                                                <PrivateRoute
+                                                    path={`${match?.path}/add`}
+                                                    exact
+                                                    Component={RoleAuthorizationManagement?.RoleAuthorizationAdd}
+                                                    authority="dashboard"
+                                                />
                                                 <Route
                                                     component={() => (
                                                         <Redirect
