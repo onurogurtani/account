@@ -16,7 +16,7 @@ import { roleType } from '../../../constants/roleAuthorization';
 import { getOperationClaimsList } from '../../../store/slice/roleAuthorizationSlice';
 import RoleAuthorizationTreeTransfer from '../components/RoleAuthorizationTreeTransfer';
 
-const RoleAuthorizationCreateOrEditForm = () => {
+const RoleAuthorizationCreateOrEditForm = ({ isEdit }) => {
     const [form] = Form.useForm();
     const history = useHistory();
     const dispatch = useDispatch();
@@ -30,6 +30,25 @@ const RoleAuthorizationCreateOrEditForm = () => {
     };
     useEffect(() => {
         dispatch(getOperationClaimsList());
+    }, []);
+
+    useEffect(() => {
+        if (isEdit) {
+            const permission = [
+                'CreateTranslateMapCommand',
+                'DeleteTranslateMapCommand',
+                'UpdateTranslateMapCommand',
+                'GetTranslateMapQuery',
+                'GetTranslateMapListQuery',
+                'GetTranslateMapsQuery',
+            ];
+            form.setFieldsValue({
+                permission,
+                name: 'Rol 1',
+                roltype: 1,
+            });
+            setTargetKeys(permission);
+        }
     }, []);
 
     useEffect(() => {
@@ -65,7 +84,7 @@ const RoleAuthorizationCreateOrEditForm = () => {
     const onCancel = () => {
         confirmDialog({
             title: <Text t="attention" />,
-            message: 'Yaptığınız değişiklikler kaydedilmeyecek. İptal işlemini onaylıyor musunuz?',
+            message: 'İptal etmek istediğinizden emin misiniz?',
             okText: 'Evet',
             cancelText: 'Hayır',
             onOk: async () => {

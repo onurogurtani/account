@@ -732,7 +732,17 @@ const App = () => {
                                                 <PrivateRoute
                                                     path={`${match?.path}/add`}
                                                     exact
-                                                    Component={RoleAuthorizationManagement?.RoleAuthorizationAdd}
+                                                    Component={
+                                                        RoleAuthorizationManagement?.RoleAuthorizationCreateOrEdit
+                                                    }
+                                                    authority="dashboard"
+                                                />
+                                                <PrivateRoute
+                                                    path={`${match?.path}/edit/:id`}
+                                                    exact
+                                                    Component={
+                                                        RoleAuthorizationManagement?.RoleAuthorizationCreateOrEdit
+                                                    }
                                                     authority="dashboard"
                                                 />
                                                 <Route

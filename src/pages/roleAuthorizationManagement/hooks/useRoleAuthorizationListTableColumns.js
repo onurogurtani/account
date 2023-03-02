@@ -1,9 +1,12 @@
 import { Tag } from 'antd';
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { CustomButton } from '../../../components';
 import RoleAuthorizationCopy from '../RoleAuthorizationCopy';
 
 const useRoleAuthorizationListTableColumns = () => {
+    const history = useHistory();
+
     const columns = [
         {
             title: 'Rol Adı',
@@ -40,7 +43,12 @@ const useRoleAuthorizationListTableColumns = () => {
             render: (_, record) => {
                 return (
                     <div className="action-btns">
-                        <CustomButton className="update-btn" onClick={() => {}}>
+                        <CustomButton
+                            className="update-btn"
+                            onClick={() => {
+                                history.push(`/role-authorization-management/edit/${record.id}`);
+                            }}
+                        >
                             Düzenle
                         </CustomButton>
                         <RoleAuthorizationCopy record={record} />
