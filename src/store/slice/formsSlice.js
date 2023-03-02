@@ -17,7 +17,8 @@ export const getFilteredPagedForms = createAsyncThunk(
 
 export const getFormCategories = createAsyncThunk('getFormCategories', async (data, { dispatch, rejectWithValue }) => {
     try {
-        const response = await formServices.getFormCategories();
+        const params = getByFilterPagedParamsHelper(data, '');
+        const response = await formServices.getFormCategories(params);
         return response;
     } catch (error) {
         return rejectWithValue(error?.data);

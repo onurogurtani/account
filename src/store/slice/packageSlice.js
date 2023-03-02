@@ -65,6 +65,7 @@ const initialState = {
   selectedPackages: [],
   isFilter: false,
   filterObject: {},
+  sorterObject: {},
   allPackagesName: [],
 };
 
@@ -72,6 +73,9 @@ export const packageSlice = createSlice({
   name: 'packageSlice',
   initialState,
   reducers: {
+    setSorterObject: (state, action) => {
+      state.sorterObject = action.payload;
+    },
     setIsFilter: (state, action) => {
       state.isFilter = action.payload;
     },
@@ -103,4 +107,4 @@ export const packageSlice = createSlice({
   },
 });
 
-export const { setFilterObject, setIsFilter } = packageSlice.actions;
+export const { setFilterObject, setSorterObject, setIsFilter } = packageSlice.actions;

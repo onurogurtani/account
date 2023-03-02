@@ -35,7 +35,7 @@ const FormFilter = () => {
 
     useEffect(() => {
         dispatch(getFilteredPagedForms({}));
-        dispatch(getFormCategories());
+        dispatch(getFormCategories({ pageNumber: 0 }));
     }, []);
 
     const handleClear = useCallback(async () => {

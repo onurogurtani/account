@@ -15,8 +15,6 @@ export const earningChoiceSlice = createSlice({
     setLessonIds: (state, action) => {
       state.lessonIds = action.payload;
     },
-  
-
   },
 });
 

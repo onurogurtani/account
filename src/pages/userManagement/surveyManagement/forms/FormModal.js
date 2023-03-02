@@ -31,7 +31,7 @@ const AddFormModal = ({
 
     useEffect(() => {
         dispatch(getFilteredPagedForms({}));
-        dispatch(getFormCategories());
+        dispatch(getFormCategories({ pageNumber: 0 }));
     }, [dispatch]);
     const handleClose = useCallback(() => {
         setIsEdit(false);
