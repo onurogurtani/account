@@ -5,9 +5,15 @@ const RoleAuthorizationList = lazy(() =>
         default: Component,
     })),
 );
+const RoleAuthorizationAdd = lazy(() =>
+    import('./RoleAuthorizationAdd').then(({ default: Component }) => ({
+        default: Component,
+    })),
+);
 
 const RoleAuthorizationManagement = {
     RoleAuthorizationList,
+    RoleAuthorizationAdd,
 };
 
 export default RoleAuthorizationManagement;
