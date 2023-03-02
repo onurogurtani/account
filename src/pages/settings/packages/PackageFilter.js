@@ -1,12 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { CustomDatePicker, CustomFormItem, CustomInput, CustomSelect, Option } from '../../../components';
+import React, { useCallback, useEffect } from 'react';
+import { CustomDatePicker, CustomFormItem, CustomSelect, Option } from '../../../components';
 import { useDispatch, useSelector } from 'react-redux';
 import TableFilter from '../../../components/TableFilter';
 import { getByFilterPagedPackages, getPackageNames, setIsFilter } from '../../../store/slice/packageSlice';
-import { packageKind } from '../../../constants/package';
+import { packageKind, packageTypes, packageFieldTypes } from '../../../constants/package';
 import { getAllClassStages } from '../../../store/slice/classStageSlice';
 import { getLessons } from '../../../store/slice/lessonsSlice';
-import { getPackageTypeList } from '../../../store/slice/packageTypeSlice';
+import { getPublisherList } from '../../../store/slice/publisherSlice';
 import { selectedStatus, status } from '../../../constants';
 import { getGroupsList } from '../../../store/slice/groupsSlice';
 import dayjs from 'dayjs';
@@ -14,17 +14,17 @@ import dayjs from 'dayjs';
 const PackageFilter = () => {
   const dispatch = useDispatch();
   const state = (state) => state?.groups;
-  const { filterObject, allPackagesName, packages } = useSelector(state => state.packages);
+  const { filterObject, allPackagesName } = useSelector(state => state.packages);
   const { allClassList } = useSelector((state) => state?.classStages);
   const { lessons } = useSelector((state) => state?.lessons);
-  const { packageTypeList } = useSelector((state) => state?.packageType);
+  const { publisherList } = useSelector((state) => state?.publisher);
   const { allGroupList } = useSelector((state) => state?.groups);
 
   useEffect(() => {
     loadPackageName()
     loadClassRoom()
     loadLessons()
-    loadPackageType()
+    loadPublisherList()
     loadRoleGroup()
   }, [dispatch]);
 
@@ -45,9 +45,9 @@ const PackageFilter = () => {
     await dispatch(getLessons());
   }, [dispatch]);
 
-  const loadPackageType = useCallback(async () => {
-    if (packageTypeList?.length) return false;
-    await dispatch(getPackageTypeList());
+  const loadPublisherList = useCallback(async () => {
+    if (publisherList?.length) return false;
+    await dispatch(getPublisherList());
   }, [dispatch]);
 
   const loadRoleGroup = useCallback(async () => {
@@ -90,7 +90,7 @@ const PackageFilter = () => {
   return (
     <TableFilter {...tableFilterProps}>
       <div className="form-item">
-        <CustomFormItem label="Rol" name="Name" >
+        <CustomFormItem label="Paket Adı" name="Name" >
           <CustomSelect allowClear placeholder="Seçiniz" mode="multiple">
             {allPackagesName.map((item, i) => (
               <Option key={`allPackagesName-${i}`} value={item}>
@@ -106,6 +106,15 @@ const PackageFilter = () => {
             </Option>
             {packageKind.map((item, i) => (
               <Option key={`allPackagesName-${i}`} value={item.value}>
+                {item.label}
+              </Option>
+            ))}
+          </CustomSelect>
+        </CustomFormItem>
+        <CustomFormItem label="Paket Türü" name="PackageTypeEnumIds" > 
+          <CustomSelect allowClear placeholder="Seçiniz" mode="multiple">
+            {packageTypes.map((item, i) => (
+              <Option key={`PackageTypeEnumIds-${i}`} value={item.value}>
                 {item.label}
               </Option>
             ))}
@@ -131,11 +140,14 @@ const PackageFilter = () => {
           </CustomSelect>
         </CustomFormItem>
 
-        <CustomFormItem label="Paket Türü" name="PackageTypeIds" >
+        <CustomFormItem label="Paket Alanı" name="FieldTypeIds" >
           <CustomSelect allowClear placeholder="Seçiniz" mode="multiple">
-            {packageTypeList.map((item, i) => (
-              <Option key={`PackageTypeIds-${i}`} value={item.id}>
-                {item.name}
+            <Option key={`FieldTypeIds-all`} value={packageFieldTypes.map(item=>item.value)}>
+              Hepsi
+            </Option>
+            {packageFieldTypes.map((item, i) => (
+              <Option key={`FieldTypeIds-${i}`} value={item.value}>
+                {item.label}
               </Option>
             ))}
           </CustomSelect>
@@ -200,13 +212,15 @@ const PackageFilter = () => {
             ))}
           </CustomSelect>
         </CustomFormItem>
-        <CustomFormItem label="Max. Net Sayısı" name="MaxNetCount">
-          <CustomInput
-            type={'number'}
-            placeholder={'Max. Net Sayısı'}
-          />
+        <CustomFormItem label="Pakette Kullanılan Yayınlar" name="PublisherIds" >
+          <CustomSelect allowClear placeholder="Seçiniz" mode="multiple">
+            {publisherList?.items?.map((item, i) => (
+              <Option key={`PublisherIds-${i}`} value={item.id}>
+                {item.name}
+              </Option>
+            ))}
+          </CustomSelect>
         </CustomFormItem>
-
       </div>
     </TableFilter>
   );

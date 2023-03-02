@@ -8,3 +8,59 @@ export const packageKind = [
     label: 'Kurumsal Paket',
   },
 ];
+
+export const packageTypes = [
+  {
+    //Lesson
+    value: 10,
+    label: "Ders Paketi",
+  },
+  {
+    //CoachService
+    value: 20,
+    label: "Koçluk Paketi",
+  },
+  {
+    //TestExam
+    value: 30,
+    label: "Deneme Sınavı Paketi",
+  },
+  {
+    //MotivationEvent
+    value: 40,
+    label: "Motivasyon Etkinliği Paketi",
+  },
+  {
+    //Free
+    value: 50,
+    label: "Ücretsiz Paketi",
+  },
+  {
+    //PrivateLesson
+    value: 60,
+    label: "Özel Ders paketi",
+  }
+];
+
+export const packageFieldTypes = [
+  {
+    value: 0,
+    label: "Yok",
+  },
+  {
+    value: 10,
+    label: "Sayısal",
+  },
+  {
+    value: 20,
+    label: "Sözel",
+  },
+  {
+    value: 30,
+    label: "Eşit Ağırlık",
+  },
+  {
+    value: 40,
+    label: "Dil",
+  },
+];
