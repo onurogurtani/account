@@ -86,6 +86,9 @@ export const persistLogin = async (dispatch, staticLogout) => {
 // };
 
 export const turkishToLower = (string = '') => {
+    if (!string) {
+        string = '';
+    }
     let letters = { İ: 'i', I: 'ı', Ş: 'ş', Ğ: 'ğ', Ü: 'ü', Ö: 'ö', Ç: 'ç' };
     string = string.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
         return letters[letter];
