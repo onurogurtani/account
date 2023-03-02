@@ -110,7 +110,7 @@ const EvaluationTest = ({setIsExit}) => {
         </div>
 
         <div className='evaluation-test-add-form-footer form-footer'>
-          <CustomButton type='primary' onClick={() => dispatch(onChangeActiveKey('1'))} className='back-btn'>
+          <CustomButton type='primary' onClick={() => dispatch(onChangeActiveKey('0'))} className='back-btn'>
             Geri
           </CustomButton>
 

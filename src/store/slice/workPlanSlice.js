@@ -53,10 +53,35 @@ export const getByFilterPagedWorkPlans = createAsyncThunk(
   },
 );
 
+export const addWorkPlan = createAsyncThunk(
+  'addWorkPlan',
+  async (data = {}, { getState, dispatch, rejectWithValue }) => {
+    try {
+      const response = await workPlanService.addWorkPlan(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
+export const getUsedVideoIdsQuery = createAsyncThunk(
+  'getUsedVideoIdsQuery',
+  async (data = {}, { getState, dispatch, rejectWithValue }) => {
+    try {
+      const response = await workPlanService.getUsedVideoIdsQuery();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
 const initialState = {
   activeKey: '0',
   isExit: false,
   workPlanList: [],
+  usedVideoIdsQueryListData: [],
   subjectChooseTab: {
     formData: {},
     selectedRowVideo: {},
@@ -241,6 +266,12 @@ export const workPlanSlice = createSlice({
     });
     builder.addCase(getByFilterPagedWorkPlans.rejected, (state, action) => {
       state.workPlanList = [];
+    });
+    builder.addCase(getUsedVideoIdsQuery.fulfilled, (state, action) => {
+      state.usedVideoIdsQueryListData = action?.payload?.data;
+    });
+    builder.addCase(getUsedVideoIdsQuery.rejected, (state, action) => {
+      state.usedVideoIdsQueryListData = [];
     });
   },
 });

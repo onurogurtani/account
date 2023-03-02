@@ -1,16 +1,24 @@
 import React, { useCallback, useEffect } from 'react';
-import { confirmDialog, CustomButton, CustomImage, CustomModal, Text } from '../../../../components';
+import {
+  confirmDialog,
+  CustomButton,
+  CustomImage,
+  CustomModal,
+  errorDialog,
+  successDialog,
+  Text,
+} from '../../../../components';
 import modalClose from '../../../../assets/icons/icon-close.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import '../../../../styles/workPlanManagement/questionListModal.scss';
 import { useHistory } from 'react-router-dom';
-import { resetAllData, setIsExit } from '../../../../store/slice/workPlanSlice';
+import { addWorkPlan, resetAllData } from '../../../../store/slice/workPlanSlice';
 
-const QuestionListModal = ({ modalVisible, handleModalVisible, modalTitle, selectedRowData,setIsExit}) => {
+const QuestionListModal = ({ modalVisible, handleModalVisible, modalTitle, selectedRowData, setIsExit }) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { evaluationTab } = useSelector((state) => state?.workPlan);
+  const { evaluationTab, subjectChooseTab, activeKey } = useSelector((state) => state?.workPlan);
 
   const handleClose = useCallback(
     (e) => {
@@ -44,14 +52,65 @@ const QuestionListModal = ({ modalVisible, handleModalVisible, modalTitle, selec
       },
       onCancel: async () => {
         setIsExit(true);
-        await console.log('kaydedildi...');
-        await dispatch(resetAllData());
-        history.push({
-          pathname: '/test-management/assessment-and-evaluation/edit',
-          state: { data: { selectedRowData } },
-        });
+        await saveDrafted(selectedRowData)
+        // await console.log('kaydedildi...');
+        // await dispatch(resetAllData());
+        // history.push({
+        //   pathname: '/test-management/assessment-and-evaluation/edit',
+        //   state: { data: { selectedRowData } },
+        // });
       },
     });
+  };
+
+  const saveDrafted = async (rowData) => {
+
+    if (Object.keys(evaluationTab.selectedRowData).length > 0) {
+
+      const body = {
+        workPLan: {
+          activeKey,
+          asEvId: evaluationTab.selectedRowData.id,
+          videoId: subjectChooseTab.selectedRowVideo.id,
+          publishStatus: 3,
+          classroomId: subjectChooseTab.filterObject.ClassroomId,
+          lessonUnitId: subjectChooseTab.filterObject.LessonUnitIds,
+          lessonSubjectId: subjectChooseTab.filterObject.LessonSubjectIds,
+          lessonId: subjectChooseTab.filterObject.LessonIds,
+          educationYearId: subjectChooseTab.formData.educationYear,
+          // asEvId: 1,
+          workPlanQuestionOfExams: [],
+          workPlanVideos: [],
+          workPlanLessonSubSubjects: [],
+        },
+      };
+
+      const action = await dispatch(addWorkPlan(body));
+      if (addWorkPlan?.fulfilled?.match(action)) {
+        successDialog({
+          title: <Text t='successfullySent' />,
+          message: action.payload?.message,
+          onOk: async () => {
+            console.log('kaydedildi...');
+            await dispatch(resetAllData());
+            history.push({
+              pathname: '/test-management/assessment-and-evaluation/edit',
+              state: { data: { rowData } },
+            });
+          },
+        });
+      } else {
+        errorDialog({
+          title: <Text t='error' />,
+          message: action.payload?.message,
+        });
+      }
+    } else {
+      errorDialog({
+        title: <Text t='error' />,
+        message: 'Lütfen Ölçme ve Değerlendirme testi ekleyiniz...',
+      });
+    }
   };
 
   return (

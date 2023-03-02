@@ -20,7 +20,7 @@ import {
   setSubjectChooseSchoolLevel,
   selectedEvaluationTabRowData,
   resetEvaluationDataList,
-  resetEvaluationQuestionList
+  resetEvaluationQuestionList, getUsedVideoIdsQuery,
 } from '../../../../store/slice/workPlanSlice';
 import { getEducationYears } from '../../../../store/slice/questionFileSlice';
 import { getAllClassStages } from '../../../../store/slice/classStageSlice';
@@ -42,13 +42,13 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
   const { classroomId, setClassroomId, lessonId, setLessonId, unitId, setUnitId } =
     useAcquisitionTree();
 
-  const { subjectChooseTab } = useSelector((state) => state?.workPlan);
+  const { subjectChooseTab,usedVideoIdsQueryListData } = useSelector((state) => state?.workPlan);
   const { educationYears } = useSelector((state) => state?.questionManagement);
   const { allClassList } = useSelector((state) => state?.classStages);
   const { lessons } = useSelector((state) => state?.lessons);
   const { lessonUnits } = useSelector((state) => state?.lessonUnits);
   const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
-  const columns = videoListTableColumn(dispatch, subjectChooseTab);
+  const columns = videoListTableColumn(dispatch, subjectChooseTab, usedVideoIdsQueryListData);
 
   const paginationSetFilteredVideoList = (res) => {
     dispatch(setSubjectChooseVideoFilteredList(res?.payload));
@@ -107,7 +107,7 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
     dispatch(setSubjectChooseData(values));
 
     if (Object.keys(subjectChooseTab.selectedRowVideo).length > 0) {
-      dispatch(onChangeActiveKey('1'));
+      dispatch(onChangeActiveKey('2'));
     } else {
       errorDialog({
         title: <Text t='error' />,
@@ -119,9 +119,13 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
   // filter search videolist
   const handleSearchVideo = async () => {
     const values = await subjectForm.validateFields(['ClassroomId', 'LessonIds', 'LessonUnitIds', 'LessonSubjectIds']);
+    const educationYearVal = await subjectForm.validateFields(['educationYear']);
 
     dispatch(selectedSubjectTabRowVideo({}));
-    dispatch(setSubjectChooseData(values));
+    dispatch(setSubjectChooseData({
+      ...values,
+      educationYear: educationYearVal.educationYear
+    }));
     dispatch(selectedPracticeQuestionTabRowsVideo());
     dispatch(resetPracticeQuestionVideoList());
     dispatch(setOutQuestionTabLessonSubSubjectList());
@@ -152,6 +156,7 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
     if (getByFilterPagedVideos?.fulfilled?.match(action)) {
       await dispatch(setSubjectChooseVideoFilteredList(action?.payload));
       console.log('subjectChooseTab.videos', subjectChooseTab.videos);
+      await dispatch(getUsedVideoIdsQuery())
     }
   };
 

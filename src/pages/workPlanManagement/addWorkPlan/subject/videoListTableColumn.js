@@ -4,7 +4,7 @@ import { CustomButton } from '../../../../components';
 import { selectedSubjectTabRowVideo } from '../../../../store/slice/workPlanSlice';
 import VideoWatchModal from '../../../../components/videoPlayer/VideoWatchModal';
 
-const videoListTableColumn = (dispatch, subjectChooseTab) => {
+const videoListTableColumn = (dispatch, subjectChooseTab, usedVideoIdsQueryListData) => {
 
   const selectedRow = (row) => dispatch(selectedSubjectTabRowVideo(row));
 
@@ -28,6 +28,22 @@ const videoListTableColumn = (dispatch, subjectChooseTab) => {
             );
           })}
         </>
+      ),
+    },
+    {
+      title: '',
+      dataIndex: 'kalturaVideoName',
+      key: 'kalturaVideoName',
+      render: (_, record) => (
+        usedVideoIdsQueryListData?.map((item)=> {
+          if(record.id === item){
+            return (
+              <Tag className='m-1' color='blue' key={record.id}>
+                Daha önce çalışma planına eklenmiş
+              </Tag>
+            );
+          }
+        })
       ),
     },
     {

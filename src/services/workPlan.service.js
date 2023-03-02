@@ -23,10 +23,26 @@ const getByFilterPagedWorkPlans = (data) => {
   });
 };
 
+const addWorkPlan = (data) => {
+  return api({
+    url: `Target/WorkPlans`,
+    method: 'POST',
+    data: data,
+  });
+};
+const getUsedVideoIdsQuery = () => {
+  return api({
+    url: `Target/WorkPlans/getUsedVideoIdsQuery`,
+    method: 'GET',
+  });
+};
+
 const workPlanService = {
   getByFilterPagedQuestionOfExams,
   getAsEvQuestionOfExamsByAsEvId,
-  getByFilterPagedWorkPlans
+  getByFilterPagedWorkPlans,
+  addWorkPlan,
+  getUsedVideoIdsQuery,
 };
 
 export default workPlanService;
