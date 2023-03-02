@@ -7,7 +7,6 @@ import { encryptTransform } from 'redux-persist-transform-encrypt';
 import { authSlice } from './slice/authSlice';
 import { userSlice } from './slice/userSlice';
 import { menuSlice } from './slice/menuSlice';
-import { operationClaimsSlice } from './slice/operationClaimsSlice';
 import { groupsSlice } from './slice/groupsSlice';
 import { userListSlice } from './slice/userListSlice';
 import { avatarFilesSlice } from './slice/avatarSlice';
@@ -65,7 +64,6 @@ const reducers = combineReducers({
     auth: authSlice.reducer,
     user: userSlice.reducer,
     menu: menuSlice.reducer,
-    operationClaims: operationClaimsSlice.reducer,
     groups: groupsSlice.reducer,
     userList: userListSlice.reducer,
     avatarFiles: avatarFilesSlice.reducer,
