@@ -80,11 +80,6 @@ const App = () => {
                                         return (
                                             <Switch>
                                                 <PrivateRoute
-                                                    path={`${match?.path}/role-management`}
-                                                    Component={UserManagement?.RoleManagement}
-                                                    authority="dashboard"
-                                                />
-                                                <PrivateRoute
                                                     path={`${match?.path}/survey-management/add`}
                                                     Component={UserManagement?.AddForm}
                                                     authority="dashboard"
@@ -97,17 +92,6 @@ const App = () => {
                                                 <PrivateRoute
                                                     path={`${match?.path}/survey-management`}
                                                     Component={UserManagement?.SurveyManagement}
-                                                    authority="dashboard"
-                                                />
-
-                                                <PrivateRoute
-                                                    path={`${match?.path}/operation-claims`}
-                                                    Component={UserManagement?.OperationManagement}
-                                                    authority="dashboard"
-                                                />
-                                                <PrivateRoute
-                                                    path={`${match?.path}/role-operation-connect`}
-                                                    Component={UserManagement?.RoleOperationConnect}
                                                     authority="dashboard"
                                                 />
                                                 <PrivateRoute
