@@ -242,9 +242,12 @@ const AddEditCopyPackages = () => {
     };
 
     const beforeUpload = async (file) => {
+        setErrorUpload();
         const isImage = file.type.toLowerCase().includes('image');
         if (!isImage) {
             message.error(`${file.name} bir resim dosyası değil`);
+            setErrorUpload('Lütfen resim uzantılı dosya yükletyin!');
+            return Upload.LIST_IGNORE;
         }
         return false; //disable auto post
         //return isImage || Upload.LIST_IGNORE;
@@ -401,6 +404,9 @@ const AddEditCopyPackages = () => {
         setClassroomId(value.at(-1));
         let selectedClass = allClassList.filter((item) => value.includes(item.id));
         setSelectedClassrooms(selectedClass);
+        if (!selectedClassrooms.some((i) => i.schoolLevel === 30)) {
+            form.setFieldsValue({ packageFieldTypes: 0 });
+        }
     };
 
     const onLessonChange = (value) => {
@@ -413,6 +419,24 @@ const AddEditCopyPackages = () => {
             lesson: removeFromArray(lessonIds, ...findLessonsIds),
         });
     };
+
+    function getCoachServiceList() {
+        return form.getFieldValue('packagePackageTypeEnums') !== PACKAGE_TYPES.CoachService
+            ? coachServiceList.filter((i) => i.id?.toString() !== id?.toString())
+            : [];
+    }
+
+    function getTestExamList() {
+        return form.getFieldValue('packagePackageTypeEnums') !== PACKAGE_TYPES.TestExam
+            ? testExamList.filter((i) => i.id?.toString() !== id?.toString())
+            : [];
+    }
+
+    function getMotivationActivityList() {
+        return form.getFieldValue('packagePackageTypeEnums') !== PACKAGE_TYPES.MotivationEvent
+            ? motivationActivityList.filter((i) => i.id?.toString() !== id?.toString())
+            : [];
+    }
 
     const formRules = [
         {
@@ -559,7 +583,11 @@ const AddEditCopyPackages = () => {
                                 <>
                                     <CustomFormItem
                                         label={false}
-                                        rules={getFieldValue('hasCoachService') ? formRules : []}
+                                        rules={
+                                            getFieldValue('hasCoachService') && getCoachServiceList().length > 0
+                                                ? formRules
+                                                : []
+                                        }
                                         name="coachServicePackages"
                                     >
                                         <span>Pakete Dahil Olan Koçluk Hizmetleri </span>
@@ -567,14 +595,10 @@ const AddEditCopyPackages = () => {
                                             title="Koçluk Hizmeti Listesi"
                                             name="coachServicePackages"
                                             disabled={!getFieldValue('hasCoachService')}
-                                            informationText={'Koçluk Hizmeti Vardır'}
-                                            selectOptionList={
-                                                getFieldValue('packagePackageTypeEnums') !== PACKAGE_TYPES.CoachService
-                                                    ? coachServiceList.filter(
-                                                          (i) => i.id?.toString() !== id?.toString(),
-                                                      )
-                                                    : []
-                                            }
+                                            informationText={`Koçluk Hizmeti ${
+                                                getCoachServiceList().length > 0 ? 'Vardır' : 'Yoktur'
+                                            }`}
+                                            selectOptionList={getCoachServiceList()}
                                         />
                                     </CustomFormItem>
                                 </>
@@ -599,7 +623,9 @@ const AddEditCopyPackages = () => {
                             {({ getFieldValue }) => (
                                 <CustomFormItem
                                     label={false}
-                                    rules={getFieldValue('hasTryingTest') ? formRules : []}
+                                    rules={
+                                        getFieldValue('hasTryingTest') && getTestExamList().length > 0 ? formRules : []
+                                    }
                                     name="testExamPackages"
                                 >
                                     <span>Pakete Dahil Olan Deneme Sınavları </span>
@@ -607,12 +633,10 @@ const AddEditCopyPackages = () => {
                                         title="Deneme Sınavı Listesi"
                                         name="testExamPackages"
                                         disabled={!getFieldValue('hasTryingTest')}
-                                        informationText={'Paketin İçinde Deneme Sınavı Vardır'}
-                                        selectOptionList={
-                                            getFieldValue('packagePackageTypeEnums') !== PACKAGE_TYPES.TestExam
-                                                ? testExamList.filter((i) => i.id?.toString() !== id?.toString())
-                                                : []
-                                        }
+                                        informationText={`Paketin İçinde Deneme Sınavı ${
+                                            getTestExamList().length > 0 ? 'Vardır' : 'Yoktur'
+                                        }`}
+                                        selectOptionList={getTestExamList()}
                                     />
                                 </CustomFormItem>
                             )}
@@ -636,7 +660,11 @@ const AddEditCopyPackages = () => {
                             {({ getFieldValue }) => (
                                 <CustomFormItem
                                     label={false}
-                                    rules={getFieldValue('hasMotivationEvent') ? formRules : []}
+                                    rules={
+                                        getFieldValue('hasMotivationEvent') && getMotivationActivityList().length > 0
+                                            ? formRules
+                                            : []
+                                    }
                                     name="motivationActivityPackages"
                                 >
                                     <span>Pakete Dahil Olan Motivasyon Etkinlikleri </span>
@@ -644,14 +672,10 @@ const AddEditCopyPackages = () => {
                                         title="Motivasyon Etkinlikleri Listesi"
                                         name="motivationActivityPackages"
                                         disabled={!getFieldValue('hasMotivationEvent')}
-                                        informationText={'Paketin İçinde Motivasyon Etkinliği Vardır'}
-                                        selectOptionList={
-                                            getFieldValue('packagePackageTypeEnums') !== PACKAGE_TYPES.MotivationEvent
-                                                ? motivationActivityList.filter(
-                                                      (i) => i.id?.toString() !== id?.toString(),
-                                                  )
-                                                : []
-                                        }
+                                        informationText={`Paketin İçinde Motivasyon Etkinliği ${
+                                            getMotivationActivityList().length > 0 ? 'Vardır' : 'Yoktur'
+                                        }`}
+                                        selectOptionList={getMotivationActivityList()}
                                     />
                                 </CustomFormItem>
                             )}
@@ -715,8 +739,17 @@ const AddEditCopyPackages = () => {
                         ></CustomSelect>
                     </CustomFormItem>
 
-                    <CustomFormItem label={<Text t="Paket Alanı" />} name="packageFieldTypes" rules={formRules}>
-                        <CustomSelect className="form-filter-item" placeholder={'Seçiniz'}>
+                    <CustomFormItem
+                        label={<Text t="Paket Alanı" />}
+                        name="packageFieldTypes"
+                        shouldUpdate={(prevValues, curValues) => prevValues.gradeLevel !== curValues.gradeLevel}
+                        rules={selectedClassrooms.some((i) => i.schoolLevel === 30) ? formRules : []}
+                    >
+                        <CustomSelect
+                            className="form-filter-item"
+                            placeholder={'Seçiniz'}
+                            disabled={!selectedClassrooms.some((i) => i.schoolLevel === 30)}
+                        >
                             {packageFieldTypes?.map((item) => {
                                 return (
                                     <Option key={`packageFieldTypes-${item.value}`} value={item.value}>

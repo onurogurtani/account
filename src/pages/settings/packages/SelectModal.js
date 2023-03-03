@@ -13,12 +13,11 @@ const SelectModal = ({ name, rules, title, disabled, informationText, selectOpti
                 title={title}
                 visible={isOpenModal}
                 onOk={(val) => setIsOpenModal(false)}
-                okText="Kaydet"
-                cancelText="Vazgeç"
                 onCancel={() => {
                     setIsOpenModal(false);
                 }}
                 bodyStyle={{ overflowY: 'auto', maxHeight: 'calc(100vh - 300px)' }}
+                footer={null}
             >
                 <CustomFormItem rules={rules} name={name}>
                     <CustomCheckbox.Group style={{ display: 'flex', flexDirection: 'column' }}>
