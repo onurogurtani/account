@@ -24,7 +24,7 @@ const PackagesList = () => {
     name: { ascend: 'NameASC', descend: 'NameDESC' },
     isActive: { ascend: 'IsActiveASC', descend: 'IsActiveDESC' },
     expiryDate: { ascend: 'FinishDateASC', descend: 'FinishDateDESC' },
-    gradeLevel: { ascend: 'GradeLevelASC', descend: 'GradeLevelDESC' },
+    gradeLevel: { ascend: 'ClassroomASC', descend: 'ClassroomDESC' },
     lesson: { ascend: 'LessonASC', descend: 'LessonDESC' },
     hasTryingTest: { ascend: 'HasTryingTestASC', descend: 'HasTryingTestDESC' },
     hasMotivationEvent: { ascend: 'HasMotivationEventASC', descend: 'HasMotivationEventDESC' },
@@ -86,13 +86,7 @@ const PackagesList = () => {
       dataIndex: 'packageKind',
       key: 'packageKind',
       render: (text, record) => {
-        return (
-          <div>
-            {packageKind.map((item) =>
-              (item.value === text) && item.label
-            )}
-          </div >
-        )
+        return <div>{packageKind.map((item) => item.value === text && item.label)}</div>;
       },
     },
     {
@@ -103,9 +97,9 @@ const PackagesList = () => {
         return (
           <div>
             {items.map((item) => (
-               <Tag color="green" key={item?.packageTypeEnum}>
-                 {packageTypes.find(i=>i.value === item.packageTypeEnum)?.label}
-               </Tag>
+              <Tag color="green" key={item?.packageTypeEnum}>
+                {packageTypes.find((i) => i.value === item.packageTypeEnum)?.label}
+              </Tag>
             ))}
           </div>
         );
@@ -163,7 +157,10 @@ const PackagesList = () => {
       title: 'Sınıf Seviyesi',
       dataIndex: 'gradeLevel',
       key: 'gradeLevel',
-      sorter: (a, b) => a.gradeLevel - b.gradeLevel,
+      sorter: {
+        compare: (a, b) => b?.packageLessons.map((i) => i.lesson.classroom.name).join(" ").localeCompare(a?.packageLessons.map((i) => i.lesson.classroom.name).join(" "), 'tr', { numeric: true }),
+        multiple: 3,
+      },
       sortOrder: sorterObject?.columnKey === 'gradeLevel' ? sorterObject?.order : null,
       render: (text, record) => {
         return <div>{record.packageLessons.map((i) => i.lesson.classroom.name)}</div>;
@@ -173,7 +170,10 @@ const PackagesList = () => {
       title: 'Ders',
       dataIndex: 'lesson',
       key: 'lesson',
-      sorter: (a, b) => a.lesson - b.lesson,
+      sorter: {
+        compare: (a, b) => b?.packageLessons.map((i) => i.lesson.name).join(" ").localeCompare(a?.packageLessons.map((i) => i.lesson.name).join(" "), 'tr', { numeric: true }),
+        multiple: 3,
+      },
       sortOrder: sorterObject?.columnKey === 'lesson' ? sorterObject?.order : null,
       render: (text, record) => {
         return <div>{record.packageLessons.map((i) => i.lesson.name)}</div>;
@@ -187,9 +187,9 @@ const PackagesList = () => {
         return (
           <div>
             {items.map((item) => (
-               <Tag color="green" key={item?.fieldType}>
-                 {packageFieldTypes.find(i=>i.value === item.fieldType)?.label}
-               </Tag>
+              <Tag color="green" key={item?.fieldType}>
+                {packageFieldTypes.find((i) => i.value === item.fieldType)?.label}
+              </Tag>
             ))}
           </div>
         );
@@ -305,7 +305,11 @@ const PackagesList = () => {
           Yeni
         </CustomButton>
         <div className="drafts-count-title">
-          <CustomButton data-testid="search" className="search-btn" onClick={() => setIsPackageFilter((prev) => !prev)}>
+          <CustomButton
+            data-testid="search"
+            className="search-btn"
+            onClick={() => setIsPackageFilter((prev) => !prev)}
+          >
             <CustomImage src={iconSearchWhite} />
           </CustomButton>
         </div>
