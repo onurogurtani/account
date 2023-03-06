@@ -72,7 +72,7 @@ const AddEditCopyPackages = () => {
     const { allGroupList } = useSelector((state) => state?.groups);
     const { documentsList } = useSelector((state) => state?.documents);
     const { coachServiceList, testExamList, motivationActivityList } = useSelector((state) => state?.packages);
-    const { motivationEventList } = useSelector((state) => state?.events);
+    const { events } = useSelector((state) => state?.events);
     const { publisherList } = useSelector((state) => state?.publisher);
     const { contractTypeAllList } = useSelector((state) => state?.contractTypes);
     const { contractKindsByContractTypesList } = useSelector((state) => state?.contractKinds);
@@ -157,7 +157,7 @@ const AddEditCopyPackages = () => {
         if (packageType !== PACKAGE_TYPES.MotivationEvent && motivationActivityList?.length <= 0) {
             dispatch(getByFilterPagedPackages({ PageSize: 1000, PackageTypeEnumIds: PACKAGE_TYPES.MotivationEvent }));
         }
-        if (packageType === PACKAGE_TYPES.MotivationEvent && motivationEventList?.length <= 0) {
+        if (packageType === PACKAGE_TYPES.MotivationEvent) {
             dispatch(getByFilterPagedEvents({ PageSize: 1000, EventTypeCode: 'motivation' }));
         }
     }, [hasMotivationEvent, Form.useWatch('packagePackageTypeEnums', form)]);
@@ -456,7 +456,7 @@ const AddEditCopyPackages = () => {
     function getMotivationActivityList() {
         return form.getFieldValue('packagePackageTypeEnums') !== PACKAGE_TYPES.MotivationEvent
             ? motivationActivityList.filter((i) => i.id?.toString() !== id?.toString())
-            : motivationEventList;
+            : events;
     }
 
     const formRules = [
