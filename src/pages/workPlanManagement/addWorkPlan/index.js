@@ -129,6 +129,17 @@ const AddWorkPlan = () => {
     outQuestionTab,
   ]);
 
+  useEffect(() => {
+    window.addEventListener('beforeunload', alertUser)
+    return () => {
+      window.removeEventListener('beforeunload', alertUser)
+    }
+  })
+
+  const alertUser = (event) => {
+    event.preventDefault()
+    event.returnValue = ''
+  }
 
   const saveDrafted = async (locationPathName) => {
     const body = {
