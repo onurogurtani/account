@@ -230,6 +230,9 @@ const AddEditCopyPackages = () => {
                       (item) => item.motivationActivityPackageId,
                   )
                 : [],
+            packageEvents: currentPackageResponse.payload?.hasMotivationEvent
+                ? currentPackageResponse.payload?.packageEvents?.map((item) => item.eventId)
+                : [],
         });
 
         form.setFieldsValue({
