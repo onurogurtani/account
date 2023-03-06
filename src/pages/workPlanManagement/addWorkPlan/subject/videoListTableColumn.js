@@ -4,9 +4,21 @@ import { CustomButton } from '../../../../components';
 import { selectedSubjectTabRowVideo } from '../../../../store/slice/workPlanSlice';
 import VideoWatchModal from '../../../../components/videoPlayer/VideoWatchModal';
 
-const videoListTableColumn = (dispatch, subjectChooseTab) => {
+const videoListTableColumn = (dispatch, subjectChooseTab, usedVideoIdsQueryListData) => {
 
   const selectedRow = (row) => dispatch(selectedSubjectTabRowVideo(row));
+
+  const filter = (record) => {
+    const res = usedVideoIdsQueryListData?.filter((it) => it === record.id);
+
+    if (res.length > 0) {
+      return (
+        <Tag className='m-1' color='blue' key={record.id}>
+          Daha önce çalışma planına eklenmiş
+        </Tag>
+      );
+    }
+  };
 
   const columns = [
     {
@@ -32,6 +44,14 @@ const videoListTableColumn = (dispatch, subjectChooseTab) => {
     },
     {
       title: '',
+      dataIndex: 'kalturaVideoName',
+      key: 'kalturaVideoName',
+      render: (_, record) => (
+        filter(record)
+      ),
+    },
+    {
+      title: '',
       dataIndex: 'action',
       key: 'action',
       width: 100,
@@ -41,7 +61,6 @@ const videoListTableColumn = (dispatch, subjectChooseTab) => {
           <div className='action-btns'>
 
             <VideoWatchModal
-              // marks={marks}
               className='btn-show btn'
               name={record?.kalturaVideoName}
               kalturaVideoId={record?.kalturaVideoId}
