@@ -13,9 +13,9 @@ const useAdminUserListTableColumns = () => {
 
     const columns = [
         {
-            title: 'Admin Tipi',
-            dataIndex: '???',
-            key: '???',
+            title: 'T.C. Kimlik No',
+            dataIndex: 'citizenId',
+            key: 'citizenId',
             // sorter: true,
             // sortOrder: sorterObject?.columnKey === 'name' ? sorterObject?.order : null,
             render: (text, record) => {
@@ -70,6 +70,16 @@ const useAdminUserListTableColumns = () => {
             // sortOrder: sorterObject?.columnKey === 'name' ? sorterObject?.order : null,
             render: (text, record) => {
                 return <div>{maskedPhone(text)}</div>;
+            },
+        },
+        {
+            title: 'Admin Tipi',
+            dataIndex: 'adminTypeEnum',
+            key: 'adminTypeEnum',
+            // sorter: true,
+            // sortOrder: sorterObject?.columnKey === 'name' ? sorterObject?.order : null,
+            render: (text, record) => {
+                return <div>{text === 1 ? 'Sistem Admin' : 'Kurum Admin'}</div>;
             },
         },
         {

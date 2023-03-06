@@ -30,7 +30,7 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
     const dispatch = useDispatch();
     const { id } = useParams();
     const { allGroupList } = useSelector((state) => state?.groups);
-    const [adminType, setAdminType] = useState();
+    const { adminTypeEnum } = useSelector((state) => state.user.currentUser);
 
     useEffect(() => {
         if (allGroupList.length) return false;
@@ -82,9 +82,6 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
     };
     const validateMessages = { required: 'Lütfen Zorunlu Alanları Doldurunuz.' };
 
-    const onChangeAdminType = (value) => {
-        setAdminType(value);
-    };
     return (
         <div className="add-admin-user-container">
             <CustomForm
@@ -100,28 +97,19 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
                 name="form"
             >
                 <div className="left">
-                    <CustomFormItem rules={[{ required: true }]} label="Admin Tipi" name="???">
-                        <CustomSelect onChange={onChangeAdminType} placeholder="Seçiniz">
-                            {adminTypes.map((item) => (
-                                <Option key={item.id} value={item.id}>
-                                    {item.value}
-                                </Option>
-                            ))}
-                        </CustomSelect>
+                    <CustomFormItem
+                        rules={[{ required: true }, { validator: tcknValidator, message: '11 Karakter İçermelidir' }]}
+                        label="TC Kimlik Numarası"
+                        name="citizenId"
+                    >
+                        <CustomMaskInput maskPlaceholder={null} mask={'99999999999'}>
+                            <CustomInput placeholder="TC Kimlik Numarası" />
+                        </CustomMaskInput>
                     </CustomFormItem>
 
-                    {adminType === 2 && (
-                        <CustomFormItem
-                            rules={[
-                                { required: true },
-                                { validator: tcknValidator, message: '11 Karakter İçermelidir' },
-                            ]}
-                            label="TC Kimlik Numarası"
-                            name="???"
-                        >
-                            <CustomMaskInput maskPlaceholder={null} mask={'99999999999'}>
-                                <CustomInput placeholder="TC Kimlik Numarası" />
-                            </CustomMaskInput>
+                    {isEdit && (
+                        <CustomFormItem label="Kullanıcı Adı" name="userName">
+                            <CustomTextInput disabled placeholder="Kullanıcı Adı" />
                         </CustomFormItem>
                     )}
 
@@ -132,12 +120,6 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
                     <CustomFormItem label="Soyad" name="surName" rules={[{ required: true }, { whitespace: true }]}>
                         <CustomTextInput placeholder="Soyad" />
                     </CustomFormItem>
-
-                    {isEdit && (
-                        <CustomFormItem label="Kullanıcı Adı" name="userName">
-                            <CustomTextInput disabled placeholder="Kullanıcı Adı" />
-                        </CustomFormItem>
-                    )}
 
                     <CustomFormItem
                         label="E-Mail"
@@ -152,7 +134,9 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
                     >
                         <CustomInput placeholder="E-Mail" />
                     </CustomFormItem>
+                </div>
 
+                <div className="right">
                     <CustomFormItem
                         rules={[{ required: true }, { validator: formPhoneRegex, message: 'Geçerli Telefon Giriniz' }]}
                         label="Cep Telefonu"
@@ -162,9 +146,23 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
                             <CustomInput placeholder="Cep Telefonu" />
                         </CustomMaskInput>
                     </CustomFormItem>
-                </div>
 
-                <div className="right">
+                    <CustomFormItem
+                        rules={[{ required: true }]}
+                        initialValue={adminTypeEnum === 2 ? 2 : undefined}
+                        label="Admin Tipi"
+                        name="adminTypeEnum"
+                    >
+                        <CustomSelect placeholder="Seçiniz">
+                            {adminTypes
+                                ?.filter((u) => u.accessType.includes(adminTypeEnum))
+                                ?.map((item) => (
+                                    <Option key={item.id} value={item.id}>
+                                        {item.value}
+                                    </Option>
+                                ))}
+                        </CustomSelect>
+                    </CustomFormItem>
                     <CustomFormItem rules={[{ required: true }]} label="Rol" name="groupIds">
                         <CustomSelect
                             filterOption={(input, option) =>

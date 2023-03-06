@@ -14,7 +14,7 @@ import {
 import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
 import '../../../styles/tableFilter.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { formMailRegex, formPhoneRegex } from '../../../utils/formRule';
+import { formMailRegex, formPhoneRegex, tcknValidator } from '../../../utils/formRule';
 import { getUnmaskedPhone, turkishToLower } from '../../../utils/utils';
 import { getGroupsList } from '../../../store/slice/groupsSlice';
 import { getByFilterPagedAdminUsers, setIsFilter } from '../../../store/slice/adminUserSlice';
@@ -25,7 +25,7 @@ const AdminUserFilter = () => {
     const dispatch = useDispatch();
     const { allGroupList } = useSelector((state) => state?.groups);
     const { filterObject, isFilter } = useSelector((state) => state?.adminUsers);
-
+    const { adminTypeEnum } = useSelector((state) => state.user.currentUser);
     useEffect(() => {
         if (allGroupList.length) return false;
         dispatch(getGroupsList());
@@ -79,14 +79,18 @@ const AdminUserFilter = () => {
                 onFinish={onFinish}
             >
                 <div className="form-item">
-                    <CustomFormItem label="Admin Tipi" name="???">
-                        <CustomSelect allowClear placeholder="Seçiniz">
-                            {adminTypes.map((item) => (
-                                <Option key={item.id} value={item.id}>
-                                    {item.value}
-                                </Option>
-                            ))}
-                        </CustomSelect>
+                    <CustomFormItem
+                        rules={[{ validator: tcknValidator, message: '11 Karakter İçermelidir' }]}
+                        label="TC Kimlik Numarası"
+                        name="CitizenId"
+                    >
+                        <CustomMaskInput mask={'99999999999'}>
+                            <CustomInput placeholder="TC Kimlik Numarası" />
+                        </CustomMaskInput>
+                    </CustomFormItem>
+
+                    <CustomFormItem label="Kullanıcı Adı" rules={[{ whitespace: true }]} name="UserName">
+                        <CustomInput placeholder="Kullanıcı Adı" />
                     </CustomFormItem>
 
                     <CustomFormItem label="Ad" rules={[{ whitespace: true }]} name="Name">
@@ -107,16 +111,24 @@ const AdminUserFilter = () => {
                         </CustomMaskInput>
                     </CustomFormItem>
 
-                    <CustomFormItem label="Kullanıcı Adı" rules={[{ whitespace: true }]} name="UserName">
-                        <CustomInput placeholder="Kullanıcı Adı" />
-                    </CustomFormItem>
-
                     <CustomFormItem
                         label="E-Mail"
                         name="Email"
                         rules={[{ validator: formMailRegex, message: <Text t="enterValidEmail" /> }]}
                     >
                         <CustomInput placeholder="E-Mail" />
+                    </CustomFormItem>
+
+                    <CustomFormItem label="Admin Tipi" name="AdminTypeEnum">
+                        <CustomSelect allowClear placeholder="Seçiniz">
+                            {adminTypes
+                                ?.filter((u) => u.accessType.includes(adminTypeEnum))
+                                ?.map((item) => (
+                                    <Option key={item.id} value={item.id}>
+                                        {item.value}
+                                    </Option>
+                                ))}
+                        </CustomSelect>
                     </CustomFormItem>
 
                     <CustomFormItem label="Rol" name="GroupIds">
