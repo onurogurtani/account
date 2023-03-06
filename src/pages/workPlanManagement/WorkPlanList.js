@@ -7,12 +7,13 @@ import WorkPlanListTable from './WorkPlanListTable';
 import useGetUsers from '../userManagement/userListManagement/hooks/useGetUsers';
 import '../../styles/workPlanManagement/workList.scss';
 import '../../styles/table.scss';
+import useGetWorkPlans from './hooks/useGetWorkPlans';
 
 const WorkPlanList = () => {
   const history = useHistory();
-  useGetUsers((data) => setIsUserFilter(data));
+  useGetWorkPlans((data) => setIsWorkPlansFilter(data));
 
-  const [isUserFilter, setIsUserFilter] = useState(false);
+  const [isWorkPlansFilter, setIsWorkPlansFilter] = useState(false);
   const addUser = () => history.push('/work-plan-management/add');
 
   return (
@@ -22,11 +23,11 @@ const WorkPlanList = () => {
           <CustomButton className="add-btns" onClick={addUser}>
             YENİ ÇALIŞMA PLANI OLUŞTUR
           </CustomButton>
-          <CustomButton data-testid="search" className="search-btn" height={36} onClick={() => setIsUserFilter((prev) => !prev)}>
+          <CustomButton data-testid="search" className="search-btn" height={36} onClick={() => setIsWorkPlansFilter((prev) => !prev)}>
             <CustomImage src={iconSearchWhite} />
           </CustomButton>
         </div>
-        {isUserFilter && <WorkFilter />}
+        {isWorkPlansFilter && <WorkFilter />}
         <WorkPlanListTable />
       </CustomCollapseCard>
     </CustomPageHeader>

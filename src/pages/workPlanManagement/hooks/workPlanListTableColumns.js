@@ -1,16 +1,16 @@
 import { Tag } from 'antd';
 import { CustomButton, DeleteButton } from '../../../components';
 import { deleteUser, setUserStatus } from '../../../store/slice/userListSlice';
+import React from 'react';
 
 const workPlanListTableColumns = () => {
-
   const columns = [
     {
       title: 'Çalışma Planı Adı',
-      dataIndex: 'userType',
-      key: 'userType',
+      dataIndex: 'name',
+      key: 'name',
       render: (text, record) => {
-        return <div>{text?.name}</div>;
+        return <div>{text}</div>;
       },
     },
     {
@@ -19,60 +19,70 @@ const workPlanListTableColumns = () => {
       key: 'status',
       render: (text, record) => {
         return (
-          <Tag color={text ? 'green' : 'red'} key={1}>
-            {text ? 'Aktif' : 'Pasif'}
+          <Tag color={'green'} key={1}>
+            {text}
           </Tag>
         );
       },
     },
     {
       title: 'Sınıf Seviyesi',
-      dataIndex: 'citizenId',
-      key: 'citizenId',
+      dataIndex: 'classroom',
+      key: 'classroom',
       render: (text, record) => {
-        return <div>{text}</div>;
+        return <div>{record.classroom.name}</div>;
       },
     },
     {
       title: 'Ders Adı',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'lesson',
+      key: 'lesson',
       render: (text, record) => {
-        return <div>{text}</div>;
+        return <div>{record.lesson.name}</div>;
       },
     },
     {
       title: 'Konu',
-      dataIndex: 'surName',
-      key: 'surName',
+      dataIndex: 'lessonSubject',
+      key: 'lessonSubject',
       render: (text, record) => {
-        return <div>{text}</div>;
+        return <div>{record.lessonSubject.name}</div>;
       },
     },
     {
       title: 'Kazanım',
-      dataIndex: 'email',
-      key: 'email',
-      render: (text, record) => {
-        return <div>{text}</div>;
-      },
+      dataIndex: 'lessonSubSubjects',
+      key: 'lessonSubSubjects',
+      render: (text, record) => (
+        <>
+          {record.video.lessonSubSubjects?.map((item, id) => {
+            return (
+              <Tag className="m-1" color="gold" key={id}>
+                {item.lessonSubSubject.name}
+              </Tag>
+            );
+          })}
+        </>
+      ),
     },
     {
       title: 'Eğitim Öğretim Yılı',
-      dataIndex: 'isPackages',
-      key: 'isPackages',
+      dataIndex: 'educationYear',
+      key: 'educationYear',
       render: (text, record) => {
-        return <div>{text}</div>;
+        return <div>{record.educationYear.startYear} - {record.educationYear.endYear}</div>;
       },
     },
     {
       title: 'Kullanım Durumu',
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'publishStatus',
+      key: 'publishStatus',
       render: (text, record) => {
         return (
-          <Tag color={text ? 'green' : 'orange'} key={1}>
-            {text ? 'Kullanımda' : 'Taslak'}
+          <Tag
+            color={record.publishStatus === 1 && 'green' || record.publishStatus === 2 && 'orange' || record.publishStatus === 3 && 'orange'}
+            key={1}>
+            {record.publishStatus === 1 && 'Kullanımda' || record.publishStatus === 2 && 'Yayında Değil' || record.publishStatus === 3 && 'Taslak'}
           </Tag>
         );
       },

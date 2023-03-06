@@ -4,18 +4,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { confirmDialog, CustomPageHeader, errorDialog, successDialog, Text } from '../../../components';
 import '../../../styles/workPlanManagement/addWorkPlan.scss';
 import SubjectChoose from './subject';
-import ReinforcementTest from './reinforcement';
 import EvaluationTest from './evaluation';
 import OutQuestion from './outQuestions';
 import PracticeQuestion from './practiceQuestion';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {
   addWorkPlan,
-  onChangeActiveKey,
   resetAllData,
-  setSubjectChooseVideoFilteredList,
 } from '../../../store/slice/workPlanSlice';
-import { getByFilterPagedVideos } from '../../../store/slice/videoSlice';
 
 const AddWorkPlan = () => {
   const { TabPane } = Tabs;
@@ -71,9 +67,9 @@ const AddWorkPlan = () => {
             try {
               setIsExit(true);
 
-              console.log("evaluationTab",evaluationTab)
-              console.log("outQuestionTab",outQuestionTab)
-              console.log("practiceQuestionTab",practiceQuestionTab)
+              console.log('evaluationTab', evaluationTab);
+              console.log('outQuestionTab', outQuestionTab);
+              console.log('practiceQuestionTab', practiceQuestionTab);
               const values = await subjectForm.validateFields();
               if (Object.keys(subjectChooseTab.selectedRowVideo).length === 0) {
                 throw 'deneme';
@@ -110,10 +106,6 @@ const AddWorkPlan = () => {
           onCancel: async () => {
             setIsExit(true);
             await saveDrafted(location.pathname);
-
-            // await console.log('kaydedildi...');
-            // await dispatch(resetAllData());
-            // history.push(location.pathname);
           },
         });
 
@@ -134,7 +126,7 @@ const AddWorkPlan = () => {
     subjectChooseTab,
     evaluationTab,
     practiceQuestionTab,
-    outQuestionTab
+    outQuestionTab,
   ]);
 
 
@@ -149,7 +141,6 @@ const AddWorkPlan = () => {
         lessonSubjectId: subjectChooseTab.filterObject.LessonSubjectIds,
         lessonId: subjectChooseTab.filterObject.LessonIds,
         educationYearId: subjectChooseTab.formData.educationYear,
-        // asEvId: 1,
         workPlanQuestionOfExams: [],
         workPlanVideos: [],
         workPlanLessonSubSubjects: [],
@@ -164,9 +155,9 @@ const AddWorkPlan = () => {
       body.workPLan.asEvId = evaluationTab.selectedRowData.id;
       let arrData = [];
 
-      outQuestionTab?.selectedRowsData.map((item)=> {
+      outQuestionTab?.selectedRowsData.map((item) => {
         arrData.push({ questionOfExamId: item.id });
-      })
+      });
 
       body.workPLan.workPlanQuestionOfExams = arrData;
     }
@@ -176,27 +167,25 @@ const AddWorkPlan = () => {
       let arrOutQuestion = [];
       let arrData = [];
 
-      outQuestionTab?.selectedRowsData.map((item)=> {
+      outQuestionTab?.selectedRowsData.map((item) => {
         arrOutQuestion.push({ questionOfExamId: item.id });
-      })
+      });
 
       body.workPLan.workPlanQuestionOfExams = arrOutQuestion;
 
-      practiceQuestionTab?.selectedRowsVideo.map((item)=> {
+      practiceQuestionTab?.selectedRowsVideo.map((item) => {
         arrData.push({ videoId: item.id });
-      })
+      });
 
       body.workPLan.workPlanVideos = arrData;
     }
 
     const action = await dispatch(addWorkPlan(body));
     if (addWorkPlan?.fulfilled?.match(action)) {
-      debugger;
       successDialog({
         title: <Text t='successfullySent' />,
         message: action.payload?.message,
         onOk: async () => {
-          console.log('kaydedildi...');
           await dispatch(resetAllData());
           history.push(locationPathName);
         },
@@ -233,7 +222,7 @@ const AddWorkPlan = () => {
             <OutQuestion outQuestionForm={outQuestionForm} />
           </TabPane>
           <TabPane tab='Alıştırma Sorusu Ekleme' key='4'>
-            <PracticeQuestion subjectForm={subjectForm} outQuestionForm={outQuestionForm} practiceForm={practiceForm} />
+            <PracticeQuestion subjectForm={subjectForm} outQuestionForm={outQuestionForm} practiceForm={practiceForm} setIsExit={setIsExit} />
           </TabPane>
         </Tabs>
       </div>

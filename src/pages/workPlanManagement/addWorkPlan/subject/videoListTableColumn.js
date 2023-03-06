@@ -8,6 +8,18 @@ const videoListTableColumn = (dispatch, subjectChooseTab, usedVideoIdsQueryListD
 
   const selectedRow = (row) => dispatch(selectedSubjectTabRowVideo(row));
 
+  const filter = (record) => {
+    const res = usedVideoIdsQueryListData?.filter((it) => it === record.id);
+
+    if (res.length > 0) {
+      return (
+        <Tag className='m-1' color='blue' key={record.id}>
+          Daha önce çalışma planına eklenmiş
+        </Tag>
+      );
+    }
+  };
+
   const columns = [
     {
       title: 'VİDEO ADI',
@@ -35,15 +47,7 @@ const videoListTableColumn = (dispatch, subjectChooseTab, usedVideoIdsQueryListD
       dataIndex: 'kalturaVideoName',
       key: 'kalturaVideoName',
       render: (_, record) => (
-        usedVideoIdsQueryListData?.map((item)=> {
-          if(record.id === item){
-            return (
-              <Tag className='m-1' color='blue' key={record.id}>
-                Daha önce çalışma planına eklenmiş
-              </Tag>
-            );
-          }
-        })
+        filter(record)
       ),
     },
     {
@@ -57,7 +61,6 @@ const videoListTableColumn = (dispatch, subjectChooseTab, usedVideoIdsQueryListD
           <div className='action-btns'>
 
             <VideoWatchModal
-              // marks={marks}
               className='btn-show btn'
               name={record?.kalturaVideoName}
               kalturaVideoId={record?.kalturaVideoId}

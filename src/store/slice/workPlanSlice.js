@@ -128,6 +128,15 @@ const initialState = {
       totalCount: 0,
     },
   },
+  isFilter: false,
+  filterObject: {},
+  sorterObject: {},
+  tableProperty: {
+    currentPage: 1,
+    page: 1,
+    pageSize: 0,
+    totalCount: 0,
+  },
 };
 
 export const workPlanSlice = createSlice({
@@ -262,10 +271,17 @@ export const workPlanSlice = createSlice({
       state.evaluationTab.questionList = [];
     });
     builder.addCase(getByFilterPagedWorkPlans.fulfilled, (state, action) => {
-      state.workPlanList = action?.payload?.data?.items;
+      state.workPlanList = action?.payload?.data?.items || [];
+      state.tableProperty = action?.payload?.data?.pagedProperty || {};
     });
     builder.addCase(getByFilterPagedWorkPlans.rejected, (state, action) => {
       state.workPlanList = [];
+      state.tableProperty = {
+        currentPage: 1,
+        page: 1,
+        pageSize: 10,
+        totalCount: 0,
+      };
     });
     builder.addCase(getUsedVideoIdsQuery.fulfilled, (state, action) => {
       state.usedVideoIdsQueryListData = action?.payload?.data;
