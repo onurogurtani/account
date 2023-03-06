@@ -604,6 +604,7 @@ const AddEditCopyPackages = () => {
                                 <>
                                     <CustomFormItem
                                         label={false}
+                                        name="coachServicePackages"
                                         rules={
                                             getFieldValue('hasCoachService') && getCoachServiceList().length > 0
                                                 ? formRules
@@ -643,6 +644,7 @@ const AddEditCopyPackages = () => {
                             {({ getFieldValue }) => (
                                 <CustomFormItem
                                     label={false}
+                                    name="testExamPackages"
                                     rules={
                                         getFieldValue('hasTryingTest') && getTestExamList().length > 0 ? formRules : []
                                     }
@@ -679,6 +681,11 @@ const AddEditCopyPackages = () => {
                             {({ getFieldValue }) => (
                                 <CustomFormItem
                                     label={false}
+                                    name={
+                                        form.getFieldValue('packagePackageTypeEnums') !== PACKAGE_TYPES.MotivationEvent
+                                            ? 'motivationActivityPackages'
+                                            : 'packageEvents'
+                                    }
                                     rules={
                                         getFieldValue('hasMotivationEvent') && getMotivationActivityList().length > 0
                                             ? formRules
