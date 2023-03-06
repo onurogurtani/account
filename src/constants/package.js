@@ -64,3 +64,12 @@ export const packageFieldTypes = [
     label: "Dil",
   },
 ];
+
+export const PACKAGE_TYPES = {
+  Lesson: 10,
+  CoachService: 20,
+  TestExam: 30,
+  MotivationEvent: 40,
+  Free: 50,
+  PrivateLesson: 60,
+};
