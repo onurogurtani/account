@@ -119,6 +119,7 @@ const initialState = {
   filterObject: {},
   sorterObject: {},
   participantGroupsList: [],
+  motivationEventList: [],
 };
 
 export const eventsSlice = createSlice({
@@ -143,6 +144,11 @@ export const eventsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getByFilterPagedEvents.fulfilled, (state, action) => {
+      
+      if (action?.meta?.arg?.EventTypeCode === "motivation") {
+        state.motivationEventList = action?.payload?.data?.items;
+      }
+
       state.events = action?.payload?.data?.items;
       state.tableProperty = action?.payload?.data?.pagedProperty;
     });

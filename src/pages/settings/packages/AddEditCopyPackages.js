@@ -31,6 +31,7 @@ import { getContractTypeAll } from '../../../store/slice/contractTypeSlice';
 import { getListDocuments } from '../../../store/slice/documentsSlice';
 import { getGroupsList } from '../../../store/slice/groupsSlice';
 import { addPackage, getPackageById, updatePackage, getByFilterPagedPackages } from '../../../store/slice/packageSlice';
+import { getByFilterPagedEvents } from '../../../store/slice/eventsSlice';
 import '../../../styles/settings/packages.scss';
 import classes from '../../../styles/surveyManagement/addSurvey.module.scss';
 import { reactQuillValidator } from '../../../utils/formRule';
@@ -71,6 +72,7 @@ const AddEditCopyPackages = () => {
     const { allGroupList } = useSelector((state) => state?.groups);
     const { documentsList } = useSelector((state) => state?.documents);
     const { coachServiceList, testExamList, motivationActivityList } = useSelector((state) => state?.packages);
+    const { motivationEventList } = useSelector((state) => state?.events);
     const { publisherList } = useSelector((state) => state?.publisher);
     const { contractTypeAllList } = useSelector((state) => state?.contractTypes);
     const { contractKindsByContractTypesList } = useSelector((state) => state?.contractKinds);
@@ -149,9 +151,16 @@ const AddEditCopyPackages = () => {
     }, [hasTryingTest]);
 
     useEffect(() => {
-        if (!hasMotivationEvent || motivationActivityList?.length > 0) return;
-        dispatch(getByFilterPagedPackages({ PageSize: 1000, PackageTypeEnumIds: PACKAGE_TYPES.MotivationEvent }));
-    }, [hasMotivationEvent]);
+        if (!hasMotivationEvent) return;
+
+        const packageType = form.getFieldValue('packagePackageTypeEnums');
+        if (packageType !== PACKAGE_TYPES.MotivationEvent && motivationActivityList?.length <= 0) {
+            dispatch(getByFilterPagedPackages({ PageSize: 1000, PackageTypeEnumIds: PACKAGE_TYPES.MotivationEvent }));
+        }
+        if (packageType === PACKAGE_TYPES.MotivationEvent && motivationEventList?.length <= 0) {
+            dispatch(getByFilterPagedEvents({ PageSize: 1000, EventTypeCode: 'motivation' }));
+        }
+    }, [hasMotivationEvent, Form.useWatch('packagePackageTypeEnums', form)]);
 
     useEffect(() => {
         switch (form.getFieldValue('packagePackageTypeEnums')) {
@@ -161,9 +170,9 @@ const AddEditCopyPackages = () => {
             case PACKAGE_TYPES.TestExam:
                 form.setFieldsValue({ testExamList: [] });
                 break;
-            case PACKAGE_TYPES.MotivationEvent:
-                form.setFieldsValue({ motivationActivityList: [] });
-                break;
+            // case PACKAGE_TYPES.MotivationEvent:
+            //     form.setFieldsValue({ motivationActivityList: [] });
+            //     break;
             default:
                 break;
         }
@@ -329,11 +338,20 @@ const AddEditCopyPackages = () => {
                 packagePublishers: values.packagePublishers?.map((item) => ({ publisherId: item })),
                 packageDocuments: values.packageDocuments?.map((item) => ({ documentId: item })),
                 packageContractTypes: values.contractTypeId.map((item) => ({ contractTypeId: item })),
-                coachServicePackages: values.coachServicePackages.map((item) => ({ coachServicePackageId: item })),
+                coachServicePackages: values.coachServicePackages?.map((item) => ({ coachServicePackageId: item })),
                 testExamPackages: values.testExamPackages?.map((item) => ({ testExamPackageId: item })),
-                motivationActivityPackages: values.motivationActivityPackages?.map((item) => ({
-                    motivationActivityPackageId: item,
-                })),
+                motivationActivityPackages:
+                    values.packagePackageTypeEnums !== PACKAGE_TYPES.MotivationEvent
+                        ? values.motivationActivityPackages?.map((item) => ({
+                              motivationActivityPackageId: item,
+                          }))
+                        : [],
+                packageEvents:
+                    values.packagePackageTypeEnums === PACKAGE_TYPES.MotivationEvent
+                        ? values.packageEvents?.map((item) => ({
+                              eventId: item,
+                          }))
+                        : [],
             },
         };
 
@@ -435,7 +453,7 @@ const AddEditCopyPackages = () => {
     function getMotivationActivityList() {
         return form.getFieldValue('packagePackageTypeEnums') !== PACKAGE_TYPES.MotivationEvent
             ? motivationActivityList.filter((i) => i.id?.toString() !== id?.toString())
-            : [];
+            : motivationEventList;
     }
 
     const formRules = [
@@ -588,7 +606,6 @@ const AddEditCopyPackages = () => {
                                                 ? formRules
                                                 : []
                                         }
-                                        name="coachServicePackages"
                                     >
                                         <span>Pakete Dahil Olan Koçluk Hizmetleri </span>
                                         <SelectModal
@@ -626,7 +643,6 @@ const AddEditCopyPackages = () => {
                                     rules={
                                         getFieldValue('hasTryingTest') && getTestExamList().length > 0 ? formRules : []
                                     }
-                                    name="testExamPackages"
                                 >
                                     <span>Pakete Dahil Olan Deneme Sınavları </span>
                                     <SelectModal
@@ -665,12 +681,16 @@ const AddEditCopyPackages = () => {
                                             ? formRules
                                             : []
                                     }
-                                    name="motivationActivityPackages"
                                 >
                                     <span>Pakete Dahil Olan Motivasyon Etkinlikleri </span>
                                     <SelectModal
                                         title="Motivasyon Etkinlikleri Listesi"
-                                        name="motivationActivityPackages"
+                                        name={
+                                            form.getFieldValue('packagePackageTypeEnums') !==
+                                            PACKAGE_TYPES.MotivationEvent
+                                                ? 'motivationActivityPackages'
+                                                : 'packageEvents'
+                                        }
                                         disabled={!getFieldValue('hasMotivationEvent')}
                                         informationText={`Paketin İçinde Motivasyon Etkinliği ${
                                             getMotivationActivityList().length > 0 ? 'Vardır' : 'Yoktur'
