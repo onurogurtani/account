@@ -33,6 +33,7 @@ import QuestionDifficultyReports from './pages/reports/questionDifficulty';
 import OrganisationManagement from './pages/organisationManagement';
 import Exam from './pages/exam/index';
 import Reports from './pages/reports/index';
+import RoleAuthorizationManagement from './pages/roleAuthorizationManagement';
 
 const PrivateRoute = lazy(() =>
     import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -79,11 +80,6 @@ const App = () => {
                                         return (
                                             <Switch>
                                                 <PrivateRoute
-                                                    path={`${match?.path}/role-management`}
-                                                    Component={UserManagement?.RoleManagement}
-                                                    authority="dashboard"
-                                                />
-                                                <PrivateRoute
                                                     path={`${match?.path}/survey-management/add`}
                                                     Component={UserManagement?.AddForm}
                                                     authority="dashboard"
@@ -96,17 +92,6 @@ const App = () => {
                                                 <PrivateRoute
                                                     path={`${match?.path}/survey-management`}
                                                     Component={UserManagement?.SurveyManagement}
-                                                    authority="dashboard"
-                                                />
-
-                                                <PrivateRoute
-                                                    path={`${match?.path}/operation-claims`}
-                                                    Component={UserManagement?.OperationManagement}
-                                                    authority="dashboard"
-                                                />
-                                                <PrivateRoute
-                                                    path={`${match?.path}/role-operation-connect`}
-                                                    Component={UserManagement?.RoleOperationConnect}
                                                     authority="dashboard"
                                                 />
                                                 <PrivateRoute
@@ -693,6 +678,55 @@ const App = () => {
                                                     path={`${match?.path}/video-reports`}
                                                     exact
                                                     Component={Reports.VideoReports}
+                                                    authority="dashboard"
+                                                />
+                                                <PrivateRoute
+                                                    path={`${match?.path}/work-plan-video-reports-add-info`}
+                                                    exact
+                                                    Component={Reports.WorkPlanVideoReportsAdd}
+                                                    authority="dashboard"
+                                                />
+                                                <Route
+                                                    component={() => (
+                                                        <Redirect
+                                                            to={{
+                                                                pathname: '/not-found',
+                                                                state: { status: 404 },
+                                                            }}
+                                                        />
+                                                    )}
+                                                />
+                                            </Switch>
+                                        );
+                                    }}
+                                    authority="dashboard"
+                                    isLayout={false}
+                                />
+                                <PrivateRoute
+                                    path={'/role-authorization-management'}
+                                    Component={({ match }) => {
+                                        return (
+                                            <Switch>
+                                                <PrivateRoute
+                                                    path={`${match?.path}/list`}
+                                                    exact
+                                                    Component={RoleAuthorizationManagement?.RoleAuthorizationList}
+                                                    authority="dashboard"
+                                                />
+                                                <PrivateRoute
+                                                    path={`${match?.path}/add`}
+                                                    exact
+                                                    Component={
+                                                        RoleAuthorizationManagement?.RoleAuthorizationCreateOrEdit
+                                                    }
+                                                    authority="dashboard"
+                                                />
+                                                <PrivateRoute
+                                                    path={`${match?.path}/edit/:id`}
+                                                    exact
+                                                    Component={
+                                                        RoleAuthorizationManagement?.RoleAuthorizationCreateOrEdit
+                                                    }
                                                     authority="dashboard"
                                                 />
                                                 <Route

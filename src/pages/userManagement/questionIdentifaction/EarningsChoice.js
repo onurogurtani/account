@@ -7,7 +7,7 @@ import CustomSelect, { Option } from '../../../components/CustomSelect';
 import CustomCollapseCard from '../../../components/CustomCollapseCard';
 import { getByClassromIdLessons } from '../../../store/slice/lessonsSlice';
 
-const EarningsChoice = ({ classroomId }) => {
+const EarningsChoice = ({ classroomId, updateStatus }) => {
     const { lessonUnits } = useSelector((state) => state?.lessonUnits);
     const { lessonsGetByClassroom } = useSelector((state) => state?.lessons);
     const { earningChoice, lessonIds } = useSelector((state) => state.earningChoice);
@@ -193,13 +193,16 @@ const EarningsChoice = ({ classroomId }) => {
             earningChoice?.subSubjectId?.forEach((element) => {
                 newData.push(element.toString() + '/lessonSubSubject');
             });
-
-            setCheckedKeys(newData);
+            if (updateStatus) {
+                setCheckedKeys(newData);
+            } else {
+                setCheckedKeys([]);
+            }
             setTimeout(() => {
                 setExpandedKeys(newData);
             }, '500');
         }
-    }, [chackedChange, earningChoice]);
+    }, [chackedChange, earningChoice, updateStatus]);
 
     const onCheck = (checkedKeysValue, info) => {
         setCheckedKeys(checkedKeysValue);
@@ -270,12 +273,7 @@ const EarningsChoice = ({ classroomId }) => {
             {selectedLessons.map((item) => {
                 return (
                     <CustomCollapseCard defaultActiveKey={[]} cardTitle={item.name}>
-                        {treeData.length === 0 && (
-                            <Result
-                                status="warning"
-                                title="Uygun Kayıt Bulunamadı"
-                            />
-                        )}
+                        {treeData.length === 0 && <Result status="warning" title="Uygun Kayıt Bulunamadı" />}
                         <Tree
                             onExpand={onExpand}
                             expandedKeys={expandedKeys}
