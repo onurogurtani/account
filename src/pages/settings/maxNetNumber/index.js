@@ -66,7 +66,7 @@ const MaxNetNumber = () => {
             sorter: true,
 
             render: (text, record) => {
-                return <div>{text == true ? 'Aktif' : 'Pasif'}</div>;
+                return <div>{text === true ? 'Aktif' : 'Pasif'}</div>;
             },
         },
         {
@@ -143,7 +143,7 @@ const MaxNetNumber = () => {
         const newData = {
             educationYearId: formAdd.getFieldValue('educationYearId'),
             classroomId: formAdd.getFieldValue('classroomId'),
-            isActive: true,
+            isActive: formAdd.getFieldValue('isActive'),
         };
         const maxNetCountLessons = [];
         Object.keys(formNumberValue).forEach((item, index) => {
@@ -214,6 +214,7 @@ const MaxNetNumber = () => {
                 ...formAdd.getFieldValue(),
                 classroomId: updateData.classroomId,
                 educationYearId: updateData.educationYearId,
+                isActive: updateData.isActive,
             });
             if (updateData.maxNetCountLessons) {
                 const newData = {};
@@ -406,6 +407,12 @@ const MaxNetNumber = () => {
                                                 {item.name}
                                             </Option>
                                         ))}
+                                    </CustomSelect>
+                                </CustomFormItem>
+                                <CustomFormItem name={'isActive'} label="Durumu">
+                                    <CustomSelect>
+                                        <Option value={true}>Aktif</Option>
+                                        <Option value={false}>Pasif</Option>
                                     </CustomSelect>
                                 </CustomFormItem>
                                 <div>
