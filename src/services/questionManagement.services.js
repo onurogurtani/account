@@ -16,11 +16,11 @@ const uploadZipFileOfQuestion = (data) => {
   });
 };
 
-const getPublisherList = () => {
+const getPublisherList = (data) => {
   return api({
     url: `Question/Publishers/getList?PageNumber=0&PageSize=0`,
     method: 'POST',
-    data: null,
+    data: data,
   });
 };
 
