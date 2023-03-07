@@ -143,7 +143,7 @@ const MaxNetNumber = () => {
         const newData = {
             educationYearId: formAdd.getFieldValue('educationYearId'),
             classroomId: formAdd.getFieldValue('classroomId'),
-            isActive: formAdd.getFieldValue('isActive'),
+            isActive: true,
         };
         const maxNetCountLessons = [];
         Object.keys(formNumberValue).forEach((item, index) => {
@@ -151,6 +151,7 @@ const MaxNetNumber = () => {
         });
         newData.maxNetCountLessons = maxNetCountLessons;
         if (updateData.id) {
+            updateData.isActive = formAdd.getFieldValue('isActive');
             setStep(1);
             const action = await dispatch(
                 getMaxNetCountsUpdate({ data: { maxNetCount: { ...newData, id: updateData.id } } }),
@@ -409,12 +410,15 @@ const MaxNetNumber = () => {
                                         ))}
                                     </CustomSelect>
                                 </CustomFormItem>
-                                <CustomFormItem name={'isActive'} label="Durumu">
-                                    <CustomSelect>
-                                        <Option value={true}>Aktif</Option>
-                                        <Option value={false}>Pasif</Option>
-                                    </CustomSelect>
-                                </CustomFormItem>
+                                {updateData.id && (
+                                    <CustomFormItem name={'isActive'} label="Durumu">
+                                        <CustomSelect>
+                                            <Option value={true}>Aktif</Option>
+                                            <Option value={false}>Pasif</Option>
+                                        </CustomSelect>
+                                    </CustomFormItem>
+                                )}
+
                                 <div>
                                     {lessons.map((item, index) => (
                                         <div key={index} className=" add-lessons-item">
