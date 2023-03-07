@@ -33,8 +33,9 @@ const MaxNetNumber = () => {
     const [tableFilter, setTableFilter] = useState(false);
     const [form] = Form.useForm();
     const [formAdd] = Form.useForm();
-
     const [formNumberValue, setFormNumberValue] = useState({});
+    const { maxNetNumberList } = useSelector((state) => state.maxNetNumber);
+
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getEducationYearList({ params: { pageSize: '99999' } }));
@@ -48,7 +49,6 @@ const MaxNetNumber = () => {
             ]),
         );
     }, [dispatch]);
-    const { maxNetNumberList } = useSelector((state) => state.maxNetNumber);
     const columns = [
         {
             title: 'No',
@@ -66,7 +66,7 @@ const MaxNetNumber = () => {
             sorter: true,
 
             render: (text, record) => {
-                return <div>{text == true ? 'Aktif' : 'Pasif'}</div>;
+                return <div>{text === true ? 'Aktif' : 'Pasif'}</div>;
             },
         },
         {
@@ -151,6 +151,7 @@ const MaxNetNumber = () => {
         });
         newData.maxNetCountLessons = maxNetCountLessons;
         if (updateData.id) {
+            updateData.isActive = formAdd.getFieldValue('isActive');
             setStep(1);
             const action = await dispatch(
                 getMaxNetCountsUpdate({ data: { maxNetCount: { ...newData, id: updateData.id } } }),
@@ -214,6 +215,7 @@ const MaxNetNumber = () => {
                 ...formAdd.getFieldValue(),
                 classroomId: updateData.classroomId,
                 educationYearId: updateData.educationYearId,
+                isActive: updateData.isActive,
             });
             if (updateData.maxNetCountLessons) {
                 const newData = {};
@@ -408,6 +410,15 @@ const MaxNetNumber = () => {
                                         ))}
                                     </CustomSelect>
                                 </CustomFormItem>
+                                {updateData.id && (
+                                    <CustomFormItem name={'isActive'} label="Durumu">
+                                        <CustomSelect>
+                                            <Option value={true}>Aktif</Option>
+                                            <Option value={false}>Pasif</Option>
+                                        </CustomSelect>
+                                    </CustomFormItem>
+                                )}
+
                                 <div>
                                     {lessons.map((item, index) => (
                                         <div key={index} className=" add-lessons-item">
