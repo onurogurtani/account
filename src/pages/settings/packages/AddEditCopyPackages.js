@@ -237,10 +237,10 @@ const AddEditCopyPackages = () => {
 
         form.setFieldsValue({
             gradeLevel: currentClassrooms,
-            lesson: currentPackageResponse.payload.packageLessons.map((item) => item.lesson.id),
+            lesson: currentPackageResponse.payload.packageLessons?.map((item) => item.lesson.id),
             packageGroups: currentGroupRole,
             contractTypeId: contractTypeId,
-            packageDocuments: currentPackageResponse.payload.packageDocuments.map((item) => item.document.id),
+            packageDocuments: currentPackageResponse.payload.packageDocuments?.map((item) => item.document.id),
         });
 
         setIsDisable(currentImageArray.length >= 5);
@@ -270,8 +270,10 @@ const AddEditCopyPackages = () => {
     };
 
     const handleUpload = async (images) => {
+        setErrorUpload();
         let imageListArray = [],
-            imageFileIDList = [];
+            imageFileIDList = [],
+            errorList = [];
         for (let i = 0; i < images.length; i++) {
             if (images[i]?.fileId !== undefined) {
                 imageFileIDList.push({ fileId: images[i].fileId });
@@ -304,17 +306,26 @@ const AddEditCopyPackages = () => {
                         return;
                     }
                     setErrorUpload('Dosya yüklenemedi yeniden deneyiniz');
+                    errorList.push(images[i]);
                 }
             }
         }
         form.setFieldsValue({
             imageOfPackages: imageListArray,
         });
-        return imageFileIDList;
+        return [imageFileIDList, errorList];
     };
 
     const onFinish = async (values) => {
         setIsFormSubmitDisable(true);
+
+        const [imageFileIDList, uploadImageErrorList] = await handleUpload(values.imageOfPackages);
+
+        if (uploadImageErrorList.length > 0) {
+            setIsDisable(false);
+            setIsFormSubmitDisable(false);
+            return;
+        }
 
         let lessonsArr = values?.lesson?.map((item) => {
             return { lessonId: item };
@@ -335,7 +346,7 @@ const AddEditCopyPackages = () => {
                 startDate: values.startDate.$d,
                 finishDate: values.endDate.$d,
                 packageLessons: lessonsArr,
-                imageOfPackages: await handleUpload(values.imageOfPackages),
+                imageOfPackages: imageFileIDList,
                 examType: 10, //sınav tipi halihazırda inputtan alınmıyor
                 packageGroups: packageGroups,
                 packagePublishers: values.packagePublishers?.map((item) => ({ publisherId: item })),
@@ -789,7 +800,9 @@ const AddEditCopyPackages = () => {
                             })}
                         </CustomSelect>
                     </CustomFormItem>
-                    <CustomFormItem rules={[{ required: true }]} label="Rol" name="packageGroups">
+                    <CustomFormItem 
+                    // rules={[{ required: true }]} TODO: Roller belirlendikten sonra düzeltilecek.
+                    label="Rol" name="packageGroups">
                         <CustomSelect
                             filterOption={(input, option) =>
                                 turkishToLower(option.children).includes(turkishToLower(input))
