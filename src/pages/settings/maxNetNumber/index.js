@@ -33,8 +33,9 @@ const MaxNetNumber = () => {
     const [tableFilter, setTableFilter] = useState(false);
     const [form] = Form.useForm();
     const [formAdd] = Form.useForm();
-
     const [formNumberValue, setFormNumberValue] = useState({});
+    const { maxNetNumberList } = useSelector((state) => state.maxNetNumber);
+
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getEducationYearList({ params: { pageSize: '99999' } }));
@@ -48,7 +49,6 @@ const MaxNetNumber = () => {
             ]),
         );
     }, [dispatch]);
-    const { maxNetNumberList } = useSelector((state) => state.maxNetNumber);
     const columns = [
         {
             title: 'No',
