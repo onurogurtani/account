@@ -9,7 +9,6 @@ import { useHistory, useLocation, useParams } from 'react-router-dom';
 import {
     confirmDialog,
     CustomButton,
-    CustomCheckbox,
     CustomCollapseCard,
     CustomForm,
     CustomFormItem,
@@ -38,6 +37,7 @@ import { reactQuillValidator } from '../../../utils/formRule';
 import { removeFromArray, turkishToLower } from '../../../utils/utils';
 import DateSection from '../../eventManagement/forms/DateSection';
 import SelectModal from './SelectModal';
+import CheckedSelectList from './CheckedSelectList';
 
 const OPERATION_TYPES = {
     ADD: 'add',
@@ -597,131 +597,39 @@ const AddEditCopyPackages = () => {
                     </CustomFormItem>
                     {errorUpload && <div className="ant-form-item-explain-error">{errorUpload}</div>}
 
-                    <div className="package-books-wrapper">
-                        <CustomFormItem label={false} name="hasCoachService" valuePropName="checked">
-                            <CustomCheckbox>
-                                <Text t="Koçluk Hizmeti Vardır" />
-                            </CustomCheckbox>
-                        </CustomFormItem>
+                    <CheckedSelectList
+                        formRules={formRules}
+                        shouldUpdateWith={['packagePackageTypeEnums']}
+                        checkboxName="hasCoachService"
+                        checkboxLabel="Koçluk Hizmeti Vardır"
+                        listName="coachServicePackages"
+                        listTitle="Koçluk Hizmeti Listesi"
+                        listOptions={getCoachServiceList()}
+                    />
 
-                        <CustomFormItem
-                            noStyle
-                            shouldUpdate={(prevValues, curValues) =>
-                                prevValues.hasCoachService !== curValues.hasCoachService ||
-                                prevValues.packagePackageTypeEnums !== curValues.packagePackageTypeEnums
-                            }
-                        >
-                            {({ getFieldValue }) => (
-                                <>
-                                    <CustomFormItem
-                                        label={false}
-                                        name="coachServicePackages"
-                                        rules={
-                                            getFieldValue('hasCoachService') && getCoachServiceList().length > 0
-                                                ? formRules
-                                                : []
-                                        }
-                                    >
-                                        <span>Pakete Dahil Olan Koçluk Hizmetleri </span>
-                                        <SelectModal
-                                            title="Koçluk Hizmeti Listesi"
-                                            name="coachServicePackages"
-                                            disabled={!getFieldValue('hasCoachService')}
-                                            informationText={`Koçluk Hizmeti ${
-                                                getCoachServiceList().length > 0 ? 'Vardır' : 'Yoktur'
-                                            }`}
-                                            selectOptionList={getCoachServiceList()}
-                                        />
-                                    </CustomFormItem>
-                                </>
-                            )}
-                        </CustomFormItem>
-                    </div>
+                    <CheckedSelectList
+                        formRules={formRules}
+                        shouldUpdateWith={['packagePackageTypeEnums']}
+                        checkboxName="hasTryingTest"
+                        checkboxLabel="Paket İçinde Deneme Sınavı Vardır"
+                        listName="testExamPackages"
+                        listTitle="Deneme Sınavı Listesi"
+                        listOptions={getTestExamList()}
+                    />
 
-                    <div className="has-trying-test-wrapper">
-                        <CustomFormItem label={false} name="hasTryingTest" valuePropName="checked">
-                            <CustomCheckbox>
-                                <Text t="Paket İçinde Deneme Sınavı Vardır" />
-                            </CustomCheckbox>
-                        </CustomFormItem>
-
-                        <CustomFormItem
-                            noStyle
-                            shouldUpdate={(prevValues, curValues) =>
-                                prevValues.hasTryingTest !== curValues.hasTryingTest ||
-                                prevValues.packagePackageTypeEnums !== curValues.packagePackageTypeEnums
-                            }
-                        >
-                            {({ getFieldValue }) => (
-                                <CustomFormItem
-                                    label={false}
-                                    name="testExamPackages"
-                                    rules={
-                                        getFieldValue('hasTryingTest') && getTestExamList().length > 0 ? formRules : []
-                                    }
-                                >
-                                    <span>Pakete Dahil Olan Deneme Sınavları </span>
-                                    <SelectModal
-                                        title="Deneme Sınavı Listesi"
-                                        name="testExamPackages"
-                                        disabled={!getFieldValue('hasTryingTest')}
-                                        informationText={`Paketin İçinde Deneme Sınavı ${
-                                            getTestExamList().length > 0 ? 'Vardır' : 'Yoktur'
-                                        }`}
-                                        selectOptionList={getTestExamList()}
-                                    />
-                                </CustomFormItem>
-                            )}
-                        </CustomFormItem>
-                    </div>
-
-                    <div className="has-trying-test-wrapper">
-                        <CustomFormItem label={false} name="hasMotivationEvent" valuePropName="checked">
-                            <CustomCheckbox>
-                                <Text t="Motivasyon Etkinliklerine Paket Satın Alan Kullanıcıların Erişimi Vardır" />
-                            </CustomCheckbox>
-                        </CustomFormItem>
-
-                        <CustomFormItem
-                            noStyle
-                            shouldUpdate={(prevValues, curValues) =>
-                                prevValues.hasMotivationEvent !== curValues.hasMotivationEvent ||
-                                prevValues.packagePackageTypeEnums !== curValues.packagePackageTypeEnums
-                            }
-                        >
-                            {({ getFieldValue }) => (
-                                <CustomFormItem
-                                    label={false}
-                                    name={
-                                        form.getFieldValue('packagePackageTypeEnums') !== PACKAGE_TYPES.MotivationEvent
-                                            ? 'motivationActivityPackages'
-                                            : 'packageEvents'
-                                    }
-                                    rules={
-                                        getFieldValue('hasMotivationEvent') && getMotivationActivityList().length > 0
-                                            ? formRules
-                                            : []
-                                    }
-                                >
-                                    <span>Pakete Dahil Olan Motivasyon Etkinlikleri </span>
-                                    <SelectModal
-                                        title="Motivasyon Etkinlikleri Listesi"
-                                        name={
-                                            form.getFieldValue('packagePackageTypeEnums') !==
-                                            PACKAGE_TYPES.MotivationEvent
-                                                ? 'motivationActivityPackages'
-                                                : 'packageEvents'
-                                        }
-                                        disabled={!getFieldValue('hasMotivationEvent')}
-                                        informationText={`Paketin İçinde Motivasyon Etkinliği ${
-                                            getMotivationActivityList().length > 0 ? 'Vardır' : 'Yoktur'
-                                        }`}
-                                        selectOptionList={getMotivationActivityList()}
-                                    />
-                                </CustomFormItem>
-                            )}
-                        </CustomFormItem>
-                    </div>
+                    <CheckedSelectList
+                        formRules={formRules}
+                        shouldUpdateWith={['packagePackageTypeEnums']}
+                        checkboxName="hasMotivationEvent"
+                        checkboxLabel="Motivasyon Etkinliklerine Paket Satın Alan Kullanıcıların Erişimi Vardır"
+                        listName={
+                            form.getFieldValue('packagePackageTypeEnums') !== PACKAGE_TYPES.MotivationEvent
+                                ? 'motivationActivityPackages'
+                                : 'packageEvents'
+                        }
+                        listTitle="Motivasyon Etkinlikleri Listesi"
+                        listOptions={getMotivationActivityList()}
+                    />
 
                     <CustomFormItem label={<Text t="Yayınlar" />}>
                         <SelectModal
@@ -800,9 +708,11 @@ const AddEditCopyPackages = () => {
                             })}
                         </CustomSelect>
                     </CustomFormItem>
-                    <CustomFormItem 
-                    // rules={[{ required: true }]} TODO: Roller belirlendikten sonra düzeltilecek.
-                    label="Rol" name="packageGroups">
+                    <CustomFormItem
+                        // rules={[{ required: true }]} TODO: Roller belirlendikten sonra düzeltilecek.
+                        label="Rol"
+                        name="packageGroups"
+                    >
                         <CustomSelect
                             filterOption={(input, option) =>
                                 turkishToLower(option.children).includes(turkishToLower(input))
