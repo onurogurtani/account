@@ -91,7 +91,7 @@ const useAdminUserListTableColumns = () => {
             render: (text, record) => {
                 return (
                     <div>
-                        {text.map((item) => (
+                        {text?.map((item) => (
                             <Tag color="green" key={item?.id}>
                                 {item?.groupName}
                             </Tag>

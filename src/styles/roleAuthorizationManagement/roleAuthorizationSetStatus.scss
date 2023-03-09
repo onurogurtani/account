@@ -1,0 +1,17 @@
+.role-set-status {
+    .message {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+    .confirm-message {
+        font-size: 18px;
+    }
+    .action-btn {
+        display: flex;
+        justify-content: end;
+        gap: 10px;
+    }
+}

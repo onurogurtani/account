@@ -1,26 +1,35 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomFormItem, CustomSelect, Option, OptGroup, warningDialog, Text } from '../../components';
 import TableFilter from '../../components/TableFilter';
 import { recordStatus } from '../../constants';
-import { getByFilterPagedRoleAuthorization, getOperationClaimsList } from '../../store/slice/roleAuthorizationSlice';
+import {
+    getAllRoleList,
+    getByFilterPagedRoles,
+    getOperationClaimsList,
+} from '../../store/slice/roleAuthorizationSlice';
 import { turkishToLower } from '../../utils/utils';
 
 const RoleAuthorizationFilter = ({ isVisibleFilter }) => {
     const dispatch = useDispatch();
-
     const state = (state) => state?.roleAuthorization;
+    const { allRoles, operationClaims, roleAuthorizationDetailSearch } = useSelector(
+        (state) => state.roleAuthorization,
+    );
 
-    const { roles, operationClaims, roleAuthorizationDetailSearch } = useSelector((state) => state.roleAuthorization);
     useEffect(() => {
-        isVisibleFilter && dispatch(getOperationClaimsList());
+        if (!isVisibleFilter) return false;
+        dispatch(getOperationClaimsList());
+        dispatch(getAllRoleList({}));
     }, [dispatch, isVisibleFilter]);
 
     const onFinish = useCallback(
         async (values) => {
+            console.log(values);
+            console.log(Object.is(values, undefined));
             try {
                 const action = await dispatch(
-                    getByFilterPagedRoleAuthorization({
+                    getByFilterPagedRoles({
                         ...roleAuthorizationDetailSearch,
                         pageNumber: 1,
                         body: values,
@@ -40,15 +49,13 @@ const RoleAuthorizationFilter = ({ isVisibleFilter }) => {
         [dispatch, roleAuthorizationDetailSearch],
     );
     const reset = async () => {
-        await dispatch(
-            getByFilterPagedRoleAuthorization({ ...roleAuthorizationDetailSearch, pageNumber: 1, body: {} }),
-        );
+        await dispatch(getByFilterPagedRoles({ ...roleAuthorizationDetailSearch, pageNumber: 1, body: {} }));
     };
     const tableFilterProps = { onFinish, reset, state };
     return (
         <TableFilter {...tableFilterProps}>
             <div className="form-item">
-                <CustomFormItem label="Rol Adı" name="name">
+                <CustomFormItem label="Rol Adı" name="roleIds">
                     <CustomSelect
                         filterOption={(input, option) =>
                             turkishToLower(option.children).includes(turkishToLower(input))
@@ -58,7 +65,7 @@ const RoleAuthorizationFilter = ({ isVisibleFilter }) => {
                         mode="multiple"
                         placeholder="Seçiniz.."
                     >
-                        {roles?.map((item) => {
+                        {allRoles?.map((item) => {
                             return (
                                 <Option key={item?.id} value={item?.id}>
                                     {item?.name}
@@ -68,7 +75,7 @@ const RoleAuthorizationFilter = ({ isVisibleFilter }) => {
                     </CustomSelect>
                 </CustomFormItem>
 
-                <CustomFormItem label="Yetki" name="permission">
+                <CustomFormItem label="Yetki" name="claimNames">
                     <CustomSelect
                         filterOption={(input, option) =>
                             turkishToLower(option.children).includes(turkishToLower(input))
@@ -82,7 +89,7 @@ const RoleAuthorizationFilter = ({ isVisibleFilter }) => {
                             return (
                                 <OptGroup key={item} label={item}>
                                     {operationClaims[item].map((i) => (
-                                        <Option key={i?.id} value={i?.id}>
+                                        <Option key={i?.id} value={i?.name}>
                                             {i?.description}
                                         </Option>
                                     ))}
