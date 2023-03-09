@@ -225,7 +225,7 @@ const EarningsChoice = ({ classroomId, updateStatus }) => {
             });
             setTimeout(() => {
                 setExpandedKeys(newData);
-            }, '500');
+            }, '1000');
         }
     }, [chackedChange, earningChoice, updateStatus, lessonId]);
 
