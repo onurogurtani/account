@@ -524,6 +524,14 @@ const Menus = () => {
                         </span>
                     </MenuItemText>
                 </CustomItem>
+                <CustomItem key="/reports/work-plan-video-reports-add-info">
+                    <MenuItemText>
+                        <CustomImage src={menuIcons} />
+                        <span>
+                            <Text t="Çalışma Planına Bağlanmış Videolar Raporu" />
+                        </span>
+                    </MenuItemText>
+                </CustomItem>
             </CustomSubMenu>
         </CustomMenu>
     );
