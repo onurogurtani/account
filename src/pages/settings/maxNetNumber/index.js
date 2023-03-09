@@ -151,7 +151,7 @@ const MaxNetNumber = () => {
         });
         newData.maxNetCountLessons = maxNetCountLessons;
         if (updateData.id) {
-            updateData.isActive = formAdd.getFieldValue('isActive');
+            newData.isActive = formAdd.getFieldValue('isActive');
             setStep(1);
             const action = await dispatch(
                 getMaxNetCountsUpdate({ data: { maxNetCount: { ...newData, id: updateData.id } } }),
