@@ -1,17 +1,17 @@
 import { api } from './api';
 
-const getFilter = (params) => {
+const getFilter = (data) => {
     return api({
         url: `/Reporting/WorkPlanLinkedVideos/GetFilterPageWorkPlanLinkedVideos`,
         method: 'POST',
-        params,
+        data,
     });
 };
-const getFilterDownload = (params) => {
+const getFilterDownload = (data) => {
     return api({
         url: `/Reporting/WorkPlanLinkedVideos/downloadFile`,
-        method: 'get',
-        params,
+        method: 'POST',
+        data,
         responseType: 'blob',
     });
 };

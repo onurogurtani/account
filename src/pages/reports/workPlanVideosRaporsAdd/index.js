@@ -40,12 +40,13 @@ const WorkPlanVideoReportsAdd = () => {
     const { categories } = useSelector((state) => state?.videos);
     const { videoReportsConnectedList } = useSelector((state) => state.videoReportsConnected);
     const { educationYearList } = useSelector((state) => state.educationYears);
+    const { workPlanList } = useSelector((state) => state?.workPlan);
 
     const columns = [
         {
             title: 'Sınıf Seviyesi',
-            dataIndex: 'id',
-            key: 'id',
+            dataIndex: 'classroomName',
+            key: 'classroomName',
             sorter: true,
             render: (text, record) => {
                 return <div>{text}</div>;
@@ -53,8 +54,8 @@ const WorkPlanVideoReportsAdd = () => {
         },
         {
             title: 'Ders Adı',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'lessonName',
+            key: 'lessonName',
 
             render: (text, record) => {
                 return <div>{text}</div>;
@@ -62,8 +63,8 @@ const WorkPlanVideoReportsAdd = () => {
         },
         {
             title: 'Ünite Adı',
-            dataIndex: 'recordStatus',
-            key: 'recordStatus',
+            dataIndex: 'lessonUnitName',
+            key: 'lessonUnitName',
 
             render: (text, record) => {
                 return <div>{text}</div>;
@@ -71,17 +72,27 @@ const WorkPlanVideoReportsAdd = () => {
         },
         {
             title: 'Konu Adı',
-            dataIndex: 'konu',
-            key: 'konu',
+            dataIndex: 'lessonSubjectName',
+            key: 'lessonSubjectName',
 
             render: (text, record) => {
                 return <div>{text}</div>;
             },
         },
         {
+            title: 'Eğitim Öğretim Yılı',
+            dataIndex: 'educationYearName',
+            key: 'educationYearName',
+
+            render: (text, record) => {
+                return <div>{text}</div>;
+            },
+        },
+
+        {
             title: 'Video Adı',
-            dataIndex: 'video',
-            key: 'video',
+            dataIndex: 'videoName',
+            key: 'videoName',
 
             render: (text, record) => {
                 return <div>{text}</div>;
@@ -89,8 +100,8 @@ const WorkPlanVideoReportsAdd = () => {
         },
         {
             title: 'Video Kategori',
-            dataIndex: 'video',
-            key: 'video',
+            dataIndex: 'videoCategoryName',
+            key: 'videoCategoryName',
 
             render: (text, record) => {
                 return <div>{text}</div>;
@@ -98,8 +109,8 @@ const WorkPlanVideoReportsAdd = () => {
         },
         {
             title: 'Video Kazanımları',
-            dataIndex: 'video',
-            key: 'video',
+            dataIndex: 'outcomeName',
+            key: 'outcomeName',
 
             render: (text, record) => {
                 return <div>{text}</div>;
@@ -107,8 +118,8 @@ const WorkPlanVideoReportsAdd = () => {
         },
         {
             title: 'Bağlı Olduğu Çalışma Planı Adı',
-            dataIndex: 'video',
-            key: 'video',
+            dataIndex: 'workPlanName',
+            key: 'workPlanName',
 
             render: (text, record) => {
                 return <div>{text}</div>;
@@ -148,11 +159,15 @@ const WorkPlanVideoReportsAdd = () => {
 
     const onFinish = async () => {
         const value = form.getFieldsValue();
-        dispatch(videoReportsConnectedGetList({ ...value, PageSize: 10, PageNumber: 1 }));
+        dispatch(
+            videoReportsConnectedGetList({
+                workPlanLinkedVideoDetailSearch: { ...value, PageSize: 10, PageNumber: 1 },
+            }),
+        );
     };
     const getDownload = async (code) => {
         const value = form.getFieldsValue();
-        dispatch(videoReportsConnectedDownload({ ...value, DownloadType: code }));
+        dispatch(videoReportsConnectedDownload({ workPlanLinkedVideoDetailSearch: { ...value }, downloadType: code }));
     };
     return (
         <CustomPageHeader>
@@ -185,15 +200,15 @@ const WorkPlanVideoReportsAdd = () => {
                                                             },
                                                         ]),
                                                     );
-                                                    dispatch(resetLessonUnits());
-                                                    dispatch(resetLessonSubjects());
-                                                    dispatch(resetLessonSubSubjects());
                                                     form.resetFields([
                                                         'LessonId',
                                                         'LessonUnitId',
                                                         'LessonSubjectId',
                                                         'LessonSubSubjectId',
                                                     ]);
+                                                    dispatch(resetLessonUnits());
+                                                    dispatch(resetLessonSubjects());
+                                                    dispatch(resetLessonSubSubjects());
                                                 }}
                                             >
                                                 {allClassList.map((item, index) => (
@@ -205,9 +220,8 @@ const WorkPlanVideoReportsAdd = () => {
                                         </CustomFormItem>
                                     </Col>
                                     <Col span={4}>
-                                        <CustomFormItem label={'Ders'}>
+                                        <CustomFormItem name={'LessonId'} label={'Ders'}>
                                             <CustomSelect
-                                                name={'LessonId'}
                                                 onChange={(e) => {
                                                     dispatch(
                                                         getUnitsList([{ field: 'lessonId', value: e, compareType: 0 }]),
@@ -231,7 +245,7 @@ const WorkPlanVideoReportsAdd = () => {
                                         </CustomFormItem>
                                     </Col>
                                     <Col span={4}>
-                                        <CustomFormItem label={'Ünite'}>
+                                        <CustomFormItem name={'LessonUnitId'} label={'Ünite'}>
                                             <CustomSelect
                                                 onChange={(e) => {
                                                     dispatch(
@@ -308,7 +322,13 @@ const WorkPlanVideoReportsAdd = () => {
                                     </Col>
                                     <Col span={8}>
                                         <CustomFormItem name={'WorkPlanIds'} label={'Bağlı Olduğu Çalışma Planı Adı'}>
-                                            <CustomSelect mode="multiple"></CustomSelect>
+                                            <CustomSelect mode="multiple">
+                                                {workPlanList?.map((item, index) => (
+                                                    <Option value={item.id} key={index}>
+                                                        {item.name}
+                                                    </Option>
+                                                ))}
+                                            </CustomSelect>
                                         </CustomFormItem>
                                     </Col>
                                 </Row>
@@ -325,7 +345,13 @@ const WorkPlanVideoReportsAdd = () => {
                                     >
                                         Temizle
                                     </CustomButton>
-                                    <CustomButton>Flitrele</CustomButton>
+                                    <CustomButton
+                                        onClick={() => {
+                                            form.submit();
+                                        }}
+                                    >
+                                        Flitrele
+                                    </CustomButton>
                                 </div>
                             </CustomForm>
                         </div>
