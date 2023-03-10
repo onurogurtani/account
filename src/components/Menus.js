@@ -525,6 +525,14 @@ const Menus = () => {
                     </MenuItemText>
                 </CustomItem>
             </CustomSubMenu>
+            <CustomItem key="/teachers">
+                <MenuItemText>
+                    <CustomImage src={menuIcons} />
+                    <span>
+                        <Text t="Öğretmenler" />
+                    </span>
+                </MenuItemText>
+            </CustomItem>
         </CustomMenu>
     );
 };
