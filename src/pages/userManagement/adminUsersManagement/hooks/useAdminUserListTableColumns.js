@@ -84,8 +84,8 @@ const useAdminUserListTableColumns = () => {
         },
         {
             title: 'Rol',
-            dataIndex: 'groups',
-            key: 'groups',
+            dataIndex: 'roles',
+            key: 'roles',
             // sorter: true,
             // sortOrder: sorterObject?.columnKey === 'isActive' ? sorterObject?.order : null,
             render: (text, record) => {
@@ -93,7 +93,7 @@ const useAdminUserListTableColumns = () => {
                     <div>
                         {text?.map((item) => (
                             <Tag color="green" key={item?.id}>
-                                {item?.groupName}
+                                {item?.name}
                             </Tag>
                         ))}
                     </div>

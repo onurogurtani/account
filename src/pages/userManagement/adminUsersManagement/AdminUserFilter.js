@@ -19,16 +19,26 @@ import { getUnmaskedPhone, turkishToLower } from '../../../utils/utils';
 import { getGroupsList } from '../../../store/slice/groupsSlice';
 import { getByFilterPagedAdminUsers, setIsFilter } from '../../../store/slice/adminUserSlice';
 import { adminTypes } from '../../../constants/adminUsers';
+import { getAllRoleList } from '../../../store/slice/roleAuthorizationSlice';
 
 const AdminUserFilter = () => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
-    const { allGroupList } = useSelector((state) => state?.groups);
+    const { allRoles } = useSelector((state) => state?.roleAuthorization);
     const { filterObject, isFilter } = useSelector((state) => state?.adminUsers);
     const { adminTypeEnum } = useSelector((state) => state.user.currentUser);
     useEffect(() => {
-        if (allGroupList.length) return false;
-        dispatch(getGroupsList());
+        dispatch(
+            getAllRoleList({
+                data: [
+                    {
+                        field: 'recordStatus',
+                        value: 1,
+                        compareType: 0,
+                    },
+                ],
+            }),
+        );
     }, []);
 
     useEffect(() => {
@@ -131,7 +141,7 @@ const AdminUserFilter = () => {
                         </CustomSelect>
                     </CustomFormItem>
 
-                    <CustomFormItem label="Rol" name="GroupIds">
+                    <CustomFormItem label="Rol" name="RoleIds">
                         <CustomSelect
                             filterOption={(input, option) =>
                                 turkishToLower(option.children).includes(turkishToLower(input))
@@ -141,12 +151,12 @@ const AdminUserFilter = () => {
                             mode="multiple"
                             placeholder="Rol"
                         >
-                            {allGroupList
+                            {allRoles
                                 // ?.filter((item) => item.isActive)
                                 ?.map((item) => {
                                     return (
                                         <Option key={item?.id} value={item?.id}>
-                                            {item?.groupName}
+                                            {item?.name}
                                         </Option>
                                     );
                                 })}
