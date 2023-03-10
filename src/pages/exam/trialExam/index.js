@@ -143,7 +143,8 @@ const TrialExam = () => {
                                     >
                                         <CustomDatePicker disabledDate={disabledEndDate} format={dateFormat} />
                                     </CustomFormItem>
-                                    <CustomFormItem name={'dependLecturingVideo'}>
+
+                                    {/**    <CustomFormItem name={'dependLecturingVideo'}>
                                         <CustomCheckbox
                                             onChange={(e) => {
                                                 setDependLecturingVideo(e.target.checked);
@@ -151,8 +152,7 @@ const TrialExam = () => {
                                         >
                                             Konu anlatım vidosunda bağlı oluştur
                                         </CustomCheckbox>
-                                    </CustomFormItem>
-                                    {dependLecturingVideo && (
+                                    </CustomFormItem>  {dependLecturingVideo && (
                                         <>
                                             <CustomFormItem name={'classId'} label="Sınıf">
                                                 <CustomSelect
@@ -291,7 +291,8 @@ const TrialExam = () => {
                                                 </CustomSelect>
                                             </CustomFormItem>
                                         </>
-                                    )}
+                                    )} */}
+
                                     <CustomFormItem name={'transitionBetweenQuestions'}>
                                         <CustomCheckbox name>Sorular Arası Geçise İzin Ver</CustomCheckbox>
                                     </CustomFormItem>
