@@ -4,7 +4,7 @@ import { CustomTable } from '../../components';
 import usePaginationProps from '../../hooks/usePaginationProps';
 import useRoleAuthorizationListTableColumns from './hooks/useRoleAuthorizationListTableColumns';
 import '../../styles/table.scss';
-import { getByFilterPagedRoleAuthorization } from '../../store/slice/roleAuthorizationSlice';
+import { getByFilterPagedRoles } from '../../store/slice/roleAuthorizationSlice';
 import { capitalizeFirstLetter } from '../../utils/utils';
 
 const RoleAuthorizationListTable = () => {
@@ -15,12 +15,12 @@ const RoleAuthorizationListTable = () => {
     const paginationProps = usePaginationProps(tableProperty);
 
     useEffect(() => {
-        dispatch(getByFilterPagedRoleAuthorization(roleAuthorizationDetailSearch));
+        dispatch(getByFilterPagedRoles());
     }, []);
 
     const onChangeTable = async (pagination, filters, sorter, extra) => {
         dispatch(
-            getByFilterPagedRoleAuthorization({
+            getByFilterPagedRoles({
                 ...roleAuthorizationDetailSearch,
                 pageSize: pagination?.pageSize,
                 pageNumber: pagination?.current,
