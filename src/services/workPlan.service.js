@@ -30,9 +30,17 @@ const addWorkPlan = (data) => {
     data: data,
   });
 };
+
 const getUsedVideoIdsQuery = () => {
   return api({
     url: `Target/WorkPlans/getUsedVideoIdsQuery`,
+    method: 'GET',
+  });
+};
+
+const getWorkPlanNamesQuery = () => {
+  return api({
+    url: `Target/WorkPlans/getWorkPlanNamesQuery`,
     method: 'GET',
   });
 };
@@ -43,6 +51,7 @@ const workPlanService = {
   getByFilterPagedWorkPlans,
   addWorkPlan,
   getUsedVideoIdsQuery,
+  getWorkPlanNamesQuery
 };
 
 export default workPlanService;
