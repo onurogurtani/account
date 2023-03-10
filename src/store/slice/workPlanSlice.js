@@ -45,7 +45,10 @@ export const getByFilterPagedWorkPlans = createAsyncThunk(
   'getByFilterPagedWorkPlans',
   async (data = {}, { getState, dispatch, rejectWithValue }) => {
     try {
-      const response = await workPlanService.getByFilterPagedWorkPlans(data);
+      const response = await workPlanService.getByFilterPagedWorkPlans({
+        workPlanDetailSearch: { ...data, ...data?.body, body: undefined },
+      });
+      dispatch(setFilterObject(data));
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -77,11 +80,24 @@ export const getUsedVideoIdsQuery = createAsyncThunk(
   },
 );
 
+export const getWorkPlanNamesQuery = createAsyncThunk(
+  'getWorkPlanNamesQuery',
+  async (data = {}, { getState, dispatch, rejectWithValue }) => {
+    try {
+      const response = await workPlanService.getWorkPlanNamesQuery();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
 const initialState = {
   activeKey: '0',
   isExit: false,
   workPlanList: [],
   usedVideoIdsQueryListData: [],
+  workPlanNamesListData: [],
   subjectChooseTab: {
     formData: {},
     selectedRowVideo: {},
@@ -129,8 +145,12 @@ const initialState = {
     },
   },
   isFilter: false,
-  filterObject: {},
-  sorterObject: {},
+  workPlanDetailSearch: {
+    pageNumber: 1,
+    pageSize: 10,
+    body: {},
+    orderBy: 'UpdateTimeDESC',
+  },
   tableProperty: {
     currentPage: 1,
     page: 1,
@@ -220,7 +240,6 @@ export const workPlanSlice = createSlice({
       state.outQuestionTab.dataList = [];
     },
     selectedOutQuestionTabRowsData: (state, action) => {
-      console.log('selectedRowsDataOut', state.outQuestionTab.selectedRowsData);
       if (action.payload === undefined) {
         state.outQuestionTab.selectedRowsData = [];
       } else {
@@ -245,6 +264,12 @@ export const workPlanSlice = createSlice({
     },
     resetEvaluationQuestionList: (state, action) => {
       state.evaluationTab.questionList = [];
+    },
+    setIsFilter: (state, action) => {
+      state.isFilter = action.payload;
+    },
+    setFilterObject: (state, action) => {
+      state.workPlanDetailSearch = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -289,6 +314,12 @@ export const workPlanSlice = createSlice({
     builder.addCase(getUsedVideoIdsQuery.rejected, (state, action) => {
       state.usedVideoIdsQueryListData = [];
     });
+    builder.addCase(getWorkPlanNamesQuery.fulfilled, (state, action) => {
+      state.workPlanNamesListData = action?.payload?.data;
+    });
+    builder.addCase(getWorkPlanNamesQuery.rejected, (state, action) => {
+      state.workPlanNamesListData = [];
+    });
   },
 });
 
@@ -311,5 +342,7 @@ export const {
   selectedEvaluationTabRowData,
   setEvaluationFilteredList,
   resetEvaluationDataList,
-  resetEvaluationQuestionList
+  resetEvaluationQuestionList,
+  setIsFilter,
+  setFilterObject,
 } = workPlanSlice.actions;
