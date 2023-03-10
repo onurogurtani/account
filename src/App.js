@@ -34,6 +34,7 @@ import OrganisationManagement from './pages/organisationManagement';
 import Exam from './pages/exam/index';
 import Reports from './pages/reports/index';
 import RoleAuthorizationManagement from './pages/roleAuthorizationManagement';
+import Teachers from './pages/teachers';
 
 const PrivateRoute = lazy(() =>
     import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -738,6 +739,22 @@ const App = () => {
                                                             }}
                                                         />
                                                     )}
+                                                />
+                                            </Switch>
+                                        );
+                                    }}
+                                    authority="dashboard"
+                                    isLayout={false}
+                                />
+                                <PrivateRoute
+                                    path={'/teachers'}
+                                    Component={({ match }) => {
+                                        return (
+                                            <Switch>
+                                                <PrivateRoute
+                                                    path={`${match?.path}/`}
+                                                    Component={Teachers.TeacherList}
+                                                    authority="dashboard"
                                                 />
                                             </Switch>
                                         );

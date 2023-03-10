@@ -12,12 +12,12 @@ import {
     CustomImage,
     CustomSelect,
     Option,
-    Text
+    Text,
 } from '../../../components';
 import {
     getByFilterPagedContractKinds,
     getByFilterPagedDocuments,
-    getFilteredContractTypes
+    getFilteredContractTypes,
 } from '../../../store/slice/contractsSlice';
 import '../../../styles/settings/contracts.scss';
 
@@ -36,7 +36,6 @@ const Filter = () => {
             contractTypeDto: {
                 pageNumber: 1,
                 pageSize: 1000,
-                recordStatus: 1,
             },
         };
         await dispatch(getFilteredContractTypes(typeData));
@@ -130,13 +129,11 @@ const Filter = () => {
                                 width: '100% !important',
                             }}
                         >
-                            {contractTypes
-                                ?.filter((c) => c?.recordStatus !== 0)
-                                ?.map(({ id, name }) => (
-                                    <Option key={id} value={id}>
-                                        {name}
-                                    </Option>
-                                ))}
+                            {contractTypes?.map(({ id, name }) => (
+                                <Option key={id} value={id}>
+                                    {name}
+                                </Option>
+                            ))}
                         </CustomSelect>
                     </CustomFormItem>
                     <CustomFormItem

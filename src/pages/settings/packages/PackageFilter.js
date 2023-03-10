@@ -47,7 +47,7 @@ const PackageFilter = () => {
 
   const loadPublisherList = useCallback(async () => {
     if (publisherList?.length) return false;
-    await dispatch(getPublisherList());
+    await dispatch(getPublisherList({ params: { 'PublisherDetailSearch.PageSize': 1000 } }));
   }, [dispatch]);
 
   const loadRoleGroup = useCallback(async () => {

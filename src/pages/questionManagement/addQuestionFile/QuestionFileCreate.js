@@ -19,6 +19,7 @@ import { getEducationYears, uploadZipFileOfQuestion } from '../../../store/slice
 
 const QuestionFileCreate = ({}) => {
   const [showFileList, setShowFileList] = useState(true);
+  const [uploadDisabled, setUploadDisabled] = useState(false);
 
   const lessons = useSelector((state) => state?.lessons?.lessons);
   const classStages = useSelector((state) => state?.classStages?.allClassList);
@@ -34,6 +35,12 @@ const QuestionFileCreate = ({}) => {
   const onClassroomChange = (value) => {
     setClassroomId(value);
     form.resetFields(['LessonId']);
+  };
+
+  const onUploadChange = (value) => {
+    if(value.fileList.length == 0) {
+      setUploadDisabled(false)
+    }
   };
 
   const onPublisherChange = (value) => {
@@ -81,6 +88,7 @@ const QuestionFileCreate = ({}) => {
       return false;
     } else {
       setShowFileList(true);
+      setUploadDisabled(true)
       return false;
     }
   };
@@ -156,8 +164,8 @@ const QuestionFileCreate = ({}) => {
           </CustomSelect>
         </CustomFormItem>
         <CustomFormItem rules={[{ required: true }]} label="Zip Dosyası Ekle" name="ZipFile">
-          <Upload showUploadList={showFileList} maxCount={1} beforeUpload={beforeUpload}>
-            <CustomButton icon={<UploadOutlined />}>Yükle</CustomButton>
+          <Upload onChange={onUploadChange} showUploadList={showFileList} maxCount={1} beforeUpload={beforeUpload}>
+            <CustomButton disabled={uploadDisabled} icon={<UploadOutlined />}>Yükle</CustomButton>
           </Upload>
         </CustomFormItem>
         <CustomFormItem></CustomFormItem>
