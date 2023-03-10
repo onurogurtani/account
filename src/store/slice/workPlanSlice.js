@@ -92,6 +92,22 @@ export const getWorkPlanNamesQuery = createAsyncThunk(
   },
 );
 
+export const deleteWorkPlan = createAsyncThunk(
+  'deleteWorkPlan',
+  async (data = {}, { getState, dispatch, rejectWithValue }) => {
+    try {
+      const response = await workPlanService.deleteWorkPlan(data);
+      await dispatch(getByFilterPagedWorkPlans(
+        {
+          workPlanDetailSearch: { ...data, ...data?.body, body: undefined },
+        }));
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
 const initialState = {
   activeKey: '0',
   isExit: false,
