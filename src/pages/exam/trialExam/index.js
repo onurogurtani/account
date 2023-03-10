@@ -31,13 +31,14 @@ const TrialExam = () => {
     const [form] = Form.useForm();
     const { trialTypeList } = useSelector((state) => state.trialType);
     const { allClassList } = useSelector((state) => state.classStages);
-    const { lessons } = useSelector((state) => state.lessons);
+    /*  const { lessons } = useSelector((state) => state.lessons);
     const { lessonUnits } = useSelector((state) => state?.lessonUnits);
     const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
     const { lessonSubSubjects } = useSelector((state) => state?.lessonSubSubjects);
     const { videos } = useSelector((state) => state?.videos);
-
     const [dependLecturingVideo, setDependLecturingVideo] = useState(false);
+*/
+
     const disabledEndDate = useCallback(
         (endValue) => {
             const { startDate } = form?.getFieldsValue(['startDate']);
@@ -100,6 +101,24 @@ const TrialExam = () => {
                                                 </Option>
                                             ))}
                                         </CustomSelect>
+                                    </CustomFormItem>
+                                    <CustomFormItem name={'examType'} label="Sınav Türü">
+                                        <CustomSelect
+                                            options={[
+                                                {
+                                                    value: '1',
+                                                    label: 'LGS',
+                                                },
+                                                {
+                                                    value: '2',
+                                                    label: 'TYT',
+                                                },
+                                                {
+                                                    value: '3',
+                                                    label: 'AYT',
+                                                },
+                                            ]}
+                                        ></CustomSelect>
                                     </CustomFormItem>
                                     <CustomFormItem name={'difficulty'} label="Zorluk">
                                         <CustomSelect
