@@ -106,7 +106,7 @@ export const packageSlice = createSlice({
         }
       }
 
-      state.packages = action?.payload?.data?.items.reverse();
+      state.packages = action?.payload?.data?.items;
       state.tableProperty = action?.payload?.data?.pagedProperty;
     });
     builder.addCase(getByFilterPagedPackages.rejected, (state) => {
