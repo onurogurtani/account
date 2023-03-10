@@ -62,7 +62,12 @@ const AnnouncementInfoForm = ({
     const [quillValue] = useState('');
     const [fileImage, setFileImage] = useState(null);
     useEffect(() => {
-        dispatch(getByFilterPagedAnnouncementTypes());
+        let typeData = {
+            pageSize: 1000,
+            pageNumber: 1,
+            isActive: true,
+        };
+        dispatch(getByFilterPagedAnnouncementTypes(typeData));
         if (initialValues) {
             const currentDate = dayjs().utc().format('YYYY-MM-DD-HH-mm');
             const startDate = dayjs(initialValues?.startDate).utc().format('YYYY-MM-DD-HH-mm');
