@@ -45,13 +45,21 @@ const getWorkPlanNamesQuery = () => {
   });
 };
 
+const deleteWorkPlan = (data) => {
+  return api({
+    url: `Target/WorkPlans?id=${data.id}`,
+    method: 'DELETE',
+  });
+};
+
 const workPlanService = {
   getByFilterPagedQuestionOfExams,
   getAsEvQuestionOfExamsByAsEvId,
   getByFilterPagedWorkPlans,
   addWorkPlan,
   getUsedVideoIdsQuery,
-  getWorkPlanNamesQuery
+  getWorkPlanNamesQuery,
+  deleteWorkPlan
 };
 
 export default workPlanService;

@@ -1,6 +1,6 @@
 import { Tag } from 'antd';
 import { CustomButton, DeleteButton } from '../../../components';
-import { deleteUser} from '../../../store/slice/userListSlice';
+import { deleteWorkPlan} from '../../../store/slice/workPlanSlice';
 import React from 'react';
 
 const workPlanListTableColumns = () => {
@@ -99,7 +99,7 @@ const workPlanListTableColumns = () => {
             <CustomButton className='btn detail-btn'>
               DÜZENLE
             </CustomButton>
-            <DeleteButton id={record?.id} deleteAction={deleteUser} />
+            <DeleteButton disabled={record.recordStatus === 1} id={record?.id} deleteAction={deleteWorkPlan} />
             <CustomButton className='btn copy-btn'>
               KOPYALA
             </CustomButton>

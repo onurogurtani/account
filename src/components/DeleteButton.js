@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux';
 import CustomButton from './CustomButton';
 import { confirmDialog, errorDialog } from './CustomDialog';
 
-const DeleteButton = ({ id, deleteAction }) => {
+const DeleteButton = ({ id, deleteAction, disabled= false }) => {
   const dispatch = useDispatch();
   const onDelete = (id) => {
     confirmDialog({
@@ -25,7 +25,7 @@ const DeleteButton = ({ id, deleteAction }) => {
   };
 
   return (
-    <CustomButton className="btn delete-btn" onClick={() => onDelete(id)}>
+    <CustomButton disabled={disabled} className="btn delete-btn" onClick={() => onDelete(id)}>
       SİL
     </CustomButton>
   );
