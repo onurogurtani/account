@@ -14,11 +14,11 @@ const OrganisationList = () => {
     history.push('/organisation-management/add');
   };
   return (
-    <CustomPageHeader title="Kurum Yönetimi" showBreadCrumb showHelpButton routes={['Kurum Yönetimi']}>
-      <CustomCollapseCard cardTitle="Kurum Yönetimi">
+    <CustomPageHeader title="Kurumsal Müşteri Listesi" showBreadCrumb showHelpButton routes={['Kurumsal Müşteri Listesi']}>
+      <CustomCollapseCard cardTitle="Kurumsal Müşteri Listesi">
         <div className="table-header">
           <CustomButton className="add-btn" onClick={addOrganisation}>
-            YENİ KURUM EKLE
+            YENİ MÜŞTERİ EKLE
           </CustomButton>
           <CustomButton data-testid="search" className="search-btn" onClick={() => setIsFilter((prev) => !prev)}>
             <CustomImage src={iconSearchWhite} />

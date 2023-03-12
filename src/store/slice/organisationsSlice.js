@@ -8,7 +8,8 @@ export const getByFilterPagedOrganisations = createAsyncThunk(
       const response = await organisationsServices.getByFilterPagedOrganisations({
         organisationDetailSearch: { ...data, ...data?.body, body: undefined },
       });
-      dispatch(setOrganisationDetailSearch(data));
+     // dispatch(setOrganisationDetailSearch(data));
+      dispatch(setFilterObject(data));
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -28,11 +29,47 @@ export const getOrganisationNames = createAsyncThunk(
   },
 );
 
+export const getOrganisationPackagesNames = createAsyncThunk(
+  'organisations/getOrganisationPackagesNames',
+  async (data = {}, { getState, dispatch, rejectWithValue }) => {
+    try {
+      const response = await organisationsServices.getOrganisationPackagesNames(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
+export const getOrganisationManagerNames = createAsyncThunk(
+  'organisations/getOrganisationManagerNames',
+  async (data = {}, { getState, dispatch, rejectWithValue }) => {
+    try {
+      const response = await organisationsServices.getOrganisationManagerNames(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
+export const getOrganisationDomainNames = createAsyncThunk(
+  'organisations/getOrganisationDomainNames',
+  async (data = {}, { getState, dispatch, rejectWithValue }) => {
+    try {
+      const response = await organisationsServices.getOrganisationDomainNames(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
 export const getByOrganisationId = createAsyncThunk(
   'organisations/getByOrganisationId',
-  async (params = {}, { getState, dispatch, rejectWithValue }) => {
+  async (data,{ getState, dispatch, rejectWithValue }) => {
     try {
-      const response = await organisationsServices.getByOrganisationId(params);
+      const response = await organisationsServices.getByOrganisationId(data?.Id);
       return response;
     } catch (error) {
       return rejectWithValue(error?.data);
@@ -64,6 +101,28 @@ export const updateOrganisation = createAsyncThunk(
   },
 );
 
+export const UpdateOrganisationStatus = createAsyncThunk(
+  'organisations/UpdateOrganisationStatus',
+  async (data = {}, { getState, dispatch, rejectWithValue }) => {
+    try {
+      const response = await organisationsServices.UpdateOrganisationStatus(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
+export const deleteOrganization = createAsyncThunk(
+  'organisations/deleteOrganization', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await organisationsServices.deleteOrganization(data);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+
 export const UpdateOrganisationIsActive = createAsyncThunk(
   'organisations/UpdateOrganisationIsActive',
   async (data = {}, { getState, dispatch, rejectWithValue }) => {
@@ -77,6 +136,7 @@ export const UpdateOrganisationIsActive = createAsyncThunk(
 );
 
 const initialState = {
+  activeStep: 0,
   organisations: [],
   organisationDetailSearch: {
     pageNumber: 1,
@@ -90,14 +150,25 @@ const initialState = {
     pageSize: 10,
     totalCount: 0,
   },
+  isFilter: false,
+  filterObject: {},
 };
 
 export const organisationsSlice = createSlice({
   name: 'organisationsSlice',
   initialState,
   reducers: {
+    onChangeActiveStep: (state, action) => {
+      state.activeStep = action?.payload;
+    },
     setOrganisationDetailSearch: (state, action) => {
       state.organisationDetailSearch = action.payload;
+    },
+    setFilterObject: (state, action) => {
+      state.filterObject = action.payload;
+    },
+    setIsFilter: (state, action) => {
+      state.isFilter = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -113,8 +184,14 @@ export const organisationsSlice = createSlice({
         pageSize: 10,
         totalCount: 0,
       };
+      // builder.addCase(deleteOrganization.fulfilled, (state, action) => {
+      //   const { arg } = action.meta;
+      //   if (arg) {
+      //     state.organisations = state.organisations.filter((item) => item.id !== arg);
+      //   }
+      // });
     });
   },
 });
 
-export const { setOrganisationDetailSearch } = organisationsSlice.actions;
+export const { onChangeActiveStep, setOrganisationDetailSearch , setFilterObject, setIsFilter } = organisationsSlice.actions;

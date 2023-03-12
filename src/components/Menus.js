@@ -274,7 +274,7 @@ const Menus = () => {
         <MenuItemText>
           <CustomImage src={menuIcons} />
           <span>
-            <Text t="Kurum Yönetimi" />
+            <Text t="Kurumsal Müşteri Listesi" />
           </span>
         </MenuItemText>
       </CustomItem>

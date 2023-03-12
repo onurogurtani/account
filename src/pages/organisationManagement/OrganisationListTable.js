@@ -15,7 +15,7 @@ const OrganisationListTable = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  useEffect(() => {
+  useEffect(() => { 
     dispatch(getByFilterPagedOrganisations(organisationDetailSearch));
   }, []);
 
@@ -33,10 +33,9 @@ const OrganisationListTable = () => {
   };
 
   const showOrganisations = (record) => {
-    history.push({
-      pathname: `/organisation-management/show/${record.id}`,
-    });
+    history.push(`/organisation-management/edit/${record.id}`);
   };
+
   return (
     <CustomTable
       dataSource={organisations}
