@@ -109,10 +109,18 @@
     padding: 20px;
     border: 1px solid;
     margin-top: 20px;
+    .view-quesiton-add-main {
+        display: flex;
+        gap: 20px;
+        margin-top: 20px;
+        .ant-select {
+            width: 100px !important;
+            height: 50px;
+        }
+    }
     .question-image-main {
         height: 200px;
         border: 1px solid;
         width: 400px;
-        margin-top: 20px;
     }
 }

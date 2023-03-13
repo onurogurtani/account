@@ -1,6 +1,6 @@
 import { CheckOutlined } from '@ant-design/icons';
 import { Col, Form, Pagination, Row } from 'antd';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     CustomButton,
@@ -32,6 +32,7 @@ const AddQuestion = () => {
     const { questionOfExamsList, pagedProperty } = useSelector((state) => state.questionIdentification);
     const [sectionName, setSectionName] = useState('');
     const [selectSection, setSelectSection] = useState('');
+    const [sortData, setSortData] = useState([]);
 
     const [form] = Form.useForm();
     const dispatch = useDispatch();
@@ -75,7 +76,10 @@ const AddQuestion = () => {
                 };
                 dispatch(setTrialExamFormData({ ...trialExamFormData, sections: [...newData] }));
             } else {
-                const newQuestion = { questionOfExamId: item.id };
+                const newQuestion = {
+                    questionOfExamId: item.id,
+                    filePath: item?.file?.filePath,
+                };
 
                 newData[findIndex] = {
                     ...newData[findIndex],
@@ -86,6 +90,15 @@ const AddQuestion = () => {
         },
         [dispatch, selectSection, trialExamFormData],
     );
+    useEffect(() => {
+        const examLength = trialExamFormData?.sections?.find((q) => q.name === selectSection)?.sectionQuestionOfExams
+            .length;
+        const newData = [];
+        for (let index = 0; index < examLength; index++) {
+            newData.push({ value: index + 1, label: index + 1 });
+        }
+        setSortData(newData);
+    }, [selectSection, trialExamFormData?.sections]);
     return (
         <div className="add-question-trial">
             {step === 1 && (
@@ -139,8 +152,37 @@ const AddQuestion = () => {
                         {trialExamFormData?.sections
                             ?.find((q) => q.name === selectSection)
                             ?.sectionQuestionOfExams.map((item, index) => (
-                                <div key={index} className="question-image-main">
-                                    <img className="question-image" src={item?.file?.base64} />
+                                <div className="view-quesiton-add-main ">
+                                    <CustomSelect
+                                        onChange={(e) => {
+                                            const newSections = [...trialExamFormData.sections];
+                                            const findIndex = trialExamFormData?.sections?.findIndex(
+                                                (q) => q.name === selectSection,
+                                            );
+                                            const newFindIndexSections = { ...trialExamFormData.sections[findIndex] };
+                                            const newSectionQuestionOfExams = [
+                                                ...trialExamFormData.sections[findIndex].sectionQuestionOfExams,
+                                            ];
+
+                                            const changeData = { ...newSectionQuestionOfExams[index] };
+                                            newSectionQuestionOfExams[index] = newSectionQuestionOfExams[e - 1];
+                                            newSectionQuestionOfExams[e - 1] = changeData;
+                                            newFindIndexSections.sectionQuestionOfExams = newSectionQuestionOfExams;
+                                            newSections[findIndex] = newFindIndexSections;
+                                            dispatch(
+                                                setTrialExamFormData({
+                                                    ...trialExamFormData,
+                                                    sections: [...newSections],
+                                                }),
+                                            );
+                                        }}
+                                        value={index + 1}
+                                        options={sortData}
+                                    ></CustomSelect>
+                                    <div key={index} className="question-image-main">
+                                        <img className="question-image" src={item?.file?.base64} />
+                                        {item.filePath}
+                                    </div>
                                 </div>
                             ))}
                     </div>
