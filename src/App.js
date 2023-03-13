@@ -413,6 +413,11 @@ const App = () => {
                                                     Component={Settings?.Contracts}
                                                     authority="dashboard"
                                                 />
+                                                <PrivateRoute
+                                                    path={`${match?.path}/job-settings`}
+                                                    Component={Settings?.JobSettings}
+                                                    authority="dashboard"
+                                                />
                                                 <Route
                                                     component={() => (
                                                         <Redirect

@@ -461,6 +461,14 @@ const Menus = () => {
                         </span>
                     </MenuItemText>
                 </CustomItem>
+                <CustomItem key="/settings/job-settings">
+                    <MenuItemText>
+                        <CustomImage src={menuIcons} />
+                        <span>
+                            <Text t="Jobların Çalışma Rutin Kontrolü" />
+                        </span>
+                    </MenuItemText>
+                </CustomItem>
             </CustomSubMenu>
 
             <CustomSubMenu key="QuestionMenu" title="Soru Yönetimi" icon={<CustomImage src={menuIcons} />}>
