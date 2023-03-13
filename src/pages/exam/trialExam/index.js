@@ -313,10 +313,10 @@ const TrialExam = () => {
                                     )} */}
 
                                     <CustomFormItem name={'transitionBetweenQuestions'}>
-                                        <CustomCheckbox name>Sorular Arası Geçise İzin Ver</CustomCheckbox>
+                                        <CustomCheckbox>Sorular Arası Geçise İzin Ver</CustomCheckbox>
                                     </CustomFormItem>
                                     <CustomFormItem name={'transitionBetweenSections'}>
-                                        <CustomCheckbox name>Bölümler Arası Geçise İzin Ver</CustomCheckbox>
+                                        <CustomCheckbox>Bölümler Arası Geçise İzin Ver</CustomCheckbox>
                                     </CustomFormItem>
                                     <CustomButton type={'sumbit'}>İleri</CustomButton>
                                 </CustomForm>

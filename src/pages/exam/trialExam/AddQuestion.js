@@ -113,6 +113,25 @@ const AddQuestion = () => {
                                     }}
                                 />
                             </div>
+                            <div>
+                                <CustomButton
+                                    type="primary"
+                                    onClick={() => {
+                                        if (trialExamFormData.sections.find((q) => q.name === sectionName)) {
+                                            errorDialog({ title: 'Hata', message: 'Bu isimde bölüm var' });
+                                        } else if (sectionName === '') {
+                                            errorDialog({ title: 'Hata', message: 'Bölüm ismi boş olamaz' });
+                                        } else {
+                                            let newData = [...trialExamFormData.sections];
+                                            newData.push({ name: sectionName, sectionQuestionOfExams: [] });
+                                            dispatch(setTrialExamFormData({ ...trialExamFormData, sections: newData }));
+                                            setSectionName('');
+                                        }
+                                    }}
+                                >
+                                    Bölüm Ekle
+                                </CustomButton>
+                            </div>
                             {trialExamFormData.sections.map((item, index) => (
                                 <div>
                                     <CustomButton
@@ -125,24 +144,6 @@ const AddQuestion = () => {
                                     </CustomButton>
                                 </div>
                             ))}
-
-                            <div>
-                                <CustomButton
-                                    type="primary"
-                                    onClick={() => {
-                                        if (trialExamFormData.sections.find((q) => q.name === sectionName)) {
-                                            errorDialog({ title: 'Hata', message: 'Bu isimde bölüm var' });
-                                        } else {
-                                            let newData = [...trialExamFormData.sections];
-                                            newData.push({ name: sectionName, sectionQuestionOfExams: [] });
-                                            dispatch(setTrialExamFormData({ ...trialExamFormData, sections: newData }));
-                                            setSectionName('');
-                                        }
-                                    }}
-                                >
-                                    Bölüm Ekle
-                                </CustomButton>
-                            </div>
                         </div>
                         <div>
                             <CustomButton>Önizleme</CustomButton>
@@ -185,6 +186,8 @@ const AddQuestion = () => {
                                     </div>
                                 </div>
                             ))}
+                        {trialExamFormData?.sections?.find((q) => q.name === selectSection)?.sectionQuestionOfExams
+                            ?.length === 0 && 'Soru Eklenmedi!'}
                     </div>
                     <div
                         onClick={() => {
@@ -193,6 +196,11 @@ const AddQuestion = () => {
                         className="add-question-button"
                     >
                         <CustomButton>Soru Ekle</CustomButton>
+                    </div>
+                    <div className="step1-action-button">
+                        <CustomButton>İptal</CustomButton>
+                        <CustomButton>Taslak Olarak Kaydet</CustomButton>
+                        <CustomButton>Kaydet Ve Kullanıma Aç</CustomButton>
                     </div>
                 </div>
             )}
@@ -328,6 +336,7 @@ const AddQuestion = () => {
                                         dispatch(resetLessonUnitsFilter());
                                         dispatch(resetLessonSubjectsFilter());
                                         dispatch(resetLessonSubSubjectsFilter());
+                                        form.submit();
                                     }}
                                 >
                                     Temizle
@@ -343,7 +352,8 @@ const AddQuestion = () => {
                             </div>
                         </CustomForm>
                     </div>
-                    <Row>
+                    <div className="quesiton-list"> </div>
+                    <Row gutter={16}>
                         {questionOfExamsList.map((item, index) => (
                             <Col span={8}>
                                 <div key={index}>
@@ -385,18 +395,20 @@ const AddQuestion = () => {
                             </Col>
                         ))}
                     </Row>
-                    <div className=" pagination-right">
-                        <Pagination
-                            current={pagedProperty.currentPage}
-                            showQuickJumper={true}
-                            showLessItems={true}
-                            total={pagedProperty.totalPages}
-                            pageSize={1}
-                            onChange={(e, e2) => {
-                                searchQuesiton(e);
-                            }}
-                        />{' '}
-                    </div>
+                    {questionOfExamsList?.length > 0 && (
+                        <div className=" pagination-right">
+                            <Pagination
+                                current={pagedProperty.currentPage}
+                                showQuickJumper={true}
+                                showLessItems={true}
+                                total={pagedProperty.totalPages}
+                                pageSize={1}
+                                onChange={(e, e2) => {
+                                    searchQuesiton(e);
+                                }}
+                            />{' '}
+                        </div>
+                    )}
 
                     <div className=" footer-question">
                         <CustomButton
@@ -405,8 +417,7 @@ const AddQuestion = () => {
                             }}
                         >
                             Geri
-                        </CustomButton>{' '}
-                        <CustomButton>İleri</CustomButton>
+                        </CustomButton>
                     </div>
                 </div>
             )}
