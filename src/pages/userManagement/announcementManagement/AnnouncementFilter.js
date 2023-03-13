@@ -47,7 +47,11 @@ const AnnouncementFilter = () => {
 
     useEffect(() => {
         form.resetFields();
-        dispatch(getByFilterPagedAnnouncementTypes());
+        let typeData = {
+            pageSize: 1000,
+            pageNumber: 1,
+        };
+        dispatch(getByFilterPagedAnnouncementTypes(typeData));
     }, []);
 
     const handleClear = useCallback(async () => {
