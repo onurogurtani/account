@@ -122,6 +122,7 @@ const WorkFilter = () => {
           body: values,
           PageNumber: 1,
         };
+        body.body.classroomIds= [values.classroomIds]
         await dispatch(getByFilterPagedWorkPlans(body));
         await dispatch(setIsFilter(true));
       } catch (e) {
