@@ -13,6 +13,7 @@ import {
     CustomForm,
     CustomFormItem,
     CustomInput,
+    CustomPageHeader,
     CustomRadio,
     CustomRadioGroup,
     CustomSelect,
@@ -82,9 +83,9 @@ const AddEditCopyPackages = () => {
     const hasCoachService = Form.useWatch('hasCoachService', form) || false;
     const hasTryingTest = Form.useWatch('hasTryingTest', form) || false;
     const hasMotivationEvent = Form.useWatch('hasMotivationEvent', form) || false;
-    
+
     const activeClassList = useMemo(() => allClassList.filter(item => item.isActive === true), [allClassList]);
-    
+
     useEffect(() => {
         if (allGroupList.length) return false;
         dispatch(getGroupsList());
@@ -408,9 +409,7 @@ const AddEditCopyPackages = () => {
             successDialog({
                 title: <Text t="success" />,
                 message: action?.payload.message,
-                onOk: async () => {
-                    history.push('/settings/packages');
-                },
+                onOk: async () => historyPushBack(),
             });
         } else {
             errorDialog({
@@ -428,9 +427,7 @@ const AddEditCopyPackages = () => {
             message: 'İptal etmek istediğinizden emin misiniz?',
             okText: 'Evet',
             cancelText: 'Hayır',
-            onOk: async () => {
-                history.push('/settings/packages');
-            },
+            onOk: async () => historyPushBack(),
         });
     };
 
@@ -453,6 +450,10 @@ const AddEditCopyPackages = () => {
             lesson: removeFromArray(lessonIds, ...findLessonsIds),
         });
     };
+
+    function historyPushBack() {
+        history.push('/settings/packages');
+    }
 
     function getCoachServiceList() {
         return form.getFieldValue('packagePackageTypeEnums') !== PACKAGE_TYPES.CoachService
@@ -486,311 +487,322 @@ const AddEditCopyPackages = () => {
     };
 
     return (
-        <CustomCollapseCard cardTitle={TITLES[operationType]}>
-            <div className="add-packages-container">
-                <CustomForm
-                    name="packagesInfo"
-                    className="addPackagesInfo-link-form"
-                    form={form}
-                    autoComplete="off"
-                    layout={'horizontal'}
-                    onFinish={onFinish}
-                >
-                    <CustomFormItem
-                        label={<Text t="Paket Adı" />}
-                        name="name"
-                        rules={[
-                            ...formRules,
-                            { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-                        ]}
+        <CustomPageHeader title={TITLES[operationType]} routes={['Ayarlar', 'Paketler']} showBreadCrumb>
+            <CustomButton
+                type="primary"
+                htmlType="submit"
+                className="submit-btn"
+                onClick={historyPushBack}
+                style={{ marginBottom: '1em' }}
+            >
+                Geri
+            </CustomButton>
+            <CustomCollapseCard cardTitle={TITLES[operationType]}>
+                <div className="add-packages-container">
+                    <CustomForm
+                        name="packagesInfo"
+                        className="addPackagesInfo-link-form"
+                        form={form}
+                        autoComplete="off"
+                        layout={'horizontal'}
+                        onFinish={onFinish}
                     >
-                        <CustomInput placeholder={'Paket Adı'} />
-                    </CustomFormItem>
-                    <CustomFormItem
-                        className={classes['ant-form-item']}
-                        label={<Text t="Paket Tipi" />}
-                        name="packageKind"
-                        rules={formRules}
-                    >
-                        <CustomRadioGroup
-                            className={classes.radioGroup}
-                            style={{ display: 'flex', flexDirection: 'row' }}
+                        <CustomFormItem
+                            label={<Text t="Paket Adı" />}
+                            name="name"
+                            rules={[
+                                ...formRules,
+                                { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+                            ]}
                         >
-                            {packageKind.map((radio, index) => (
-                                <CustomRadio key={index} value={radio.value} className={classes.radio} checked={true}>
-                                    {radio.label}
-                                </CustomRadio>
-                            ))}
-                        </CustomRadioGroup>
-                    </CustomFormItem>
-                    <CustomFormItem label={<Text t="Paket Türü" />} name="packagePackageTypeEnums" rules={formRules}>
-                        <CustomSelect className="form-filter-item" placeholder={'Seçiniz'}>
-                            {packageTypes?.map((item) => {
-                                return (
-                                    <Option key={`packageTypeList-${item.value}`} value={item.value}>
-                                        <Text t={item.label} />
-                                    </Option>
-                                );
-                            })}
-                        </CustomSelect>
-                    </CustomFormItem>
-
-                    <CustomFormItem
-                        label={<Text t="Paket Özeti" />}
-                        name="summary"
-                        rules={[
-                            ...formRules,
-                            { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-                        ]}
-                    >
-                        <CustomInput placeholder={'Paket Özeti'} />
-                    </CustomFormItem>
-
-                    <CustomFormItem
-                        className="editor"
-                        label={<Text t="Paket İçeriği" />}
-                        name="content"
-                        rules={[
-                            ...formRules,
-                            {
-                                validator: reactQuillValidator,
-                                message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
-                            },
-                            {
-                                type: 'string',
-                                max: 2500,
-                                message: 'Duyurunuz En fazla 2500 Karakter İçerebilir.',
-                            },
-                        ]}
-                    >
-                        <ReactQuill className={isErrorReactQuill ? 'quill-error' : ''} theme="snow" />
-                    </CustomFormItem>
-
-                    <CustomFormItem
-                        label="Paket Görseli"
-                        name="imageOfPackages"
-                        valuePropName="fileList"
-                        getValueFromEvent={normFile}
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Lütfen dosya seçiniz.',
-                            },
-                        ]}
-                    >
-                        <Upload
-                            name="files"
-                            maxCount={5}
-                            multiple={true}
-                            showUploadList={{
-                                showRemoveIcon: true,
-                                removeIcon: <DeleteOutlined onClick={(e) => handleCancelFileUpload()} />,
-                            }}
-                            beforeUpload={beforeUpload}
-                            onChange={(e) => {
-                                e.fileList.length >= 5 ? setIsDisable(true) : setIsDisable(false);
-                            }}
-                            accept="image/*"
+                            <CustomInput placeholder={'Paket Adı'} />
+                        </CustomFormItem>
+                        <CustomFormItem
+                            className={classes['ant-form-item']}
+                            label={<Text t="Paket Tipi" />}
+                            name="packageKind"
+                            rules={formRules}
                         >
-                            <Button disabled={isDisable} icon={<UploadOutlined />}>
-                                Upload
-                            </Button>
-                        </Upload>
-                    </CustomFormItem>
-                    {errorUpload && <div className="ant-form-item-explain-error">{errorUpload}</div>}
-
-                    <CheckedSelectList
-                        formRules={formRules}
-                        shouldUpdateWith={['packagePackageTypeEnums']}
-                        checkboxName="hasCoachService"
-                        checkboxLabel="Koçluk Hizmeti Vardır"
-                        listName="coachServicePackages"
-                        listTitle="Koçluk Hizmeti Listesi"
-                        listOptions={getCoachServiceList()}
-                    />
-
-                    <CheckedSelectList
-                        formRules={formRules}
-                        shouldUpdateWith={['packagePackageTypeEnums']}
-                        checkboxName="hasTryingTest"
-                        checkboxLabel="Paket İçinde Deneme Sınavı Vardır"
-                        listName="testExamPackages"
-                        listTitle="Deneme Sınavı Listesi"
-                        listOptions={getTestExamList()}
-                    />
-
-                    <CheckedSelectList
-                        formRules={formRules}
-                        shouldUpdateWith={['packagePackageTypeEnums']}
-                        checkboxName="hasMotivationEvent"
-                        checkboxLabel="Motivasyon Etkinliklerine Paket Satın Alan Kullanıcıların Erişimi Vardır"
-                        listName={
-                            form.getFieldValue('packagePackageTypeEnums') !== PACKAGE_TYPES.MotivationEvent
-                                ? 'motivationActivityPackages'
-                                : 'packageEvents'
-                        }
-                        listTitle="Motivasyon Etkinlikleri Listesi"
-                        listOptions={getMotivationActivityList()}
-                    />
-
-                    <CustomFormItem label={<Text t="Yayınlar" />}>
-                        <SelectModal
-                            title="Yayın Evleri Listesi"
-                            name="packagePublishers"
-                            selectOptionList={publisherList?.items?.filter((i) => i.recordStatus === 1)}
-                        />
-                    </CustomFormItem>
-
-                    <CustomFormItem label={<Text t="Durumu" />} name="isActive" rules={formRules}>
-                        <CustomSelect className="form-filter-item" placeholder={'Seçiniz'}>
-                            <Option key={'true'} value={true}>
-                                <Text t={'Aktif'} />
-                            </Option>{' '}
-                            <Option key={false} value={false}>
-                                <Text t={'Pasive'} />
-                            </Option>
-                        </CustomSelect>
-                    </CustomFormItem>
-
-                    <DateSection form={form} />
-
-                    <CustomFormItem label={<Text t="Sınıf Seviyesi" />} name="gradeLevel" rules={formRules}>
-                        <CustomSelect
-                            className="form-filter-item"
-                            placeholder={'Seçiniz'}
-                            filterOption={(input, option) =>
-                                turkishToLower(option.children).includes(turkishToLower(input))
-                            }
-                            showArrow
-                            mode="multiple"
-                            onDeselect={onClassroomsDeselect}
-                            onChange={onClassroomChange}
-                        >
-                            {activeClassList?.map((item) => {
-                                return (
-                                    <Option key={item?.id} value={item?.id}>
-                                        {item?.name}
-                                    </Option>
-                                );
-                            })}
-                        </CustomSelect>
-                    </CustomFormItem>
-
-                    <CustomFormItem label="Ders" name="lesson" rules={formRules}>
-                        <CustomSelect
-                            className="form-filter-item"
-                            placeholder={'Seçiniz'}
-                            filterOption={(input, option) =>
-                                turkishToLower(option.children).includes(turkishToLower(input))
-                            }
-                            showArrow
-                            mode="multiple"
-                            onChange={onLessonChange}
-                            options={lessonsOptions}
-                        ></CustomSelect>
-                    </CustomFormItem>
-
-                    <CustomFormItem
-                        label={<Text t="Paket Alanı" />}
-                        name="packageFieldTypes"
-                        shouldUpdate={(prevValues, curValues) => prevValues.gradeLevel !== curValues.gradeLevel}
-                        rules={selectedClassrooms.some((i) => i.schoolLevel === 30) ? formRules : []}
-                    >
-                        <CustomSelect
-                            className="form-filter-item"
-                            placeholder={'Seçiniz'}
-                            disabled={!selectedClassrooms.some((i) => i.schoolLevel === 30)}
-                        >
-                            {packageFieldTypes?.map((item) => {
-                                return (
-                                    <Option key={`packageFieldTypes-${item.value}`} value={item.value}>
-                                        <Text t={item.label} />
-                                    </Option>
-                                );
-                            })}
-                        </CustomSelect>
-                    </CustomFormItem>
-                    <CustomFormItem
-                        // rules={[{ required: true }]} TODO: Roller belirlendikten sonra düzeltilecek.
-                        label="Rol"
-                        name="packageGroups"
-                    >
-                        <CustomSelect
-                            filterOption={(input, option) =>
-                                turkishToLower(option.children).includes(turkishToLower(input))
-                            }
-                            showArrow
-                            mode="multiple"
-                            placeholder="Rol"
-                        >
-                            {allGroupList
-                                ?.filter((item) => item.isPackageRole)
-                                ?.map((item) => {
+                            <CustomRadioGroup
+                                className={classes.radioGroup}
+                                style={{ display: 'flex', flexDirection: 'row' }}
+                            >
+                                {packageKind.map((radio, index) => (
+                                    <CustomRadio key={index} value={radio.value} className={classes.radio} checked={true}>
+                                        {radio.label}
+                                    </CustomRadio>
+                                ))}
+                            </CustomRadioGroup>
+                        </CustomFormItem>
+                        <CustomFormItem label={<Text t="Paket Türü" />} name="packagePackageTypeEnums" rules={formRules}>
+                            <CustomSelect className="form-filter-item" placeholder={'Seçiniz'}>
+                                {packageTypes?.map((item) => {
                                     return (
-                                        <Option key={item?.id} value={item?.id}>
-                                            {item?.groupName}
+                                        <Option key={`packageTypeList-${item.value}`} value={item.value}>
+                                            <Text t={item.label} />
                                         </Option>
                                     );
                                 })}
-                        </CustomSelect>
-                    </CustomFormItem>
-                    <CustomFormItem
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Lütfen Zorunlu Alanları Doldurunuz.',
-                            },
-                        ]}
-                        label="Sözleşme Tipi"
-                        name="contractTypeId"
-                    >
-                        <CustomSelect
-                            placeholder="Seçiniz"
-                            mode="multiple"
-                            showArrow
-                            onChange={(values) => {
-                                form.resetFields(['packageDocuments']);
-                                dispatch(getContractKindsByContractTypes({ Ids: values }));
-                            }}
+                            </CustomSelect>
+                        </CustomFormItem>
+
+                        <CustomFormItem
+                            label={<Text t="Paket Özeti" />}
+                            name="summary"
+                            rules={[
+                                ...formRules,
+                                { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+                            ]}
                         >
-                            {contractTypeAllList.map((item) => (
-                                <Option key={item.id} value={item.id}>
-                                    {item?.name}
+                            <CustomInput placeholder={'Paket Özeti'} />
+                        </CustomFormItem>
+
+                        <CustomFormItem
+                            className="editor"
+                            label={<Text t="Paket İçeriği" />}
+                            name="content"
+                            rules={[
+                                ...formRules,
+                                {
+                                    validator: reactQuillValidator,
+                                    message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
+                                },
+                                {
+                                    type: 'string',
+                                    max: 2500,
+                                    message: 'Duyurunuz En fazla 2500 Karakter İçerebilir.',
+                                },
+                            ]}
+                        >
+                            <ReactQuill className={isErrorReactQuill ? 'quill-error' : ''} theme="snow" />
+                        </CustomFormItem>
+
+                        <CustomFormItem
+                            label="Paket Görseli"
+                            name="imageOfPackages"
+                            valuePropName="fileList"
+                            getValueFromEvent={normFile}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Lütfen dosya seçiniz.',
+                                },
+                            ]}
+                        >
+                            <Upload
+                                name="files"
+                                maxCount={5}
+                                multiple={true}
+                                showUploadList={{
+                                    showRemoveIcon: true,
+                                    removeIcon: <DeleteOutlined onClick={(e) => handleCancelFileUpload()} />,
+                                }}
+                                beforeUpload={beforeUpload}
+                                onChange={(e) => {
+                                    e.fileList.length >= 5 ? setIsDisable(true) : setIsDisable(false);
+                                }}
+                                accept="image/*"
+                            >
+                                <Button disabled={isDisable} icon={<UploadOutlined />}>
+                                    Upload
+                                </Button>
+                            </Upload>
+                        </CustomFormItem>
+                        {errorUpload && <div className="ant-form-item-explain-error">{errorUpload}</div>}
+
+                        <CheckedSelectList
+                            formRules={formRules}
+                            shouldUpdateWith={['packagePackageTypeEnums']}
+                            checkboxName="hasCoachService"
+                            checkboxLabel="Koçluk Hizmeti Vardır"
+                            listName="coachServicePackages"
+                            listTitle="Koçluk Hizmeti Listesi"
+                            listOptions={getCoachServiceList()}
+                        />
+
+                        <CheckedSelectList
+                            formRules={formRules}
+                            shouldUpdateWith={['packagePackageTypeEnums']}
+                            checkboxName="hasTryingTest"
+                            checkboxLabel="Paket İçinde Deneme Sınavı Vardır"
+                            listName="testExamPackages"
+                            listTitle="Deneme Sınavı Listesi"
+                            listOptions={getTestExamList()}
+                        />
+
+                        <CheckedSelectList
+                            formRules={formRules}
+                            shouldUpdateWith={['packagePackageTypeEnums']}
+                            checkboxName="hasMotivationEvent"
+                            checkboxLabel="Motivasyon Etkinliklerine Paket Satın Alan Kullanıcıların Erişimi Vardır"
+                            listName={
+                                form.getFieldValue('packagePackageTypeEnums') !== PACKAGE_TYPES.MotivationEvent
+                                    ? 'motivationActivityPackages'
+                                    : 'packageEvents'
+                            }
+                            listTitle="Motivasyon Etkinlikleri Listesi"
+                            listOptions={getMotivationActivityList()}
+                        />
+
+                        <CustomFormItem label={<Text t="Yayınlar" />}>
+                            <SelectModal
+                                title="Yayın Evleri Listesi"
+                                name="packagePublishers"
+                                selectOptionList={publisherList?.items?.filter((i) => i.recordStatus === 1)}
+                            />
+                        </CustomFormItem>
+
+                        <CustomFormItem label={<Text t="Durumu" />} name="isActive" rules={formRules}>
+                            <CustomSelect className="form-filter-item" placeholder={'Seçiniz'}>
+                                <Option key={'true'} value={true}>
+                                    <Text t={'Aktif'} />
+                                </Option>{' '}
+                                <Option key={false} value={false}>
+                                    <Text t={'Pasive'} />
                                 </Option>
-                            ))}
-                        </CustomSelect>
-                    </CustomFormItem>
-                    <CustomFormItem
-                        rules={[{ required: true }]}
-                        label="Paketi Satın Alan Kullanıcılara Onaylatılacak Evraklar"
-                        name="packageDocuments"
-                    >
-                        <CustomSelect showArrow mode="multiple" placeholder="Seçiniz">
-                            {contractKindsByContractTypesList?.map((item) => {
-                                return (
-                                    <Option key={item?.id} value={item?.id}>
-                                        {item?.label}
-                                    </Option>
-                                );
-                            })}
-                        </CustomSelect>
-                    </CustomFormItem>
-                    <div className="add-package-footer">
-                        <CustomButton type="primary" className="cancel-btn" onClick={onCancel}>
-                            İptal
-                        </CustomButton>
-                        <CustomButton
-                            type="primary"
-                            className="save-btn"
-                            loading={isFormSubmitDisable}
-                            onClick={() => form.submit()}
+                            </CustomSelect>
+                        </CustomFormItem>
+
+                        <DateSection form={form} />
+
+                        <CustomFormItem label={<Text t="Sınıf Seviyesi" />} name="gradeLevel" rules={formRules}>
+                            <CustomSelect
+                                className="form-filter-item"
+                                placeholder={'Seçiniz'}
+                                filterOption={(input, option) =>
+                                    turkishToLower(option.children).includes(turkishToLower(input))
+                                }
+                                showArrow
+                                mode="multiple"
+                                onDeselect={onClassroomsDeselect}
+                                onChange={onClassroomChange}
+                            >
+                                {activeClassList?.map((item) => {
+                                    return (
+                                        <Option key={item?.id} value={item?.id}>
+                                            {item?.name}
+                                        </Option>
+                                    );
+                                })}
+                            </CustomSelect>
+                        </CustomFormItem>
+
+                        <CustomFormItem label="Ders" name="lesson" rules={formRules}>
+                            <CustomSelect
+                                className="form-filter-item"
+                                placeholder={'Seçiniz'}
+                                filterOption={(input, option) =>
+                                    turkishToLower(option.children).includes(turkishToLower(input))
+                                }
+                                showArrow
+                                mode="multiple"
+                                onChange={onLessonChange}
+                                options={lessonsOptions}
+                            ></CustomSelect>
+                        </CustomFormItem>
+
+                        <CustomFormItem
+                            label={<Text t="Paket Alanı" />}
+                            name="packageFieldTypes"
+                            shouldUpdate={(prevValues, curValues) => prevValues.gradeLevel !== curValues.gradeLevel}
+                            rules={selectedClassrooms.some((i) => i.schoolLevel === 30) ? formRules : []}
                         >
-                            {operationType === OPERATION_TYPES.EDIT ? 'Güncelle' : 'Kaydet'}
-                        </CustomButton>
-                    </div>
-                </CustomForm>
-            </div>
-        </CustomCollapseCard>
+                            <CustomSelect
+                                className="form-filter-item"
+                                placeholder={'Seçiniz'}
+                                disabled={!selectedClassrooms.some((i) => i.schoolLevel === 30)}
+                            >
+                                {packageFieldTypes?.map((item) => {
+                                    return (
+                                        <Option key={`packageFieldTypes-${item.value}`} value={item.value}>
+                                            <Text t={item.label} />
+                                        </Option>
+                                    );
+                                })}
+                            </CustomSelect>
+                        </CustomFormItem>
+                        <CustomFormItem
+                            // rules={[{ required: true }]} TODO: Roller belirlendikten sonra düzeltilecek.
+                            label="Rol"
+                            name="packageGroups"
+                        >
+                            <CustomSelect
+                                filterOption={(input, option) =>
+                                    turkishToLower(option.children).includes(turkishToLower(input))
+                                }
+                                showArrow
+                                mode="multiple"
+                                placeholder="Rol"
+                            >
+                                {allGroupList
+                                    ?.filter((item) => item.isPackageRole)
+                                    ?.map((item) => {
+                                        return (
+                                            <Option key={item?.id} value={item?.id}>
+                                                {item?.groupName}
+                                            </Option>
+                                        );
+                                    })}
+                            </CustomSelect>
+                        </CustomFormItem>
+                        <CustomFormItem
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                                },
+                            ]}
+                            label="Sözleşme Tipi"
+                            name="contractTypeId"
+                        >
+                            <CustomSelect
+                                placeholder="Seçiniz"
+                                mode="multiple"
+                                showArrow
+                                onChange={(values) => {
+                                    form.resetFields(['packageDocuments']);
+                                    dispatch(getContractKindsByContractTypes({ Ids: values }));
+                                }}
+                            >
+                                {contractTypeAllList.map((item) => (
+                                    <Option key={item.id} value={item.id}>
+                                        {item?.name}
+                                    </Option>
+                                ))}
+                            </CustomSelect>
+                        </CustomFormItem>
+                        <CustomFormItem
+                            rules={[{ required: true }]}
+                            label="Paketi Satın Alan Kullanıcılara Onaylatılacak Evraklar"
+                            name="packageDocuments"
+                        >
+                            <CustomSelect showArrow mode="multiple" placeholder="Seçiniz">
+                                {contractKindsByContractTypesList?.map((item) => {
+                                    return (
+                                        <Option key={item?.id} value={item?.id}>
+                                            {item?.label}
+                                        </Option>
+                                    );
+                                })}
+                            </CustomSelect>
+                        </CustomFormItem>
+                        <div className="add-package-footer">
+                            <CustomButton type="primary" className="cancel-btn" onClick={onCancel}>
+                                İptal
+                            </CustomButton>
+                            <CustomButton
+                                type="primary"
+                                className="save-btn"
+                                loading={isFormSubmitDisable}
+                                onClick={() => form.submit()}
+                            >
+                                {operationType === OPERATION_TYPES.EDIT ? 'Güncelle' : 'Kaydet'}
+                            </CustomButton>
+                        </div>
+                    </CustomForm>
+                </div>
+            </CustomCollapseCard>
+        </CustomPageHeader>
     );
 };
 
