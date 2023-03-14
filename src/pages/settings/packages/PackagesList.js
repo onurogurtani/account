@@ -277,7 +277,7 @@ const PackagesList = () => {
             <CustomButton className="update-btn" onClick={() => handleUpdatePackage(record)}>
               Güncelle
             </CustomButton>
-            <CustomButton className='btn copy-btn' onClick={()=> handleCopyPackage(record)}>
+            <CustomButton className='btn copy-btn' onClick={() => handleCopyPackage(record)}>
               Kopyala
             </CustomButton>
           </div>
@@ -311,6 +311,7 @@ const PackagesList = () => {
             onClick={() => setIsPackageFilter((prev) => !prev)}
           >
             <CustomImage src={iconSearchWhite} />
+            <span className="search-btn-text">Filtrele</span>
           </CustomButton>
         </div>
       </div>
