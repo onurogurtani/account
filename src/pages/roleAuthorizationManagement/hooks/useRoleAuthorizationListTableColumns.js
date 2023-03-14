@@ -19,9 +19,19 @@ const useRoleAuthorizationListTableColumns = () => {
             },
         },
         {
+            title: 'Kurumsal Rol mü?',
+            dataIndex: 'isOrganisationView',
+            key: 'isOrganisationView',
+            sorter: true,
+            render: (text, record) => {
+                return <div>{text ? 'Evet' : 'Hayır'}</div>;
+            },
+        },
+        {
             title: 'Durum',
-            dataIndex: 'recordStatus',
-            key: 'recordStatus',
+            dataIndex: 'RecordStatusInfo',
+            key: 'RecordStatusInfo',
+            sorter: true,
             width: 100,
             render: (text, record) => {
                 return (
