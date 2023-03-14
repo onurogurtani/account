@@ -7,9 +7,13 @@ import {
   Option,
 } from '../../components';
 import { useDispatch, useSelector } from 'react-redux';
-import { getByFilterPagedWorkPlans, setIsFilter, getWorkPlanNamesQuery } from '../../store/slice/workPlanSlice';
+import {
+  getByFilterPagedWorkPlans,
+  setIsFilter,
+  getWorkPlanNamesQuery,
+  getActiveEducationYear,
+} from '../../store/slice/workPlanSlice';
 import { getListFilterParams, removeFromArray, turkishToLower } from '../../utils/utils';
-import { getEducationYears } from '../../store/slice/questionFileSlice';
 import { getAllClassStages } from '../../store/slice/classStageSlice';
 import useAcquisitionTree from '../../hooks/useAcquisitionTree';
 import iconSearchWhite from '../../assets/icons/icon-white-search.svg';
@@ -22,8 +26,7 @@ const WorkFilter = () => {
   const dispatch = useDispatch();
 
   const [activeFilter, setActiveFilter] = useState(getListFilterParams('isActive', true));
-  const { isFilter, workPlanNamesListData, workPlanDetailSearch } = useSelector((state) => state?.workPlan);
-  const { educationYears } = useSelector((state) => state?.questionManagement);
+  const { educationYearsList,isFilter, workPlanNamesListData, workPlanDetailSearch } = useSelector((state) => state?.workPlan);
 
   const { lessons } = useSelector((state) => state?.lessons);
   const { lessonSubSubjects } = useSelector((state) => state?.lessonSubSubjects);
@@ -40,7 +43,7 @@ const WorkFilter = () => {
 
 
   useEffect(() => {
-    dispatch(getEducationYears());
+    dispatch(getActiveEducationYear());
     dispatch(getWorkPlanNamesQuery());
     dispatch(getAllClassStages(activeFilter));
   }, []);
@@ -312,7 +315,7 @@ const WorkFilter = () => {
               placeholder='Seçiniz'
               mode='multiple'
             >
-              {educationYears.map((item) => {
+              {educationYearsList.map((item) => {
                 return (
                   <Option key={item.id} value={item.id}>
                     {item.startYear} - {item.endYear}

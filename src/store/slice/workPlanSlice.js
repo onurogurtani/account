@@ -108,10 +108,21 @@ export const deleteWorkPlan = createAsyncThunk(
   },
 );
 
+export const getActiveEducationYear = createAsyncThunk(
+  'getActiveEducationYear',
+  async (data, { dispatch, rejectWithValue }) => {
+  try {
+    return await workPlanService.getActiveEducationYear(data);
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+
 const initialState = {
   activeKey: '0',
   isExit: false,
   workPlanList: [],
+  educationYearsList: [],
   usedVideoIdsQueryListData: [],
   workPlanNamesListData: [],
   subjectChooseTab: {
@@ -335,6 +346,12 @@ export const workPlanSlice = createSlice({
     });
     builder.addCase(getWorkPlanNamesQuery.rejected, (state, action) => {
       state.workPlanNamesListData = [];
+    });
+    builder.addCase(getActiveEducationYear.fulfilled, (state, action) => {
+      state.educationYearsList =  action.payload.data?.items;
+    });
+    builder.addCase(getActiveEducationYear.rejected, (state, action) => {
+      state.educationYearsList =  [];
     });
   },
 });
