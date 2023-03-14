@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setEarningChoice } from '../../../store/slice/earningChoiceSlice';
 import EarningSearch from './EarningSearch';
 import CustomSelect, { Option } from '../../../components/CustomSelect';
-import CustomCollapseCard from '../../../components/CustomCollapseCard';
 import { getByClassromIdLessons } from '../../../store/slice/lessonsSlice';
 
 const EarningsChoice = ({ classroomId, updateStatus }) => {
@@ -49,28 +48,37 @@ const EarningsChoice = ({ classroomId, updateStatus }) => {
             return flat;
         }
 
-        const modifiedLessonUnits = flatten(lessonUnits).map((item) => {
+        const modifiedLessonUnits = selectLessons.map((item) => {
             return {
                 title: item.name,
-                key: item.id.toString() + '/unit',
+                key: item.id.toString() + '/lesson',
                 id: item?.id,
-                lessonId: item.lessonId,
-                children: item.lessonSubjects.map((x) => {
-                    return {
-                        title: x.name,
-                        key: x.id.toString() + '/lessonSubject',
-                        id: x.id,
-                        lessonUnitId: x.lessonUnitId,
-                        children: x.lessonSubSubjects.map((y) => {
-                            return {
-                                title: y.name,
-                                key: y.id.toString() + '/lessonSubSubject',
-                                id: y.id,
-                                lessonSubjectId: y.lessonSubjectId,
-                            };
-                        }),
-                    };
-                }),
+                children: flatten(lessonUnits)
+                    .filter((u) => u.lessonId === item.id)
+                    .map((item) => {
+                        return {
+                            title: item.name,
+                            key: item.id.toString() + '/unit',
+                            id: item?.id,
+                            lessonId: item.lessonId,
+                            children: item.lessonSubjects.map((x) => {
+                                return {
+                                    title: x.name,
+                                    key: x.id.toString() + '/lessonSubject',
+                                    id: x.id,
+                                    lessonUnitId: x.lessonUnitId,
+                                    children: x.lessonSubSubjects.map((y) => {
+                                        return {
+                                            title: y.name,
+                                            key: y.id.toString() + '/lessonSubSubject',
+                                            id: y.id,
+                                            lessonSubjectId: y.lessonSubjectId,
+                                        };
+                                    }),
+                                };
+                            }),
+                        };
+                    }),
             };
         });
 
@@ -154,28 +162,37 @@ const EarningsChoice = ({ classroomId, updateStatus }) => {
             return flat;
         }
 
-        const modifiedLessonUnits = flatten(lessonUnits).map((item) => {
+        const modifiedLessonUnits = selectLessons.map((item) => {
             return {
                 title: item.name,
-                key: item.id.toString() + '/unit',
+                key: item.id.toString() + '/lesson',
                 id: item?.id,
-                lessonId: item.lessonId,
-                children: item.lessonSubjects.map((x) => {
-                    return {
-                        title: x.name,
-                        key: x.id.toString() + '/lessonSubject',
-                        id: x.id,
-                        lessonUnitId: x.lessonUnitId,
-                        children: x.lessonSubSubjects.map((y) => {
-                            return {
-                                title: y.name,
-                                key: y.id.toString() + '/lessonSubSubject',
-                                id: y.id,
-                                lessonSubjectId: y.lessonSubjectId,
-                            };
-                        }),
-                    };
-                }),
+                children: flatten(lessonUnits)
+                    .filter((u) => u.lessonId === item.id)
+                    .map((item) => {
+                        return {
+                            title: item.name,
+                            key: item.id.toString() + '/unit',
+                            id: item?.id,
+                            lessonId: item.lessonId,
+                            children: item.lessonSubjects.map((x) => {
+                                return {
+                                    title: x.name,
+                                    key: x.id.toString() + '/lessonSubject',
+                                    id: x.id,
+                                    lessonUnitId: x.lessonUnitId,
+                                    children: x.lessonSubSubjects.map((y) => {
+                                        return {
+                                            title: y.name,
+                                            key: y.id.toString() + '/lessonSubSubject',
+                                            id: y.id,
+                                            lessonSubjectId: y.lessonSubjectId,
+                                        };
+                                    }),
+                                };
+                            }),
+                        };
+                    }),
             };
         });
 
@@ -190,62 +207,60 @@ const EarningsChoice = ({ classroomId, updateStatus }) => {
     useEffect(() => {
         if (!chackedChange) {
             let newData = [];
-            earningChoice?.subSubjectId?.forEach((element) => {
-                newData.push(element.toString() + '/lessonSubSubject');
-            });
+            const checkedData = earningChoice?.subSubjectId?.map((item) => item.toString() + '/lessonSubSubject');
+
             if (updateStatus) {
-                setCheckedKeys(newData);
+                setCheckedKeys(checkedData);
             } else {
                 setCheckedKeys([]);
             }
+            earningChoice?.subjectId?.forEach((element) => {
+                newData.push(element.toString() + '/lessonSubject');
+            });
+            earningChoice?.unitId?.forEach((element) => {
+                newData.push(element.toString() + '/unit');
+            });
+            lessonId.map((item) => {
+                newData.push(item.toString() + '/lesson');
+            });
             setTimeout(() => {
                 setExpandedKeys(newData);
-            }, '500');
+            }, '1000');
         }
-    }, [chackedChange, earningChoice, updateStatus]);
+    }, [chackedChange, earningChoice, updateStatus, lessonId]);
 
     const onCheck = (checkedKeysValue, info) => {
-        setCheckedKeys(checkedKeysValue);
-        setChackedChange(true);
-        const earningChoice = {
+        const emptyEarningChoice = {
             unitId: [],
             subjectId: [],
             subSubjectId: [],
         };
 
-        if (info.halfCheckedKeys.length > 0) {
-            treeData.map((item) => {
-                info.halfCheckedKeys.map((subItem) => {
-                    const difIndex = subItem.search('/');
-                    if (subItem.slice(0, difIndex).includes(item.id.toString())) {
-                        earningChoice.unitId.push(item?.id);
-                    }
-                });
-            });
-            info.halfCheckedKeys.map((item) => {
-                const difIndex = item.search('/');
-                if (!earningChoice.unitId.includes(parseInt(item.slice(0, difIndex)))) {
-                    earningChoice.subjectId.push(parseInt(item.slice(0, difIndex)));
-                }
-            });
-        }
-
-        info.checkedNodes.map((item) => {
-            if (item?.lessonId) {
-                earningChoice.unitId.push(item?.id);
+        checkedKeysValue.map((item) => {
+            if (item.includes('lessonSubSubject')) {
+                emptyEarningChoice.subSubjectId.push(parseInt(item.split('/')[0]));
             }
-            if (item?.lessonSubjectId) {
-                earningChoice.subSubjectId.push(item?.id);
-                if (info.halfCheckedKeys.includes(item?.lessonSubSubjectId)) {
-                    earningChoice.subjectId.push(item?.id);
-                }
+            if (item.includes('lessonSubject')) {
+                emptyEarningChoice.subjectId.push(parseInt(item.split('/')[0]));
             }
-            if (item?.lessonUnitId) {
-                earningChoice.subjectId.push(item?.id);
+            if (item.includes('unit')) {
+                emptyEarningChoice.unitId.push(parseInt(item.split('/')[0]));
             }
         });
 
-        dispatch(setEarningChoice(earningChoice));
+        info.halfCheckedKeys.map((item) => {
+            if (item.includes('lessonSubject')) {
+                emptyEarningChoice.subjectId.push(parseInt(item.split('/')[0]));
+            }
+            if (item.includes('unit')) {
+                emptyEarningChoice.unitId.push(parseInt(item.split('/')[0]));
+            }
+        });
+
+        dispatch(setEarningChoice(emptyEarningChoice));
+        setCheckedKeys(checkedKeysValue);
+        setExpandedKeys(checkedKeysValue);
+        setChackedChange(true);
     };
 
     return (
@@ -257,7 +272,7 @@ const EarningsChoice = ({ classroomId, updateStatus }) => {
                 mode="multiple"
                 onChange={handleLesson}
                 height={'8px'}
-                style={{ float: 'right', width: '300px' }}
+                style={{ float: 'right', width: '500px' }}
                 placeholder="Ders Seçiniz"
             >
                 {lessonsGetByClassroom.map((item) => {
@@ -270,22 +285,17 @@ const EarningsChoice = ({ classroomId, updateStatus }) => {
             </CustomSelect>
             <br></br>
             <br></br>
-            {selectedLessons.map((item) => {
-                return (
-                    <CustomCollapseCard defaultActiveKey={[]} cardTitle={item.name}>
-                        {treeData.length === 0 && <Result status="warning" title="Uygun Kayıt Bulunamadı" />}
-                        <Tree
-                            onExpand={onExpand}
-                            expandedKeys={expandedKeys}
-                            autoExpandParent
-                            checkedKeys={checkedKeys}
-                            onCheck={onCheck}
-                            checkable
-                            treeData={treeData.filter((z) => z.lessonId == item.id)}
-                        />
-                    </CustomCollapseCard>
-                );
-            })}
+            <br></br>
+            <Tree
+                onExpand={onExpand}
+                expandedKeys={expandedKeys}
+                autoExpandParent
+                checkedKeys={checkedKeys}
+                onCheck={onCheck}
+                checkable
+                treeData={treeData}
+                height={233}
+            />
 
             {lessonIds.length === 0 && treeData.length === 0 && (
                 <Result status="warning" title="Kazanım Ağacı Görüntülemek İçin Ders Seçimi Yapmanız Gerekmektedir" />

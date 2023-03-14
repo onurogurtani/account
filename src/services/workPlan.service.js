@@ -30,10 +30,25 @@ const addWorkPlan = (data) => {
     data: data,
   });
 };
+
 const getUsedVideoIdsQuery = () => {
   return api({
     url: `Target/WorkPlans/getUsedVideoIdsQuery`,
     method: 'GET',
+  });
+};
+
+const getWorkPlanNamesQuery = () => {
+  return api({
+    url: `Target/WorkPlans/getWorkPlanNamesQuery`,
+    method: 'GET',
+  });
+};
+
+const deleteWorkPlan = (data) => {
+  return api({
+    url: `Target/WorkPlans?id=${data.id}`,
+    method: 'DELETE',
   });
 };
 
@@ -43,6 +58,8 @@ const workPlanService = {
   getByFilterPagedWorkPlans,
   addWorkPlan,
   getUsedVideoIdsQuery,
+  getWorkPlanNamesQuery,
+  deleteWorkPlan
 };
 
 export default workPlanService;

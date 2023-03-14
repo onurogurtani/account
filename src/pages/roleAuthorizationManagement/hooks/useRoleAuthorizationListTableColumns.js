@@ -3,6 +3,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { CustomButton } from '../../../components';
 import RoleAuthorizationCopy from '../RoleAuthorizationCopy';
+import RoleAuthorizationSetStatus from '../RoleAuthorizationSetStatus';
 
 const useRoleAuthorizationListTableColumns = () => {
     const history = useHistory();
@@ -43,6 +44,7 @@ const useRoleAuthorizationListTableColumns = () => {
             render: (_, record) => {
                 return (
                     <div className="action-btns">
+                        <RoleAuthorizationSetStatus record={record} />
                         <CustomButton
                             className="update-btn"
                             onClick={() => {

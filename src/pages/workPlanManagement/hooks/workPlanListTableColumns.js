@@ -1,6 +1,6 @@
 import { Tag } from 'antd';
 import { CustomButton, DeleteButton } from '../../../components';
-import { deleteUser, setUserStatus } from '../../../store/slice/userListSlice';
+import { deleteWorkPlan} from '../../../store/slice/workPlanSlice';
 import React from 'react';
 
 const workPlanListTableColumns = () => {
@@ -15,12 +15,12 @@ const workPlanListTableColumns = () => {
     },
     {
       title: 'Durum',
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'recordStatus',
+      key: 'recordStatus',
       render: (text, record) => {
         return (
-          <Tag color={'green'} key={1}>
-            {text}
+          <Tag color={record.recordStatus === 1 && 'green' || record.recordStatus === 0 && 'red'} key={1}>
+            {record.recordStatus === 1 && 'Aktif' || record.recordStatus === 0 && 'Pasif'}
           </Tag>
         );
       },
@@ -57,7 +57,7 @@ const workPlanListTableColumns = () => {
         <>
           {record.video.lessonSubSubjects?.map((item, id) => {
             return (
-              <Tag className="m-1" color="gold" key={id}>
+              <Tag className='m-1' color='gold' key={id}>
                 {item.lessonSubSubject.name}
               </Tag>
             );
@@ -80,9 +80,9 @@ const workPlanListTableColumns = () => {
       render: (text, record) => {
         return (
           <Tag
-            color={record.publishStatus === 1 && 'green' || record.publishStatus === 2 && 'orange' || record.publishStatus === 3 && 'orange'}
+            color={record.publishStatus === 1 && 'green' || record.publishStatus === 2 && 'red' || record.publishStatus === 3 && 'orange'}
             key={1}>
-            {record.publishStatus === 1 && 'Kullanımda' || record.publishStatus === 2 && 'Yayında Değil' || record.publishStatus === 3 && 'Taslak'}
+            {record.publishStatus === 1 && 'Kullanımda' || record.publishStatus === 2 && 'Kullanımda Değil' || record.publishStatus === 3 && 'Taslak'}
           </Tag>
         );
       },
@@ -99,7 +99,7 @@ const workPlanListTableColumns = () => {
             <CustomButton className='btn detail-btn'>
               DÜZENLE
             </CustomButton>
-            <DeleteButton id={record?.id} deleteAction={deleteUser} />
+            <DeleteButton disabled={record.recordStatus === 1} id={record?.id} deleteAction={deleteWorkPlan} />
             <CustomButton className='btn copy-btn'>
               KOPYALA
             </CustomButton>
