@@ -2,7 +2,7 @@ import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Form, message, Upload } from 'antd';
 import { CancelToken, isCancel } from 'axios';
 import dayjs from 'dayjs';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
@@ -82,7 +82,9 @@ const AddEditCopyPackages = () => {
     const hasCoachService = Form.useWatch('hasCoachService', form) || false;
     const hasTryingTest = Form.useWatch('hasTryingTest', form) || false;
     const hasMotivationEvent = Form.useWatch('hasMotivationEvent', form) || false;
-
+    
+    const activeClassList = useMemo(() => allClassList.filter(item => item.isActive === true), [allClassList]);
+    
     useEffect(() => {
         if (allGroupList.length) return false;
         dispatch(getGroupsList());
@@ -136,9 +138,9 @@ const AddEditCopyPackages = () => {
     }, [lessons, selectedClassrooms]);
 
     useEffect(() => {
-        let selectedClass = allClassList?.filter((item) => currentClassroomIds?.includes(item.id));
+        let selectedClass = activeClassList?.filter((item) => currentClassroomIds?.includes(item.id));
         setSelectedClassrooms(selectedClass);
-    }, [allClassList, currentClassroomIds]);
+    }, [activeClassList, currentClassroomIds]);
 
     useEffect(() => {
         if (!hasCoachService || coachServiceList?.length > 0) return;
@@ -227,8 +229,8 @@ const AddEditCopyPackages = () => {
                 : [],
             motivationActivityPackages: currentPackageResponse.payload?.hasMotivationEvent
                 ? currentPackageResponse.payload?.motivationActivityPackages?.map(
-                      (item) => item.motivationActivityPackageId,
-                  )
+                    (item) => item.motivationActivityPackageId,
+                )
                 : [],
             packageEvents: currentPackageResponse.payload?.hasMotivationEvent
                 ? currentPackageResponse.payload?.packageEvents?.map((item) => item.eventId)
@@ -357,14 +359,14 @@ const AddEditCopyPackages = () => {
                 motivationActivityPackages:
                     values.packagePackageTypeEnums !== PACKAGE_TYPES.MotivationEvent
                         ? values.motivationActivityPackages?.map((item) => ({
-                              motivationActivityPackageId: item,
-                          }))
+                            motivationActivityPackageId: item,
+                        }))
                         : [],
                 packageEvents:
                     values.packagePackageTypeEnums === PACKAGE_TYPES.MotivationEvent
                         ? values.packageEvents?.map((item) => ({
-                              eventId: item,
-                          }))
+                            eventId: item,
+                        }))
                         : [],
             },
         };
@@ -434,7 +436,7 @@ const AddEditCopyPackages = () => {
 
     const onClassroomChange = (value) => {
         setClassroomId(value.at(-1));
-        let selectedClass = allClassList.filter((item) => value.includes(item.id));
+        let selectedClass = activeClassList.filter((item) => value.includes(item.id));
         setSelectedClassrooms(selectedClass);
         if (!selectedClassrooms.some((i) => i.schoolLevel === 30)) {
             form.setFieldsValue({ packageFieldTypes: 0 });
@@ -664,7 +666,7 @@ const AddEditCopyPackages = () => {
                             onDeselect={onClassroomsDeselect}
                             onChange={onClassroomChange}
                         >
-                            {allClassList?.map((item) => {
+                            {activeClassList?.map((item) => {
                                 return (
                                     <Option key={item?.id} value={item?.id}>
                                         {item?.name}

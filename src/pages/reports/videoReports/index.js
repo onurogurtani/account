@@ -134,7 +134,6 @@ const VideoReports = () => {
     };
     const getDownload = async (code) => {
         const value = form.getFieldsValue();
-
         dispatch(videoReportsNotConnectedDownload({ ...value, DownloadType: code }));
     };
 
@@ -227,7 +226,6 @@ const VideoReports = () => {
                                                     form.resetFields(['LessonSubjectId', 'LessonSubSubjectId']);
                                                 }}
                                             >
-                                                {' '}
                                                 {lessonUnits.map((item, index) => (
                                                     <Option key={index} value={item.id}>
                                                         {item.name}
@@ -346,18 +344,21 @@ const VideoReports = () => {
                     <div>Toplam Sonuç :{videoReportsNotConnectedList?.pagedProperty?.totalCount}</div>
                 </div>
             </CustomCollapseCard>
-            <CustomModal
-                footer={false}
-                onCancel={() => {
-                    setOpenVideo(null);
-                }}
-                width={'1000px'}
-                visible={openVideo !== null ? true : false}
-            >
-                <CustomVideoPlayer
-                    url={`https://trkcll-dijital-dersane-demo.ercdn.net/${openVideo}.smil/playlist.m3u8`}
-                />
-            </CustomModal>
+
+            {openVideo !== null && (
+                <CustomModal
+                    footer={false}
+                    onCancel={() => {
+                        setOpenVideo(null);
+                    }}
+                    width={'1000px'}
+                    visible={openVideo !== null ? true : false}
+                >
+                    <CustomVideoPlayer
+                        url={`https://trkcll-dijital-dersane-demo.ercdn.net/${openVideo}.smil/playlist.m3u8`}
+                    />
+                </CustomModal>
+            )}
         </CustomPageHeader>
     );
 };

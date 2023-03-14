@@ -60,6 +60,7 @@ import { asEvSlice } from './slice/asEvSlice';
 import { roleAuthorizationSlice } from './slice/roleAuthorizationSlice';
 import { videoReportsNotConnectedSlice } from './slice/videoReportsNotConnectedSlice';
 import { jobSettingsSlice } from './slice/jobSettingsSlice';
+import { videoReportsConnectedSlice } from './slice/videoReportsConnectedSlice';
 
 const reducers = combineReducers({
     auth: authSlice.reducer,
@@ -115,6 +116,7 @@ const reducers = combineReducers({
     roleAuthorization: roleAuthorizationSlice.reducer,
     videoReportsNotConnected: videoReportsNotConnectedSlice.reducer,
     jobSettings: jobSettingsSlice.reducer,
+    videoReportsConnected: videoReportsConnectedSlice.reducer,
 });
 
 const persistConfig = {
