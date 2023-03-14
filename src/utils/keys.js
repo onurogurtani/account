@@ -1,4 +1,4 @@
-export const ReCAPTCHAKeys = '6LfsHP0kAAAAAGYXPRxDGTeEoFyAqU0yKPCOuLYE';
+export const ReCAPTCHAKeys = '6Lfzgv0kAAAAAP3SFw-N4rhMgWIiz1c9h2RBy3Xe';
 export const footerLink = {
     help: '/',
     communication: 'https://www.dd.com.tr/iletisim',
