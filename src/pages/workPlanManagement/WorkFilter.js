@@ -53,7 +53,7 @@ const WorkFilter = () => {
   }, []);
 
   const onClassroomChange = (value) => {
-    setClassroomId(value.at(-1));
+    setClassroomId(value);
     form.resetFields(['LessonIds', 'LessonUnitIds', 'LessonSubjectIds', 'LessonSubSubjectIds']);
   };
 
@@ -122,6 +122,10 @@ const WorkFilter = () => {
           body: values,
           PageNumber: 1,
         };
+
+        if(values.classroomIds){
+          body.body.classroomIds= [values.classroomIds]
+        }
         await dispatch(getByFilterPagedWorkPlans(body));
         await dispatch(setIsFilter(true));
       } catch (e) {
@@ -179,7 +183,6 @@ const WorkFilter = () => {
               placeholder='Seçiniz'
               height={36}
               showArrow
-              mode='multiple'
             >
               {allClassList
                 ?.map((item) => {
