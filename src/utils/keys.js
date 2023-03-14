@@ -1,19 +1,19 @@
-export const ReCAPTCHAKeys = '6Lf2wFkUAAAAAF4FyKtWBiVzAOdQ3NVuzWEBwqXF';
+export const ReCAPTCHAKeys = '6LfsHP0kAAAAAGYXPRxDGTeEoFyAqU0yKPCOuLYE';
 export const footerLink = {
-  help: '/',
-  communication: 'https://www.dd.com.tr/iletisim',
-  protectionOfPersonalData: 'https://www.dd.com.tr/kisisel-verilerin-korunmasi',
-  cookiePolicy: 'https://www.dd.com.tr/cerez-politikasi',
-  facebook: '/',
-  instagram: '/',
-  linkedin: '/',
-  youtube: '/',
-  twitter: '/',
+    help: '/',
+    communication: 'https://www.dd.com.tr/iletisim',
+    protectionOfPersonalData: 'https://www.dd.com.tr/kisisel-verilerin-korunmasi',
+    cookiePolicy: 'https://www.dd.com.tr/cerez-politikasi',
+    facebook: '/',
+    instagram: '/',
+    linkedin: '/',
+    youtube: '/',
+    twitter: '/',
 };
 
 export const sessionModalMinutes = {
-  modalMinutes: 2,
-  sessionMinutes: process.env.SESSION_MINUTES || 3000,
+    modalMinutes: 2,
+    sessionMinutes: process.env.SESSION_MINUTES || 3000,
 };
 export const endUserPageUrl = process.env.END_USER_PAGE;
 export const endUserPageBehalfOfLoginUrl = endUserPageUrl + 'behalfOfLogin';
