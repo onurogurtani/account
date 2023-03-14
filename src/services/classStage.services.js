@@ -30,11 +30,19 @@ const deleteClass = (data) => {
   });
 };
 
+const getByIdClass = (data) => {
+  return api({
+    url: `Shared/Classrooms/getbyid?id=${data.id}`,
+    method: 'GET',
+  });
+};
+
 const classStageServices = {
   getClassList,
   addClass,
   updateClass,
   deleteClass,
+  getByIdClass,
 };
 
 export default classStageServices;

@@ -1,0 +1,169 @@
+.slider-filter-container {
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  .notification-box-content {
+    margin: 0;
+    padding: 0;
+    width: 70%;
+    height: 820px;
+    .notification-slider {
+      .swiper-wrapper {
+        .notification-body {
+          width: 100% !important;
+          overflow: auto;
+          height: 158px;
+          display: flex;
+          flex-direction: column;
+          gap: 7px;
+
+          @media (min-width: 992px) {
+            height: auto;
+          }
+          @media (max-width: 992px) {
+            padding: 18px 13px !important;
+            p {
+              font-size: 12px !important;
+              line-height: normal !important;
+              margin-bottom: 10px !important;
+            }
+          }
+
+          @media (max-width: 768px) {
+            padding: 18px 13px !important;
+            p {
+              font-size: 12px !important;
+              line-height: normal !important;
+              margin-bottom: 10px !important;
+            }
+          }
+        }
+      }
+    }
+    .notification-header,
+    .notification-header2 {
+      display: flex;
+      margin-top: 10px;
+      justify-content: center;
+
+      span {
+        font-family: UbuntuMedium, sans-serif;
+        font-size: 18px;
+        line-height: 24px;
+        font-weight: 500;
+        color: #3f4957;
+      }
+
+      .pagination-btns {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: center;
+        img {
+          cursor: pointer;
+        }
+
+        .swiper-paginations {
+          font-family: UbuntuRegular, sans-serif;
+          font-size: 18px;
+          line-height: 20px;
+          color: #323232;
+          margin: 0 10px;
+        }
+      }
+    }
+  }
+}
+
+.new-question-modal {
+  // border: 2px solid purple;
+  min-width: 1200px;
+  min-height: 850px;
+  padding: 0;
+  // .custom-modal .ant-modal-content {
+  //   margin: 0;
+  //   height: 850px;
+  // .notification-box-content {
+  //   margin: 0;
+  //   padding: 0;
+  //   width: 70%;
+  //   // border: 2px solid blue;
+  //   height: 520px;
+  //   .notification-slider {
+  //     .swiper-wrapper {
+  //       .notification-body {
+  //         width: 100% !important;
+  //         overflow: auto;
+  //         height: 158px;
+  //         display: flex;
+  //         flex-direction: column;
+  //         gap: 7px;
+
+  //         @media (min-width: 992px) {
+  //           height: auto;
+  //         }
+  //         @media (max-width: 992px) {
+  //           padding: 18px 13px !important;
+  //           p {
+  //             font-size: 12px !important;
+  //             line-height: normal !important;
+  //             margin-bottom: 10px !important;
+  //           }
+  //         }
+
+  //         @media (max-width: 768px) {
+  //           padding: 18px 13px !important;
+  //           p {
+  //             font-size: 12px !important;
+  //             line-height: normal !important;
+  //             margin-bottom: 10px !important;
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  //   .notification-header,
+  //   .notification-header2 {
+  //     border: 2px solid gray;
+
+  //     // padding: 10px 0 0 0;
+  //     // border-top: solid 1px #d5d8de;
+  //     display: flex;
+  //     margin-top: 10px;
+  //     justify-content: center;
+
+  //     span {
+  //       font-family: UbuntuMedium, sans-serif;
+  //       font-size: 18px;
+  //       line-height: 24px;
+  //       font-weight: 500;
+  //       color: #3f4957;
+  //     }
+  //   }
+  // }
+  // }
+}
+.pagination-btns {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  img {
+    cursor: pointer;
+  }
+
+  .swiper-paginations {
+    font-family: UbuntuRegular, sans-serif;
+    font-size: 18px;
+    line-height: 20px;
+    color: #323232;
+    margin: 0 10px;
+  }
+}

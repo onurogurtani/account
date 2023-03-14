@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { CustomCollapseCard, Text } from '../../../../components';
 
-import '../../../../styles/announcementManagement/addAnnouncementInfo.scss';
+import '../../../../styles/temporaryFile/asEvGeneral.scss';
 import AnnouncementInfoForm from '../forms/AnnouncementInfoForm';
 
 const AddAnnouncementInfo = ({

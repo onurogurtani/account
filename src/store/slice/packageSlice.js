@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { PACKAGE_TYPES } from '../../constants/package';
 import packageServices from '../../services/package.services';
 import { getByFilterPagedParamsHelper } from '../../utils/utils';
 
@@ -65,13 +66,20 @@ const initialState = {
   selectedPackages: [],
   isFilter: false,
   filterObject: {},
+  sorterObject: {},
   allPackagesName: [],
+  coachServiceList: [],
+  testExamList: [],
+  motivationActivityList: [],
 };
 
 export const packageSlice = createSlice({
   name: 'packageSlice',
   initialState,
   reducers: {
+    setSorterObject: (state, action) => {
+      state.sorterObject = action.payload;
+    },
     setIsFilter: (state, action) => {
       state.isFilter = action.payload;
     },
@@ -81,7 +89,24 @@ export const packageSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getByFilterPagedPackages.fulfilled, (state, action) => {
-      state.packages = action?.payload?.data?.items.reverse();
+
+      if (action?.meta?.arg?.PackageTypeEnumIds) {
+        switch (action?.meta?.arg?.PackageTypeEnumIds) {
+          case PACKAGE_TYPES.CoachService:
+            state.coachServiceList = action?.payload?.data?.items;
+            break;
+          case PACKAGE_TYPES.TestExam:
+            state.testExamList = action?.payload?.data?.items;
+            break;
+          case PACKAGE_TYPES.MotivationEvent:
+            state.motivationActivityList = action?.payload?.data?.items;
+            break;
+          default:
+            break;
+        }
+      }
+
+      state.packages = action?.payload?.data?.items;
       state.tableProperty = action?.payload?.data?.pagedProperty;
     });
     builder.addCase(getByFilterPagedPackages.rejected, (state) => {
@@ -103,4 +128,4 @@ export const packageSlice = createSlice({
   },
 });
 
-export const { setFilterObject, setIsFilter } = packageSlice.actions;
+export const { setFilterObject, setSorterObject, setIsFilter } = packageSlice.actions;

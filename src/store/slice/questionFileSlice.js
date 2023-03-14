@@ -11,7 +11,13 @@ export const getEducationYears = createAsyncThunk('getEducationYears', async (da
 
 export const getPublisherList = createAsyncThunk('getPublisherList', async (data, { dispatch, rejectWithValue }) => {
   try {
-    return await questionMangementServices.getPublisherList();
+    return await questionMangementServices.getPublisherList([
+      {
+        "field": "recordStatus",
+        "value": 1,
+        "compareType": 0
+      }
+    ]);
   } catch (error) {
     return rejectWithValue(error?.data);
   }

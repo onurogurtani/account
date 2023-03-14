@@ -2,6 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useLocationQuery from '../../../../hooks/useLocationQuery';
 import { getByFilterPagedUsers, setIsFilter, setSorterObject } from '../../../../store/slice/userListSlice';
+import { getByFilterPagedWorkPlans } from '../../../../store/slice/workPlanSlice';
 
 const useGetUsers = (setIsUserFilter) => {
   let query = useLocationQuery();
@@ -22,6 +23,7 @@ const useGetUsers = (setIsUserFilter) => {
   const loadUsers = useCallback(
     async (data) => {
       await dispatch(getByFilterPagedUsers(data));
+      await dispatch(getByFilterPagedWorkPlans());
     },
     [dispatch],
   );

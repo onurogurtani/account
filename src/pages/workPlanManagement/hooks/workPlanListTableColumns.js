@@ -1,40 +1,12 @@
 import { Tag } from 'antd';
 import { CustomButton, DeleteButton } from '../../../components';
-import { deleteUser, setUserStatus } from '../../../store/slice/userListSlice';
+import { deleteWorkPlan} from '../../../store/slice/workPlanSlice';
+import React from 'react';
 
 const workPlanListTableColumns = () => {
-
   const columns = [
     {
       title: 'Çalışma Planı Adı',
-      dataIndex: 'userType',
-      key: 'userType',
-      render: (text, record) => {
-        return <div>{text?.name}</div>;
-      },
-    },
-    {
-      title: 'Durum',
-      dataIndex: 'status',
-      key: 'status',
-      render: (text, record) => {
-        return (
-          <Tag color={text ? 'green' : 'red'} key={1}>
-            {text ? 'Aktif' : 'Pasif'}
-          </Tag>
-        );
-      },
-    },
-    {
-      title: 'Sınıf Seviyesi',
-      dataIndex: 'citizenId',
-      key: 'citizenId',
-      render: (text, record) => {
-        return <div>{text}</div>;
-      },
-    },
-    {
-      title: 'Ders Adı',
       dataIndex: 'name',
       key: 'name',
       render: (text, record) => {
@@ -42,37 +14,75 @@ const workPlanListTableColumns = () => {
       },
     },
     {
-      title: 'Konu',
-      dataIndex: 'surName',
-      key: 'surName',
+      title: 'Durum',
+      dataIndex: 'recordStatus',
+      key: 'recordStatus',
       render: (text, record) => {
-        return <div>{text}</div>;
+        return (
+          <Tag color={record.recordStatus === 1 && 'green' || record.recordStatus === 0 && 'red'} key={1}>
+            {record.recordStatus === 1 && 'Aktif' || record.recordStatus === 0 && 'Pasif'}
+          </Tag>
+        );
+      },
+    },
+    {
+      title: 'Sınıf Seviyesi',
+      dataIndex: 'classroom',
+      key: 'classroom',
+      render: (text, record) => {
+        return <div>{record.classroom.name}</div>;
+      },
+    },
+    {
+      title: 'Ders Adı',
+      dataIndex: 'lesson',
+      key: 'lesson',
+      render: (text, record) => {
+        return <div>{record.lesson.name}</div>;
+      },
+    },
+    {
+      title: 'Konu',
+      dataIndex: 'lessonSubject',
+      key: 'lessonSubject',
+      render: (text, record) => {
+        return <div>{record.lessonSubject.name}</div>;
       },
     },
     {
       title: 'Kazanım',
-      dataIndex: 'email',
-      key: 'email',
-      render: (text, record) => {
-        return <div>{text}</div>;
-      },
+      dataIndex: 'lessonSubSubjects',
+      key: 'lessonSubSubjects',
+      render: (text, record) => (
+        <>
+          {record.video.lessonSubSubjects?.map((item, id) => {
+            return (
+              <Tag className='m-1' color='gold' key={id}>
+                {item.lessonSubSubject.name}
+              </Tag>
+            );
+          })}
+        </>
+      ),
     },
     {
       title: 'Eğitim Öğretim Yılı',
-      dataIndex: 'isPackages',
-      key: 'isPackages',
+      dataIndex: 'educationYear',
+      key: 'educationYear',
       render: (text, record) => {
-        return <div>{text}</div>;
+        return <div>{record.educationYear.startYear} - {record.educationYear.endYear}</div>;
       },
     },
     {
       title: 'Kullanım Durumu',
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'publishStatus',
+      key: 'publishStatus',
       render: (text, record) => {
         return (
-          <Tag color={text ? 'green' : 'orange'} key={1}>
-            {text ? 'Kullanımda' : 'Taslak'}
+          <Tag
+            color={record.publishStatus === 1 && 'green' || record.publishStatus === 2 && 'red' || record.publishStatus === 3 && 'orange'}
+            key={1}>
+            {record.publishStatus === 1 && 'Kullanımda' || record.publishStatus === 2 && 'Kullanımda Değil' || record.publishStatus === 3 && 'Taslak'}
           </Tag>
         );
       },
@@ -89,7 +99,7 @@ const workPlanListTableColumns = () => {
             <CustomButton className='btn detail-btn'>
               DÜZENLE
             </CustomButton>
-            <DeleteButton id={record?.id} deleteAction={deleteUser} />
+            <DeleteButton disabled={record.recordStatus === 1} id={record?.id} deleteAction={deleteWorkPlan} />
             <CustomButton className='btn copy-btn'>
               KOPYALA
             </CustomButton>

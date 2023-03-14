@@ -7,7 +7,6 @@ import { encryptTransform } from 'redux-persist-transform-encrypt';
 import { authSlice } from './slice/authSlice';
 import { userSlice } from './slice/userSlice';
 import { menuSlice } from './slice/menuSlice';
-import { operationClaimsSlice } from './slice/operationClaimsSlice';
 import { groupsSlice } from './slice/groupsSlice';
 import { userListSlice } from './slice/userListSlice';
 import { avatarFilesSlice } from './slice/avatarSlice';
@@ -55,93 +54,106 @@ import { contractTypeSlice } from './slice/contractTypeSlice';
 import { trialExamSlice } from './slice/trialExamSlice';
 import { contractKindsSlice } from './slice/contractKindsSlice';
 import { difficultyLevelQuestionOfExamSlice } from './slice/difficultyLevelQuestionOfExamSlice';
+import { maxNetNumberSlice } from './slice/maxNetNumberSlice';
+import { contractsSlice } from './slice/contractsSlice';
+import { asEvSlice } from './slice/asEvSlice';
+import { roleAuthorizationSlice } from './slice/roleAuthorizationSlice';
+import { videoReportsNotConnectedSlice } from './slice/videoReportsNotConnectedSlice';
+import { jobSettingsSlice } from './slice/jobSettingsSlice';
+import { videoReportsConnectedSlice } from './slice/videoReportsConnectedSlice';
 
 const reducers = combineReducers({
-  auth: authSlice.reducer,
-  user: userSlice.reducer,
-  menu: menuSlice.reducer,
-  operationClaims: operationClaimsSlice.reducer,
-  groups: groupsSlice.reducer,
-  userList: userListSlice.reducer,
-  avatarFiles: avatarFilesSlice.reducer,
-  school: schoolSlice.reducer,
-  questions: questionSlice.reducer,
-  forms: formsSlice.reducer,
-  announcement: announcementSlice.reducer,
-  citysCountys: citysCountysSlice.reducer,
-  videos: videoSlice.reducer,
-  lessons: lessonsSlice.reducer,
-  lessonUnits: lessonUnitsSlice.reducer,
-  lessonSubjects: lessonSubjectsSlice.reducer,
-  lessonSubSubjects: lessonSubSubjectsSlice.reducer,
-  packages: packageSlice.reducer,
-  category: categorySlice.reducer,
-  eventType: eventTypeSlice.reducer,
-  events: eventsSlice.reducer,
-  classStages: classStageSlice.reducer,
-  announcementTypes: announcementTypeSlice.reducer,
-  targetScreen: targetScreenSlice.reducer,
-  educationYears: educationYearsSlice.reducer,
-  graduationYears: graduationYearsSlice.reducer,
-  adminUsers: adminUserSlice.reducer,
-  targetSentence: targetSentenceSlice.reducer,
-  preferencePeriod: preferencePeriodSlice.reducer,
-  packageType: packageTypeSlice.reducer,
-  userType: userTypeSlice.reducer,
-  branchs: branchsSlice.reducer,
-  publisher: publisherSlice.reducer,
-  publisherBook: publisherBookSlice.reducer,
-  questionManagement: questionManagementSlice.reducer,
-  workPlan: workPlanSlice.reducer,
-  questionIdentification: questionIdentificationSlice.reducer,
-  earningChoice: earningChoiceSlice.reducer,
-  participantGroups: participantGroupsSlice.reducer,
-  trialType: trialTypeSlice.reducer,
-  documents: documentsSlice.reducer,
-  books: booksSlice.reducer,
-  organisationTypes: organisationTypesSlice.reducer,
-  organisations: organisationsSlice.reducer,
-  contractTypes: contractTypeSlice.reducer,
-  tiralExam: trialExamSlice.reducer,
-  contractKinds: contractKindsSlice.reducer,
-  difficultyLevelQuestionOfExams: difficultyLevelQuestionOfExamSlice.reducer,
+    auth: authSlice.reducer,
+    user: userSlice.reducer,
+    menu: menuSlice.reducer,
+    groups: groupsSlice.reducer,
+    userList: userListSlice.reducer,
+    avatarFiles: avatarFilesSlice.reducer,
+    school: schoolSlice.reducer,
+    questions: questionSlice.reducer,
+    forms: formsSlice.reducer,
+    announcement: announcementSlice.reducer,
+    citysCountys: citysCountysSlice.reducer,
+    videos: videoSlice.reducer,
+    lessons: lessonsSlice.reducer,
+    lessonUnits: lessonUnitsSlice.reducer,
+    lessonSubjects: lessonSubjectsSlice.reducer,
+    lessonSubSubjects: lessonSubSubjectsSlice.reducer,
+    packages: packageSlice.reducer,
+    category: categorySlice.reducer,
+    eventType: eventTypeSlice.reducer,
+    events: eventsSlice.reducer,
+    classStages: classStageSlice.reducer,
+    announcementTypes: announcementTypeSlice.reducer,
+    targetScreen: targetScreenSlice.reducer,
+    educationYears: educationYearsSlice.reducer,
+    graduationYears: graduationYearsSlice.reducer,
+    adminUsers: adminUserSlice.reducer,
+    targetSentence: targetSentenceSlice.reducer,
+    preferencePeriod: preferencePeriodSlice.reducer,
+    packageType: packageTypeSlice.reducer,
+    userType: userTypeSlice.reducer,
+    branchs: branchsSlice.reducer,
+    publisher: publisherSlice.reducer,
+    publisherBook: publisherBookSlice.reducer,
+    questionManagement: questionManagementSlice.reducer,
+    workPlan: workPlanSlice.reducer,
+    questionIdentification: questionIdentificationSlice.reducer,
+    earningChoice: earningChoiceSlice.reducer,
+    participantGroups: participantGroupsSlice.reducer,
+    trialType: trialTypeSlice.reducer,
+    documents: documentsSlice.reducer,
+    books: booksSlice.reducer,
+    organisationTypes: organisationTypesSlice.reducer,
+    organisations: organisationsSlice.reducer,
+    contractTypes: contractTypeSlice.reducer,
+    tiralExam: trialExamSlice.reducer,
+    contractKinds: contractKindsSlice.reducer,
+    difficultyLevelQuestionOfExams: difficultyLevelQuestionOfExamSlice.reducer,
+    maxNetNumber: maxNetNumberSlice.reducer,
+    contracts: contractsSlice.reducer,
+    asEv: asEvSlice.reducer,
+    roleAuthorization: roleAuthorizationSlice.reducer,
+    videoReportsNotConnected: videoReportsNotConnectedSlice.reducer,
+    jobSettings: jobSettingsSlice.reducer,
+    videoReportsConnected: videoReportsConnectedSlice.reducer,
 });
 
 const persistConfig = {
-  key: 'root',
-  storage,
-  whitelist: ['auth', 'user', 'menu', 'forms'], // only persist these keys,
-  transforms: [
-    encryptTransform({
-      secretKey: 'dd-secret-key-for-redux-persist',
-      onError: function (error) {
-        throw new Error(error?.message);
-      },
-    }),
-  ],
+    key: 'root',
+    storage,
+    whitelist: ['auth', 'user', 'menu', 'forms'], // only persist these keys,
+    transforms: [
+        encryptTransform({
+            secretKey: 'dd-secret-key-for-redux-persist',
+            onError: function (error) {
+                throw new Error(error?.message);
+            },
+        }),
+    ],
 };
 
 const rootReducer = (state, action) => {
-  if (action.type === FLUSH) {
-    storage.removeItem('persist:root');
-    return reducers(undefined, action);
-  }
+    if (action.type === FLUSH) {
+        storage.removeItem('persist:root');
+        return reducers(undefined, action);
+    }
 
-  return reducers(state, action);
+    return reducers(state, action);
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
-  reducer: persistedReducer,
-  devTools: process.env.NODE_ENV !== 'production',
-  middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    });
-  },
+    reducer: persistedReducer,
+    devTools: process.env.NODE_ENV !== 'production',
+    middleware: (getDefaultMiddleware) => {
+        return getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+            },
+        });
+    },
 });
 
 const persist = persistStore(store);
