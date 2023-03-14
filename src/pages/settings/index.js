@@ -133,6 +133,11 @@ const ShowContracts = lazy(() =>
         default: Component,
     })),
 );
+const JobSettings = lazy(() =>
+    import('./jobSettings').then(({ default: Component }) => ({
+        default: Component,
+    })),
+);
 
 const Settings = {
     Categories,
@@ -160,6 +165,7 @@ const Settings = {
     AddContract,
     EditContracts,
     ShowContracts,
+    JobSettings,
 };
 
 export default Settings;
