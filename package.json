@@ -71,6 +71,7 @@
     "build:dev": "yarn set:conf:dev && cross-env NODE_ENV=production && craco build",
     "build:qa": "yarn set:conf:qa && cross-env NODE_ENV=production && craco build",
     "build:master": "yarn set:conf:master && cross-env NODE_ENV=production && craco build",
+    "build:turkcell.dev": "yarn set:conf:turkcell.dev && cross-env NODE_ENV=production && craco build",
     "test": "craco test",
     "test-coverage": "craco test --coverage --watchAll=false",
     "test-sonar": "craco test --env=jsdom --coverage --testResultsProcessor jest-sonar-reporter --watchAll=false",
@@ -78,6 +79,7 @@
     "set:conf:dev": "cross-env ENV_NAME=dev node utils/configurator.js",
     "set:conf:qa": "cross-env ENV_NAME=qa node utils/configurator.js",
     "set:conf:master": "cross-env ENV_NAME=master node utils/configurator.js",
+    "set:conf:turkcell.dev": "cross-env ENV_NAME=turkcell.dev node utils/configurator.js",
     "prettier": "prettier --write \"src/**/*.js\"",
     "eslint:fix": "eslint src/ --fix"
   },

@@ -461,6 +461,14 @@ const Menus = () => {
                         </span>
                     </MenuItemText>
                 </CustomItem>
+                <CustomItem key="/settings/job-settings">
+                    <MenuItemText>
+                        <CustomImage src={menuIcons} />
+                        <span>
+                            <Text t="Jobların Çalışma Rutin Kontrolü" />
+                        </span>
+                    </MenuItemText>
+                </CustomItem>
             </CustomSubMenu>
 
             <CustomSubMenu key="QuestionMenu" title="Soru Yönetimi" icon={<CustomImage src={menuIcons} />}>
@@ -521,6 +529,14 @@ const Menus = () => {
                         <CustomImage src={menuIcons} />
                         <span>
                             <Text t="Çalışma Planına Bağlanmamış Videolar Raporu" />
+                        </span>
+                    </MenuItemText>
+                </CustomItem>
+                <CustomItem key="/reports/work-plan-video-reports-add-info">
+                    <MenuItemText>
+                        <CustomImage src={menuIcons} />
+                        <span>
+                            <Text t="Çalışma Planına Bağlanmış Videolar Raporu" />
                         </span>
                     </MenuItemText>
                 </CustomItem>

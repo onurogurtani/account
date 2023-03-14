@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import videoReportsNotConnected from '../../services//videoReportsNotConnected.servies';
+import videoReportsNotConnected from '../../services/videoReportsNotConnected.services';
 
 export const videoReportsNotConnectedGetList = createAsyncThunk(
     'videoReportsNotConnectedGetList',

@@ -1,6 +1,6 @@
 import { SearchOutlined } from '@ant-design/icons';
-import { Col, Row } from 'antd';
-import React, { useState } from 'react';
+import { Col, Form, Row } from 'antd';
+import React, { useEffect, useState } from 'react';
 import {
     CustomButton,
     CustomCollapseCard,
@@ -10,18 +10,43 @@ import {
     CustomPageHeader,
     CustomSelect,
     CustomTable,
+    Option,
 } from '../../../components';
 import CustomVideoPlayer from '../../../components/videoPlayer/CustomVideoPlayer';
 import '../../../styles/reports/videoReports.scss';
+import { getAllClassStages } from '../../../store/slice/classStageSlice';
+import { getLessonsQuesiton, setLessons } from '../../../store/slice/lessonsSlice';
+import { getLessonSubjectsList, resetLessonSubjects } from '../../../store/slice/lessonSubjectsSlice';
+import { getLessonSubSubjectsList, resetLessonSubSubjects } from '../../../store/slice/lessonSubSubjectsSlice';
+import { getUnitsList, resetLessonUnits } from '../../../store/slice/lessonUnitsSlice';
+import { getVideoCategoryList } from '../../../store/slice/videoSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    videoReportsConnectedGetList,
+    videoReportsConnectedDownload,
+} from '../../../store/slice/videoReportsConnectedSlice';
+import { getEducationYearList } from '../../../store/slice/educationYearsSlice';
+import { getByFilterPagedWorkPlans } from '../../../store/slice/workPlanSlice';
 
 const WorkPlanVideoReportsAdd = () => {
-    const [openVideo, setOpenVideo] = useState(false);
+    const [openVideo, setOpenVideo] = useState(null);
     const [openFilter, setOpenFilter] = useState(false);
+
+    const { allClassList } = useSelector((state) => state.classStages);
+    const { lessons } = useSelector((state) => state.lessons);
+    const { lessonUnits } = useSelector((state) => state?.lessonUnits);
+    const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
+    const { lessonSubSubjects } = useSelector((state) => state?.lessonSubSubjects);
+    const { categories } = useSelector((state) => state?.videos);
+    const { videoReportsConnectedList } = useSelector((state) => state.videoReportsConnected);
+    const { educationYearList } = useSelector((state) => state.educationYears);
+    const { workPlanList } = useSelector((state) => state?.workPlan);
+
     const columns = [
         {
             title: 'Sınıf Seviyesi',
-            dataIndex: 'id',
-            key: 'id',
+            dataIndex: 'classroomName',
+            key: 'classroomName',
             sorter: true,
             render: (text, record) => {
                 return <div>{text}</div>;
@@ -29,8 +54,8 @@ const WorkPlanVideoReportsAdd = () => {
         },
         {
             title: 'Ders Adı',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'lessonName',
+            key: 'lessonName',
 
             render: (text, record) => {
                 return <div>{text}</div>;
@@ -38,8 +63,8 @@ const WorkPlanVideoReportsAdd = () => {
         },
         {
             title: 'Ünite Adı',
-            dataIndex: 'recordStatus',
-            key: 'recordStatus',
+            dataIndex: 'lessonUnitName',
+            key: 'lessonUnitName',
 
             render: (text, record) => {
                 return <div>{text}</div>;
@@ -47,17 +72,27 @@ const WorkPlanVideoReportsAdd = () => {
         },
         {
             title: 'Konu Adı',
-            dataIndex: 'konu',
-            key: 'konu',
+            dataIndex: 'lessonSubjectName',
+            key: 'lessonSubjectName',
 
             render: (text, record) => {
                 return <div>{text}</div>;
             },
         },
         {
+            title: 'Eğitim Öğretim Yılı',
+            dataIndex: 'educationYearName',
+            key: 'educationYearName',
+
+            render: (text, record) => {
+                return <div>{text}</div>;
+            },
+        },
+
+        {
             title: 'Video Adı',
-            dataIndex: 'video',
-            key: 'video',
+            dataIndex: 'videoName',
+            key: 'videoName',
 
             render: (text, record) => {
                 return <div>{text}</div>;
@@ -65,8 +100,8 @@ const WorkPlanVideoReportsAdd = () => {
         },
         {
             title: 'Video Kategori',
-            dataIndex: 'video',
-            key: 'video',
+            dataIndex: 'videoCategoryName',
+            key: 'videoCategoryName',
 
             render: (text, record) => {
                 return <div>{text}</div>;
@@ -74,8 +109,8 @@ const WorkPlanVideoReportsAdd = () => {
         },
         {
             title: 'Video Kazanımları',
-            dataIndex: 'video',
-            key: 'video',
+            dataIndex: 'outcomeName',
+            key: 'outcomeName',
 
             render: (text, record) => {
                 return <div>{text}</div>;
@@ -83,8 +118,8 @@ const WorkPlanVideoReportsAdd = () => {
         },
         {
             title: 'Bağlı Olduğu Çalışma Planı Adı',
-            dataIndex: 'video',
-            key: 'video',
+            dataIndex: 'workPlanName',
+            key: 'workPlanName',
 
             render: (text, record) => {
                 return <div>{text}</div>;
@@ -101,7 +136,7 @@ const WorkPlanVideoReportsAdd = () => {
                     <div className="action-btns">
                         <CustomButton
                             onClick={() => {
-                                setOpenVideo(true);
+                                setOpenVideo(record.kalturaVideoId);
                             }}
                             className="edit-button"
                         >
@@ -112,6 +147,28 @@ const WorkPlanVideoReportsAdd = () => {
             },
         },
     ];
+    const dispatch = useDispatch();
+    const [form] = Form.useForm();
+    useEffect(() => {
+        dispatch(getAllClassStages());
+        dispatch(getVideoCategoryList());
+        dispatch(getEducationYearList());
+        dispatch(getByFilterPagedWorkPlans());
+        dispatch(videoReportsConnectedGetList({ PageSize: 10, PageNumber: 1 }));
+    }, [dispatch]);
+
+    const onFinish = async () => {
+        const value = form.getFieldsValue();
+        dispatch(
+            videoReportsConnectedGetList({
+                workPlanLinkedVideoDetailSearch: { ...value, PageSize: 10, PageNumber: 1 },
+            }),
+        );
+    };
+    const getDownload = async (code) => {
+        const value = form.getFieldsValue();
+        dispatch(videoReportsConnectedDownload({ workPlanLinkedVideoDetailSearch: { ...value }, downloadType: code }));
+    };
     return (
         <CustomPageHeader>
             <CustomCollapseCard cardTitle={'Çalışma Planına Bağlanmış Videolar Raporu'}>
@@ -128,87 +185,239 @@ const WorkPlanVideoReportsAdd = () => {
                             </CustomButton>
                         </div>
                         <div style={{ display: openFilter === true ? 'block' : 'none' }}>
-                            <CustomForm>
+                            <CustomForm onFinish={onFinish} form={form} layout="vertical">
                                 <Row gutter={16}>
                                     <Col span={4}>
-                                        <CustomFormItem label={'Sınıf Seviyesi'}>
-                                            <CustomSelect></CustomSelect>
+                                        <CustomFormItem name={'ClassroomId'} label={'Sınıf Seviyesi'}>
+                                            <CustomSelect
+                                                onChange={(e) => {
+                                                    dispatch(
+                                                        getLessonsQuesiton([
+                                                            {
+                                                                field: 'classroomId',
+                                                                value: e,
+                                                                compareType: 0,
+                                                            },
+                                                        ]),
+                                                    );
+                                                    form.resetFields([
+                                                        'LessonId',
+                                                        'LessonUnitId',
+                                                        'LessonSubjectId',
+                                                        'LessonSubSubjectId',
+                                                    ]);
+                                                    dispatch(resetLessonUnits());
+                                                    dispatch(resetLessonSubjects());
+                                                    dispatch(resetLessonSubSubjects());
+                                                }}
+                                            >
+                                                {allClassList.map((item, index) => (
+                                                    <Option key={index} value={item.id}>
+                                                        {item.name}
+                                                    </Option>
+                                                ))}
+                                            </CustomSelect>
                                         </CustomFormItem>
                                     </Col>
                                     <Col span={4}>
-                                        <CustomFormItem label={'Ders'}>
-                                            <CustomSelect></CustomSelect>
+                                        <CustomFormItem name={'LessonId'} label={'Ders'}>
+                                            <CustomSelect
+                                                onChange={(e) => {
+                                                    dispatch(
+                                                        getUnitsList([{ field: 'lessonId', value: e, compareType: 0 }]),
+                                                    );
+                                                    dispatch(resetLessonUnits());
+                                                    dispatch(resetLessonSubjects());
+                                                    dispatch(resetLessonSubSubjects());
+                                                    form.resetFields([
+                                                        'LessonUnitId',
+                                                        'LessonSubjectId',
+                                                        'LessonSubSubjectId',
+                                                    ]);
+                                                }}
+                                            >
+                                                {lessons.map((item, index) => (
+                                                    <Option key={index} value={item.id}>
+                                                        {item.name}
+                                                    </Option>
+                                                ))}
+                                            </CustomSelect>
                                         </CustomFormItem>
                                     </Col>
                                     <Col span={4}>
-                                        <CustomFormItem label={'Ünite'}>
-                                            <CustomSelect></CustomSelect>
+                                        <CustomFormItem name={'LessonUnitId'} label={'Ünite'}>
+                                            <CustomSelect
+                                                onChange={(e) => {
+                                                    dispatch(
+                                                        getLessonSubjectsList([
+                                                            { field: 'lessonUnitId', value: e, compareType: 0 },
+                                                        ]),
+                                                    );
+                                                    dispatch(resetLessonSubjects());
+                                                    dispatch(resetLessonSubSubjects());
+                                                    form.resetFields(['LessonSubjectId', 'LessonSubSubjectId']);
+                                                }}
+                                            >
+                                                {lessonUnits.map((item, index) => (
+                                                    <Option key={index} value={item.id}>
+                                                        {item.name}
+                                                    </Option>
+                                                ))}
+                                            </CustomSelect>
                                         </CustomFormItem>
                                     </Col>
                                     <Col span={4}>
-                                        <CustomFormItem label={'Konu'}>
-                                            <CustomSelect></CustomSelect>
+                                        <CustomFormItem name={'LessonSubjectId'} label={'Konu'}>
+                                            <CustomSelect
+                                                onChange={(e) => {
+                                                    dispatch(
+                                                        getLessonSubSubjectsList([
+                                                            { field: 'lessonSubjectId', value: e, compareType: 0 },
+                                                        ]),
+                                                    );
+                                                    dispatch(resetLessonSubSubjects());
+                                                    form.resetFields(['LessonSubSubjectId']);
+                                                }}
+                                            >
+                                                {lessonSubjects.map((item, index) => (
+                                                    <Option key={index} value={item.id}>
+                                                        {item.name}
+                                                    </Option>
+                                                ))}
+                                            </CustomSelect>
                                         </CustomFormItem>
                                     </Col>
                                     <Col span={4}>
-                                        <CustomFormItem label={'Kazanım'}>
-                                            <CustomSelect></CustomSelect>
+                                        <CustomFormItem name={'LessonSubSubjectId'} label={'Kazanım'}>
+                                            <CustomSelect>
+                                                {lessonSubSubjects.map((item, index) => (
+                                                    <Option key={index} value={item.id}>
+                                                        {item.name}
+                                                    </Option>
+                                                ))}
+                                            </CustomSelect>
                                         </CustomFormItem>
                                     </Col>
                                     <Col span={6}>
-                                        <CustomFormItem label={'Video Kategori'}>
-                                            <CustomSelect></CustomSelect>
+                                        <CustomFormItem name={'CategoryOfVideoId'} label={'Video Kategori'}>
+                                            <CustomSelect>
+                                                {categories.map((item, index) => (
+                                                    <Option key={index} value={item.id}>
+                                                        {item.name}
+                                                    </Option>
+                                                ))}
+                                            </CustomSelect>
                                         </CustomFormItem>
                                     </Col>
                                     <Col span={6}>
-                                        <CustomFormItem label={'Eğitim Öğretim Yılı'}>
-                                            <CustomSelect></CustomSelect>
+                                        <CustomFormItem name={'EducationYearIds'} label={'Eğitim Öğretim Yılı'}>
+                                            <CustomSelect mode="multiple">
+                                                {educationYearList?.items?.map((item, index) => (
+                                                    <Option value={item.id} key={index}>
+                                                        {item.startYear}-{item.endYear}
+                                                    </Option>
+                                                ))}
+                                            </CustomSelect>
                                         </CustomFormItem>
                                     </Col>
                                     <Col span={8}>
-                                        <CustomFormItem label={'Bağlı Olduğu Çalışma Planı Adı'}>
-                                            <CustomSelect></CustomSelect>
+                                        <CustomFormItem name={'WorkPlanIds'} label={'Bağlı Olduğu Çalışma Planı Adı'}>
+                                            <CustomSelect mode="multiple">
+                                                {workPlanList?.map((item, index) => (
+                                                    <Option value={item.id} key={index}>
+                                                        {item.name}
+                                                    </Option>
+                                                ))}
+                                            </CustomSelect>
                                         </CustomFormItem>
                                     </Col>
                                 </Row>
                                 <div className=" form-button">
-                                    <CustomButton>Temizle</CustomButton>
-                                    <CustomButton>Flitrele</CustomButton>
+                                    <CustomButton
+                                        onClick={() => {
+                                            dispatch(setLessons([]));
+                                            dispatch(resetLessonUnits());
+                                            dispatch(resetLessonSubjects());
+                                            dispatch(resetLessonSubSubjects());
+                                            form.resetFields();
+                                            dispatch(videoReportsConnectedGetList({ PageSize: 10, PageNumber: 1 }));
+                                        }}
+                                    >
+                                        Temizle
+                                    </CustomButton>
+                                    <CustomButton
+                                        onClick={() => {
+                                            form.submit();
+                                        }}
+                                    >
+                                        Flitrele
+                                    </CustomButton>
                                 </div>
                             </CustomForm>
                         </div>
                     </div>
 
                     <div className=" exports-button">
-                        <CustomButton type="primary">PDF'E Aktar</CustomButton>
-                        <CustomButton className="excel-button">Excele Aktar</CustomButton>
+                        <CustomButton
+                            onClick={() => {
+                                getDownload(2);
+                            }}
+                            type="primary"
+                        >
+                            PDF'E Aktar
+                        </CustomButton>
+                        <CustomButton
+                            onClick={() => {
+                                getDownload(1);
+                            }}
+                            className="excel-button"
+                        >
+                            Excele Aktar
+                        </CustomButton>
                     </div>
                     <CustomTable
+                        onChange={(e) => {
+                            const value = form.getFieldsValue();
+                            dispatch(
+                                videoReportsConnectedGetList({
+                                    ...value,
+                                    PageSize: e.pageSize,
+                                    PageNumber: e.current,
+                                }),
+                            );
+                        }}
                         pagination={{
                             showQuickJumper: true,
                             position: 'bottomRight',
                             showSizeChanger: true,
-                            total: 200,
-                            pageSize: 10,
+                            total: videoReportsConnectedList?.pagedProperty?.totalCount,
+                            pageSize: videoReportsConnectedList?.pagedProperty?.pageSize,
                         }}
-                        dataSource={[{ name: 'A' }]}
+                        dataSource={videoReportsConnectedList.items}
                         columns={columns}
                     ></CustomTable>
-                    <div>Toplam Sonuç :200</div>
+                    <div>
+                        Toplam Sonuç :
+                        {videoReportsConnectedList?.pagedProperty?.totalCount
+                            ? videoReportsConnectedList?.pagedProperty?.totalCount
+                            : 0}
+                    </div>
                 </div>
             </CustomCollapseCard>
-            <CustomModal
-                footer={false}
-                onCancel={() => {
-                    setOpenVideo(false);
-                }}
-                width={'1000px'}
-                visible={openVideo}
-            >
-                <CustomVideoPlayer
-                    url={'https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4'}
-                />
-            </CustomModal>
+            {openVideo !== null && (
+                <CustomModal
+                    footer={false}
+                    onCancel={() => {
+                        setOpenVideo(null);
+                    }}
+                    width={'1000px'}
+                    visible={openVideo !== null ? true : false}
+                >
+                    <CustomVideoPlayer
+                        url={`https://trkcll-dijital-dersane-demo.ercdn.net/${openVideo}.smil/playlist.m3u8`}
+                    />
+                </CustomModal>
+            )}
         </CustomPageHeader>
     );
 };
