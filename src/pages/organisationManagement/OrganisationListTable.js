@@ -15,16 +15,17 @@ const OrganisationListTable = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  useEffect(() => { 
+  useEffect(() => {
     dispatch(getByFilterPagedOrganisations(organisationDetailSearch));
   }, []);
 
   const onChangeTable = async (pagination, filters, sorter, extra) => {
+    const actionType = extra?.action
     dispatch(
       getByFilterPagedOrganisations({
         ...organisationDetailSearch,
         pageSize: pagination?.pageSize,
-        pageNumber: pagination?.current,
+        pageNumber: actionType === 'paginate' ? pagination?.current : 1,
         orderBy: sorter?.order
           ? capitalizeFirstLetter(sorter?.field) + (sorter?.order === 'ascend' ? 'ASC' : 'DESC')
           : 'UpdateTimeDESC',

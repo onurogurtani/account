@@ -255,7 +255,7 @@ const OrganisationCreateOrUpdate = () => {
           >
             {steps.map((item, index) => {
               return (
-                <Step key={index} title={item?.title} />
+                <Step disabled key={index} title={item?.title} />
               )
             })}
           </Steps>
