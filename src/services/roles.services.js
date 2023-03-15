@@ -69,6 +69,14 @@ const setActiveRole = (data) => {
     });
 };
 
+const getRoleTypes = (data) => {
+    return api({
+        url: `Identity/Roles/getRoleTypes`,
+        method: 'Get',
+        data,
+    });
+};
+
 const rolesServices = {
     getByFilterPagedRoles,
     addRole,
@@ -79,6 +87,7 @@ const rolesServices = {
     passiveCheckControlRole,
     setPassiveRole,
     setActiveRole,
+    getRoleTypes,
 };
 
 export default rolesServices;

@@ -110,9 +110,21 @@ export const setActiveRole = createAsyncThunk(
     },
 );
 
+export const getRoleTypes = createAsyncThunk(
+    'roleAuthorization/getRoleTypes',
+    async (body, { rejectWithValue, getState }) => {
+        try {
+            return await rolesServices.getRoleTypes(body);
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    },
+);
+
 const initialState = {
     roles: [],
     allRoles: [],
+    roleTypes: [],
     operationClaims: [],
     roleAuthorizationDetailSearch: {
         pageNumber: 1,
@@ -156,6 +168,9 @@ export const roleAuthorizationSlice = createSlice({
         });
         builder.addCase(getAllRoleList.fulfilled, (state, action) => {
             state.allRoles = action?.payload?.data?.items;
+        });
+        builder.addCase(getRoleTypes.fulfilled, (state, action) => {
+            state.roleTypes = action?.payload?.data;
         });
         builder.addCase(setPassiveRole.fulfilled, (state, action) => {
             const {
