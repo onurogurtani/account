@@ -114,14 +114,6 @@ const PackagesList = () => {
       },
     },
     {
-      title: 'Paket İçeriği',
-      dataIndex: 'content',
-      key: 'content',
-      render: (text, record) => {
-        return <div>{text}</div>;
-      },
-    },
-    {
       title: 'Paket Görselleri',
       dataIndex: 'imageOfPackages',
       key: 'imageOfPackages',
