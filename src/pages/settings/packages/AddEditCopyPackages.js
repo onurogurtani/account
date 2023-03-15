@@ -23,6 +23,7 @@ import {
     Text,
 } from '../../../components';
 import { packageKind, packageTypes, packageFieldTypes, PACKAGE_TYPES } from '../../../constants/package';
+import { schoolLevelEnum } from '../../../constants/schoolLevel';
 import useAcquisitionTree from '../../../hooks/useAcquisitionTree';
 import fileServices from '../../../services/file.services';
 import { getPublisherList } from '../../../store/slice/publisherSlice';
@@ -435,7 +436,7 @@ const AddEditCopyPackages = () => {
         setClassroomId(value.at(-1));
         let selectedClass = activeClassList.filter((item) => value.includes(item.id));
         setSelectedClassrooms(selectedClass);
-        if (!selectedClassrooms.some((i) => i.schoolLevel === 30)) {
+        if (selectedClassrooms.every((i) => i.schoolLevel !== schoolLevelEnum.Lise)) {
             form.setFieldsValue({ packageFieldTypes: 0 });
         }
     };
@@ -665,7 +666,15 @@ const AddEditCopyPackages = () => {
 
                         <DateSection form={form} />
 
-                        <CustomFormItem label={<Text t="Sınıf Seviyesi" />} name="gradeLevel" rules={formRules}>
+                        <CustomFormItem label={<Text t="Sınıf Seviyesi" />} name="gradeLevel"
+                            rules={[
+                                ...formRules,
+                                ...(selectedClassrooms.length > 1 && selectedClassrooms?.some((item) => selectedClassrooms.some(i => i.schoolLevel !== item.schoolLevel))
+                                    ? [{
+                                        message: "Seçilen sınıf seviyelerinin eğitim düzeyleri(ilkokul, ortaokul, lise) farklı olmamalıdır."
+                                    }]
+                                    : [])
+                            ]}>
                             <CustomSelect
                                 className="form-filter-item"
                                 placeholder={'Seçiniz'}
