@@ -20,7 +20,8 @@ import {
 } from '../../../store/slice/lessonSubSubjectsSlice';
 import { getUnitsListFilter, resetLessonUnitsFilter } from '../../../store/slice/lessonUnitsSlice';
 import { getByFilterPagedQuestionOfExamsList } from '../../../store/slice/questionIdentificationSlice';
-import { setTrialExamFormData } from '../../../store/slice/trialExamSlice';
+import { setTrialExamFormData, deleteAddQuesiton } from '../../../store/slice/trialExamSlice';
+import Preview from './Preview';
 const AddQuestion = () => {
     const [step, setStep] = useState(1);
     const { allClassList } = useSelector((state) => state.classStages);
@@ -31,8 +32,9 @@ const AddQuestion = () => {
     const { trialExamFormData } = useSelector((state) => state?.tiralExam);
     const { questionOfExamsList, pagedProperty } = useSelector((state) => state.questionIdentification);
     const [sectionName, setSectionName] = useState('');
-    const [selectSection, setSelectSection] = useState('');
+    const [selectSection, setSelectSection] = useState(null);
     const [sortData, setSortData] = useState([]);
+    const [previewShow, setPreviewShow] = useState(false);
 
     const [form] = Form.useForm();
     const dispatch = useDispatch();
@@ -63,13 +65,13 @@ const AddQuestion = () => {
             } else {
                 newData[findIndex].sectionQuestionOfExams = [];
             }
-            const questionFındIndex = newData[findIndex].sectionQuestionOfExams.findIndex(
+            const questionFindIndex = newData[findIndex].sectionQuestionOfExams.findIndex(
                 (q) => q.questionOfExamId === item.id,
             );
 
-            if (questionFındIndex !== -1) {
+            if (questionFindIndex !== -1) {
                 let a = [...newData[findIndex].sectionQuestionOfExams];
-                a.splice(questionFındIndex, 1);
+                a.splice(questionFindIndex, 1);
                 newData[findIndex] = {
                     ...newData[findIndex],
                     sectionQuestionOfExams: [...a],
@@ -146,57 +148,83 @@ const AddQuestion = () => {
                             ))}
                         </div>
                         <div>
-                            <CustomButton>Önizleme</CustomButton>
+                            <CustomButton
+                                onClick={() => {
+                                    setPreviewShow(true);
+                                }}
+                            >
+                                Önizleme
+                            </CustomButton>
                         </div>
                     </div>
-                    <div className="view-quesiton-add">
-                        {trialExamFormData?.sections
-                            ?.find((q) => q.name === selectSection)
-                            ?.sectionQuestionOfExams.map((item, index) => (
-                                <div className="view-quesiton-add-main ">
-                                    <CustomSelect
-                                        onChange={(e) => {
-                                            const newSections = [...trialExamFormData.sections];
-                                            const findIndex = trialExamFormData?.sections?.findIndex(
-                                                (q) => q.name === selectSection,
-                                            );
-                                            const newFindIndexSections = { ...trialExamFormData.sections[findIndex] };
-                                            const newSectionQuestionOfExams = [
-                                                ...trialExamFormData.sections[findIndex].sectionQuestionOfExams,
-                                            ];
+                    {selectSection && (
+                        <>
+                            <div
+                                onClick={() => {
+                                    setStep(2);
+                                }}
+                                className="add-question-button"
+                            >
+                                <CustomButton>Soru Ekle</CustomButton>
+                            </div>
+                            <div className="view-quesiton-add">
+                                {trialExamFormData?.sections
+                                    ?.find((q) => q.name === selectSection)
+                                    ?.sectionQuestionOfExams.map((item, index) => (
+                                        <div className="view-quesiton-add-main ">
+                                            <CustomSelect
+                                                onChange={(e) => {
+                                                    const newSections = [...trialExamFormData.sections];
+                                                    const findIndex = trialExamFormData?.sections?.findIndex(
+                                                        (q) => q.name === selectSection,
+                                                    );
+                                                    const newFindIndexSections = {
+                                                        ...trialExamFormData.sections[findIndex],
+                                                    };
+                                                    const newSectionQuestionOfExams = [
+                                                        ...trialExamFormData.sections[findIndex].sectionQuestionOfExams,
+                                                    ];
 
-                                            const changeData = { ...newSectionQuestionOfExams[index] };
-                                            newSectionQuestionOfExams[index] = newSectionQuestionOfExams[e - 1];
-                                            newSectionQuestionOfExams[e - 1] = changeData;
-                                            newFindIndexSections.sectionQuestionOfExams = newSectionQuestionOfExams;
-                                            newSections[findIndex] = newFindIndexSections;
-                                            dispatch(
-                                                setTrialExamFormData({
-                                                    ...trialExamFormData,
-                                                    sections: [...newSections],
-                                                }),
-                                            );
-                                        }}
-                                        value={index + 1}
-                                        options={sortData}
-                                    ></CustomSelect>
-                                    <div key={index} className="question-image-main">
-                                        <img className="question-image" src={item?.file?.base64} />
-                                        {item.filePath}
-                                    </div>
-                                </div>
-                            ))}
-                        {trialExamFormData?.sections?.find((q) => q.name === selectSection)?.sectionQuestionOfExams
-                            ?.length === 0 && 'Soru Eklenmedi!'}
-                    </div>
-                    <div
-                        onClick={() => {
-                            setStep(2);
-                        }}
-                        className="add-question-button"
-                    >
-                        <CustomButton>Soru Ekle</CustomButton>
-                    </div>
+                                                    const changeData = { ...newSectionQuestionOfExams[index] };
+                                                    newSectionQuestionOfExams[index] = newSectionQuestionOfExams[e - 1];
+                                                    newSectionQuestionOfExams[e - 1] = changeData;
+                                                    newFindIndexSections.sectionQuestionOfExams =
+                                                        newSectionQuestionOfExams;
+                                                    newSections[findIndex] = newFindIndexSections;
+                                                    dispatch(
+                                                        setTrialExamFormData({
+                                                            ...trialExamFormData,
+                                                            sections: [...newSections],
+                                                        }),
+                                                    );
+                                                }}
+                                                value={index + 1}
+                                                options={sortData}
+                                            ></CustomSelect>
+                                            <div key={index} className="question-image-main">
+                                                <img className="question-image" src={item?.file?.base64} />
+                                                {item.filePath}
+                                            </div>
+                                            <div
+                                                onClick={() => {
+                                                    const findIndex = trialExamFormData?.sections?.findIndex(
+                                                        (q) => q.name === selectSection,
+                                                    );
+                                                    dispatch(
+                                                        deleteAddQuesiton({ index: findIndex, quesitonIndex: index }),
+                                                    );
+                                                }}
+                                            >
+                                                <CustomButton className="button-red">Sil</CustomButton>
+                                            </div>
+                                        </div>
+                                    ))}
+                                {trialExamFormData?.sections?.find((q) => q.name === selectSection)
+                                    ?.sectionQuestionOfExams?.length === 0 && 'Soru Eklenmedi!'}
+                            </div>
+                        </>
+                    )}
+
                     <div className="step1-action-button">
                         <CustomButton>İptal</CustomButton>
                         <CustomButton>Taslak Olarak Kaydet</CustomButton>
@@ -421,6 +449,17 @@ const AddQuestion = () => {
                     </div>
                 </div>
             )}
+            <CustomModal
+                title="Deneme Sınavı Önizleme"
+                footer={false}
+                onCancel={() => {
+                    setPreviewShow(false);
+                }}
+                width={1100}
+                visible={previewShow}
+            >
+                <Preview />
+            </CustomModal>
         </div>
     );
 };
