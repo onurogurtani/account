@@ -105,7 +105,12 @@ const RoleAuthorizationCreateOrEditForm = ({ isEdit }) => {
     const onCancel = () => {
         confirmDialog({
             title: <Text t="attention" />,
-            message: 'İptal etmek istediğinizden emin misiniz?',
+            htmlContent: (
+                <>
+                    Yaptığınız değişiklikler kaydedilmeyecek. <br />
+                    İptal işlemini onaylıyor musunuz?
+                </>
+            ),
             okText: 'Evet',
             cancelText: 'Hayır',
             onOk: async () => {

@@ -24,13 +24,13 @@ const useRoleAuthorizationListTableColumns = () => {
             key: 'isOrganisationView',
             sorter: true,
             render: (text, record) => {
-                return <div>{text ? 'Evet' : 'Hayır'}</div>;
+                return <div>{<Tag color={text ? 'green' : 'red'}>{text ? 'Evet' : 'Hayır'}</Tag>}</div>;
             },
         },
         {
             title: 'Durum',
-            dataIndex: 'RecordStatusInfo',
-            key: 'RecordStatusInfo',
+            dataIndex: 'recordStatus',
+            key: 'recordStatus',
             sorter: true,
             width: 100,
             render: (text, record) => {
