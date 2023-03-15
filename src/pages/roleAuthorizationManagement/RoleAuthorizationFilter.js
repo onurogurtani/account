@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomFormItem, CustomSelect, Option, OptGroup, warningDialog, Text } from '../../components';
 import TableFilter from '../../components/TableFilter';
 import { recordStatus } from '../../constants';
+import { isOrganisationView } from '../../constants/roleAuthorization';
 import {
     getAllRoleList,
     getByFilterPagedRoles,
@@ -104,6 +105,16 @@ const RoleAuthorizationFilter = ({ isVisibleFilter }) => {
                         {recordStatus.map((item) => (
                             <Option key={item.id} value={item.id}>
                                 {item.value}
+                            </Option>
+                        ))}
+                    </CustomSelect>
+                </CustomFormItem>
+
+                <CustomFormItem label="Kurumsal Rol mü?" name="isOrganisationView">
+                    <CustomSelect allowClear placeholder="Seçiniz">
+                        {isOrganisationView.map((item) => (
+                            <Option key={item.value} value={item.value}>
+                                {item.label}
                             </Option>
                         ))}
                     </CustomSelect>

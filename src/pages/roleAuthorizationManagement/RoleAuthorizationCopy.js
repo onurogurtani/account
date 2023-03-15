@@ -59,7 +59,7 @@ const RoleAuthorizationCopy = ({ record }) => {
                     <CustomFormItem
                         label="Rol Adı:"
                         name="rolName"
-                        initialValue={record.name + ' (2)'}
+                        initialValue={record.name + '(2)'}
                         rules={[
                             { required: true, message: 'Rol adı giriniz' },
                             { whitespace: true },

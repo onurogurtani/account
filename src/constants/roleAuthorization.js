@@ -1,18 +1,10 @@
-export const roleType = [
+export const isOrganisationView = [
     {
-        id: 1,
-        value: 'Öğretmen',
+        value: true,
+        label: 'Evet',
     },
     {
-        id: 2,
-        value: 'Öğrenci',
-    },
-    {
-        id: 3,
-        value: 'Veli',
-    },
-    {
-        id: 4,
-        value: 'Admin',
+        value: false,
+        label: 'Hayır',
     },
 ];

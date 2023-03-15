@@ -30,7 +30,7 @@ const RoleAuthorizationList = () => {
                                 : (ref.current.style.display = 'none');
                         }}
                     >
-                        <CustomImage className="icon-search" src={iconSearchWhite} />
+                        <CustomImage className="icon-search" src={iconSearchWhite} /> Ara
                     </CustomButton>
                 </div>
 

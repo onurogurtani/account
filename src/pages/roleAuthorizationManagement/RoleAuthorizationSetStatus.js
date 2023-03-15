@@ -15,7 +15,12 @@ import modalClose from '../../assets/icons/icon-close.svg';
 import { Form } from 'antd';
 import { turkishToLower } from '../../utils/utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllRoleList, passiveCheckControlRole, setPassiveRole } from '../../store/slice/roleAuthorizationSlice';
+import {
+    getAllRoleList,
+    passiveCheckControlRole,
+    setActiveRole,
+    setPassiveRole,
+} from '../../store/slice/roleAuthorizationSlice';
 import { PlusCircleFilled } from '@ant-design/icons';
 import modalWarning from '../../assets/icons/icon-modal-warning.svg';
 import '../../styles/roleAuthorizationManagement/roleAuthorizationSetStatus.scss';
@@ -40,9 +45,8 @@ const RoleAuthorizationSetStatus = ({ record }) => {
     };
 
     const onFinish = async (values) => {
-        console.log(values);
         try {
-            await dispatch(setPassiveRole({ roleId: record?.id, transferRoleId: values?.transferRoleId }));
+            await dispatch(setPassiveRole({ roleId: record?.id, transferRoleId: values?.transferRoleId })).unwrap();
             handleClose();
         } catch (error) {
             errorDialog({ title: <Text t="error" />, message: error?.data?.message });
@@ -151,9 +155,20 @@ const RoleAuthorizationSetStatus = ({ record }) => {
                     if (record?.recordStatus === 1) {
                         const action = await dispatch(passiveCheckControlRole({ RoleId: record?.id })).unwrap();
                         if (action?.data?.isPassiveCheck) {
+                            try {
+                                await dispatch(setPassiveRole({ roleId: record?.id })).unwrap();
+                            } catch (error) {
+                                errorDialog({ title: <Text t="error" />, message: error?.data?.message });
+                            }
                         } else {
                             setMessage(action?.data?.message);
                             setOpen(true);
+                        }
+                    } else {
+                        try {
+                            await dispatch(setActiveRole({ roleId: record?.id })).unwrap();
+                        } catch (error) {
+                            errorDialog({ title: <Text t="error" />, message: error?.data?.message });
                         }
                     }
                 }}

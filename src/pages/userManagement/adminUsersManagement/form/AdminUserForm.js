@@ -50,6 +50,7 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
         if (isEdit && currentAdminUser) {
             form.setFieldsValue({
                 ...currentAdminUser,
+                citizenId: currentAdminUser?.citizenId.toString(),
                 mobilePhones: maskedPhone(currentAdminUser?.mobilePhones),
                 roleIds: currentAdminUser?.roles?.map((i) => i.id),
             });

@@ -52,6 +52,14 @@ const deleteWorkPlan = (data) => {
   });
 };
 
+const getActiveEducationYear = (data = null) => {
+  return api({
+    url: `Target/EducationYears/getActiveEducationYear`,
+    method: 'POST',
+    data,
+  });
+};
+
 const workPlanService = {
   getByFilterPagedQuestionOfExams,
   getAsEvQuestionOfExamsByAsEvId,
@@ -59,7 +67,8 @@ const workPlanService = {
   addWorkPlan,
   getUsedVideoIdsQuery,
   getWorkPlanNamesQuery,
-  deleteWorkPlan
+  deleteWorkPlan,
+  getActiveEducationYear
 };
 
 export default workPlanService;

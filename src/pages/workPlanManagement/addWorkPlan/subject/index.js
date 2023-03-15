@@ -20,9 +20,8 @@ import {
   setSubjectChooseSchoolLevel,
   selectedEvaluationTabRowData,
   resetEvaluationDataList,
-  resetEvaluationQuestionList, getUsedVideoIdsQuery,
+  resetEvaluationQuestionList, getUsedVideoIdsQuery, getActiveEducationYear,
 } from '../../../../store/slice/workPlanSlice';
-import { getEducationYears } from '../../../../store/slice/questionFileSlice';
 import { getAllClassStages } from '../../../../store/slice/classStageSlice';
 import useAcquisitionTree from '../../../../hooks/useAcquisitionTree';
 import { getByFilterPagedVideos } from '../../../../store/slice/videoSlice';
@@ -42,8 +41,7 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
   const { classroomId, setClassroomId, lessonId, setLessonId, unitId, setUnitId } =
     useAcquisitionTree();
 
-  const { subjectChooseTab,usedVideoIdsQueryListData } = useSelector((state) => state?.workPlan);
-  const { educationYears } = useSelector((state) => state?.questionManagement);
+  const { educationYearsList,subjectChooseTab,usedVideoIdsQueryListData } = useSelector((state) => state?.workPlan);
   const { allClassList } = useSelector((state) => state?.classStages);
   const { lessons } = useSelector((state) => state?.lessons);
   const { lessonUnits } = useSelector((state) => state?.lessonUnits);
@@ -62,7 +60,7 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
 
 
   useEffect(() => {
-    dispatch(getEducationYears());
+    dispatch(getActiveEducationYear());
     dispatch(getAllClassStages(activeFilter));
     dispatch(resetSubjectChooseVideoList());
   }, []);
@@ -183,7 +181,7 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
             placeholder='Seçiniz'
 
           >
-            {educationYears.map((item) => {
+            {educationYearsList.map((item) => {
               return (
                 <Option key={item.id} value={item.id}>
                   {item.startYear} - {item.endYear}
