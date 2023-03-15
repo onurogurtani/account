@@ -19,11 +19,12 @@ const RoleAuthorizationListTable = () => {
     }, []);
 
     const onChangeTable = async (pagination, filters, sorter, extra) => {
+        const actiontype = extra?.action;
         dispatch(
             getByFilterPagedRoles({
                 ...roleAuthorizationDetailSearch,
                 pageSize: pagination?.pageSize,
-                pageNumber: pagination?.current,
+                pageNumber: actiontype === 'paginate' ? pagination?.current : 1,
                 orderBy: sorter?.order
                     ? capitalizeFirstLetter(sorter?.field) + (sorter?.order === 'ascend' ? 'ASC' : 'DESC')
                     : 'UpdateTimeDESC',

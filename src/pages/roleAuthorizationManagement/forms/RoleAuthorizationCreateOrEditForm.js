@@ -15,8 +15,13 @@ import {
     successDialog,
     Text,
 } from '../../../components';
-import { roleType } from '../../../constants/roleAuthorization';
-import { addRole, getOperationClaimsList, getRoleById, updateRole } from '../../../store/slice/roleAuthorizationSlice';
+import {
+    addRole,
+    getOperationClaimsList,
+    getRoleById,
+    getRoleTypes,
+    updateRole,
+} from '../../../store/slice/roleAuthorizationSlice';
 import RoleAuthorizationTreeTransfer from '../components/RoleAuthorizationTreeTransfer';
 
 const RoleAuthorizationCreateOrEditForm = ({ isEdit }) => {
@@ -27,13 +32,14 @@ const RoleAuthorizationCreateOrEditForm = ({ isEdit }) => {
 
     const [targetKeys, setTargetKeys] = useState([]);
     const [transferData, setTransferData] = useState([]);
-    const { operationClaims } = useSelector((state) => state.roleAuthorization);
+    const { operationClaims, roleTypes } = useSelector((state) => state.roleAuthorization);
 
     const onChange = (keys) => {
         setTargetKeys(keys);
     };
     useEffect(() => {
         dispatch(getOperationClaimsList());
+        dispatch(getRoleTypes());
     }, []);
 
     useEffect(() => {
@@ -105,7 +111,12 @@ const RoleAuthorizationCreateOrEditForm = ({ isEdit }) => {
     const onCancel = () => {
         confirmDialog({
             title: <Text t="attention" />,
-            message: 'İptal etmek istediğinizden emin misiniz?',
+            htmlContent: (
+                <>
+                    Yaptığınız değişiklikler kaydedilmeyecek. <br />
+                    İptal işlemini onaylıyor musunuz?
+                </>
+            ),
             okText: 'Evet',
             cancelText: 'Hayır',
             onOk: async () => {
@@ -153,13 +164,15 @@ const RoleAuthorizationCreateOrEditForm = ({ isEdit }) => {
                         rules={[{ required: true, message: 'Rol Tipi Seçiniz' }]}
                     >
                         <CustomSelect placeholder="Seçiniz" allowClear>
-                            {roleType.map((item) => {
-                                return (
-                                    <Option key={item.id} value={item.id}>
-                                        {item.value}
-                                    </Option>
-                                );
-                            })}
+                            {roleTypes
+                                .filter((u) => u.isDisabled === false)
+                                .map((item) => {
+                                    return (
+                                        <Option key={item.id} value={item.id}>
+                                            {item.label}
+                                        </Option>
+                                    );
+                                })}
                         </CustomSelect>
                     </CustomFormItem>
                 </div>

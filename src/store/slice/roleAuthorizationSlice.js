@@ -99,10 +99,32 @@ export const setPassiveRole = createAsyncThunk(
         }
     },
 );
+export const setActiveRole = createAsyncThunk(
+    'roleAuthorization/setActiveRole',
+    async (body, { rejectWithValue, getState }) => {
+        try {
+            return await rolesServices.setActiveRole(body);
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    },
+);
+
+export const getRoleTypes = createAsyncThunk(
+    'roleAuthorization/getRoleTypes',
+    async (body, { rejectWithValue, getState }) => {
+        try {
+            return await rolesServices.getRoleTypes(body);
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    },
+);
 
 const initialState = {
     roles: [],
     allRoles: [],
+    roleTypes: [],
     operationClaims: [],
     roleAuthorizationDetailSearch: {
         pageNumber: 1,
@@ -147,24 +169,26 @@ export const roleAuthorizationSlice = createSlice({
         builder.addCase(getAllRoleList.fulfilled, (state, action) => {
             state.allRoles = action?.payload?.data?.items;
         });
-        builder.addCase(passiveCheckControlRole.fulfilled, (state, action) => {
-            console.log(1, action);
-            const {
-                arg: { RoleId },
-            } = action.meta;
-            const { isPassiveCheck } = action?.payload?.data;
-            if (RoleId && isPassiveCheck) {
-                state.roles = state.roles.map((item) => (item.id === RoleId ? { ...item, recordStatus: 0 } : item));
-            }
+        builder.addCase(getRoleTypes.fulfilled, (state, action) => {
+            state.roleTypes = action?.payload?.data;
         });
         builder.addCase(setPassiveRole.fulfilled, (state, action) => {
-            console.log(1, action);
             const {
                 arg: { roleId },
             } = action.meta;
             const { success } = action?.payload;
             if (roleId && success) {
                 state.roles = state.roles.map((item) => (item.id === roleId ? { ...item, recordStatus: 0 } : item));
+            }
+        });
+        builder.addCase(setActiveRole.fulfilled, (state, action) => {
+            console.log(1, action);
+            const {
+                arg: { roleId },
+            } = action.meta;
+            const { success } = action?.payload;
+            if (roleId && success) {
+                state.roles = state.roles.map((item) => (item.id === roleId ? { ...item, recordStatus: 1 } : item));
             }
         });
     },
