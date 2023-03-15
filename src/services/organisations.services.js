@@ -16,11 +16,34 @@ const getOrganisationNames = (data) => {
   });
 };
 
-const getByOrganisationId = (params) => {
+const getOrganisationPackagesNames = (data) => {
   return api({
-    url: `Crm/Organisations/getbyid`,
+    url: `Crm/Organisations/getOrganisationPackageNames`,
     method: 'GET',
-    params,
+    data,
+  });
+};
+
+const getOrganisationManagerNames = (data) => {
+  return api({
+    url: `Crm/Organisations/getOrganisationManagerNames`,
+    method: 'GET',
+    data,
+  });
+};
+
+const getOrganisationDomainNames = (data) => {
+  return api({
+    url: `Crm/Organisations/getOrganisationDomainNames`,
+    method: 'GET',
+    data,
+  });
+};
+
+const getByOrganisationId = (id) => {
+  return api({
+    url: `Crm/Organisations/getbyid?Id=${id}`,
+    method: 'GET',
   });
 };
 
@@ -40,6 +63,22 @@ const updateOrganisation = (data) => {
   });
 };
 
+const UpdateOrganisationStatus = (data) => {
+  return api({
+    url: `Crm/Organisations/UpdateOrganisationStatus`,
+    method: 'PUT',
+    data: data,
+  });
+};
+
+const deleteOrganization = (data) => {
+  return api({
+    url: `Crm/Organisations/Delete`,
+    method: 'DELETE',
+    data,
+  });
+};
+
 const UpdateOrganisationIsActive = (data) => {
   return api({
     url: `Crm/Organisations/UpdateOrganisationIsActive`,
@@ -51,9 +90,14 @@ const UpdateOrganisationIsActive = (data) => {
 const organisationsServices = {
   getByFilterPagedOrganisations,
   getOrganisationNames,
+  getOrganisationPackagesNames,
+  getOrganisationManagerNames,
+  getOrganisationDomainNames,
   getByOrganisationId,
   addOrganisation,
   updateOrganisation,
+  UpdateOrganisationStatus,
+  deleteOrganization,
   UpdateOrganisationIsActive,
 };
 

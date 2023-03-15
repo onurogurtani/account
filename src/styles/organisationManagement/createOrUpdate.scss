@@ -1,0 +1,59 @@
+.steps-container {
+    padding: 32px;
+  }
+
+  .steps-content{
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .submit-btn {
+    border: none;
+    background: #162056 !important;
+    text-align: center;
+    color: #fff;
+    border-radius: 6px;
+  }
+  .cancel-btn {
+    background-color: gray;
+    border: none;
+    width: 100px !important;
+    text-align: center;
+    color: #fff;
+    border-radius: 6px;
+  }
+  .call-of-button{
+    background-color: rgb(170, 46, 46);
+    border: none;
+    text-align: center;
+    color: #fff;
+    border-radius: 6px;
+  }
+  .update-btn {
+    background-color: #699a00;
+    border: none;
+    text-align: center;
+    color: #fff;
+    border-radius: 6px; 
+  }
+  .back-btn {
+    background-color: #162056;
+    border: none;
+    text-align: center;
+    color: #fff;
+    border-radius: 6px;
+  }
+  .active-btn{
+    background-color: #699a00;
+    border: none;
+    text-align: center;
+    color: #fff;
+    border-radius: 6px;
+  }
+  .suspend-btn{
+    background-color: #d5b803;
+    border: none;
+    text-align: center;
+    color: #fff;
+    border-radius: 6px;
+  }

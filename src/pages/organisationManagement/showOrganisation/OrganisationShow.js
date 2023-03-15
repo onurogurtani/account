@@ -33,7 +33,7 @@ const OrganisationShow = () => {
         title="Kurum Görüntüleme"
         showBreadCrumb
         showHelpButton
-        routes={['Kurum Yönetimi']}
+        routes={['Kurumsal Müşteri Listesi']}
       ></CustomPageHeader>
       <OrganisationShowAction organisation={organisation} />
       <OrganisationShowList organisation={organisation} />
