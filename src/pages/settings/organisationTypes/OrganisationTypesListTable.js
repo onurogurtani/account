@@ -1,3 +1,4 @@
+import { Tag } from 'antd';
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomButton, CustomTable } from '../../../components';
@@ -34,7 +35,7 @@ const OrganisationTypesListTable = () => {
             sorter: (a, b) => b.recordStatus - a.recordStatus,
             sortOrder: sortedInfo.columnKey === 'recordStatus' ? sortedInfo.order : null,
             render: (text, record) => {
-                return <div>{text ? 'Aktif' : 'Pasif'}</div>;
+                return <div>{<Tag color={text ? 'green' : 'red'}>{text ? 'Aktif' : 'Pasif'}</Tag>}</div>;
             },
         },
         {

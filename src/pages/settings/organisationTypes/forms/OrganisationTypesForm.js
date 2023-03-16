@@ -21,12 +21,12 @@ import { organisationTypesList } from '../../../../constants/settings/organisati
 import {
     addOrganisationTypes,
     closeModal,
+    getOrganisationTypes,
     updateOrganisationTypes,
 } from '../../../../store/slice/organisationTypesSlice';
 
 const OrganisationTypesForm = ({ onCancel, organisationType, form }) => {
     const dispatch = useDispatch();
-
     const onFinish = (values) => {
         if (organisationType?.id) {
             confirmDialog({
@@ -43,18 +43,22 @@ const OrganisationTypesForm = ({ onCancel, organisationType, form }) => {
         }
         onSubmit(values);
     };
+    const isDisabledOrganisationTypeFormItem = !organisationType?.isSingularOrPluralChangeable && organisationType?.id;
 
     const onSubmit = useCallback(
         async (values) => {
             try {
                 let action;
                 if (organisationType?.id) {
-                    action = await dispatch(
-                        updateOrganisationTypes({ organisationType: { ...values, id: organisationType?.id } }),
-                    ).unwrap();
+                    const data = { ...values, id: organisationType?.id };
+                    if (isDisabledOrganisationTypeFormItem) {
+                        delete data.isSingularOrganisation;
+                    }
+                    action = await dispatch(updateOrganisationTypes({ organisationType: data })).unwrap();
                 } else {
                     action = await dispatch(addOrganisationTypes({ organisationType: values })).unwrap();
                 }
+                await dispatch(getOrganisationTypes());
                 dispatch(closeModal());
                 form.resetFields();
 
@@ -63,9 +67,8 @@ const OrganisationTypesForm = ({ onCancel, organisationType, form }) => {
                 errorDialog({ title: <Text t="error" />, message: error?.message });
             }
         },
-        [dispatch, form, organisationType?.id],
+        [dispatch, form, organisationType?.id, isDisabledOrganisationTypeFormItem],
     );
-
     return (
         <CustomForm
             form={form}
@@ -91,8 +94,18 @@ const OrganisationTypesForm = ({ onCancel, organisationType, form }) => {
                 name="isSingularOrganisation"
                 rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
             >
-                <CustomRadioGroup>
-                    <Space direction="vertical">
+                <CustomRadioGroup disabled={isDisabledOrganisationTypeFormItem}>
+                    <Space
+                        onClick={() => {
+                            isDisabledOrganisationTypeFormItem &&
+                                errorDialog({
+                                    title: '',
+                                    message:
+                                        'Kurum Tipi, Kurumsal Müşteri Listesindeki kayıtlar ile ilişkilendirilmiştir. Değişiklik yapılamaz.',
+                                });
+                        }}
+                        direction="vertical"
+                    >
                         {organisationTypesList.map((radio, index) => (
                             <CustomRadio key={index} value={radio.value}>
                                 {radio.label}
