@@ -86,6 +86,7 @@ const AddEditCopyPackages = () => {
     const hasMotivationEvent = Form.useWatch('hasMotivationEvent', form) || false;
 
     const activeClassList = useMemo(() => allClassList.filter(item => item.isActive === true), [allClassList]);
+    const activeContractTypeAllList = useMemo(() => contractTypeAllList.filter(item => item.recordStatus === 1), [contractTypeAllList]);
 
     useEffect(() => {
         if (allGroupList.length) return false;
@@ -773,7 +774,7 @@ const AddEditCopyPackages = () => {
                                     dispatch(getContractKindsByContractTypes({ Ids: values }));
                                 }}
                             >
-                                {contractTypeAllList.map((item) => (
+                                {activeContractTypeAllList.map((item) => (
                                     <Option key={item.id} value={item.id}>
                                         {item?.name}
                                     </Option>
