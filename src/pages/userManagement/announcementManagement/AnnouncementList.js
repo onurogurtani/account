@@ -114,10 +114,11 @@ const AnnouncementList = () => {
 
     const columns = [
         {
-            title: 'No',
+            title: '#',
             dataIndex: 'id',
             key: 'id',
             sorter: true,
+            align: 'center',
             render: (text, record) => {
                 return <div>{text}</div>;
             },
@@ -169,9 +170,30 @@ const AnnouncementList = () => {
         //     render: (_, record) => listRoles(record),
         // },
         {
+            title: 'Katılımcı Tipi',
+            dataIndex: 'groups',
+            key: 'groups',
+            align: 'center',
+            render: (_, record) => {
+                // return listRoles(record);
+                return <span>veri gelecek</span>;
+            },
+        },
+        {
+            title: 'Katılımcı Grubu',
+            dataIndex: 'groups',
+            key: 'groups',
+            align: 'center',
+            render: (_, record) => {
+                // return listRoles(record);
+                return <span>veri gelecek</span>;
+            },
+        },
+        {
             title: 'Yayınlanma Durumu',
             dataIndex: 'publishStatus',
             key: 'publishStatus',
+            sorter: 'true',
             align: 'center',
             render: (publishStatus) => {
                 return publishStatus === 1 ? (
@@ -259,6 +281,11 @@ const AnnouncementList = () => {
             key: 'endDate',
             ascend: 'endASC',
             descend: 'endDESC',
+        },
+        {
+            key: 'publishStatus',
+            ascend: 'publishStatusASC',
+            descend: 'publishStatusDESC',
         },
     ];
 

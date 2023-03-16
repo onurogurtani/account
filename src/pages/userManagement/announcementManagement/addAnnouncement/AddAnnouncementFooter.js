@@ -53,8 +53,12 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileIma
                 });
                 return;
             }
+
+            console.log('values', values);
+
             try {
                 const values = await form.validateFields();
+                console.log('values', values);
                 const startDate = values?.startDate ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD') : undefined;
                 const startHour = values?.startDate ? dayjs(values?.startDate)?.utc().format('HH:mm:ss') : undefined;
                 const endDate = values?.endDate ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD') : undefined;
@@ -67,12 +71,12 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileIma
                         foundType.push(announcementTypes[i]);
                     }
                 }
-                let rolesArray = groupsList.filter(function (e) {
-                    return values.roles.indexOf(e.id) !== -1;
-                });
+                // let rolesArray = groupsList.filter(function (e) {
+                //     return values.roles.indexOf(e.id) !== -1;
+                // });
                 const fileId = await dispatch(getAvatarUpload(fileImage));
                 let data = {
-                    roles: rolesArray,
+                    // roles: rolesArray,
                     announcementType: foundType[0],
                     headText: values.headText.trim(),
                     content: values.content,
@@ -87,23 +91,26 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileIma
                     announcementPublicationPlaces: values?.announcementPublicationPlaces,
                     isPopupAvailable: values?.announcementPublicationPlaces.includes(4),
                     isReadCheckbox: values?.isReadCheckbox,
+                    participantGroupIds: values?.participantGroupIds,
                 };
-                const action = await dispatch(addAnnouncement(data));
+                console.log('🚀 ~ file: AddAnnouncementFooter.js:96 ~ data:', data);
 
-                if (addAnnouncement.fulfilled.match(action)) {
-                    successDialog({
-                        title: <Text t="success" />,
-                        message: 'Yeni Duyuru Başarıyla Eklendi',
-                        onOk: () => {
-                            history.push('/user-management/announcement-management');
-                        },
-                    });
-                } else {
-                    errorDialog({
-                        title: <Text t="error" />,
-                        message: action?.payload?.message,
-                    });
-                }
+                // const action = await dispatch(addAnnouncement(data));
+
+                // if (addAnnouncement.fulfilled.match(action)) {
+                //     successDialog({
+                //         title: <Text t="success" />,
+                //         message: 'Yeni Duyuru Başarıyla Eklendi',
+                //         onOk: () => {
+                //             history.push('/user-management/announcement-management');
+                //         },
+                //     });
+                // } else {
+                //     errorDialog({
+                //         title: <Text t="error" />,
+                //         message: action?.payload?.message,
+                //     });
+                // }
             } catch (error) {
                 errorDialog({
                     title: <Text t="error" />,

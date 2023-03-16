@@ -21,6 +21,7 @@ import '../../../styles/announcementManagement/announcementFilter.scss';
 
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
+import CustomParticipantSelect from './forms/CustomParticipantSelect';
 
 const publishStatusObj = [
     { id: 1, name: 'Yayında' },
@@ -199,7 +200,8 @@ const AnnouncementFilter = () => {
                             </Option>
                         </CustomSelect>
                     </CustomFormItem>
-                    <CustomFormItem
+                    <CustomParticipantSelect className={'filter-item'} form={form} required={false} />
+                    {/* <CustomFormItem
                         label={
                             <div>
                                 <Text t="Duyuru Rolleri" />
@@ -228,7 +230,7 @@ const AnnouncementFilter = () => {
                                 </Option>
                             ))}
                         </CustomSelect>
-                    </CustomFormItem>
+                    </CustomFormItem> */}
                     <CustomFormItem
                         label={
                             <div>

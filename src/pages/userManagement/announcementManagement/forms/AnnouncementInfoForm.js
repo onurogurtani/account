@@ -1,7 +1,6 @@
 import { Col, Form, Row } from 'antd';
 import dayjs from 'dayjs';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import ReactQuill from 'react-quill';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     CustomCheckbox,
@@ -14,12 +13,36 @@ import {
     Text,
 } from '../../../../components';
 import { getByFilterPagedAnnouncementTypes } from '../../../../store/slice/announcementSlice';
-import { getByFilterPagedGroups } from '../../../../store/slice/groupsSlice';
 import '../../../../styles/announcementManagement/addAnnouncementInfo.scss';
-import { dateValidator, reactQuillValidator } from '../../../../utils/formRule';
+import { dateValidator } from '../../../../utils/formRule';
 import AddAnnouncementFooter from '../addAnnouncement/AddAnnouncementFooter';
+import CustomQuillFormItem from '../cutomQuill/CustomQuillFormItem';
 import EditAnnouncementFooter from '../editAnnouncement/EditAnnouncementFooter';
 import AnnouncementIcon from './AnnouncementIcon';
+import CustomParticipantSelect from './CustomParticipantSelect';
+
+const modules = {
+    history: {
+        delay: 2000,
+        maxStack: 500,
+        userOnly: true,
+    },
+    toolbar: {
+        container: [
+            [{ font: [] }],
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ color: [] }, { background: [] }],
+            [{ script: 'sub' }, { script: 'super' }],
+            ['blockquote', 'code-block'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ indent: '-1' }, { indent: '+1' }, { align: [] }],
+            ['link', 'image', 'video'],
+            ['clean'],
+            [{ undo: true, redo: true }],
+        ],
+    },
+};
 
 const announcementPublicationPlaces = [
     { id: 1, name: 'Anasayfa' },
@@ -43,23 +66,11 @@ const AnnouncementInfoForm = ({
     const [selectedPlaces, setSelectedPlaces] = useState([]);
     const [required, setRequired] = useState(false);
     useEffect(() => {}, [required]);
-
-    const loadGroupsList = useCallback(async () => {
-        let data = {
-            pageSize: 10000,
-        };
-        await dispatch(getByFilterPagedGroups(data));
-    }, [dispatch]);
-    useEffect(() => {
-        loadGroupsList();
-    }, []);
-
-    const { groupsList } = useSelector((state) => state?.groups);
+    const [quillValue, setquillValue] = useState('');
 
     const [form] = Form.useForm();
     const { announcementTypes } = useSelector((state) => state?.announcement);
 
-    const [quillValue] = useState('');
     const [fileImage, setFileImage] = useState(null);
     useEffect(() => {
         let typeData = {
@@ -73,9 +84,9 @@ const AnnouncementInfoForm = ({
             const startDate = dayjs(initialValues?.startDate).utc().format('YYYY-MM-DD-HH-mm');
             const endDate = dayjs(initialValues?.endDate).utc().format('YYYY-MM-DD-HH-mm');
             let idsOfRolesArr = [];
-            for (let i = 0; i < initialValues.roles.length; i++) {
-                idsOfRolesArr.push(initialValues.roles[i].id);
-            }
+            // for (let i = 0; i < initialValues.roles.length; i++) {
+            //     idsOfRolesArr.push(initialValues.roles[i].id);
+            // }
             let initialData = {
                 startDate: startDate >= currentDate ? dayjs(initialValues?.startDate) : undefined,
                 endDate: endDate >= currentDate ? dayjs(initialValues?.endDate) : undefined,
@@ -87,11 +98,12 @@ const AnnouncementInfoForm = ({
                 buttonUrl: initialValues?.buttonUrl,
                 homePageContent: initialValues?.homePageContent,
                 content: initialValues?.content,
-                roles: idsOfRolesArr,
+                // roles: idsOfRolesArr,
                 isReadCheckbox: initialValues?.isReadCheckbox,
             };
             form.setFieldsValue({ ...initialData });
             setAnnouncementInfoData(initialValues.id);
+            setquillValue(initialValues?.content);
             setFormData(form);
         }
     }, []);
@@ -131,262 +143,280 @@ const AnnouncementInfoForm = ({
         }
     };
     const handleChange = async (value) => {
+        console.log('value', value);
         setSelectedPlaces(value);
     };
+
+    // const handleFormChange = async (name, value) => {
+    //     form.setFieldsValue({ description: value });
+    // };
     return (
-        <CustomForm
-            name="announcementInfo"
-            className="addAnnouncementInfo-link-form"
-            form={form}
-            initialValues={initialValues ? initialValues : {}}
-            autoComplete="off"
-            layout={'horizontal'}
-        >
-            <CustomFormItem
-                label={<Text t="Duyuru Tipi" />}
-                name="announcementType"
-                style={{ width: '100%' }}
-                rules={[
-                    { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-                    { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-                ]}
+        <Row>
+            <CustomForm
+                name="announcementInfo"
+                className="addAnnouncementInfo-link-form"
+                form={form}
+                initialValues={initialValues ? initialValues : {}}
+                autoComplete="off"
+                layout={'horizontal'}
             >
-                <CustomSelect className="form-filter-item" placeholder={'Seçiniz'} style={{ width: '100%' }}>
-                    {announcementTypes?.map(({ id, name }) => (
-                        <Option id={id} key={id} value={name}>
-                            <Text t={name} />
-                        </Option>
-                    ))}
-                </CustomSelect>
-            </CustomFormItem>
-            <CustomFormItem
-                label={<Text t="Başlık" />}
-                name="headText"
-                rules={[
-                    { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-                    { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-                ]}
-            >
-                <CustomInput placeholder={'Başlık'} />
-            </CustomFormItem>
-            <CustomFormItem
-                className="editor"
-                label={<Text t="İçerik" />}
-                name="content"
-                value={quillValue}
-                rules={[
-                    { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-                    {
-                        validator: reactQuillValidator,
-                        message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
-                    },
-                    {
-                        type: 'string',
-                        max: 2500,
-                        message: 'Duyurunuz En fazla 2500 Karakter İçerebilir.',
-                    },
-                ]}
-            >
-                <ReactQuill className={isErrorReactQuill ? 'quill-error' : ''} theme="snow" />
-            </CustomFormItem>
-            <CustomFormItem
-                label={<Text t="Duyuru Anasayfa Metni" />}
-                name="homePageContent"
-                placeholder={
-                    'Bu alana girilen veri anasayfa, tüm duyurular sayfası ve pop-uplarda gösterilecek özet bilgi metnidir.'
-                }
-                rules={[
-                    { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-                    { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-                ]}
-            >
-                <CustomInput placeholder={'Yeni duyurunuz ile ilgili özet metin'} />
-            </CustomFormItem>
-            <AnnouncementIcon
-                initialValues={initialValues}
-                announcementInfoData={announcementInfoData}
-                setFormData={setFormData}
-                updated={updated}
-                setUpdated={setUpdated}
-                fileImage={fileImage}
-                setFileImage={setFileImage}
-            />
-
-            <div className="url-buttonName-Container ">
                 <CustomFormItem
-                    label={<Text t="Duyuru Detay Sayfasında Görünecek Buton Adı" />}
-                    name="buttonName"
+                    label={<Text t="Duyuru Tipi" />}
+                    name="announcementType"
+                    style={{ width: '100%' }}
                     rules={[
-                        {
-                            required: required,
-                            message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
-                        },
+                        { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+                        { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
                     ]}
-                    onChange={() => {
-                        check();
-                    }}
                 >
-                    <CustomInput ref={nameRef} placeholder={'Buton İsmi'} />
+                    <CustomSelect className="form-filter-item" placeholder={'Seçiniz'} style={{ width: '100%' }}>
+                        {announcementTypes?.map(({ id, name }) => (
+                            <Option id={id} key={id} value={name}>
+                                <Text t={name} />
+                            </Option>
+                        ))}
+                    </CustomSelect>
                 </CustomFormItem>
-
                 <CustomFormItem
-                    label={
-                        <div>
-                            <Text t="Duyuru Detay Sayfasındaki Butonun Yönlendireceği Link" />
-                        </div>
-                    }
-                    name="buttonUrl"
+                    label={<Text t="Başlık" />}
+                    name="headText"
                     rules={[
-                        {
-                            required: required,
-                            message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
-                        },
-                        {
-                            type: 'url',
-                            message: 'Lütfen geçerli bir URL giriniz',
-                        },
+                        { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+                        { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
                     ]}
-                    onChange={() => {
-                        check();
-                    }}
                 >
-                    <CustomInput ref={urlRef} placeholder={'https://ButonUrl.com'} />
+                    <CustomInput placeholder={'Başlık'} />
                 </CustomFormItem>
-            </div>
-            <Row gutter={16}>
-                <Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} lg={{ span: 16 }}>
-                    <CustomFormItem
-                        label={<Text t="Başlangıç Tarihi" />}
-                        name="startDate"
-                        rules={[
-                            { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
 
-                            {
-                                validator: dateValidator,
-                                message: <Text t="Girilen tarihleri kontrol ediniz" />,
-                            },
-                        ]}
-                    >
-                        <CustomDatePicker
-                            placeholder={'Tarih Seçiniz'}
-                            disabledDate={disabledStartDate}
-                            format="YYYY-MM-DD HH:mm"
-                            showTime={true}
-                        />
-                    </CustomFormItem>
-                </Col>
-            </Row>
-            <p style={{ color: 'red', marginTop: '5px', marginLeft: '200px' }}>
-                Başlangıç Tarihi Duyurunun, Arayüzünden görüntüleneceği tarihi belirlemenizi sağlar.
-            </p>
-            <Row gutter={16}>
-                <Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} lg={{ span: 16 }}>
-                    <CustomFormItem
-                        label={<Text t="Bitiş Tarihi" />}
-                        name="endDate"
-                        rules={[
-                            { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-                            {
-                                validator: dateValidator,
-                                message: <Text t="Girilen tarihleri kontrol ediniz" />,
-                            },
-                        ]}
-                    >
-                        <CustomDatePicker
-                            placeholder={'Tarih Seçiniz'}
-                            disabledDate={disabledEndDate}
-                            format="YYYY-MM-DD HH:mm"
-                            hideDisabledOptions
-                            showTime={true}
-                        />
-                    </CustomFormItem>
-                </Col>
-            </Row>
-            <p style={{ color: 'red', marginTop: '5px', marginLeft: '200px' }}>
-                Bitiş Tarihi Duyurunun, Arayüzünden kaldırılacağı tarihi belirlemenizi sağlar.
-            </p>
-            <CustomFormItem
-                rules={[
-                    {
-                        required: true,
-                        message: 'Lütfen Zorunlu Alanları Doldurunuz.',
-                    },
-                ]}
-                label="Duyuru Rolleri"
-                name="roles"
-            >
-                <CustomSelect
-                    placeholder="Seçiniz"
-                    mode="multiple"
-                    showArrow
-                    style={{
-                        width: '100%',
-                    }}
-                >
-                    {groupsList?.map((item, i) => {
-                        return (
-                            <Option key={item?.id} value={item?.id}>
-                                {item?.groupName}
-                            </Option>
-                        );
-                    })}
-                </CustomSelect>
-            </CustomFormItem>
-            <CustomFormItem
-                rules={[
-                    {
-                        required: true,
-                        message: 'Lütfen Zorunlu Alanları Doldurunuz.',
-                    },
-                ]}
-                label="Yayınlanma Yeri"
-                name="announcementPublicationPlaces"
-            >
-                <CustomSelect
-                    placeholder="Seçiniz"
-                    mode="multiple"
-                    showArrow
-                    onChange={handleChange}
-                    style={{
-                        width: '100%',
-                    }}
-                >
-                    {announcementPublicationPlaces.map((item, i) => {
-                        return (
-                            <Option key={item?.id} value={item?.id}>
-                                {item?.name}
-                            </Option>
-                        );
-                    })}
-                </CustomSelect>
-            </CustomFormItem>
-            {(selectedPlaces?.includes(4) || initialValues?.announcementPublicationPlaces?.includes(4)) && (
-                <CustomFormItem
-                    name="isReadCheckbox"
-                    className="custom-form-item"
-                    valuePropName="checked"
-                    style={{ marginLeft: '200px' }}
-                >
-                    <CustomCheckbox value="true">
-                        <p style={{ fontSize: '16px', fontWeight: '500' }}>Okundu onayı alınsın</p>
-                    </CustomCheckbox>
-                </CustomFormItem>
-            )}
-            {!initialValues ? (
-                <AddAnnouncementFooter form={form} history={history} fileImage={fileImage} />
-            ) : (
-                <EditAnnouncementFooter
-                    initialValues={initialValues}
+                <CustomQuillFormItem
+                    className="editor"
+                    label={'İçerik'}
+                    name={'content'}
+                    setQuillValue={setquillValue}
+                    quillValue={quillValue}
                     form={form}
-                    history={history}
+                    placeholder="Lütfen doldurunuz"
+                />
+                {/* <CustomFormItem
+                    className="editor"
+                    label={<Text t="İçerik" />}
+                    name="content"
+                    // value={quillValue}
+                    rules={[
+                        { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+                        {
+                            validator: reactQuillValidator,
+                            message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
+                        },
+                        {
+                            type: 'string',
+                            max: 2500,
+                            message: 'Duyurunuz En fazla 2500 Karakter İçerebilir.',
+                        },
+                    ]}
+                >
+                    <ReactQuill className={isErrorReactQuill ? 'quill-error' : ''} theme="snow" modules={modules} />
+                </CustomFormItem> */}
+                <CustomFormItem
+                    label={<Text t="Duyuru Anasayfa Metni" />}
+                    name="homePageContent"
+                    placeholder={
+                        'Bu alana girilen veri anasayfa, tüm duyurular sayfası ve pop-uplarda gösterilecek özet bilgi metnidir.'
+                    }
+                    rules={[
+                        { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+                        { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+                    ]}
+                >
+                    <CustomInput placeholder={'Yeni duyurunuz ile ilgili özet metin'} />
+                </CustomFormItem>
+                <AnnouncementIcon
+                    initialValues={initialValues}
                     announcementInfoData={announcementInfoData}
-                    currentId={initialValues.id}
+                    setFormData={setFormData}
                     updated={updated}
                     setUpdated={setUpdated}
                     fileImage={fileImage}
+                    setFileImage={setFileImage}
                 />
-            )}
-        </CustomForm>
+
+                <div className="url-buttonName-Container ">
+                    <CustomFormItem
+                        label={<Text t="Duyuru Detay Sayfasında Görünecek Buton Adı" />}
+                        name="buttonName"
+                        rules={[
+                            {
+                                required: required,
+                                message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
+                            },
+                        ]}
+                        onChange={() => {
+                            check();
+                        }}
+                    >
+                        <CustomInput ref={nameRef} placeholder={'Buton İsmi'} />
+                    </CustomFormItem>
+
+                    <CustomFormItem
+                        label={
+                            <div>
+                                <Text t="Duyuru Detay Sayfasındaki Butonun Yönlendireceği Link" />
+                            </div>
+                        }
+                        name="buttonUrl"
+                        rules={[
+                            {
+                                required: required,
+                                message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
+                            },
+                            {
+                                type: 'url',
+                                message: 'Lütfen geçerli bir URL giriniz',
+                            },
+                        ]}
+                        onChange={() => {
+                            check();
+                        }}
+                    >
+                        <CustomInput ref={urlRef} placeholder={'https://ButonUrl.com'} />
+                    </CustomFormItem>
+                </div>
+                <Row gutter={16}>
+                    <Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} lg={{ span: 16 }}>
+                        <CustomFormItem
+                            label={<Text t="Başlangıç Tarihi" />}
+                            name="startDate"
+                            rules={[
+                                { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+
+                                {
+                                    validator: dateValidator,
+                                    message: <Text t="Girilen tarihleri kontrol ediniz" />,
+                                },
+                            ]}
+                        >
+                            <CustomDatePicker
+                                placeholder={'Tarih Seçiniz'}
+                                disabledDate={disabledStartDate}
+                                format="YYYY-MM-DD HH:mm"
+                                showTime={true}
+                            />
+                        </CustomFormItem>
+                    </Col>
+                </Row>
+                <p style={{ color: 'red', marginTop: '5px', marginLeft: '200px' }}>
+                    Başlangıç Tarihi Duyurunun, Arayüzünden görüntüleneceği tarihi belirlemenizi sağlar.
+                </p>
+                <Row gutter={16}>
+                    <Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} lg={{ span: 16 }}>
+                        <CustomFormItem
+                            label={<Text t="Bitiş Tarihi" />}
+                            name="endDate"
+                            rules={[
+                                { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+                                {
+                                    validator: dateValidator,
+                                    message: <Text t="Girilen tarihleri kontrol ediniz" />,
+                                },
+                            ]}
+                        >
+                            <CustomDatePicker
+                                placeholder={'Tarih Seçiniz'}
+                                disabledDate={disabledEndDate}
+                                format="YYYY-MM-DD HH:mm"
+                                hideDisabledOptions
+                                showTime={true}
+                            />
+                        </CustomFormItem>
+                    </Col>
+                </Row>
+                <p style={{ color: 'red', marginTop: '5px', marginLeft: '200px' }}>
+                    Bitiş Tarihi Duyurunun, Arayüzünden kaldırılacağı tarihi belirlemenizi sağlar.
+                </p>
+                {/* <CustomFormItem
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                        },
+                    ]}
+                    label="Duyuru Rolleri"
+                    name="roles"
+                >
+                    <CustomSelect
+                        placeholder="Seçiniz"
+                        mode="multiple"
+                        showArrow
+                        style={{
+                            width: '100%',
+                        }}
+                    >
+                        {groupsList?.map((item, i) => {
+                            return (
+                                <Option key={item?.id} value={item?.id}>
+                                    {item?.groupName}
+                                </Option>
+                            );
+                        })}
+                    </CustomSelect>
+                </CustomFormItem> */}
+                <CustomParticipantSelect className={'custom-form-item'} form={form} required={true} />
+                <CustomFormItem
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                        },
+                    ]}
+                    label="Yayınlanma Yeri"
+                    name="announcementPublicationPlaces"
+                >
+                    <CustomSelect
+                        placeholder="Seçiniz"
+                        mode="multiple"
+                        showArrow
+                        onChange={handleChange}
+                        style={{
+                            width: '100%',
+                        }}
+                    >
+                        {announcementPublicationPlaces.map((item, i) => {
+                            return (
+                                <Option key={item?.id} value={item?.id}>
+                                    {item?.name}
+                                </Option>
+                            );
+                        })}
+                    </CustomSelect>
+                </CustomFormItem>
+                {(selectedPlaces?.includes(4) || initialValues?.announcementPublicationPlaces?.includes(4)) && (
+                    <CustomFormItem
+                        name="isReadCheckbox"
+                        className="custom-form-item"
+                        valuePropName="checked"
+                        style={{ marginLeft: '200px' }}
+                    >
+                        <CustomCheckbox value="true">
+                            <p style={{ fontSize: '16px', fontWeight: '500' }}>Okundu onayı alınsın</p>
+                        </CustomCheckbox>
+                    </CustomFormItem>
+                )}
+                {!initialValues ? (
+                    <AddAnnouncementFooter form={form} history={history} fileImage={fileImage} />
+                ) : (
+                    <EditAnnouncementFooter
+                        initialValues={initialValues}
+                        form={form}
+                        history={history}
+                        announcementInfoData={announcementInfoData}
+                        currentId={initialValues.id}
+                        updated={updated}
+                        setUpdated={setUpdated}
+                        fileImage={fileImage}
+                    />
+                )}
+            </CustomForm>
+        </Row>
     );
 };
 
