@@ -23,6 +23,13 @@ const getByClassromIdLessons = (classroomId) => {
   });
 };
 
+const getByClassromIdLessonsBySearchText = (data) => {
+  return api({
+    url: `Shared/Lessons/getByClassromIdLessons?ClassroomId=${data.classroomId}&searchText=${data.searchText}`,
+    method: 'POST',
+  });
+};
+
 const editLessons = (data) => {
   return api({
     url: `Shared/Lessons`,
@@ -62,6 +69,7 @@ const lessonsServices = {
   uploadLessonsExcel,
   addLessons,
   getByClassromIdLessons,
+  getByClassromIdLessonsBySearchText
 };
 
 export default lessonsServices;
