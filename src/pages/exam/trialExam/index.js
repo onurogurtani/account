@@ -31,13 +31,14 @@ const TrialExam = () => {
     const [form] = Form.useForm();
     const { trialTypeList } = useSelector((state) => state.trialType);
     const { allClassList } = useSelector((state) => state.classStages);
-    const { lessons } = useSelector((state) => state.lessons);
+    /*  const { lessons } = useSelector((state) => state.lessons);
     const { lessonUnits } = useSelector((state) => state?.lessonUnits);
     const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
     const { lessonSubSubjects } = useSelector((state) => state?.lessonSubSubjects);
     const { videos } = useSelector((state) => state?.videos);
-
     const [dependLecturingVideo, setDependLecturingVideo] = useState(false);
+*/
+
     const disabledEndDate = useCallback(
         (endValue) => {
             const { startDate } = form?.getFieldsValue(['startDate']);
@@ -101,6 +102,24 @@ const TrialExam = () => {
                                             ))}
                                         </CustomSelect>
                                     </CustomFormItem>
+                                    <CustomFormItem name={'examType'} label="Sınav Türü">
+                                        <CustomSelect
+                                            options={[
+                                                {
+                                                    value: '1',
+                                                    label: 'LGS',
+                                                },
+                                                {
+                                                    value: '2',
+                                                    label: 'TYT',
+                                                },
+                                                {
+                                                    value: '3',
+                                                    label: 'AYT',
+                                                },
+                                            ]}
+                                        ></CustomSelect>
+                                    </CustomFormItem>
                                     <CustomFormItem name={'difficulty'} label="Zorluk">
                                         <CustomSelect
                                             options={[
@@ -143,7 +162,8 @@ const TrialExam = () => {
                                     >
                                         <CustomDatePicker disabledDate={disabledEndDate} format={dateFormat} />
                                     </CustomFormItem>
-                                    <CustomFormItem name={'dependLecturingVideo'}>
+
+                                    {/**    <CustomFormItem name={'dependLecturingVideo'}>
                                         <CustomCheckbox
                                             onChange={(e) => {
                                                 setDependLecturingVideo(e.target.checked);
@@ -151,8 +171,7 @@ const TrialExam = () => {
                                         >
                                             Konu anlatım vidosunda bağlı oluştur
                                         </CustomCheckbox>
-                                    </CustomFormItem>
-                                    {dependLecturingVideo && (
+                                    </CustomFormItem>  {dependLecturingVideo && (
                                         <>
                                             <CustomFormItem name={'classId'} label="Sınıf">
                                                 <CustomSelect
@@ -291,12 +310,13 @@ const TrialExam = () => {
                                                 </CustomSelect>
                                             </CustomFormItem>
                                         </>
-                                    )}
+                                    )} */}
+
                                     <CustomFormItem name={'transitionBetweenQuestions'}>
-                                        <CustomCheckbox name>Sorular Arası Geçise İzin Ver</CustomCheckbox>
+                                        <CustomCheckbox>Sorular Arası Geçise İzin Ver</CustomCheckbox>
                                     </CustomFormItem>
                                     <CustomFormItem name={'transitionBetweenSections'}>
-                                        <CustomCheckbox name>Bölümler Arası Geçise İzin Ver</CustomCheckbox>
+                                        <CustomCheckbox>Bölümler Arası Geçise İzin Ver</CustomCheckbox>
                                     </CustomFormItem>
                                     <CustomButton type={'sumbit'}>İleri</CustomButton>
                                 </CustomForm>
