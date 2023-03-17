@@ -47,10 +47,11 @@ const HandleContractFormButton = ({ form, initialValues, contractTypes, contract
         }
         try {
             const values = await form.validateFields();
-            const startDate = values?.StartDate ? dayjs(values?.StartDate)?.utc().format('YYYY-MM-DD') : undefined;
-            const startHour = values?.StartDate ? dayjs(values?.StartDate)?.utc().format('HH:mm:ss') : undefined;
-            const endDate = values?.EndDate ? dayjs(values?.EndDate)?.utc().format('YYYY-MM-DD') : undefined;
-            const endHour = values?.EndDate ? dayjs(values?.EndDate)?.utc().format('HH:mm:ss') : undefined;
+            const startDate = values?.startDate ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD') : undefined;
+            const startHour = values?.startDate ? dayjs(values?.startDate)?.utc().format('HH:mm:ss') : undefined;
+            const endDate = values?.endDate ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD') : undefined;
+            const endHour = values?.endDate ? dayjs(values?.endDate)?.utc().format('HH:mm:ss') : undefined;
+
             let typesFromForm = values?.contractTypes;
 
             let typeData = {
@@ -92,7 +93,6 @@ const HandleContractFormButton = ({ form, initialValues, contractTypes, contract
                 }
             } else {
                 const action = await dispatch(addNewContract(data));
-                console.log('action', action);
                 if (addNewContract.fulfilled.match(action)) {
                     successDialog({
                         title: <Text t="success" />,

@@ -15,6 +15,7 @@ import {
     CustomSelect,
     Option,
     Text,
+    errorDialog,
 } from '../../../../components';
 import {
     getByFilterPagedContractKinds,
@@ -35,7 +36,6 @@ const statusObj = [
 const ContractForm = ({ initialValues }) => {
     const [buttonDisabled, setButtonDisabled] = useState(true);
 
-    console.log('initialValues', initialValues);
     const [filteredKinds, setFilteredKinds] = useState([]);
     const history = useHistory();
 
@@ -83,6 +83,9 @@ const ContractForm = ({ initialValues }) => {
                     title: <Text t="attention" />,
                     message: 'Kopyalamak istediğiniz kaydın versiyon bilgisi otomatik olarak değiştirilecektir.',
                     okText: <Text t="Evet" />,
+                    onOk: async () => {
+                        getCopiedVersion();
+                    },
                     cancelText: 'Vazgeç',
                     onCancel: async () => {
                         history.push('/settings/contracts');
@@ -111,7 +114,6 @@ const ContractForm = ({ initialValues }) => {
     }, [form, initialValues, history]);
 
     const disabledStartDate = (startValue) => {
-        console.log('startValue', startValue);
         const { endDate } = form?.getFieldsValue(['endDate']);
         return startValue?.startOf('day') > endDate?.startOf('day') || startValue < dayjs().startOf('day');
     };
@@ -135,52 +137,49 @@ const ContractForm = ({ initialValues }) => {
         form.resetFields(['contractKinds']);
         let kinds = contractKinds.filter((obj) => arr.includes(obj?.contractType?.description));
         setFilteredKinds([...kinds]);
+        kindChangeHandler();
     };
 
-    const getNewVersion = async () => {
-        let kind = form.getFieldValue(['contractKinds']);
-        let kindId = filteredKinds?.filter((i) => i.name === kind);
-        console.log('🚀 ~ file: ContractForm.js:143 ~ getNewVersion ~ kindId:', kindId[0]?.id);
-
-        const response = await dispatch(getVersionForContract(kindId[0]?.id));
+    const getNewVersion = async (data) => {
+        try {
+            const action = await dispatch(getVersionForContract(data));
+            if (getVersionForContract.fulfilled.match(action)) {
+                setVersionValue(action?.payload?.data?.version);
+                form.setFieldsValue({ version: `V${action?.payload?.data?.version}` });
+            }
+        } catch (error) {
+            errorDialog({
+                title: <Text t="error" />,
+                message: error,
+            });
+        }
     };
 
     const getCopiedVersion = async () => {
-        let kind = form.getFieldValue(['contractKinds']);
-        let kindId = filteredKinds?.filter((i) => i.name === kind);
-        console.log({
-            id: kindId[0]?.id,
-        });
-        const response = await dispatch(
-            getVersionForCopiedContract({
-                id: kindId[0]?.id,
-            }),
-        );
-        // console.log('first', response);
-        // const promiseResult = unwrapResult(action);
-        // console.log('action', promiseResult);
+        try {
+            const action2 = await dispatch(getVersionForCopiedContract({ id: initialValues?.id }));
+            if (getVersionForCopiedContract.fulfilled.match(action2)) {
+                setVersionValue(action2?.payload?.data?.version);
+                form.setFieldsValue({ version: `V${action2?.payload?.data?.version}` });
+                setButtonDisabled(true);
+            }
+        } catch (error) {
+            errorDialog({
+                title: <Text t="error" />,
+                message: error,
+            });
+        }
     };
 
     const setVersionHandler = async () => {
         let kind = form.getFieldValue(['contractKinds']);
         let kindId = filteredKinds?.filter((i) => i.name === kind);
-        if (initialValues?.handleType === 'copy') {
-            await getCopiedVersion();
-            // const action = await dispatch(
-            //     getVersionForCopiedContract({
-            //         id: kindId[0]?.id,
-            //     }),
-            // );
-            // console.log(action);
-        } else {
-            await getNewVersion();
-            //     let res = await dispatch(getVersionForContract(kindId[0]?.id));
-            //     let data = await res?.payload?.data;
-            // }
-            // console.log('kind', kind);
-            // form.setFieldsValue({ version: `V${versionValue + 1}` });
-            // setVersionValue(versionValue + 1);
-        }
+        await getNewVersion(kindId[0]?.id);
+    };
+
+    const kindChangeHandler = async (value) => {
+        form.resetFields(['version']);
+        value ? setButtonDisabled(false) : setButtonDisabled(true);
     };
 
     return (
@@ -239,7 +238,7 @@ const ContractForm = ({ initialValues }) => {
                     }}
                     allowClear
                     showArrow
-                    onChange={(value) => (value ? setButtonDisabled(false) : setButtonDisabled(true))}
+                    onChange={(value) => kindChangeHandler(value)}
                 >
                     {filteredKinds
                         ?.filter((t) => t.recordStatus !== 0)
@@ -274,12 +273,12 @@ const ContractForm = ({ initialValues }) => {
                 }}
             >
                 <CustomFormItem
-                    // rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
                     label="Versiyon"
                     name="version"
-                    value={`V${versionValue}`}
+                    // value={`V${versionValue}`}
+                    rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
                 >
-                    <CustomInput defaultValue={`V${versionValue}`} disabled={true} />
+                    <CustomInput disabled={true} />
                 </CustomFormItem>
                 <CustomButton
                     style={{
@@ -293,7 +292,6 @@ const ContractForm = ({ initialValues }) => {
                 >
                     Versiyon Ekle
                 </CustomButton>
-                -
             </div>
             <p style={{ color: 'red', marginTop: '-10px', marginLeft: '200px' }}>
                 Versiyon bilgisi sistem tarafından otomatik olarak sağlanacaktır.

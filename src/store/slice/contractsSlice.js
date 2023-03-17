@@ -60,8 +60,6 @@ export const getVersionForContract = createAsyncThunk(
     async (id, { dispatch, rejectWithValue }) => {
         try {
             const response = await contractsServices.getVersionForContract(id);
-            const data = response;
-            console.log('response get', data);
             return response;
         } catch (error) {
             return rejectWithValue(error?.data);
@@ -74,9 +72,6 @@ export const getVersionForCopiedContract = createAsyncThunk(
     async (data, { dispatch, rejectWithValue }) => {
         try {
             const response = await contractsServices.getVersionForCopiedContract(data);
-            const data = response.data.data;
-            console.log('response kopy', data);
-
             return response;
         } catch (error) {
             return rejectWithValue(error?.data);
