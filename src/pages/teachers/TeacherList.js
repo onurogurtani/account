@@ -1,66 +1,62 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { Space } from 'antd';
 import { FileExcelOutlined } from '@ant-design/icons';
 import {
   CustomButton,
   CustomCollapseCard,
   CustomImage,
-  CustomTable
+  CustomPageHeader,
 } from '../../components';
-import useOnchangeTable from '../../hooks/useOnchangeTable';
-import usePaginationProps from '../../hooks/usePaginationProps';
-import useTeacherListTableColumns from './hooks/useTeacherListTableColumns';
 import TeacherListFilter from './TeacherListFilter';
+import TeacherListTable from './TeacherListTable';
 import iconSearchWhite from '../../assets/icons/icon-white-search.svg';
 import '../../styles/table.scss';
 import '../../styles/teachers/teacherList.scss';
 
 const TeacherList = () => {
+  const refFilterDiv = useRef();
   const history = useHistory();
-  const { schools, filterObject, tableProperty, sorterObject } = useSelector((state) => state?.teachers);
 
-  const paginationProps = usePaginationProps(tableProperty);
-  const onChangeTable = useOnchangeTable({ filterObject, action: ()=>[] }); //TODO: set action
-  const columns = useTeacherListTableColumns(sorterObject);
+  const [isVisibleFilter, setIsVisibleFilter] = useState(false);
 
-  const [isPackageFilter, setIsPackageFilter] = useState(false);
-
-  const handleAddButton = ()=>{
+  const handleAddButton = () => {
     history.push('/teachers/add');
   }
 
   return (
-    <CustomCollapseCard className="teacher-list-card" cardTitle="Öğretmenler">
-      <div className="table-header">
-        <Space>
-          <CustomButton className="add-btn" onClick={handleAddButton}>
-            YENİ EKLE
+    <CustomPageHeader title="Öğretmen Listesi" showBreadCrumb showHelpButton routes={["Öğretmenler"]} >
+      <CustomCollapseCard className="teacher-list-card" cardTitle="Öğretmen Listesi">
+        <div className="table-header">
+          <Space>
+            <CustomButton className="add-btn" onClick={handleAddButton}>
+              YENİ EKLE
+            </CustomButton>
+            <CustomButton className="upload-btn">
+              <FileExcelOutlined />
+              Excel ile Ekle
+            </CustomButton>
+          </Space>
+          <CustomButton
+            data-testid="search"
+            className="search-btn"
+            onClick={() =>
+              setIsVisibleFilter((prev) => {
+                refFilterDiv.current.style.display = prev ? 'none' : 'block';
+                return !prev;
+              })
+            }
+          >
+            <CustomImage src={iconSearchWhite} />
+            <span className="search-btn-text">Filtrele</span>
           </CustomButton>
-          <CustomButton className="upload-btn">
-            <FileExcelOutlined />
-            Excel ile Ekle
-          </CustomButton>
-        </Space>
-        <CustomButton
-          data-testid="search"
-          className="search-btn"
-          onClick={() => setIsPackageFilter((prev) => !prev)}
-        >
-          <CustomImage src={iconSearchWhite} />
-        </CustomButton>
-      </div>
-      {isPackageFilter && <TeacherListFilter />}
-      <CustomTable
-        dataSource={schools}
-        columns={columns}
-        pagination={paginationProps}
-        rowKey={(record) => `teachers-${record?.id || record?.name}`}
-        scroll={{ x: false }}
-        onChange={onChangeTable}
-      />
-    </CustomCollapseCard>
+        </div>
+        <div ref={refFilterDiv} style={{ display: 'none' }}>
+          <TeacherListFilter isVisibleFilter={isVisibleFilter} />
+        </div>
+        <TeacherListTable />
+      </CustomCollapseCard>
+    </CustomPageHeader>
   );
 };
 
