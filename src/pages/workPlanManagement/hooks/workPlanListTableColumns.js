@@ -1,9 +1,10 @@
 import { Tag } from 'antd';
 import { CustomButton, DeleteButton } from '../../../components';
-import { deleteWorkPlan} from '../../../store/slice/workPlanSlice';
+import { deleteWorkPlan, onChangeActiveKey, setCurrentData } from '../../../store/slice/workPlanSlice';
 import React from 'react';
 
-const workPlanListTableColumns = () => {
+const workPlanListTableColumns = (history,dispatch) => {
+
   const columns = [
     {
       title: 'Çalışma Planı Adı',
@@ -96,7 +97,16 @@ const workPlanListTableColumns = () => {
       render: (_, record) => {
         return (
           <div className='action-btns'>
-            <CustomButton className='btn detail-btn'>
+            <CustomButton
+              onClick={async () => {
+                // dispatch(setCurrentData( record ));
+                history.push(
+                  {
+                    pathname: `/work-plan-management/edit`,
+                    state: { data: { ...record }, activeKey: record.activeKey },
+                  });
+              }}
+              className='btn detail-btn'>
               DÜZENLE
             </CustomButton>
             <DeleteButton disabled={record.recordStatus === 1} id={record?.id} deleteAction={deleteWorkPlan} />

@@ -122,6 +122,7 @@ const initialState = {
   activeKey: '0',
   isExit: false,
   workPlanList: [],
+  currentData: {},
   educationYearsList: [],
   usedVideoIdsQueryListData: [],
   workPlanNamesListData: [],
@@ -298,6 +299,9 @@ export const workPlanSlice = createSlice({
     setFilterObject: (state, action) => {
       state.workPlanDetailSearch = action.payload;
     },
+    setCurrentData: (state, action) => {
+      state.currentData = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getByFilterPagedQuestionOfExams.fulfilled, (state, action) => {
@@ -378,4 +382,5 @@ export const {
   resetEvaluationQuestionList,
   setIsFilter,
   setFilterObject,
+  setCurrentData
 } = workPlanSlice.actions;
