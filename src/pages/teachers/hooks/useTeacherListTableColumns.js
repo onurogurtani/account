@@ -1,6 +1,7 @@
 import { Space, Tag } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { CustomButton, DeleteButton, SetStatusButton } from '../../../components';
+import { maskedPhone } from '../../../utils/utils';
 // import { deleteTeacher, setTeacherStatus } from '../../../store/slice/teacherSlice';
 
 const useTeacherListTableColumns = (sorterObject) => {
@@ -9,6 +10,14 @@ const useTeacherListTableColumns = (sorterObject) => {
   const editTeacher = (id) => history.push({ pathname: `/teachers/edit/${id}` });
 
   const columns = [
+    {
+      title: 'T.C. Kimlik No',
+      dataIndex: 'citizenId',
+      key: 'citizenId',
+      render: (text, record) => {
+        return <div>{text}</div>;
+      },
+    },
     {
       title: 'Ad',
       dataIndex: 'name',
@@ -28,12 +37,20 @@ const useTeacherListTableColumns = (sorterObject) => {
       },
     },
     {
-      title: 'E-Posta',
+      title: 'E-Mail',
       dataIndex: 'email',
       key: 'email',
       sorter: true,
       render: (text, record) => {
         return <div>{text}</div>;
+      },
+    },
+    {
+      title: 'Cep Telefonu',
+      dataIndex: 'mobilePhones',
+      key: 'mobilePhones',
+      render: (text, record) => {
+        return <div>{text ? maskedPhone(text) : ""}</div>;
       },
     },
     {
