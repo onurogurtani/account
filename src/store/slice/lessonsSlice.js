@@ -8,8 +8,8 @@ import { resetLessonSubSubjects } from './lessonSubSubjectsSlice';
 export const getLessons = createAsyncThunk('getLessons', async (body, { dispatch, getState, rejectWithValue }) => {
     try {
         //statede varsa request iptal
-        const findLessons = getState()?.lessons.lessons.find((i) => i.classroomId === body[0]?.value);
-        if (findLessons) return rejectWithValue();
+        // const findLessons = getState()?.lessons.lessons.find((i) => i.classroomId === body[0]?.value);
+        // if (findLessons) return rejectWithValue();
 
         return await lessonsServices.getLessons(body);
     } catch (error) {
@@ -46,6 +46,18 @@ export const getByClassromIdLessons = createAsyncThunk(
     async (data, { dispatch, rejectWithValue }) => {
         try {
             const response = await lessonsServices.getByClassromIdLessons(data);
+            return response;
+        } catch (error) {
+            return rejectWithValue(error?.data);
+        }
+    },
+);
+
+export const getByClassromIdLessonsBySearchText = createAsyncThunk(
+    'getByClassromIdLessonsBySearchText',
+    async (data, { dispatch, rejectWithValue }) => {
+        try {
+            const response = await lessonsServices.getByClassromIdLessonsBySearchText(data);
             return response;
         } catch (error) {
             return rejectWithValue(error?.data);
@@ -123,11 +135,20 @@ export const lessonsSlice = createSlice({
         setLessons: (state, action) => {
             state.lessons = action.payload;
         },
+        setStatusLessons: (state, action) => {
+            state.lessons = state.lessons.map((item) =>
+                item.id === action.payload ? { ...item, isActive: !item.isActive } : item,
+            );
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(getLessons.fulfilled, (state, action) => {
+            const { value } = action?.meta?.arg?.[0];
             if (action?.payload?.data?.items.length) {
-                state.lessons = state.lessons.concat(action?.payload?.data?.items).reverse();
+                state.lessons = state.lessons
+                    .filter((u) => u.classroomId !== value)
+                    .concat(action?.payload?.data?.items)
+                    .sort((a, b) => a.name.localeCompare(b.name));
             }
         });
         builder.addCase(getLessonsQuesiton.fulfilled, (state, action) => {
@@ -139,12 +160,15 @@ export const lessonsSlice = createSlice({
         builder.addCase(getByClassromIdLessons.fulfilled, (state, action) => {
             state.lessonsGetByClassroom = action?.payload?.data;
         });
+        builder.addCase(getByClassromIdLessonsBySearchText.fulfilled, (state, action) => {
+            state.lessonsGetByClassroom = action?.payload?.data;
+        });
         builder.addCase(uploadLessonsExcel.fulfilled, (state, action) => {
             const { arg } = action.meta;
             state.lessons = state.lessons.filter((item) => item.classroomId !== Number(arg.get('ClassroomId')));
         });
         builder.addCase(addLessons.fulfilled, (state, action) => {
-            state.lessons = state.lessons.concat(action?.payload?.data);
+            state.lessons = [action?.payload?.data, ...state.lessons];
         });
         builder.addCase(editLessons.fulfilled, (state, action) => {
             const {
@@ -164,4 +188,4 @@ export const lessonsSlice = createSlice({
         });
     },
 });
-export const { resetLessonsFilterList, setLessons } = lessonsSlice.actions;
+export const { resetLessonsFilterList, setLessons, setStatusLessons } = lessonsSlice.actions;

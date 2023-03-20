@@ -1,19 +1,8 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Space, Typography } from 'antd';
-import { useCallback, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-    CustomButton,
-    CustomCollapseCard,
-    CustomPageHeader,
-    CustomSelect,
-    Option,
-    Text,
-    warningDialog,
-} from '../../../components';
-import EditableInput from '../../../components/EditableInput';
+import { useState } from 'react';
+import { CustomButton, CustomCollapseCard, CustomPageHeader, CustomSelect, Option } from '../../../components';
 import useAcquisitionTree from '../../../hooks/useAcquisitionTree';
-import { addLessons } from '../../../store/slice/lessonsSlice';
 
 import '../../../styles/settings/lessons.scss';
 
@@ -22,34 +11,8 @@ import Lessons from './Lessons';
 
 const { Title } = Typography;
 const AcquisitionTreeList = () => {
-    const dispatch = useDispatch();
-    const { allClassList, classroomId, setClassroomId } = useAcquisitionTree();
+    const { allClassList, classroomId, setClassroomId, isLoading } = useAcquisitionTree(false, true);
     const [isAdd, setIsAdd] = useState(false);
-
-    const validateClassroom = useCallback(() => {
-        if (!classroomId) {
-            warningDialog({
-                title: <Text t="error" />,
-                message: 'Ders eklemek  için öncelikle sınıf seçmeniz gerekmektedir.',
-            });
-        } else {
-            setIsAdd(true);
-        }
-    }, [classroomId]);
-
-    const addLesson = useCallback(
-        async (value) => {
-            const entity = {
-                entity: {
-                    name: value,
-                    isActive: true,
-                    classroomId,
-                },
-            };
-            await dispatch(addLessons(entity));
-        },
-        [classroomId, dispatch],
-    );
 
     return (
         <>
@@ -58,7 +21,7 @@ const AcquisitionTreeList = () => {
                     <div className="lessons-wrapper">
                         <div className="lessons-header">
                             <div className="class-select-container">
-                                <Title level={5}>Sınıf Bilgisi :</Title>
+                                <Title level={5}>Sınıf Seviyesi Seç :</Title>
                                 <CustomSelect
                                     style={{
                                         width: 300,
@@ -78,17 +41,22 @@ const AcquisitionTreeList = () => {
                             </div>
                             <Space>
                                 <CustomButton
-                                    onClick={validateClassroom}
+                                    onClick={() => {
+                                        setIsAdd(true);
+                                    }}
                                     className="add-btn"
                                     icon={<PlusCircleOutlined />}
+                                    disabled={!classroomId}
                                 >
                                     Ders Ekle
                                 </CustomButton>
                                 <AcquisitionTreeUploadExcelModal selectedClassId={classroomId} />
                             </Space>
                         </div>
-                        <EditableInput height="40" isEdit={isAdd} setIsEdit={setIsAdd} onEnter={addLesson} />
-                        <Lessons classroomId={classroomId} />
+
+                        {classroomId && !isLoading && (
+                            <Lessons classroomId={classroomId} isAdd={isAdd} setIsAdd={setIsAdd} />
+                        )}
                     </div>
                 </CustomCollapseCard>
             </CustomPageHeader>
