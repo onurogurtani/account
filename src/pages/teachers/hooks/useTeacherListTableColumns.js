@@ -59,7 +59,7 @@ const useTeacherListTableColumns = (sorterObject) => {
       key: 'status',
       render: (text, record) => {
         return (
-          <Tag color={text ? 'green' : 'red'} key={1} strong>
+          <Tag color={text ? 'green' : 'red'} key={1}>
             {text ? 'Aktif' : 'Pasif'}
           </Tag>
         );

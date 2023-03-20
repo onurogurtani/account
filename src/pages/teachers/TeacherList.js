@@ -10,6 +10,7 @@ import {
 } from '../../components';
 import TeacherListFilter from './TeacherListFilter';
 import TeacherListTable from './TeacherListTable';
+import TeachersExcelUploadFormModal from './TeachersExcelUploadFormModal';
 import iconSearchWhite from '../../assets/icons/icon-white-search.svg';
 import '../../styles/table.scss';
 import '../../styles/teachers/teacherList.scss';
@@ -19,6 +20,7 @@ const TeacherList = () => {
   const history = useHistory();
 
   const [isVisibleFilter, setIsVisibleFilter] = useState(false);
+  const [isVisibleExcelUploadFormModalVisible, setIsVisibleExcelUploadFormModal] = useState(false);
 
   const handleAddButton = () => {
     history.push('/teachers/add');
@@ -32,8 +34,7 @@ const TeacherList = () => {
             <CustomButton className="add-btn" onClick={handleAddButton}>
               YENİ EKLE
             </CustomButton>
-            <CustomButton className="upload-btn">
-              <FileExcelOutlined />
+            <CustomButton icon={<FileExcelOutlined />} className="upload-btn" onClick={() => setIsVisibleExcelUploadFormModal(true)}>
               Excel ile Ekle
             </CustomButton>
           </Space>
@@ -55,6 +56,10 @@ const TeacherList = () => {
           <TeacherListFilter isVisibleFilter={isVisibleFilter} />
         </div>
         <TeacherListTable />
+        <TeachersExcelUploadFormModal
+          modalVisible={isVisibleExcelUploadFormModalVisible}
+          handleModalVisible={setIsVisibleExcelUploadFormModal}
+        />
       </CustomCollapseCard>
     </CustomPageHeader>
   );

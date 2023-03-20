@@ -168,3 +168,12 @@ export const validation = {
         return str1 === str2;
     },
 };
+
+export function downloadFile({ data, fileName = "", fileExtension = "xlsx" }) {
+    const url = URL.createObjectURL(new Blob([data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `${fileName}-${Date.now()}.${fileExtension}`);
+    document.body.appendChild(link);
+    link.click();
+}
