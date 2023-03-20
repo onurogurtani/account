@@ -2,7 +2,6 @@ import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomCollapseCard, Text } from '../../../../components';
-import { participantGroupTypes } from '../../../../constants/settings/participantGroups';
 import { getParticipantGroupsList, resetParticipantGroupsList } from '../../../../store/slice/eventsSlice';
 import '../../../../styles/announcementManagement/showAnnouncement.scss';
 
@@ -80,59 +79,29 @@ const ShowAnnouncementCard = ({ showData }) => {
                     <Text t="Bitiş Tarihi" /> : <span>{dayjs(showData?.endDate)?.format('YYYY-MM-DD HH:mm')}</span>
                 </li>
                 <li>
-                    <Text t="Katılımcı Tipi" /> : <span>Veri Gelecek</span>
-                </li>
-                <li>
                     <div className="roleListContainer">
-                        <Text t="Katılımcı Tipi" /> : {/* {showData.roles && ( */}
+                        <Text t="Katılımcı Tipi" /> :
                         <ul className="rolesList">
-                            {/* {showData.roles.map((r) => (
-                                <li key={r.id} className="roles">
-                                    {r.groupName}
-                                </li>
-                            ))} */}
-                            {participantGroupTypes.map((t) => (
-                                <li key={t?.id} className="roles">
-                                    {t.value}
+                            {showData?.participantType?.name?.split(',').map((text, index) => (
+                                <li key={index} className="roles">
+                                    {text}
                                 </li>
                             ))}
                         </ul>
-                        {/* )} */}
                     </div>
                 </li>
                 <li>
                     <div className="roleListContainer">
-                        <Text t="Katılımcı Grubu" /> : {/* {showData.roles && ( */}
+                        <Text t="Katılımcı Grubu" /> :
                         <ul className="rolesList">
-                            {/* {showData.roles.map((r) => (
-                                <li key={r.id} className="roles">
-                                    {r.groupName}
-                                </li>
-                            ))} */}
-                            {participantGroupsList.map((t) => (
-                                <li key={t?.id} className="roles">
-                                    {t.name}
+                            {showData?.participantGroup?.name?.split(',').map((text, index) => (
+                                <li key={index} className="roles">
+                                    {text}
                                 </li>
                             ))}
                         </ul>
-                        {/* )} */}
                     </div>
                 </li>
-
-                {/* <li>
-          <div className="roleListContainer">
-            <Text t="Roller" /> :{' '}
-            {showData.roles && (
-              <ul className="rolesList">
-                {showData.roles.map((r) => (
-                  <li key={r.id} className="roles">
-                    {r.groupName}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </li> */}
                 <li>
                     <div className="roleListContainer">
                         <Text t="Duyuru Yayınlanma Yeri" /> :{' '}

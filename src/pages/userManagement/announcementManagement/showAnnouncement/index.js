@@ -2,7 +2,6 @@ import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
-import { Tooltip } from 'antd';
 import {
     confirmDialog,
     CustomButton,
@@ -21,8 +20,6 @@ import '../../../../styles/announcementManagement/showAnnouncement.scss';
 import ShowAnnouncementCard from './ShowAnnouncementCard';
 import UpdateAnnouncementDate from './updateAnnouncementDate';
 const ShowAnnouncement = () => {
-    const [isTooltipVisible, setIsTooltipVisible] = useState(false);
-
     const history = useHistory();
     const [dateVisible, setDateVisible] = useState(false);
     const location = useLocation();
@@ -38,7 +35,6 @@ const ShowAnnouncement = () => {
         history.push('/user-management/announcement-management');
     };
     const handleEdit = () => {
-        handleMouseEnter();
         history.push({
             pathname: '/user-management/announcement-management/edit',
             state: { data: currentAnnouncement },
@@ -71,7 +67,6 @@ const ShowAnnouncement = () => {
         });
     };
     const publishAnnouncement = () => {
-        const id = currentAnnouncement.id;
         if (dayjs(currentAnnouncement?.endDate).isBefore(dayjs())) {
             setDateVisible(true);
         } else {
@@ -81,7 +76,8 @@ const ShowAnnouncement = () => {
                 okText: <Text t="Evet" />,
                 cancelText: 'Hayır',
                 onOk: async () => {
-                    let data = { ...currentAnnouncement, publishStatus: 1 };
+                    let groupIds = currentAnnouncement?.participantGroup?.id.split(',');
+                    let data = { ...currentAnnouncement, publishStatus: 1, participantGroupIds: groupIds };
 
                     const action = await dispatch(editAnnouncement(data));
                     if (editAnnouncement.fulfilled.match(action)) {
@@ -114,7 +110,8 @@ const ShowAnnouncement = () => {
             okText: <Text t="Evet" />,
             cancelText: 'Hayır',
             onOk: async () => {
-                let data = { ...currentAnnouncement, publishStatus: 2 };
+                let groupIds = currentAnnouncement?.participantGroup?.id.split(',');
+                let data = { ...currentAnnouncement, publishStatus: 2, participantGroupIds: groupIds };
 
                 const action = await dispatch(editAnnouncement(data));
                 if (editAnnouncement.fulfilled.match(action)) {
@@ -201,17 +198,6 @@ const ShowAnnouncement = () => {
             },
         });
     };
-
-    const handleMouseEnter = () => {
-        console.log('hopp', 'hopp');
-        if (currentAnnouncement.publishStatus === 1) {
-            setIsTooltipVisible(true);
-        }
-    };
-
-    const handleMouseLeave = () => {
-        setIsTooltipVisible(false);
-    };
     return (
         <>
             <CustomPageHeader
@@ -224,21 +210,15 @@ const ShowAnnouncement = () => {
                 <CustomButton type="primary" htmlType="submit" className="submit-btn" onClick={handleBack}>
                     Geri
                 </CustomButton>
-                <Tooltip color="blue" title="Yayında olan duyuru güncellenememektedir" visible={isTooltipVisible}>
-                    <CustomButton
-                        onMouseOver={handleMouseEnter}
-                        onMouseOut={handleMouseLeave}
-                        onBlur={handleMouseLeave}
-                        type="primary"
-                        htmlType="submit"
-                        className="edit-btn"
-                        onClick={handleEdit}
-                        disabled={currentAnnouncement.publishStatus === 1}
-                    >
-                        Düzenle
-                    </CustomButton>
-                </Tooltip>
-
+                <CustomButton
+                    type="primary"
+                    htmlType="submit"
+                    className="edit-btn"
+                    onClick={handleEdit}
+                    disabled={currentAnnouncement.publishStatus === 1}
+                >
+                    Düzenle
+                </CustomButton>
                 <CustomButton type="primary" htmlType="submit" className="submit-btn" onClick={onDelete} danger>
                     Sil
                 </CustomButton>
