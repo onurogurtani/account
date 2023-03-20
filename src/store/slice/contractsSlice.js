@@ -46,7 +46,7 @@ export const addNewContract = createAsyncThunk('addNewContract', async (data, { 
         return rejectWithValue(error?.data);
     }
 });
-export const updateContract = createAsyncThunk('addNewContract', async (data, { dispatch, rejectWithValue }) => {
+export const updateContract = createAsyncThunk('updateContract', async (data, { dispatch, rejectWithValue }) => {
     try {
         const response = await contractsServices.updateContract(data);
         return response;
@@ -54,6 +54,30 @@ export const updateContract = createAsyncThunk('addNewContract', async (data, { 
         return rejectWithValue(error?.data);
     }
 });
+
+export const getVersionForContract = createAsyncThunk(
+    'getVersionForContract',
+    async (id, { dispatch, rejectWithValue }) => {
+        try {
+            const response = await contractsServices.getVersionForContract(id);
+            return response;
+        } catch (error) {
+            return rejectWithValue(error?.data);
+        }
+    },
+);
+
+export const getVersionForCopiedContract = createAsyncThunk(
+    'getVersionForCopiedContract',
+    async (data, { dispatch, rejectWithValue }) => {
+        try {
+            const response = await contractsServices.getVersionForCopiedContract(data);
+            return response;
+        } catch (error) {
+            return rejectWithValue(error?.data);
+        }
+    },
+);
 
 const initialState = {
     contractTypes: [],

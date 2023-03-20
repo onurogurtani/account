@@ -37,12 +37,28 @@ const updateContract = (data) => {
     });
 };
 
+const getVersionForContract = (id) => {
+    return api({
+        url: `Crm/Documents/getNewVersion?ContractKindId=${id}`,
+        method: 'POST',
+    });
+};
+const getVersionForCopiedContract = (data) => {
+    return api({
+        url: 'Crm/Documents/copyDocument',
+        method: 'POST',
+        data,
+    });
+};
+
 const contractsServices = {
     getFilteredContractTypes,
     getByFilterPagedContractKinds,
     getByFilterPagedDocuments,
     addNewContract,
     updateContract,
+    getVersionForContract,
+    getVersionForCopiedContract,
 };
 
 export default contractsServices;
