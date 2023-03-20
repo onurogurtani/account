@@ -1,7 +1,7 @@
+import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
-import React, { useState, useContext, useEffect, useCallback, useMemo } from 'react';
 import 'react-quill/dist/quill.snow.css';
-import './editor.css';
+import '../../../../styles/announcementManagement/editor.scss';
 import QuillToolbar, { formats, modules } from './QuillToolbar';
 
 export const CustomReactQuill = ({ onChange, quillValue }) => {
@@ -13,7 +13,6 @@ export const CustomReactQuill = ({ onChange, quillValue }) => {
         };
     }, [quillValue]);
     const handleQuillChange = (value) => {
-        console.log('🚀 ~ file: CustomReactQuill.js:8 ~ handleQuillChange ~ value:', value);
         setnewVal(value);
         onChange(value);
     };
@@ -25,9 +24,6 @@ export const CustomReactQuill = ({ onChange, quillValue }) => {
                 value={newVal}
                 theme="snow"
                 onChange={handleQuillChange}
-                // onBlur={handleQuillChange}
-                // onMouseLeave={() => console.log('onMouseLeave')}
-                // onMouseOut={() => console.log('onMouseLeave')}
                 modules={modules}
                 formats={formats}
                 style={{ height: '100%' }}

@@ -1,7 +1,6 @@
-import React, { useState, useContext, useEffect, useCallback, useMemo } from 'react';
-import { CustomFormItem, Text } from '../../../../components';
+import React, { useState } from 'react';
+import { CustomFormItem } from '../../../../components';
 import CustomReactQuill from './CustomReactQuill';
-import { reactQuillValidator } from '../../../../utils/formRule';
 
 const CustomQuillFormItem = ({ label, name, setQuillValue, quillValue, form, placeholder, className }) => {
     const [quillError, setquillError] = useState(false);
@@ -19,7 +18,6 @@ const CustomQuillFormItem = ({ label, name, setQuillValue, quillValue, form, pla
     };
     const onQuillChange = async (value) => {
         let newStr = await removeTags(value);
-        console.log('newStr', newStr);
 
         let data = {
             name: value,
