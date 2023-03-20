@@ -1,10 +1,10 @@
 import { Collapse, Typography } from 'antd';
 import React, { memo, useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import EditableInput from '../../../components/EditableInput';
 import { addLessons } from '../../../store/slice/lessonsSlice';
 import { getUnits } from '../../../store/slice/lessonUnitsSlice';
 import { getListFilterParams } from '../../../utils/utils';
+import AcquisitionTreeCreateOrEdit from './AcquisitionTreeCreateOrEdit';
 import Lesson from './Lesson';
 import Units from './Units';
 
@@ -23,6 +23,7 @@ const Lessons = ({ classroomId, isAdd, setIsAdd }) => {
     const onChange = (key) => {
         setOpenedPanels(key);
         if (!key.toString()) return false;
+        if (openedPanels.includes(key.at(-1)?.toString())) return false;
         dispatch(getUnits(getListFilterParams('lessonId', Number(key.at(-1).toString()))));
     };
 
@@ -35,7 +36,8 @@ const Lessons = ({ classroomId, isAdd, setIsAdd }) => {
                     classroomId,
                 },
             };
-            await dispatch(addLessons(entity));
+
+            await dispatch(addLessons(entity)).unwrap();
         },
         [classroomId, dispatch],
     );
@@ -50,28 +52,26 @@ const Lessons = ({ classroomId, isAdd, setIsAdd }) => {
             )}
             <br />
             {(isAdd || filteredLessons.length !== 0) && <Title level={3}>Dersler</Title>}
-            <EditableInput height="40" isEdit={isAdd} setIsEdit={setIsAdd} onEnter={addLesson} />
-            <Collapse onChange={onChange}>
-                {filteredLessons
-                    .sort((a, b) => a.name.localeCompare(b.name))
-                    .map((lesson) => (
-                        <Panel
-                            header={
-                                <Lesson
-                                    setSelectedInsertKey={setSelectedInsertKey}
-                                    lesson={lesson}
-                                    open={openedPanels.includes(lesson.id.toString())}
-                                />
-                            }
-                            key={lesson.id}
-                        >
-                            <Units
-                                lesson={lesson}
+            <AcquisitionTreeCreateOrEdit height="40" isEdit={isAdd} setIsEdit={setIsAdd} onEnter={addLesson} />
+            <Collapse destroyInactivePanel={true} onChange={onChange}>
+                {filteredLessons.map((lesson) => (
+                    <Panel
+                        header={
+                            <Lesson
                                 setSelectedInsertKey={setSelectedInsertKey}
-                                selectedInsertKey={selectedInsertKey}
+                                lesson={lesson}
+                                open={openedPanels.includes(lesson.id.toString())}
                             />
-                        </Panel>
-                    ))}
+                        }
+                        key={lesson.id}
+                    >
+                        <Units
+                            lesson={lesson}
+                            setSelectedInsertKey={setSelectedInsertKey}
+                            selectedInsertKey={selectedInsertKey}
+                        />
+                    </Panel>
+                ))}
             </Collapse>
         </>
     );
