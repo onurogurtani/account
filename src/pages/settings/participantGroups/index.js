@@ -246,9 +246,9 @@ const ParticipantGroups = () => {
               <CustomFormItem
                 rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
                 name={'participantType'}
-                label={<Text t="Katılımcı Türü" />}
+                label={<Text t="Katılımcı Tipi" />}
               >
-                <CustomSelect placeholder="Katılımcı Türü">
+                <CustomSelect placeholder="Katılımcı Tipi">
                   <Option key={'1'} value={1}>
                     <Text t={'Öğrenci'} />
                   </Option>
