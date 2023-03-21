@@ -15,10 +15,28 @@ export const getByFilterPagedTeachers = createAsyncThunk('teachers/getByFilterPa
   }
 });
 
+export const uploadTeacherExcel = createAsyncThunk('uploadTeacherExcel', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await teachersServices.uploadTeacherExcel(data);
+    dispatch(getByFilterPagedTeachers());
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+
 export const setTeacherStatus = createAsyncThunk('teachers/setTeacherStatus', async (data, { dispatch, rejectWithValue }) => {
   try {
     const response = await teachersServices.setTeacherStatus(data);
     return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+
+export const downloadTeacherExcel = createAsyncThunk('downloadTeacherExcel', async (body, { rejectWithValue }) => {
+  try {
+    return await teachersServices.downloadTeacherExcel();
   } catch (error) {
     return rejectWithValue(error?.data);
   }
