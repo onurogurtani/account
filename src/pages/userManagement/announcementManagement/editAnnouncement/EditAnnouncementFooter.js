@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import modalSuccessIcon from '../../../../assets/icons/icon-modal-success.svg';
 import {
@@ -12,25 +12,29 @@ import {
     Text,
 } from '../../../../components';
 import { editAnnouncement, getAvatarUpload } from '../../../../store/slice/announcementSlice';
-import { getByFilterPagedGroups } from '../../../../store/slice/groupsSlice';
+
+import { getParticipantGroupsList } from '../../../../store/slice/eventsSlice';
+
 import '../../../../styles/announcementManagement/saveAndFinish.scss';
 const EditAnnouncementFooter = ({ form, history, currentId, fileImage, initialValues }) => {
     const dispatch = useDispatch();
     const [updatedAnnouncement, setUpdatedAnnouncement] = useState({});
     const [isVisible, setIsVisible] = useState(false);
     const { announcementTypes, updateAnnouncementObject } = useSelector((state) => state?.announcement);
+    const { participantGroupsList } = useSelector((state) => state?.events);
 
-    const loadGroupsList = useCallback(async () => {
-        let data = {
-          pageSize: 10000,
-        };
-        await dispatch(getByFilterPagedGroups(data));
-    }, [dispatch]);
-    useEffect(() => {
-        loadGroupsList();
-    }, []);
+    const loadParticipantGroups = useCallback(async () => {
+        participantGroupsList?.length === 0 &&
+            dispatch(
+                getParticipantGroupsList({
+                    params: {
+                        'ParticipantGroupDetailSearch.PageSize': 100000000,
+                    },
+                }),
+            );
+    }, [participantGroupsList, dispatch]);
 
-    const { groupsList } = useSelector((state) => state?.groups);
+    loadParticipantGroups();
 
     const onCancel = () => {
         confirmDialog({
@@ -43,90 +47,88 @@ const EditAnnouncementFooter = ({ form, history, currentId, fileImage, initialVa
             },
         });
     };
-    const onFinish = useCallback(
-        async (status) => {
-            const values = await form.validateFields();
-            const startOfAnnouncement = values?.startDate
-                ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD-HH-mm')
-                : undefined;
+    const onFinish = async (status) => {
+        const values = await form.validateFields();
+        const startOfAnnouncement = values?.startDate
+            ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD-HH-mm')
+            : undefined;
 
-            const endOfAnnouncement = values?.endDate
-                ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD-HH-mm')
-                : undefined;
+        const endOfAnnouncement = values?.endDate
+            ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD-HH-mm')
+            : undefined;
 
-            if (startOfAnnouncement >= endOfAnnouncement) {
+        if (startOfAnnouncement >= endOfAnnouncement) {
+            errorDialog({
+                title: <Text t="error" />,
+                message: 'Başlangıç Tarihi Bitiş Tarihinden Önce Olmalıdır',
+            });
+            return;
+        }
+
+        try {
+            const startDate = values?.startDate ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD') : undefined;
+            const startHour = values?.startDate ? dayjs(values?.startDate)?.utc().format('HH:mm:ss') : undefined;
+            const endDate = values?.endDate ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD') : undefined;
+            const endHour = values?.endDate ? dayjs(values?.endDate)?.utc().format('HH:mm:ss') : undefined;
+            const typeName = values.announcementType;
+
+            const transFormedType = [];
+            for (let i = 0; i < announcementTypes.length; i++) {
+                if (announcementTypes[i].name === typeName) {
+                    transFormedType.push(announcementTypes[i]);
+                }
+            }
+            let fileId = updateAnnouncementObject?.fileId;
+            if (Array.isArray(values.fileId)) {
+                let res = await dispatch(getAvatarUpload(fileImage));
+                fileId = await res?.payload?.data?.id;
+            }
+            let selectedGroupsArray = participantGroupsList.filter((p) => values.participantGroupIds.includes(p?.name));
+            let idsArr = [];
+            selectedGroupsArray?.map((item) => idsArr.push(item?.id));
+            idsArr.push();
+
+            const data = {
+                participantGroupIds: idsArr,
+                id: currentId,
+                announcementType: transFormedType[0],
+                headText: values.headText.trim(),
+                content: values.content,
+                homePageContent: values.homePageContent,
+                startDate: startDate + 'T' + startHour + '.000Z',
+                endDate: endDate + 'T' + endHour + '.000Z',
+                fileId: fileId,
+                buttonName: values.buttonName,
+                buttonUrl: values.buttonUrl,
+                isArchived: false,
+                isPublished: true,
+                publishStatus: status,
+                announcementPublicationPlaces: values.announcementPublicationPlaces,
+                isPopupAvailable: values?.announcementPublicationPlaces.includes(4),
+                isReadCheckbox: values?.isReadCheckbox,
+            };
+
+            const action = await dispatch(editAnnouncement(data));
+
+            if (Array.isArray(values?.fileId)) {
+                data.file = values?.fileId[0];
+            }
+            if (editAnnouncement.fulfilled.match(action)) {
+                setIsVisible(true);
+                setUpdatedAnnouncement({ ...initialValues, ...data });
+            } else {
                 errorDialog({
                     title: <Text t="error" />,
-                    message: 'Başlangıç Tarihi Bitiş Tarihinden Önce Olmalıdır',
-                });
-                return;
-            }
-
-            try {
-                const startDate = values?.startDate ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD') : undefined;
-                const startHour = values?.startDate ? dayjs(values?.startDate)?.utc().format('HH:mm:ss') : undefined;
-                const endDate = values?.endDate ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD') : undefined;
-                const endHour = values?.endDate ? dayjs(values?.endDate)?.utc().format('HH:mm:ss') : undefined;
-                const typeName = values.announcementType;
-
-                const transFormedType = [];
-                for (let i = 0; i < announcementTypes.length; i++) {
-                    if (announcementTypes[i].name === typeName) {
-                        transFormedType.push(announcementTypes[i]);
-                    }
-                }
-                let fileId = updateAnnouncementObject?.fileId;
-                if (Array.isArray(values.fileId)) {
-                    let res = await dispatch(getAvatarUpload(fileImage));
-                    fileId = await res?.payload?.data?.id;
-                }
-                let rolesArray = groupsList.filter(function (e) {
-                    return values.roles.indexOf(e.id) != -1;
-                });
-
-                const data = {
-                    roles: rolesArray,
-                    id: currentId,
-                    announcementType: transFormedType[0],
-                    headText: values.headText.trim(),
-                    content: values.content,
-                    homePageContent: values.homePageContent,
-                    startDate: startDate + 'T' + startHour + '.000Z',
-                    endDate: endDate + 'T' + endHour + '.000Z',
-                    fileId: fileId,
-                    buttonName: values.buttonName,
-                    buttonUrl: values.buttonUrl,
-                    isArchived: false,
-                    isPublished: true,
-                    publishStatus: status,
-                    announcementPublicationPlaces: values.announcementPublicationPlaces,
-                    isPopupAvailable: values?.announcementPublicationPlaces.includes(4),
-                    isReadCheckbox: values?.isReadCheckbox,
-                };
-
-                const action = await dispatch(editAnnouncement(data));
-
-                if (Array.isArray(values?.fileId)) {
-                    data.file = values?.fileId[0];
-                }
-                if (editAnnouncement.fulfilled.match(action)) {
-                    setIsVisible(true);
-                    setUpdatedAnnouncement({ ...initialValues, ...data });
-                } else {
-                    errorDialog({
-                        title: <Text t="error" />,
-                        message: action?.payload?.message,
-                    });
-                }
-            } catch (error) {
-                errorDialog({
-                    title: <Text t="error" />,
-                    message: error,
+                    message: action?.payload?.message,
                 });
             }
-        },
-        [form, fileImage, dispatch, currentId, updateAnnouncementObject?.fileId, announcementTypes],
-    );
+        } catch (error) {
+            errorDialog({
+                title: <Text t="error" />,
+                message: error,
+            });
+        }
+    };
     return (
         <>
             <CustomModal
