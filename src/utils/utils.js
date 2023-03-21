@@ -161,7 +161,7 @@ export const validation = {
         return pattern.test(str);
     },
     isDouble: function (str) {
-        const pattern = /^\d{0,2}(\.\d{0,2}){0,1}$/;
+        const pattern = /^[+-]?\d+(\.\d+)?$/;
         return pattern.test(str);
     },
     isSame: function (str1, str2) {
