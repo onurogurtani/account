@@ -19,6 +19,14 @@ const uploadTeacherExcel = (data) => {
   });
 };
 
+const setTeacherActivateStatus = (data) => {
+  return api({
+    url: `Identity/Teachers/SetActivateStatus`,
+    method: 'POST',
+    data,
+  });
+};
+
 const getTeacherById = (id) => {
   return api({
     url: `Identity/Teachers/getbyid?Id=${id}`,
@@ -56,6 +64,7 @@ const downloadTeacherExcel = (data) => {
 const teachersServices = {
   getByFilterPagedTeachers,
   uploadTeacherExcel,
+  setTeacherActivateStatus,
   addTeacher,
   updateTeacher,
   getTeacherById,

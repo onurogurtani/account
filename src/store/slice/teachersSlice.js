@@ -25,9 +25,9 @@ export const uploadTeacherExcel = createAsyncThunk('uploadTeacherExcel', async (
   }
 });
 
-export const setTeacherStatus = createAsyncThunk('teachers/setTeacherStatus', async (data, { dispatch, rejectWithValue }) => {
+export const setTeacherActivateStatus = createAsyncThunk('teachers/setTeacherActivateStatus', async (data, { dispatch, rejectWithValue }) => {
   try {
-    const response = await teachersServices.setTeacherStatus(data);
+    const response = await teachersServices.setTeacherActivateStatus(data);
     return response;
   } catch (error) {
     return rejectWithValue(error?.data);
@@ -82,7 +82,7 @@ export const teachersSlice = createSlice({
         totalCount: 0,
       };
     });
-    builder.addCase(setTeacherStatus.fulfilled, (state, action) => {
+    builder.addCase(setTeacherActivateStatus.fulfilled, (state, action) => {
       const {
         arg: { id, status },
       } = action.meta;
