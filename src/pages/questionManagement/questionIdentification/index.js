@@ -807,13 +807,21 @@ const QuestionIdentification = () => {
                                                         const value = e.target.value;
                                                         if (
                                                             value[value.length - 1] === undefined ||
-                                                            validation.isDouble(value)
+                                                            validation.isNumber(value) ||
+                                                            value[value.length - 1] === '.'
                                                         ) {
                                                             setFormData({
                                                                 ...formData,
                                                                 solutionMinute: e.target.value,
                                                             });
                                                         } else {
+                                                            if (formData.solutionMinute) {
+                                                            } else {
+                                                                setFormData({
+                                                                    ...formData,
+                                                                    solutionMinute: '',
+                                                                });
+                                                            }
                                                         }
                                                     }}
                                                     value={formData.solutionMinute}
@@ -829,19 +837,23 @@ const QuestionIdentification = () => {
                                                     disabled={formData.questionOfExamState === 1}
                                                     onChange={(e) => {
                                                         const value = e.target.value;
-
+                                                        console.log(validation.isNumber(value));
                                                         if (
-                                                            validation.isNumber(value) ||
-                                                            value[value.length - 1] === undefined
+                                                            value[value.length - 1] === undefined ||
+                                                            validation.isNumber(value)
                                                         ) {
                                                             setFormData({
                                                                 ...formData,
-                                                                wordCount:
-                                                                    value[value.length - 1] === undefined
-                                                                        ? ''
-                                                                        : parseInt(e.target.value),
+                                                                wordCount: parseInt(e.target.value),
                                                             });
                                                         } else {
+                                                            if (formData.wordCount) {
+                                                            } else {
+                                                                setFormData({
+                                                                    ...formData,
+                                                                    wordCount: '',
+                                                                });
+                                                            }
                                                         }
                                                     }}
                                                     value={formData.wordCount}

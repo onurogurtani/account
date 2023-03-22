@@ -18,6 +18,11 @@ import {
 import { getByFilterPagedAnnouncements, setUpdateAnnouncementObject } from '../../../store/slice/announcementSlice';
 import '../../../styles/announcementManagement/announcementList.scss';
 import AnnouncementFilter from './AnnouncementFilter';
+const activeEnum = {
+    true: 'Aktif Kayıtlar',
+    false: 'Arşiv Kayıtlar',
+    '': 'Seçiniz',
+};
 
 const AnnouncementList = () => {
     const dispatch = useDispatch();
@@ -25,18 +30,7 @@ const AnnouncementList = () => {
     const [announcementFilterIsShow, setAnnouncementFilterIsShow] = useState(false);
     const [activeValue, setActiveValue] = useState();
     const { announcements, tableProperty, filterObject } = useSelector((state) => state?.announcement);
-    //TODO ROL YAPISI ÇALIŞMASINDAN DOLAYI GELEN HATA NEDENİYLE BU BÖLÜM YORUMA ALINDI, ROL YAPISI TAMAMLANDIKTAN SONRA DÜZELTİLECEK
-    // const listRoles = useCallback((record) => {
-    //     console.log('record', record);
-    //     if (record?.roles?.length === 0) {
-    //         return null;
-    //     }
-    //     const newArray = record?.roles?.map((r) => {
-    //         return r.groupName;
-    //     });
-    //     const unifiedRoles = newArray.join(' , ');
-    //     return unifiedRoles;
-    // }, []);
+
     const loadAnnouncemenets = async () => {
         await dispatch(getByFilterPagedAnnouncements());
     };
@@ -54,13 +48,8 @@ const AnnouncementList = () => {
             );
             setActiveValue(activeEnum[value]);
         },
-        [dispatch],
+        [dispatch, filterObject],
     );
-    const activeEnum = {
-        true: 'Aktif Kayıtlar',
-        false: 'Arşiv Kayıtlar',
-        '': 'Seçiniz',
-    };
 
     const paginationProps = {
         showSizeChanger: true,
@@ -114,10 +103,11 @@ const AnnouncementList = () => {
 
     const columns = [
         {
-            title: 'No',
+            title: '#',
             dataIndex: 'id',
             key: 'id',
             sorter: true,
+            align: 'center',
             render: (text, record) => {
                 return <div>{text}</div>;
             },
@@ -159,19 +149,30 @@ const AnnouncementList = () => {
                 return date;
             },
         },
-        //TODO ROL YAPISI ÇALIŞMASINDAN DOLAYI GELEN HATA NEDENİYLE BU BÖLÜM YORUMA ALINDI, ROL YAPISI TAMAMLANDIKTAN SONRA DÜZELTİLECEK
 
-        // {
-        //     title: 'Duyuru Rolleri',
-        //     dataIndex: 'groups',
-        //     key: 'groups',
-        //     align: 'center',
-        //     render: (_, record) => listRoles(record),
-        // },
+        {
+            title: 'Katılımcı Tipi',
+            dataIndex: 'participantType',
+            key: 'participantType',
+            align: 'center',
+            render: (participantType) => {
+                return <span>{participantType?.name}</span>;
+            },
+        },
+        {
+            title: 'Katılımcı Grubu',
+            dataIndex: 'participantGroup',
+            key: 'participantGroup',
+            align: 'center',
+            render: (participantGroup) => {
+                return <span>{participantGroup?.name}</span>;
+            },
+        },
         {
             title: 'Yayınlanma Durumu',
             dataIndex: 'publishStatus',
             key: 'publishStatus',
+            sorter: 'true',
             align: 'center',
             render: (publishStatus) => {
                 return publishStatus === 1 ? (
@@ -259,6 +260,11 @@ const AnnouncementList = () => {
             key: 'endDate',
             ascend: 'endASC',
             descend: 'endDESC',
+        },
+        {
+            key: 'publishStatus',
+            ascend: 'publishStatusASC',
+            descend: 'publishStatusDESC',
         },
     ];
 

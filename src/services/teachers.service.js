@@ -8,6 +8,17 @@ const getByFilterPagedTeachers = (data) => {
   });
 };
 
+const uploadTeacherExcel = (data) => {
+  const headers = { 'Content-Type': 'blob' };
+  return api({
+    url: `Identity/Teachers/uploadTeacherExcel`,
+    method: 'POST',
+    data,
+    responseType: 'arraybuffer',
+    headers,
+  });
+};
+
 const getTeacherById = (id) => {
   return api({
     url: `Identity/Teachers/getbyid?Id=${id}`,
@@ -31,11 +42,24 @@ const updateTeacher = (data) => {
   });
 };
 
+const downloadTeacherExcel = (data) => {
+  const headers = { 'Content-Type': 'blob' };
+  return api({
+    url: `Identity/Teachers/downloadTeacherExcel`,
+    method: 'GET',
+    data,
+    responseType: 'arraybuffer',
+    headers,
+  });
+};
+
 const teachersServices = {
   getByFilterPagedTeachers,
+  uploadTeacherExcel,
   addTeacher,
   updateTeacher,
   getTeacherById,
+  downloadTeacherExcel,
 };
 
 export default teachersServices;

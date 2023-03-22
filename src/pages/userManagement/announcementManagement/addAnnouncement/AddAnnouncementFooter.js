@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { confirmDialog, CustomButton, CustomFormItem, errorDialog, successDialog, Text } from '../../../../components';
@@ -8,7 +8,6 @@ import {
     getAvatarUpload,
     getByFilterPagedAnnouncementTypes,
 } from '../../../../store/slice/announcementSlice';
-import { getByFilterPagedGroups } from '../../../../store/slice/groupsSlice';
 import '../../../../styles/announcementManagement/saveAndFinish.scss';
 
 const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileImage }) => {
@@ -16,17 +15,7 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileIma
 
     const dispatch = useDispatch();
     const { announcementTypes } = useSelector((state) => state?.announcement);
-    const loadGroupsList = useCallback(async () => {
-        let data = {
-            pageSize: 10000,
-        };
-        await dispatch(getByFilterPagedGroups(data));
-    }, [dispatch]);
-    useEffect(() => {
-        loadGroupsList();
-    }, []);
-
-    const { groupsList } = useSelector((state) => state?.groups);
+    const { participantGroupsList } = useSelector((state) => state?.events);
 
     const onFinish = useCallback(
         async (status) => {
@@ -67,12 +56,14 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileIma
                         foundType.push(announcementTypes[i]);
                     }
                 }
-                let rolesArray = groupsList.filter(function (e) {
-                    return values.roles.indexOf(e.id) !== -1;
-                });
+                let selectedGroupsArray = participantGroupsList.filter((p) =>
+                    values.participantGroupIds.includes(p?.name),
+                );
+                let idsArr = [];
+                selectedGroupsArray?.map((item) => idsArr.push(item?.id));
+                idsArr.push();
                 const fileId = await dispatch(getAvatarUpload(fileImage));
                 let data = {
-                    roles: rolesArray,
                     announcementType: foundType[0],
                     headText: values.headText.trim(),
                     content: values.content,
@@ -87,6 +78,7 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileIma
                     announcementPublicationPlaces: values?.announcementPublicationPlaces,
                     isPopupAvailable: values?.announcementPublicationPlaces.includes(4),
                     isReadCheckbox: values?.isReadCheckbox,
+                    participantGroupIds: idsArr,
                 };
                 const action = await dispatch(addAnnouncement(data));
 
@@ -111,7 +103,7 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileIma
                 });
             }
         },
-        [announcementTypes, dispatch, fileImage, form, setAnnouncementInfoData, setStep],
+        [announcementTypes, dispatch, fileImage, form, history, participantGroupsList],
     );
 
     const onCancel = () => {
