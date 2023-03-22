@@ -40,10 +40,15 @@ const ParticipantGroups = () => {
     const formData = {
       "name": values.name,
       "packageIds": values.participantGroupPackages,
-      "participantType":values.participantType
+      "userType":values.participantType
     }
     if (updateData) {
-      const action = await dispatch(updateParticipantGroups({...formData,id : updateData.id}));
+      const updateFormData = {
+        "name": values.name,
+        "packageIds": values.participantGroupPackages,
+        "userType":values.participantType === "Öğrenci" ? 1 : 2
+      }
+      const action = await dispatch(updateParticipantGroups({...updateFormData,id : updateData.id}));
       if (updateParticipantGroups.fulfilled.match(action)) {
         successDialog({
           title: <Text t="success" />,
@@ -103,9 +108,9 @@ const ParticipantGroups = () => {
       },
     },
     {
-      title: 'Katılımcı Türü',
-      dataIndex: 'participantType',
-      key: 'participantType',
+      title: 'Katılımcı Tipi',
+      dataIndex: 'userType',
+      key: 'userType',
       sorter: true,
 
       render: (text, record) => {
