@@ -12,6 +12,17 @@ export const getTrialExamList = createAsyncThunk(
         }
     },
 );
+export const getTrialExamAdd = createAsyncThunk(
+    'getTrialExamAdd',
+    async ({ params, data } = {}, { dispatch, rejectWithValue }) => {
+        try {
+            const response = await trialExamServices.trialExamsAdd(data);
+            return response;
+        } catch (error) {
+            return rejectWithValue(error?.data);
+        }
+    },
+);
 
 const initialState = {
     trialExamList: [],
@@ -26,7 +37,6 @@ export const trialExamSlice = createSlice({
             state.trialExamFormData = action?.payload;
         },
         deleteAddQuesiton: (state, action) => {
-            console.log(action.payload);
             state.trialExamFormData.sections[action.payload.index].sectionQuestionOfExams.splice(
                 action.payload.quesitonIndex,
                 1,

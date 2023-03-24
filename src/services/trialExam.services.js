@@ -1,14 +1,15 @@
 import { api } from './api';
 
-const getCurrentUser = () => {
-  return api({
-    url: 'Users/getCurrentUser',
-    method: 'GET',
-  });
+const trialExamsAdd = (data) => {
+    return api({
+        url: '/Exam/TestExams/Add',
+        method: 'POST',
+        data: data,
+    });
 };
 
 const trialExamServices = {
-  getCurrentUser,
+    trialExamsAdd,
 };
 
 export default trialExamServices;

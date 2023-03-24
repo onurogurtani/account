@@ -20,9 +20,9 @@ import {
 } from '../../../store/slice/lessonSubSubjectsSlice';
 import { getUnitsListFilter, resetLessonUnitsFilter } from '../../../store/slice/lessonUnitsSlice';
 import { getByFilterPagedQuestionOfExamsList } from '../../../store/slice/questionIdentificationSlice';
-import { setTrialExamFormData, deleteAddQuesiton } from '../../../store/slice/trialExamSlice';
+import { setTrialExamFormData, deleteAddQuesiton, getTrialExamAdd } from '../../../store/slice/trialExamSlice';
 import Preview from './Preview';
-const AddQuestion = () => {
+const AddQuestion = ({ setActiveKey }) => {
     const [step, setStep] = useState(1);
     const { allClassList } = useSelector((state) => state.classStages);
     const { lessonsFilterList } = useSelector((state) => state.lessons);
@@ -101,6 +101,13 @@ const AddQuestion = () => {
         }
         setSortData(newData);
     }, [selectSection, trialExamFormData?.sections]);
+
+    useEffect(() => {
+        form.setFieldsValue({ ['ClassroomId']: trialExamFormData.classroomId });
+        dispatch(
+            getLessonsQuesitonFilter([{ field: 'classroomId', value: trialExamFormData.classroomId, compareType: 0 }]),
+        );
+    }, [dispatch, trialExamFormData.classroomId]);
     return (
         <div className="add-question-trial">
             {step === 1 && (
@@ -226,9 +233,22 @@ const AddQuestion = () => {
                     )}
 
                     <div className="step1-action-button">
+                        <CustomButton
+                            onClick={() => {
+                                setActiveKey('0');
+                            }}
+                        >
+                            Geri
+                        </CustomButton>
                         <CustomButton>İptal</CustomButton>
                         <CustomButton>Taslak Olarak Kaydet</CustomButton>
-                        <CustomButton>Kaydet Ve Kullanıma Aç</CustomButton>
+                        <CustomButton
+                            onClick={() => {
+                                dispatch(getTrialExamAdd({ data: { testExam: { ...trialExamFormData } } }));
+                            }}
+                        >
+                            Kaydet Ve Kullanıma Aç
+                        </CustomButton>
                     </div>
                 </div>
             )}
