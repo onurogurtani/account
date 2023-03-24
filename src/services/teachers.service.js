@@ -42,7 +42,7 @@ const addTeacher = (data) => {
   });
 };
 
-const updateTeacher = (data) => {
+const editTeacher = (data) => {
   return api({
     url: `Identity/Teachers/Update`,
     method: 'PUT',
@@ -66,7 +66,7 @@ const teachersServices = {
   uploadTeacherExcel,
   setTeacherActivateStatus,
   addTeacher,
-  updateTeacher,
+  editTeacher,
   getTeacherById,
   downloadTeacherExcel,
 };

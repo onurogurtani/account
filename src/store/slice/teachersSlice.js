@@ -15,7 +15,7 @@ export const getByFilterPagedTeachers = createAsyncThunk('teachers/getByFilterPa
   }
 });
 
-export const uploadTeacherExcel = createAsyncThunk('uploadTeacherExcel', async (data, { dispatch, rejectWithValue }) => {
+export const uploadTeacherExcel = createAsyncThunk('teachers/uploadTeacherExcel', async (data, { dispatch, rejectWithValue }) => {
   try {
     const response = await teachersServices.uploadTeacherExcel(data);
     dispatch(getByFilterPagedTeachers());
@@ -34,7 +34,34 @@ export const setTeacherActivateStatus = createAsyncThunk('teachers/setTeacherAct
   }
 });
 
-export const downloadTeacherExcel = createAsyncThunk('downloadTeacherExcel', async (body, { rejectWithValue }) => {
+export const addTeacher = createAsyncThunk('teachers/addTeacher', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await teachersServices.addTeacher(data);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+
+export const editTeacher = createAsyncThunk('teachers/addTeacher', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await teachersServices.editTeacher(data);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+
+export const getTeacherById = createAsyncThunk('teachers/getTeacherById', async (id, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await teachersServices.getTeacherById(id);
+    return response?.data;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+
+export const downloadTeacherExcel = createAsyncThunk('teachers/downloadTeacherExcel', async (body, { rejectWithValue }) => {
   try {
     return await teachersServices.downloadTeacherExcel();
   } catch (error) {
@@ -44,6 +71,7 @@ export const downloadTeacherExcel = createAsyncThunk('downloadTeacherExcel', asy
 
 const initialState = {
   teacherList: [],
+  selectedTeacher: undefined,
   tableProperty: {
     currentPage: 1,
     page: 1,
@@ -89,6 +117,12 @@ export const teachersSlice = createSlice({
       if (id) {
         state.teacherList = state.teacherList.map((item) => (item.id === id ? { ...item, status } : item));
       }
+    });
+    builder.addCase(getTeacherById.fulfilled, (state, action) => {
+      state.selectedTeacher = action?.payload;
+    });
+    builder.addCase(getTeacherById.rejected, (state) => {
+      state.selectedTeacher = undefined;
     });
   },
 });
