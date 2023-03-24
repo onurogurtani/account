@@ -18,7 +18,7 @@ import AddAnnouncementFooter from '../addAnnouncement/AddAnnouncementFooter';
 import CustomQuillFormItem from '../../../../components/customQuill/CustomQuillFormItem';
 import EditAnnouncementFooter from '../editAnnouncement/EditAnnouncementFooter';
 import AnnouncementIcon from './AnnouncementIcon';
-import CustomParticipantSelectFormItems from './CustomParticipantSelectFormItems';
+import CustomParticipantSelectFormItems from '../../../../components/CustomParticipantSelectFormItems';
 
 const announcementPublicationPlaces = [
     { id: 1, name: 'Anasayfa' },
@@ -285,12 +285,6 @@ const AnnouncementInfoForm = ({
                     required={true}
                     initialValues={initialValues}
                 />
-                {/* <CustomParticipantSelectFormItems
-                    className={'custom-form-item'}
-                    form={form}
-                    required={true}
-                    initialValues={initialValues}
-                /> */}
                 <CustomFormItem
                     rules={[
                         {

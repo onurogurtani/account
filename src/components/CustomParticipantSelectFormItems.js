@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CustomFormItem, CustomSelect, Option } from '../../../../components';
-import { participantGroupTypes } from '../../../../constants/settings/participantGroups';
-import { resetParticipantGroupsList } from '../../../../store/slice/eventsSlice';
+import { CustomFormItem, CustomSelect, Option } from '../components';
+import { participantGroupTypes } from '../constants/settings/participantGroups';
+import { resetParticipantGroupsList } from '../store/slice/eventsSlice';
 
 const CustomParticipantSelectFormItems = ({ form, className, required, initialValues }) => {
     const [groupVal, setGroupVal] = useState([]);
