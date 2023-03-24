@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CustomFormItem, CustomSelect, Option } from '../../../../components';
-import { participantGroupTypes } from '../../../../constants/settings/participantGroups';
-import { resetParticipantGroupsList } from '../../../../store/slice/eventsSlice';
+import { CustomFormItem, CustomSelect, Option } from '../components';
+import { participantGroupTypes } from '../constants/settings/participantGroups';
+import { resetParticipantGroupsList } from '../store/slice/eventsSlice';
 
-const CustomParticipantSelect = ({ form, className, required, initialValues }) => {
+const CustomParticipantSelectFormItems = ({ form, className, required, initialValues }) => {
     const [groupVal, setGroupVal] = useState([]);
     const [participantIdsArr, setParticipantIdsArr] = useState([]);
     const dispatch = useDispatch();
     const { participantGroupsList } = useSelector((state) => state?.events);
 
     useEffect(() => {
-        let typeIds = initialValues?.participantType?.name?.split(',');
+        let typeIds = initialValues?.participantType?.id?.split(',')?.map((item) => Number(item));
         if (typeIds?.length > 0) {
             setParticipantIdsArr([...typeIds]);
             filterByParticipantTypeIds([...typeIds]);
@@ -24,7 +24,6 @@ const CustomParticipantSelect = ({ form, className, required, initialValues }) =
     const onParticipantGroupTypeDeSelect = async (value) => {};
 
     const handleSelectChange = (value) => {
-        console.log('"change"', 'change');
         form.resetFields(['participantGroupIds']);
         setParticipantIdsArr([...value]);
         if (value.length === 0) {
@@ -35,14 +34,20 @@ const CustomParticipantSelect = ({ form, className, required, initialValues }) =
     };
 
     const filterByParticipantTypeIds = async (value) => {
-        let typesIdsOfValues = participantGroupTypes.filter((item) => {
-            return value.some((v) => v === item?.value);
-        });
-
         let newArr = participantGroupsList.filter((item) => {
-            return typesIdsOfValues.some((v) => v.id === item.participantType);
+            return value.some((v) => v === item?.userType);
         });
-        setGroups([...newArr]);
+        const uniqueArr = [];
+
+        newArr.forEach((obj) => {
+            const isDuplicate = uniqueArr.some((uniqueObj) => {
+                return obj.id === uniqueObj.id;
+            });
+            if (!isDuplicate) {
+                uniqueArr.push(obj);
+            }
+        });
+        setGroups([...uniqueArr]);
     };
 
     return (
@@ -69,7 +74,7 @@ const CustomParticipantSelect = ({ form, className, required, initialValues }) =
                 >
                     {participantGroupTypes?.map((item) => {
                         return (
-                            <Option key={item?.id} value={item?.value}>
+                            <Option key={item?.id} value={item?.id}>
                                 {item?.value}
                             </Option>
                         );
@@ -101,7 +106,7 @@ const CustomParticipantSelect = ({ form, className, required, initialValues }) =
                 >
                     {groups?.map((item) => {
                         return (
-                            <Option key={item?.id} value={item?.name}>
+                            <Option key={item?.id} value={item?.id}>
                                 {item?.name}
                             </Option>
                         );
@@ -112,4 +117,4 @@ const CustomParticipantSelect = ({ form, className, required, initialValues }) =
     );
 };
 
-export default CustomParticipantSelect;
+export default CustomParticipantSelectFormItems;

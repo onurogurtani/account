@@ -15,10 +15,10 @@ import {
 import '../../../../styles/announcementManagement/addAnnouncementInfo.scss';
 import { dateValidator } from '../../../../utils/formRule';
 import AddAnnouncementFooter from '../addAnnouncement/AddAnnouncementFooter';
-import CustomQuillFormItem from '../cutomQuill/CustomQuillFormItem';
+import CustomQuillFormItem from '../../../../components/customQuill/CustomQuillFormItem';
 import EditAnnouncementFooter from '../editAnnouncement/EditAnnouncementFooter';
 import AnnouncementIcon from './AnnouncementIcon';
-import CustomParticipantSelect from './CustomParticipantSelect';
+import CustomParticipantSelectFormItems from '../../../../components/CustomParticipantSelectFormItems';
 
 const announcementPublicationPlaces = [
     { id: 1, name: 'Anasayfa' },
@@ -51,18 +51,19 @@ const AnnouncementInfoForm = ({
 
     useEffect(() => {
         if (initialValues) {
+            console.log('initialValues', initialValues);
             const currentDate = dayjs().utc().format('YYYY-MM-DD-HH-mm');
             const startDate = dayjs(initialValues?.startDate).utc().format('YYYY-MM-DD-HH-mm');
             const endDate = dayjs(initialValues?.endDate).utc().format('YYYY-MM-DD-HH-mm');
-            let groupIds = initialValues?.participantGroup?.name?.split(',');
-            let typeIds = initialValues?.participantType?.name?.split(',');
+            let groupIds = initialValues?.participantGroup?.id?.split(',')?.map((item) => Number(item));
+            let typeIds = initialValues?.participantType?.id?.split(',')?.map((item) => Number(item));
             let initialData = {
                 startDate: startDate >= currentDate ? dayjs(initialValues?.startDate) : undefined,
                 endDate: endDate >= currentDate ? dayjs(initialValues?.endDate) : undefined,
                 announcementPublicationPlaces: initialValues?.announcementPublicationPlaces,
                 fileId: initialValues?.fileId,
                 headText: initialValues.headText,
-                announcementType: initialValues.announcementType.name,
+                announcementType: initialValues.announcementType.id,
                 buttonName: initialValues?.buttonName,
                 buttonUrl: initialValues?.buttonUrl,
                 homePageContent: initialValues?.homePageContent,
@@ -136,7 +137,7 @@ const AnnouncementInfoForm = ({
                 >
                     <CustomSelect className="form-filter-item" placeholder={'Seçiniz'} style={{ width: '100%' }}>
                         {announcementTypes?.map(({ id, name }) => (
-                            <Option id={id} key={id} value={name}>
+                            <Option id={id} key={id} value={id}>
                                 <Text t={name} />
                             </Option>
                         ))}
@@ -278,7 +279,7 @@ const AnnouncementInfoForm = ({
                 <p style={{ color: 'red', marginTop: '5px', marginLeft: '200px' }}>
                     Bitiş Tarihi Duyurunun, Arayüzünden kaldırılacağı tarihi belirlemenizi sağlar.
                 </p>
-                <CustomParticipantSelect
+                <CustomParticipantSelectFormItems
                     className={'custom-form-item'}
                     form={form}
                     required={true}
