@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import '../../../../styles/announcementManagement/editor.scss';
+import '../../styles/customQuill/editor.scss';
 import QuillToolbar, { formats, modules } from './QuillToolbar';
 
 export const CustomReactQuill = ({ onChange, quillValue }) => {

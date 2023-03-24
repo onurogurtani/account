@@ -6,3 +6,7 @@
     min-height: 100px;
     overflow: auto;
 }
+.quill {
+    position: relative;
+    z-index: 10;
+}

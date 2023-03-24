@@ -68,6 +68,11 @@ const EditEvent = () => {
         }
     }, [currentEvent]);
 
+    console.log(
+        'first',
+        currentEvent?.participantGroups?.map((item) => item.participantGroupId),
+    );
+
     const setFormFieldsValue = async () => {
         form.setFieldsValue({
             name: currentEvent?.name,
