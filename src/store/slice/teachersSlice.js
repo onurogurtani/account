@@ -15,7 +15,7 @@ export const getByFilterPagedTeachers = createAsyncThunk('teachers/getByFilterPa
   }
 });
 
-export const uploadTeacherExcel = createAsyncThunk('uploadTeacherExcel', async (data, { dispatch, rejectWithValue }) => {
+export const uploadTeacherExcel = createAsyncThunk('teachers/uploadTeacherExcel', async (data, { dispatch, rejectWithValue }) => {
   try {
     const response = await teachersServices.uploadTeacherExcel(data);
     dispatch(getByFilterPagedTeachers());
@@ -25,16 +25,54 @@ export const uploadTeacherExcel = createAsyncThunk('uploadTeacherExcel', async (
   }
 });
 
-export const setTeacherStatus = createAsyncThunk('teachers/setTeacherStatus', async (data, { dispatch, rejectWithValue }) => {
+export const setTeacherActivateStatus = createAsyncThunk('teachers/setTeacherActivateStatus', async (data, { dispatch, rejectWithValue }) => {
   try {
-    const response = await teachersServices.setTeacherStatus(data);
+    const response = await teachersServices.setTeacherActivateStatus(data);
     return response;
   } catch (error) {
     return rejectWithValue(error?.data);
   }
 });
 
-export const downloadTeacherExcel = createAsyncThunk('downloadTeacherExcel', async (body, { rejectWithValue }) => {
+export const addTeacher = createAsyncThunk('teachers/addTeacher', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await teachersServices.addTeacher(data);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+
+export const editTeacher = createAsyncThunk('teachers/addTeacher', async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await teachersServices.editTeacher(data);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+
+export const deleteTeacher = createAsyncThunk('teachers/deleteTeacher', async (data, { dispatch, getState, rejectWithValue }) => {
+  try {
+    const response = await teachersServices.deleteTeacher(data);
+    await dispatch(getByFilterPagedTeachers(getState()?.teachers.teachersDetailSearch));
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+},
+);
+
+export const getTeacherById = createAsyncThunk('teachers/getTeacherById', async (id, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await teachersServices.getTeacherById(id);
+    return response?.data;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+
+export const downloadTeacherExcel = createAsyncThunk('teachers/downloadTeacherExcel', async (body, { rejectWithValue }) => {
   try {
     return await teachersServices.downloadTeacherExcel();
   } catch (error) {
@@ -44,6 +82,7 @@ export const downloadTeacherExcel = createAsyncThunk('downloadTeacherExcel', asy
 
 const initialState = {
   teacherList: [],
+  selectedTeacher: undefined,
   tableProperty: {
     currentPage: 1,
     page: 1,
@@ -82,13 +121,19 @@ export const teachersSlice = createSlice({
         totalCount: 0,
       };
     });
-    builder.addCase(setTeacherStatus.fulfilled, (state, action) => {
+    builder.addCase(setTeacherActivateStatus.fulfilled, (state, action) => {
       const {
         arg: { id, status },
       } = action.meta;
       if (id) {
         state.teacherList = state.teacherList.map((item) => (item.id === id ? { ...item, status } : item));
       }
+    });
+    builder.addCase(getTeacherById.fulfilled, (state, action) => {
+      state.selectedTeacher = action?.payload;
+    });
+    builder.addCase(getTeacherById.rejected, (state) => {
+      state.selectedTeacher = undefined;
     });
   },
 });

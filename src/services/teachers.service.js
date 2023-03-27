@@ -19,6 +19,14 @@ const uploadTeacherExcel = (data) => {
   });
 };
 
+const setTeacherActivateStatus = (data) => {
+  return api({
+    url: `Identity/Teachers/SetActivateStatus`,
+    method: 'POST',
+    data,
+  });
+};
+
 const getTeacherById = (id) => {
   return api({
     url: `Identity/Teachers/getbyid?Id=${id}`,
@@ -34,10 +42,18 @@ const addTeacher = (data) => {
   });
 };
 
-const updateTeacher = (data) => {
+const editTeacher = (data) => {
   return api({
     url: `Identity/Teachers/Update`,
     method: 'PUT',
+    data,
+  });
+};
+
+const deleteTeacher = (data) => {
+  return api({
+    url: `Identity/Teachers`,
+    method: 'DELETE',
     data,
   });
 };
@@ -56,8 +72,10 @@ const downloadTeacherExcel = (data) => {
 const teachersServices = {
   getByFilterPagedTeachers,
   uploadTeacherExcel,
+  setTeacherActivateStatus,
   addTeacher,
-  updateTeacher,
+  editTeacher,
+  deleteTeacher,
   getTeacherById,
   downloadTeacherExcel,
 };
