@@ -52,6 +52,17 @@ export const editTeacher = createAsyncThunk('teachers/addTeacher', async (data, 
   }
 });
 
+export const deleteTeacher = createAsyncThunk('teachers/deleteTeacher', async (data, { dispatch, getState, rejectWithValue }) => {
+  try {
+    const response = await teachersServices.deleteTeacher(data);
+    await dispatch(getByFilterPagedTeachers(getState()?.teachers.teachersDetailSearch));
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+},
+);
+
 export const getTeacherById = createAsyncThunk('teachers/getTeacherById', async (id, { dispatch, rejectWithValue }) => {
   try {
     const response = await teachersServices.getTeacherById(id);

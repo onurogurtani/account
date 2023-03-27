@@ -50,6 +50,14 @@ const editTeacher = (data) => {
   });
 };
 
+const deleteTeacher = (data) => {
+  return api({
+    url: `Identity/Teachers`,
+    method: 'DELETE',
+    data,
+  });
+};
+
 const downloadTeacherExcel = (data) => {
   const headers = { 'Content-Type': 'blob' };
   return api({
@@ -67,6 +75,7 @@ const teachersServices = {
   setTeacherActivateStatus,
   addTeacher,
   editTeacher,
+  deleteTeacher,
   getTeacherById,
   downloadTeacherExcel,
 };
