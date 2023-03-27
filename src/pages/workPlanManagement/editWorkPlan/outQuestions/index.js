@@ -17,15 +17,11 @@ import {
 } from '../../../../store/slice/workPlanSlice';
 import { getLessonSubSubjects } from '../../../../store/slice/lessonSubSubjectsSlice';
 import { getListFilterParams } from '../../../../utils/utils';
-import { useLocation } from 'react-router-dom';
 
 const OutQuestion = ({ outQuestionForm }) => {
 
   const dispatch = useDispatch();
-  const location = useLocation();
-  const showData = location?.state?.data;
 
-  const [currentData, setCurrentData] = useState(showData);
   const [yearOfQuestion, setYearOfQuestion] = useState([]);
 
   const { activeKey, subjectChooseTab, outQuestionTab } = useSelector((state) => state?.workPlan);
@@ -63,13 +59,7 @@ const OutQuestion = ({ outQuestionForm }) => {
       delete body.LessonSubjectIds;
       delete body.LessonUnitIds;
       delete body.isActive;
-debugger
       await dispatch(getByFilterPagedQuestionOfExams(body));
-      if (Object.keys(currentData).length > 0) {
-        currentData.workPlanQuestionOfExams?.forEach((item) => {
-          dispatch(selectedOutQuestionTabRowsData(item.questionOfExam))
-        });
-      }
     }
 
   }, [activeKey]);
@@ -115,7 +105,7 @@ debugger
     delete body.isActive;
     delete body.OutIn;
 
-    console.log('body', body);
+    // console.log('body', body);
     if(!pageNumber){
       dispatch(selectedOutQuestionTabRowsData());
     }

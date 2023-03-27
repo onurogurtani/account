@@ -20,25 +20,22 @@ import {
   setSubjectChooseSchoolLevel,
   selectedEvaluationTabRowData,
   resetEvaluationDataList,
-  resetEvaluationQuestionList, getUsedVideoIdsQuery, getActiveEducationYear,
+  resetEvaluationQuestionList, getUsedVideoIdsQuery, getActiveEducationYear, setIsEdited,
 } from '../../../../store/slice/workPlanSlice';
-import { getAllClassStages } from '../../../../store/slice/classStageSlice';
 import useAcquisitionTree from '../../../../hooks/useAcquisitionTree';
 import { getByFilterPagedVideos } from '../../../../store/slice/videoSlice';
-import videoListTableColumn from './videoListTableColumn';
+import videoListTableColumn from '../../addWorkPlan/subject/videoListTableColumn';
 import useOnchangeTable from '../../../../hooks/useOnchangeTable';
 import '../../../../styles/table.scss';
-import { getListFilterParams } from '../../../../utils/utils';
 import { resetLessonSubSubjects } from '../../../../store/slice/lessonSubSubjectsSlice';
 
-const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm, isEdit }) => {
+const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
 
   const history = useHistory();
   const dispatch = useDispatch();
   const location = useLocation();
   const showData = location?.state?.data;
   const [currentData, setCurrentData] = useState(showData);
-  const [activeFilter, setActiveFilter] = useState(getListFilterParams('isActive', true));
 
   const { classroomId, setClassroomId, lessonId, setLessonId, unitId, setUnitId } =
     useAcquisitionTree();
@@ -68,28 +65,48 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm, isEdit }) =
 
   useEffect(() => {
     dispatch(getActiveEducationYear());
-    dispatch(getAllClassStages(activeFilter));
     dispatch(resetSubjectChooseVideoList());
   }, []);
 
+  useEffect(() => {
+      if (Object.keys(showData).length > 0) {
+        setClassroomId(showData.classroomId);
+        setLessonId(showData.lessonId);
+        setUnitId(showData.lessonUnitId);
+      }
+    }, [],
+  );
+
   useEffect(async () => {
       if (activeKey === '0') {
-
+        const educationYearVal = await subjectForm.getFieldValue(['educationYear']);
         await setClassroomId(currentData.classroomId);
         await setLessonId(currentData.lessonId);
         await setUnitId(currentData.lessonUnitId);
 
         await subjectForm.setFieldsValue({
-          educationYear: currentData.recordStatus === 1 ? currentData.educationYearId : undefined,
+          educationYear: educationYearVal ? educationYearVal : currentData.recordStatus === 1 ? currentData.educationYearId : undefined,
           ClassroomId: currentData.classroomId,
           LessonIds: currentData.lessonId,
           LessonUnitIds: currentData.lessonUnitId,
           LessonSubjectIds: currentData.lessonSubjectId,
         });
 
+        dispatch(setIsEdited(true));
+        const values = await subjectForm.getFieldsValue(['ClassroomId', 'LessonIds', 'LessonUnitIds', 'LessonSubjectIds', 'educationYear']);
+        dispatch(setSubjectChooseData(values));
+        dispatch(selectedEvaluationTabRowData({ id: currentData.asEvId }));
+        currentData.workPlanQuestionOfExams?.forEach((item) => {
+          dispatch(selectedOutQuestionTabRowsData(item.questionOfExam));
+        });
+        currentData.workPlanVideos?.forEach((item) => {
+          dispatch(selectedPracticeQuestionTabRowsVideo(item.video));
+        });
         await handleSearchVideo('edit');
+        showData?.activeKey && dispatch(onChangeActiveKey(showData?.activeKey));
+
       }
-    }, [currentData, subjectForm, activeKey],
+    }, [currentData, subjectForm],
   );
 
   // table pagination
@@ -128,7 +145,6 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm, isEdit }) =
 
   // next step
   const onFinish = async (values) => {
-debugger
 
     dispatch(setSubjectChooseData(values));
 
@@ -143,14 +159,9 @@ debugger
   };
 
   // filter search videolist
-  const handleSearchVideo = async (from = '') => {
+  const handleSearchVideo = async (from) => {
     const values = await subjectForm.validateFields(['ClassroomId', 'LessonIds', 'LessonUnitIds', 'LessonSubjectIds']);
-    // const educationYearVal = await subjectForm.validateFields(['educationYear']);
     dispatch(selectedSubjectTabRowVideo({}));
-    // dispatch(setSubjectChooseData({
-    //   ...values,
-    //   educationYear: educationYearVal.educationYear,
-    // }));
     if (from === '') {
       dispatch(selectedPracticeQuestionTabRowsVideo());
       dispatch(resetPracticeQuestionVideoList());
@@ -161,17 +172,20 @@ debugger
       dispatch(selectedEvaluationTabRowData({}));
       dispatch(resetEvaluationDataList());
       dispatch(resetEvaluationQuestionList());
+      dispatch(setIsEdited(false));
 
       practiceForm.resetFields();
       outQuestionForm.resetFields();
     }
+
     let data = {
       ...values,
       isActive: true,
       CategoryCode: 'lectureVideo',
     };
+
     dispatch(setSubjectChooseFilterData(data));
-    console.log('subjectChooseTab.filterObject', subjectChooseTab.filterObject);
+    // console.log('subjectChooseTab.filterObject', subjectChooseTab.filterObject);
 
     const body = {
       ...data,
@@ -181,8 +195,8 @@ debugger
     const action = await dispatch(getByFilterPagedVideos(body));
     if (getByFilterPagedVideos?.fulfilled?.match(action)) {
       await dispatch(setSubjectChooseVideoFilteredList(action?.payload));
-      console.log('subjectChooseTab.videos', subjectChooseTab.videos);
-      console.log('subjectChooseTab.form', subjectChooseTab.formData);
+      // console.log('subjectChooseTab.videos', subjectChooseTab.videos);
+      // console.log('subjectChooseTab.form', subjectChooseTab.formData);
       await dispatch(getUsedVideoIdsQuery());
       if (from === 'edit') {
         dispatch(selectedSubjectTabRowVideo(currentData.video));
@@ -332,7 +346,7 @@ debugger
           </CustomFormItem>
 
           <div className='search-btn-content'>
-            <CustomButton type='primary' className='search-btn' onClick={handleSearchVideo}>
+            <CustomButton type='primary' className='search-btn' onClick={() => handleSearchVideo('')}>
               Videoları Listele
             </CustomButton>
           </div>

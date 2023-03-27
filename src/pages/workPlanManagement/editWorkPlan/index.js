@@ -9,10 +9,8 @@ import OutQuestion from './outQuestions';
 import PracticeQuestion from './practiceQuestion';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
-  addWorkPlan, onChangeActiveKey,
-  resetAllData, setSubjectChooseData, setSubjectChooseFilterData,
+  resetAllData, updateWorkPlan,
 } from '../../../store/slice/workPlanSlice';
-import useAcquisitionTree from '../../../hooks/useAcquisitionTree';
 
 const EditWorkPlan = () => {
   const { TabPane } = Tabs;
@@ -25,13 +23,10 @@ const EditWorkPlan = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const showData = location?.state?.data;
-  const [currentData, setCurrentData] = useState(showData);
   const [isExit, setIsExit] = useState(false);
   const [count, setCount] = useState(0);
 
   console.log('showData :>> ', showData);
-  const { classroomId, setClassroomId, lessonId, setLessonId, unitId, setUnitId } =
-    useAcquisitionTree();
   const {
     activeKey,
     subjectChooseTab,
@@ -40,43 +35,20 @@ const EditWorkPlan = () => {
     practiceQuestionTab,
   } = useSelector((state) => state?.workPlan);
 
-  useEffect(() => {
-    console.log('showData',showData)
-    console.log('subjectChooseTab',subjectChooseTab)
-    console.log('evaluationTab',evaluationTab)
-    console.log('outQuestionTab',outQuestionTab)
-    console.log('practiceQuestionTab',practiceQuestionTab)
-    }, [
-      subjectChooseTab,
-      evaluationTab,
-      outQuestionTab,
-      practiceQuestionTab,
-    ],
-  );
+  // useEffect(() => {
+  //     console.log('showData', showData);
+  //     console.log('subjectChooseTab', subjectChooseTab);
+  //     console.log('evaluationTab', evaluationTab);
+  //     console.log('outQuestionTab', outQuestionTab);
+  //     console.log('practiceQuestionTab', practiceQuestionTab);
+  //   }, [
+  //     subjectChooseTab,
+  //     evaluationTab,
+  //     outQuestionTab,
+  //     practiceQuestionTab,
+  //   ],
+  // );
 
-  useEffect(async () => {
-    if (Object.keys(currentData).length > 0) {
-      if(currentData.publishStatus ===3) {
-        await setClassroomId(currentData.classroomId);
-        await setLessonId(currentData.lessonId);
-        await setUnitId(currentData.lessonUnitId);
-
-        await subjectForm.setFieldsValue({
-          educationYear: currentData.recordStatus === 1 ? currentData.educationYearId : undefined,
-          ClassroomId: currentData.classroomId,
-          LessonIds: currentData.lessonId,
-          LessonUnitIds: currentData.lessonUnitId,
-          LessonSubjectIds: currentData.lessonSubjectId,
-        });
-        const values = await subjectForm.validateFields(['ClassroomId', 'LessonIds', 'LessonUnitIds', 'LessonSubjectIds']);
-        debugger
-        dispatch(setSubjectChooseFilterData(values));
-
-        showData.activeKey && dispatch(onChangeActiveKey(showData.activeKey));
-      }
-    }
-    }, [currentData,subjectForm],
-  );
   useEffect(() => {
     const unblock = history.block((location) => {
       if (isExit) {
@@ -92,7 +64,7 @@ const EditWorkPlan = () => {
           cancelText: 'Hayır',
           onOk: async () => {
             setIsExit(true);
-            await console.log('kaydedilmedi...');
+            // await console.log('kaydedilmedi...');
             await dispatch(resetAllData());
             history.push(location.pathname);
           },
@@ -102,14 +74,14 @@ const EditWorkPlan = () => {
             try {
               setIsExit(true);
 
-              console.log('evaluationTab', evaluationTab);
-              console.log('outQuestionTab', outQuestionTab);
-              console.log('practiceQuestionTab', practiceQuestionTab);
+              // console.log('evaluationTab', evaluationTab);
+              // console.log('outQuestionTab', outQuestionTab);
+              // console.log('practiceQuestionTab', practiceQuestionTab);
               const values = await subjectForm.validateFields();
               if (Object.keys(subjectChooseTab.selectedRowVideo).length === 0) {
                 throw 'deneme';
               }
-              console.log('val', values);
+              // console.log('val', values);
               await saveDrafted(location.pathname);
 
             } catch (e) {
@@ -179,6 +151,7 @@ const EditWorkPlan = () => {
   const saveDrafted = async (locationPathName) => {
     const body = {
       workPLan: {
+        id: showData.id,
         activeKey,
         videoId: subjectChooseTab.selectedRowVideo.id,
         publishStatus: 3,
@@ -187,47 +160,30 @@ const EditWorkPlan = () => {
         lessonSubjectId: subjectChooseTab.filterObject.LessonSubjectIds,
         lessonId: subjectChooseTab.filterObject.LessonIds,
         educationYearId: subjectChooseTab.formData.educationYear,
+        asEvId: evaluationTab.selectedRowData.id,
         workPlanQuestionOfExams: [],
         workPlanVideos: [],
         workPlanLessonSubSubjects: [],
       },
     };
 
-    if (activeKey === '2') {
-      body.workPLan.asEvId = evaluationTab.selectedRowData.id;
-    }
+    let arrOutQuestion = [];
+    let arrData = [];
 
-    if (activeKey === '3') {
-      body.workPLan.asEvId = evaluationTab.selectedRowData.id;
-      let arrData = [];
+    outQuestionTab?.selectedRowsData.map((item) => {
+      arrOutQuestion.push({ questionOfExamId: item.id });
+    });
 
-      outQuestionTab?.selectedRowsData.map((item) => {
-        arrData.push({ questionOfExamId: item.id });
-      });
+    body.workPLan.workPlanQuestionOfExams = arrOutQuestion;
 
-      body.workPLan.workPlanQuestionOfExams = arrData;
-    }
+    practiceQuestionTab?.selectedRowsVideo.map((item) => {
+      arrData.push({ videoId: item.id });
+    });
 
-    if (activeKey === '4') {
-      body.workPLan.asEvId = evaluationTab.selectedRowData.id;
-      let arrOutQuestion = [];
-      let arrData = [];
+    body.workPLan.workPlanVideos = arrData;
 
-      outQuestionTab?.selectedRowsData.map((item) => {
-        arrOutQuestion.push({ questionOfExamId: item.id });
-      });
-
-      body.workPLan.workPlanQuestionOfExams = arrOutQuestion;
-
-      practiceQuestionTab?.selectedRowsVideo.map((item) => {
-        arrData.push({ videoId: item.id });
-      });
-
-      body.workPLan.workPlanVideos = arrData;
-    }
-
-    const action = await dispatch(addWorkPlan(body));
-    if (addWorkPlan?.fulfilled?.match(action)) {
+    const action = await dispatch(updateWorkPlan(body));
+    if (updateWorkPlan?.fulfilled?.match(action)) {
       successDialog({
         title: <Text t='successfullySent' />,
         message: action.payload?.message,
@@ -256,7 +212,8 @@ const EditWorkPlan = () => {
           }}
         >
           <TabPane tab='Konu Seçimi' key='0'>
-            <SubjectChoose subjectForm={subjectForm} outQuestionForm={outQuestionForm} practiceForm={practiceForm} isEdit={true} />
+            <SubjectChoose subjectForm={subjectForm} outQuestionForm={outQuestionForm} practiceForm={practiceForm}
+                           isEdit={true} />
           </TabPane>
           {/*<TabPane tab='Pekiştirme Test Ekleme' key='1'>*/}
           {/*  <ReinforcementTest />*/}

@@ -4,29 +4,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CustomButton, CustomForm, CustomTable, errorDialog, Text } from '../../../../components';
 import {
   getByFilterPagedAsEvs,
-  onChangeActiveKey, selectedEvaluationTabRowData,
+  onChangeActiveKey,
   setEvaluationFilteredList,
 } from '../../../../store/slice/workPlanSlice';
-import dataListTableColumn from './dataListTableColumn';
+import dataListTableColumn from '../../addWorkPlan/evaluation/dataListTableColumn';
 import useOnchangeTable from '../../../../hooks/useOnchangeTable';
-import QuestionListModal from './QuestionListModal';
-import { useLocation } from 'react-router-dom';
-const EvaluationTest = ({setIsExit}) => {
+import QuestionListModal from '../../addWorkPlan/evaluation/QuestionListModal';
+
+const EvaluationTest = ({ setIsExit }) => {
 
   const [form] = Form.useForm();
   const dispatch = useDispatch();
-  const location = useLocation();
-  const showData = location?.state?.data;
 
-  const [currentData, setCurrentData] = useState(showData);
   const [filterData, setFilterData] = useState();
   const [questionListModalVisible, setQuestionListModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState(false);
 
-  const { activeKey, evaluationTab, subjectChooseTab } = useSelector((state) => state?.workPlan);
+  const { activeKey, evaluationTab, subjectChooseTab, isEdited } = useSelector((state) => state?.workPlan);
 
-  const columns = dataListTableColumn(dispatch, evaluationTab, setQuestionListModalVisible,setModalTitle,setSelectedRowData);
+  const columns = dataListTableColumn(dispatch, evaluationTab, setQuestionListModalVisible, setModalTitle, setSelectedRowData);
 
   const paginationSetFilteredDataList = (res) => {
     dispatch(setEvaluationFilteredList(res?.payload));
@@ -40,7 +37,7 @@ const EvaluationTest = ({setIsExit}) => {
 
 
   const onFinish = (values) => {
-    console.log('values', values);
+    // console.log('values', values);
 
     if (Object.keys(evaluationTab.selectedRowData).length > 0 && evaluationTab.dataList.length > 0) {
       dispatch(onChangeActiveKey('3'));
@@ -78,9 +75,6 @@ const EvaluationTest = ({setIsExit}) => {
       delete body.isActive;
       setFilterData(body);
       await dispatch(getByFilterPagedAsEvs(body));
-      if (Object.keys(currentData).length > 0) {
-        dispatch(selectedEvaluationTabRowData({id:currentData.asEvId}))
-      }
     }
   }, [activeKey]);
 

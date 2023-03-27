@@ -10,20 +10,22 @@ import {
   Text,
 } from '../../../../components';
 import {
-  addWorkPlan,
   onChangeActiveKey, resetAllData,
-  setPracticeQuestionVideoFilteredList,
+  setPracticeQuestionVideoFilteredList, updateWorkPlan,
 } from '../../../../store/slice/workPlanSlice';
 import { getByFilterPagedVideos } from '../../../../store/slice/videoSlice';
-import videoTableColumn from './videoTableColumn';
+import videoTableColumn from '../../addWorkPlan/practiceQuestion/videoTableColumn';
 import '../../../../styles/table.scss';
 import useOnchangeTable from '../../../../hooks/useOnchangeTable';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const PracticeQuestion = ({ subjectForm, practiceForm, outQuestionForm, setIsExit }) => {
 
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
+  const showData = location?.state?.data;
+
   const [isDrafted, setIsDrafted] = useState(false);
 
   const {
@@ -50,65 +52,58 @@ const PracticeQuestion = ({ subjectForm, practiceForm, outQuestionForm, setIsExi
 
   const onFinish = async (values) => {
 
-    if (practiceQuestionTab.selectedRowsVideo.length > 0) {
+    const body = {
+      workPLan: {
+        id: showData.id,
+        videoId: subjectChooseTab.selectedRowVideo.id,
+        publishStatus: 1,
+        classroomId: subjectChooseTab.filterObject.ClassroomId,
+        lessonUnitId: subjectChooseTab.filterObject.LessonUnitIds,
+        lessonSubjectId: subjectChooseTab.filterObject.LessonSubjectIds,
+        lessonId: subjectChooseTab.filterObject.LessonIds,
+        educationYearId: subjectChooseTab.formData.educationYear,
+        workPlanLessonSubSubjects: [],
+      },
+    };
 
-      const body = {
-        workPLan: {
-          videoId: subjectChooseTab.selectedRowVideo.id,
-          publishStatus: 1,
-          classroomId: subjectChooseTab.filterObject.ClassroomId,
-          lessonUnitId: subjectChooseTab.filterObject.LessonUnitIds,
-          lessonSubjectId: subjectChooseTab.filterObject.LessonSubjectIds,
-          lessonId: subjectChooseTab.filterObject.LessonIds,
-          educationYearId: subjectChooseTab.formData.educationYear,
-          workPlanLessonSubSubjects: [],
+    body.workPLan.asEvId = evaluationTab.selectedRowData.id;
+    let arrOutQuestion = [];
+    let arrData = [];
+
+    outQuestionTab?.selectedRowsData.map((item) => {
+      arrOutQuestion.push({ questionOfExamId: item.id });
+    });
+
+    body.workPLan.workPlanQuestionOfExams = arrOutQuestion;
+
+    practiceQuestionTab?.selectedRowsVideo.map((item) => {
+      arrData.push({ videoId: item.id });
+    });
+
+    body.workPLan.workPlanVideos = arrData;
+
+    if (isDrafted) {
+      body.workPLan.activeKey = activeKey;
+      body.workPLan.publishStatus = 3;
+    }
+    const action = await dispatch(updateWorkPlan(body));
+    if (updateWorkPlan?.fulfilled?.match(action)) {
+      successDialog({
+        title: <Text t='successfullySent' />,
+        message: action.payload?.message,
+        onOk: async () => {
+          setIsExit(true);
+          await dispatch(resetAllData());
+          history.push('/work-plan-management/list');
         },
-      };
-
-      body.workPLan.asEvId = evaluationTab.selectedRowData.id;
-      let arrOutQuestion = [];
-      let arrData = [];
-
-      outQuestionTab?.selectedRowsData.map((item) => {
-        arrOutQuestion.push({ questionOfExamId: item.id });
       });
-
-      body.workPLan.workPlanQuestionOfExams = arrOutQuestion;
-
-      practiceQuestionTab?.selectedRowsVideo.map((item) => {
-        arrData.push({ videoId: item.id });
-      });
-
-      body.workPLan.workPlanVideos = arrData;
-
-      if (isDrafted) {
-        body.workPLan.activeKey = activeKey;
-        body.workPLan.publishStatus = 3;
-      }
-      const action = await dispatch(addWorkPlan(body));
-      if (addWorkPlan?.fulfilled?.match(action)) {
-        successDialog({
-          title: <Text t='successfullySent' />,
-          message: action.payload?.message,
-          onOk: async () => {
-            setIsExit(true);
-            await dispatch(resetAllData());
-            history.push('/work-plan-management/list');
-          },
-        });
-      } else {
-        errorDialog({
-          title: <Text t='error' />,
-          message: action.payload?.message,
-        });
-      }
-
     } else {
       errorDialog({
         title: <Text t='error' />,
-        message: 'Lütfen Soru seçiniz.',
+        message: action.payload?.message,
       });
     }
+
   };
 
   // table pagination
@@ -137,9 +132,8 @@ const PracticeQuestion = ({ subjectForm, practiceForm, outQuestionForm, setIsExi
       if (getByFilterPagedVideos?.fulfilled?.match(action)) {
         dispatch(setPracticeQuestionVideoFilteredList(action?.payload));
       }
-
     }
-  });
+  }, [activeKey]);
 
   const handleBackButton = async () => {
     setIsExit(true);

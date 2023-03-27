@@ -68,6 +68,18 @@ export const addWorkPlan = createAsyncThunk(
   },
 );
 
+export const updateWorkPlan = createAsyncThunk(
+  'updateWorkPlan',
+  async (data = {}, { getState, dispatch, rejectWithValue }) => {
+    try {
+      const response = await workPlanService.updatedWorkPlan(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
 export const getUsedVideoIdsQuery = createAsyncThunk(
   'getUsedVideoIdsQuery',
   async (data = {}, { getState, dispatch, rejectWithValue }) => {
@@ -121,6 +133,7 @@ export const getActiveEducationYear = createAsyncThunk(
 const initialState = {
   activeKey: '0',
   isExit: false,
+  isEdited: false,
   workPlanList: [],
   currentData: {},
   educationYearsList: [],
@@ -216,6 +229,9 @@ export const workPlanSlice = createSlice({
     },
     setIsExit: (state, action) => {
       state.isExit = action?.payload;
+    },
+    setIsEdited: (state, action) => {
+      state.isEdited = action?.payload;
     },
     selectedSubjectTabRowVideo: (state, action) => {
       state.subjectChooseTab.selectedRowVideo = action?.payload;
@@ -382,5 +398,6 @@ export const {
   resetEvaluationQuestionList,
   setIsFilter,
   setFilterObject,
-  setCurrentData
+  setCurrentData,
+  setIsEdited
 } = workPlanSlice.actions;
