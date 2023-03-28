@@ -31,6 +31,15 @@ const addWorkPlan = (data) => {
   });
 };
 
+const updatedWorkPlan = (data) => {
+  return api({
+    url: `Target/WorkPlans`,
+    method: 'PUT',
+    data: data,
+  });
+};
+
+
 const getUsedVideoIdsQuery = () => {
   return api({
     url: `Target/WorkPlans/getUsedVideoIdsQuery`,
@@ -65,6 +74,7 @@ const workPlanService = {
   getAsEvQuestionOfExamsByAsEvId,
   getByFilterPagedWorkPlans,
   addWorkPlan,
+  updatedWorkPlan,
   getUsedVideoIdsQuery,
   getWorkPlanNamesQuery,
   deleteWorkPlan,

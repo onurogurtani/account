@@ -568,11 +568,11 @@ const App = () => {
                                                     Component={WorkPlanManagement?.AddWorkPlan}
                                                     authority="dashboard"
                                                 />
-                                                {/*<PrivateRoute*/}
-                                                {/*  path={`${match?.path}/edit/:id`}*/}
-                                                {/*  Component={WorkPlanManagement?.EditWorkPlan}*/}
-                                                {/*  authority="dashboard"*/}
-                                                {/*/>*/}
+                                                <PrivateRoute
+                                                  path={`${match?.path}/edit`}
+                                                  Component={WorkPlanManagement?.EditWorkPlan}
+                                                  authority="dashboard"
+                                                />
                                                 <Route
                                                     component={() => (
                                                         <Redirect
