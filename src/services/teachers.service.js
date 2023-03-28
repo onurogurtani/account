@@ -8,6 +8,25 @@ const getByFilterPagedTeachers = (data) => {
   });
 };
 
+const uploadTeacherExcel = (data) => {
+  const headers = { 'Content-Type': 'blob' };
+  return api({
+    url: `Identity/Teachers/uploadTeacherExcel`,
+    method: 'POST',
+    data,
+    responseType: 'arraybuffer',
+    headers,
+  });
+};
+
+const setTeacherActivateStatus = (data) => {
+  return api({
+    url: `Identity/Teachers/SetActivateStatus`,
+    method: 'POST',
+    data,
+  });
+};
+
 const getTeacherById = (id) => {
   return api({
     url: `Identity/Teachers/getbyid?Id=${id}`,
@@ -23,7 +42,7 @@ const addTeacher = (data) => {
   });
 };
 
-const updateTeacher = (data) => {
+const editTeacher = (data) => {
   return api({
     url: `Identity/Teachers/Update`,
     method: 'PUT',
@@ -31,11 +50,34 @@ const updateTeacher = (data) => {
   });
 };
 
+const deleteTeacher = (data) => {
+  return api({
+    url: `Identity/Teachers`,
+    method: 'DELETE',
+    data,
+  });
+};
+
+const downloadTeacherExcel = (data) => {
+  const headers = { 'Content-Type': 'blob' };
+  return api({
+    url: `Identity/Teachers/downloadTeacherExcel`,
+    method: 'GET',
+    data,
+    responseType: 'arraybuffer',
+    headers,
+  });
+};
+
 const teachersServices = {
   getByFilterPagedTeachers,
+  uploadTeacherExcel,
+  setTeacherActivateStatus,
   addTeacher,
-  updateTeacher,
+  editTeacher,
+  deleteTeacher,
   getTeacherById,
+  downloadTeacherExcel,
 };
 
 export default teachersServices;

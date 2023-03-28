@@ -6,8 +6,15 @@ const TeacherList = lazy(() =>
     })),
 );
 
+const TeacherAddEdit = lazy(() =>
+    import('./TeacherAddEdit').then(({ default: Component }) => ({
+        default: Component,
+    })),
+);
+
 const Teachers = {
     TeacherList,
+    TeacherAddEdit,
 };
 
 export default Teachers;
