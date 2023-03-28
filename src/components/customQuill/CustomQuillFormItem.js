@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CustomFormItem } from '../../../../components';
+import { CustomFormItem } from '../CustomForm';
 import CustomReactQuill from './CustomReactQuill';
 
 const CustomQuillFormItem = ({ label, name, setQuillValue, quillValue, form, placeholder, className }) => {
@@ -8,7 +8,6 @@ const CustomQuillFormItem = ({ label, name, setQuillValue, quillValue, form, pla
         const regex = /<(?!img)[^>]*>/g;
         const newVal = await text?.replace(regex, '').trim();
         if (newVal?.length === 0) {
-            console.log('hoppp', 'hoppp');
             setquillError(true);
         } else {
             setquillError(false);

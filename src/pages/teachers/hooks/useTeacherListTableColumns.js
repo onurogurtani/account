@@ -2,9 +2,9 @@ import { Space, Tag } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { CustomButton, DeleteButton, SetStatusButton } from '../../../components';
 import { maskedPhone } from '../../../utils/utils';
-// import { deleteTeacher, setTeacherStatus } from '../../../store/slice/teacherSlice';
+import { setTeacherActivateStatus, deleteTeacher } from '../../../store/slice/teachersSlice';
 
-const useTeacherListTableColumns = (sorterObject) => {
+const useTeacherListTableColumns = () => {
   const history = useHistory();
 
   const editTeacher = (id) => history.push({ pathname: `/teachers/edit/${id}` });
@@ -75,11 +75,11 @@ const useTeacherListTableColumns = (sorterObject) => {
         return (
           <div className="action-btns">
             <Space>
-              <SetStatusButton record={record} statusAction={function setTeacherStatus(){}} />
+              <SetStatusButton record={record} statusAction={setTeacherActivateStatus} />
               <CustomButton className="btn detail-btn" onClick={() => editTeacher(record?.id)}>
                 DÜZENLE
               </CustomButton>
-              <DeleteButton id={record?.id} deleteAction={function deleteTeacher(){}} />
+              <DeleteButton id={record?.id} deleteAction={deleteTeacher} />
             </Space>
           </div>
         );
