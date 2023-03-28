@@ -18,10 +18,12 @@ import { getLessonsQuesiton } from '../../../store/slice/lessonsSlice';
 import { getLessonSubjectsList, resetLessonSubjects } from '../../../store/slice/lessonSubjectsSlice';
 import { getLessonSubSubjectsList, resetLessonSubSubjects } from '../../../store/slice/lessonSubSubjectsSlice';
 import { getUnitsList, resetLessonUnits } from '../../../store/slice/lessonUnitsSlice';
+import { setTrialExamFormData } from '../../../store/slice/trialExamSlice';
 import { getTrialTypeList } from '../../../store/slice/trialTypeSlice';
 import { getByFilterPagedVideosList, setVideos } from '../../../store/slice/videoSlice';
 import '../../../styles/exam/trialExam.scss';
 import { dateFormat } from '../../../utils/keys';
+import { validation } from '../../../utils/utils';
 import AddQuestion from './AddQuestion';
 
 const TrialExam = () => {
@@ -31,6 +33,8 @@ const TrialExam = () => {
     const [form] = Form.useForm();
     const { trialTypeList } = useSelector((state) => state.trialType);
     const { allClassList } = useSelector((state) => state.classStages);
+    const { trialExamFormData } = useSelector((state) => state?.tiralExam);
+
     /*  const { lessons } = useSelector((state) => state.lessons);
     const { lessonUnits } = useSelector((state) => state?.lessonUnits);
     const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
@@ -48,9 +52,23 @@ const TrialExam = () => {
     );
     const isTheEndYearEqualToTheYearOfTheEndDate = useCallback(
         async (field, value) => {
-            const { endYear } = form?.getFieldsValue(['endYear']);
+            const startYear = form?.getFieldValue('startDate');
             try {
-                if (!endYear || value?.$y === endYear) {
+                if (!startYear || value.$d > startYear.$d) {
+                    return Promise.resolve();
+                }
+                return Promise.reject(new Error());
+            } catch (e) {
+                return Promise.reject(new Error());
+            }
+        },
+        [form],
+    );
+    const isTheStartYearEqualToTheYearOfTheEndDate = useCallback(
+        async (field, value) => {
+            const finishDate = form?.getFieldValue('finishDate');
+            try {
+                if (!finishDate || value.$d < finishDate.$d) {
                     return Promise.resolve();
                 }
                 return Promise.reject(new Error());
@@ -75,13 +93,36 @@ const TrialExam = () => {
                     <div className="trial-exam-add-content">
                         <Tabs
                             onChange={(e) => {
-                                setActiveKey(e);
+                                // setActiveKey(e);
                             }}
                             activeKey={activeKey}
                         >
                             <TabPane tab="Genel Bilgiler" key={'0'}>
-                                <CustomForm form={form} className="form">
-                                    <CustomFormItem name={'testExamTypeId'} label="Deneme Türü">
+                                <CustomForm
+                                    onFinish={(e) => {
+                                        const data = {
+                                            ...trialExamFormData,
+                                            ...e,
+                                            finishDate: e?.finishDate?.$d,
+                                            startDate: e?.startDate?.$d,
+                                            transitionBetweenQuestions: e.transitionBetweenQuestions
+                                                ? e.transitionBetweenQuestions
+                                                : false,
+                                            transitionBetweenSections: e.transitionBetweenSections
+                                                ? e.transitionBetweenSections
+                                                : false,
+                                        };
+                                        dispatch(setTrialExamFormData(data));
+                                        setActiveKey('1');
+                                    }}
+                                    form={form}
+                                    className="form"
+                                >
+                                    <CustomFormItem
+                                        rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
+                                        name={'testExamTypeId'}
+                                        label="Deneme Türü"
+                                    >
                                         <CustomSelect>
                                             {trialTypeList?.items?.map((item, index) => (
                                                 <Option value={item.id} key={item.id}>
@@ -90,10 +131,18 @@ const TrialExam = () => {
                                             ))}
                                         </CustomSelect>
                                     </CustomFormItem>
-                                    <CustomFormItem name={'name'} label="Sınav Adı">
+                                    <CustomFormItem
+                                        rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
+                                        name={'name'}
+                                        label="Sınav Adı"
+                                    >
                                         <CustomInput />
                                     </CustomFormItem>
-                                    <CustomFormItem name={'classroomId'} label="Sınıf">
+                                    <CustomFormItem
+                                        rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
+                                        name={'classroomId'}
+                                        label="Sınıf"
+                                    >
                                         <CustomSelect>
                                             {allClassList?.map((item, index) => (
                                                 <Option value={item.id} key={item.id}>
@@ -102,25 +151,33 @@ const TrialExam = () => {
                                             ))}
                                         </CustomSelect>
                                     </CustomFormItem>
-                                    <CustomFormItem name={'examType'} label="Sınav Türü">
+                                    <CustomFormItem
+                                        rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
+                                        name={'examType'}
+                                        label="Sınav Türü"
+                                    >
                                         <CustomSelect
                                             options={[
                                                 {
-                                                    value: '1',
+                                                    value: 1,
                                                     label: 'LGS',
                                                 },
                                                 {
-                                                    value: '2',
+                                                    value: 2,
                                                     label: 'TYT',
                                                 },
                                                 {
-                                                    value: '3',
+                                                    value: 3,
                                                     label: 'AYT',
                                                 },
                                             ]}
                                         ></CustomSelect>
                                     </CustomFormItem>
-                                    <CustomFormItem name={'difficulty'} label="Zorluk">
+                                    <CustomFormItem
+                                        rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
+                                        name={'difficulty'}
+                                        label="Zorluk"
+                                    >
                                         <CustomSelect
                                             options={[
                                                 {
@@ -146,7 +203,42 @@ const TrialExam = () => {
                                             ]}
                                         />
                                     </CustomFormItem>
-                                    <CustomFormItem name={'startDate'} label="Başlangıç Tarihi">
+                                    <div style={{ position: 'relative' }}>
+                                        <CustomFormItem
+                                            rules={[
+                                                { required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
+                                                {
+                                                    validator: (field, value) => {
+                                                        if (validation.isNumber(value) && value.search(' ') === -1) {
+                                                            return Promise.resolve();
+                                                        } else {
+                                                            return Promise.reject(new Error());
+                                                        }
+                                                    },
+                                                    message: 'Lütfen harf ve  boşluk girmeyiniz.',
+                                                },
+                                            ]}
+                                            name={'testExamTime'}
+                                            label="Sınav Süresi"
+                                        >
+                                            <CustomInput />
+                                        </CustomFormItem>
+                                        <div className="TestExamTimeType">Dk</div>
+                                    </div>
+                                    <CustomFormItem name={'keyWords'} label="Anahtar Kelimeler">
+                                        <CustomSelect mode="tags" />
+                                    </CustomFormItem>
+                                    <CustomFormItem
+                                        rules={[
+                                            { required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
+                                            {
+                                                validator: isTheStartYearEqualToTheYearOfTheEndDate,
+                                                message: 'Lütfen tarihleri kontrol ediniz.',
+                                            },
+                                        ]}
+                                        name={'startDate'}
+                                        label="Başlangıç Tarihi"
+                                    >
                                         <CustomDatePicker />
                                     </CustomFormItem>
                                     <CustomFormItem
@@ -160,7 +252,7 @@ const TrialExam = () => {
                                         name={'finishDate'}
                                         label="Bitiş Tarihi"
                                     >
-                                        <CustomDatePicker disabledDate={disabledEndDate} format={dateFormat} />
+                                        <CustomDatePicker disabledDate={disabledEndDate} />
                                     </CustomFormItem>
 
                                     {/**    <CustomFormItem name={'dependLecturingVideo'}>
@@ -312,17 +404,23 @@ const TrialExam = () => {
                                         </>
                                     )} */}
 
-                                    <CustomFormItem name={'transitionBetweenQuestions'}>
+                                    <CustomFormItem valuePropName="checked" name={'transitionBetweenQuestions'}>
                                         <CustomCheckbox>Sorular Arası Geçise İzin Ver</CustomCheckbox>
                                     </CustomFormItem>
-                                    <CustomFormItem name={'transitionBetweenSections'}>
+                                    <CustomFormItem valuePropName="checked" name={'transitionBetweenSections'}>
                                         <CustomCheckbox>Bölümler Arası Geçise İzin Ver</CustomCheckbox>
                                     </CustomFormItem>
-                                    <CustomButton type={'sumbit'}>İleri</CustomButton>
+                                    <CustomButton
+                                        onClick={() => {
+                                            form.submit();
+                                        }}
+                                    >
+                                        İleri
+                                    </CustomButton>
                                 </CustomForm>
                             </TabPane>
                             <TabPane tab="Soru Seçimi" key={'1'}>
-                                <AddQuestion />
+                                <AddQuestion setActiveKey={setActiveKey} />
                             </TabPane>
                         </Tabs>
                     </div>
