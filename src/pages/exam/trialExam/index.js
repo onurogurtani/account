@@ -159,15 +159,15 @@ const TrialExam = () => {
                                         <CustomSelect
                                             options={[
                                                 {
-                                                    value: '1',
+                                                    value: 1,
                                                     label: 'LGS',
                                                 },
                                                 {
-                                                    value: '2',
+                                                    value: 2,
                                                     label: 'TYT',
                                                 },
                                                 {
-                                                    value: '3',
+                                                    value: 3,
                                                     label: 'AYT',
                                                 },
                                             ]}

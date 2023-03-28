@@ -5,7 +5,7 @@ export const getTrialExamList = createAsyncThunk(
     'getTrialExamList',
     async ({ params, data } = {}, { dispatch, rejectWithValue }) => {
         try {
-            const response = await trialExamServices.getCurrentUser(params);
+            const response = await trialExamServices.getTrialExamList(data);
             return response;
         } catch (error) {
             return rejectWithValue(error?.data);
