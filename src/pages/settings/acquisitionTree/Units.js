@@ -29,7 +29,7 @@ const Units = ({ lesson, selectedInsertKey, setSelectedInsertKey }) => {
     const addUnit = async (value) => {
         const entity = {
             entity: {
-                name: value,
+                name: value.name,
                 isActive: true,
                 lessonId: lesson.id,
             },

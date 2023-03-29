@@ -8,7 +8,7 @@ import { getLessonSubSubjects } from '../store/slice/lessonSubSubjectsSlice';
 import { getUnits } from '../store/slice/lessonUnitsSlice';
 import { getListFilterParams } from '../utils/utils';
 
-const useAcquisitionTree = (isActive, loadingControl) => {
+const useAcquisitionTree = (isActive, loadingControl, educationYear) => {
     const dispatch = useDispatch();
     const { allClassList } = useSelector((state) => state?.classStages);
     const [classroomId, setClassroomId] = useState();
@@ -27,7 +27,7 @@ const useAcquisitionTree = (isActive, loadingControl) => {
         : [];
 
     useEffect(() => {
-        dispatch(getAllClassStages(activeFilter));
+        !educationYear && dispatch(getAllClassStages(activeFilter));
     }, []);
 
     useEffect(() => {

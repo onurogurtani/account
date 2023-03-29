@@ -1,18 +1,16 @@
 import { Space, Tooltip } from 'antd';
 import { EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { memo } from 'react';
-import { confirmDialog, Text } from '../../../components';
+import { confirmDialog, errorDialog, Text } from '../../../components';
 
 const Toolbar = ({
     addText,
     editText,
-    deleteText,
     isActive,
     statusAction,
     statusText,
     open,
     setIsEdit,
-    deleteAction,
     hidePlusButton,
     setSelectedInsertKey,
     selectedKey,
@@ -26,11 +24,11 @@ const Toolbar = ({
                 okText: <Text t="Evet" />,
                 cancelText: 'Hayır',
                 onOk: async () => {
-                    statusAction();
+                    statusAction().catch((e) => errorDialog({ title: <Text t="error" />, message: e?.message }));
                 },
             });
         } else {
-            statusAction();
+            statusAction().catch((e) => errorDialog({ title: <Text t="error" />, message: e?.message }));
         }
     };
     return (

@@ -31,7 +31,7 @@ const Lessons = ({ classroomId, isAdd, setIsAdd }) => {
         async (value) => {
             const entity = {
                 entity: {
-                    name: value,
+                    name: value.name,
                     isActive: true,
                     classroomId,
                 },

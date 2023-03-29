@@ -1,5 +1,5 @@
 import { Form, Space } from 'antd';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import CustomButton from '../../../components/CustomButton';
 import { errorDialog } from '../../../components/CustomDialog';
 import CustomForm, { CustomFormItem } from '../../../components/CustomForm';
@@ -10,23 +10,19 @@ import Text from '../../../components/Text';
 const AcquisitionTreeCreateOrEdit = ({ initialValue, isEdit, setIsEdit, height, onEnter, code }) => {
     const inputRef = useRef(null);
     const [form] = Form.useForm();
-    const [value, setValue] = useState(initialValue);
 
-    // useEffect(() => {
-    //     if (isEdit) inputRef.current?.focus();
-    // }, [isEdit]);
+    useEffect(() => {
+        if (isEdit) inputRef.current?.focus();
+    }, [isEdit]);
 
-    const onFinish = useCallback(
-        (values) => {
-            onEnter?.(values.name)
-                .then((e) => {
-                    setIsEdit(false);
-                    form.resetFields();
-                })
-                .catch((e) => errorDialog({ title: <Text t="error" />, message: e?.message }));
-        },
-        [value],
-    );
+    const onFinish = useCallback((values) => {
+        onEnter?.(values)
+            .then((e) => {
+                setIsEdit(false);
+                form.resetFields();
+            })
+            .catch((e) => errorDialog({ title: <Text t="error" />, message: e?.message }));
+    }, []);
     const onKeyPress = (event) => {
         event.stopPropagation();
     };
@@ -46,6 +42,7 @@ const AcquisitionTreeCreateOrEdit = ({ initialValue, isEdit, setIsEdit, height, 
                         { whitespace: true, message: 'Sadece boşluktan oluşamaz.' },
                     ]}
                     label="Tekil Kod"
+                    initialValue={initialValue?.code}
                     name="code"
                 >
                     <CustomInput
@@ -55,10 +52,6 @@ const AcquisitionTreeCreateOrEdit = ({ initialValue, isEdit, setIsEdit, height, 
                             event.stopPropagation();
                         }}
                         style={{ width: '350px' }}
-                        onChange={(e) => setValue(e.target.value)}
-                        onBlur={() => {
-                            setValue(initialValue);
-                        }}
                         height={height ? height : '28'}
                     />
                 </CustomFormItem>
@@ -70,7 +63,7 @@ const AcquisitionTreeCreateOrEdit = ({ initialValue, isEdit, setIsEdit, height, 
                     { whitespace: true, message: 'Sadece boşluktan oluşamaz.' },
                 ]}
                 name="name"
-                initialValue={initialValue}
+                initialValue={initialValue?.name}
                 label={code && 'Ad'}
             >
                 {code ? (
@@ -81,13 +74,8 @@ const AcquisitionTreeCreateOrEdit = ({ initialValue, isEdit, setIsEdit, height, 
                         style={{ width: '350px' }}
                         onChange={(e) => {
                             e.stopPropagation();
-                            setValue(e.target.value);
                         }}
                         onKeyPress={onKeyPress}
-                        onBlur={() => {
-                            setValue(initialValue);
-                        }}
-                        value={value}
                         height={height ? height : '28'}
                     />
                 ) : (
@@ -96,10 +84,6 @@ const AcquisitionTreeCreateOrEdit = ({ initialValue, isEdit, setIsEdit, height, 
                         onKeyPress={onKeyPress}
                         onClick={(event) => {
                             event.stopPropagation();
-                        }}
-                        onChange={(e) => setValue(e.target.value)}
-                        onBlur={() => {
-                            setValue(initialValue);
                         }}
                         height={height ? height : '28'}
                     />
@@ -130,7 +114,10 @@ const AcquisitionTreeCreateOrEdit = ({ initialValue, isEdit, setIsEdit, height, 
             </Space>
         </CustomForm>
     ) : (
-        <>{initialValue}</>
+        <>
+            {initialValue?.code}
+            {initialValue?.code && ' -'} {initialValue?.name}
+        </>
     );
 };
 

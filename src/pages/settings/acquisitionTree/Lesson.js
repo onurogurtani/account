@@ -1,7 +1,8 @@
 import React, { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { confirmDialog, errorDialog, Text } from '../../../components';
-import { deleteLessons, editLessons, setStatusLessons } from '../../../store/slice/lessonsSlice';
+import { setStatusLessonAcquisitions } from '../../../store/slice/lessonAcquisitionsSlice';
+import { setStatusLessonBrackets } from '../../../store/slice/lessonBracketsSlice';
+import { editLessons, setLessonStatus, setStatusLessons } from '../../../store/slice/lessonsSlice';
 import { setStatusLessonSubjects } from '../../../store/slice/lessonSubjectsSlice';
 import { setStatusUnits } from '../../../store/slice/lessonUnitsSlice';
 import AcquisitionTreeCreateOrEdit from './AcquisitionTreeCreateOrEdit';
@@ -12,12 +13,14 @@ const Lesson = ({ lesson, open, setSelectedInsertKey }) => {
     const [isEdit, setIsEdit] = useState(false);
     const { lessonUnits } = useSelector((state) => state?.lessonUnits);
     const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
+    const { lessonAcquisitions } = useSelector((state) => state?.lessonAcquisitions);
+    const { lessonBrackets } = useSelector((state) => state?.lessonBrackets);
 
     const updateLesson = async (value) => {
         const entity = {
             entity: {
                 id: lesson.id,
-                name: value,
+                name: value.name,
                 classroomId: lesson.classroomId,
                 isActive: lesson.isActive,
             },
@@ -25,22 +28,8 @@ const Lesson = ({ lesson, open, setSelectedInsertKey }) => {
         await dispatch(editLessons(entity)).unwrap();
     };
 
-    const deleteLesson = async () => {
-        confirmDialog({
-            title: <Text t="attention" />,
-            message: 'Tüm ilişkili bağlantılar silinecektir. Silmek istediğinizden emin misiniz?',
-            okText: <Text t="Evet" />,
-            cancelText: 'Hayır',
-            onOk: async () => {
-                try {
-                    await dispatch(deleteLessons(lesson.id)).unwrap();
-                } catch (err) {
-                    errorDialog({ title: <Text t="error" />, message: err.message });
-                }
-            },
-        });
-    };
-    const statusAction = () => {
+    const statusAction = async () => {
+        await dispatch(setLessonStatus({ id: lesson.id, isActive: !lesson.isActive })).unwrap();
         dispatch(setStatusLessons(lesson.id));
         const lessonUnitIds = lessonUnits.filter((item) => item.lessonId === lesson.id).map((i) => i.id);
         dispatch(setStatusUnits({ data: lessonUnitIds, status: !lesson.isActive }));
@@ -48,6 +37,14 @@ const Lesson = ({ lesson, open, setSelectedInsertKey }) => {
             .filter((item) => lessonUnitIds.includes(item.lessonUnitId))
             .map((i) => i.id);
         dispatch(setStatusLessonSubjects({ data: lessonSubjectIds, status: !lesson.isActive }));
+        const lessonAcquisitionIds = lessonAcquisitions
+            .filter((item) => lessonSubjectIds.includes(item.lessonSubjectId))
+            .map((i) => i.id);
+        dispatch(setStatusLessonAcquisitions({ data: lessonAcquisitionIds, status: !lesson.isActive }));
+        const lessonBracketIds = lessonBrackets
+            .filter((item) => lessonAcquisitionIds.includes(item.lessonAcquisitionId))
+            .map((i) => i.id);
+        dispatch(setStatusLessonBrackets({ data: lessonBracketIds, status: !lesson.isActive }));
     };
     const toolbarProps = {
         addText: 'Ünite Ekle',
@@ -68,7 +65,7 @@ const Lesson = ({ lesson, open, setSelectedInsertKey }) => {
         <>
             <div style={{ opacity: lesson.isActive ? 1 : 0.4 }}>
                 <AcquisitionTreeCreateOrEdit
-                    initialValue={lesson.name}
+                    initialValue={lesson}
                     isEdit={isEdit}
                     setIsEdit={setIsEdit}
                     onEnter={updateLesson}
