@@ -68,7 +68,7 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string RoleIsAlreadyActive = "Rol zaten aktif.";
         public static string RoleandTransferRoleCantBeTheSame = "Pasif etmek istediğiniz rol ile transfer etmek istediğiniz rol aynı olamaz.";
         public static string DefaultAdminRoleCantPassive = "{0} Pasif etmek istediğiniz rol default kurum admin rolündedir. Default kurum admin rolünü başka role atamadan pasif edemezsiniz.";
-
+        public static string CanNotChangeForRealationOrganisation = "Kurum Tipi, Kurumsal Müşteri Listesindeki kayıtlar ile ilişkilendirilmiştir. Değişiklik yapılamaz.";
 #pragma warning restore CA2211
 #pragma warning restore S2223
 #pragma warning restore S1104

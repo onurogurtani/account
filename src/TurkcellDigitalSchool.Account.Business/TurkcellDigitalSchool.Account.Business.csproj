@@ -36,7 +36,8 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\TurkcellDigitalSchool.Infrastructure\src\TurkcellDigitalSchool.Common\TurkcellDigitalSchool.Common.csproj" /> 
+    <ProjectReference Include="..\..\..\..\TurkcellDigitalSchool.Infrastructure\src\TurkcellDigitalSchool.Common\TurkcellDigitalSchool.Common.csproj" />
+    <ProjectReference Include="..\..\..\TurkcellDigitalSchool.File\src\TurkcellDigitalSchool.File.DataAccess\TurkcellDigitalSchool.File.DataAccess.csproj" /> 
     <ProjectReference Include="..\TurkcellDigitalSchool.Account.DataAccess\TurkcellDigitalSchool.Account.DataAccess.csproj" />
   </ItemGroup>
   
