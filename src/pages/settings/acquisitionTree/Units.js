@@ -30,7 +30,7 @@ const Units = ({ lesson, selectedInsertKey, setSelectedInsertKey, parentIsActive
         const entity = {
             entity: {
                 name: value.name,
-                isActive: true,
+                isActive: parentIsActive,
                 lessonId: lesson.id,
             },
         };

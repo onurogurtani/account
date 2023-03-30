@@ -20,7 +20,7 @@ const LessonBrackets = ({ lessonAcquisition, selectedInsertKey, setSelectedInser
             entity: {
                 name: value.name,
                 code: value.code,
-                isActive: true,
+                isActive: parentIsActive,
                 lessonAcquisitionId: lessonAcquisition.id,
             },
         };

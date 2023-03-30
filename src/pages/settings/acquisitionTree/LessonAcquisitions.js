@@ -31,7 +31,7 @@ const LessonAcquisitions = ({ lessonSubject, selectedInsertKey, setSelectedInser
         const entity = {
             entity: {
                 name: value.name,
-                isActive: true,
+                isActive: parentIsActive,
                 lessonSubjectId: lessonSubject.id,
                 code: value.code,
             },

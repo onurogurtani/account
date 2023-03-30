@@ -15,14 +15,17 @@ const AcquisitionTreeCreateOrEdit = ({ initialValue, isEdit, setIsEdit, height, 
         if (isEdit) inputRef.current?.focus();
     }, [isEdit]);
 
-    const onFinish = useCallback((values) => {
-        onEnter?.(values)
-            .then((e) => {
-                setIsEdit(false);
-                form.resetFields();
-            })
-            .catch((e) => errorDialog({ title: <Text t="error" />, message: e?.message }));
-    }, []);
+    const onFinish = useCallback(
+        (values) => {
+            onEnter?.(values)
+                .then((e) => {
+                    setIsEdit(false);
+                    form.resetFields();
+                })
+                .catch((e) => errorDialog({ title: <Text t="error" />, message: e?.message }));
+        },
+        [onEnter],
+    );
     const onKeyPress = (event) => {
         event.stopPropagation();
     };
