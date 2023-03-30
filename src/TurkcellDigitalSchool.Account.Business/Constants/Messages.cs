@@ -9,6 +9,7 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
 #pragma warning disable CA2211
 #pragma warning disable S2223
 #pragma warning disable S1104
+        public static string PackageNameAldreadyExist = "Girdiğiniz paket adına  sahip aktif paket bulunmaktadır, lütfen girdiğiniz bilgileri kontrol ediniz";
         public static string AuthorizationsDenied = "AuthorizationsDenied";
         public static string Added = "İşleminiz Başarıyla Gerçekleştirildi.";
         public static string Deleted = "İşleminiz Başarıyla Gerçekleştirildi.";
