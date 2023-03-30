@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -19,6 +19,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\TurkcellDigitalSchool.Account.Business\TurkcellDigitalSchool.Account.Business.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Handlers\ContractTypes\Queries\" />
+    <Folder Include="Handlers\OrganisationLogos\Queries\" />
   </ItemGroup>
 
 </Project>
