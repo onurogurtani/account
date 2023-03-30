@@ -6,7 +6,7 @@ import AcquisitionTreeCreateOrEdit from './AcquisitionTreeCreateOrEdit';
 import LessonBracket from './LessonBracket';
 
 const { Title } = Typography;
-const LessonBrackets = ({ lessonAcquisition, selectedInsertKey, setSelectedInsertKey }) => {
+const LessonBrackets = ({ lessonAcquisition, selectedInsertKey, setSelectedInsertKey, parentIsActive }) => {
     const dispatch = useDispatch();
     const { lessonBrackets } = useSelector((state) => state?.lessonBrackets);
 
@@ -40,7 +40,11 @@ const LessonBrackets = ({ lessonAcquisition, selectedInsertKey, setSelectedInser
             />
             {filteredLessonBracket.map((lessonBracket) => (
                 <div className="mb-3">
-                    <LessonBracket setSelectedInsertKey={setSelectedInsertKey} lessonBracket={lessonBracket} />
+                    <LessonBracket
+                        parentIsActive={parentIsActive}
+                        setSelectedInsertKey={setSelectedInsertKey}
+                        lessonBracket={lessonBracket}
+                    />
                 </div>
             ))}
         </>

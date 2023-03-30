@@ -14,7 +14,7 @@ export const lessonBracketsSlice = createSlice({
         },
         setStatusLessonBrackets: (state, action) => {
             state.lessonBrackets = state.lessonBrackets.map((item) =>
-                action.payload.data.includes(item.id) ? { ...item, isActive: action.payload.status } : item,
+                item.id === action.payload.data ? { ...item, isActive: action.payload.status } : item,
             );
         },
     },

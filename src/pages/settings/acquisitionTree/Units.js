@@ -10,7 +10,7 @@ import Unit from './Unit';
 
 const { Panel } = Collapse;
 const { Title } = Typography;
-const Units = ({ lesson, selectedInsertKey, setSelectedInsertKey }) => {
+const Units = ({ lesson, selectedInsertKey, setSelectedInsertKey, parentIsActive }) => {
     const dispatch = useDispatch();
     const { lessonUnits } = useSelector((state) => state?.lessonUnits);
     const [openedPanels, setOpenedPanels] = useState([]);
@@ -55,6 +55,7 @@ const Units = ({ lesson, selectedInsertKey, setSelectedInsertKey }) => {
                                 setSelectedInsertKey={setSelectedInsertKey}
                                 unit={unit}
                                 open={openedPanels.includes(unit.id.toString())}
+                                parentIsActive={parentIsActive}
                             />
                         }
                         key={unit.id}
@@ -63,6 +64,7 @@ const Units = ({ lesson, selectedInsertKey, setSelectedInsertKey }) => {
                             unit={unit}
                             setSelectedInsertKey={setSelectedInsertKey}
                             selectedInsertKey={selectedInsertKey}
+                            parentIsActive={parentIsActive ? unit.isActive : false}
                         />
                     </Panel>
                 ))}

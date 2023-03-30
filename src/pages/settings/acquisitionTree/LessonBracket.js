@@ -1,5 +1,5 @@
 import React, { memo, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Space } from 'antd';
 import {
     editLessonBrackets,
@@ -8,10 +8,17 @@ import {
 } from '../../../store/slice/lessonBracketsSlice';
 import AcquisitionTreeCreateOrEdit from './AcquisitionTreeCreateOrEdit';
 import Toolbar from './Toolbar';
+import { setStatusLessonAcquisitions } from '../../../store/slice/lessonAcquisitionsSlice';
+import { setStatusLessonSubjects } from '../../../store/slice/lessonSubjectsSlice';
+import { setStatusUnits } from '../../../store/slice/lessonUnitsSlice';
+import { setStatusLessons } from '../../../store/slice/lessonsSlice';
 
-const LessonBracket = ({ lessonBracket, setSelectedInsertKey }) => {
+const LessonBracket = ({ lessonBracket, setSelectedInsertKey, parentIsActive }) => {
     const dispatch = useDispatch();
     const [isEdit, setIsEdit] = useState(false);
+    const { lessonAcquisitions } = useSelector((state) => state?.lessonAcquisitions);
+    const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
+    const { lessonUnits } = useSelector((state) => state?.lessonUnits);
 
     const updateLessonBracket = async (value) => {
         const entity = {
@@ -26,9 +33,20 @@ const LessonBracket = ({ lessonBracket, setSelectedInsertKey }) => {
         await dispatch(editLessonBrackets(entity)).unwrap();
     };
 
-    const statusAction = async () => {
-        await dispatch(setLessonBracketStatus({ id: lessonBracket.id, isActive: !lessonBracket.isActive })).unwrap();
-        dispatch(setStatusLessonBrackets({ data: [lessonBracket.id], status: !lessonBracket?.isActive }));
+    const statusAction = async (status) => {
+        await dispatch(setLessonBracketStatus({ id: lessonBracket.id, isActive: status })).unwrap();
+        dispatch(setStatusLessonBrackets({ data: lessonBracket.id, status }));
+        if (!status) return false;
+
+        dispatch(setStatusLessonAcquisitions({ data: lessonBracket.lessonAcquisitionId, status }));
+        const lessonSubjectId = lessonAcquisitions.find(
+            (item) => item.id === lessonBracket.lessonAcquisitionId,
+        ).lessonSubjectId;
+        dispatch(setStatusLessonSubjects({ data: lessonSubjectId, status }));
+        const lessonUnitId = lessonSubjects.find((item) => item.id === lessonSubjectId).lessonUnitId;
+        dispatch(setStatusUnits({ data: lessonUnitId, status }));
+        const lessonId = lessonUnits.find((item) => item.id === lessonUnitId).lessonId;
+        dispatch(setStatusLessons({ data: lessonId, status }));
     };
 
     const toolbarProps = {
@@ -39,11 +57,12 @@ const LessonBracket = ({ lessonBracket, setSelectedInsertKey }) => {
         hidePlusButton: true,
         setSelectedInsertKey,
         statusAction,
+        parentIsActive,
         selectedKey: lessonBracket.id,
     };
     return (
         <Space align="baseline">
-            <div style={{ opacity: isEdit || lessonBracket.isActive ? 1 : 0.4 }}>
+            <div style={{ opacity: isEdit || parentIsActive ? (lessonBracket.isActive ? 1 : 0.4) : 0.4 }}>
                 <AcquisitionTreeCreateOrEdit
                     initialValue={lessonBracket}
                     isEdit={isEdit}

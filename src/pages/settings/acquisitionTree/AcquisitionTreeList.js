@@ -14,7 +14,7 @@ import '../../../styles/settings/lessons.scss';
 const { Title } = Typography;
 const AcquisitionTreeList = () => {
     const dispatch = useDispatch();
-    const { classroomId, setClassroomId, isLoading } = useAcquisitionTree(false, true, true);
+    const { classroomId, setClassroomId, isLoading } = useAcquisitionTree(false, true, false);
     const { educationYearList } = useSelector((state) => state.educationYears);
     const { allClassList } = useSelector((state) => state?.classStages);
     const [isAdd, setIsAdd] = useState(false);
@@ -41,7 +41,7 @@ const AcquisitionTreeList = () => {
                                         onChange={(e) => {
                                             dispatch(
                                                 getAllClassStages(
-                                                    getListFilterParams('educationYearId', e).concat([
+                                                    getListFilterParams('educationYearId', e.toString()).concat([
                                                         { field: 'isActive', value: true, compareType: 0 },
                                                     ]),
                                                 ),

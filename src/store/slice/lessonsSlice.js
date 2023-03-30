@@ -130,7 +130,7 @@ export const lessonsSlice = createSlice({
         },
         setStatusLessons: (state, action) => {
             state.lessons = state.lessons.map((item) =>
-                item.id === action.payload ? { ...item, isActive: !item.isActive } : item,
+                item.id === action.payload.data ? { ...item, isActive: action.payload.status } : item,
             );
         },
     },

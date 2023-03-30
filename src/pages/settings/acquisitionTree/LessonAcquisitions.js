@@ -11,7 +11,7 @@ import LessonBrackets from './LessonBrackets';
 const { Panel } = Collapse;
 const { Title } = Typography;
 
-const LessonAcquisitions = ({ lessonSubject, selectedInsertKey, setSelectedInsertKey }) => {
+const LessonAcquisitions = ({ lessonSubject, selectedInsertKey, setSelectedInsertKey, parentIsActive }) => {
     const dispatch = useDispatch();
     const { lessonAcquisitions } = useSelector((state) => state?.lessonAcquisitions);
     const [openedPanels, setOpenedPanels] = useState([]);
@@ -57,6 +57,7 @@ const LessonAcquisitions = ({ lessonSubject, selectedInsertKey, setSelectedInser
                                 setSelectedInsertKey={setSelectedInsertKey}
                                 lessonAcquisition={lessonAcquisition}
                                 open={openedPanels.includes(lessonAcquisition.id.toString())}
+                                parentIsActive={parentIsActive}
                             />
                         }
                         key={lessonAcquisition.id}
@@ -65,6 +66,7 @@ const LessonAcquisitions = ({ lessonSubject, selectedInsertKey, setSelectedInser
                             lessonAcquisition={lessonAcquisition}
                             setSelectedInsertKey={setSelectedInsertKey}
                             selectedInsertKey={selectedInsertKey}
+                            parentIsActive={parentIsActive ? lessonAcquisition.isActive : false}
                         />
                     </Panel>
                 ))}

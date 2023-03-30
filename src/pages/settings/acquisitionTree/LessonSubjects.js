@@ -10,7 +10,7 @@ import LessonSubject from './LessonSubject';
 
 const { Panel } = Collapse;
 const { Title } = Typography;
-const LessonSubjects = ({ unit, selectedInsertKey, setSelectedInsertKey }) => {
+const LessonSubjects = ({ unit, selectedInsertKey, setSelectedInsertKey, parentIsActive }) => {
     const dispatch = useDispatch();
     const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
     const [openedPanels, setOpenedPanels] = useState([]);
@@ -55,6 +55,7 @@ const LessonSubjects = ({ unit, selectedInsertKey, setSelectedInsertKey }) => {
                                 setSelectedInsertKey={setSelectedInsertKey}
                                 lessonSubject={lessonSubject}
                                 open={openedPanels.includes(lessonSubject.id.toString())}
+                                parentIsActive={parentIsActive}
                             />
                         }
                         key={lessonSubject.id}
@@ -63,6 +64,7 @@ const LessonSubjects = ({ unit, selectedInsertKey, setSelectedInsertKey }) => {
                             lessonSubject={lessonSubject}
                             setSelectedInsertKey={setSelectedInsertKey}
                             selectedInsertKey={selectedInsertKey}
+                            parentIsActive={parentIsActive ? lessonSubject.isActive : false}
                         />
                     </Panel>
                 ))}

@@ -69,6 +69,7 @@ const Lessons = ({ classroomId, isAdd, setIsAdd }) => {
                             lesson={lesson}
                             setSelectedInsertKey={setSelectedInsertKey}
                             selectedInsertKey={selectedInsertKey}
+                            parentIsActive={lesson.isActive}
                         />
                     </Panel>
                 ))}

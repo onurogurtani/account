@@ -14,7 +14,7 @@ export const lessonAcquisitionsSlice = createSlice({
         },
         setStatusLessonAcquisitions: (state, action) => {
             state.lessonAcquisitions = state.lessonAcquisitions.map((item) =>
-                action.payload.data.includes(item.id) ? { ...item, isActive: action.payload.status } : item,
+                item.id === action.payload.data ? { ...item, isActive: action.payload.status } : item,
             );
         },
     },

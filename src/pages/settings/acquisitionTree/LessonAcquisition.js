@@ -5,14 +5,17 @@ import {
     setLessonAcquisitionStatus,
     setStatusLessonAcquisitions,
 } from '../../../store/slice/lessonAcquisitionsSlice';
-import { setStatusLessonBrackets } from '../../../store/slice/lessonBracketsSlice';
+import { setStatusLessons } from '../../../store/slice/lessonsSlice';
+import { setStatusLessonSubjects } from '../../../store/slice/lessonSubjectsSlice';
+import { setStatusUnits } from '../../../store/slice/lessonUnitsSlice';
 import AcquisitionTreeCreateOrEdit from './AcquisitionTreeCreateOrEdit';
 import Toolbar from './Toolbar';
 
-const LessonAcquisition = ({ lessonAcquisition, open, setSelectedInsertKey }) => {
+const LessonAcquisition = ({ lessonAcquisition, open, setSelectedInsertKey, parentIsActive }) => {
     const dispatch = useDispatch();
     const [isEdit, setIsEdit] = useState(false);
-    const { lessonBrackets } = useSelector((state) => state?.lessonBrackets);
+    const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
+    const { lessonUnits } = useSelector((state) => state?.lessonUnits);
 
     const updateLessonAcquisition = async (value) => {
         const entity = {
@@ -27,15 +30,16 @@ const LessonAcquisition = ({ lessonAcquisition, open, setSelectedInsertKey }) =>
         await dispatch(editLessonAcquisitions(entity)).unwrap();
     };
 
-    const statusAction = async () => {
-        await dispatch(
-            setLessonAcquisitionStatus({ id: lessonAcquisition.id, isActive: !lessonAcquisition.isActive }),
-        ).unwrap();
-        dispatch(setStatusLessonAcquisitions({ data: [lessonAcquisition.id], status: !lessonAcquisition?.isActive }));
-        const lessonBracketIds = lessonBrackets
-            .filter((item) => item.lessonAcquisitionId === lessonAcquisition.id)
-            .map((i) => i.id);
-        dispatch(setStatusLessonBrackets({ data: lessonBracketIds, status: !lessonAcquisition.isActive }));
+    const statusAction = async (status) => {
+        await dispatch(setLessonAcquisitionStatus({ id: lessonAcquisition.id, isActive: status })).unwrap();
+        dispatch(setStatusLessonAcquisitions({ data: lessonAcquisition.id, status }));
+
+        if (!status) return false;
+        dispatch(setStatusLessonSubjects({ data: lessonAcquisition.lessonSubjectId, status }));
+        const lessonUnitId = lessonSubjects.find((item) => item.id === lessonAcquisition.lessonSubjectId).lessonUnitId;
+        dispatch(setStatusUnits({ data: lessonUnitId, status }));
+        const lessonId = lessonUnits.find((item) => item.id === lessonUnitId).lessonId;
+        dispatch(setStatusLessons({ data: lessonId, status }));
     };
 
     const toolbarProps = {
@@ -51,11 +55,12 @@ const LessonAcquisition = ({ lessonAcquisition, open, setSelectedInsertKey }) =>
         setIsEdit,
         setSelectedInsertKey,
         statusAction,
+        parentIsActive,
         selectedKey: { id: lessonAcquisition.id, type: 'lessonAcquisition' },
     };
     return (
         <>
-            <div style={{ opacity: lessonAcquisition.isActive ? 1 : 0.4 }}>
+            <div style={{ opacity: parentIsActive ? (lessonAcquisition.isActive ? 1 : 0.4) : 0.4 }}>
                 <AcquisitionTreeCreateOrEdit
                     initialValue={lessonAcquisition}
                     isEdit={isEdit}
