@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "TurkcellDigitalSchool.Identity.Business": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:58939;http://localhost:58942"
+    }
+  }
+}

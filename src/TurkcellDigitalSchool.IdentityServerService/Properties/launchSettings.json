@@ -1,0 +1,24 @@
+{
+  "profiles": { 
+    "TurkcellDigitalSchool.Api.DEV": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "DEV"
+      },
+      "applicationUrl": "http://localhost:6001",
+      "dotnetRunMessages": true
+    },
+    "TurkcellDigitalSchool.Api.DEVTURKCELL": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "DEVTURKCELL"
+      },
+      "applicationUrl": "http://localhost:6001",
+      "dotnetRunMessages": true
+    }
+  } 
+}
