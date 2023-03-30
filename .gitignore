@@ -48,3 +48,23 @@ Thumbs.db
 *.mov
 *.wmv
 
+/src/TurkcellDigitalSchool.Account.Api/bin
+/.vs
+/src/TurkcellDigitalSchool.Account.Api/logs
+/src/TurkcellDigitalSchool.Account.Api/obj/Debug/net6.0/ref/TurkcellDigitalSchool.Account.Api.dll
+/src/TurkcellDigitalSchool.Account.Api/obj
+/src/TurkcellDigitalSchool.Account.Api/Properties/PublishProfiles/FolderProfile.pubxml.user
+/src/TurkcellDigitalSchool.Account.Api/TurkcellDigitalSchool.Account.Api.csproj.user
+/src/TurkcellDigitalSchool.Account.Business/bin
+/src/TurkcellDigitalSchool.Account.Business/obj
+/src/TurkcellDigitalSchool.Account.Container/bin
+/src/TurkcellDigitalSchool.Account.Container/obj
+/src/TurkcellDigitalSchool.Account.DataAccess/bin
+/src/TurkcellDigitalSchool.Account.DataAccess/obj
+/src/TurkcellDigitalSchool.IdentityServerService/.vs/TurkcellDigitalSchool.IdentityServerService
+/src/TurkcellDigitalSchool.IdentityServerService/bin
+/src/TurkcellDigitalSchool.IdentityServerService/obj
+/src/TurkcellDigitalSchool.IdentityServerService/Properties/PublishProfiles/FolderProfile.pubxml.user
+/src/TurkcellDigitalSchool.IdentityServerService/TurkcellDigitalSchool.IdentityServerService.csproj.user
+/test/TurkcellDigitalSchool.Account.Business.Test/bin
+/test/TurkcellDigitalSchool.Account.Business.Test/obj
