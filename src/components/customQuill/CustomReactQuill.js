@@ -4,7 +4,7 @@ import 'react-quill/dist/quill.snow.css';
 import '../../styles/customQuill/editor.scss';
 import QuillToolbar, { formats, modules } from './QuillToolbar';
 
-export const CustomReactQuill = ({ onChange, quillValue }) => {
+export const CustomReactQuill = ({ onChange, quillValue, placeholder }) => {
     const [newVal, setnewVal] = useState('');
     useEffect(() => {
         setnewVal(quillValue);
@@ -27,6 +27,7 @@ export const CustomReactQuill = ({ onChange, quillValue }) => {
                 modules={modules}
                 formats={formats}
                 style={{ height: '100%' }}
+                placeholder={placeholder}
             />
         </div>
     );

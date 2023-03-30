@@ -14,24 +14,32 @@ import {
     Text,
     useText,
 } from '../../../../components';
-import { getFilteredPagedForms, getFormCategories, setFormFilterObject } from '../../../../store/slice/formsSlice';
+import { getFilteredPagedForms, getFormCategories } from '../../../../store/slice/formsSlice';
 import '../../../../styles/surveyManagement/surveyFilter.scss';
-
-const publishSituation = [
-    { id: 1, value: 'Yayında' },
-    { id: 2, value: 'Yayında değil' },
-    { id: 3, value: 'Taslak' },
-];
-const publishEnumReverse = {
-    1: 'Yayında',
-    2: 'Yayında değil',
-    3: 'Taslak',
-};
+import CustomParticipantSelectFormItems from '../../../../components/CustomParticipantSelectFormItems';
+import { getParticipantGroupsList } from '../../../../store/slice/eventsSlice';
+import { publishStatus } from '../../../../constants/surveys';
 
 const FormFilter = () => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
-    const { filterObject, formList, formCategories } = useSelector((state) => state?.forms);
+    const { formList, formCategories } = useSelector((state) => state?.forms);
+    const { participantGroupsList } = useSelector((state) => state?.events);
+
+    const loadParticipantGroups = useCallback(async () => {
+        participantGroupsList?.length === 0 &&
+            dispatch(
+                getParticipantGroupsList({
+                    params: {
+                        'ParticipantGroupDetailSearch.PageSize': 100000000,
+                    },
+                }),
+            );
+    }, [dispatch, participantGroupsList]);
+    
+    useEffect(() => {
+        loadParticipantGroups();
+    }, [participantGroupsList]);
 
     useEffect(() => {
         dispatch(getFilteredPagedForms({}));
@@ -66,6 +74,8 @@ const FormFilter = () => {
                 CategoryOfFormId: values?.categoryId,
                 StartDate: values?.startDate ? dayjs(values?.startDate)?.format('YYYY-MM-DDT00:00:00') : undefined,
                 EndDate: values?.endDate && dayjs(values?.endDate)?.format('YYYY-MM-DDT23:59:59'),
+                participantGroupIds: values?.participantGroupIds,
+                UserTypeIds: values.participantTypeIds,
             };
             await dispatch(getFilteredPagedForms(body));
         } catch (e) {}
@@ -133,7 +143,7 @@ const FormFilter = () => {
                             className="filter-item"
                         >
                             <CustomSelect className="form-filter-item" placeholder={useText('Seçiniz')}>
-                                {publishSituation?.map(({ id, value }) => (
+                                {publishStatus?.map(({ id, value }) => (
                                     <Option key={id} value={id}>
                                         {value}
                                     </Option>
@@ -196,6 +206,7 @@ const FormFilter = () => {
                                 disabledDate={disabledEndDate}
                             />
                         </CustomFormItem>
+                        <CustomParticipantSelectFormItems className={'filter-item'} form={form} required={false} />
                     </div>
 
                     <div className="action-buttons">

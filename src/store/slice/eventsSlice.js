@@ -59,7 +59,6 @@ export const getParticipantGroupsList = createAsyncThunk(
     'events/getParticipantGroupsList',
     async ({ params = {} }, { dispatch, rejectWithValue }) => {
         try {
-            console.log('"try"', 'try');
             const response = await participantGroupsServices.getParticipantGroupsPagedList(params);
             return response;
         } catch (error) {

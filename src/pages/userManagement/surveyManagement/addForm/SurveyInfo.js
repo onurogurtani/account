@@ -14,6 +14,7 @@ import {
     CustomButton,
     errorDialog,
     confirmDialog,
+    successDialog,
 } from '../../../../components';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,40 +33,14 @@ import {
     setShowFormObj,
     deleteForm,
 } from '../../../../store/slice/formsSlice';
-import { data } from '../forms/static';
-
-const publishStatus = [
-    { id: 1, value: 'Yayında' },
-    { id: 2, value: 'Yayında değil' },
-    { id: 3, value: 'Taslak' },
-];
-const publishEnum = {
-    Yayında: 1,
-    'Yayında değil': 2,
-    Taslak: 3,
-};
-const publishEnumReverse = {
-    1: 'Yayında',
-    2: 'Yayında değil',
-    3: 'Taslak',
-};
-const radioOptions = [
-    {
-        label: 'Kullanıcı tüm soruları cevapladığında anketi bitirebilir.',
-        value: true,
-    },
-    {
-        label: 'Kullanıcı her an anketi bitirebilir',
-        value: false,
-    },
-];
-
-const formPublicationPlaces = [
-    { id: 1, name: 'Anasayfa' },
-    { id: 2, name: 'Anketler Sayfası' },
-    { id: 3, name: 'Pop-up' },
-    { id: 4, name: 'Bildirimler' },
-];
+import {
+    publishStatus,
+    publishEnum,
+    publishEnumReverse,
+    radioOptions,
+    formPublicationPlaces,
+} from '../../../../constants/surveys.js';
+import CustomParticipantSelectFormItems from '../../../../components/CustomParticipantSelectFormItems';
 
 const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
     const [serviceData, setServiceData] = useState({});
@@ -73,24 +48,36 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
     const history = useHistory();
     const dispatch = useDispatch();
 
-    useEffect(() => {
+    const loadData = async () => {
         dispatch(getAllClassStages());
         dispatch(getFormCategories({ pageNumber: 0 }));
         dispatch(getFormPackages());
+    };
+
+    useEffect(() => {
+        loadData();
     }, []);
 
     const { formCategories, formPackages, currentForm, showFormObj } = useSelector((state) => state?.forms);
 
-    useEffect(() => {
+    const loadFormPackages = async () => {
         if (!formPackages) {
             dispatch(getFormPackages());
         }
-    }, [formPackages]);
+    };
 
-    useEffect(() => {
+    const loadFormCategories = async () => {
         if (!formCategories) {
             dispatch(getFormCategories({ pageNumber: 0 }));
         }
+    };
+
+    useEffect(() => {
+        loadFormPackages();
+    }, [formPackages]);
+
+    useEffect(() => {
+        loadFormCategories();
     }, [formCategories]);
 
     useEffect(() => {
@@ -98,6 +85,9 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
             const currentDate = dayjs().utc().format('YYYY-MM-DD-HH-mm');
             const startDate = dayjs(showFormObj?.startDate).utc().format('YYYY-MM-DD-HH-mm');
             const endDate = dayjs(showFormObj?.endDate).utc().format('YYYY-MM-DD-HH-mm');
+            let groupIds = showFormObj?.participantGroup?.id?.split(',')?.map((item) => Number(item));
+            let typeIds = showFormObj?.participantType?.id?.split(',')?.map((item) => Number(item));
+
             let initialData = {
                 surveyName: showFormObj?.name,
                 description: showFormObj?.description,
@@ -107,6 +97,8 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                 surveyCategory: showFormObj?.categoryOfForm?.name,
                 finishCondition: showFormObj?.onlyComletedWhenFinish,
                 formPublicationPlaces: showFormObj?.formPublicationPlaces,
+                participantTypeIds: typeIds,
+                participantGroupIds: groupIds,
             };
             if (showFormObj?.categoryOfForm?.name.toLowerCase().includes('envanter')) {
                 let newData = {
@@ -165,8 +157,6 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
         });
     };
 
-    //           JSON.stringify(showFormObj) === JSON.stringify({ ...showFormObj, ...data.form }),
-
     const onFinish = async (string) => {
         const values = await form.validateFields();
         const startOfForm = values?.startDate ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD-HH-mm') : undefined;
@@ -211,6 +201,13 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                 }
             }
             const selectedPublishStatus = values.publishStatus;
+            let participantArrObj = [];
+            values?.participantGroupIds?.map((item) =>
+                participantArrObj.push({
+                    participantGroupId: item,
+                }),
+            );
+
             const data = {
                 entity: {
                     name: values.surveyName,
@@ -222,10 +219,11 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                     onlyComletedWhenFinish: values.finishCondition,
                     isActive: true,
                     formPublicationPlaces: values?.formPublicationPlaces,
+                    formParticipantGroups: participantArrObj,
                 },
             };
 
-            if (values.surveyCategory == 'Envanter') {
+            if (values.surveyCategory === 'Envanter') {
                 let packages = [
                     {
                         packageId: packageArray[0]?.id,
@@ -251,9 +249,16 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                 const action = await dispatch(updateForm(newData));
                 if (updateForm.fulfilled.match(action)) {
                     await dispatch(getAllQuestionsOfForm({ formId: showFormObj.id }));
-                    dispatch(getGroupsOfForm());
+                    await dispatch(getGroupsOfForm());
+
                     if (string == 'taslak olarak kaydet' || string == 'kaydet ve yayınla') {
-                        history.push('/user-management/survey-management');
+                        successDialog({
+                            title: <Text t="success" />,
+                            message: action?.payload?.message,
+                            onOk: async () => {
+                                history.push('/user-management/survey-management');
+                            },
+                        });
                     } else {
                         setStep('2');
                         setPermitNext(true);
@@ -281,7 +286,6 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                     };
                     await dispatch(addNewGroupToForm(newGroupData));
                     await dispatch(getAllQuestionsOfForm({ formId: res.id }));
-                    // dispatch(getGroupsOfForm());
                     setStep('2');
                     setPermitNext(true);
                 }
@@ -397,6 +401,12 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                                 </CustomFormItem>
                             </>
                         )}
+                        <CustomParticipantSelectFormItems
+                            className={classes['ant-form-item']}
+                            form={form}
+                            required={true}
+                            initialValues={showFormObj}
+                        />
 
                         <Row gutter={16}>
                             <Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} lg={{ span: 16 }}>
@@ -541,7 +551,6 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                                         className={classes['submit-btn']}
                                         onClick={() => {
                                             onFinish('kaydet ve yayınla');
-                                            // publishAndSaveHandler()
                                         }}
                                     >
                                         Kaydet ve Yayınla

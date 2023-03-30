@@ -1,39 +1,37 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import {
     confirmDialog,
     CustomButton,
     CustomPageHeader,
     errorDialog,
-    Text,
     successDialog,
+    Text,
 } from '../../../../components';
-import { useLocation } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
+import { copyForm, deleteForm, setShowFormObj, updateForm } from '../../../../store/slice/formsSlice';
 import classes from '../../../../styles/surveyManagement/showForm.module.scss';
-// import { columns, sortList } from './static';
-import { useDispatch, useSelector } from 'react-redux';
-// import iconSearchWhite from '../../../../assets/icons/icon-white-search.svg';
-import {
-    getFilteredPagedForms,
-    getFormCategories,
-    setShowFormObj,
-    updateForm,
-    deleteForm,
-    copyForm,
-} from '../../../../store/slice/formsSlice';
 import ShowFormTabs from './ShowFormTabs';
-import { BulbFilled } from '@ant-design/icons';
-const publishStatus = [
-    { id: 1, value: 'Yayında' },
-    { id: 2, value: 'Yayında değil' },
-    { id: 3, value: 'Taslak' },
-];
 
 const ShowForm = () => {
     const dispatch = useDispatch();
-    const location = useLocation();
     const history = useHistory();
     const { showFormObj } = useSelector((state) => state?.forms);
+
+    const editObj = async (value) => {
+        let groupArr = [];
+        showFormObj?.participantGroup?.id
+            ?.split(',')
+            ?.map((item) => Number(item))
+            ?.map((item) => groupArr.push({ participantGroupId: item }));
+        let data = { ...showFormObj };
+        delete data.participantType;
+        delete data.participantGroup;
+        data.formParticipantGroups = groupArr;
+        data.publishStatus = value;
+        return data;
+    };
+    editObj();
 
     useEffect(() => {
         if (showFormObj.id == undefined || showFormObj.id == 0) {
@@ -69,7 +67,7 @@ const ShowForm = () => {
                 if (deleteForm.fulfilled.match(action3)) {
                     successDialog({
                         title: <Text t="success" />,
-                        message: 'Anket başarıyla silinmiştir',
+                        message: action3?.payload?.message,
                     });
                     await dispatch(setShowFormObj({}));
                     history.push('/user-management/survey-management');
@@ -91,17 +89,17 @@ const ShowForm = () => {
             okText: <Text t="Evet" />,
             cancelText: 'Hayır',
             onOk: async () => {
+                let body = await editObj(1);
                 let data = {
                     form: {
-                        ...showFormObj,
-                        publishStatus: 1,
+                        ...body,
                     },
                 };
                 const action2 = await dispatch(updateForm(data));
                 if (updateForm.fulfilled.match(action2)) {
                     successDialog({
                         title: <Text t="success" />,
-                        message: 'Anket başarıyla yayınlanmıştır',
+                        message: action2?.payload?.message,
                     });
                     await dispatch(setShowFormObj({ ...showFormObj, publishStatus: 1 }));
                 } else {
@@ -122,17 +120,17 @@ const ShowForm = () => {
             okText: <Text t="Evet" />,
             cancelText: 'Hayır',
             onOk: async () => {
+                let body = await editObj(2);
                 let data = {
                     form: {
-                        ...showFormObj,
-                        publishStatus: 2,
+                        ...body,
                     },
                 };
                 const action = await dispatch(updateForm(data));
                 if (updateForm.fulfilled.match(action)) {
                     successDialog({
                         title: <Text t="success" />,
-                        message: 'Anket başarıyla yayından kaldırılmıştır',
+                        message: action?.payload?.message,
                     });
                     await dispatch(setShowFormObj({ ...showFormObj, publishStatus: 2 }));
                 } else {
@@ -151,6 +149,8 @@ const ShowForm = () => {
         await dispatch(copyForm(data));
     };
 
+    console.log('index te showFormObj', showFormObj)
+
     return (
         <>
             <CustomPageHeader
@@ -163,15 +163,17 @@ const ShowForm = () => {
                 <CustomButton type="primary" htmlType="submit" onClick={handleBack}>
                     Geri
                 </CustomButton>
-                <CustomButton htmlType="submit" className={classes['edit-btn']} onClick={handleEdit}>
-                    Düzenle
-                </CustomButton>
+                {showFormObj.publishStatus !== 1 && (
+                    <CustomButton htmlType="submit" className={classes['edit-btn']} onClick={handleEdit}>
+                        Düzenle
+                    </CustomButton>
+                )}
                 {showFormObj.publishStatus != 1 && (
                     <CustomButton type="primary" onClick={onDelete} danger>
                         Sil
                     </CustomButton>
                 )}
-                {showFormObj.publishStatus == 1 && (
+                {showFormObj.publishStatus === 1 && (
                     <CustomButton
                         type="primary"
                         htmlType="submit"
@@ -181,7 +183,7 @@ const ShowForm = () => {
                         {'Yayından Kaldır'}
                     </CustomButton>
                 )}
-                {showFormObj.publishStatus == 2 && (
+                {showFormObj.publishStatus === 2 && (
                     <CustomButton
                         type="primary"
                         htmlType="submit"
@@ -196,13 +198,6 @@ const ShowForm = () => {
                 </CustomButton>
             </div>
             <ShowFormTabs showData={showFormObj} />
-            {/* <ShowAnnouncementTabs showData={currentAnnouncement} />
-      <UpdateAnnouncementDate
-        setCurrentAnnouncement={setCurrentAnnouncement}
-        currentAnnouncement={currentAnnouncement}
-        dateVisible={dateVisible}
-        setDateVisible={setDateVisible}
-      /> */}
         </>
     );
 };

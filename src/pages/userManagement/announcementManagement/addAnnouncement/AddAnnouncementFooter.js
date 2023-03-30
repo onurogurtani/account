@@ -56,12 +56,11 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileIma
                         foundType.push(announcementTypes[i]);
                     }
                 }
-                let selectedGroupsArray = participantGroupsList.filter((p) =>
-                    values.participantGroupIds.includes(p?.name),
-                );
-                let idsArr = [];
-                selectedGroupsArray?.map((item) => idsArr.push(item?.id));
-                idsArr.push();
+                // let selectedGroupsArray = participantGroupsList.filter((p) =>
+                //     values.participantGroupIds.includes(p?.name),
+                // );
+                // let idsArr = [];
+                // selectedGroupsArray?.map((item) => idsArr.push(item?.id));
                 const fileId = await dispatch(getAvatarUpload(fileImage));
                 let data = {
                     announcementType: foundType[0],
@@ -78,7 +77,7 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileIma
                     announcementPublicationPlaces: values?.announcementPublicationPlaces,
                     isPopupAvailable: values?.announcementPublicationPlaces.includes(4),
                     isReadCheckbox: values?.isReadCheckbox,
-                    participantGroupIds: idsArr,
+                    participantGroupIds: values?.participantGroupIds,
                 };
                 const action = await dispatch(addAnnouncement(data));
 

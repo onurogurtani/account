@@ -19,6 +19,7 @@ import CustomQuillFormItem from '../../../../components/customQuill/CustomQuillF
 import EditAnnouncementFooter from '../editAnnouncement/EditAnnouncementFooter';
 import AnnouncementIcon from './AnnouncementIcon';
 import CustomParticipantSelectFormItems from '../../../../components/CustomParticipantSelectFormItems';
+// import { } from '../../../../constants/announcements';
 
 const announcementPublicationPlaces = [
     { id: 1, name: 'Anasayfa' },
@@ -57,6 +58,7 @@ const AnnouncementInfoForm = ({
             const endDate = dayjs(initialValues?.endDate).utc().format('YYYY-MM-DD-HH-mm');
             let groupIds = initialValues?.participantGroup?.id?.split(',')?.map((item) => Number(item));
             let typeIds = initialValues?.participantType?.id?.split(',')?.map((item) => Number(item));
+
             let initialData = {
                 startDate: startDate >= currentDate ? dayjs(initialValues?.startDate) : undefined,
                 endDate: endDate >= currentDate ? dayjs(initialValues?.endDate) : undefined,

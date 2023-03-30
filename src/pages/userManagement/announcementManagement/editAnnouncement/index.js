@@ -24,7 +24,8 @@ const EditAnnouncement = () => {
         announcementTypes?.length === 0 && (await dispatch(getByFilterPagedAnnouncementTypes(typeData)));
     }, [dispatch, announcementTypes]);
 
-    const loadParticipantGroups = useCallback(async () => {
+    const loadParticipantGroups = async () => {
+        console.log('"part içinde"', 'part içinde');
         participantGroupsList?.length === 0 &&
             dispatch(
                 getParticipantGroupsList({
@@ -33,12 +34,13 @@ const EditAnnouncement = () => {
                     },
                 }),
             );
-    }, [dispatch, participantGroupsList]);
+    };
+
+    loadParticipantGroups();
 
     useEffect(() => {
         window.scrollTo(0, 0);
         loadAnnouncemenTypes();
-        loadParticipantGroups();
     }, []);
 
     useEffect(() => {
