@@ -55,12 +55,6 @@ export const lessonSubSubjectsSlice = createSlice({
                 ];
             }
         });
-        builder.addCase(deleteLessonSubSubjects.fulfilled, (state, action) => {
-            const { arg } = action.meta;
-            if (arg) {
-                state.lessonSubSubjects = state.lessonSubSubjects.filter((item) => item.id !== arg);
-            }
-        });
     },
 });
 
@@ -70,12 +64,6 @@ export const getLessonSubSubjects = createAsyncThunk(
     'getLessonSubSubjects',
     async (body, { dispatch, getState, rejectWithValue }) => {
         try {
-            //statede varsa request iptal
-            // const findLessonSubSubjects = getState()?.lessonSubSubjects.lessonSubSubjects.find(
-            //     (i) => i.lessonSubjectId === body[0]?.value,
-            // );
-            // if (findLessonSubSubjects) return rejectWithValue();
-
             return await lessonSubSubjectsServices.getLessonSubSubjects(body);
         } catch (error) {
             return rejectWithValue(error?.data);
@@ -120,18 +108,6 @@ export const editLessonSubSubjects = createAsyncThunk(
     async (data, { dispatch, rejectWithValue }) => {
         try {
             const response = await lessonSubSubjectsServices.editLessonSubSubjects(data);
-            return response;
-        } catch (error) {
-            return rejectWithValue(error?.data);
-        }
-    },
-);
-
-export const deleteLessonSubSubjects = createAsyncThunk(
-    'deleteLessonSubSubjects',
-    async (data, { dispatch, rejectWithValue }) => {
-        try {
-            const response = await lessonSubSubjectsServices.deleteLessonSubSubjects(data);
             return response;
         } catch (error) {
             return rejectWithValue(error?.data);

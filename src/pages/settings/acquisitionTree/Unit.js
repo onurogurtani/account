@@ -1,48 +1,32 @@
 import React, { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { confirmDialog, errorDialog, Text } from '../../../components';
-import { setStatusLessonSubjects } from '../../../store/slice/lessonSubjectsSlice';
-import { deleteUnits, editUnits, setStatusUnits } from '../../../store/slice/lessonUnitsSlice';
+import { setStatusLessons } from '../../../store/slice/lessonsSlice';
+import { editUnits, setStatusUnits, setUnitStatus } from '../../../store/slice/lessonUnitsSlice';
 import AcquisitionTreeCreateOrEdit from './AcquisitionTreeCreateOrEdit';
 import Toolbar from './Toolbar';
 
-const Unit = ({ unit, open, setSelectedInsertKey }) => {
+const Unit = ({ unit, open, setSelectedInsertKey, parentIsActive }) => {
     const dispatch = useDispatch();
     const [isEdit, setIsEdit] = useState(false);
-    const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
 
     const updateUnit = async (value) => {
         const entity = {
             entity: {
                 id: unit.id,
-                name: value,
+                name: value.name,
                 lessonId: unit.lessonId,
-                isActive: unit.isActive,
+                isActive: parentIsActive ? unit.isActive : false,
             },
         };
         await dispatch(editUnits(entity)).unwrap();
     };
 
-    const deleteUnit = async () => {
-        confirmDialog({
-            title: <Text t="attention" />,
-            message: 'Tüm ilişkili bağlantılar silinecektir. Silmek istediğinizden emin misiniz?',
-            okText: <Text t="Evet" />,
-            cancelText: 'Hayır',
-            onOk: async () => {
-                try {
-                    await dispatch(deleteUnits(unit.id)).unwrap();
-                } catch (err) {
-                    errorDialog({ title: <Text t="error" />, message: err.message });
-                }
-            },
-        });
-    };
+    const statusAction = async (status) => {
+        await dispatch(setUnitStatus({ id: unit.id, isActive: status })).unwrap();
+        dispatch(setStatusUnits({ data: unit.id, status }));
 
-    const statusAction = () => {
-        dispatch(setStatusUnits({ data: [unit.id], status: !unit?.isActive }));
-        const lessonSubjectIds = lessonSubjects.filter((item) => item.lessonUnitId === unit.id).map((i) => i.id);
-        dispatch(setStatusLessonSubjects({ data: lessonSubjectIds, status: !unit.isActive }));
+        if (!status) return false;
+        dispatch(setStatusLessons({ data: unit.lessonId, status }));
     };
     const toolbarProps = {
         addText: 'Konu Ekle',
@@ -57,13 +41,14 @@ const Unit = ({ unit, open, setSelectedInsertKey }) => {
         setIsEdit,
         setSelectedInsertKey,
         statusAction,
+        parentIsActive,
         selectedKey: { id: unit.id, type: 'unit' },
     };
     return (
         <>
-            <div style={{ opacity: unit.isActive ? 1 : 0.4 }}>
+            <div style={{ opacity: parentIsActive ? (unit.isActive ? 1 : 0.4) : 0.4 }}>
                 <AcquisitionTreeCreateOrEdit
-                    initialValue={unit.name}
+                    initialValue={unit}
                     isEdit={isEdit}
                     setIsEdit={setIsEdit}
                     onEnter={updateUnit}

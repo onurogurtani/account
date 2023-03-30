@@ -7,10 +7,6 @@ import { resetLessonSubSubjects } from './lessonSubSubjectsSlice';
 
 export const getLessons = createAsyncThunk('getLessons', async (body, { dispatch, getState, rejectWithValue }) => {
     try {
-        //statede varsa request iptal
-        // const findLessons = getState()?.lessons.lessons.find((i) => i.classroomId === body[0]?.value);
-        // if (findLessons) return rejectWithValue();
-
         return await lessonsServices.getLessons(body);
     } catch (error) {
         return rejectWithValue(error?.data);
@@ -20,10 +16,6 @@ export const getLessonsQuesiton = createAsyncThunk(
     'getLessonsQuesiton',
     async (body, { dispatch, getState, rejectWithValue }) => {
         try {
-            //statede varsa request iptal
-            //  const findLessons = getState()?.lessons.lessons.find((i) => i.classroomId === body[0]?.value);
-            //  if (findLessons) return rejectWithValue();
-
             return await lessonsServices.getLessons(body);
         } catch (error) {
             return rejectWithValue(error?.data);
@@ -82,15 +74,6 @@ export const editLessons = createAsyncThunk('editLessons', async (data, { dispat
     }
 });
 
-export const deleteLessons = createAsyncThunk('deleteLessons', async (data, { dispatch, rejectWithValue }) => {
-    try {
-        const response = await lessonsServices.deleteLessons(data);
-        return response;
-    } catch (error) {
-        return rejectWithValue(error?.data);
-    }
-});
-
 export const downloadLessonsExcel = createAsyncThunk(
     'downloadLessonsExcel',
     async (data, { dispatch, rejectWithValue }) => {
@@ -119,6 +102,16 @@ export const uploadLessonsExcel = createAsyncThunk(
     },
 );
 
+export const setLessonStatus = createAsyncThunk(
+    'setLessonStatus',
+    async (body, { dispatch, getState, rejectWithValue }) => {
+        try {
+            return await lessonsServices.setLessonStatus(body);
+        } catch (error) {
+            return rejectWithValue(error?.data);
+        }
+    },
+);
 const initialState = {
     lessons: [],
     lessonsFilterList: [],
@@ -137,7 +130,7 @@ export const lessonsSlice = createSlice({
         },
         setStatusLessons: (state, action) => {
             state.lessons = state.lessons.map((item) =>
-                item.id === action.payload ? { ...item, isActive: !item.isActive } : item,
+                item.id === action.payload.data ? { ...item, isActive: action.payload.status } : item,
             );
         },
     },
@@ -178,12 +171,6 @@ export const lessonsSlice = createSlice({
             } = action.meta;
             if (id) {
                 state.lessons = [action?.payload?.data, ...state.lessons.filter((item) => item.id !== id)];
-            }
-        });
-        builder.addCase(deleteLessons.fulfilled, (state, action) => {
-            const { arg } = action.meta;
-            if (arg) {
-                state.lessons = state.lessons.filter((item) => item.id !== arg);
             }
         });
     },

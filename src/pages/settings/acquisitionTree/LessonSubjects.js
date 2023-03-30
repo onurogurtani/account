@@ -1,16 +1,16 @@
 import { Collapse, Typography } from 'antd';
 import React, { memo, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { getLessonAcquisitions } from '../../../store/slice/lessonAcquisitionsSlice';
 import { addLessonSubjects } from '../../../store/slice/lessonSubjectsSlice';
-import { getLessonSubSubjects } from '../../../store/slice/lessonSubSubjectsSlice';
 import { getListFilterParams } from '../../../utils/utils';
 import AcquisitionTreeCreateOrEdit from './AcquisitionTreeCreateOrEdit';
+import LessonAcquisitions from './LessonAcquisitions';
 import LessonSubject from './LessonSubject';
-import LessonSubSubjects from './LessonSubSubjects';
 
 const { Panel } = Collapse;
 const { Title } = Typography;
-const LessonSubjects = ({ unit, selectedInsertKey, setSelectedInsertKey }) => {
+const LessonSubjects = ({ unit, selectedInsertKey, setSelectedInsertKey, parentIsActive }) => {
     const dispatch = useDispatch();
     const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
     const [openedPanels, setOpenedPanels] = useState([]);
@@ -21,16 +21,17 @@ const LessonSubjects = ({ unit, selectedInsertKey, setSelectedInsertKey }) => {
     );
 
     const onChange = (key) => {
+        console.log(key);
         setOpenedPanels(key);
         if (!key.toString()) return false;
         if (openedPanels.includes(key.at(-1)?.toString())) return false;
-        dispatch(getLessonSubSubjects(getListFilterParams('lessonSubjectId', Number(key.toString()))));
+        dispatch(getLessonAcquisitions(getListFilterParams('lessonSubjectId', Number(key.at(-1).toString()))));
     };
     const addSubject = async (value) => {
         const entity = {
             entity: {
-                name: value,
-                isActive: true,
+                name: value.name,
+                isActive: parentIsActive,
                 lessonUnitId: unit.id,
             },
         };
@@ -54,14 +55,16 @@ const LessonSubjects = ({ unit, selectedInsertKey, setSelectedInsertKey }) => {
                                 setSelectedInsertKey={setSelectedInsertKey}
                                 lessonSubject={lessonSubject}
                                 open={openedPanels.includes(lessonSubject.id.toString())}
+                                parentIsActive={parentIsActive}
                             />
                         }
                         key={lessonSubject.id}
                     >
-                        <LessonSubSubjects
+                        <LessonAcquisitions
                             lessonSubject={lessonSubject}
                             setSelectedInsertKey={setSelectedInsertKey}
                             selectedInsertKey={selectedInsertKey}
+                            parentIsActive={parentIsActive ? lessonSubject.isActive : false}
                         />
                     </Panel>
                 ))}

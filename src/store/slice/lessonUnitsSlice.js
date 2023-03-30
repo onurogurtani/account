@@ -18,15 +18,12 @@ export const lessonUnitsSlice = createSlice({
         },
         setStatusUnits: (state, action) => {
             state.lessonUnits = state.lessonUnits.map((item) =>
-                action.payload.data.includes(item.id) ? { ...item, isActive: action.payload.status } : item,
+                item.id === action.payload.data ? { ...item, isActive: action.payload.status } : item,
             );
         },
     },
     extraReducers: (builder) => {
         builder.addCase(getUnits.fulfilled, (state, action) => {
-            // if (action?.payload?.data?.items.length) {
-            //     state.lessonUnits = state.lessonUnits.concat(action?.payload?.data?.items);
-            // }
             const { value } = action?.meta?.arg?.[0];
             if (action?.payload?.data?.items.length) {
                 state.lessonUnits = state.lessonUnits
@@ -48,12 +45,7 @@ export const lessonUnitsSlice = createSlice({
                 state.lessonUnits = [action?.payload?.data, ...state.lessonUnits.filter((item) => item.id !== id)];
             }
         });
-        builder.addCase(deleteUnits.fulfilled, (state, action) => {
-            const { arg } = action.meta;
-            if (arg) {
-                state.lessonUnits = state.lessonUnits.filter((item) => item.id !== arg);
-            }
-        });
+
         builder.addCase(getUnitsList.fulfilled, (state, action) => {
             state.lessonUnits = action?.payload?.data?.items;
         });
@@ -67,10 +59,6 @@ export const { resetLessonUnits, resetLessonUnitsFilter, setStatusUnits } = less
 
 export const getUnits = createAsyncThunk('getUnits', async (body, { dispatch, getState, rejectWithValue }) => {
     try {
-        //statede varsa request iptal
-        // const findUnits = getState()?.lessonUnits.lessonUnits.find((i) => i.lessonId === body[0]?.value);
-        // if (findUnits) return rejectWithValue();
-
         return await lessonUnitsServices.getUnits(body);
     } catch (error) {
         return rejectWithValue(error?.data);
@@ -112,11 +100,13 @@ export const editUnits = createAsyncThunk('editUnits', async (data, { dispatch, 
     }
 });
 
-export const deleteUnits = createAsyncThunk('deleteUnits', async (data, { dispatch, rejectWithValue }) => {
-    try {
-        const response = await lessonUnitsServices.deleteUnits(data);
-        return response;
-    } catch (error) {
-        return rejectWithValue(error?.data);
-    }
-});
+export const setUnitStatus = createAsyncThunk(
+    'setUnitStatus',
+    async (body, { dispatch, getState, rejectWithValue }) => {
+        try {
+            return await lessonUnitsServices.setUnitStatus(body);
+        } catch (error) {
+            return rejectWithValue(error?.data);
+        }
+    },
+);

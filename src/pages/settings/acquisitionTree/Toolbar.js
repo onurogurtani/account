@@ -1,24 +1,39 @@
 import { Space, Tooltip } from 'antd';
 import { EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { memo } from 'react';
-import { confirmDialog, Text } from '../../../components';
+import { confirmDialog, errorDialog, Text } from '../../../components';
 
 const Toolbar = ({
     addText,
     editText,
-    deleteText,
     isActive,
     statusAction,
+    parentIsActive,
     statusText,
     open,
     setIsEdit,
-    deleteAction,
     hidePlusButton,
     setSelectedInsertKey,
     selectedKey,
 }) => {
     const statusOnClick = (event) => {
         event.stopPropagation();
+        if (!parentIsActive || !isActive) {
+            confirmDialog({
+                title: <Text t="attention" />,
+                message:
+                    'Aktif ettiğinizde pasif durumda olan tüm üst kırılımlar da aktif edilecektir.Aktife alma işlemini onaylıyor musunuz?',
+                okText: <Text t="Evet" />,
+                cancelText: 'Hayır',
+                onOk: async () => {
+                    statusAction(parentIsActive ? !isActive : true).catch((e) =>
+                        errorDialog({ title: <Text t="error" />, message: e?.message }),
+                    );
+                },
+            });
+
+            return false;
+        }
         if (isActive) {
             confirmDialog({
                 title: <Text t="attention" />,
@@ -26,17 +41,17 @@ const Toolbar = ({
                 okText: <Text t="Evet" />,
                 cancelText: 'Hayır',
                 onOk: async () => {
-                    statusAction();
+                    statusAction(parentIsActive ? !isActive : true).catch((e) =>
+                        errorDialog({ title: <Text t="error" />, message: e?.message }),
+                    );
                 },
             });
-        } else {
-            statusAction();
         }
     };
     return (
         <Space align="center" style={{ marginLeft: 'auto' }}>
             <span onClick={statusOnClick} style={{ fontSize: '14px' }}>
-                {isActive ? 'Pasif Et' : 'Aktif Et'}
+                {parentIsActive ? (isActive ? 'Pasif Et' : 'Aktif Et') : 'Aktif Et'}
             </span>
 
             <Tooltip title={editText}>

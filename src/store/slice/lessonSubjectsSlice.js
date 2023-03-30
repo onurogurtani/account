@@ -18,7 +18,7 @@ export const lessonSubjectsSlice = createSlice({
         },
         setStatusLessonSubjects: (state, action) => {
             state.lessonSubjects = state.lessonSubjects.map((item) =>
-                action.payload.data.includes(item.id) ? { ...item, isActive: action.payload.status } : item,
+                item.id === action.payload.data ? { ...item, isActive: action.payload.status } : item,
             );
         },
     },
@@ -55,12 +55,6 @@ export const lessonSubjectsSlice = createSlice({
                 ];
             }
         });
-        builder.addCase(deleteLessonSubjects.fulfilled, (state, action) => {
-            const { arg } = action.meta;
-            if (arg) {
-                state.lessonSubjects = state.lessonSubjects.filter((item) => item.id !== arg);
-            }
-        });
     },
 });
 
@@ -70,12 +64,6 @@ export const getLessonSubjects = createAsyncThunk(
     'getLessonSubjects',
     async (body, { dispatch, getState, rejectWithValue }) => {
         try {
-            //statede varsa request iptal
-            // const findLessonSubjects = getState()?.lessonSubjects.lessonSubjects.find(
-            //     (i) => i.lessonUnitId === body[0]?.value,
-            // );
-            // if (findLessonSubjects) return rejectWithValue();
-
             return await lessonSubjectsServices.getLessonSubjects(body);
         } catch (error) {
             return rejectWithValue(error?.data);
@@ -112,11 +100,11 @@ export const addLessonSubjects = createAsyncThunk('addLessonSubjects', async (da
     }
 });
 
-export const deleteLessonSubjects = createAsyncThunk(
-    'deleteLessonSubjects',
+export const editLessonSubjects = createAsyncThunk(
+    'editLessonSubjects',
     async (data, { dispatch, rejectWithValue }) => {
         try {
-            const response = await lessonSubjectsServices.deleteLessonSubjects(data);
+            const response = await lessonSubjectsServices.editLessonSubjects(data);
             return response;
         } catch (error) {
             return rejectWithValue(error?.data);
@@ -124,12 +112,11 @@ export const deleteLessonSubjects = createAsyncThunk(
     },
 );
 
-export const editLessonSubjects = createAsyncThunk(
-    'editLessonSubjects',
-    async (data, { dispatch, rejectWithValue }) => {
+export const setLessonSubjectStatus = createAsyncThunk(
+    'setLessonSubjectStatus',
+    async (body, { dispatch, getState, rejectWithValue }) => {
         try {
-            const response = await lessonSubjectsServices.editLessonSubjects(data);
-            return response;
+            return await lessonSubjectsServices.setLessonSubjectStatus(body);
         } catch (error) {
             return rejectWithValue(error?.data);
         }

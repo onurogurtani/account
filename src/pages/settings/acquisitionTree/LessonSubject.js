@@ -1,58 +1,44 @@
 import React, { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { confirmDialog, errorDialog, Text } from '../../../components';
+import { setStatusLessons } from '../../../store/slice/lessonsSlice';
 import {
-    deleteLessonSubjects,
     editLessonSubjects,
+    setLessonSubjectStatus,
     setStatusLessonSubjects,
 } from '../../../store/slice/lessonSubjectsSlice';
-import { setStatusLessonSubSubjects } from '../../../store/slice/lessonSubSubjectsSlice';
+import { setStatusUnits } from '../../../store/slice/lessonUnitsSlice';
 import AcquisitionTreeCreateOrEdit from './AcquisitionTreeCreateOrEdit';
 import Toolbar from './Toolbar';
 
-const LessonSubject = ({ lessonSubject, open, setSelectedInsertKey }) => {
+const LessonSubject = ({ lessonSubject, open, setSelectedInsertKey, parentIsActive }) => {
     const dispatch = useDispatch();
     const [isEdit, setIsEdit] = useState(false);
-    const { lessonSubSubjects } = useSelector((state) => state?.lessonSubSubjects);
+    const { lessonUnits } = useSelector((state) => state?.lessonUnits);
 
     const updatelessonSubject = async (value) => {
         const entity = {
             entity: {
                 id: lessonSubject.id,
-                name: value,
+                name: value.name,
                 lessonUnitId: lessonSubject.lessonUnitId,
-                isActive: lessonSubject.isActive,
+                isActive: parentIsActive ? lessonSubject.isActive : false,
             },
         };
         await dispatch(editLessonSubjects(entity)).unwrap();
     };
 
-    const deleteLessonSubject = async () => {
-        confirmDialog({
-            title: <Text t="attention" />,
-            message: 'Tüm ilişkili bağlantılar silinecektir. Silmek istediğinizden emin misiniz?',
-            okText: <Text t="Evet" />,
-            cancelText: 'Hayır',
-            onOk: async () => {
-                try {
-                    await dispatch(deleteLessonSubjects(lessonSubject.id)).unwrap();
-                } catch (err) {
-                    errorDialog({ title: <Text t="error" />, message: err.message });
-                }
-            },
-        });
-    };
+    const statusAction = async (status) => {
+        await dispatch(setLessonSubjectStatus({ id: lessonSubject.id, isActive: status })).unwrap();
+        dispatch(setStatusLessonSubjects({ data: lessonSubject.id, status }));
 
-    const statusAction = () => {
-        dispatch(setStatusLessonSubjects({ data: [lessonSubject.id], status: !lessonSubject?.isActive }));
-        const lessonSubSubjectIds = lessonSubSubjects
-            .filter((item) => item.lessonSubjectId === lessonSubject.id)
-            .map((i) => i.id);
-        dispatch(setStatusLessonSubSubjects({ data: lessonSubSubjectIds, status: !lessonSubject.isActive }));
+        if (!status) return false;
+        dispatch(setStatusUnits({ data: lessonSubject.lessonUnitId, status }));
+        const lessonId = lessonUnits.find((item) => item.id === lessonSubject.lessonUnitId).lessonId;
+        dispatch(setStatusLessons({ data: lessonId, status }));
     };
 
     const toolbarProps = {
-        addText: 'Alt Başlık Ekle',
+        addText: 'Kazanım Ekle',
         editText: 'Konuyu Düzenle',
         statusText:
             lessonSubject.name +
@@ -64,13 +50,14 @@ const LessonSubject = ({ lessonSubject, open, setSelectedInsertKey }) => {
         setIsEdit,
         setSelectedInsertKey,
         statusAction,
+        parentIsActive,
         selectedKey: { id: lessonSubject.id, type: 'lessonSubject' },
     };
     return (
         <>
-            <div style={{ opacity: lessonSubject.isActive ? 1 : 0.4 }}>
+            <div style={{ opacity: parentIsActive ? (lessonSubject.isActive ? 1 : 0.4) : 0.4 }}>
                 <AcquisitionTreeCreateOrEdit
-                    initialValue={lessonSubject.name}
+                    initialValue={lessonSubject}
                     isEdit={isEdit}
                     setIsEdit={setIsEdit}
                     onEnter={updatelessonSubject}
