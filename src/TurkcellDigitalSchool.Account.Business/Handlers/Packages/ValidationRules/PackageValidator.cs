@@ -44,9 +44,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.ValidationRul
 
 
             When(x => x.Package.HasCoachService, () =>
-                {
-                    //RuleFor(p => p.Package.CoachServicePackages).NotEmpty().WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
-                });
+            {
+                RuleFor(x => x.Package.PackageFieldTypes).NotEmpty().WithMessage(string.Format(Messages.FieldIsNotNullOrEmpty, "Motivasyon Seçim "));
+            });
 
 
             When(x => !x.Package.HasMotivationEvent, () =>
