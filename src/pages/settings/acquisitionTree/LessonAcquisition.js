@@ -24,7 +24,7 @@ const LessonAcquisition = ({ lessonAcquisition, open, setSelectedInsertKey, pare
                 name: value.name,
                 code: value.code,
                 lessonSubjectId: lessonAcquisition.lessonSubjectId,
-                isActive: lessonAcquisition.isActive,
+                isActive: parentIsActive ? lessonAcquisition.isActive : false,
             },
         };
         await dispatch(editLessonAcquisitions(entity)).unwrap();

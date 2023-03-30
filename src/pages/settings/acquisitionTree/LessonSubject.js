@@ -21,7 +21,7 @@ const LessonSubject = ({ lessonSubject, open, setSelectedInsertKey, parentIsActi
                 id: lessonSubject.id,
                 name: value.name,
                 lessonUnitId: lessonSubject.lessonUnitId,
-                isActive: lessonSubject.isActive,
+                isActive: parentIsActive ? lessonSubject.isActive : false,
             },
         };
         await dispatch(editLessonSubjects(entity)).unwrap();

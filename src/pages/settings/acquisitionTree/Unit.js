@@ -15,7 +15,7 @@ const Unit = ({ unit, open, setSelectedInsertKey, parentIsActive }) => {
                 id: unit.id,
                 name: value.name,
                 lessonId: unit.lessonId,
-                isActive: unit.isActive,
+                isActive: parentIsActive ? unit.isActive : false,
             },
         };
         await dispatch(editUnits(entity)).unwrap();

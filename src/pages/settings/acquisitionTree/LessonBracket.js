@@ -27,7 +27,7 @@ const LessonBracket = ({ lessonBracket, setSelectedInsertKey, parentIsActive }) 
                 name: value.name,
                 code: value.code,
                 lessonAcquisitionId: lessonBracket.lessonAcquisitionId,
-                isActive: lessonBracket.isActive,
+                isActive: parentIsActive ? lessonBracket.isActive : false,
             },
         };
         await dispatch(editLessonBrackets(entity)).unwrap();
