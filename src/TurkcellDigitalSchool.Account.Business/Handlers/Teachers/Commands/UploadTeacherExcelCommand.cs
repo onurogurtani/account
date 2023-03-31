@@ -59,8 +59,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
                                 return new SuccessDataResult<ExcelResponse>(Messages.ExcelRecordIsNotFound);
                             }
 
+                            var currentColumnCount = worksheet.Row(1).Cells(q => !string.IsNullOrEmpty(q.Value?.ToString().Trim())).Count();
                             var targetColumnsCount = 5;
-                            if (worksheet.Columns().Count() != targetColumnsCount) { return new ErrorDataResult<ExcelResponse>(string.Format(Account.Business.Constants.Messages.ExcelNumberOfColumnsNotValid, targetColumnsCount)); }
+                            if (currentColumnCount != targetColumnsCount) { return new ErrorDataResult<ExcelResponse>(string.Format(Constants.Messages.ExcelNumberOfColumnsNotValid, targetColumnsCount)); }
 
                             worksheet.Row(1).Cell(6).Value = "Durum";
                             worksheet.Row(1).Cell(7).Value = "Mesaj";
