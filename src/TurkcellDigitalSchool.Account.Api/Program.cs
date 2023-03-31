@@ -36,7 +36,7 @@ namespace TurkcellDigitalSchool.Account.Api
                         .UseStartup<Startup>()
                         .ConfigureKestrel((context, options) =>
                         {
-                            options.Listen(IPAddress.Any, 6018, listenOptions =>
+                            options.Listen(IPAddress.Any, 6021, listenOptions =>
                             {
                                 // Enables HTTP/3
                                 //listenOptions.Protocols = HttpProtocols.Http3;

@@ -16,7 +16,7 @@
       "sslPort": 0
     },
     "iisExpress": {
-      "applicationUrl": "http://localhost:6018",
+      "applicationUrl": "http://localhost:6021",
       "sslPort": 0
     }
   },
@@ -28,7 +28,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "STB"
       },
-      "applicationUrl": "http://localhost:6018",
+      "applicationUrl": "http://localhost:6021",
       "dotnetRunMessages": true
     },
     "TurkcellDigitalSchool.Api.LOCAL": {
@@ -38,7 +38,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "LOCAL"
       },
-      "applicationUrl": "http://localhost:6018",
+      "applicationUrl": "http://localhost:6021",
       "dotnetRunMessages": true
     },
     "TurkcellDigitalSchool.Api.PRP": {
@@ -48,7 +48,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "PRP"
       },
-      "applicationUrl": "http://localhost:6018",
+      "applicationUrl": "http://localhost:6021",
       "dotnetRunMessages": true
     },
     "TurkcellDigitalSchool.Api.DEV": {
@@ -58,7 +58,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "DEV"
       },
-      "applicationUrl": "http://localhost:6018",
+      "applicationUrl": "http://localhost:6021",
       "dotnetRunMessages": true
     },
     "TurkcellDigitalSchool.Api.DEVTURKCELL": {
@@ -68,7 +68,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "DEVTURKCELL"
       },
-      "applicationUrl": "http://localhost:6018",
+      "applicationUrl": "http://localhost:6021",
       "dotnetRunMessages": true
     },
     "TurkcellDigitalSchool.Api.PROD": {
@@ -78,7 +78,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "PROD"
       },
-      "applicationUrl": "http://localhost:6018",
+      "applicationUrl": "http://localhost:6021",
       "dotnetRunMessages": true
     },
     "IIS_DEV": {
@@ -88,7 +88,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:60018;http://localhost:6018"
+      "applicationUrl": "https://localhost:60021;http://localhost:6021"
     }
   }
 }
