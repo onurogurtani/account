@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Dtos.RoleDtos;
-using TurkcellDigitalSchool.Identity.DataAccess.Abstract;
+using TurkcellDigitalSchool.Entities.Dtos.RoleDtos; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
 {

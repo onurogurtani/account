@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Concrete;
 using TurkcellDigitalSchool.Entities.Concrete.Core;
-using TurkcellDigitalSchool.Entities.Dtos.RoleDtos;
-using TurkcellDigitalSchool.Identity.DataAccess.Abstract;
+using TurkcellDigitalSchool.Entities.Dtos.RoleDtos; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
 {

@@ -5,12 +5,12 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Handlers.Roles.ValidationRules;
+using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Concrete.Core;
-using TurkcellDigitalSchool.Entities.Dtos.RoleDtos;
-using TurkcellDigitalSchool.Identity.DataAccess.Abstract;
+using TurkcellDigitalSchool.Entities.Dtos.RoleDtos; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
 {

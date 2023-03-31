@@ -10,8 +10,7 @@ using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Dtos.OrganisationChangeRequestDtos;
-using IUserRepository = TurkcellDigitalSchool.Identity.DataAccess.Abstract.IUserRepository;
+using TurkcellDigitalSchool.Entities.Dtos.OrganisationChangeRequestDtos; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Queries
 {

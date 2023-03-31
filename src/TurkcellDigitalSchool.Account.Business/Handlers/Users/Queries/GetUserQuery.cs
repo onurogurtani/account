@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.Handlers;
 using TurkcellDigitalSchool.Core.Utilities.Requests;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
-using TurkcellDigitalSchool.Identity.DataAccess.Abstract;
+using TurkcellDigitalSchool.Entities.Concrete.Core; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 {

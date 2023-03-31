@@ -15,11 +15,7 @@ using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
-using IMobileLoginRepository = TurkcellDigitalSchool.Identity.DataAccess.Abstract.IMobileLoginRepository;
-using ISmsOtpRepository = TurkcellDigitalSchool.Identity.DataAccess.Abstract.ISmsOtpRepository;
-using IUserRepository = TurkcellDigitalSchool.Identity.DataAccess.Abstract.IUserRepository;
-using IUserSessionRepository = TurkcellDigitalSchool.Identity.DataAccess.Abstract.IUserSessionRepository;
+using TurkcellDigitalSchool.Entities.Concrete.Core; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {

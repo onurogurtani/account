@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using TurkcellDigitalSchool.Account.Business.Handlers.Admins.ValidationRules;
+using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Concrete.Core;
-using TurkcellDigitalSchool.Entities.Dtos.Admin;
-using TurkcellDigitalSchool.Identity.DataAccess.Abstract;
+using TurkcellDigitalSchool.Entities.Dtos.Admin; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
 {

@@ -11,9 +11,9 @@ using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
 using TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries;
+using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
-using TurkcellDigitalSchool.Identity.DataAccess.Abstract;
+using TurkcellDigitalSchool.Entities.Concrete.Core; 
 using static TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries.GetTeacherQuery;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Queries
