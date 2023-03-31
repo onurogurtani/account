@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
@@ -21,7 +22,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.Entities.Concrete;
 using TurkcellDigitalSchool.Entities.Dtos.OrganisationChangeRequestDtos;
 using TurkcellDigitalSchool.Entities.Enums;
-using TurkcellDigitalSchool.File.DataAccess.Abstract;
+using TurkcellDigitalSchool.Shared.DataAccess.Abstract;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Commands
 {
@@ -35,6 +36,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
         {
             private readonly IOrganisationInfoChangeRequestRepository _organisationInfoChangeRequestRepository;
             private readonly IOrganisationChangeReqContentRepository _organisationChangeReqContentRepository;
+            private readonly IOrganisationRepository _organisationRepository;
+
             private readonly IFileRepository _fileRepository;
             private readonly IFileService _fileService;
             private readonly IPathHelper _pathHelper;
@@ -45,7 +48,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
             private readonly string _filePath = "OrganisationLogo";
 
             public UpdateOrganisationChangeRequestCommandHandler(IOrganisationInfoChangeRequestRepository organisationInfoChangeRequestRepository, IOrganisationChangeReqContentRepository organisationChangeReqContentRepository,
-                ITokenHelper tokenHelper, IMapper mapper, IFileRepository fileRepository, IFileService fileService, IPathHelper pathHelper, IMediator mediator)
+                IOrganisationRepository organisationRepository, ITokenHelper tokenHelper, IMapper mapper, IFileRepository fileRepository, IFileService fileService, IPathHelper pathHelper, IMediator mediator)
             {
                 _organisationInfoChangeRequestRepository = organisationInfoChangeRequestRepository;
                 _organisationChangeReqContentRepository = organisationChangeReqContentRepository;
@@ -72,6 +75,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                     return new ErrorResult(Common.Constants.Messages.ErrorInUpdatingProcess);
 
                 var organisationId = _tokenHelper.GetCurrentOrganisationId();
+
+                var name = request.OrganisationInfoChangeRequest.OrganisationChangeReqContents.FirstOrDefault(w => w.PropertyEnum == Entities.Enums.OrganisationChangePropertyEnum.OrganisationName).PropertyValue;
+
+                var organisation = await _organisationRepository.Query().AnyAsync(x => x.Name.Trim().ToLower() == name.Trim().ToLower() && x.Id != organisationId);
+                if (organisation)
+                    return new ErrorResult(Messages.SameNameAlreadyExist);
 
                 var changeContent = await _organisationChangeReqContentRepository.GetListAsync(x => x.RequestId == request.OrganisationInfoChangeRequest.Id);
                 _organisationChangeReqContentRepository.DeleteRange(changeContent);

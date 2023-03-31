@@ -39,25 +39,25 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
-        ///<summary>
-        ///List TEntitys
-        ///</summary>
-        ///<remarks>TEntitys</remarks>
-        ///<return>List TEntitys</return>
-        ///<response code="200"></response>
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<OrganisationInfoChangeRequest>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPost("getList")]
-        public async Task<IActionResult> GetList([FromQuery] PaginationQuery query, [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] FilterQuery[] filterQuery = null)
-        {
-            var result = await Mediator.Send(new QueryByFilterRequestBase<OrganisationInfoChangeRequest> { PaginationQuery = query, FilterQuery = filterQuery });
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
+        /////<summary>
+        /////List TEntitys
+        /////</summary>
+        /////<remarks>TEntitys</remarks>
+        /////<return>List TEntitys</return>
+        /////<response code="200"></response>
+        //[Produces("application/json", "text/plain")]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<OrganisationInfoChangeRequest>))]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        //[HttpPost("getList")]
+        //public async Task<IActionResult> GetList([FromQuery] PaginationQuery query, [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] FilterQuery[] filterQuery = null)
+        //{
+        //    var result = await Mediator.Send(new QueryByFilterRequestBase<OrganisationInfoChangeRequest> { PaginationQuery = query, FilterQuery = filterQuery });
+        //    if (result.Success)
+        //    {
+        //        return Ok(result);
+        //    }
+        //    return BadRequest(result);
+        //}
 
 
 

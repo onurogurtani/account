@@ -21,17 +21,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
         public class GetOrganisationChangeRequestByIdQueryHandler : IRequestHandler<GetOrganisationChangeRequestByIdQuery, IDataResult<GetOrganisationInfoChangeRequestDto>>
         {
             private readonly IOrganisationInfoChangeRequestRepository _organisationInfoChangeRequestRepository;
-            private readonly IUserRepository _userRepository;
-            private readonly ICityRepository _cityRepository;
-            private readonly ICountyRepository _countyRepository;
             private readonly IMapper _mapper;
 
-            public GetOrganisationChangeRequestByIdQueryHandler(IOrganisationInfoChangeRequestRepository organisationInfoChangeRequestRepository, IUserRepository userRepository, ICityRepository cityRepository, ICountyRepository countyRepository, IMapper mapper)
+            public GetOrganisationChangeRequestByIdQueryHandler(IOrganisationInfoChangeRequestRepository organisationInfoChangeRequestRepository, IMapper mapper)
             {
                 _organisationInfoChangeRequestRepository = organisationInfoChangeRequestRepository;
-                _userRepository = userRepository;
-                _cityRepository = cityRepository;
-                _countyRepository = countyRepository;
                 _mapper = mapper;
             }
 

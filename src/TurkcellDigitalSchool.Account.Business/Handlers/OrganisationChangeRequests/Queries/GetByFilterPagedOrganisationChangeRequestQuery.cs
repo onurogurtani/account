@@ -26,12 +26,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
         public class GetByFilterPagedOrganisationChangeRequestQueryHandler : IRequestHandler<GetByFilterPagedOrganisationChangeRequestQuery, IDataResult<PagedList<OrganisationInfoChangeRequest>>>
         {
             private readonly IOrganisationInfoChangeRequestRepository _organisationInfoChangeRequestRepository;
-            private readonly IMapper _mapper;
 
-            public GetByFilterPagedOrganisationChangeRequestQueryHandler(IOrganisationInfoChangeRequestRepository organisationInfoChangeRequestRepository, IMapper mapper)
+            public GetByFilterPagedOrganisationChangeRequestQueryHandler(IOrganisationInfoChangeRequestRepository organisationInfoChangeRequestRepository)
             {
                 _organisationInfoChangeRequestRepository= organisationInfoChangeRequestRepository;
-                _mapper = mapper;
             }
 
             [LogAspect(typeof(FileLogger))]
