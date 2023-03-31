@@ -26,7 +26,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>PagedList GetOrganisationInfoChangeRequestDto</return>               
         ///<response code="200"></response>                      
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PagedList<OrganisationInfoChangeRequest>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PagedList<GetOrganisationInfoChangeRequestDto>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("GetByFilterPagedOrganisationChangeRequests")]
         public async Task<IActionResult> GetByFilterPagedOrganisationChangeRequests(GetByFilterPagedOrganisationChangeRequestQuery query)

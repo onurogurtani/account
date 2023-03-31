@@ -16,6 +16,8 @@ using TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using static TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Queries.GetOrganisationChangeRequestByIdQuery;
 using System.Linq.Expressions;
+using TurkcellDigitalSchool.Entities.Dtos.OrganisationDtos;
+using TurkcellDigitalSchool.Entities.Dtos.OrganisationChangeRequestDtos;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChangeRequests.Queries
 {
@@ -24,7 +26,8 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
     {
         private GetOrganisationChangeRequestByIdQuery _getOrganisationChangeRequestByIdQuery;
         private GetOrganisationChangeRequestByIdQueryHandler _getOrganisationChangeRequestByIdQueryHandler;
-
+        private Mock<ICityRepository> _cityRepository;
+        private Mock<ICountyRepository> _countyRepository;
 
         private Mock<IOrganisationInfoChangeRequestRepository> _organisationInfoChangeRequestRepository;
 
@@ -52,11 +55,12 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
             _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
 
             _organisationInfoChangeRequestRepository = new Mock<IOrganisationInfoChangeRequestRepository>();
-
+            _countyRepository = new Mock<ICountyRepository>();
+            _cityRepository = new Mock<ICityRepository>();
             _mapper = new Mock<IMapper>();
 
             _getOrganisationChangeRequestByIdQuery = new GetOrganisationChangeRequestByIdQuery();
-            _getOrganisationChangeRequestByIdQueryHandler = new GetOrganisationChangeRequestByIdQueryHandler(_organisationInfoChangeRequestRepository.Object, _mapper.Object);
+            _getOrganisationChangeRequestByIdQueryHandler = new GetOrganisationChangeRequestByIdQueryHandler(_organisationInfoChangeRequestRepository.Object, _cityRepository.Object,_countyRepository.Object, _mapper.Object);
         }
 
         [Test]
@@ -95,8 +99,39 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     }
                 }
             };
+            var organisations = new List<Organisation>{
+                new Organisation{
+                    Id = 1,
+                }
+            };
+
+            var cities = new List<City>
+            {
+                new City
+                {
+                    Id = 1,
+                    Name = "Test"
+                }
+            };
+            var countries = new List<County>
+            {
+                new County
+                {
+                    Id = 1,
+                    Name = "Test"
+                }
+            };
+
+            _cityRepository.Setup(x => x.Query()).Returns(cities.AsQueryable().BuildMock());
+            _cityRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<City, bool>>>())).ReturnsAsync(cities.FirstOrDefault());
+
+            _countyRepository.Setup(x => x.Query()).Returns(countries.AsQueryable().BuildMock());
+            _countyRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<County, bool>>>())).ReturnsAsync(countries.FirstOrDefault());
+
             _organisationInfoChangeRequestRepository.Setup(x => x.Query()).Returns(pageTypes.AsQueryable().BuildMock());
             _organisationInfoChangeRequestRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<OrganisationInfoChangeRequest, bool>>>())).ReturnsAsync(pageTypes.FirstOrDefault());
+
+            _mapper.Setup(s => s.Map<GetOrganisationInfoChangeRequestDto>(pageTypes[0])).Returns(new GetOrganisationInfoChangeRequestDto());
 
             var result = await _getOrganisationChangeRequestByIdQueryHandler.Handle(_getOrganisationChangeRequestByIdQuery, CancellationToken.None);
 

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -12,6 +13,7 @@ using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Concrete;
 using TurkcellDigitalSchool.Entities.Dtos.OrganisationChangeRequestDtos;
+using TurkcellDigitalSchool.Entities.Dtos.RoleDtos;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Queries
 {
@@ -19,22 +21,24 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
     ///Get Filtered Paged Role with relation data 
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be ""RequestDateASC" ,"RequestDateDESC",  "RequestStateASC","RequestStateDESC", "ResponseStateASC" , "ResponseStateDESC", "CustomerManagerASC", "CustomerManagerDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC","IdASC","IdDESC" </remarks>
-    public class GetByFilterPagedOrganisationChangeRequestQuery : IRequest<IDataResult<PagedList<OrganisationInfoChangeRequest>>>
+    public class GetByFilterPagedOrganisationChangeRequestQuery : IRequest<IDataResult<PagedList<GetOrganisationInfoChangeRequestDto>>>
     {
         public OrganisationChangeRequestDetailSearch OrganisationChangeRequestDetailSearch { get; set; } = new OrganisationChangeRequestDetailSearch();
 
-        public class GetByFilterPagedOrganisationChangeRequestQueryHandler : IRequestHandler<GetByFilterPagedOrganisationChangeRequestQuery, IDataResult<PagedList<OrganisationInfoChangeRequest>>>
+        public class GetByFilterPagedOrganisationChangeRequestQueryHandler : IRequestHandler<GetByFilterPagedOrganisationChangeRequestQuery, IDataResult<PagedList<GetOrganisationInfoChangeRequestDto>>>
         {
             private readonly IOrganisationInfoChangeRequestRepository _organisationInfoChangeRequestRepository;
+            private readonly IMapper _mapper;
 
-            public GetByFilterPagedOrganisationChangeRequestQueryHandler(IOrganisationInfoChangeRequestRepository organisationInfoChangeRequestRepository)
+            public GetByFilterPagedOrganisationChangeRequestQueryHandler(IOrganisationInfoChangeRequestRepository organisationInfoChangeRequestRepository, IMapper mapper)
             {
-                _organisationInfoChangeRequestRepository= organisationInfoChangeRequestRepository;
+                _organisationInfoChangeRequestRepository = organisationInfoChangeRequestRepository;
+                _mapper = mapper;
             }
 
             [LogAspect(typeof(FileLogger))]
             [SecuredOperation(Priority = 1)]
-            public virtual async Task<IDataResult<PagedList<OrganisationInfoChangeRequest>>> Handle(GetByFilterPagedOrganisationChangeRequestQuery request, CancellationToken cancellationToken)
+            public virtual async Task<IDataResult<PagedList<GetOrganisationInfoChangeRequestDto>>> Handle(GetByFilterPagedOrganisationChangeRequestQuery request, CancellationToken cancellationToken)
             {
                 var query = _organisationInfoChangeRequestRepository.Query()
                     .Include(x => x.OrganisationChangeReqContents)
@@ -76,9 +80,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                     .Take(request.OrganisationChangeRequestDetailSearch.PageSize)
                     .ToListAsync();
 
-                var pagedList = new PagedList<OrganisationInfoChangeRequest>(datas, query.Count(), request.OrganisationChangeRequestDetailSearch.PageNumber, request.OrganisationChangeRequestDetailSearch.PageSize);
+                var items = _mapper.Map<List<GetOrganisationInfoChangeRequestDto>>(datas);
 
-                return new SuccessDataResult<PagedList<OrganisationInfoChangeRequest>>(pagedList);
+                var pagedList = new PagedList<GetOrganisationInfoChangeRequestDto>(items, query.Count(), request.OrganisationChangeRequestDetailSearch.PageNumber, request.OrganisationChangeRequestDetailSearch.PageSize);
+
+                return new SuccessDataResult<PagedList<GetOrganisationInfoChangeRequestDto>>(pagedList);
             }
         }
     }
