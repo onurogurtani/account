@@ -569,9 +569,9 @@ const App = () => {
                                                     authority="dashboard"
                                                 />
                                                 <PrivateRoute
-                                                  path={`${match?.path}/edit`}
-                                                  Component={WorkPlanManagement?.EditWorkPlan}
-                                                  authority="dashboard"
+                                                    path={`${match?.path}/edit`}
+                                                    Component={WorkPlanManagement?.EditWorkPlan}
+                                                    authority="dashboard"
                                                 />
                                                 <Route
                                                     component={() => (
@@ -646,7 +646,12 @@ const App = () => {
                                                     Component={Exam.TrialExam}
                                                     authority="dashboard"
                                                 />
-
+                                                <PrivateRoute
+                                                    path={`${match?.path}/list`}
+                                                    exact
+                                                    Component={Exam.TrialExamList}
+                                                    authority="dashboard"
+                                                />
                                                 <Route
                                                     component={() => (
                                                         <Redirect

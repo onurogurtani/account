@@ -1,0 +1,18 @@
+.test-exam-list-main {
+    padding: 27px;
+    .form-button {
+        display: flex;
+        width: 100%;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    .filter {
+        margin-bottom: 20px;
+        .filter-item {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+    }
+}
