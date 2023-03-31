@@ -19,7 +19,6 @@ using static TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeR
 using TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using System.Linq.Expressions;
-using TurkcellDigitalSchool.Identity.DataAccess.Abstract;
 using TurkcellDigitalSchool.Entities.Dtos;
 using TurkcellDigitalSchool.Entities.Enums;
 
@@ -61,7 +60,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
             _mapper = new Mock<IMapper>();
 
             _getByFilterPagedOrganisationChangeRequestQuery = new GetByFilterPagedOrganisationChangeRequestQuery();
-            _getByFilterPagedOrganisationChangeRequestQueryHandler = new GetByFilterPagedOrganisationChangeRequestQueryHandler(_organisationInfoChangeRequestRepository.Object);
+            _getByFilterPagedOrganisationChangeRequestQueryHandler = new GetByFilterPagedOrganisationChangeRequestQueryHandler(_organisationInfoChangeRequestRepository.Object, _mapper.Object);
         }
 
         [Test]

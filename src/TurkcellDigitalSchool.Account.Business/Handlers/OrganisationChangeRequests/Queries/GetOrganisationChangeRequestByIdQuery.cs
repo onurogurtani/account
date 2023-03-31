@@ -21,11 +21,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
         public class GetOrganisationChangeRequestByIdQueryHandler : IRequestHandler<GetOrganisationChangeRequestByIdQuery, IDataResult<GetOrganisationInfoChangeRequestDto>>
         {
             private readonly IOrganisationInfoChangeRequestRepository _organisationInfoChangeRequestRepository;
+            private readonly ICityRepository _cityRepository;
+            private readonly ICountyRepository _countyRepository;
             private readonly IMapper _mapper;
 
-            public GetOrganisationChangeRequestByIdQueryHandler(IOrganisationInfoChangeRequestRepository organisationInfoChangeRequestRepository, IMapper mapper)
+            public GetOrganisationChangeRequestByIdQueryHandler(IOrganisationInfoChangeRequestRepository organisationInfoChangeRequestRepository, ICityRepository cityRepository, ICountyRepository countyRepository, IMapper mapper)
             {
                 _organisationInfoChangeRequestRepository = organisationInfoChangeRequestRepository;
+                _cityRepository = cityRepository;
+                _countyRepository = countyRepository;
                 _mapper = mapper;
             }
 
@@ -44,6 +48,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                     return new ErrorDataResult<GetOrganisationInfoChangeRequestDto>(null, Messages.RecordIsNotFound);
 
                 var organisationInfoDto = _mapper.Map<GetOrganisationInfoChangeRequestDto>(data);
+
+                var getCity = await _cityRepository.GetAsync(x => x.Id == organisationInfoDto.Organisation.CityId);
+                organisationInfoDto.CityName = getCity.Name;
+                var getCounty = await _countyRepository.GetAsync(x => x.Id == organisationInfoDto.Organisation.CountyId);
+                organisationInfoDto.CountyName = getCounty.Name;
 
                 return new SuccessDataResult<GetOrganisationInfoChangeRequestDto>(organisationInfoDto, Messages.SuccessfulOperation);
             }
