@@ -22,7 +22,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.Entities.Concrete;
 using TurkcellDigitalSchool.Entities.Dtos.OrganisationChangeRequestDtos;
 using TurkcellDigitalSchool.Entities.Enums;
-using TurkcellDigitalSchool.File.DataAccess.Abstract;
+using TurkcellDigitalSchool.Shared.DataAccess.Abstract;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Commands
 {
