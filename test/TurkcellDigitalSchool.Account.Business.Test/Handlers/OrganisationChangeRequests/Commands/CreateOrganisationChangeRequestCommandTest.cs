@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MockQueryable.Moq;
 using TurkcellDigitalSchool.Entities.Enums;
-using TurkcellDigitalSchool.Shared.DataAccess.Abstract;
+using TurkcellDigitalSchool.File.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
