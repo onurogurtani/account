@@ -1,8 +1,8 @@
 using FluentValidation;
+using TurkcellDigitalSchool.Account.Business.Handlers.Countrys.Commands;
 using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Shared.Business.Handlers.Countrys.Commands;
 
-namespace TurkcellDigitalSchool.Shared.Business.Handlers.Countrys.ValidationRules
+namespace TurkcellDigitalSchool.Account.Business.Handlers.Countrys.ValidationRules
 {
 
     public class CreateCountryValidator : AbstractValidator<CreateCountryCommand>

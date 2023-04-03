@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using TurkcellDigitalSchool.Common.Controllers;
 using TurkcellDigitalSchool.Entities.Concrete;
 
-namespace TurkcellDigitalSchool.Shared.Api.Controllers
+namespace TurkcellDigitalSchool.Account.Api.Controllers
 {
     /// <summary>
     /// Citys If controller methods will not be Authorize, [AllowAnonymous] is used.

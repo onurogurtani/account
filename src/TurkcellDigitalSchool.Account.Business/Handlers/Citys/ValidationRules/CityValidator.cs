@@ -2,7 +2,7 @@ using FluentValidation;
 using TurkcellDigitalSchool.Account.Business.Handlers.Citys.Commands;
 using TurkcellDigitalSchool.Common.Constants;
 
-namespace TurkcellDigitalSchool.Shared.Business.Handlers.Citys.ValidationRules
+namespace TurkcellDigitalSchool.Account.Business.Handlers.Citys.ValidationRules
 {
 
     public class CreateCityValidator : AbstractValidator<CreateCityCommand>
