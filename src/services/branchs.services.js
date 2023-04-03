@@ -1,40 +1,40 @@
 import { api } from './api';
 
 const getBranchs = (urlString) => {
-  return api({
-    url: `Shared/Branchs/GetByFilterPagedBranchs${urlString}`,
-    method: 'POST',
-  });
+    return api({
+        url: `Education/Branchs/GetByFilterPagedBranchs${urlString}`,
+        method: 'POST',
+    });
 };
 
 const addBranchs = (data) => {
-  return api({
-    url: 'Shared/Branchs',
-    method: 'POST',
-    data,
-  });
+    return api({
+        url: 'Education/Branchs',
+        method: 'POST',
+        data,
+    });
 };
 
 const updateBranchs = (data) => {
-  return api({
-    url: 'Shared/Branchs',
-    method: 'PUT',
-    data,
-  });
+    return api({
+        url: 'Education/Branchs',
+        method: 'PUT',
+        data,
+    });
 };
 const deleteBranchs = (data) => {
-  return api({
-    url: `Shared/Branchs`,
-    method: 'DELETE',
-    data,
-  });
+    return api({
+        url: `Education/Branchs`,
+        method: 'DELETE',
+        data,
+    });
 };
 
 const branchsServices = {
-  getBranchs,
-  addBranchs,
-  updateBranchs,
-  deleteBranchs,
+    getBranchs,
+    addBranchs,
+    updateBranchs,
+    deleteBranchs,
 };
 
 export default branchsServices;

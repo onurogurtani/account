@@ -2,14 +2,14 @@ import { api } from './api';
 
 const getFilteredContractTypes = (data) => {
     return api({
-        url: `Crm/ContractTypes/GetByFilterPagedContractTypes`,
+        url: `Account/ContractTypes/GetByFilterPagedContractTypes`,
         method: 'POST',
         data,
     });
 };
 const getByFilterPagedContractKinds = (data) => {
     return api({
-        url: 'Crm/ContractKinds/GetByFilterPagedContractKinds',
+        url: 'Account/ContractKinds/GetByFilterPagedContractKinds',
         method: 'POST',
         data,
     });
@@ -17,21 +17,21 @@ const getByFilterPagedContractKinds = (data) => {
 
 const getByFilterPagedDocuments = (params) => {
     return api({
-        url: 'Crm/Documents/getByFilterPagedDocuments',
+        url: 'Account/Documents/getByFilterPagedDocuments',
         method: 'POST',
         params,
     });
 };
 const addNewContract = (data) => {
     return api({
-        url: 'Crm/Documents',
+        url: 'Account/Documents',
         method: 'POST',
         data,
     });
 };
 const updateContract = (data) => {
     return api({
-        url: 'Crm/Documents/UpdateDocument',
+        url: 'Account/Documents/UpdateDocument',
         method: 'PUT',
         data,
     });
@@ -39,13 +39,13 @@ const updateContract = (data) => {
 
 const getVersionForContract = (id) => {
     return api({
-        url: `Crm/Documents/getNewVersion?ContractKindId=${id}`,
+        url: `Account/Documents/getNewVersion?ContractKindId=${id}`,
         method: 'POST',
     });
 };
 const getVersionForCopiedContract = (data) => {
     return api({
-        url: 'Crm/Documents/copyDocument',
+        url: 'Account/Documents/copyDocument',
         method: 'POST',
         data,
     });

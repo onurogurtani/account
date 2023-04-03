@@ -2,7 +2,7 @@ import { api } from './api';
 
 const getUnits = (data = null) => {
     return api({
-        url: `Shared/LessonUnits/getList?PageSize=0`,
+        url: `Education/LessonUnits/getList?PageSize=0`,
         method: 'POST',
         data,
     });
@@ -10,21 +10,21 @@ const getUnits = (data = null) => {
 
 const addUnits = (data) => {
     return api({
-        url: `Shared/LessonUnits`,
+        url: `Education/LessonUnits`,
         method: 'POST',
         data,
     });
 };
 const editUnits = (data) => {
     return api({
-        url: `Shared/LessonUnits`,
+        url: `Education/LessonUnits`,
         method: 'PUT',
         data,
     });
 };
 const setUnitStatus = (data) => {
     return api({
-        url: `/Shared/LessonUnits/setIsActive`,
+        url: `Education/LessonUnits/setIsActive`,
         method: 'POST',
         data,
     });
