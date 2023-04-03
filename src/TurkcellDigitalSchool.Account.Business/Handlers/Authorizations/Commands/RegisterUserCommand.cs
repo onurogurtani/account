@@ -18,7 +18,7 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.Entities.Concrete.Core; 
+using TurkcellDigitalSchool.Entities.Concrete.Core;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
@@ -34,10 +34,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 
         public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, IDataResult<AccessToken>>
         {
-            private readonly IUserRepository _userRepository;          
+            private readonly IUserRepository _userRepository;
             private readonly ISendOtpSmsHelper _sendOtpSmsHelper;
 
-            public RegisterUserCommandHandler(IUserRepository userRepository, ISendOtpSmsHelper sendOtpSmsHelper )
+            public RegisterUserCommandHandler(IUserRepository userRepository, ISendOtpSmsHelper sendOtpSmsHelper)
             {
                 _userRepository = userRepository;
                 _sendOtpSmsHelper = sendOtpSmsHelper;
@@ -58,12 +58,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 if (citizenIdCheck != null)
                     return new ErrorDataResult<AccessToken>(Messages.CitizenIdAlreadyExist);
 
-                var email = await _userRepository.Query().AnyAsync(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
-                if (email)
+                var existEmail = await _userRepository.Query().AnyAsync(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
+                if (existEmail)
                     return new ErrorDataResult<AccessToken>(Messages.EmailAlreadyExist);
 
-                var phone = await _userRepository.Query().AnyAsync(x => x.MobilePhones != request.MobilePhones);
-                if (phone)
+                var existPhone = await _userRepository.Query().AnyAsync(x => x.MobilePhones == request.MobilePhones);
+                if (existPhone)
                     return new ErrorDataResult<AccessToken>(Messages.MobilePhoneAlreadyExist);
 
                 var user = new User
@@ -73,7 +73,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     Name = request.Name,
                     SurName = request.SurName,
                     Email = request.Email,
-                    MobilePhones = request.MobilePhones,                    
+                    MobilePhones = request.MobilePhones,
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt
                 };
