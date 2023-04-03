@@ -61,8 +61,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
                     }
                 }
 
-                await _roleRepository.PassiveOldIsDefaultOrganisationRoles(sourceRoleResponse.Data.IsDefaultOrganisationRole);
-
                 var record = _roleRepository.Add(copyRole);
                 await _roleRepository.SaveChangesAsync();
 

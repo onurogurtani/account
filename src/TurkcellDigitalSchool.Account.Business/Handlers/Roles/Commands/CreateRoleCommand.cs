@@ -37,7 +37,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
                 if (role)
                     return new ErrorResult(Common.Constants.Messages.SameNameAlreadyExist);
 
-                await _roleRepository.PassiveOldIsDefaultOrganisationRoles(request.Role.IsDefaultOrganisationRole);
                 var entity = _mapper.Map<Role>(request.Role);
                 var record = _roleRepository.Add(entity);
                 await _roleRepository.SaveChangesAsync();

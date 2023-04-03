@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
@@ -13,19 +12,6 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
     {
         public RoleRepository(ProjectDbContext context) : base(context)
         {
-        }
-
-        public async Task PassiveOldIsDefaultOrganisationRoles(bool isDefaultOrganisationRole)
-        {
-            if (isDefaultOrganisationRole)
-            {
-                var roleList = await Context.Roles.Where(x => x.IsDefaultOrganisationRole).ToListAsync();
-                foreach (var role in roleList)
-                {
-                    role.IsDefaultOrganisationRole = false;
-                }
-                Context.Roles.UpdateRange(roleList);
-            }
         }
 
         public async Task SetPassiveRole(long roleId)

@@ -36,14 +36,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
             [TransactionScopeAspectAsync]
             public async Task<IResult> Handle(SetPassiveRoleCommand request, CancellationToken cancellationToken)
             {
-                var role = await _mediator.Send(new GetRoleQuery { Id = request.RoleId }, cancellationToken);
-                if (role.Data.IsDefaultOrganisationRole)
-                {
-                    return new ErrorResult(Messages.DefaultAdminRoleCantPassive);
-                }
                 if ((request.TransferRoleId ?? 0) == 0)
                 {
-
                     var passiveControl = await _mediator.Send(new PassiveCheckControlRoleQuery { RoleId = request.RoleId }, cancellationToken);
                     if (passiveControl.Data.IsPassiveCheck)
                     {
