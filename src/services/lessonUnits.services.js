@@ -24,7 +24,7 @@ const editUnits = (data) => {
 };
 const setUnitStatus = (data) => {
     return api({
-        url: `/Education/LessonUnits/setIsActive`,
+        url: `Education/LessonUnits/setIsActive`,
         method: 'POST',
         data,
     });

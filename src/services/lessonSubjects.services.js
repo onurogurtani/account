@@ -26,7 +26,7 @@ const editLessonSubjects = (data) => {
 
 const setLessonSubjectStatus = (data) => {
     return api({
-        url: `/Education/LessonSubjects/setIsActive`,
+        url: `Education/LessonSubjects/setIsActive`,
         method: 'POST',
         data,
     });

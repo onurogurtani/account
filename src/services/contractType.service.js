@@ -23,14 +23,14 @@ const getContractTypeAll = (
 };
 const addContractType = (data = {}) => {
     return api({
-        url: `/Account/ContractTypes/Add`,
+        url: `Account/ContractTypes/Add`,
         method: 'POST',
         data: data,
     });
 };
 const updateContractType = (data = {}) => {
     return api({
-        url: `/Account/ContractTypes/Update`,
+        url: `Account/ContractTypes/Update`,
         method: 'PUT',
         data: data,
     });

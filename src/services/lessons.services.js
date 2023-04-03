@@ -40,7 +40,7 @@ const editLessons = (data) => {
 
 const downloadLessonsExcel = () => {
     return api({
-        url: `/Education/Lessons/downloadLessonExcel`,
+        url: `Education/Lessons/downloadLessonExcel`,
         method: 'GET',
         responseType: 'blob',
     });
@@ -48,14 +48,14 @@ const downloadLessonsExcel = () => {
 
 const uploadLessonsExcel = (data) => {
     return api({
-        url: `/Education/Lessons/uploadLessonExcel`,
+        url: `Education/Lessons/uploadLessonExcel`,
         method: 'POST',
         data,
     });
 };
 const setLessonStatus = (data) => {
     return api({
-        url: `/Education/Lessons/setIsActive`,
+        url: `Education/Lessons/setIsActive`,
         method: 'POST',
         data,
     });

@@ -10,7 +10,7 @@ const getByFilterPagedQuestionOfExams = (params) => {
 
 const getAsEvQuestionOfExamsByAsEvId = (data) => {
     return api({
-        url: `/Exam/AsEvQuestionOfExams/getAsEvQuestionOfExamsByAsEvId?asEvId=${data.id}&includeQuestionFilesBase64=${data.includeQuestionFilesBase64}&PageSize=${data.pageSize}`,
+        url: `Exam/AsEvQuestionOfExams/getAsEvQuestionOfExamsByAsEvId?asEvId=${data.id}&includeQuestionFilesBase64=${data.includeQuestionFilesBase64}&PageSize=${data.pageSize}`,
         method: 'POST',
     });
 };

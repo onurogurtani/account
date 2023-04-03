@@ -16,14 +16,14 @@ const getContractKindsByContractTypes = (data = {}) => {
 };
 const addContractKinds = (data = {}) => {
     return api({
-        url: `/Account/ContractKinds/Add`,
+        url: `Account/ContractKinds/Add`,
         method: 'POST',
         data: data,
     });
 };
 const updateContractKinds = (data = {}) => {
     return api({
-        url: `/Account/ContractKinds/Update`,
+        url: `Account/ContractKinds/Update`,
         method: 'PUT',
         data: data,
     });

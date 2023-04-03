@@ -27,7 +27,7 @@ const editLessonBrackets = (data) => {
 
 const setLessonBracketStatus = (data) => {
     return api({
-        url: `/Education/LessonBrackets/setIsActive`,
+        url: `Education/LessonBrackets/setIsActive`,
         method: 'POST',
         data,
     });
