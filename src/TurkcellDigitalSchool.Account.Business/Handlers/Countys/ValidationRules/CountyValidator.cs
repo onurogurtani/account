@@ -1,8 +1,8 @@
 using FluentValidation;
+using TurkcellDigitalSchool.Account.Business.Handlers.Countys.Commands;
 using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Shared.Business.Handlers.Countys.Commands;
 
-namespace TurkcellDigitalSchool.Shared.Business.Handlers.Countys.ValidationRules
+namespace TurkcellDigitalSchool.Account.Business.Handlers.Countys.ValidationRules
 {
 
     public class CreateCountyValidator : AbstractValidator<CreateCountyCommand>
