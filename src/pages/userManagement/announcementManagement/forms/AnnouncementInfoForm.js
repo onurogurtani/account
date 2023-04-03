@@ -48,6 +48,7 @@ const AnnouncementInfoForm = ({
 
     const [fileImage, setFileImage] = useState(null);
     const { announcementTypes } = useSelector((state) => state?.announcement);
+    console.log('announcementTypes', announcementTypes);
     const { participantGroupsList } = useSelector((state) => state?.events);
 
     useEffect(() => {
@@ -65,7 +66,7 @@ const AnnouncementInfoForm = ({
                 announcementPublicationPlaces: initialValues?.announcementPublicationPlaces,
                 fileId: initialValues?.fileId,
                 headText: initialValues.headText,
-                announcementType: initialValues.announcementType.id,
+                announcementType: initialValues?.announcementType?.id,
                 buttonName: initialValues?.buttonName,
                 buttonUrl: initialValues?.buttonUrl,
                 homePageContent: initialValues?.homePageContent,
@@ -134,12 +135,12 @@ const AnnouncementInfoForm = ({
                     style={{ width: '100%' }}
                     rules={[
                         { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-                        { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+                        // { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
                     ]}
                 >
                     <CustomSelect className="form-filter-item" placeholder={'Seçiniz'} style={{ width: '100%' }}>
                         {announcementTypes?.map(({ id, name }) => (
-                            <Option id={id} key={id} value={id}>
+                            <Option key={id} value={id}>
                                 <Text t={name} />
                             </Option>
                         ))}

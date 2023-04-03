@@ -32,7 +32,11 @@ const AnnouncementList = () => {
     const { announcements, tableProperty, filterObject } = useSelector((state) => state?.announcement);
 
     const loadAnnouncemenets = async () => {
-        await dispatch(getByFilterPagedAnnouncements());
+        let data = {
+            PageNumber: 10,
+            PageSize: 10,
+        };
+        await dispatch(getByFilterPagedAnnouncements(data));
     };
     useEffect(() => {
         loadAnnouncemenets();
