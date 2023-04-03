@@ -59,8 +59,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
 
                 var adminType = await _organisationTypeRepository.Query().AnyAsync(x => x.Id == request.Organisation.OrganisationTypeId && x.IsSingularOrganisation);
 
-                var defaultOrganisationRoleId = await _roleRepository.Query().Where(x => x.IsDefaultOrganisationRole).Select(x => x.Id).FirstOrDefaultAsync();
-                var roleIds = new List<long> { defaultOrganisationRoleId };
+                //TODO paketten gelen roleId kurumAdmininin RoleIds kýsmýna eklenecek. Geçici olarak roleId deðeri 1 olarak yazýldý orasý da  kaldýrýlacak.
+                var roleIds = new List<long> { 1 };
 
                 var organisationAdminId = await _userRepository.Query().Where(x => x.CitizenId.ToString() == request.Organisation.AdminTc).Select(x => x.Id).FirstOrDefaultAsync();
 

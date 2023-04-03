@@ -53,7 +53,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
                     if (userRoles || packageRoles)
                         return new ErrorResult(Messages.RoleTypeCantChanged);
                 }
-                await _roleRepository.PassiveOldIsDefaultOrganisationRoles(request.Role.IsDefaultOrganisationRole);
 
                 var roleClaims = await _roleClaimRepository.GetListAsync(x => x.RoleId == request.Role.Id);
                 _roleClaimRepository.DeleteRange(roleClaims);

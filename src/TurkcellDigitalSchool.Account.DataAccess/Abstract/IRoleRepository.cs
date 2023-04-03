@@ -6,7 +6,6 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Abstract
 {
     public interface IRoleRepository : IEntityDefaultRepository<Role>
     {
-        Task PassiveOldIsDefaultOrganisationRoles(bool isDefaultOrganisationRole);
         Task SetPassiveRole(long roleId);
         Task SetActiveRole(long roleId);
     }
