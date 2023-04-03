@@ -29,14 +29,14 @@ const CheckedSelectList = ({
                     <CustomFormItem
                         label={false}
                         name={listName}
-                        rules={getFieldValue(checkboxName) && listOptions.length > 0 ? formRules : []}
+                        rules={getFieldValue(checkboxName) && listOptions?.length > 0 ? formRules : []}
                     >
                         <span>{listTitle} </span>
                         <SelectModal
                             title={listTitle}
                             name={listName}
                             disabled={!getFieldValue(checkboxName)}
-                            informationText={`${listTitle} ${listOptions.length > 0 ? 'Vardır' : 'Yoktur'}`}
+                            informationText={`${listTitle} ${listOptions?.length > 0 ? 'Vardır' : 'Yoktur'}`}
                             selectOptionList={listOptions}
                         />
                     </CustomFormItem>

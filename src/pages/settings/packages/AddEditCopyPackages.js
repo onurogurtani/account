@@ -33,6 +33,7 @@ import { getListDocuments } from '../../../store/slice/documentsSlice';
 import { getGroupsList } from '../../../store/slice/groupsSlice';
 import { addPackage, getPackageById, updatePackage, getByFilterPagedPackages } from '../../../store/slice/packageSlice';
 import { getByFilterPagedEvents } from '../../../store/slice/eventsSlice';
+import { getTrialExamList } from '../../../store/slice/trialExamSlice';
 import '../../../styles/settings/packages.scss';
 import classes from '../../../styles/surveyManagement/addSurvey.module.scss';
 import { reactQuillValidator } from '../../../utils/formRule';
@@ -78,6 +79,7 @@ const AddEditCopyPackages = () => {
     const { publisherList } = useSelector((state) => state?.publisher);
     const { contractTypeAllList } = useSelector((state) => state?.contractTypes);
     const { contractKindsByContractTypesList } = useSelector((state) => state?.contractKinds);
+    const { trialExamList } = useSelector((state) => state?.tiralExam);
 
     const { setClassroomId, setLessonId } = useAcquisitionTree();
     const lessonIds = Form.useWatch('lesson', form) || [];
@@ -151,9 +153,19 @@ const AddEditCopyPackages = () => {
     }, [hasCoachService]);
 
     useEffect(() => {
-        if (!hasTryingTest || testExamList?.length > 0) return;
+        if (!hasTryingTest) return;
         dispatch(getByFilterPagedPackages({ PageSize: 1000, PackageTypeEnumIds: PACKAGE_TYPES.TestExam }));
-    }, [hasTryingTest]);
+
+        if (!hasTryingTest) return;
+
+        const packageType = form.getFieldValue('packagePackageTypeEnums');
+        if (packageType !== PACKAGE_TYPES.TestExam && testExamList?.length <= 0) {
+            dispatch(getByFilterPagedPackages({ PageSize: 1000, PackageTypeEnumIds: PACKAGE_TYPES.TestExam }));
+        }
+        if (packageType === PACKAGE_TYPES.TestExam) {
+            dispatch(getTrialExamList({ data: { PageSize: 1000, recordStatus: 1, testExamStatus: 1 } })); // TODO call exam service
+        }
+    }, [hasTryingTest, Form.useWatch('packagePackageTypeEnums', form)]);
 
     useEffect(() => {
         if (!hasMotivationEvent) return;
@@ -168,18 +180,9 @@ const AddEditCopyPackages = () => {
     }, [hasMotivationEvent, Form.useWatch('packagePackageTypeEnums', form)]);
 
     useEffect(() => {
-        switch (form.getFieldValue('packagePackageTypeEnums')) {
-            case PACKAGE_TYPES.CoachService:
-                form.setFieldsValue({ coachServicePackages: [] });
-                break;
-            case PACKAGE_TYPES.TestExam:
-                form.setFieldsValue({ testExamList: [] });
-                break;
-            // case PACKAGE_TYPES.MotivationEvent:
-            //     form.setFieldsValue({ motivationActivityList: [] });
-            //     break;
-            default:
-                break;
+        //TODO: while implementing coach service then this useEffect will be removed
+        if (form.getFieldValue('packagePackageTypeEnums') === PACKAGE_TYPES.CoachService) {
+            form.setFieldsValue({ coachServicePackages: [] });
         }
     }, [Form.useWatch('packagePackageTypeEnums', form)]);
 
@@ -223,12 +226,15 @@ const AddEditCopyPackages = () => {
                 (item) => item.packageTypeEnum,
             )[0],
             packageFieldTypes: currentPackageResponse.payload?.packageFieldTypes?.map((item) => item.fieldType)[0],
-            packagePublishers: currentPackageResponse.payload?.packagePublishers?.map((item) => item.publisherId)[0],
+            packagePublishers: currentPackageResponse.payload?.packagePublishers?.map((item) => item.publisherId),
             coachServicePackages: currentPackageResponse.payload?.hasCoachService
                 ? currentPackageResponse.payload?.coachServicePackages?.map((item) => item.coachServicePackageId)
                 : [],
             testExamPackages: currentPackageResponse.payload?.hasTryingTest
                 ? currentPackageResponse.payload?.testExamPackages?.map((item) => item.testExamPackageId)
+                : [],
+            packageTestExams: currentPackageResponse.payload?.hasTryingTest
+                ? currentPackageResponse.payload?.packageTestExams?.map((item) => item.testExamId)
                 : [],
             motivationActivityPackages: currentPackageResponse.payload?.hasMotivationEvent
                 ? currentPackageResponse.payload?.motivationActivityPackages?.map(
@@ -267,7 +273,6 @@ const AddEditCopyPackages = () => {
             return Upload.LIST_IGNORE;
         }
         return false; //disable auto post
-        //return isImage || Upload.LIST_IGNORE;
     };
 
     const handleCancelFileUpload = () => {
@@ -358,19 +363,18 @@ const AddEditCopyPackages = () => {
                 packageDocuments: values.packageDocuments?.map((item) => ({ documentId: item })),
                 packageContractTypes: values.contractTypeId.map((item) => ({ contractTypeId: item })),
                 coachServicePackages: values.coachServicePackages?.map((item) => ({ coachServicePackageId: item })),
-                testExamPackages: values.testExamPackages?.map((item) => ({ testExamPackageId: item })),
-                motivationActivityPackages:
-                    values.packagePackageTypeEnums !== PACKAGE_TYPES.MotivationEvent
-                        ? values.motivationActivityPackages?.map((item) => ({
-                            motivationActivityPackageId: item,
-                        }))
-                        : [],
-                packageEvents:
-                    values.packagePackageTypeEnums === PACKAGE_TYPES.MotivationEvent
-                        ? values.packageEvents?.map((item) => ({
-                            eventId: item,
-                        }))
-                        : [],
+                testExamPackages: values.packagePackageTypeEnums !== PACKAGE_TYPES.TestExam
+                    ? (values.testExamPackages || []).map((item) => ({ testExamPackageId: item }))
+                    : [],
+                packageTestExams: values.packagePackageTypeEnums === PACKAGE_TYPES.TestExam
+                    ? (values.packageTestExams || []).map((item) => ({ testExamId: item }))
+                    : [],
+                motivationActivityPackages: values.packagePackageTypeEnums !== PACKAGE_TYPES.MotivationEvent
+                    ? (values.motivationActivityPackages || []).map((item) => ({ motivationActivityPackageId: item }))
+                    : [],
+                packageEvents: values.packagePackageTypeEnums === PACKAGE_TYPES.MotivationEvent
+                    ? (values.packageEvents || []).map((item) => ({ eventId: item }))
+                    : [],
             },
         };
 
@@ -466,7 +470,7 @@ const AddEditCopyPackages = () => {
     function getTestExamList() {
         return form.getFieldValue('packagePackageTypeEnums') !== PACKAGE_TYPES.TestExam
             ? testExamList.filter((i) => i.id?.toString() !== id?.toString())
-            : [];
+            : trialExamList?.items;
     }
 
     function getMotivationActivityList() {
@@ -627,7 +631,11 @@ const AddEditCopyPackages = () => {
                             shouldUpdateWith={['packagePackageTypeEnums']}
                             checkboxName="hasTryingTest"
                             checkboxLabel="Paket İçinde Deneme Sınavı Vardır"
-                            listName="testExamPackages"
+                            listName={
+                                form.getFieldValue('packagePackageTypeEnums') !== PACKAGE_TYPES.TestExam
+                                    ? 'testExamPackages'
+                                    : 'packageTestExams'
+                            }
                             listTitle="Deneme Sınavı Listesi"
                             listOptions={getTestExamList()}
                         />
