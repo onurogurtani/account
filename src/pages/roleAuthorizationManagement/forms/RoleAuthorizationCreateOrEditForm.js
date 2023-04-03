@@ -1,8 +1,8 @@
 import { Checkbox, Form } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
+
 import {
     confirmDialog,
     CustomButton,
@@ -53,7 +53,6 @@ const RoleAuthorizationCreateOrEditForm = ({ isEdit }) => {
                         roleClaims: permission,
                         name: data?.name,
                         roleType: data?.roleType,
-                        isDefaultOrganisationRole: data?.isDefaultOrganisationRole,
                         isOrganisationView: data?.isOrganisationView,
                     });
                     setTargetKeys(permission);
@@ -176,14 +175,7 @@ const RoleAuthorizationCreateOrEditForm = ({ isEdit }) => {
                         </CustomSelect>
                     </CustomFormItem>
                 </div>
-                <CustomFormItem
-                    style={{ marginBottom: '0' }}
-                    name="isDefaultOrganisationRole"
-                    valuePropName="checked"
-                    initialValue={false}
-                >
-                    <Checkbox>Default kurum admin rolünü ata</Checkbox>
-                </CustomFormItem>
+
                 <CustomFormItem name="isOrganisationView" valuePropName="checked" initialValue={false}>
                     <Checkbox>Kurumsalda görünsün</Checkbox>
                 </CustomFormItem>
