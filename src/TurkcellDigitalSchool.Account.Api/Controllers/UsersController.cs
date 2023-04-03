@@ -17,6 +17,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     public class UsersController : BaseCrudController<User>
     {
 
+
         ///<summary>
         /// Update  user information
         ///</summary>
