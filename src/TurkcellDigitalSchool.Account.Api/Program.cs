@@ -36,6 +36,7 @@ namespace TurkcellDigitalSchool.Account.Api
                         .UseStartup<Startup>()
                         .ConfigureKestrel((context, options) =>
                         {
+                            options.AddServerHeader = false;
                             options.Listen(IPAddress.Any, 6021, listenOptions =>
                             {
                                 // Enables HTTP/3

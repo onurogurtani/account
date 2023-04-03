@@ -27,6 +27,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             [LogAspect(typeof(FileLogger))]
             public async Task<IDataResult<AccessToken>> Handle(LogoutUserQuery request, CancellationToken cancellationToken)
             {
+                //todo:orkun  kullanıcı logout olduktan sonra token sona ermelidir tekrar login olmadan kullancı oluşturulabilmekte 
                 var userId = await Task.FromResult(_tokenHelper.GetUserIdByCurrentToken());
                 _cacheManager.Remove($"{CacheKeys.UserIdForClaim}={userId}");
                 return new SuccessDataResult<AccessToken>(
