@@ -90,7 +90,7 @@ const AdminUserFilter = () => {
             >
                 <div className="form-item">
                     <CustomFormItem
-                        rules={[{ validator: tcknValidator, message: '11 Karakter İçermelidir' }]}
+                        rules={[{ validator: tcknValidator, message: 'Lütfen geçerli T.C. kimlik numarası giriniz.' }]}
                         label="TC Kimlik Numarası"
                         name="CitizenId"
                     >

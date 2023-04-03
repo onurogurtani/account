@@ -108,7 +108,10 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
             >
                 <div className="left">
                     <CustomFormItem
-                        rules={[{ required: true }, { validator: tcknValidator, message: '11 Karakter İçermelidir' }]}
+                        rules={[
+                            { required: true },
+                            { validator: tcknValidator, message: 'Lütfen geçerli T.C. kimlik numarası giriniz.' },
+                        ]}
                         label="TC Kimlik Numarası"
                         name="citizenId"
                     >
