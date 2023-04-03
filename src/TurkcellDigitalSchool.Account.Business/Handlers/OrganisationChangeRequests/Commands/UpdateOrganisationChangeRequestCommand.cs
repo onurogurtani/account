@@ -52,6 +52,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
             {
                 _organisationInfoChangeRequestRepository = organisationInfoChangeRequestRepository;
                 _organisationChangeReqContentRepository = organisationChangeReqContentRepository;
+                _organisationRepository= organisationRepository;
                 _fileRepository = fileRepository;
                 _fileService = fileService;
                 _pathHelper = pathHelper;
