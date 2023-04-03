@@ -2,7 +2,7 @@ import { api } from './api';
 
 const getLessonBrackets = (data = null, params = { PageSize: 0 }) => {
     return api({
-        url: `Shared/LessonBrackets/getList`,
+        url: `Education/LessonBrackets/getList`,
         method: 'POST',
         data,
         params,
@@ -11,7 +11,7 @@ const getLessonBrackets = (data = null, params = { PageSize: 0 }) => {
 
 const addLessonBrackets = (data) => {
     return api({
-        url: `Shared/LessonBrackets`,
+        url: `Education/LessonBrackets`,
         method: 'POST',
         data,
     });
@@ -19,7 +19,7 @@ const addLessonBrackets = (data) => {
 
 const editLessonBrackets = (data) => {
     return api({
-        url: `Shared/LessonBrackets`,
+        url: `Education/LessonBrackets`,
         method: 'PUT',
         data,
     });
@@ -27,7 +27,7 @@ const editLessonBrackets = (data) => {
 
 const setLessonBracketStatus = (data) => {
     return api({
-        url: `/Shared/LessonBrackets/setIsActive`,
+        url: `/Education/LessonBrackets/setIsActive`,
         method: 'POST',
         data,
     });

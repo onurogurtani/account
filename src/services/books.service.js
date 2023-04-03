@@ -1,15 +1,15 @@
 import { api } from './api';
 
 const GetByFilterPagedGroups = (params) => {
-  return api({
-    url: `Question/Books/getByFilterPagedBooks`,
-    method: 'POST',
-    params,
-  });
+    return api({
+        url: `Exam/Books/getByFilterPagedBooks`,
+        method: 'POST',
+        params,
+    });
 };
 
 const booksServices = {
-  GetByFilterPagedGroups,
+    GetByFilterPagedGroups,
 };
 
 export default booksServices;

@@ -2,7 +2,7 @@ import { api } from './api';
 
 const getLessonSubjects = (data = null) => {
     return api({
-        url: `Shared/LessonSubjects/getList?PageSize=0`,
+        url: `Education/LessonSubjects/getList?PageSize=0`,
         method: 'POST',
         data,
     });
@@ -10,7 +10,7 @@ const getLessonSubjects = (data = null) => {
 
 const addLessonSubjects = (data) => {
     return api({
-        url: `Shared/LessonSubjects`,
+        url: `Education/LessonSubjects`,
         method: 'POST',
         data,
     });
@@ -18,7 +18,7 @@ const addLessonSubjects = (data) => {
 
 const editLessonSubjects = (data) => {
     return api({
-        url: `Shared/LessonSubjects`,
+        url: `Education/LessonSubjects`,
         method: 'PUT',
         data,
     });
@@ -26,7 +26,7 @@ const editLessonSubjects = (data) => {
 
 const setLessonSubjectStatus = (data) => {
     return api({
-        url: `/Shared/LessonSubjects/setIsActive`,
+        url: `/Education/LessonSubjects/setIsActive`,
         method: 'POST',
         data,
     });

@@ -1,15 +1,15 @@
 import { api } from './api';
 
 const getListDocuments = () => {
-  return api({
-    url: 'Crm/Documents/getList',
-    method: 'POST',
-    data: [],
-  });
+    return api({
+        url: 'Account/Documents/getList',
+        method: 'POST',
+        data: [],
+    });
 };
 
 const documentsServices = {
-  getListDocuments,
+    getListDocuments,
 };
 
 export default documentsServices;

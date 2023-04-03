@@ -2,7 +2,7 @@ import { api } from './api';
 
 const getLessons = (data = null) => {
     return api({
-        url: `Shared/Lessons/getList?PageSize=0`,
+        url: `Education/Lessons/getList?PageSize=0`,
         method: 'POST',
         data,
     });
@@ -10,7 +10,7 @@ const getLessons = (data = null) => {
 
 const addLessons = (data) => {
     return api({
-        url: `Shared/Lessons`,
+        url: `Education/Lessons`,
         method: 'POST',
         data,
     });
@@ -18,21 +18,21 @@ const addLessons = (data) => {
 
 const getByClassromIdLessons = (classroomId) => {
     return api({
-        url: `Shared/Lessons/getByClassromIdLessons?ClassroomId=${classroomId}`,
+        url: `Education/Lessons/getByClassromIdLessons?ClassroomId=${classroomId}`,
         method: 'POST',
     });
 };
 
 const getByClassromIdLessonsBySearchText = (data) => {
     return api({
-        url: `Shared/Lessons/getByClassromIdLessons?ClassroomId=${data.classroomId}&searchText=${data.searchText}`,
+        url: `Education/Lessons/getByClassromIdLessons?ClassroomId=${data.classroomId}&searchText=${data.searchText}`,
         method: 'POST',
     });
 };
 
 const editLessons = (data) => {
     return api({
-        url: `Shared/Lessons`,
+        url: `Education/Lessons`,
         method: 'PUT',
         data,
     });
@@ -40,7 +40,7 @@ const editLessons = (data) => {
 
 const downloadLessonsExcel = () => {
     return api({
-        url: `/Shared/Lessons/downloadLessonExcel`,
+        url: `/Education/Lessons/downloadLessonExcel`,
         method: 'GET',
         responseType: 'blob',
     });
@@ -48,14 +48,14 @@ const downloadLessonsExcel = () => {
 
 const uploadLessonsExcel = (data) => {
     return api({
-        url: `/Shared/Lessons/uploadLessonExcel`,
+        url: `/Education/Lessons/uploadLessonExcel`,
         method: 'POST',
         data,
     });
 };
 const setLessonStatus = (data) => {
     return api({
-        url: `/Shared/Lessons/setIsActive`,
+        url: `/Education/Lessons/setIsActive`,
         method: 'POST',
         data,
     });
