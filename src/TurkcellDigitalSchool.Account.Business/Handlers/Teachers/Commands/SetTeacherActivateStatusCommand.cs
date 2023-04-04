@@ -36,7 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
                     return new ErrorResult(Messages.RecordDoesNotExist);
                 }
 
-                if (teacher.UserTypeEnum.HasValue && teacher.UserTypeEnum != UserTypeEnum.Teacher)
+                if (teacher.UserType != null && teacher.UserType != UserType.Teacher)
                     return new ErrorDataResult<User>(Account.Business.Constants.Messages.UserIsNotTeacher);
 
                 teacher.Status = request.Status;

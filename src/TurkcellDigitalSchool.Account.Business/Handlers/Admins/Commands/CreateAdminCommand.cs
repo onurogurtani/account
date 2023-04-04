@@ -47,10 +47,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
                 long currentuserId = _tokenHelper.GetUserIdByCurrentToken();
                 var currentUser = await _userRepository.GetAsync(p => p.Id == currentuserId);
 
-                if (currentUser.AdminTypeEnum == null)
+                if (currentUser.UserType == null)
                     return new ErrorResult(Messages.AutorizationRoleError);
 
-                if (currentUser.AdminTypeEnum == AdminTypeEnum.OrganisationAdmin)
+                if (currentUser.UserType == UserType.OrganisationAdmin)
                     request.Admin.AdminTypeEnum = AdminTypeEnum.OrganisationAdmin;
 
                 var citizenIdCheck = await _userRepository.GetAsync(

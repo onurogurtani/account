@@ -71,11 +71,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Queries
                     RegisterStatus = Core.Enums.RegisterStatus.Registered,
                     AddingType = UserAddingType.Default,
                     Address = "Adres",
-                    AdminTypeEnum = Core.Enums.AdminTypeEnum.Admin,
                     CitizenId = 12345676787,
                     Email = "email@hotmail.com",
                     MobilePhones = "5554443322",
-                    UserTypeEnum = Core.Enums.UserTypeEnum.Teacher,
+                    UserType = Core.Enums.UserType.Teacher,
                     IsDeleted = false
                 }
             };

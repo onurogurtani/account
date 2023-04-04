@@ -84,8 +84,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 PassSalt = user.PasswordSalt,
                 Surname = user.SurName,
                 TcNo = user.CitizenId == 0 ? "" : user.CitizenId + "",
-                AdminTypeEnum = user.AdminTypeEnum,
-                UserTypeEnum = user.UserTypeEnum,
+                UserType = user.UserType,
                 FailLoginCount = user.FailLoginCount
             };
             return result;

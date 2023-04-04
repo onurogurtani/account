@@ -42,7 +42,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
                 var teacherQueryable = _userRepository.Query().AsQueryable();
 
 
-                var data = await teacherQueryable.FirstOrDefaultAsync(x => x.Id == request.Id && x.UserTypeEnum == UserTypeEnum.Teacher);
+                var data = await teacherQueryable.FirstOrDefaultAsync(x => x.Id == request.Id && x.UserType == UserType.Teacher);
 
                 if (data == null)
                     return new ErrorDataResult<GetTeacherResponseDto>(null, Messages.RecordIsNotFound);

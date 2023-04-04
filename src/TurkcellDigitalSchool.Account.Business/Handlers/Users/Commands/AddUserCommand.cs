@@ -21,7 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
     /// </summary>
     public class AddUserCommand : IRequest<IDataResult<SelectionItem>>
     {
-        public UserTypeEnum? UserTypeId { get; set; }
+        public UserType UserTypeId { get; set; }
         public long CitizenId { get; set; }
         public string Name { get; set; }
         public string SurName { get; set; }
@@ -59,7 +59,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                     MobilePhones = request.MobilePhones,
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt,
-                    UserTypeEnum = request.UserTypeId,
+                    UserType = request.UserTypeId,
                     Status = true,
                     RegisterStatus = RegisterStatus.Registered
                 };

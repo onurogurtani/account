@@ -44,7 +44,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
             public virtual async Task<IDataResult<PagedList<GetTeachersResponseDto>>> Handle(GetByFilterPagedTeachersQuery request, CancellationToken cancellationToken)
             {
                 var query = _userRepository.Query();
-                query = query.Where(q => q.UserTypeEnum == UserTypeEnum.Teacher);
+                query = query.Where(q => q.UserType == UserType.Teacher);
 
                 if (!string.IsNullOrEmpty(request.Name))
                     query = query.Where(q => q.Name.ToLower().Contains(request.Name.ToLower()));

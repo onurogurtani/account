@@ -37,8 +37,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 new Claim(JwtRegisteredClaimNames.Email, user.EMail),
                 new Claim(JwtRegisteredClaimNames.Name, user.Name),
                 new Claim(JwtRegisteredClaimNames.FamilyName, user.Surname),
-                new Claim(IdentityServerConst.IDENTITY_RESOURCE_USER_ADMIN_TYPE,(user.AdminTypeEnum == null ? 0 : user.AdminTypeEnum.GetHashCode()).ToString()),
-                new Claim(IdentityServerConst.IDENTITY_RESOURCE_USER_TYPE ,(user.UserTypeEnum == null ? 0 : user.UserTypeEnum.GetHashCode()).ToString()),
+                new Claim(IdentityServerConst.IDENTITY_RESOURCE_USER_TYPE ,user.UserType.GetHashCode().ToString()),
                 new Claim(IdentityServerConst.IDENTITY_RESOURCE_USER_ORGANISATION,organisation) 
             };
             foreach (var item in addedClaimFromLogin)

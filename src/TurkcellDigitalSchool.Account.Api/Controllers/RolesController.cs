@@ -199,25 +199,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             }
             return BadRequest(result);
         }
-
-        ///<summary>
-        ///Get RoleTypes
-        ///</summary>
-        ///<return>List TEntitys</return>
-        ///<response code="200"></response>
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SelectionItem>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpGet("getRoleTypes")]
-        public async Task<IActionResult> GetRoleTypes()
-        {
-            var result = await Mediator.Send(new GetRoleTypesQuery());
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
+         
 
         ///<summary>
         ///Get AdminTypes

@@ -51,7 +51,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
 
                 var result = await query.OrderByDescending(x => x.UpdateTime).Select(s => new AdminDto
                 {
-                    AdminTypeEnum = s.AdminTypeEnum,
+                    UserType = s.UserType,
                     CitizenId = s.CitizenId,
                     Email = s.Email,
                     Id = s.Id,
@@ -64,7 +64,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
                     }).ToList(),
                     Status = s.Status,
                     SurName = s.SurName,
-                    UserName = s.AdminTypeEnum == AdminTypeEnum.OrganisationAdmin ? (s.CitizenId + "") : s.UserName
+                    UserName = s.UserType == UserType.OrganisationAdmin ? (s.CitizenId + "") : s.UserName
                 }).FirstOrDefaultAsync();
 
                 if (result == null)

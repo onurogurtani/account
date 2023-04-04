@@ -46,12 +46,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
                 if (entity == null)
                     return new ErrorResult(Common.Constants.Messages.RecordDoesNotExist);
 
-                if (entity.RoleType != request.Role.RoleType)
+                if (entity.UserType != request.Role.UserType)
                 {
                     var userRoles = await _userRoleRepository.Query().AnyAsync(x => x.RoleId == request.Role.Id, cancellationToken: cancellationToken);
                     var packageRoles = await _packageRoleRepository.Query().AnyAsync(x => x.RoleId == request.Role.Id, cancellationToken: cancellationToken);
                     if (userRoles || packageRoles)
-                        return new ErrorResult(Messages.RoleTypeCantChanged);
+                        return new ErrorResult(Messages.UserTypeCantChanged);
                 }
 
                 var roleClaims = await _roleClaimRepository.GetListAsync(x => x.RoleId == request.Role.Id);

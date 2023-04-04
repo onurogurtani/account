@@ -68,11 +68,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Commands
                     RegisterStatus = Core.Enums.RegisterStatus.Registered,
                     AddingType = UserAddingType.Default,
                     Address = "Adres",
-                    AdminTypeEnum = Core.Enums.AdminTypeEnum.Admin,
                     CitizenId = 12345676787,
                     Email = "email@hotmail.com",
                     MobilePhones = "5554443322",
-                    UserTypeEnum = Core.Enums.UserTypeEnum.Teacher,
+                    UserType = Core.Enums.UserType.Teacher,
                     IsDeleted = false
                 },
                 new User{
@@ -87,11 +86,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Commands
                     RegisterStatus = Core.Enums.RegisterStatus.Registered,
                     AddingType = UserAddingType.Default,
                     Address = "Adres",
-                    AdminTypeEnum = Core.Enums.AdminTypeEnum.Admin,
+                    UserType = Core.Enums.UserType.Student,
                     CitizenId = 12345676789,
                     Email = "email2@hotmail.com",
                     MobilePhones = "5554443321",
-                    UserTypeEnum = Core.Enums.UserTypeEnum.Student,
                     IsDeleted = false
                 },
             };

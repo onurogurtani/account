@@ -16,8 +16,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services.Model
 
         public string FullName => Name + " " + Surname;
 
-        public AdminTypeEnum? AdminTypeEnum { get; set; }
-        public UserTypeEnum? UserTypeEnum { get; set; }
+        public UserType UserType { get; set; }
 
         public int? FailLoginCount { get; set; }
     }
