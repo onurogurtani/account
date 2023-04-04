@@ -145,8 +145,8 @@ const EventFilter = () => {
                     >
                         {Object.keys(participantGroupTypes)?.map((item) => {
                             return (
-                                <Option key={item} value={participantGroupTypes[item]?.value}>
-                                    {participantGroupTypes[item]?.value}
+                                <Option key={item} value={item}>
+                                    {participantGroupTypes[item]?.label}
                                 </Option>
                             );
                         })}

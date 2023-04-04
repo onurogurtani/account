@@ -70,7 +70,7 @@ const EventShow = () => {
                             {currentEvent?.participantTypeOfEvents?.map((item, id) => {
                                 return (
                                     <Tag className="m-1" color="orange" key={id}>
-                                        {participantGroupTypes?.[item.userType]?.value}
+                                        {participantGroupTypes?.[item.userType]?.label}
                                     </Tag>
                                 );
                             })}
