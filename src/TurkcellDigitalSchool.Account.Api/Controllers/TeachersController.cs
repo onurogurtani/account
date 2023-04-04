@@ -168,7 +168,25 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         }
 
 
+        /// <summary>
+        /// Delete TEntity.
+        /// </summary>
+        /// <returns></returns>
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> Delete([FromBody] DeleteTeacherCommand deleteTeacherCommand)
+        {
+            var result = await Mediator.Send(deleteTeacherCommand);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
 
+            return BadRequest(result);
+        }
 
 
     }
