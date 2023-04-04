@@ -56,7 +56,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                     Admin = new CreateUpdateAdminDto
                     {
                         UserName = request.Organisation.AdminTc,
-                        AdminTypeEnum = adminType ? AdminTypeEnum.OrganisationAdmin : AdminTypeEnum.FranchiseAdmin,
+                        AdminTypeEnum = adminType ? UserType.OrganisationAdmin : UserType.FranchiseAdmin,
                         CitizenId = request.Organisation.AdminTc,
                         Name = request.Organisation.AdminName,
                         SurName = request.Organisation.AdminSurname,

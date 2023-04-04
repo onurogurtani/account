@@ -24,12 +24,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
             [SecuredOperation(Priority = 1)]
             public async Task<IDataResult<List<SelectionItem>>> Handle(GetAdminTypesQuery request, CancellationToken cancellationToken)
             {
-                var items = ((AdminTypeEnum[])Enum.GetValues(typeof(AdminTypeEnum)))
+                var adminTypes = AdminTypeConst.ADMIN_TYPES;
+                var items = ((UserType[])Enum.GetValues(typeof(UserType)))
                 .Select(x => new SelectionItem
                 {
                     Id = (int)x,
                     Label = x.DescriptionAttr().ToString()
-                }).ToList();
+                }).Where(w => adminTypes.Contains(w.Id)).ToList(); 
                 return new SuccessDataResult<List<SelectionItem>>(items);
             }
         }

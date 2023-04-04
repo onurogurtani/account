@@ -42,7 +42,8 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// It brings the details according to its id.
         /// </summary>
         /// <remarks>bla bla bla </remarks>
-        /// <return>Users List</return>
+        /// <return> Users List
+        /// UserType => Student = 10,  Parent = 20,Teacher = 30,Coach = 40,  Admin = 100,OrganisationAdmin = 110,InstitutionAdminAssistant = 111, FranchiseAdmin = 120 </return>
         /// <response code="200"></response>
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Entities.Dtos.UserDtos.CurrentUserDto))]
