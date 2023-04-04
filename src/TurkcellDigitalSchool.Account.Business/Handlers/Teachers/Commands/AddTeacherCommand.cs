@@ -55,7 +55,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
                     MobilePhones = request.MobilePhones,
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt,
-                    UserTypeEnum = UserTypeEnum.Teacher,
+                    UserType = UserType.Teacher,
                     Status = true,
                     RegisterStatus = RegisterStatus.Registered,
                     UserName = request.CitizenId.ToString()

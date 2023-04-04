@@ -10,12 +10,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Validat
         {
             RuleFor(x => x.Email).EmailAddress().When(w => !string.IsNullOrEmpty(w.Email)).WithMessage(Messages.EmailIsNotValid);
        
-            When(w => w.UserTypeId == Core.Enums.UserTypeEnum.Student, () =>
+            When(w => w.UserTypeId == Core.Enums.UserType.Student, () =>
             {
                 RuleFor(x => x.Email).NotEmpty().WithMessage(Messages.RequiredField);
             });
 
-            When(w => w.UserTypeId == Core.Enums.UserTypeEnum.Parent, () =>
+            When(w => w.UserTypeId == Core.Enums.UserType.Parent, () =>
             {
                 RuleFor(x => x.Email).NotEmpty().WithMessage(Messages.RequiredField);
                 RuleFor(x => x.MobilePhones).NotEmpty().WithMessage(Messages.RequiredField);

@@ -8,7 +8,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.ValidationRules
         public CreateRoleValidator()
         {
             RuleFor(x => x.Role.Name).NotEmpty().Length(2, 100).Matches("^[a-zA-Z0-9()ýðüþöçÝÐÜÞÖÇ ]*$").WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
-            RuleFor(x => x.Role.RoleType).NotEmpty().IsInEnum().WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
+            RuleFor(x => x.Role.UserType).NotEmpty().IsInEnum().WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
             RuleFor(x => x.Role.RoleClaims).NotEmpty().Must(x => x.Count > 0).WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
         }
     }
@@ -18,7 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.ValidationRules
         {
             RuleFor(x => x.Role.Id).NotEmpty();
             RuleFor(x => x.Role.Name).NotEmpty().Length(2, 100).Matches("^[a-zA-Z0-9()ýðüþöçÝÐÜÞÖÇ ]*$").WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
-            RuleFor(x => x.Role.RoleType).NotEmpty().IsInEnum().WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
+            RuleFor(x => x.Role.UserType).NotEmpty().IsInEnum().WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
             RuleFor(x => x.Role.RoleClaims).NotEmpty().Must(x => x.Count > 0).WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
         }
     }

@@ -13,7 +13,7 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Concrete.Core;
-using TurkcellDigitalSchool.Entities.Dtos.UserDtos; 
+using TurkcellDigitalSchool.Entities.Dtos.UserDtos;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 {
@@ -38,8 +38,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
             [LogAspect(typeof(FileLogger))]
             [SecuredOperation(Priority = 1)]
             public virtual async Task<IDataResult<PagedList<UserDto>>> Handle(GetByFilterPagedUsersQuery request, CancellationToken cancellationToken)
-            {                
-                var query = _userRepository.Query().Where(x => x.UserTypeEnum != null && x.UserTypeEnum > 0 && x.RegisterStatus == RegisterStatus.Registered)
+            {
+                var query = _userRepository.Query().Where(
+                    x => x.UserType != UserType.Admin && x.UserType != UserType.OrganisationAdmin
+                    && x.UserType != UserType.FranchiseAdmin && x.RegisterStatus == RegisterStatus.Registered)
                     .AsQueryable();
 
                 if (!string.IsNullOrWhiteSpace(request.UserDetailSearch.Name))
@@ -55,7 +57,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                     query = query.Where(x => x.MobilePhones.Contains(request.UserDetailSearch.MobilePhones));
 
                 if (request.UserDetailSearch.UserTypeId > 0)
-                    query = query.Where(x => x.UserTypeEnum == request.UserDetailSearch.UserTypeId);
+                    query = query.Where(x => x.UserType == request.UserDetailSearch.UserTypeId);
 
                 if (request.UserDetailSearch.CitizenId > 0)
                     query = query.Where(x => x.CitizenId == request.UserDetailSearch.CitizenId);
@@ -93,10 +95,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                         query = query.OrderBy(x => x.CitizenId);
                         break;
                     case "UserTypeIdDESC":
-                        query = query.OrderByDescending(x => x.UserTypeEnum);
+                        query = query.OrderByDescending(x => x.UserType);
                         break;
                     case "UserTypeIdASC":
-                        query = query.OrderBy(x => x.UserTypeEnum);
+                        query = query.OrderBy(x => x.UserType);
                         break;
                 }
 

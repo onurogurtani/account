@@ -64,7 +64,7 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
 
         public static string RoleAdded = "{0} rolü ve yetkileri başarıyla kaydedildi.";
         public static string RoleUpdated = "{0} rolü ve yetkilerdeki değişiklikler kaydedildi.";
-        public static string RoleTypeCantChanged = "Kullanıcı tanımlı olduğu ya da paketle tanımlı olan rol tipi değiştirilemez.";
+        public static string UserTypeCantChanged = "Kullanıcı tanımlı olduğu ya da paketle tanımlı olan Kullanıcı tipi değiştirilemez.";
         public static string TranferRoleIsNotActive = "Transfer etmek istediğiniz rol aktif değil.";
         public static string RoleIsAlreadyActive = "Rol zaten aktif.";
         public static string RoleandTransferRoleCantBeTheSame = "Pasif etmek istediğiniz rol ile transfer etmek istediğiniz rol aynı olamaz.";

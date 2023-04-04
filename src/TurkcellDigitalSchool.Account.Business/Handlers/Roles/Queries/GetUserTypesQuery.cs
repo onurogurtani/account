@@ -24,7 +24,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
             [SecuredOperation(Priority = 1)]
             public async Task<IDataResult<List<SelectionItem>>> Handle(GetUserTypesQuery request, CancellationToken cancellationToken)
             {
-                var items = ((UserTypeEnum[])Enum.GetValues(typeof(UserTypeEnum)))
+                var items = ((UserType[])Enum.GetValues(typeof(UserType)))
                 .Select(x => new SelectionItem
                 {
                     Id = (int)x,

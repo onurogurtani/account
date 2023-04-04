@@ -9,7 +9,7 @@ using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete.Core; 
+using TurkcellDigitalSchool.Entities.Concrete.Core;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
 {
@@ -40,10 +40,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
                 var isCitizenIdExist = _userRepository.Query().Any(q => q.Id != request.Id && q.CitizenId == request.CitizenId);
                 if (isCitizenIdExist) { return new ErrorDataResult<User>(Messages.CitizenIdAlreadyExist); }
 
-                var entity = await _userRepository.GetAsync(x => x.Id == request.Id );
+                var entity = await _userRepository.GetAsync(x => x.Id == request.Id);
                 if (entity == null)
                     return new ErrorDataResult<User>(Messages.RecordDoesNotExist);
-                if (entity.UserTypeEnum.HasValue && entity.UserTypeEnum != UserTypeEnum.Teacher)
+                if (entity.UserType != null && entity.UserType != UserType.Teacher)
                     return new ErrorDataResult<User>(Account.Business.Constants.Messages.UserIsNotTeacher);
 
                 entity.Name = request.Name;

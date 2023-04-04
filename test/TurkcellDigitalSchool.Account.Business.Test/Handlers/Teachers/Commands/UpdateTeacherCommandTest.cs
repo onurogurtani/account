@@ -14,7 +14,7 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
-using TurkcellDigitalSchool.Entities.Concrete.Core; 
+using TurkcellDigitalSchool.Entities.Concrete.Core;
 using static TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands.UpdateTeacherCommand;
 
 
@@ -70,11 +70,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Commands
                     RegisterStatus = Core.Enums.RegisterStatus.Registered,
                     AddingType = UserAddingType.Default,
                     Address = "Adres",
-                    AdminTypeEnum = Core.Enums.AdminTypeEnum.Admin,
                     CitizenId = 12345676787,
                     Email = "email@hotmail.com",
                     MobilePhones = "5554443322",
-                    UserTypeEnum = Core.Enums.UserTypeEnum.Teacher,
+                    UserType = Core.Enums.UserType.Teacher,
                     IsDeleted = false
                 },
                 new User{
@@ -89,11 +88,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Commands
                     RegisterStatus = Core.Enums.RegisterStatus.Registered,
                     AddingType = UserAddingType.Default,
                     Address = "Adres",
-                    AdminTypeEnum = Core.Enums.AdminTypeEnum.Admin,
+                    UserType = Core.Enums.UserType.Student,
                     CitizenId = 12345676789,
                     Email = "email2@hotmail.com",
                     MobilePhones = "5554443321",
-                    UserTypeEnum = Core.Enums.UserTypeEnum.Student,
                     IsDeleted = false
                 },
             };
@@ -160,7 +158,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Commands
             };
 
             _userRepository.Setup(x => x.Query()).Returns(_fakeUsers.AsQueryable().BuildMock());
-            _userRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<User,bool>>>())).ReturnsAsync(_fakeUsers.Where(q=> q.Id == 1).FirstOrDefault());
+            _userRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<User, bool>>>())).ReturnsAsync(_fakeUsers.Where(q => q.Id == 1).FirstOrDefault());
             _userRepository.Setup(x => x.Update(It.IsAny<User>())).Returns(new User());
 
             var result = await _updateTeacherCommandHandler.Handle(_updateTeacherCommand, new CancellationToken());

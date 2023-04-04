@@ -47,7 +47,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                 long userId = _tokenHelper.GetUserIdByCurrentToken();
                 var userEntity = await _userRepository.GetAsync(p => p.Id == userId);
 
-                if (userEntity.UserTypeEnum ==UserTypeEnum.Student)
+                if (userEntity.UserType == UserType.Student)
                 {
                     userEntity.NameSurname = request.NameSurname;
                     userEntity.ResidenceCounty = request.ResidenceCounty;
@@ -62,7 +62,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                     //_educationRepository.Update(education);
                     //await _educationRepository.SaveChangesAsync();
                 }
-                else if (userEntity.UserTypeEnum == UserTypeEnum.Parent)
+                else if (userEntity.UserType == UserType.Parent)
                 {
                     userEntity.NameSurname = request.NameSurname;
                     userEntity.MobilePhones = request.MobilePhones;

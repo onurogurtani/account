@@ -49,14 +49,17 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
                 long currentUserId = _tokenHelper.GetUserIdByCurrentToken();
                 var currentUser = await _userRepository.GetAsync(p => p.Id == currentUserId);
 
-                if (currentUser.AdminTypeEnum == null)
+                if (currentUser.UserType !=  UserType.Admin && currentUser.UserType != UserType.OrganisationAdmin && currentUser.UserType != UserType.FranchiseAdmin)
                     return new ErrorDataResult<PagedList<AdminDto>>(Messages.AutorizationRoleError);
 
-                if (currentUser.AdminTypeEnum == AdminTypeEnum.OrganisationAdmin)
-                    request.AdminDetailSearch.AdminTypeEnum = AdminTypeEnum.OrganisationAdmin;
+                if (currentUser.UserType == UserType.OrganisationAdmin)
+                    request.AdminDetailSearch.UserType = UserType.OrganisationAdmin;
 
+                if (currentUser.UserType == UserType.FranchiseAdmin)
+                    request.AdminDetailSearch.UserType = UserType.OrganisationAdmin;
+                
                 var query = _userRepository.Query().Include(cc => cc.UserRoles).ThenInclude(rol => rol.Role)
-                    .Where(x => x.AdminTypeEnum != null && x.AdminTypeEnum > 0)
+                    .Where(x => x.UserType == UserType.Admin   || x.UserType == UserType.OrganisationAdmin || x.UserType == UserType.FranchiseAdmin )
                     .AsQueryable();
 
                 if (!string.IsNullOrWhiteSpace(request.AdminDetailSearch.Name))
@@ -77,13 +80,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
                 if (!string.IsNullOrWhiteSpace(request.AdminDetailSearch.MobilePhones))
                     query = query.Where(x => x.MobilePhones.Contains(request.AdminDetailSearch.MobilePhones));
 
-                if (request.AdminDetailSearch.AdminTypeEnum != null)
-                    query = query.Where(x => x.AdminTypeEnum == request.AdminDetailSearch.AdminTypeEnum);
+                if (request.AdminDetailSearch.UserType != null)
+                    query = query.Where(x => x.UserType == request.AdminDetailSearch.UserType);
 
 
                 var items = await query.OrderByDescending(x => x.UpdateTime ?? DateTime.MinValue).Select(s => new AdminDto
                 {
-                    AdminTypeEnum = s.AdminTypeEnum,
+                    UserType = s.UserType,
                     CitizenId = s.CitizenId,
                     Email = s.Email,
                     Id = s.Id,
@@ -96,7 +99,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
                     }).ToList(),
                     Status = s.Status,
                     SurName = s.SurName,
-                    UserName = s.AdminTypeEnum == AdminTypeEnum.OrganisationAdmin ? (s.CitizenId + "") : s.UserName,
+                    UserName = s.UserType == UserType.OrganisationAdmin ? (s.CitizenId + "") : s.UserName,
                     LastLoginDate = (s.LastMobileSessionTime ?? DateTime.MinValue) > (s.LastWebSessionTime??DateTime.MinValue) ? s.LastMobileSessionTime : s.LastWebSessionTime
                 }).ToListAsync();
 

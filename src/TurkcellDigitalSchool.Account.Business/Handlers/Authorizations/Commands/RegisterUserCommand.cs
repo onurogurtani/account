@@ -24,7 +24,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 {
     public class RegisterUserCommand : IRequest<IDataResult<AccessToken>>
     {
-        public UserTypeEnum UserTypeId { get; set; }
+        public UserType UserTypeId { get; set; }
         public long CitizenId { get; set; }
         public string Name { get; set; }
         public string SurName { get; set; }
@@ -68,7 +68,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 
                 var user = new User
                 {
-                    UserTypeEnum = request.UserTypeId,
+                    UserType = request.UserTypeId,
                     CitizenId = request.CitizenId,
                     Name = request.Name,
                     SurName = request.SurName,
