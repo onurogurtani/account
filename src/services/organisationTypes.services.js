@@ -7,7 +7,7 @@ const getOrganisationTypes = (
     },
 ) => {
     return api({
-        url: `Crm/OrganisationTypes/GetByFilterPagedOrganisationTypes`,
+        url: `Account/OrganisationTypes/GetByFilterPagedOrganisationTypes`,
         method: 'POST',
         data,
         params,

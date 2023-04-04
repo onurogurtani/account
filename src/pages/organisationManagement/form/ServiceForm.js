@@ -5,12 +5,13 @@ import {
   CustomSelect,
   CustomTextInput,
   Option,
+  CustomInput,
   CustomNumberInput,
 } from '../../../components';
 import { serviceInformation } from '../../../constants/organisation';
 import '../../../styles/organisationManagement/organisationForm.scss';
 
-const ServiceForm = ({ form, serviceData, onFinishForm, sendValue }) => {
+const ServiceForm = ({ form, serviceData, sendValue  }) => {
   useEffect(() => {
     if (Object.keys(serviceData).length > 0) {
       form.setFieldsValue(serviceData)
@@ -19,7 +20,6 @@ const ServiceForm = ({ form, serviceData, onFinishForm, sendValue }) => {
 
   const onFinish = (values) => {
     sendValue(values);
-    onFinishForm()
   }
 
   const validateMessages = { required: 'Lütfen Zorunlu Alanları Doldurunuz.' };
@@ -68,7 +68,7 @@ const ServiceForm = ({ form, serviceData, onFinishForm, sendValue }) => {
             rules={[{ required: true }, { whitespace: true }]}
             style={{ width: '50%' }}
           >
-            <CustomTextInput placeholder="Host" />
+            <CustomInput placeholder="Host" />
           </CustomFormItem>
         </div>
 
@@ -77,7 +77,7 @@ const ServiceForm = ({ form, serviceData, onFinishForm, sendValue }) => {
           name="apiKey"
           rules={[{ required: true }, { whitespace: true }]}
         >
-          <CustomTextInput placeholder="API Key" />
+          <CustomInput placeholder="API Key" />
         </CustomFormItem>
 
         <CustomFormItem
@@ -85,7 +85,7 @@ const ServiceForm = ({ form, serviceData, onFinishForm, sendValue }) => {
           name="apiSecret"
           rules={[{ required: true }, { whitespace: true }]}
         >
-          <CustomTextInput placeholder="API Secret" />
+          <CustomInput placeholder="API Secret" />
         </CustomFormItem>
 
         <div className='flex-row'>

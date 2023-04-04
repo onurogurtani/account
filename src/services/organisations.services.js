@@ -1,8 +1,9 @@
 import { api } from './api';
+import axios from 'axios';
 
 const getByFilterPagedOrganisations = (data) => {
   return api({
-    url: `Crm/Organisations/GetByFilterPagedOrganisations`,
+    url: `Account/Organisations/GetByFilterPagedOrganisations`,
     method: 'POST',
     data,
   });
@@ -10,7 +11,7 @@ const getByFilterPagedOrganisations = (data) => {
 
 const getOrganisationNames = (data) => {
   return api({
-    url: `Crm/Organisations/getOrganisationNames`,
+    url: `Account/Organisations/getOrganisationNames`,
     method: 'GET',
     data,
   });
@@ -18,7 +19,7 @@ const getOrganisationNames = (data) => {
 
 const getOrganisationPackagesNames = (data) => {
   return api({
-    url: `Crm/Organisations/getOrganisationPackageNames`,
+    url: `Account/Organisations/getOrganisationPackageNames`,
     method: 'GET',
     data,
   });
@@ -26,7 +27,7 @@ const getOrganisationPackagesNames = (data) => {
 
 const getOrganisationManagerNames = (data) => {
   return api({
-    url: `Crm/Organisations/getOrganisationManagerNames`,
+    url: `Account/Organisations/getOrganisationManagerNames`,
     method: 'GET',
     data,
   });
@@ -34,7 +35,7 @@ const getOrganisationManagerNames = (data) => {
 
 const getOrganisationDomainNames = (data) => {
   return api({
-    url: `Crm/Organisations/getOrganisationDomainNames`,
+    url: `Account/Organisations/getOrganisationDomainNames`,
     method: 'GET',
     data,
   });
@@ -42,14 +43,14 @@ const getOrganisationDomainNames = (data) => {
 
 const getByOrganisationId = (id) => {
   return api({
-    url: `Crm/Organisations/getbyid?Id=${id}`,
+    url: `Account/Organisations/getbyid?Id=${id}`,
     method: 'GET',
   });
 };
 
 const addOrganisation = (data) => {
   return api({
-    url: `Crm/Organisations/Add`,
+    url: `Account/Organisations/Add`,
     method: 'POST',
     data: data,
   });
@@ -57,7 +58,7 @@ const addOrganisation = (data) => {
 
 const updateOrganisation = (data) => {
   return api({
-    url: `Crm/Organisations/Update`,
+    url: `Account/Organisations/Update`,
     method: 'PUT',
     data: data,
   });
@@ -65,7 +66,7 @@ const updateOrganisation = (data) => {
 
 const UpdateOrganisationStatus = (data) => {
   return api({
-    url: `Crm/Organisations/UpdateOrganisationStatus`,
+    url: `Account/Organisations/UpdateOrganisationStatus`,
     method: 'PUT',
     data: data,
   });
@@ -73,7 +74,7 @@ const UpdateOrganisationStatus = (data) => {
 
 const deleteOrganization = (data) => {
   return api({
-    url: `Crm/Organisations/Delete`,
+    url: `Account/Organisations/Delete`,
     method: 'DELETE',
     data,
   });
@@ -81,10 +82,25 @@ const deleteOrganization = (data) => {
 
 const UpdateOrganisationIsActive = (data) => {
   return api({
-    url: `Crm/Organisations/UpdateOrganisationIsActive`,
+    url: `Account/Organisations/UpdateOrganisationIsActive`,
     method: 'PUT',
     data: data,
   });
+};
+
+const getImage = ({ id }) => {
+  return api({
+    url: `Account/OrganisationLogo/getbyid?Id=${id}`,
+    method: 'GET',
+  });
+};
+
+const addImage = (data, options) => {
+  return axios.post(`${process.env.PUBLIC_HOST_API}/Account/OrganisationLogo/Add`, data, { ...options });
+};
+
+const updateImage = (data, options) => {
+  return axios.put(`${process.env.PUBLIC_HOST_API}/Account/OrganisationLogo/Update`, data, { ...options });
 };
 
 const organisationsServices = {
@@ -99,6 +115,10 @@ const organisationsServices = {
   UpdateOrganisationStatus,
   deleteOrganization,
   UpdateOrganisationIsActive,
+  getImage,
+  addImage,
+  updateImage,
+  addImage
 };
 
 export default organisationsServices;

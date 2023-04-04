@@ -8,7 +8,6 @@ export const getByFilterPagedOrganisations = createAsyncThunk(
       const response = await organisationsServices.getByFilterPagedOrganisations({
         organisationDetailSearch: { ...data, ...data?.body, body: undefined },
       });
-     // dispatch(setOrganisationDetailSearch(data));
       dispatch(setFilterObject(data));
       return response;
     } catch (error) {
@@ -67,7 +66,7 @@ export const getOrganisationDomainNames = createAsyncThunk(
 
 export const getByOrganisationId = createAsyncThunk(
   'organisations/getByOrganisationId',
-  async (data,{ getState, dispatch, rejectWithValue }) => {
+  async (data, { getState, dispatch, rejectWithValue }) => {
     try {
       const response = await organisationsServices.getByOrganisationId(data?.Id);
       return response;
@@ -115,13 +114,13 @@ export const UpdateOrganisationStatus = createAsyncThunk(
 
 export const deleteOrganization = createAsyncThunk(
   'organisations/deleteOrganization', async (data, { dispatch, rejectWithValue }) => {
-  try {
-    const response = await organisationsServices.deleteOrganization(data);
-    return response;
-  } catch (error) {
-    return rejectWithValue(error?.data);
-  }
-});
+    try {
+      const response = await organisationsServices.deleteOrganization(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  });
 
 export const UpdateOrganisationIsActive = createAsyncThunk(
   'organisations/UpdateOrganisationIsActive',
@@ -135,9 +134,44 @@ export const UpdateOrganisationIsActive = createAsyncThunk(
   },
 );
 
+export const getImage = createAsyncThunk(
+  'organisations/getImage',
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      return await organisationsServices.getImage({ id });
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  }
+);
+
+export const addImage = createAsyncThunk(
+  'organisations/addImage', async (data = {}, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await organisationsServices.addImage(data.data, data.options);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+
+export const updateImage = createAsyncThunk(
+  'organisations/updateImage', async (data = {}, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await organisationsServices.updateImage(data.data, data.options);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error?.data);
+  }
+});
+
 const initialState = {
   activeStep: 0,
   organisations: [],
+  organisationNames:[],
+  organisationPackagesNames:[],
+  organisationManagerNames:[],
+  organisationDomainNames:[],
   organisationDetailSearch: {
     pageNumber: 1,
     pageSize: 10,
@@ -152,6 +186,7 @@ const initialState = {
   },
   isFilter: false,
   filterObject: {},
+  organisationImageId:0
 };
 
 export const organisationsSlice = createSlice({
@@ -170,6 +205,9 @@ export const organisationsSlice = createSlice({
     setIsFilter: (state, action) => {
       state.isFilter = action.payload;
     },
+    setOrganizationImageId: (state, action) => {
+      state.organisationImageId = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getByFilterPagedOrganisations.fulfilled, (state, action) => {
@@ -184,14 +222,32 @@ export const organisationsSlice = createSlice({
         pageSize: 10,
         totalCount: 0,
       };
-      // builder.addCase(deleteOrganization.fulfilled, (state, action) => {
-      //   const { arg } = action.meta;
-      //   if (arg) {
-      //     state.organisations = state.organisations.filter((item) => item.id !== arg);
-      //   }
-      // });
+    });
+    builder.addCase(getOrganisationNames.fulfilled, (state, action) => {
+      state.organisationNames = action?.payload?.data;
+    });
+    builder.addCase(getOrganisationNames.rejected, (state) => {
+      state.organisationNames = [];
+    });
+    builder.addCase(getOrganisationPackagesNames.fulfilled, (state, action) => {
+      state.organisationPackagesNames = action?.payload?.data;
+    });
+    builder.addCase(getOrganisationPackagesNames.rejected, (state) => {
+      state.organisationPackagesNames = [];
+    });
+    builder.addCase(getOrganisationManagerNames.fulfilled, (state, action) => {
+      state.organisationManagerNames = action?.payload?.data;
+    });
+    builder.addCase(getOrganisationManagerNames.rejected, (state) => {
+      state.organisationManagerNames = [];
+    });
+    builder.addCase(getOrganisationDomainNames.fulfilled, (state, action) => {
+      state.organisationDomainNames = action?.payload?.data;
+    });
+    builder.addCase(getOrganisationDomainNames.rejected, (state) => {
+      state.organisationDomainNames = [];
     });
   },
 });
 
-export const { onChangeActiveStep, setOrganisationDetailSearch , setFilterObject, setIsFilter } = organisationsSlice.actions;
+export const { onChangeActiveStep, setOrganisationDetailSearch, setFilterObject, setIsFilter ,setOrganizationImageId} = organisationsSlice.actions;
