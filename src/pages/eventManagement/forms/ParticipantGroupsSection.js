@@ -27,10 +27,10 @@ const ParticipantGroupsSection = ({ form }) => {
                     onSelect={onParticipantGroupTypeSelect}
                     onDeselect={onParticipantGroupTypeDeSelect}
                 >
-                    {participantGroupTypes?.map((item) => {
+                    {Object.keys(participantGroupTypes)?.map((item) => {
                         return (
-                            <Option key={item?.id} value={item?.id}>
-                                {item?.value}
+                            <Option key={item} value={participantGroupTypes[item]?.value}>
+                                {participantGroupTypes[item]?.value}
                             </Option>
                         );
                     })}
