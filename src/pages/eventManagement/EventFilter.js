@@ -135,7 +135,7 @@ const EventFilter = () => {
                     </CustomSelect>
                 </CustomFormItem>
 
-                <CustomFormItem label="Katılımcı Türü" name="???">
+                <CustomFormItem label="Katılımcı Türü" name="ParticipantTypeId">
                     <CustomSelect
                         showArrow
                         mode="multiple"
