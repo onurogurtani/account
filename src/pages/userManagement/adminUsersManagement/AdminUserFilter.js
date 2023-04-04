@@ -48,7 +48,6 @@ const AdminUserFilter = () => {
 
     const onFinish = useCallback(
         async (values) => {
-            console.log(values);
             try {
                 const body = {
                     ...filterObject,
@@ -58,9 +57,7 @@ const AdminUserFilter = () => {
                 };
                 await dispatch(getByFilterPagedAdminUsers(body));
                 await dispatch(setIsFilter(true));
-            } catch (e) {
-                console.log(e);
-            }
+            } catch (e) {}
         },
         [dispatch, filterObject],
     );
@@ -130,11 +127,11 @@ const AdminUserFilter = () => {
 
                     <CustomFormItem label="Admin Tipi" name="UserType">
                         <CustomSelect allowClear placeholder="Seçiniz">
-                            {adminTypes
-                                ?.filter((u) => u.accessType.includes(userType))
+                            {Object.keys(adminTypes)
+                                ?.filter((u) => adminTypes[u].accessType.includes(userType))
                                 ?.map((item) => (
-                                    <Option key={item.id} value={item.id}>
-                                        {item.value}
+                                    <Option key={item} value={item}>
+                                        {adminTypes[item].label}
                                     </Option>
                                 ))}
                         </CustomSelect>

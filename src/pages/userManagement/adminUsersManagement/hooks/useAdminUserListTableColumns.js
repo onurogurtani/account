@@ -80,7 +80,7 @@ const useAdminUserListTableColumns = () => {
             // sorter: true,
             // sortOrder: sorterObject?.columnKey === 'name' ? sorterObject?.order : null,
             render: (text, record) => {
-                return <div>{adminTypes.find((item) => item.id === text).value}</div>;
+                return <div>{adminTypes[text]?.label}</div>;
             },
         },
         {

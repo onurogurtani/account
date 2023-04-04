@@ -170,11 +170,11 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
                         name="adminTypeEnum"
                     >
                         <CustomSelect placeholder="Seçiniz">
-                            {adminTypes
-                                ?.filter((u) => u.accessType.includes(userType))
+                            {Object.keys(adminTypes)
+                                ?.filter((u) => adminTypes[u].accessType.includes(userType))
                                 ?.map((item) => (
-                                    <Option key={item.id} value={item.id}>
-                                        {item.value}
+                                    <Option key={item} value={item}>
+                                        {adminTypes[item].label}
                                     </Option>
                                 ))}
                         </CustomSelect>
