@@ -38,5 +38,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.ValidationRul
         }
     }
 
+    public class DeleteTeacherValidator : AbstractValidator<DeleteTeacherCommand>
+    {
+        public DeleteTeacherValidator()
+        {
+            RuleFor(x => x.UserId).NotEmpty().WithMessage("UserId gereklidir");
+            RuleFor(x => x.OrganisationId).NotEmpty().WithMessage("OrganisationId gereklidir");
+        }
+    }
 
 }
