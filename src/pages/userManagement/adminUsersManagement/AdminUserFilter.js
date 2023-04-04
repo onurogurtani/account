@@ -16,7 +16,6 @@ import '../../../styles/tableFilter.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { formMailRegex, formPhoneRegex, tcknValidator } from '../../../utils/formRule';
 import { getUnmaskedPhone, turkishToLower } from '../../../utils/utils';
-import { getGroupsList } from '../../../store/slice/groupsSlice';
 import { getByFilterPagedAdminUsers, setIsFilter } from '../../../store/slice/adminUserSlice';
 import { adminTypes } from '../../../constants/adminUsers';
 import { getAllRoleList } from '../../../store/slice/roleAuthorizationSlice';
@@ -26,7 +25,7 @@ const AdminUserFilter = () => {
     const dispatch = useDispatch();
     const { allRoles } = useSelector((state) => state?.roleAuthorization);
     const { filterObject, isFilter } = useSelector((state) => state?.adminUsers);
-    const { adminTypeEnum } = useSelector((state) => state.user.currentUser);
+    const { userType } = useSelector((state) => state.user.currentUser);
     useEffect(() => {
         dispatch(
             getAllRoleList({
@@ -129,10 +128,10 @@ const AdminUserFilter = () => {
                         <CustomInput placeholder="E-Mail" />
                     </CustomFormItem>
 
-                    <CustomFormItem label="Admin Tipi" name="AdminTypeEnum">
+                    <CustomFormItem label="Admin Tipi" name="UserType">
                         <CustomSelect allowClear placeholder="Seçiniz">
                             {adminTypes
-                                ?.filter((u) => u.accessType.includes(adminTypeEnum))
+                                ?.filter((u) => u.accessType.includes(userType))
                                 ?.map((item) => (
                                     <Option key={item.id} value={item.id}>
                                         {item.value}
