@@ -573,6 +573,11 @@ const App = () => {
                                                     Component={WorkPlanManagement?.EditWorkPlan}
                                                     authority="dashboard"
                                                 />
+                                                <PrivateRoute
+                                                    path={`${match?.path}/copy`}
+                                                    Component={WorkPlanManagement?.CopyWorkPlan}
+                                                    authority="dashboard"
+                                                />
                                                 <Route
                                                     component={() => (
                                                         <Redirect
