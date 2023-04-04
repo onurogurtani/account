@@ -1,24 +1,24 @@
 import { api } from './api';
 
 const citysGetList = () => {
-  return api({
-    url: `Shared/Citys/getList?PageSize=0`,
-    method: 'POST',
-    data: null,
-  });
+    return api({
+        url: `Account/Citys/getList?PageSize=0`,
+        method: 'POST',
+        data: null,
+    });
 };
 
 const countysGetList = () => {
-  return api({
-    url: `Shared/Countys/getList?PageSize=0`,
-    method: 'POST',
-    data: null,
-  });
+    return api({
+        url: `Account/Countys/getList?PageSize=0`,
+        method: 'POST',
+        data: null,
+    });
 };
 
 const cityCountyServices = {
-  citysGetList,
-  countysGetList,
+    citysGetList,
+    countysGetList,
 };
 
 export default cityCountyServices;

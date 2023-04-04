@@ -1,57 +1,62 @@
 import React, { memo, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { confirmDialog, errorDialog, Text } from '../../../components';
-import EditableInput from '../../../components/EditableInput';
-import { deleteUnits, editUnits } from '../../../store/slice/lessonUnitsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { setStatusLessons } from '../../../store/slice/lessonsSlice';
+import { editUnits, setStatusUnits, setUnitStatus } from '../../../store/slice/lessonUnitsSlice';
+import AcquisitionTreeCreateOrEdit from './AcquisitionTreeCreateOrEdit';
 import Toolbar from './Toolbar';
 
-const Unit = ({ unit, open, setSelectedInsertKey }) => {
-  const dispatch = useDispatch();
-  const [isEdit, setIsEdit] = useState(false);
+const Unit = ({ unit, open, setSelectedInsertKey, parentIsActive }) => {
+    const dispatch = useDispatch();
+    const [isEdit, setIsEdit] = useState(false);
 
-  const updateUnit = async (value) => {
-    const entity = {
-      entity: {
-        id: unit.id,
-        name: value,
-        lessonId: unit.lessonId,
-      },
+    const updateUnit = async (value) => {
+        const entity = {
+            entity: {
+                id: unit.id,
+                name: value.name,
+                lessonId: unit.lessonId,
+                isActive: parentIsActive ? unit.isActive : false,
+            },
+        };
+        await dispatch(editUnits(entity)).unwrap();
     };
-    await dispatch(editUnits(entity));
-  };
 
-  const deleteUnit = async () => {
-    confirmDialog({
-      title: <Text t="attention" />,
-      message: 'Tüm ilişkili bağlantılar silinecektir. Silmek istediğinizden emin misiniz?',
-      okText: <Text t="Evet" />,
-      cancelText: 'Hayır',
-      onOk: async () => {
-        try {
-          await dispatch(deleteUnits(unit.id)).unwrap();
-        } catch (err) {
-          errorDialog({ title: <Text t="error" />, message: err.message });
-        }
-      },
-    });
-  };
+    const statusAction = async (status) => {
+        await dispatch(setUnitStatus({ id: unit.id, isActive: status })).unwrap();
+        dispatch(setStatusUnits({ data: unit.id, status }));
 
-  const toolbarProps = {
-    addText: 'Konu Ekle',
-    editText: 'Üniteyi Düzenle',
-    deleteText: 'Üniteyi Sil',
-    open,
-    setIsEdit,
-    setSelectedInsertKey,
-    deleteAction: deleteUnit,
-    selectedKey: { id: unit.id, type: 'unit' },
-  };
-  return (
-    <>
-      <EditableInput initialValue={unit.name} isEdit={isEdit} setIsEdit={setIsEdit} onEnter={updateUnit} />
-      <Toolbar {...toolbarProps} />
-    </>
-  );
+        if (!status) return false;
+        dispatch(setStatusLessons({ data: unit.lessonId, status }));
+    };
+    const toolbarProps = {
+        addText: 'Konu Ekle',
+        editText: 'Üniteyi Düzenle',
+        statusText:
+            unit.name +
+            ' ünitesi ve ' +
+            unit.name +
+            ' ünitesine tanımlanmış tüm konu, kazanım ve ayraçlar pasife alınacaktır. Pasife alma işlemini onaylıyor musunuz?',
+        isActive: unit?.isActive,
+        open,
+        setIsEdit,
+        setSelectedInsertKey,
+        statusAction,
+        parentIsActive,
+        selectedKey: { id: unit.id, type: 'unit' },
+    };
+    return (
+        <>
+            <div style={{ opacity: parentIsActive ? (unit.isActive ? 1 : 0.4) : 0.4 }}>
+                <AcquisitionTreeCreateOrEdit
+                    initialValue={unit}
+                    isEdit={isEdit}
+                    setIsEdit={setIsEdit}
+                    onEnter={updateUnit}
+                />
+            </div>
+            <Toolbar {...toolbarProps} />
+        </>
+    );
 };
 
 export default memo(Unit);

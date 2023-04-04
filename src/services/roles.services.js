@@ -2,7 +2,7 @@ import { api } from './api';
 
 const getByFilterPagedRoles = (data) => {
     return api({
-        url: `Identity/Roles/GetByFilterPagedRoles`,
+        url: `Account/Roles/GetByFilterPagedRoles`,
         method: 'POST',
         data,
     });
@@ -10,7 +10,7 @@ const getByFilterPagedRoles = (data) => {
 
 const addRole = (data) => {
     return api({
-        url: `Identity/Roles/Add`,
+        url: `Account/Roles/Add`,
         method: 'POST',
         data,
     });
@@ -18,7 +18,7 @@ const addRole = (data) => {
 
 const updateRole = (data) => {
     return api({
-        url: `Identity/Roles/Update`,
+        url: `Account/Roles/Update`,
         method: 'PUT',
         data,
     });
@@ -26,21 +26,21 @@ const updateRole = (data) => {
 
 const getRoleById = (params) => {
     return api({
-        url: `Identity/Roles/getbyid`,
+        url: `Account/Roles/getbyid`,
         method: 'GET',
         params,
     });
 };
 const roleCopy = (data) => {
     return api({
-        url: `Identity/Roles/RoleCopy`,
+        url: `Account/Roles/RoleCopy`,
         method: 'POST',
         data,
     });
 };
 const getAllRoleList = ({ data = null, params = { PageSize: 0 } }) => {
     return api({
-        url: `Identity/Roles/getList`,
+        url: `Account/Roles/getList`,
         method: 'POST',
         data,
         params,
@@ -49,21 +49,21 @@ const getAllRoleList = ({ data = null, params = { PageSize: 0 } }) => {
 
 const passiveCheckControlRole = (params) => {
     return api({
-        url: `Identity/Roles/PassiveCheckControlRole`,
+        url: `Account/Roles/PassiveCheckControlRole`,
         method: 'GET',
         params,
     });
 };
 const setPassiveRole = (data) => {
     return api({
-        url: `Identity/Roles/SetPassiveRole`,
+        url: `Account/Roles/SetPassiveRole`,
         method: 'POST',
         data,
     });
 };
 const setActiveRole = (data) => {
     return api({
-        url: `Identity/Roles/SetActiveRole`,
+        url: `Account/Roles/SetActiveRole`,
         method: 'POST',
         data,
     });
@@ -71,7 +71,7 @@ const setActiveRole = (data) => {
 
 const getRoleTypes = (data) => {
     return api({
-        url: `Identity/Roles/getRoleTypes`,
+        url: `Account/Roles/getRoleTypes`,
         method: 'Get',
         data,
     });

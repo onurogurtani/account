@@ -568,11 +568,11 @@ const App = () => {
                                                     Component={WorkPlanManagement?.AddWorkPlan}
                                                     authority="dashboard"
                                                 />
-                                                {/*<PrivateRoute*/}
-                                                {/*  path={`${match?.path}/edit/:id`}*/}
-                                                {/*  Component={WorkPlanManagement?.EditWorkPlan}*/}
-                                                {/*  authority="dashboard"*/}
-                                                {/*/>*/}
+                                                <PrivateRoute
+                                                    path={`${match?.path}/edit`}
+                                                    Component={WorkPlanManagement?.EditWorkPlan}
+                                                    authority="dashboard"
+                                                />
                                                 <Route
                                                     component={() => (
                                                         <Redirect
@@ -646,7 +646,12 @@ const App = () => {
                                                     Component={Exam.TrialExam}
                                                     authority="dashboard"
                                                 />
-
+                                                <PrivateRoute
+                                                    path={`${match?.path}/list`}
+                                                    exact
+                                                    Component={Exam.TrialExamList}
+                                                    authority="dashboard"
+                                                />
                                                 <Route
                                                     component={() => (
                                                         <Redirect
@@ -758,7 +763,20 @@ const App = () => {
                                             <Switch>
                                                 <PrivateRoute
                                                     path={`${match?.path}/`}
+                                                    exact
                                                     Component={Teachers.TeacherList}
+                                                    authority="dashboard"
+                                                />
+                                                <PrivateRoute
+                                                    path={`${match?.path}/add`}
+                                                    exact
+                                                    Component={Teachers.TeacherAddEdit}
+                                                    authority="dashboard"
+                                                />
+                                                <PrivateRoute
+                                                    path={`${match?.path}/edit/:id`}
+                                                    exact
+                                                    Component={Teachers.TeacherAddEdit}
                                                     authority="dashboard"
                                                 />
                                             </Switch>

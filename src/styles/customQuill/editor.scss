@@ -1,0 +1,26 @@
+.text-editor {
+    width: 500px;
+    margin: 0 auto;
+}
+.ql-editor {
+    min-height: 100px;
+    overflow: auto;
+}
+.quill {
+    position: relative;
+    z-index: 10;
+}
+// .ql-toolbar .ql-snow {
+//     background-color: brown;
+//     z-index: 11;
+//     position: relative;
+// }
+
+.ql-toolbar.ql-snow {
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif, 'Times New Roman', 'Georgia', 'Garamond' serif;
+    padding: 8px;
+    z-index: 11;
+    position: relative;
+}

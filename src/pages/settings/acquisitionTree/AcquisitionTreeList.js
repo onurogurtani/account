@@ -1,56 +1,28 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Space, Typography } from 'antd';
-import { useCallback, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    CustomButton,
-    CustomCollapseCard,
-    CustomPageHeader,
-    CustomSelect,
-    Option,
-    Text,
-    warningDialog,
-} from '../../../components';
-import EditableInput from '../../../components/EditableInput';
+import { CustomButton, CustomCollapseCard, CustomPageHeader, CustomSelect, Option } from '../../../components';
 import useAcquisitionTree from '../../../hooks/useAcquisitionTree';
-import { addLessons } from '../../../store/slice/lessonsSlice';
-
-import '../../../styles/settings/lessons.scss';
-
+import { getAllClassStages } from '../../../store/slice/classStageSlice';
+import { getEducationYearList } from '../../../store/slice/educationYearsSlice';
+import { getListFilterParams } from '../../../utils/utils';
 import AcquisitionTreeUploadExcelModal from './AcquisitionTreeUploadExcelModal';
 import Lessons from './Lessons';
+import '../../../styles/settings/lessons.scss';
 
 const { Title } = Typography;
 const AcquisitionTreeList = () => {
     const dispatch = useDispatch();
-    const { allClassList, classroomId, setClassroomId } = useAcquisitionTree();
+    const { classroomId, setClassroomId, isLoading } = useAcquisitionTree(false, true, false);
+    const { educationYearList } = useSelector((state) => state.educationYears);
+    const { allClassList } = useSelector((state) => state?.classStages);
     const [isAdd, setIsAdd] = useState(false);
+    const [selectedEducationYear, setSelectedEducationYear] = useState();
 
-    const validateClassroom = useCallback(() => {
-        if (!classroomId) {
-            warningDialog({
-                title: <Text t="error" />,
-                message: 'Ders eklemek  için öncelikle sınıf seçmeniz gerekmektedir.',
-            });
-        } else {
-            setIsAdd(true);
-        }
-    }, [classroomId]);
-
-    const addLesson = useCallback(
-        async (value) => {
-            const entity = {
-                entity: {
-                    name: value,
-                    isActive: true,
-                    classroomId,
-                },
-            };
-            await dispatch(addLessons(entity));
-        },
-        [classroomId, dispatch],
-    );
-
+    useEffect(() => {
+        dispatch(getEducationYearList());
+    }, [dispatch]);
     return (
         <>
             <CustomPageHeader title="Kazanım Ağacı" showBreadCrumb routes={['Ayarlar']}>
@@ -58,37 +30,69 @@ const AcquisitionTreeList = () => {
                     <div className="lessons-wrapper">
                         <div className="lessons-header">
                             <div className="class-select-container">
-                                <Title level={5}>Sınıf Bilgisi :</Title>
-                                <CustomSelect
-                                    style={{
-                                        width: 300,
-                                        paddingLeft: 5,
-                                    }}
-                                    placeholder="Seçiniz"
-                                    onChange={(e) => setClassroomId(e)}
-                                >
-                                    {allClassList
-                                        ?.filter((item) => item.isActive === true)
-                                        ?.map(({ id, name }) => (
+                                <Space>
+                                    <Title level={5}>Eğitim Öğretim Yılı:</Title>
+                                    <CustomSelect
+                                        style={{
+                                            width: 150,
+                                            paddingLeft: 5,
+                                        }}
+                                        placeholder="Seçiniz"
+                                        onChange={(e) => {
+                                            dispatch(
+                                                getAllClassStages(
+                                                    getListFilterParams('educationYearId', e.toString()).concat([
+                                                        { field: 'isActive', value: true, compareType: 0 },
+                                                    ]),
+                                                ),
+                                            );
+                                            setSelectedEducationYear(e);
+                                        }}
+                                    >
+                                        {educationYearList?.items?.map(({ id, startYear, endYear }) => (
                                             <Option key={id} value={id}>
-                                                {name}
+                                                {startYear} - {endYear}
                                             </Option>
                                         ))}
-                                </CustomSelect>
+                                    </CustomSelect>
+                                    <Title level={5}>Sınıf Seviyesi Seç:</Title>
+                                    <CustomSelect
+                                        style={{
+                                            width: 250,
+                                            paddingLeft: 5,
+                                        }}
+                                        disabled={!selectedEducationYear}
+                                        placeholder="Seçiniz"
+                                        onChange={(e) => setClassroomId(e)}
+                                    >
+                                        {allClassList
+                                            ?.filter((item) => item.isActive === true)
+                                            ?.map(({ id, name }) => (
+                                                <Option key={id} value={id}>
+                                                    {name}
+                                                </Option>
+                                            ))}
+                                    </CustomSelect>
+                                </Space>
                             </div>
                             <Space>
                                 <CustomButton
-                                    onClick={validateClassroom}
+                                    onClick={() => {
+                                        setIsAdd(true);
+                                    }}
                                     className="add-btn"
                                     icon={<PlusCircleOutlined />}
+                                    disabled={!classroomId}
                                 >
                                     Ders Ekle
                                 </CustomButton>
                                 <AcquisitionTreeUploadExcelModal selectedClassId={classroomId} />
                             </Space>
                         </div>
-                        <EditableInput height="40" isEdit={isAdd} setIsEdit={setIsAdd} onEnter={addLesson} />
-                        <Lessons classroomId={classroomId} />
+
+                        {classroomId && !isLoading && (
+                            <Lessons classroomId={classroomId} isAdd={isAdd} setIsAdd={setIsAdd} />
+                        )}
                     </div>
                 </CustomCollapseCard>
             </CustomPageHeader>

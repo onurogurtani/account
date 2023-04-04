@@ -28,7 +28,6 @@ const EditContract = () => {
             >
                 Geri
             </CustomButton>
-            ;
             <CustomCollapseCard
                 cardTitle={showData?.handleType === 'copy' ? 'Sözleşme Kopyalama' : 'Sözleşme Güncelleme'}
             >

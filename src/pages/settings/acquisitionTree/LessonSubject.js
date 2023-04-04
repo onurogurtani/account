@@ -1,62 +1,71 @@
 import React, { memo, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { confirmDialog, errorDialog, Text } from '../../../components';
-import EditableInput from '../../../components/EditableInput';
-import { deleteLessonSubjects, editLessonSubjects } from '../../../store/slice/lessonSubjectsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { setStatusLessons } from '../../../store/slice/lessonsSlice';
+import {
+    editLessonSubjects,
+    setLessonSubjectStatus,
+    setStatusLessonSubjects,
+} from '../../../store/slice/lessonSubjectsSlice';
+import { setStatusUnits } from '../../../store/slice/lessonUnitsSlice';
+import AcquisitionTreeCreateOrEdit from './AcquisitionTreeCreateOrEdit';
 import Toolbar from './Toolbar';
 
-const LessonSubject = ({ lessonSubject, open, setSelectedInsertKey }) => {
-  const dispatch = useDispatch();
-  const [isEdit, setIsEdit] = useState(false);
+const LessonSubject = ({ lessonSubject, open, setSelectedInsertKey, parentIsActive }) => {
+    const dispatch = useDispatch();
+    const [isEdit, setIsEdit] = useState(false);
+    const { lessonUnits } = useSelector((state) => state?.lessonUnits);
 
-  const updatelessonSubject = async (value) => {
-    const entity = {
-      entity: {
-        id: lessonSubject.id,
-        name: value,
-        lessonUnitId: lessonSubject.lessonUnitId,
-      },
+    const updatelessonSubject = async (value) => {
+        const entity = {
+            entity: {
+                id: lessonSubject.id,
+                name: value.name,
+                lessonUnitId: lessonSubject.lessonUnitId,
+                isActive: parentIsActive ? lessonSubject.isActive : false,
+            },
+        };
+        await dispatch(editLessonSubjects(entity)).unwrap();
     };
-    await dispatch(editLessonSubjects(entity));
-  };
 
-  const deleteLessonSubject = async () => {
-    confirmDialog({
-      title: <Text t="attention" />,
-      message: 'Tüm ilişkili bağlantılar silinecektir. Silmek istediğinizden emin misiniz?',
-      okText: <Text t="Evet" />,
-      cancelText: 'Hayır',
-      onOk: async () => {
-        try {
-          await dispatch(deleteLessonSubjects(lessonSubject.id)).unwrap();
-        } catch (err) {
-          errorDialog({ title: <Text t="error" />, message: err.message });
-        }
-      },
-    });
-  };
+    const statusAction = async (status) => {
+        await dispatch(setLessonSubjectStatus({ id: lessonSubject.id, isActive: status })).unwrap();
+        dispatch(setStatusLessonSubjects({ data: lessonSubject.id, status }));
 
-  const toolbarProps = {
-    addText: 'Alt Başlık Ekle',
-    editText: 'Konuyu Düzenle',
-    deleteText: 'Konuyu Sil',
-    open,
-    setIsEdit,
-    setSelectedInsertKey,
-    deleteAction: deleteLessonSubject,
-    selectedKey: { id: lessonSubject.id, type: 'lessonSubject' },
-  };
-  return (
-    <>
-      <EditableInput
-        initialValue={lessonSubject.name}
-        isEdit={isEdit}
-        setIsEdit={setIsEdit}
-        onEnter={updatelessonSubject}
-      />
-      <Toolbar {...toolbarProps} />
-    </>
-  );
+        if (!status) return false;
+        dispatch(setStatusUnits({ data: lessonSubject.lessonUnitId, status }));
+        const lessonId = lessonUnits.find((item) => item.id === lessonSubject.lessonUnitId).lessonId;
+        dispatch(setStatusLessons({ data: lessonId, status }));
+    };
+
+    const toolbarProps = {
+        addText: 'Kazanım Ekle',
+        editText: 'Konuyu Düzenle',
+        statusText:
+            lessonSubject.name +
+            ' konusu ve ' +
+            lessonSubject.name +
+            ' konusuna tanımlanmış tüm kazanım ve ayraçlar pasife alınacaktır. Pasife alma işlemini onaylıyor musunuz?',
+        isActive: lessonSubject?.isActive,
+        open,
+        setIsEdit,
+        setSelectedInsertKey,
+        statusAction,
+        parentIsActive,
+        selectedKey: { id: lessonSubject.id, type: 'lessonSubject' },
+    };
+    return (
+        <>
+            <div style={{ opacity: parentIsActive ? (lessonSubject.isActive ? 1 : 0.4) : 0.4 }}>
+                <AcquisitionTreeCreateOrEdit
+                    initialValue={lessonSubject}
+                    isEdit={isEdit}
+                    setIsEdit={setIsEdit}
+                    onEnter={updatelessonSubject}
+                />
+            </div>
+            <Toolbar {...toolbarProps} />
+        </>
+    );
 };
 
 export default memo(LessonSubject);

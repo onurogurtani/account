@@ -1,14 +1,14 @@
 import { api } from './api';
 
 const getUserTypesList = () => {
-  return api({
-    url: `Identity/UserTypes/getList`,
-    method: 'GET',
-  });
+    return api({
+        url: `Account/UserTypes/getList`,
+        method: 'GET',
+    });
 };
 
 const userTypeServices = {
-  getUserTypesList,
+    getUserTypesList,
 };
 
 export default userTypeServices;

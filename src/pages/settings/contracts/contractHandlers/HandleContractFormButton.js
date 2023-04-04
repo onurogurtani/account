@@ -32,13 +32,11 @@ const HandleContractFormButton = ({ form, initialValues, contractTypes, contract
 
     const onFinish = useCallback(async (contractTypes) => {
         const values = await form.validateFields();
-        const startOfContract = values?.validStartDate
-            ? dayjs(values?.validStartDate)?.utc().format('YYYY-MM-DD-HH-mm')
+        const startOfContract = values?.StartDate
+            ? dayjs(values?.StartDate)?.utc().format('YYYY-MM-DD-HH-mm')
             : undefined;
 
-        const endOfContract = values?.validEndDate
-            ? dayjs(values?.validEndDate)?.utc().format('YYYY-MM-DD-HH-mm')
-            : undefined;
+        const endOfContract = values?.EndDate ? dayjs(values?.EndDate)?.utc().format('YYYY-MM-DD-HH-mm') : undefined;
 
         if (startOfContract >= endOfContract) {
             errorDialog({
@@ -49,14 +47,11 @@ const HandleContractFormButton = ({ form, initialValues, contractTypes, contract
         }
         try {
             const values = await form.validateFields();
-            const startDate = values?.validStartDate
-                ? dayjs(values?.validStartDate)?.utc().format('YYYY-MM-DD')
-                : undefined;
-            const startHour = values?.validStartDate
-                ? dayjs(values?.validStartDate)?.utc().format('HH:mm:ss')
-                : undefined;
-            const endDate = values?.validEndDate ? dayjs(values?.validEndDate)?.utc().format('YYYY-MM-DD') : undefined;
-            const endHour = values?.validEndDate ? dayjs(values?.validEndDate)?.utc().format('HH:mm:ss') : undefined;
+            const startDate = values?.startDate ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD') : undefined;
+            const startHour = values?.startDate ? dayjs(values?.startDate)?.utc().format('HH:mm:ss') : undefined;
+            const endDate = values?.endDate ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD') : undefined;
+            const endHour = values?.endDate ? dayjs(values?.endDate)?.utc().format('HH:mm:ss') : undefined;
+
             let typesFromForm = values?.contractTypes;
 
             let typeData = {
@@ -78,7 +73,7 @@ const HandleContractFormButton = ({ form, initialValues, contractTypes, contract
                     validEndDate: endDate + 'T' + endHour + '.000Z',
                     requiredApproval: values?.requiredApproval,
                     content: values?.content,
-                    contractKindId: initialValues ? kindId[0].id : values?.contractKinds,
+                    contractKindId: kindId[0].id,
                     contractTypes: typeArr,
                     version: versionNumber,
                     recordStatus: values?.recordStatus,
