@@ -38,7 +38,9 @@ const OrganisationForm = ({ form, organizationData, isEdit, sendValue, cityId })
   };
 
   useEffect(() => {
-    getImageDetail()
+    if (organisationImageId !== 0) {
+      getImageDetail()
+    }
   }, [organisationImageId])
 
   const addFormModal = () => {
