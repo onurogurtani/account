@@ -61,6 +61,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
                     OrganisationWebSite = x.OrganisationWebSite,
                     OrganisationImageId = x.OrganisationImageId,
                     PackageId = x.PackageId,
+                    PackageName = x.PackageName,
+                    ContractNumber=x.ContractNumber,
                     PackageKind = x.PackageKind,
                     OrganisationType = x.OrganisationType,
                     CityName = _cityRepository.GetAsync(y => y.Id == x.CityId).Result.Name,
