@@ -65,6 +65,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
                         OrganisationWebSite = organisation.Organisation.OrganisationWebSite,
                         OrganisationImageId = organisation.Organisation.OrganisationImageId,
                         PackageId = organisation.Organisation.PackageId,
+                        PackageName = organisation.Organisation.PackageName,
+                        ContractNumber = organisation.Organisation.ContractNumber,
                         PackageKind = organisation.Organisation.PackageKind,
                         OrganisationType = organisation.Organisation.OrganisationType,
                     });
