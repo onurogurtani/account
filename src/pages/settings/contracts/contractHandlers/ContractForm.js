@@ -84,7 +84,7 @@ const ContractForm = ({ initialValues }) => {
 
             let types = [];
             initialValues?.contractTypes?.map((t) => types.push(t.contractType.name));
-            handleSelectAll(types);
+            handleFindKinds(types);
             let initialData = {
                 validStartDate: startDate >= currentDate ? dayjs(initialValues?.validStartDate) : undefined,
                 validEndDate: endDate >= currentDate ? dayjs(initialValues?.validEndDate) : undefined,
@@ -118,10 +118,14 @@ const ContractForm = ({ initialValues }) => {
         }
     }, [text]);
 
-    const handleSelectAll = async (arr) => {
+    const handleFindKinds = async (arr) => {
+        let allKindsArr = [];
+        contractKinds?.map((kindArr) => allKindsArr?.push(...kindArr?.contractType?.contractKinds));
         form.resetFields(['contractKinds']);
-        let kinds = contractKinds.filter((obj) => arr.includes(obj?.contractType?.description));
-        setFilteredKinds([...kinds]);
+        let idsArr = [];
+        contractTypes?.filter((type) => arr?.includes(type.name)).map((item) => idsArr.push(item?.id));
+        let filteredKinds = allKindsArr.filter((obj) => idsArr.includes(obj?.contractTypeId));
+        setFilteredKinds([...filteredKinds]);
     };
 
     return (
@@ -152,7 +156,7 @@ const ContractForm = ({ initialValues }) => {
                     showArrow
                     // value={typeValue}
                     placeholder="Seçiniz"
-                    onChange={handleSelectAll}
+                    onChange={handleFindKinds}
                 >
                     {contractTypes
                         ?.filter((t) => t.recordStatus !== 0)
