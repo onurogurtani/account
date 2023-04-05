@@ -187,7 +187,7 @@ const OrganisationForm = ({ form, organizationData, isEdit, sendValue, cityId })
 
         <CustomFormItem
           label="Kurum Web Adresi"
-          name="webadres"
+          name="organizationWebSite"
           rules={[
             { whitespace: true },
           ]}
@@ -197,7 +197,7 @@ const OrganisationForm = ({ form, organizationData, isEdit, sendValue, cityId })
 
         <CustomFormItem
           label="Kurum E-posta"
-          name="eposta"
+          name="organizationMail"
           rules={[
             {
               validator: formMailRegex,
