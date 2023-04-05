@@ -1,31 +1,31 @@
 import { api } from './api';
 const getPublisherBookList = (params = {}) => {
-  return api({
-    url: 'Question/Books/getByFilterPagedBooks',
-    method: 'POST',
-    data: null,
-    params: params,
-  });
+    return api({
+        url: 'Exam/Books/getByFilterPagedBooks',
+        method: 'POST',
+        data: null,
+        params: params,
+    });
 };
 const getPublisherBookAdd = (data) => {
-  return api({
-    url: 'Question/Books/AddRange',
-    method: 'POST',
-    data: data,
-  });
+    return api({
+        url: 'Exam/Books/AddRange',
+        method: 'POST',
+        data: data,
+    });
 };
 const getPublisherBookUpdate = (data) => {
-  return api({
-    url: 'Question/Books',
-    method: 'PUT',
-    data: data,
-  });
+    return api({
+        url: 'Exam/Books',
+        method: 'PUT',
+        data: data,
+    });
 };
 
 const publisherServices = {
-  getPublisherBookList,
-  getPublisherBookAdd,
-  getPublisherBookUpdate,
+    getPublisherBookList,
+    getPublisherBookAdd,
+    getPublisherBookUpdate,
 };
 
 export default publisherServices;

@@ -2,14 +2,14 @@ import { api } from './api';
 
 const getJobSettings = (data) => {
     return api({
-        url: `Admin/AppSettings/getJobSettings`,
+        url: `Account/AppSettings/getJobSettings`,
         method: 'GET',
         data,
     });
 };
 const updateAppSettings = (data) => {
     return api({
-        url: `Admin/AppSettings`,
+        url: `Account/AppSettings`,
         method: 'PUT',
         data,
     });

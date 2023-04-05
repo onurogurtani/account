@@ -27,7 +27,7 @@ const RoleAuthorizationCopy = ({ record }) => {
 
     const onFinish = async (values) => {
         try {
-            const action = await dispatch(roleCopy({ rolId: record?.id, ...values })).unwrap();
+            const action = await dispatch(roleCopy({ roleId: record?.id, ...values })).unwrap();
             setOpen(false);
             successDialog({ title: <Text t="success" />, message: action?.message });
             dispatch(getByFilterPagedRoles());
@@ -58,7 +58,7 @@ const RoleAuthorizationCopy = ({ record }) => {
                 >
                     <CustomFormItem
                         label="Rol Adı:"
-                        name="rolName"
+                        name="roleName"
                         initialValue={record.name + '(2)'}
                         rules={[
                             { required: true, message: 'Rol adı giriniz' },

@@ -112,7 +112,6 @@ const Filter = () => {
                             </div>
                         }
                         name="contractTypes"
-                        // className="filter-item"
                         style={{
                             width: '400px',
                         }}
@@ -202,8 +201,6 @@ const Filter = () => {
                             className="form-filter-item"
                             placeholder={'Tarih Seçiniz'}
                             disabledDate={disabledStartDate}
-                            // format="YYYY-MM-DD HH:mm"
-                            // showTime={true}
                         />
                     </CustomFormItem>
                     <CustomFormItem
@@ -219,8 +216,6 @@ const Filter = () => {
                             className="form-filter-item"
                             placeholder={'Tarih Seçiniz'}
                             disabledDate={disabledEndDate}
-                            // format="YYYY-MM-DD HH:mm"
-                            // showTime={true}
                         />
                     </CustomFormItem>
                 </div>

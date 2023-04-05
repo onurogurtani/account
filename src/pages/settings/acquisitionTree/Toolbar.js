@@ -1,50 +1,80 @@
 import { Space, Tooltip } from 'antd';
-import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { memo } from 'react';
+import { confirmDialog, errorDialog, Text } from '../../../components';
 
 const Toolbar = ({
-  addText,
-  editText,
-  deleteText,
-  open,
-  setIsEdit,
-  deleteAction,
-  hidePlusButton,
-  setSelectedInsertKey,
-  selectedKey,
+    addText,
+    editText,
+    isActive,
+    statusAction,
+    parentIsActive,
+    statusText,
+    open,
+    setIsEdit,
+    hidePlusButton,
+    setSelectedInsertKey,
+    selectedKey,
 }) => {
-  return (
-    <Space align="center" style={{ marginLeft: 'auto' }}>
-      {hidePlusButton ? null : (
-        <Tooltip title={addText}>
-          <PlusCircleOutlined
-            onClick={(event) => {
-              if (open) event.stopPropagation();
-              setSelectedInsertKey(selectedKey);
-            }}
-          />
-        </Tooltip>
-      )}
+    const statusOnClick = (event) => {
+        event.stopPropagation();
+        if (!parentIsActive || !isActive) {
+            confirmDialog({
+                title: <Text t="attention" />,
+                message:
+                    'Aktif ettiğinizde pasif durumda olan tüm üst kırılımlar da aktif edilecektir.Aktife alma işlemini onaylıyor musunuz?',
+                okText: <Text t="Evet" />,
+                cancelText: 'Hayır',
+                onOk: async () => {
+                    statusAction(parentIsActive ? !isActive : true).catch((e) =>
+                        errorDialog({ title: <Text t="error" />, message: e?.message }),
+                    );
+                },
+            });
 
-      <Tooltip title={editText}>
-        <EditOutlined
-          onClick={(event) => {
-            event.stopPropagation();
-            setIsEdit(true);
-          }}
-        />
-      </Tooltip>
-      <Tooltip title={deleteText}>
-        <DeleteOutlined
-          onClick={(event) => {
-            event.stopPropagation();
-            deleteAction();
-          }}
-          style={{ color: 'red' }}
-        />
-      </Tooltip>
-    </Space>
-  );
+            return false;
+        }
+        if (isActive) {
+            confirmDialog({
+                title: <Text t="attention" />,
+                message: statusText,
+                okText: <Text t="Evet" />,
+                cancelText: 'Hayır',
+                onOk: async () => {
+                    statusAction(parentIsActive ? !isActive : true).catch((e) =>
+                        errorDialog({ title: <Text t="error" />, message: e?.message }),
+                    );
+                },
+            });
+        }
+    };
+    return (
+        <Space align="center" style={{ marginLeft: 'auto' }}>
+            <span onClick={statusOnClick} style={{ fontSize: '14px' }}>
+                {parentIsActive ? (isActive ? 'Pasif Et' : 'Aktif Et') : 'Aktif Et'}
+            </span>
+
+            <Tooltip title={editText}>
+                <EditOutlined
+                    onClick={(event) => {
+                        event.stopPropagation();
+                        setIsEdit(true);
+                    }}
+                />
+            </Tooltip>
+
+            {hidePlusButton ? null : (
+                <Tooltip title={addText}>
+                    <PlusCircleOutlined
+                        onClick={(event) => {
+                            if (open) event.stopPropagation();
+                            setSelectedInsertKey(selectedKey);
+                        }}
+                    />
+                </Tooltip>
+            )}
+        </Space>
+    );
 };
 
 export default memo(Toolbar);

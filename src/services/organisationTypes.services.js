@@ -16,14 +16,14 @@ const getOrganisationTypes = (
 
 const addOrganisationTypes = (data) => {
     return api({
-        url: `Crm/OrganisationTypes/Add`,
+        url: `Account/OrganisationTypes/Add`,
         method: 'POST',
         data: data,
     });
 };
 const updateOrganisationTypes = (data) => {
     return api({
-        url: `Crm/OrganisationTypes/Update`,
+        url: `Account/OrganisationTypes/Update`,
         method: 'PUT',
         data: data,
     });

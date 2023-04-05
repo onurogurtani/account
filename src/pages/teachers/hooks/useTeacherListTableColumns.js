@@ -1,23 +1,28 @@
-import { Space } from 'antd';
+import { Space, Tag } from 'antd';
 import { useHistory } from 'react-router-dom';
-import { CustomButton, DeleteButton, SetStatusButton, Text } from '../../../components';
-// import { deleteTeacher, setTeacherStatus } from '../../../store/slice/teacherSlice';
+import { CustomButton, DeleteButton, SetStatusButton } from '../../../components';
+import { maskedPhone } from '../../../utils/utils';
+import { setTeacherActivateStatus, deleteTeacher } from '../../../store/slice/teachersSlice';
 
-const useTeacherListTableColumns = (sorterObject) => {
+const useTeacherListTableColumns = () => {
   const history = useHistory();
 
   const editTeacher = (id) => history.push({ pathname: `/teachers/edit/${id}` });
 
   const columns = [
     {
+      title: 'T.C. Kimlik No',
+      dataIndex: 'citizenId',
+      key: 'citizenId',
+      render: (text, record) => {
+        return <div>{text}</div>;
+      },
+    },
+    {
       title: 'Ad',
       dataIndex: 'name',
       key: 'name',
-      sorter: {
-        compare: (a, b) => a?.name.localeCompare(b?.name, 'tr', { numeric: true }),
-        multiple: 3,
-      },
-      sortOrder: sorterObject?.columnKey === 'name' ? sorterObject?.order : null,
+      sorter: true,
       render: (text, record) => {
         return <div>{text}</div>;
       },
@@ -26,40 +31,37 @@ const useTeacherListTableColumns = (sorterObject) => {
       title: 'Soyad',
       dataIndex: 'surName',
       key: 'surName',
-      sorter: {
-        compare: (a, b) => a?.surName.localeCompare(b?.surName, 'tr', { numeric: true }),
-        multiple: 3,
-      },
-      sortOrder: sorterObject?.columnKey === 'surName' ? sorterObject?.order : null,
+      sorter: true,
       render: (text, record) => {
         return <div>{text}</div>;
       },
     },
     {
-      title: 'E-Posta',
+      title: 'E-Mail',
       dataIndex: 'email',
       key: 'email',
-      sorter: {
-        compare: (a, b) => a?.email.localeCompare(b?.email, 'tr', { numeric: true }),
-        multiple: 3,
-      },
-      sortOrder: sorterObject?.columnKey === 'email' ? sorterObject?.order : null,
+      sorter: true,
       render: (text, record) => {
         return <div>{text}</div>;
       },
     },
-    // TODO: 'Bağlı Olduğu Okul' ve  'Sınıf / Şube' eklenecek
+    {
+      title: 'Cep Telefonu',
+      dataIndex: 'mobilePhones',
+      key: 'mobilePhones',
+      render: (text, record) => {
+        return <div>{text ? maskedPhone(text) : ""}</div>;
+      },
+    },
     {
       title: 'Durum',
       dataIndex: 'status',
       key: 'status',
-      sorter: true,
-      sortOrder: sorterObject?.columnKey === 'isActive' ? sorterObject?.order : null,
       render: (text, record) => {
         return (
-          <Text type={text ? "success" : "danger"} key={1} strong>
+          <Tag color={text ? 'green' : 'red'} key={1}>
             {text ? 'Aktif' : 'Pasif'}
-          </Text>
+          </Tag>
         );
       },
     },
@@ -73,11 +75,11 @@ const useTeacherListTableColumns = (sorterObject) => {
         return (
           <div className="action-btns">
             <Space>
-              <SetStatusButton record={record} statusAction={function setTeacherStatus(){}} />
+              <SetStatusButton record={record} statusAction={setTeacherActivateStatus} />
               <CustomButton className="btn detail-btn" onClick={() => editTeacher(record?.id)}>
                 DÜZENLE
               </CustomButton>
-              <DeleteButton id={record?.id} deleteAction={function deleteTeacher(){}} />
+              <DeleteButton id={record?.id} deleteAction={deleteTeacher} />
             </Space>
           </div>
         );

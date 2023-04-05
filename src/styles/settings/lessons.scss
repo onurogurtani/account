@@ -1,38 +1,44 @@
 .lessons-wrapper {
-  padding: 10px 20px;
-  .lessons-header {
-    display: flex;
-    margin-bottom: 20px;
-    justify-content: space-between;
-    .class-select-container {
-      display: flex;
-      align-items: center;
-    }
-  }
-  .ant-collapse {
-    border: none;
-    background-color: #fff;
-    .ant-collapse-item {
-      margin-bottom: 15px;
-      .ant-collapse-header {
-        .ant-collapse-arrow {
-          font-size: 16px;
-          vertical-align: 1px;
+    padding: 10px 20px;
+    .lessons-header {
+        display: flex;
+        margin-bottom: 20px;
+        justify-content: space-between;
+        .class-select-container {
+            display: flex;
+            align-items: center;
         }
-      }
-      .ant-collapse-content {
-        padding: 30px;
-      }
     }
-  }
-  .upload-btn {
-    background: #0f733d !important;
-    color: #fff;
-    border: none;
-  }
-  .add-btn {
-    background: #00a483 !important;
-    color: #fff;
-    border: none;
-  }
+    .ant-collapse {
+        border: none;
+        background-color: #fff;
+        .ant-collapse-item {
+            margin-bottom: 15px;
+            .ant-collapse-header {
+                .ant-collapse-arrow {
+                    font-size: 16px;
+                    vertical-align: 1px;
+                }
+            }
+            .ant-collapse-content {
+                padding: 30px;
+            }
+        }
+    }
+    .upload-btn {
+        background: #0f733d;
+        color: #fff;
+        border: none;
+    }
+    .upload-btn:disabled {
+        opacity: 0.5;
+    }
+    .add-btn {
+        background: #00a483;
+        color: #fff;
+        border: none;
+    }
+    .add-btn:disabled {
+        opacity: 0.5;
+    }
 }

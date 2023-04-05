@@ -23,6 +23,7 @@ import { getUnmaskedPhone, maskedPhone, turkishToLower } from '../../../../utils
 import '../../../../styles/adminUserManagement/adminUserForm.scss';
 import { adminTypes } from '../../../../constants/adminUsers';
 import { getAllRoleList } from '../../../../store/slice/roleAuthorizationSlice';
+import { EUserTypes } from '../../../../constants/enum';
 
 const AdminUserForm = ({ isEdit, currentAdminUser }) => {
     const [form] = Form.useForm();
@@ -30,7 +31,7 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
     const dispatch = useDispatch();
     const { id } = useParams();
     const { allRoles } = useSelector((state) => state?.roleAuthorization);
-    const { adminTypeEnum } = useSelector((state) => state.user.currentUser);
+    const { userType } = useSelector((state) => state.user.currentUser);
 
     useEffect(() => {
         dispatch(
@@ -50,6 +51,7 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
         if (isEdit && currentAdminUser) {
             form.setFieldsValue({
                 ...currentAdminUser,
+                userType: currentAdminUser?.userType.toString(),
                 citizenId: currentAdminUser?.citizenId.toString(),
                 mobilePhones: maskedPhone(currentAdminUser?.mobilePhones),
                 roleIds: currentAdminUser?.roles?.map((i) => i.id),
@@ -108,7 +110,10 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
             >
                 <div className="left">
                     <CustomFormItem
-                        rules={[{ required: true }, { validator: tcknValidator, message: '11 Karakter İçermelidir' }]}
+                        rules={[
+                            { required: true },
+                            { validator: tcknValidator, message: 'Lütfen geçerli T.C. kimlik numarası giriniz.' },
+                        ]}
                         label="TC Kimlik Numarası"
                         name="citizenId"
                     >
@@ -159,16 +164,18 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
 
                     <CustomFormItem
                         rules={[{ required: true }]}
-                        initialValue={adminTypeEnum === 2 ? 2 : undefined}
+                        initialValue={
+                            userType === EUserTypes.OrganisationAdmin ? EUserTypes.OrganisationAdmin : undefined
+                        }
                         label="Admin Tipi"
-                        name="adminTypeEnum"
+                        name="userType"
                     >
                         <CustomSelect placeholder="Seçiniz">
-                            {adminTypes
-                                ?.filter((u) => u.accessType.includes(adminTypeEnum))
+                            {Object.keys(adminTypes)
+                                ?.filter((u) => adminTypes[u].accessType.includes(userType))
                                 ?.map((item) => (
-                                    <Option key={item.id} value={item.id}>
-                                        {item.value}
+                                    <Option key={item} value={item}>
+                                        {adminTypes[item].label}
                                     </Option>
                                 ))}
                         </CustomSelect>

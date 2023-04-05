@@ -2,21 +2,21 @@ import { api } from './api';
 
 const getMaxNetCounts = (data = null) => {
     return api({
-        url: 'Target/MaxNetCounts/GetByFilterPagedMaxNetCounts',
+        url: 'Education/MaxNetCounts/GetByFilterPagedMaxNetCounts',
         method: 'POST',
         data,
     });
 };
 const getMaxNetCountsAdd = (data = null) => {
     return api({
-        url: 'Target/MaxNetCounts/Add',
+        url: 'Education/MaxNetCounts/Add',
         method: 'POST',
         data,
     });
 };
 const getMaxNetCountsUpdate = (data = null) => {
     return api({
-        url: 'Target/MaxNetCounts/Update',
+        url: 'Education/MaxNetCounts/Update',
         method: 'PUT',
         data,
     });

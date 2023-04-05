@@ -161,10 +161,19 @@ export const validation = {
         return pattern.test(str);
     },
     isDouble: function (str) {
-        const pattern = /^\d{0,2}(\.\d{0,2}){0,1}$/;
+        const pattern = /^[+-]?\d+(\.\d+)?$/;
         return pattern.test(str);
     },
     isSame: function (str1, str2) {
         return str1 === str2;
     },
 };
+
+export function downloadFile({ data, fileName = "", fileExtension = "xlsx" }) {
+    const url = URL.createObjectURL(new Blob([data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `${fileName}-${Date.now()}.${fileExtension}`);
+    document.body.appendChild(link);
+    link.click();
+}

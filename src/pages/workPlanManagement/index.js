@@ -12,9 +12,16 @@ const AddWorkPlan = lazy(() =>
   })),
 );
 
+const EditWorkPlan = lazy(() =>
+  import('./editWorkPlan/').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+
 const WorkPlanListManagement = {
   WorkPlanList,
-  AddWorkPlan
+  AddWorkPlan,
+  EditWorkPlan
 };
 
 export default WorkPlanListManagement;
