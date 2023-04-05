@@ -45,7 +45,7 @@ const SmsVerification = ({ history }) => {
         },
       });
     }
-  }, [counter, deadline, dispatch, history]);
+  }, [deadline, dispatch,history]);
 
   useEffect(() => {
     if (didMount) {
@@ -68,7 +68,9 @@ const SmsVerification = ({ history }) => {
     } else {
       counter.start();
     }
-  }, [mobileLoginId, history, dispatch, handleSendSmsAgain, counter]);
+  }, [
+    mobileLoginId, history, dispatch,
+  ]);
 
   const onFinish = useCallback(
     async (values) => {
