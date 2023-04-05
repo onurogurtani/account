@@ -79,13 +79,13 @@ const HandleContractFormButton = ({ form, initialValues, contractTypes, contract
                     recordStatus: values?.recordStatus,
                 },
             };
-            if (initialValues?.handleType === 'edit') {
+            if (initialValues?.handleType === 'edit' || initialValues.handleType === 'copy') {
                 data.entity.id = initialValues?.id;
                 const action = await dispatch(updateContract(data));
                 if (updateContract.fulfilled.match(action)) {
                     successDialog({
                         title: <Text t="success" />,
-                        message: 'Sözleşme Başarıyla Güncellendi',
+                        message: action?.payload?.message,
                         onOk: () => {
                             history.push('/settings/contracts');
                         },
