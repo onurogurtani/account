@@ -10,7 +10,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.ValidationRules
         {
             RuleFor(x => x.Admin.CitizenId).NotEmpty().WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
             RuleFor(x => x.Admin.CitizenId).Length(11).WithMessage("Tc Kimlik Numarasý 11 Haneli olmalý.");
-            RuleFor(x => x.Admin.AdminTypeEnum).NotEmpty().WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
+            RuleFor(x => x.Admin.UserType).NotEmpty().WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
             RuleFor(x => x.Admin.Name).NotEmpty().WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
             RuleFor(x => x.Admin.SurName).NotEmpty().WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
             RuleFor(x => x.Admin.Email).NotEmpty().WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
@@ -23,7 +23,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.ValidationRules
         {
             RuleFor(x => x.Admin.CitizenId).NotEmpty().WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
             RuleFor(x => x.Admin.CitizenId).Length(11).WithMessage("Tc Kimlik Numarasý 11 Haneli olmalý.");
-            RuleFor(x => x.Admin.AdminTypeEnum).NotEmpty().WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
+            RuleFor(x => x.Admin.UserType).NotEmpty().WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
             RuleFor(x => x.Admin.Id).NotEmpty().WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
             RuleFor(x => x.Admin.Name).NotEmpty().WithMessage("Lütfen zorunlu alanlarý doldurunuz.");
             RuleFor(x => x.Admin.SurName).NotEmpty().WithMessage("Lütfen zorunlu alanlarý doldurunuz.");

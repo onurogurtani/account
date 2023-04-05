@@ -51,7 +51,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
                     return new ErrorResult(Messages.AutorizationRoleError);
 
                 if (currentUser.UserType == UserType.OrganisationAdmin)
-                    request.Admin.AdminTypeEnum = UserType.OrganisationAdmin;
+                    request.Admin.UserType = UserType.OrganisationAdmin;
 
                 var citizenIdCheck = await _userRepository.GetAsync(
                     w => w.Status && (
