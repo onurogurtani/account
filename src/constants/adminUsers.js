@@ -1,4 +1,13 @@
-export const adminTypes = [
-    { id: 1, value: 'Sistem Admin', accessType: [1] },
-    { id: 2, value: 'Kurum Admin', accessType: [1, 2] },
-];
+import { EUserTypes } from './enum';
+
+export const adminTypes = {
+    [EUserTypes.Admin]: { label: 'Sistem Admin', accessType: [EUserTypes.Admin] },
+    [EUserTypes.OrganisationAdmin]: {
+        label: 'Kurum Admin',
+        accessType: [EUserTypes.Admin, EUserTypes.OrganisationAdmin, EUserTypes.FranchiseAdmin],
+    },
+    [EUserTypes.FranchiseAdmin]: {
+        label: 'Franchise Admin',
+        accessType: [EUserTypes.Admin, EUserTypes.FranchiseAdmin],
+    },
+};

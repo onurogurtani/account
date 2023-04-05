@@ -72,10 +72,10 @@ const CustomParticipantSelectFormItems = ({ form, className, required, initialVa
                     onDeselect={onParticipantGroupTypeDeSelect}
                     style={{ width: '100%' }}
                 >
-                    {participantGroupTypes?.map((item) => {
+                    {Object.keys(participantGroupTypes)?.map((item) => {
                         return (
-                            <Option key={item?.id} value={item?.id}>
-                                {item?.value}
+                            <Option key={item} value={item}>
+                                {participantGroupTypes[item]?.label}
                             </Option>
                         );
                     })}
