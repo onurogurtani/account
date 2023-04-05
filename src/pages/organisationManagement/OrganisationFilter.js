@@ -26,7 +26,7 @@ import {
 import { Form } from 'antd';
 import { dateTimeFormat } from '../../utils/keys';
 
-const OrganisationFilter = () => {
+const OrganisationFilter = (isFilter) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const state = (state) => state?.organisations;
@@ -35,24 +35,13 @@ const OrganisationFilter = () => {
   const { organisationTypes } = useSelector((state) => state.organisationTypes);
 
   useEffect(() => {
+    if (!isFilter) return false;
     dispatch(getOrganisationTypes());
-  }, []);
-
-  useEffect(() => {
     dispatch(getOrganisationNames());
-  }, []);
-
-  useEffect(() => {
     dispatch(getOrganisationPackagesNames());
-  }, []);
-
-  useEffect(() => {
     dispatch(getOrganisationManagerNames());
-  }, []);
-
-  useEffect(() => {
     dispatch(getOrganisationDomainNames());
-  }, []);
+}, [dispatch, isFilter]);
 
   const onFinish = useCallback(
     async (values) => {
