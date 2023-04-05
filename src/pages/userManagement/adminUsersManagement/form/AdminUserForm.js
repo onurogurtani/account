@@ -51,6 +51,7 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
         if (isEdit && currentAdminUser) {
             form.setFieldsValue({
                 ...currentAdminUser,
+                userType: currentAdminUser?.userType.toString(),
                 citizenId: currentAdminUser?.citizenId.toString(),
                 mobilePhones: maskedPhone(currentAdminUser?.mobilePhones),
                 roleIds: currentAdminUser?.roles?.map((i) => i.id),
@@ -167,7 +168,7 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
                             userType === EUserTypes.OrganisationAdmin ? EUserTypes.OrganisationAdmin : undefined
                         }
                         label="Admin Tipi"
-                        name="adminTypeEnum"
+                        name="userType"
                     >
                         <CustomSelect placeholder="Seçiniz">
                             {Object.keys(adminTypes)
