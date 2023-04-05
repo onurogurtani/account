@@ -1,9 +1,6 @@
-import { Col, Form, Row } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  confirmDialog,
-  CustomButton,
   CustomForm,
   CustomFormItem,
   CustomInput,
@@ -11,56 +8,41 @@ import {
   CustomSelect,
   CustomTextArea,
   CustomTextInput,
+  CustomNumberInput,
   Option,
   Text,
 } from '../../../components';
 import CitySelector from '../../../components/CitySelector';
 import CountySelector from '../../../components/CountySelector';
-import { segmentInformations } from '../../../constants/organisation';
+import { segmentInformation } from '../../../constants/organisation';
 import { getOrganisationTypes } from '../../../store/slice/organisationTypesSlice';
 import { formMailRegex, formPhoneRegex } from '../../../utils/formRule';
+import { onChangeActiveStep } from '../../../store/slice/organisationsSlice';
 import '../../../styles/organisationManagement/organisationForm.scss';
-import { useHistory, useParams } from 'react-router-dom';
-import { getByOrganisationId } from '../../../store/slice/organisationsSlice';
-import { maskedPhone } from '../../../utils/utils';
 
-const OrganisationForm = ({ onFinish, isEdit }) => {
-  const [form] = Form.useForm();
+const OrganisationForm = ({ form, organizationData, isEdit, sendValue }) => {
   const dispatch = useDispatch();
-  const history = useHistory();
-  const { id } = useParams();
   const { organisationTypes } = useSelector((state) => state.organisationTypes);
   const [selectedCityId, setSelectedCityId] = useState();
 
   useEffect(() => {
     dispatch(getOrganisationTypes());
-    isEdit && loadByOrganisationId();
   }, []);
 
-  const loadByOrganisationId = async () => {
-    try {
-      const action = await dispatch(getByOrganisationId({ Id: id })).unwrap();
-      form.setFieldsValue({ ...action?.data, contactPhone: maskedPhone(action?.data?.contactPhone) });
-      setSelectedCityId(action?.data?.cityId);
-    } catch (err) {
-      history.push('/organisation-management/list');
+  useEffect(() => {
+    if (Object.keys(organizationData).length > 0) {
+      form.setFieldsValue(organizationData)
+      isEdit && setSelectedCityId(organizationData?.cityId);
     }
-  };
+  }, [organizationData]);
+
+  const onFinish = (values) => {
+    sendValue(values);
+    dispatch(onChangeActiveStep(1));
+  }
   const onCityChange = (value) => {
     setSelectedCityId(value);
     form.resetFields(['countyId']);
-  };
-
-  const onCancel = () => {
-    confirmDialog({
-      title: <Text t="attention" />,
-      message: 'İptal etmek istediğinizden emin misiniz?',
-      okText: 'Evet',
-      cancelText: 'Hayır',
-      onOk: async () => {
-        history.push('/organisation-management/list');
-      },
-    });
   };
 
   const validateMessages = { required: 'Lütfen Zorunlu Alanları Doldurunuz.' };
@@ -75,11 +57,11 @@ const OrganisationForm = ({ onFinish, isEdit }) => {
         colon={false}
         form={form}
         validateMessages={validateMessages}
-        onFinish={onFinish}
         name="form"
+        onFinish={onFinish}
       >
         <CustomFormItem label="Kurum Adı" name="name" rules={[{ required: true }, { whitespace: true }]}>
-          <CustomTextInput placeholder="Kurum Adı" />
+          <CustomInput placeholder="Kurum Adı" />
         </CustomFormItem>
 
         <CustomFormItem label="Kurum Türü" name="organisationTypeId" rules={[{ required: true }]}>
@@ -105,9 +87,12 @@ const OrganisationForm = ({ onFinish, isEdit }) => {
         <CustomFormItem
           label="Müşteri Numarası"
           name="customerNumber"
-          rules={[{ required: true }, { whitespace: true }]}
+          rules={[
+            { required: true },
+            { type: 'number' },
+          ]}
         >
-          <CustomTextInput placeholder="Müşteri Numarası" />
+          <CustomNumberInput maxLength={10} placeholder="Müşteri Numarası" />
         </CustomFormItem>
 
         <CustomFormItem
@@ -120,7 +105,7 @@ const OrganisationForm = ({ onFinish, isEdit }) => {
 
         <CustomFormItem label="Segment Bilgisi" name="segmentType" rules={[{ required: true }]}>
           <CustomSelect allowClear showArrow placeholder="Seçiniz" style={{ width: '250px' }}>
-            {segmentInformations?.map((item) => {
+            {segmentInformation?.map((item) => {
               return (
                 <Option key={item?.id} value={item?.id}>
                   {item?.value}
@@ -182,16 +167,6 @@ const OrganisationForm = ({ onFinish, isEdit }) => {
           </CustomMaskInput>
         </CustomFormItem>
 
-        <Row>
-          <Col span={24} style={{ textAlign: 'right' }}>
-            <CustomButton type="danger" onClick={onCancel}>
-              İptal
-            </CustomButton>
-            <CustomButton style={{ marginLeft: '16px' }} type="primary" htmlType="submit">
-              {isEdit ? 'Güncelle ve Kaydet' : 'Kaydet ve Bitir'}
-            </CustomButton>
-          </Col>
-        </Row>
       </CustomForm>
     </div>
   );

@@ -28,6 +28,11 @@
         font-family: UbuntuMedium, sans-serif;
         border-radius: 10px;
         margin-left: auto;
+        gap: 0.5rem;
+        
+        &:has(.search-btn-text) {
+            width: 127px;
+        }
     }
 }
 

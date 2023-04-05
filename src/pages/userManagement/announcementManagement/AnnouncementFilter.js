@@ -16,11 +16,12 @@ import {
     getByFilterPagedAnnouncements,
     getByFilterPagedAnnouncementTypes,
 } from '../../../store/slice/announcementSlice';
-import { getByFilterPagedGroups } from '../../../store/slice/groupsSlice';
 import '../../../styles/announcementManagement/announcementFilter.scss';
 
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
+// import CustomParticipantSelect from './forms/CustomParticipantSelect';
+import CustomParticipantSelectFormItems from '../../../components/CustomParticipantSelectFormItems';
 
 const publishStatusObj = [
     { id: 1, name: 'Yayında' },
@@ -32,22 +33,14 @@ const AnnouncementFilter = () => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const { announcements, filterObject, announcementTypes } = useSelector((state) => state?.announcement);
-    const loadGroupsList = useCallback(async () => {
-        let data = {
-            pageSize: 10000,
-        };
-        await dispatch(getByFilterPagedGroups(data));
-    }, [dispatch]);
-
-    useEffect(() => {
-        loadGroupsList();
-    }, []);
-
-    const { groupsList } = useSelector((state) => state?.groups);
 
     useEffect(() => {
         form.resetFields();
-        dispatch(getByFilterPagedAnnouncementTypes());
+        let typeData = {
+            pageSize: 1000,
+            pageNumber: 1,
+        };
+        dispatch(getByFilterPagedAnnouncementTypes(typeData));
     }, []);
 
     const handleClear = useCallback(async () => {
@@ -65,7 +58,7 @@ const AnnouncementFilter = () => {
                 ...body,
             }),
         );
-    }, [dispatch, form]);
+    }, [dispatch, form, filterObject]);
 
     const handleSearch = useCallback(async () => {
         try {
@@ -78,12 +71,13 @@ const AnnouncementFilter = () => {
                 publishStatus: values.publishStatus,
                 startDate: values?.startDate ? dayjs(values?.startDate)?.format('YYYY-MM-DDT00:00:00') : undefined,
                 endDate: values?.endDate && dayjs(values?.endDate)?.format('YYYY-MM-DDT23:59:59'),
-                roleIds: values.roleIds,
+                participantTypeIds: values?.participantTypeIds,
+                participantGroupIds: values?.participantGroupIds,
             };
-            await dispatch(getByFilterPagedAnnouncements({ ...filterObject, ...body }));
+            await dispatch(getByFilterPagedAnnouncements({ ...body }));
         } catch (e) {}
         form.resetFields();
-    }, [dispatch, filterObject, form, announcementTypes]);
+    }, [dispatch, form]);
 
     const disabledStartDate = (startValue) => {
         const { endDate } = form?.getFieldsValue(['endDate']);
@@ -195,36 +189,7 @@ const AnnouncementFilter = () => {
                             </Option>
                         </CustomSelect>
                     </CustomFormItem>
-                    <CustomFormItem
-                        label={
-                            <div>
-                                <Text t="Duyuru Rolleri" />
-                            </div>
-                        }
-                        name="roleIds"
-                        className="filter-item"
-                    >
-                        <CustomSelect
-                            className="form-filter-item"
-                            placeholder={'Seçiniz'}
-                            mode="multiple"
-                            showArrow
-                            style={{
-                                width: '100%',
-                            }}
-                            showSearch
-                            optionFilterProp="children"
-                            filterOption={(input, option) =>
-                                option.children.toLocaleLowerCase().includes(input.toLocaleLowerCase())
-                            }
-                        >
-                            {groupsList?.map(({ id, groupName }) => (
-                                <Option key={id} value={id}>
-                                    {groupName}
-                                </Option>
-                            ))}
-                        </CustomSelect>
-                    </CustomFormItem>
+                    <CustomParticipantSelectFormItems className={'filter-item'} form={form} required={false} />
                     <CustomFormItem
                         label={
                             <div>

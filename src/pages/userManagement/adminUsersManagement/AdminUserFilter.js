@@ -16,19 +16,28 @@ import '../../../styles/tableFilter.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { formMailRegex, formPhoneRegex, tcknValidator } from '../../../utils/formRule';
 import { getUnmaskedPhone, turkishToLower } from '../../../utils/utils';
-import { getGroupsList } from '../../../store/slice/groupsSlice';
 import { getByFilterPagedAdminUsers, setIsFilter } from '../../../store/slice/adminUserSlice';
 import { adminTypes } from '../../../constants/adminUsers';
+import { getAllRoleList } from '../../../store/slice/roleAuthorizationSlice';
 
 const AdminUserFilter = () => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
-    const { allGroupList } = useSelector((state) => state?.groups);
+    const { allRoles } = useSelector((state) => state?.roleAuthorization);
     const { filterObject, isFilter } = useSelector((state) => state?.adminUsers);
-    const { adminTypeEnum } = useSelector((state) => state.user.currentUser);
+    const { userType } = useSelector((state) => state.user.currentUser);
     useEffect(() => {
-        if (allGroupList.length) return false;
-        dispatch(getGroupsList());
+        dispatch(
+            getAllRoleList({
+                data: [
+                    {
+                        field: 'recordStatus',
+                        value: 1,
+                        compareType: 0,
+                    },
+                ],
+            }),
+        );
     }, []);
 
     useEffect(() => {
@@ -39,7 +48,6 @@ const AdminUserFilter = () => {
 
     const onFinish = useCallback(
         async (values) => {
-            console.log(values);
             try {
                 const body = {
                     ...filterObject,
@@ -49,9 +57,7 @@ const AdminUserFilter = () => {
                 };
                 await dispatch(getByFilterPagedAdminUsers(body));
                 await dispatch(setIsFilter(true));
-            } catch (e) {
-                console.log(e);
-            }
+            } catch (e) {}
         },
         [dispatch, filterObject],
     );
@@ -80,7 +86,7 @@ const AdminUserFilter = () => {
             >
                 <div className="form-item">
                     <CustomFormItem
-                        rules={[{ validator: tcknValidator, message: '11 Karakter İçermelidir' }]}
+                        rules={[{ validator: tcknValidator, message: 'Lütfen geçerli T.C. kimlik numarası giriniz.' }]}
                         label="TC Kimlik Numarası"
                         name="CitizenId"
                     >
@@ -119,19 +125,19 @@ const AdminUserFilter = () => {
                         <CustomInput placeholder="E-Mail" />
                     </CustomFormItem>
 
-                    <CustomFormItem label="Admin Tipi" name="AdminTypeEnum">
+                    <CustomFormItem label="Admin Tipi" name="UserType">
                         <CustomSelect allowClear placeholder="Seçiniz">
-                            {adminTypes
-                                ?.filter((u) => u.accessType.includes(adminTypeEnum))
+                            {Object.keys(adminTypes)
+                                ?.filter((u) => adminTypes[u].accessType.includes(userType))
                                 ?.map((item) => (
-                                    <Option key={item.id} value={item.id}>
-                                        {item.value}
+                                    <Option key={item} value={item}>
+                                        {adminTypes[item].label}
                                     </Option>
                                 ))}
                         </CustomSelect>
                     </CustomFormItem>
 
-                    <CustomFormItem label="Rol" name="GroupIds">
+                    <CustomFormItem label="Rol" name="RoleIds">
                         <CustomSelect
                             filterOption={(input, option) =>
                                 turkishToLower(option.children).includes(turkishToLower(input))
@@ -141,12 +147,12 @@ const AdminUserFilter = () => {
                             mode="multiple"
                             placeholder="Rol"
                         >
-                            {allGroupList
+                            {allRoles
                                 // ?.filter((item) => item.isActive)
                                 ?.map((item) => {
                                     return (
                                         <Option key={item?.id} value={item?.id}>
-                                            {item?.groupName}
+                                            {item?.name}
                                         </Option>
                                     );
                                 })}

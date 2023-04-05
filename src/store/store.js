@@ -59,6 +59,11 @@ import { contractsSlice } from './slice/contractsSlice';
 import { asEvSlice } from './slice/asEvSlice';
 import { roleAuthorizationSlice } from './slice/roleAuthorizationSlice';
 import { videoReportsNotConnectedSlice } from './slice/videoReportsNotConnectedSlice';
+import { jobSettingsSlice } from './slice/jobSettingsSlice';
+import { videoReportsConnectedSlice } from './slice/videoReportsConnectedSlice';
+import { teachersSlice } from './slice/teachersSlice';
+import { lessonAcquisitionsSlice } from './slice/lessonAcquisitionsSlice';
+import { lessonBracketsSlice } from './slice/lessonBracketsSlice';
 
 const reducers = combineReducers({
     auth: authSlice.reducer,
@@ -76,6 +81,8 @@ const reducers = combineReducers({
     lessons: lessonsSlice.reducer,
     lessonUnits: lessonUnitsSlice.reducer,
     lessonSubjects: lessonSubjectsSlice.reducer,
+    lessonAcquisitions: lessonAcquisitionsSlice.reducer,
+    lessonBrackets: lessonBracketsSlice.reducer,
     lessonSubSubjects: lessonSubSubjectsSlice.reducer,
     packages: packageSlice.reducer,
     category: categorySlice.reducer,
@@ -113,6 +120,9 @@ const reducers = combineReducers({
     asEv: asEvSlice.reducer,
     roleAuthorization: roleAuthorizationSlice.reducer,
     videoReportsNotConnected: videoReportsNotConnectedSlice.reducer,
+    jobSettings: jobSettingsSlice.reducer,
+    videoReportsConnected: videoReportsConnectedSlice.reducer,
+    teachers: teachersSlice.reducer,
 });
 
 const persistConfig = {

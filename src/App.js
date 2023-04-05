@@ -34,6 +34,7 @@ import OrganisationManagement from './pages/organisationManagement';
 import Exam from './pages/exam/index';
 import Reports from './pages/reports/index';
 import RoleAuthorizationManagement from './pages/roleAuthorizationManagement';
+import Teachers from './pages/teachers';
 
 const PrivateRoute = lazy(() =>
     import('./authentication/PrivateRoute').then(({ default: Component }) => ({
@@ -412,6 +413,11 @@ const App = () => {
                                                     Component={Settings?.Contracts}
                                                     authority="dashboard"
                                                 />
+                                                <PrivateRoute
+                                                    path={`${match?.path}/job-settings`}
+                                                    Component={Settings?.JobSettings}
+                                                    authority="dashboard"
+                                                />
                                                 <Route
                                                     component={() => (
                                                         <Redirect
@@ -562,11 +568,11 @@ const App = () => {
                                                     Component={WorkPlanManagement?.AddWorkPlan}
                                                     authority="dashboard"
                                                 />
-                                                {/*<PrivateRoute*/}
-                                                {/*  path={`${match?.path}/edit/:id`}*/}
-                                                {/*  Component={WorkPlanManagement?.EditWorkPlan}*/}
-                                                {/*  authority="dashboard"*/}
-                                                {/*/>*/}
+                                                <PrivateRoute
+                                                    path={`${match?.path}/edit`}
+                                                    Component={WorkPlanManagement?.EditWorkPlan}
+                                                    authority="dashboard"
+                                                />
                                                 <Route
                                                     component={() => (
                                                         <Redirect
@@ -640,7 +646,12 @@ const App = () => {
                                                     Component={Exam.TrialExam}
                                                     authority="dashboard"
                                                 />
-
+                                                <PrivateRoute
+                                                    path={`${match?.path}/list`}
+                                                    exact
+                                                    Component={Exam.TrialExamList}
+                                                    authority="dashboard"
+                                                />
                                                 <Route
                                                     component={() => (
                                                         <Redirect
@@ -738,6 +749,35 @@ const App = () => {
                                                             }}
                                                         />
                                                     )}
+                                                />
+                                            </Switch>
+                                        );
+                                    }}
+                                    authority="dashboard"
+                                    isLayout={false}
+                                />
+                                <PrivateRoute
+                                    path={'/teachers'}
+                                    Component={({ match }) => {
+                                        return (
+                                            <Switch>
+                                                <PrivateRoute
+                                                    path={`${match?.path}/`}
+                                                    exact
+                                                    Component={Teachers.TeacherList}
+                                                    authority="dashboard"
+                                                />
+                                                <PrivateRoute
+                                                    path={`${match?.path}/add`}
+                                                    exact
+                                                    Component={Teachers.TeacherAddEdit}
+                                                    authority="dashboard"
+                                                />
+                                                <PrivateRoute
+                                                    path={`${match?.path}/edit/:id`}
+                                                    exact
+                                                    Component={Teachers.TeacherAddEdit}
+                                                    authority="dashboard"
                                                 />
                                             </Switch>
                                         );

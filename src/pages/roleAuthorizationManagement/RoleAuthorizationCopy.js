@@ -1,9 +1,22 @@
 import React, { useCallback, useState } from 'react';
 import { Form } from 'antd';
-import { CustomButton, CustomForm, CustomFormItem, CustomImage, CustomInput, CustomModal } from '../../components';
+import {
+    CustomButton,
+    CustomForm,
+    CustomFormItem,
+    CustomImage,
+    CustomInput,
+    CustomModal,
+    errorDialog,
+    successDialog,
+    Text,
+} from '../../components';
 import modalClose from '../../assets/icons/icon-close.svg';
+import { useDispatch } from 'react-redux';
+import { getByFilterPagedRoles, roleCopy } from '../../store/slice/roleAuthorizationSlice';
 
 const RoleAuthorizationCopy = ({ record }) => {
+    const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm();
 
@@ -12,8 +25,15 @@ const RoleAuthorizationCopy = ({ record }) => {
         setOpen(false);
     }, [form]);
 
-    const onFinish = (values) => {
-        console.log(values);
+    const onFinish = async (values) => {
+        try {
+            const action = await dispatch(roleCopy({ roleId: record?.id, ...values })).unwrap();
+            setOpen(false);
+            successDialog({ title: <Text t="success" />, message: action?.message });
+            dispatch(getByFilterPagedRoles());
+        } catch (error) {
+            errorDialog({ title: <Text t="error" />, message: error?.data?.message });
+        }
     };
     return (
         <>
@@ -38,8 +58,8 @@ const RoleAuthorizationCopy = ({ record }) => {
                 >
                     <CustomFormItem
                         label="Rol Adı:"
-                        name="name"
-                        initialValue={record.name + ' (2)'}
+                        name="roleName"
+                        initialValue={record.name + '(2)'}
                         rules={[
                             { required: true, message: 'Rol adı giriniz' },
                             { whitespace: true },

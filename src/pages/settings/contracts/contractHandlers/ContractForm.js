@@ -83,7 +83,7 @@ const ContractForm = ({ initialValues }) => {
             const endDate = dayjs(initialValues?.endDate).utc().format('YYYY-MM-DD-HH-mm');
 
             let types = [];
-            initialValues?.contractTypes?.map((t) => types.push(t.contractType.id));
+            initialValues?.contractTypes?.map((t) => types.push(t.contractType.name));
             handleFindKinds(types);
             let initialData = {
                 startDate: startDate >= currentDate ? dayjs(initialValues?.validStartDate) : undefined,
@@ -121,7 +121,7 @@ const ContractForm = ({ initialValues }) => {
     const handleFindKinds = async (arr) => {
         form.resetFields(['contractKinds']);
         let idsArr = [];
-        contractTypes?.filter((type) => arr?.includes(type.id)).map((item) => idsArr.push(item?.id));
+        contractTypes?.filter((type) => arr?.includes(type.name)).map((item) => idsArr.push(item?.id));
         let filteredKinds = contractKinds.filter((obj) => idsArr.includes(obj?.contractTypeId));
         setFilteredKinds([...filteredKinds]);
     };

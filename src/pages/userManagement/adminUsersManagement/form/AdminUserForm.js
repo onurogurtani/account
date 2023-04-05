@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Form } from 'antd';
 import {
     confirmDialog,
@@ -18,31 +18,43 @@ import { formMailRegex, formPhoneRegex, tcknValidator } from '../../../../utils/
 import { useHistory, useParams } from 'react-router-dom';
 import { status } from '../../../../constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { getGroupsList } from '../../../../store/slice/groupsSlice';
 import { addAdminUser, editAdminUser } from '../../../../store/slice/adminUserSlice';
 import { getUnmaskedPhone, maskedPhone, turkishToLower } from '../../../../utils/utils';
 import '../../../../styles/adminUserManagement/adminUserForm.scss';
 import { adminTypes } from '../../../../constants/adminUsers';
+import { getAllRoleList } from '../../../../store/slice/roleAuthorizationSlice';
+import { EUserTypes } from '../../../../constants/enum';
 
 const AdminUserForm = ({ isEdit, currentAdminUser }) => {
     const [form] = Form.useForm();
     const history = useHistory();
     const dispatch = useDispatch();
     const { id } = useParams();
-    const { allGroupList } = useSelector((state) => state?.groups);
-    const { adminTypeEnum } = useSelector((state) => state.user.currentUser);
+    const { allRoles } = useSelector((state) => state?.roleAuthorization);
+    const { userType } = useSelector((state) => state.user.currentUser);
 
     useEffect(() => {
-        if (allGroupList.length) return false;
-        dispatch(getGroupsList());
+        dispatch(
+            getAllRoleList({
+                data: [
+                    {
+                        field: 'recordStatus',
+                        value: 1,
+                        compareType: 0,
+                    },
+                ],
+            }),
+        );
     }, []);
 
     useEffect(() => {
         if (isEdit && currentAdminUser) {
             form.setFieldsValue({
                 ...currentAdminUser,
+                userType: currentAdminUser?.userType.toString(),
+                citizenId: currentAdminUser?.citizenId.toString(),
                 mobilePhones: maskedPhone(currentAdminUser?.mobilePhones),
-                groupIds: currentAdminUser?.groups?.map((i) => i.id),
+                roleIds: currentAdminUser?.roles?.map((i) => i.id),
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -52,7 +64,7 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
         const values = await form.validateFields();
         delete values?.userName;
         values.mobilePhones = getUnmaskedPhone(values.mobilePhones);
-        if (isEdit) values.id = id;
+        if (isEdit) values.id = Number(id);
         const data = { admin: values };
 
         const action = isEdit ? await dispatch(editAdminUser(data)) : await dispatch(addAdminUser(data));
@@ -98,7 +110,10 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
             >
                 <div className="left">
                     <CustomFormItem
-                        rules={[{ required: true }, { validator: tcknValidator, message: '11 Karakter İçermelidir' }]}
+                        rules={[
+                            { required: true },
+                            { validator: tcknValidator, message: 'Lütfen geçerli T.C. kimlik numarası giriniz.' },
+                        ]}
                         label="TC Kimlik Numarası"
                         name="citizenId"
                     >
@@ -149,21 +164,23 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
 
                     <CustomFormItem
                         rules={[{ required: true }]}
-                        initialValue={adminTypeEnum === 2 ? 2 : undefined}
+                        initialValue={
+                            userType === EUserTypes.OrganisationAdmin ? EUserTypes.OrganisationAdmin : undefined
+                        }
                         label="Admin Tipi"
-                        name="adminTypeEnum"
+                        name="userType"
                     >
                         <CustomSelect placeholder="Seçiniz">
-                            {adminTypes
-                                ?.filter((u) => u.accessType.includes(adminTypeEnum))
+                            {Object.keys(adminTypes)
+                                ?.filter((u) => adminTypes[u].accessType.includes(userType))
                                 ?.map((item) => (
-                                    <Option key={item.id} value={item.id}>
-                                        {item.value}
+                                    <Option key={item} value={item}>
+                                        {adminTypes[item].label}
                                     </Option>
                                 ))}
                         </CustomSelect>
                     </CustomFormItem>
-                    <CustomFormItem rules={[{ required: true }]} label="Rol" name="groupIds">
+                    <CustomFormItem rules={[{ required: true }]} label="Rol" name="roleIds">
                         <CustomSelect
                             filterOption={(input, option) =>
                                 turkishToLower(option.children).includes(turkishToLower(input))
@@ -172,15 +189,13 @@ const AdminUserForm = ({ isEdit, currentAdminUser }) => {
                             mode="multiple"
                             placeholder="Rol"
                         >
-                            {allGroupList
-                                // ?.filter((item) => item.isActive)
-                                ?.map((item) => {
-                                    return (
-                                        <Option key={item?.id} value={item?.id}>
-                                            {item?.groupName}
-                                        </Option>
-                                    );
-                                })}
+                            {allRoles?.map((item) => {
+                                return (
+                                    <Option key={item?.id} value={item?.id}>
+                                        {item?.name}
+                                    </Option>
+                                );
+                            })}
                         </CustomSelect>
                     </CustomFormItem>
 

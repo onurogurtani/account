@@ -1,57 +1,58 @@
 import React, { memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { confirmDialog, errorDialog, Text } from '../../../components';
-import EditableInput from '../../../components/EditableInput';
-import { deleteLessons, editLessons } from '../../../store/slice/lessonsSlice';
+import { editLessons, setLessonStatus, setStatusLessons } from '../../../store/slice/lessonsSlice';
+import AcquisitionTreeCreateOrEdit from './AcquisitionTreeCreateOrEdit';
 import Toolbar from './Toolbar';
 
 const Lesson = ({ lesson, open, setSelectedInsertKey }) => {
-  const dispatch = useDispatch();
-  const [isEdit, setIsEdit] = useState(false);
+    const dispatch = useDispatch();
+    const [isEdit, setIsEdit] = useState(false);
 
-  const updateLesson = async (value) => {
-    const entity = {
-      entity: {
-        id: lesson.id,
-        name: value,
-        classroomId: lesson.classroomId,
-      },
+    const updateLesson = async (value) => {
+        const entity = {
+            entity: {
+                id: lesson.id,
+                name: value.name,
+                classroomId: lesson.classroomId,
+                isActive: lesson.isActive,
+            },
+        };
+        await dispatch(editLessons(entity)).unwrap();
     };
-    await dispatch(editLessons(entity));
-  };
 
-  const deleteLesson = async () => {
-    confirmDialog({
-      title: <Text t="attention" />,
-      message: 'Tüm ilişkili bağlantılar silinecektir. Silmek istediğinizden emin misiniz?',
-      okText: <Text t="Evet" />,
-      cancelText: 'Hayır',
-      onOk: async () => {
-        try {
-          await dispatch(deleteLessons(lesson.id)).unwrap();
-        } catch (err) {
-          errorDialog({ title: <Text t="error" />, message: err.message });
-        }
-      },
-    });
-  };
-
-  const toolbarProps = {
-    addText: 'Ünite Ekle',
-    editText: 'Dersi Düzenle',
-    deleteText: 'Dersi Sil',
-    open,
-    setIsEdit,
-    setSelectedInsertKey,
-    deleteAction: deleteLesson,
-    selectedKey: { id: lesson.id, type: 'lesson' },
-  };
-  return (
-    <>
-      <EditableInput initialValue={lesson.name} isEdit={isEdit} setIsEdit={setIsEdit} onEnter={updateLesson} />
-      <Toolbar {...toolbarProps} />
-    </>
-  );
+    const statusAction = async (status) => {
+        await dispatch(setLessonStatus({ id: lesson.id, isActive: status })).unwrap();
+        dispatch(setStatusLessons({ data: lesson.id, status }));
+    };
+    const toolbarProps = {
+        addText: 'Ünite Ekle',
+        editText: 'Dersi Düzenle',
+        statusText:
+            lesson.name +
+            ' dersi ve ' +
+            lesson.name +
+            ' dersine tanımlanmış tüm ünite, konu, kazanım ve ayraçlar pasife alınacaktır. Pasife alma işlemini onaylıyor musunuz?',
+        isActive: lesson?.isActive,
+        open,
+        setIsEdit,
+        setSelectedInsertKey,
+        statusAction,
+        parentIsActive: true,
+        selectedKey: { id: lesson.id, type: 'lesson' },
+    };
+    return (
+        <>
+            <div style={{ opacity: lesson.isActive ? 1 : 0.4 }}>
+                <AcquisitionTreeCreateOrEdit
+                    initialValue={lesson}
+                    isEdit={isEdit}
+                    setIsEdit={setIsEdit}
+                    onEnter={updateLesson}
+                />
+            </div>
+            <Toolbar {...toolbarProps} />
+        </>
+    );
 };
 
 export default memo(Lesson);

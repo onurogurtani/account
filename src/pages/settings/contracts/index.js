@@ -10,7 +10,6 @@ const Contracts = () => {
   const history = useHistory();
   const [contractFilterIsShow, setContractFilterIsShow] = useState(false);
   const addContract = async () => {
-    //TODO DÜZENLEME
     history.push('/settings/contracts/add');
   };
 

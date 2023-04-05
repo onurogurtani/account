@@ -2,7 +2,7 @@ import { api } from './api';
 
 const GetByFilterPagedGroups = (params) => {
     return api({
-        url: `Identity/Groups/GetByFilterPagedGroups`,
+        url: `Account/Groups/GetByFilterPagedGroups`,
         method: 'POST',
         params,
     });
@@ -10,7 +10,7 @@ const GetByFilterPagedGroups = (params) => {
 
 const getGroupsList = () => {
     return api({
-        url: `Identity/Groups/getall`,
+        url: `Account/Groups/getall`,
         method: 'GET',
     });
 };

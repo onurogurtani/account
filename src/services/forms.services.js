@@ -2,7 +2,7 @@ import { api } from './api';
 //ADD NEW FORM
 const addNewForm = (data) => {
     return api({
-        url: `Survey/Forms`,
+        url: `Exam/Forms`,
         method: 'POST',
         data,
     });
@@ -10,14 +10,14 @@ const addNewForm = (data) => {
 
 const copyForm = (data) => {
     return api({
-        url: `Survey/Forms/copyForm`,
+        url: `Exam/Forms/copyForm`,
         method: 'POST',
         data,
     });
 };
 const updateForm = (data) => {
     return api({
-        url: `Survey/Forms`,
+        url: `Exam/Forms`,
         method: 'PUT',
         data,
     });
@@ -25,69 +25,69 @@ const updateForm = (data) => {
 
 const addNewGroupToForm = (data) => {
     return api({
-        url: `Survey/GroupOfQuestions`,
+        url: `Exam/GroupOfQuestions`,
         method: 'POST',
         data,
     });
 };
 const updateGroupOfForm = (data) => {
     return api({
-        url: `Survey/GroupOfQuestions`,
+        url: `Exam/GroupOfQuestions`,
         method: 'PUT',
         data,
     });
 };
 const deleteGroupOfForm = (data) => {
     return api({
-        url: `Survey/GroupOfQuestions?id=${data}`,
+        url: `Exam/GroupOfQuestions?id=${data}`,
         method: 'DELETE',
     });
 };
 const getGroupsOfForm = (data) => {
     return api({
-        url: `Survey/GroupOfQuestions/getList?PageNumber=1&PageSize=1000`,
+        url: `Exam/GroupOfQuestions/getList?PageNumber=1&PageSize=1000`,
         method: 'POST',
         data: [], // BURADA GEÇİCİ OLARAK BOŞ ARRAY YAZILDI, FORM ID si gönderebilmem lazım
     });
 }; // burada aslında tüm gruplar geliyor;
 const addNewQuestionToForm = (data) => {
     return api({
-        url: `Survey/Questions/AddWithGroupId`,
+        url: `Exam/Questions/AddWithGroupId`,
         method: 'POST',
         data,
     });
 };
 const addNewQuestionToGroup = (data) => {
     return api({
-        url: `Survey/QuestionGroupOfQuestions`,
+        url: `Exam/QuestionGroupOfQuestions`,
         method: 'POST',
         data,
     });
 };
 const updateQuestion = (data) => {
     return api({
-        url: `Survey/FormQuestions`,
+        url: `Exam/FormQuestions`,
         method: 'PUT',
         data,
     });
 };
 const getAllQuestionsOfForm = (data) => {
     return api({
-        url: `Survey/FormQuestions/getByFormIdQuestions`,
+        url: `Exam/FormQuestions/getByFormIdQuestions`,
         method: 'POST',
         data,
     });
 };
 const deleteQuestion = (data) => {
     return api({
-        url: `Survey/FormQuestions?id=${data.id}`,
+        url: `Exam/FormQuestions?id=${data.id}`,
         method: 'DELETE',
         data,
     });
 };
 const deleteQuestionFromGroup = (data) => {
     return api({
-        url: `Survey/QuestionGroupOfQuestions?id=${data.id}`,
+        url: `Exam/QuestionGroupOfQuestions?id=${data.id}`,
         method: 'DELETE',
     });
 };
@@ -96,7 +96,7 @@ const deleteQuestionFromGroup = (data) => {
 
 const getByFilterPagedForms = (params) => {
     return api({
-        url: `Survey/Forms/GetByFilterPagedForms`,
+        url: `Exam/Forms/GetByFilterPagedForms`,
         method: 'POST',
         params,
     });
@@ -106,7 +106,7 @@ const getByFilterPagedForms = (params) => {
 
 const getFormCategories = (params) => {
     return api({
-        url: `Survey/CategoryOfForms/getList`,
+        url: `Exam/CategoryOfForms/getList`,
         method: 'POST',
         data: [],
         params,
@@ -115,7 +115,7 @@ const getFormCategories = (params) => {
 
 const getFormPackages = () => {
     return api({
-        url: `Payment/Packages/getList?PageSize=0`,
+        url: `Account/Packages/getList?PageSize=0`,
         method: 'POST',
         data: [],
     });
@@ -124,7 +124,7 @@ const getFormPackages = () => {
 // Forms targetgroup
 const getTargetGroup = (data) => {
     return api({
-        url: `Target/TargetGroups/getList?PageNumber=1&PageSize=0`,
+        url: `Education/TargetGroups/getList?PageNumber=1&PageSize=0`,
         method: 'POST',
         data,
     });
@@ -133,7 +133,7 @@ const getTargetGroup = (data) => {
 // Forms anket kısıtı
 const getSurveyConstraint = (data) => {
     return api({
-        url: `Survey/SurveyConstraints/getList?PageNumber=1&PageSize=50`,
+        url: `Exam/SurveyConstraints/getList?PageNumber=1&PageSize=50`,
         method: 'POST',
         data,
     });
@@ -141,7 +141,7 @@ const getSurveyConstraint = (data) => {
 
 const updateQuestionsOrder = (data) => {
     return api({
-        url: `Survey/FormQuestions/updateQuestionsOrder`,
+        url: `Exam/FormQuestions/updateQuestionsOrder`,
         method: 'POST',
         data,
     });
@@ -150,7 +150,7 @@ const updateQuestionsOrder = (data) => {
 // Form Delete
 const formDelete = (data) => {
     return api({
-        url: `Survey/Forms/deleteForms`,
+        url: `Exam/Forms/deleteForms`,
         method: 'DELETE',
         data,
     });
@@ -177,7 +177,7 @@ const formPassive = (data) => {
 };
 const setScore = (data) => {
     return api({
-        url: `Survey/FormQuestions/setScore`,
+        url: `Exam/FormQuestions/setScore`,
         method: 'POST',
         data,
     });

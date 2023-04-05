@@ -1,58 +1,58 @@
 import { api } from './api';
 
 const getByFilterPagedAdminUsers = (urlString) => {
-  return api({
-    url: `Identity/Admins/GetByFilterPagedAdmins?${urlString}`,
-    method: 'POST',
-  });
+    return api({
+        url: `Account/Admins/GetByFilterPagedAdmins?${urlString}`,
+        method: 'POST',
+    });
 };
 
 const getByAdminUserId = (id) => {
-  return api({
-    url: `Identity/Admins/getbyid?Id=${id}`,
-    method: 'GET',
-  });
+    return api({
+        url: `Account/Admins/getbyid?Id=${id}`,
+        method: 'GET',
+    });
 };
 
 const addAdminUser = (data) => {
-  return api({
-    url: `Identity/Admins/Add`,
-    method: 'POST',
-    data,
-  });
+    return api({
+        url: `Account/Admins/Add`,
+        method: 'POST',
+        data,
+    });
 };
 
 const editAdminUser = (data) => {
-  return api({
-    url: `Identity/Admins/Update`,
-    method: 'PUT',
-    data,
-  });
+    return api({
+        url: `Account/Admins/Update`,
+        method: 'PUT',
+        data,
+    });
 };
 
 const deleteAdminUser = (data) => {
-  return api({
-    url: `Identity/Admins/Delete`,
-    method: 'DELETE',
-    data,
-  });
+    return api({
+        url: `Account/Admins/Delete`,
+        method: 'DELETE',
+        data,
+    });
 };
 
 const setAdminUserStatus = (data) => {
-  return api({
-    url: `Identity/Admins/setStatus`,
-    method: 'POST',
-    data,
-  });
+    return api({
+        url: `Account/Admins/setStatus`,
+        method: 'POST',
+        data,
+    });
 };
 
 const adminUsersServices = {
-  getByFilterPagedAdminUsers,
-  addAdminUser,
-  getByAdminUserId,
-  deleteAdminUser,
-  editAdminUser,
-  setAdminUserStatus,
+    getByFilterPagedAdminUsers,
+    addAdminUser,
+    getByAdminUserId,
+    deleteAdminUser,
+    editAdminUser,
+    setAdminUserStatus,
 };
 
 export default adminUsersServices;

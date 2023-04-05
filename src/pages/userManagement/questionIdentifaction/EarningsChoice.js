@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setEarningChoice } from '../../../store/slice/earningChoiceSlice';
 import EarningSearch from './EarningSearch';
 import CustomSelect, { Option } from '../../../components/CustomSelect';
-import { getByClassromIdLessons } from '../../../store/slice/lessonsSlice';
+import { getByClassromIdLessons,getByClassromIdLessonsBySearchText } from '../../../store/slice/lessonsSlice';
 
 const EarningsChoice = ({ classroomId, updateStatus }) => {
     const { lessonUnits } = useSelector((state) => state?.lessonUnits);
@@ -85,61 +85,12 @@ const EarningsChoice = ({ classroomId, updateStatus }) => {
         return modifiedLessonUnits;
     };
 
-    const onSearch = (event) => {
-        const expandedLevel = [];
-        const filterTreeData = treeData.filter((item) =>
-            item.title.toLowerCase().includes(event.target.value.toLowerCase()),
-        );
+    const onSearch = (value) => {
 
-        setTreeData(filterTreeData);
-
-        if (filterTreeData.length > 0) {
-            filterTreeData.map((item) => {
-                expandedLevel.push(item.key);
-                item.children.map((childItem) => {
-                    expandedLevel.push(childItem.key);
-                });
-            });
-            setTreeData(filterTreeData);
-            setExpandedKeys(expandedLevel);
-        }
-
-        if (filterTreeData.length === 0) {
-            let filteredArray = treeData.filter((element) =>
-                element.children.some((subElement) =>
-                    subElement.title.toLowerCase().includes(event.target.value.toLowerCase()),
-                ),
-            );
-
-            filteredArray.map((item) => {
-                expandedLevel.push(item.key);
-                item.children.map((childItem) => {
-                    expandedLevel.push(childItem.key);
-                });
-            });
-            setTreeData(filteredArray);
-            setExpandedKeys(expandedLevel);
-
-            if (filteredArray.length === 0) {
-                let filteredSubArray = copyFilterData.filter((element) =>
-                    element.children.some((subElement) =>
-                        subElement.children.some((subElementt) => subElementt.title.includes(event.target.value)),
-                    ),
-                );
-
-                filteredSubArray.map((item) => {
-                    expandedLevel.push(item.key);
-                    item.children.map((childItem) => {
-                        expandedLevel.push(childItem.key);
-                        setExpandedKeys(expandedLevel);
-                    });
-                });
-
-                setTreeData(filteredSubArray);
-            }
-        }
-        if (event.target.value === '') {
-            setTreeData(copyFilterData);
+        if(value !=="") {
+            dispatch(getByClassromIdLessonsBySearchText({classroomId : classroomId , searchText:value}));
+        }else{
+            dispatch(getByClassromIdLessons(classroomId));
         }
     };
 
@@ -265,8 +216,7 @@ const EarningsChoice = ({ classroomId, updateStatus }) => {
 
     return (
         <Card title="Kazanım Seçme">
-            <EarningSearch onSearch={onSearch}></EarningSearch>
-            <br></br>
+
             <CustomSelect
                 value={lessonId}
                 mode="multiple"
@@ -285,6 +235,8 @@ const EarningsChoice = ({ classroomId, updateStatus }) => {
             </CustomSelect>
             <br></br>
             <br></br>
+            <br></br>
+            <EarningSearch onSearch={onSearch}></EarningSearch>
             <br></br>
             <Tree
                 onExpand={onExpand}

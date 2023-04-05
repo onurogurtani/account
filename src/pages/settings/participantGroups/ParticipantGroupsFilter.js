@@ -20,7 +20,7 @@ const ParticipantGroupsFilter = () => {
           params: {
             'ParticipantGroupDetailSearch.Name': values.name,
             'ParticipantGroupDetailSearch.PackageIds': values.packageIds,
-            'ParticipantGroupDetailSearch.ParticipantType': values.participantType
+            'ParticipantGroupDetailSearch.UserType': values.userType
           },
         }),
       );
@@ -64,8 +64,8 @@ const ParticipantGroupsFilter = () => {
             ))}
           </CustomAutoComplete>
           </CustomFormItem>
-          <CustomFormItem name={'participantType'} label={<Text t="Katılımcı Türü" />}>
-            <CustomSelect placeholder="Katılımcı Türü">
+          <CustomFormItem name={'usertType'} label={<Text t="Katılımcı Türü" />}>
+            <CustomSelect placeholder="Katılımcı Tipi">
               <Option key={'1'} value={1}>
                 <Text t={'Öğrenci'} />
               </Option>

@@ -1,6 +1,7 @@
 import { RightOutlined } from '@ant-design/icons';
 import { Tag } from 'antd';
 import React from 'react';
+import { statusInformation } from '../../../constants/organisation';
 
 const useOrganisationListTableColumns = () => {
   const columns = [
@@ -32,6 +33,42 @@ const useOrganisationListTableColumns = () => {
       },
     },
     {
+      title: 'Kurum Yöneticisi',
+      dataIndex: 'organisationManager',
+      key: 'organisationManager',
+      sorter: true,
+      render: (text, record) => {
+        return <div>{text}</div>;
+      },
+    },
+    {
+      title: 'Paket Adı',
+      dataIndex: 'packageName',
+      key: 'packageName',
+      sorter: true,
+      render: (text, record) => {
+        return <div>{text}</div>;
+      },
+    },
+    {
+      title: 'Lisans Sayısı',
+      dataIndex: 'licenceNumber',
+      key: 'licenceNumber',
+      sorter: true,
+      render: (text, record) => {
+        return <div>{text}</div>;
+      },
+    },
+    {
+      title: 'Domain',
+      dataIndex: 'domainName',
+      key: 'domainName',
+      sorter: true,
+      render: (text, record) => {
+        return <div>{text}</div>;
+      },
+    },
+    {
       title: 'Müşteri Numarası',
       dataIndex: 'customerNumber',
       key: 'customerNumber',
@@ -41,18 +78,20 @@ const useOrganisationListTableColumns = () => {
       },
     },
     {
-      title: 'Durum',
-      dataIndex: 'recordStatus',
-      key: 'recordStatus',
+      title: 'Durum',  
+      dataIndex: 'organisationStatusInfo',
+      key: 'organisationStatusInfo',
+      sorter: true,
       render: (text, record) => {
         return (
           <div>
-            {<Tag color={record.recordStatus ? 'green' : 'red'}>{record.recordStatus ? 'Aktif' : 'Pasif'}</Tag>}
+            {<Tag color={statusInformation[record?.organisationStatusInfo]?.color}>
+              {statusInformation[record?.organisationStatusInfo]?.value}
+            </Tag>}
           </div>
         );
       },
     },
-
     {
       render: (text, record) => {
         return <RightOutlined style={{ fontSize: '25px' }} />;

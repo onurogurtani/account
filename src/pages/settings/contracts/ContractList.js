@@ -162,7 +162,6 @@ const ContractList = () => {
             ascend: 'ContractTypeASC',
             descend: 'ContractTypeDESC',
         },
-        //TODO KNT ET
         {
             key: 'contractKind',
             ascend: 'ContractKindASC',
@@ -175,7 +174,7 @@ const ContractList = () => {
         const data = {
             OrderBy: sortType.length ? sortType[0][sorter.order] : '',
             PageSize: pagination?.pageSize || 10,
-            PageNumber: pagination?.pageNumber || 1,
+            PageNumber: pagination?.current || 1,
         };
         dispatch(getByFilterPagedDocuments(data));
     };

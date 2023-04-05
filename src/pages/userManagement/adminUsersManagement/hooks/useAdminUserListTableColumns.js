@@ -2,6 +2,7 @@ import { Tag } from 'antd';
 import dayjs from 'dayjs';
 import { useHistory } from 'react-router-dom';
 import { CustomButton, DeleteButton, SetStatusButton } from '../../../../components';
+import { adminTypes } from '../../../../constants/adminUsers';
 import { deleteAdminUser, setAdminUserStatus } from '../../../../store/slice/adminUserSlice';
 import { dateTimeFormat } from '../../../../utils/keys';
 import { maskedPhone } from '../../../../utils/utils';
@@ -74,26 +75,26 @@ const useAdminUserListTableColumns = () => {
         },
         {
             title: 'Admin Tipi',
-            dataIndex: 'adminTypeEnum',
-            key: 'adminTypeEnum',
+            dataIndex: 'userType',
+            key: 'userType',
             // sorter: true,
             // sortOrder: sorterObject?.columnKey === 'name' ? sorterObject?.order : null,
             render: (text, record) => {
-                return <div>{text === 1 ? 'Sistem Admin' : 'Kurum Admin'}</div>;
+                return <div>{adminTypes[text]?.label}</div>;
             },
         },
         {
             title: 'Rol',
-            dataIndex: 'groups',
-            key: 'groups',
+            dataIndex: 'roles',
+            key: 'roles',
             // sorter: true,
             // sortOrder: sorterObject?.columnKey === 'isActive' ? sorterObject?.order : null,
             render: (text, record) => {
                 return (
                     <div>
-                        {text.map((item) => (
+                        {text?.map((item) => (
                             <Tag color="green" key={item?.id}>
-                                {item?.groupName}
+                                {item?.name}
                             </Tag>
                         ))}
                     </div>
