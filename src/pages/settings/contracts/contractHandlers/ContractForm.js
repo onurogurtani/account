@@ -119,12 +119,10 @@ const ContractForm = ({ initialValues }) => {
     }, [text]);
 
     const handleFindKinds = async (arr) => {
-        let allKindsArr = [];
-        contractKinds?.map((kindArr) => allKindsArr?.push(...kindArr?.contractType?.contractKinds));
         form.resetFields(['contractKinds']);
         let idsArr = [];
         contractTypes?.filter((type) => arr?.includes(type.name)).map((item) => idsArr.push(item?.id));
-        let filteredKinds = allKindsArr.filter((obj) => idsArr.includes(obj?.contractTypeId));
+        let filteredKinds = contractKinds.filter((obj) => idsArr.includes(obj?.contractTypeId));
         setFilteredKinds([...filteredKinds]);
     };
 
