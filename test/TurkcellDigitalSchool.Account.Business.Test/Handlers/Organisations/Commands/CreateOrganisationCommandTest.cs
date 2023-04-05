@@ -98,7 +98,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
                 Admin = new CreateUpdateAdminDto
                 {
                     UserName = "22222222222",
-                    AdminTypeEnum =UserType.OrganisationAdmin,
+                    UserType = UserType.OrganisationAdmin,
                     CitizenId = "22222222222",
                     Name = "test",
                     SurName = "test",

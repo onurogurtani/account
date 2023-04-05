@@ -46,7 +46,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                 if (organisation)
                     return new ErrorResult(Messages.SameNameAlreadyExist);
 
-                var adminType = await _organisationTypeRepository.Query().AnyAsync(x => x.Id == request.Organisation.OrganisationTypeId && x.IsSingularOrganisation);
+                var userType = await _organisationTypeRepository.Query().AnyAsync(x => x.Id == request.Organisation.OrganisationTypeId && x.IsSingularOrganisation);
 
                 //TODO paketten gelen roleId kurumAdmininin RoleIds kýsmýna eklenecek. Geçici olarak roleId deðeri 1 olarak yazýldý orasý da  kaldýrýlacak.
                 var roleIds = new List<long> { 1 };
@@ -56,7 +56,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                     Admin = new CreateUpdateAdminDto
                     {
                         UserName = request.Organisation.AdminTc,
-                        AdminTypeEnum = adminType ? UserType.OrganisationAdmin : UserType.FranchiseAdmin,
+                        UserType = userType ? UserType.OrganisationAdmin : UserType.FranchiseAdmin,
                         CitizenId = request.Organisation.AdminTc,
                         Name = request.Organisation.AdminName,
                         SurName = request.Organisation.AdminSurname,
