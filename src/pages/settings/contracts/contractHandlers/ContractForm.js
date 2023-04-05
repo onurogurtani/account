@@ -84,7 +84,7 @@ const ContractForm = ({ initialValues }) => {
 
             let types = [];
             initialValues?.contractTypes?.map((t) => types.push(t.contractType.id));
-            handleSelectAll(types);
+            handleFindKinds(types);
             let initialData = {
                 startDate: startDate >= currentDate ? dayjs(initialValues?.validStartDate) : undefined,
                 endDate: endDate >= currentDate ? dayjs(initialValues?.validEndDate) : undefined,
@@ -118,7 +118,7 @@ const ContractForm = ({ initialValues }) => {
         }
     }, [text]);
 
-    const handleSelectAll = async (arr) => {
+    const handleFindKinds = async (arr) => {
         form.resetFields(['contractKinds']);
         let idsArr = [];
         contractTypes?.filter((type) => arr?.includes(type.id)).map((item) => idsArr.push(item?.id));
@@ -154,7 +154,7 @@ const ContractForm = ({ initialValues }) => {
                     showArrow
                     // value={typeValue}
                     placeholder="Seçiniz"
-                    onChange={handleSelectAll}
+                    onChange={handleFindKinds}
                 >
                     {contractTypes
                         ?.filter((t) => t.recordStatus !== 0)
