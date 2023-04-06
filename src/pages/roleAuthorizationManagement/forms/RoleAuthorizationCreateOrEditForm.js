@@ -52,7 +52,7 @@ const RoleAuthorizationCreateOrEditForm = ({ isEdit }) => {
                     form.setFieldsValue({
                         roleClaims: permission,
                         name: data?.name,
-                        roleType: data?.roleType,
+                        userType: data?.userType,
                         isOrganisationView: data?.isOrganisationView,
                     });
                     setTargetKeys(permission);
@@ -158,7 +158,7 @@ const RoleAuthorizationCreateOrEditForm = ({ isEdit }) => {
 
                     <CustomFormItem
                         label="Rol Tipi"
-                        name="roleType"
+                        name="userType"
                         style={{ width: '50%' }}
                         rules={[{ required: true, message: 'Rol Tipi Seçiniz' }]}
                     >

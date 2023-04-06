@@ -92,7 +92,7 @@ const OrganisationForm = ({ form, organizationData, isEdit, sendValue }) => {
             { type: 'number' },
           ]}
         >
-          <CustomNumberInput maxlength={10} placeholder="Müşteri Numarası" />
+          <CustomNumberInput maxLength={10} placeholder="Müşteri Numarası" />
         </CustomFormItem>
 
         <CustomFormItem

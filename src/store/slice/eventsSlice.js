@@ -59,7 +59,6 @@ export const getParticipantGroupsList = createAsyncThunk(
     'events/getParticipantGroupsList',
     async ({ params = {} }, { dispatch, rejectWithValue }) => {
         try {
-            console.log('"try"', 'try');
             const response = await participantGroupsServices.getParticipantGroupsPagedList(params);
             return response;
         } catch (error) {
@@ -136,9 +135,7 @@ export const eventsSlice = createSlice({
             state.isFilter = action.payload;
         },
         handleParticipantGroupTypeDeSelect: (state, action) => {
-            state.participantGroupsList = state.participantGroupsList.filter(
-                (i) => i.participantType !== action.payload,
-            );
+            state.participantGroupsList = state.participantGroupsList.filter((i) => i.userType !== action.payload);
         },
         resetParticipantGroupsList: (state, action) => {
             state.participantGroupsList = [];

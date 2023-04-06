@@ -19,7 +19,7 @@ const HandleContractFormButton = ({ form, initialValues, contractTypes, contract
     const filterArray = async (originalArray, filterArray) => {
         let filteredArray = [];
         originalArray.forEach((element) => {
-            if (filterArray.includes(element?.name)) {
+            if (filterArray.includes(element?.id)) {
                 filteredArray.push(element);
             }
         });
@@ -65,7 +65,8 @@ const HandleContractFormButton = ({ form, initialValues, contractTypes, contract
             const versionNumber = versionString ? Number(versionString?.replace(/\D/g, '')) : 1;
             let kindData = { contractKindDto: {} };
             const res2 = await dispatch(getByFilterPagedContractKinds(kindData));
-            let kindId = res2?.payload?.data?.items.filter((i) => i.name === values.contractKinds);
+            let kindId = [];
+            kindId = res2?.payload?.data?.items.filter((i) => i.id === values.contractKinds);
             let data = {
                 entity: {
                     clientRequiredApproval: values?.clientRequiredApproval,
@@ -79,13 +80,13 @@ const HandleContractFormButton = ({ form, initialValues, contractTypes, contract
                     recordStatus: values?.recordStatus,
                 },
             };
-            if (initialValues?.handleType === 'edit') {
+            if (initialValues) {
                 data.entity.id = initialValues?.id;
                 const action = await dispatch(updateContract(data));
                 if (updateContract.fulfilled.match(action)) {
                     successDialog({
                         title: <Text t="success" />,
-                        message: 'Sözleşme Başarıyla Güncellendi',
+                        message: action?.payload?.message,
                         onOk: () => {
                             history.push('/settings/contracts');
                         },

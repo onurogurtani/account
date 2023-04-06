@@ -58,7 +58,7 @@ const OrganizationAdminForm = ({ form, organizationAdminData, sendValue }) => {
             { type: 'number', min: 10000000000, message: '11 karakter olmalı' },
           ]}
         >
-          <CustomNumberInput height="58" maxlength="11" placeholder="Kurum Admin T.C" />
+          <CustomNumberInput height="58" maxLength="11" placeholder="Kurum Admin T.C" />
         </CustomFormItem>
 
         <CustomFormItem

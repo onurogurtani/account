@@ -37,7 +37,7 @@ const AddEvent = () => {
                 dispatch(
                     getParticipantGroupsList({
                         params: {
-                            'ParticipantGroupDetailSearch.ParticipantType': item.participantType,
+                            'ParticipantGroupDetailSearch.UserType': item.userType,
                             'ParticipantGroupDetailSearch.PageSize': 100000000,
                         },
                     }),
@@ -63,7 +63,7 @@ const AddEvent = () => {
             eventTypeEnum: currentEvent?.eventTypeEnum,
             locationType: currentEvent?.locationType,
             physicalAddress: currentEvent?.physicalAddress,
-            participantTypeOfEvents: currentEvent?.participantTypeOfEvents?.map((item) => item.participantType),
+            participantTypeOfEvents: currentEvent?.participantTypeOfEvents?.map((item) => item.userType),
             participantGroups: currentEvent?.participantGroups?.map((item) => item.participantGroupId),
             eventTypeOfEvents: currentEvent?.eventTypeOfEvents?.map((item) => item.eventTypeId),
             startDate: dayjs(currentEvent?.startDate).startOf('minute'),
@@ -99,7 +99,7 @@ const AddEvent = () => {
         values.isPublised = isPublised;
         values.isDraft = isDraft;
         values.participantTypeOfEvents = values.participantTypeOfEvents.map((item) => ({
-            participantType: item,
+            userType: item,
         }));
         values.participantGroups = values.participantGroups.map((item) => ({
             participantGroupId: item,
