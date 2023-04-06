@@ -13,18 +13,22 @@ import {
 import {
   getByFilterPagedQuestionOfExams,
   onChangeActiveKey, selectedOutQuestionTabRowsData,
-  setOutQuestionTabLessonSubSubjectList,
+  setOutQuestionTabLessonSubSubjectList, setSubjectChooseSchoolLevel,
 } from '../../../../store/slice/workPlanSlice';
 import { getLessonSubSubjects } from '../../../../store/slice/lessonSubSubjectsSlice';
 import { getListFilterParams } from '../../../../utils/utils';
+import { useLocation } from 'react-router-dom';
 
 const OutQuestion = ({ outQuestionForm }) => {
 
+  const location = useLocation();
+  const showData = location?.state?.data;
   const dispatch = useDispatch();
 
   const [yearOfQuestion, setYearOfQuestion] = useState([]);
 
   const { activeKey, subjectChooseTab, outQuestionTab } = useSelector((state) => state?.workPlan);
+  const { allClassList } = useSelector((state) => state?.classStages);
 
   useEffect(async () => {
     //soru yılı 1975 den bulunduğu senenin listenin oluşturulması
@@ -60,6 +64,8 @@ const OutQuestion = ({ outQuestionForm }) => {
       delete body.LessonUnitIds;
       delete body.isActive;
       await dispatch(getByFilterPagedQuestionOfExams(body));
+      const res = allClassList.find((q) => q.id === showData.classroomId)
+      if(res) { dispatch(setSubjectChooseSchoolLevel(res.schoolLevel))}
     }
 
   }, [activeKey]);

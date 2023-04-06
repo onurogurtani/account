@@ -102,6 +102,8 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
         currentData.workPlanVideos?.forEach((item) => {
           dispatch(selectedPracticeQuestionTabRowsVideo(item.video));
         });
+        // const res = allClassList.find((q) => q.id === currentData.classroomId)
+        // if(res) { dispatch(setSubjectChooseSchoolLevel(res.schoolLevel))}
         await handleSearchVideo('edit');
         showData?.activeKey && dispatch(onChangeActiveKey(showData?.activeKey));
 

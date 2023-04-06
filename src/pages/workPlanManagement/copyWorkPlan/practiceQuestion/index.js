@@ -10,21 +10,20 @@ import {
   Text,
 } from '../../../../components';
 import {
+  addWorkPlan,
   onChangeActiveKey, resetAllData,
-  setPracticeQuestionVideoFilteredList, updateWorkPlan,
+  setPracticeQuestionVideoFilteredList,
 } from '../../../../store/slice/workPlanSlice';
 import { getByFilterPagedVideos } from '../../../../store/slice/videoSlice';
 import videoTableColumn from '../../addWorkPlan/practiceQuestion/videoTableColumn';
 import '../../../../styles/table.scss';
 import useOnchangeTable from '../../../../hooks/useOnchangeTable';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const PracticeQuestion = ({ subjectForm, practiceForm, outQuestionForm, setIsExit }) => {
 
   const dispatch = useDispatch();
   const history = useHistory();
-  const location = useLocation();
-  const showData = location?.state?.data;
 
   const [isDrafted, setIsDrafted] = useState(false);
 
@@ -54,7 +53,6 @@ const PracticeQuestion = ({ subjectForm, practiceForm, outQuestionForm, setIsExi
 
     const body = {
       workPLan: {
-        id: showData.id,
         videoId: subjectChooseTab.selectedRowVideo.id,
         publishStatus: 1,
         classroomId: subjectChooseTab.filterObject.ClassroomId,
@@ -86,8 +84,8 @@ const PracticeQuestion = ({ subjectForm, practiceForm, outQuestionForm, setIsExi
       body.workPLan.activeKey = activeKey;
       body.workPLan.publishStatus = 3;
     }
-    const action = await dispatch(updateWorkPlan(body));
-    if (updateWorkPlan?.fulfilled?.match(action)) {
+    const action = await dispatch(addWorkPlan(body));
+    if (addWorkPlan?.fulfilled?.match(action)) {
       successDialog({
         title: <Text t='successfullySent' />,
         message: action.payload?.message,

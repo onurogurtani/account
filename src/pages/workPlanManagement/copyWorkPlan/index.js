@@ -9,7 +9,8 @@ import OutQuestion from './outQuestions';
 import PracticeQuestion from './practiceQuestion';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
-  resetAllData, updateWorkPlan,
+  addWorkPlan,
+  resetAllData,
 } from '../../../store/slice/workPlanSlice';
 
 const CopyWorkPlan = () => {
@@ -130,7 +131,6 @@ const CopyWorkPlan = () => {
   const saveDrafted = async (locationPathName) => {
     const body = {
       workPLan: {
-        id: showData.id,
         activeKey,
         videoId: subjectChooseTab.selectedRowVideo.id,
         publishStatus: 3,
@@ -161,8 +161,8 @@ const CopyWorkPlan = () => {
 
     body.workPLan.workPlanVideos = arrData;
 
-    const action = await dispatch(updateWorkPlan(body));
-    if (updateWorkPlan?.fulfilled?.match(action)) {
+    const action = await dispatch(addWorkPlan(body));
+    if (addWorkPlan?.fulfilled?.match(action)) {
       successDialog({
         title: <Text t='successfullySent' />,
         message: action.payload?.message,

@@ -96,13 +96,15 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
         const values = await subjectForm.getFieldsValue(['ClassroomId', 'LessonIds', 'LessonUnitIds', 'LessonSubjectIds', 'educationYear']);
         dispatch(setSubjectChooseData(values));
         dispatch(selectedEvaluationTabRowData({ id: currentData.asEvId }));
-        currentData.workPlanQuestionOfExams?.forEach((item) => {
+        currentData.workPlanQuestionOfExams?.forEach((item) => {debugger
           dispatch(selectedOutQuestionTabRowsData(item.questionOfExam));
         });
         currentData.workPlanVideos?.forEach((item) => {
           dispatch(selectedPracticeQuestionTabRowsVideo(item.video));
         });
-        await handleSearchVideo('edit');
+        // const res = allClassList.find((q) => q.id === currentData.classroomId)
+        // if(res) { dispatch(setSubjectChooseSchoolLevel(res.schoolLevel))}
+        await handleSearchVideo('copy');
         // showData?.activeKey && dispatch(onChangeActiveKey(showData?.activeKey));
 
       }
@@ -195,7 +197,7 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
     if (getByFilterPagedVideos?.fulfilled?.match(action)) {
       await dispatch(setSubjectChooseVideoFilteredList(action?.payload));
       await dispatch(getUsedVideoIdsQuery());
-      if (from === 'edit') {
+      if (from === 'copy') {
         dispatch(selectedSubjectTabRowVideo(currentData.video));
       }
     }
