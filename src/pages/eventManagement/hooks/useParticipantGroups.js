@@ -29,7 +29,7 @@ const useParticipantGroups = (form, selectBoxName) => {
 
     const onParticipantGroupTypeDeSelect = (value, option) => {
         const arr1 = form.getFieldValue(selectBoxName);
-        const arr2 = participantGroupsList.filter((i) => i.participantType === value).map((i) => i.id);
+        const arr2 = participantGroupsList.filter((i) => i.userType === value).map((i) => i.id);
 
         dispatch(handleParticipantGroupTypeDeSelect(value));
         form.setFieldsValue({
