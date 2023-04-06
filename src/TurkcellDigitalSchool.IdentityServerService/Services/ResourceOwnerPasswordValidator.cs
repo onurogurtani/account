@@ -2,9 +2,13 @@
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Validation;
 using IdentityModel;
+using Org.BouncyCastle.Asn1.Ocsp;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.IdentityServerService.Constants;
 using TurkcellDigitalSchool.IdentityServerService.Services.Contract;
 using UserSession = TurkcellDigitalSchool.Entities.Concrete.Core.UserSession;
@@ -16,35 +20,89 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
         private readonly ICustomUserSvc _customUserSvc;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserSessionRepository _userSessionRepository;
-        public ResourceOwnerPasswordValidator(ICustomUserSvc customUserSvc , IHttpContextAccessor httpContextAccessor, IUserSessionRepository userSessionRepository)
+        private readonly ICaptchaManager _captchaManager;
+
+
+        public ResourceOwnerPasswordValidator(ICustomUserSvc customUserSvc, IHttpContextAccessor httpContextAccessor,
+            IUserSessionRepository userSessionRepository)
         {
             _customUserSvc = customUserSvc;
-            _httpContextAccessor= httpContextAccessor;
+            _httpContextAccessor = httpContextAccessor;
             _userSessionRepository = userSessionRepository;
         }
         public async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
-            var result = await _customUserSvc.Validate(context.UserName, context.Password);
-            var user = await _customUserSvc.FindByUserName(context.UserName);
-            if (!result)
-            { 
-                var failLoginCount = await _customUserSvc.IncUserFailLoginCount(user.Id);
-                var customResponse = new Dictionary<string, object>();
-                customResponse.Add("IsCapthcaShow", failLoginCount>=3 && failLoginCount <5 );
-                customResponse.Add("IsSendOtp",failLoginCount >=5);
+
+            var csrf_token = _httpContextAccessor.HttpContext.Request.Headers["CSRFTOKEN"].ToString();
+
+            if (string.IsNullOrEmpty(csrf_token))
+            {
                 context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
-                    Messages.PassError + " " + string.Format(Messages.FailLoginCount, failLoginCount), customResponse); 
+                    Messages.InvalitToken);
                 return;
             }
 
-            if ((user.FailLoginCount ?? 0) > 0)
+            var errorCount = await _customUserSvc.GetCsrfTokenFailLoginCount(csrf_token);
+
+            if (errorCount > 3 && errorCount <= 5)
             {
-                await _customUserSvc.ResetUserFailLoginCount(user.Id);  
+                var captchaKey = _httpContextAccessor.HttpContext.Request.Headers["captchaKey"].ToString();
+
+                if (string.IsNullOrEmpty(captchaKey))
+                {
+                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
+                        Messages.captchaKeyIsNotValid);
+                    return;
+                }
+
+                string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+                if (environment != ApplicationMode.PROD.ToString() && captchaKey == "kg")
+                {
+                    if (!_captchaManager.Validate(captchaKey))
+                    {
+                        context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
+                           Messages.captchaKeyIsNotValid);
+                        return;
+                    }
+                } 
+            }
+             
+            var result = await _customUserSvc.Validate(context.UserName, context.Password);
+
+            if (errorCount >= 4 && !result)
+            {
+
             }
 
-            
+
+            if (!result)
+            {
+                var failLoginCount = await _customUserSvc.IncCsrfTokenFailLoginCount(csrf_token);
+
+                var customResponse = new Dictionary<string, object>();
+                customResponse.Add("IsCapthcaShow", failLoginCount >= 3 && failLoginCount < 5);
+                customResponse.Add("IsSendOtp", failLoginCount >= 5);
+                context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
+                    Messages.PassError + " " + Messages.LoginFail, customResponse);
+                return;
+            }
+
+            var user = await _customUserSvc.FindByUserName(context.UserName);
+
+
+
+
+
+
+            if ((user.FailLoginCount ?? 0) > 0)
+            {
+                await _customUserSvc.ResetUserFailLoginCount(user.Id);
+            }
+
+
             var ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
-            var session= new UserSession()
+            var session = new UserSession()
             {
                 UserId = user.Id,
                 NotBefore = 1,
@@ -53,17 +111,17 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 StartTime = DateTime.Now,
                 IpAdress = ip
             };
-            if (session.SessionType==SessionType.None)
+            if (session.SessionType == SessionType.None)
             {
                 context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
                    string.Format(Messages.ClientTanimliDegil, context.Request.Client.ClientId));
                 return;
-            } 
+            }
 
             var addedSession = _userSessionRepository.AddUserSession(session);
 
-             
-            context.Result = new GrantValidationResult(user.Id.ToString(), OidcConstants.AuthenticationMethods.Password,new List<Claim>
+
+            context.Result = new GrantValidationResult(user.Id.ToString(), OidcConstants.AuthenticationMethods.Password, new List<Claim>
             {
                 new Claim("SessionType",session.SessionType.ToString()),
                 new Claim("SessionId",addedSession.Id.ToString())
