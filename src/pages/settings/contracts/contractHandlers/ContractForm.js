@@ -86,10 +86,10 @@ const ContractForm = ({ initialValues }) => {
             initialValues?.contractTypes?.map((t) => types.push(t.contractType.name));
             handleFindKinds(types);
             let initialData = {
-                validStartDate: startDate >= currentDate ? dayjs(initialValues?.validStartDate) : undefined,
-                validEndDate: endDate >= currentDate ? dayjs(initialValues?.validEndDate) : undefined,
+                startDate: startDate >= currentDate ? dayjs(initialValues?.validStartDate) : undefined,
+                endDate: endDate >= currentDate ? dayjs(initialValues?.validEndDate) : undefined,
                 contractTypes: types,
-                contractKinds: initialValues?.contractKind.name,
+                contractKinds: initialValues?.contractKind.id,
                 clientRequiredApproval: initialValues?.clientRequiredApproval,
                 requiredApproval: initialValues?.requiredApproval,
                 content: initialValues?.content,
@@ -159,7 +159,7 @@ const ContractForm = ({ initialValues }) => {
                     {contractTypes
                         ?.filter((t) => t.recordStatus !== 0)
                         ?.map(({ id, name }) => (
-                            <Option key={id} value={name}>
+                            <Option key={id} value={id}>
                                 {name}
                             </Option>
                         ))}
@@ -242,7 +242,7 @@ const ContractForm = ({ initialValues }) => {
                 <Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} lg={{ span: 16 }}>
                     <CustomFormItem
                         label={<Text t="Geçerlilik Baş. Tarihi" />}
-                        name="validStartDate"
+                        name="startDate"
                         rules={[
                             { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
 
@@ -268,7 +268,7 @@ const ContractForm = ({ initialValues }) => {
                 <Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} lg={{ span: 16 }}>
                     <CustomFormItem
                         label={<Text t="Geçerlilik Bitiş Tarihi" />}
-                        name="validEndDate"
+                        name="endDate"
                         rules={[
                             { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
                             {
