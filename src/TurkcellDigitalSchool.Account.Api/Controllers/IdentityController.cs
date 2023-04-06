@@ -257,6 +257,51 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         }
 
         /// <summary>
+        ///  Make it User Register operations
+        /// </summary>
+        /// <param name="register"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("unverifiedregister")]
+        public async Task<IActionResult> UnverifiedRegister([FromBody] UnverifiedUserCommand command)
+        {
+            var result = await Mediator.Send(command);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+        /// <summary>
+        ///  Make it User Register operations
+        /// </summary>
+        /// <param name="register"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("verifyuser")]
+        public async Task<IActionResult> UnverifiedRegister([FromBody] VerifyUserCommand command)
+        {
+            var result = await Mediator.Send(command);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        /// <summary>
         /// Otp Register
         /// </summary>
         /// <param name="query"></param>
