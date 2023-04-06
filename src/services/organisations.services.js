@@ -118,7 +118,6 @@ const organisationsServices = {
   getImage,
   addImage,
   updateImage,
-  addImage
 };
 
 export default organisationsServices;
