@@ -1,9 +1,9 @@
-﻿using System.Linq.Expressions;
-using Duende.IdentityServer.Validation;
+﻿using System.Linq.Expressions; 
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
+using TurkcellDigitalSchool.Entities.Concrete;
 using TurkcellDigitalSchool.Entities.Concrete.Core;
 using TurkcellDigitalSchool.IdentityServerService.Services.Contract;
 using TurkcellDigitalSchool.IdentityServerService.Services.Model;
@@ -14,10 +14,12 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
     {
 
         private readonly IUserRepository _userRepository;
-
-        public CustomUserSvc(IUserRepository userRepository)
+        private readonly ILoginFailCounterRepository _loginFailCounterRepository;
+        private readonly int CsrfTokenExpireHours = 6;
+        public CustomUserSvc(IUserRepository userRepository, ILoginFailCounterRepository loginFailCounterRepository)
         {
             _userRepository = userRepository;
+            _loginFailCounterRepository = loginFailCounterRepository;
         }
         public async Task<bool> Validate(string userName, string password)
         {
@@ -68,6 +70,10 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             }
 
             var user = await _userRepository.GetAsync(expression);
+            if (user==null)
+            {
+                return null;
+            }
             var result = GetCustomUser(user);
             return result;
         }
@@ -116,6 +122,49 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             user.FailLoginCount = (user.FailLoginCount ?? 0) + 1;
             await _userRepository.UpdateAndSaveAsync(user);
             return (user.FailLoginCount ?? 0);
+        }
+
+
+        public async Task ResetCsrfTokenFailLoginCount(string csrfToken)
+        {
+            var expTime = DateTime.Now.AddHours(CsrfTokenExpireHours * -1);
+            var loginFailCounter = await _loginFailCounterRepository.GetAsync(x => x.CsrfToken == csrfToken && x.InsertTime > expTime);
+            if (loginFailCounter != null)
+            { 
+             return;
+            }
+            loginFailCounter.FailCount=0;
+            await _loginFailCounterRepository.UpdateAndSaveAsync(loginFailCounter);
+        }
+
+        public async Task<int> IncCsrfTokenFailLoginCount(string csrfToken)
+        {
+            var expTime = DateTime.Now.AddHours(CsrfTokenExpireHours*-1);
+            var loginFailCounter = await _loginFailCounterRepository.GetAsync(x => x.CsrfToken  == csrfToken && x.InsertTime >= expTime);
+
+            if (loginFailCounter != null)
+            {
+                loginFailCounter = new LoginFailCounter
+                {
+                    CsrfToken = csrfToken,
+                    FailCount = 1
+                };
+                _loginFailCounterRepository.Add(loginFailCounter);
+            }
+            else
+            {
+                loginFailCounter.UpdateTime = DateTime.Now;
+                loginFailCounter.FailCount = (loginFailCounter.FailCount ?? 0) + 1;
+            } 
+            await _loginFailCounterRepository.UpdateAndSaveAsync(loginFailCounter);
+            return (loginFailCounter.FailCount ?? 0);
+        }
+
+        public async Task<int> GetCsrfTokenFailLoginCount(string csrfToken)
+        {
+            var expTime = DateTime.Now.AddHours(CsrfTokenExpireHours * -1);
+            var loginFailCounter = await _loginFailCounterRepository.GetAsync(x => x.CsrfToken == csrfToken && x.InsertTime >= expTime);
+            return (loginFailCounter?.FailCount ?? 0);
         }
     }
 }

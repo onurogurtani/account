@@ -6,6 +6,7 @@ using Serilog;
 using System.Globalization;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
+using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.IdentityServerService.Pages.Admin.ApiScopes;
@@ -35,6 +36,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
             builder.Services.AddScoped<IRoleClaimRepository, RoleClaimRepository>();
             builder.Services.AddScoped<IOperationClaimRepository, OperationClaimRepository>();
             builder.Services.AddScoped<ITokenHelper, JwtHelper>();
+            builder.Services.AddTransient<ICaptchaManager, CaptchaManager>();
 
             builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
