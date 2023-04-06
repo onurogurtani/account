@@ -120,7 +120,7 @@ const OrganisationCreateOrUpdate = () => {
       organisationImageId,
       reasonForStatus: "",
       organisationStatusInfo: (isEdit && data?.organisationStatusInfo !== 3) ? data?.organisationStatusInfo : 1,
-      packageName: packageName?.label ? packageName?.label : '',
+      packageName: packageName?.label || '',
       ...organizationData
     }
     if (isEdit) {

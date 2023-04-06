@@ -177,3 +177,7 @@ export function downloadFile({ data, fileName = "", fileExtension = "xlsx" }) {
     document.body.appendChild(link);
     link.click();
 }
+
+export const stringContainsNumber = (string) => {
+    return /\d/.test(string);
+}

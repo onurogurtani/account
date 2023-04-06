@@ -17,6 +17,8 @@ import '../../../styles/myOrders/paymentModal.scss';
 import { Form, Upload, } from 'antd';
 import { addImage, setOrganizationImageId, updateImage } from '../../../store/slice/organisationsSlice';
 import { InboxOutlined } from '@ant-design/icons';
+import '../../../styles/organisationManagement/logoFormModal.scss';
+
 
 const LogoFormModal = ({ modalVisible, handleModalVisible, organizationForm, isEdit, getImageDetail }) => {
     const [form] = Form.useForm();
@@ -34,15 +36,21 @@ const LogoFormModal = ({ modalVisible, handleModalVisible, organizationForm, isE
     const addFile = async (values) => {
         const logoData = values?.logo?.fileList[0]?.thumbUrl;
         const logoType = values?.logo?.fileList[0]?.type;
-        const binaryData = Buffer.from(logoData.split(',')[1], 'base64');
-        const blob = new Blob([binaryData], { type: logoType });
+
+        let blob = null;
+        if (typeof logoData === 'string' && typeof logoType === 'string') {
+            const binaryData = Buffer.from(logoData.split(',')[1], 'base64');
+            blob = new Blob([binaryData], { type: logoType });
+        }
 
         const formData = new FormData();
         formData.append("FileName", values?.fileName);
-        formData.append("Image", blob, logoType);
+        if (blob) {
+            formData.append("Image", blob, logoType);
+        }
 
-        const action = dispatch(
-            addImage({
+        try {
+            const action = await dispatch(addImage({
                 data: formData,
                 options: {
                     headers: {
@@ -50,34 +58,50 @@ const LogoFormModal = ({ modalVisible, handleModalVisible, organizationForm, isE
                         authorization: `Bearer ${token}`,
                     },
                 },
-            }),
-        ).unwrap();
-        return action;
+            })).unwrap();
+
+            return action;
+        } catch (error) {
+            console.error("Dosya eklenirken bir hata oluştu: ", error);
+            throw error;
+        }
     };
 
     const updateFile = async (values) => {
-        const logoData = values?.logo?.fileList[0]?.thumbUrl;
-        const logoType = values?.logo?.fileList[0]?.type;
-        const binaryData = Buffer.from(logoData.split(',')[1], 'base64');
-        const blob = new Blob([binaryData], { type: logoType });
+        try {
+            const logoData = values?.logo?.fileList[0]?.thumbUrl;
+            const logoType = values?.logo?.fileList[0]?.type;
 
-        const formData = new FormData();
-        formData.append("Id", organisationImageId);
-        formData.append("FileName", values?.fileName);
-        formData.append("Image", blob, logoType);
+            let blob = null;
+            if (typeof logoData === 'string' && typeof logoType === 'string') {
+                const binaryData = Buffer.from(logoData.split(',')[1], 'base64');
+                blob = new Blob([binaryData], { type: logoType });
+            }
 
-        const action = dispatch(
-            updateImage({
-                data: formData,
-                options: {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        authorization: `Bearer ${token}`,
+            const formData = new FormData();
+            formData.append("Id", organisationImageId);
+            formData.append("FileName", values?.fileName);
+            if (blob) {
+                formData.append("Image", blob, logoType);
+            }
+
+            const action = await dispatch(
+                updateImage({
+                    data: formData,
+                    options: {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            authorization: `Bearer ${token}`,
+                        },
                     },
-                },
-            }),
-        ).unwrap();
-        return action;
+                }),
+            ).unwrap();
+
+            return action;
+        } catch (error) {
+            console.error("Dosya güncellenirken bir hata oluştu: ", error);
+            throw error;
+        }
     };
 
     const onFinish = useCallback(
@@ -187,7 +211,7 @@ const LogoFormModal = ({ modalVisible, handleModalVisible, organizationForm, isE
 
                     <CustomFormItem
                         name='logo'
-                        style={{ marginBottom: '20px' }}
+                        className='choose-logo'
                         rules={[
                             {
                                 required: true,

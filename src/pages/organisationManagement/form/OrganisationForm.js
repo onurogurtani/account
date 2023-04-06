@@ -21,6 +21,7 @@ import { formMailRegex, formPhoneRegex } from '../../../utils/formRule';
 import { onChangeActiveStep, getImage } from '../../../store/slice/organisationsSlice';
 import '../../../styles/organisationManagement/organisationForm.scss';
 import LogoFormModal from './LogoFormModal';
+import { stringContainsNumber } from '../../../utils/utils';
 
 const OrganisationForm = ({ form, organizationData, isEdit, sendValue, cityId }) => {
   const dispatch = useDispatch();
@@ -70,10 +71,26 @@ const OrganisationForm = ({ form, organizationData, isEdit, sendValue, cityId })
     setSelectedCityId(value);
     form.resetFields(['countyId']);
   };
-
-  const hasNumber = (value) => {
-    return /\d/.test(value);
-  }
+  
+  const renderLogoButton = () => {
+    const buttonProps = {
+      className: 'update-btn',
+      type: 'primary',
+      onClick: addFormModal,
+      style: { marginRight: '28px', width: 150 },
+      icon: <UploadOutlined />,
+    };
+  
+    if (isEdit && organisationImageId !== 0) {
+      return <CustomButton {...buttonProps}>Logo Değiştir</CustomButton>;
+    }
+  
+    if (organisationImageId === 0) {
+      return <CustomButton {...buttonProps}>Logo Yükle</CustomButton>;
+    }
+  
+    return null;
+  };
 
   const validateMessages = { required: 'Lütfen Zorunlu Alanları Doldurunuz.' };
   return (
@@ -113,7 +130,7 @@ const OrganisationForm = ({ form, organizationData, isEdit, sendValue, cityId })
             { required: true }, { whitespace: true },
             ({ getFieldValue }) => ({
               validator() {
-                if (hasNumber(getFieldValue('organisationManager'))) {
+                if (stringContainsNumber(getFieldValue('organisationManager'))) {
                   return Promise.reject(new Error("Bu alana sayı girilemez."))
                 }
                 return Promise.resolve();
@@ -142,7 +159,7 @@ const OrganisationForm = ({ form, organizationData, isEdit, sendValue, cityId })
             { required: true }, { whitespace: true },
             ({ getFieldValue }) => ({
               validator() {
-                if (hasNumber(getFieldValue('customerManager'))) {
+                if (stringContainsNumber(getFieldValue('customerManager'))) {
                   return Promise.reject(new Error("Bu alana sayı girilemez."))
                 }
                 return Promise.resolve();
@@ -214,30 +231,8 @@ const OrganisationForm = ({ form, organizationData, isEdit, sendValue, cityId })
         >
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {organisationImageId !== 0 &&
-              <img src={logoUrl} alt="logo" width="150" height="auto" style={{ marginBottom: 12 }} />
-            }
-
-            {isEdit && organisationImageId !== 0 &&
-              <CustomButton
-                className='update-btn'
-                type="primary"
-                onClick={addFormModal}
-                style={{ marginRight: '28px', width: 150 }}
-                icon={<UploadOutlined />}
-              >
-                Logo Değiştir
-              </CustomButton>
-            }
-
-            {organisationImageId === 0 && <CustomButton
-              className='update-btn'
-              type="primary"
-              onClick={addFormModal}
-              style={{ marginRight: '28px', width: 150 }}
-              icon={<UploadOutlined />}
-            > Logo Yükle
-            </CustomButton>
-            }
+              <img src={logoUrl} alt="logo" width="150" height="auto" style={{ marginBottom: 12 }} />}
+            {renderLogoButton()}
           </div>
         </CustomFormItem>
 
