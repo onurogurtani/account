@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;
 using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
@@ -56,8 +57,11 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
             return userEntity;
         }
 
+
+
+
         public List<OperationClaim> GetClaims(long userId)
-        {  
+        {
             return (from user in Context.Users
                     join userRole in Context.UserRoles on user.Id equals userRole.UserId
                     join roleClaim in Context.RoleClaims on userRole.RoleId equals roleClaim.RoleId
@@ -120,6 +124,13 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 
             //return result.Select(x => new OperationClaim { Name = x.Name }).Distinct().ToList();
             return new();
+        }
+
+        public bool HasClaim(long userId, string claimName)
+        {
+          return  Context.Users.Include(i => i.UserRoles).ThenInclude(i => i.Role).ThenInclude(i => i.RoleClaims)
+                .Any(a => a.Id == userId &&
+                          a.UserRoles.Any(aa => aa.Role.RoleClaims.Any(aaa => aaa.ClaimName == claimName)));
         }
     }
 }
