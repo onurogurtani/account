@@ -38,7 +38,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
             public virtual async Task<IDataResult<GetOrganisationInfoChangeRequestDto>> Handle(GetOrganisationChangeRequestByIdQuery request, CancellationToken cancellationToken)
             {
                 var query = _organisationInfoChangeRequestRepository.Query()
-                    .Include(x => x.Organisation)
+                    .Include(x => x.Organisation).ThenInclude(x=>x.OrganisationType)
                     .Include(x => x.OrganisationChangeReqContents)
                     .AsQueryable();
 
