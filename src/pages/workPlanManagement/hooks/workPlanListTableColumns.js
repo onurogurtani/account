@@ -1,9 +1,25 @@
 import { Tag } from 'antd';
-import { CustomButton, DeleteButton } from '../../../components';
-import { deleteWorkPlan, onChangeActiveKey, setCurrentData } from '../../../store/slice/workPlanSlice';
+import { confirmDialog, CustomButton, DeleteButton} from '../../../components';
+import { deleteWorkPlan } from '../../../store/slice/workPlanSlice';
 import React from 'react';
 
-const workPlanListTableColumns = (history,dispatch) => {
+const workPlanListTableColumns = (history) => {
+
+  const onCopy = (row) => {
+    confirmDialog({
+      title: 'Dikkat',
+      message: 'Kopyasını oluşturmak istediğinizden emin misiniz?',
+      okText: 'Evet',
+      cancelText: 'Hayır',
+      onOk: async () => {
+        history.push(
+          {
+            pathname: `/work-plan-management/copy`,
+            state: { data: { ...row }, activeKey: row.activeKey },
+          });
+      },
+    });
+  };
 
   const columns = [
     {
@@ -99,7 +115,6 @@ const workPlanListTableColumns = (history,dispatch) => {
           <div className='action-btns'>
             <CustomButton
               onClick={async () => {
-                // dispatch(setCurrentData( record ));
                 history.push(
                   {
                     pathname: `/work-plan-management/edit`,
@@ -110,7 +125,7 @@ const workPlanListTableColumns = (history,dispatch) => {
               DÜZENLE
             </CustomButton>
             <DeleteButton disabled={record.recordStatus === 1} id={record?.id} deleteAction={deleteWorkPlan} />
-            <CustomButton className='btn copy-btn'>
+            <CustomButton className='btn copy-btn' onClick={()=>onCopy(record)}>
               KOPYALA
             </CustomButton>
           </div>

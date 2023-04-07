@@ -96,16 +96,13 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
         const values = await subjectForm.getFieldsValue(['ClassroomId', 'LessonIds', 'LessonUnitIds', 'LessonSubjectIds', 'educationYear']);
         dispatch(setSubjectChooseData(values));
         dispatch(selectedEvaluationTabRowData({ id: currentData.asEvId }));
-        currentData.workPlanQuestionOfExams?.forEach((item) => {
+        currentData.workPlanQuestionOfExams?.forEach((item) => {debugger
           dispatch(selectedOutQuestionTabRowsData(item.questionOfExam));
         });
         currentData.workPlanVideos?.forEach((item) => {
           dispatch(selectedPracticeQuestionTabRowsVideo(item.video));
         });
-        // const res = allClassList.find((q) => q.id === currentData.classroomId)
-        // if(res) { dispatch(setSubjectChooseSchoolLevel(res.schoolLevel))}
-        await handleSearchVideo('edit');
-        showData?.activeKey && dispatch(onChangeActiveKey(showData?.activeKey));
+        await handleSearchVideo('copy');
 
       }
     }, [currentData, subjectForm],
@@ -187,7 +184,6 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
     };
 
     dispatch(setSubjectChooseFilterData(data));
-    // console.log('subjectChooseTab.filterObject', subjectChooseTab.filterObject);
 
     const body = {
       ...data,
@@ -197,10 +193,8 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
     const action = await dispatch(getByFilterPagedVideos(body));
     if (getByFilterPagedVideos?.fulfilled?.match(action)) {
       await dispatch(setSubjectChooseVideoFilteredList(action?.payload));
-      // console.log('subjectChooseTab.videos', subjectChooseTab.videos);
-      // console.log('subjectChooseTab.form', subjectChooseTab.formData);
       await dispatch(getUsedVideoIdsQuery());
-      if (from === 'edit') {
+      if (from === 'copy') {
         dispatch(selectedSubjectTabRowVideo(currentData.video));
       }
     }
@@ -227,7 +221,6 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
             height={36}
             allowClear
             placeholder='Seçiniz'
-
           >
             {educationYearsList.map((item) => {
               return (

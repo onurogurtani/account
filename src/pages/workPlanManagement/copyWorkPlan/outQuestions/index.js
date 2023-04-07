@@ -21,14 +21,13 @@ import { useLocation } from 'react-router-dom';
 
 const OutQuestion = ({ outQuestionForm }) => {
 
+  const dispatch = useDispatch();
   const location = useLocation();
   const showData = location?.state?.data;
-  const dispatch = useDispatch();
-
   const [yearOfQuestion, setYearOfQuestion] = useState([]);
+  const { allClassList } = useSelector((state) => state?.classStages);
 
   const { activeKey, subjectChooseTab, outQuestionTab } = useSelector((state) => state?.workPlan);
-  const { allClassList } = useSelector((state) => state?.classStages);
 
   useEffect(async () => {
     //soru yılı 1975 den bulunduğu senenin listenin oluşturulması
@@ -111,7 +110,6 @@ const OutQuestion = ({ outQuestionForm }) => {
     delete body.isActive;
     delete body.OutIn;
 
-    // console.log('body', body);
     if(!pageNumber){
       dispatch(selectedOutQuestionTabRowsData());
     }

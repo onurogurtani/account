@@ -18,10 +18,17 @@ const EditWorkPlan = lazy(() =>
   })),
 );
 
+const CopyWorkPlan = lazy(() =>
+  import('./copyWorkPlan/').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+
 const WorkPlanListManagement = {
   WorkPlanList,
   AddWorkPlan,
-  EditWorkPlan
+  EditWorkPlan,
+  CopyWorkPlan
 };
 
 export default WorkPlanListManagement;
