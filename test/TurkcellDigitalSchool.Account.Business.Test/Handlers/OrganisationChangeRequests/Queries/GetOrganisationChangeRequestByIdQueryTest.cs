@@ -18,6 +18,12 @@ using static TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeR
 using System.Linq.Expressions;
 using TurkcellDigitalSchool.Entities.Dtos.OrganisationDtos;
 using TurkcellDigitalSchool.Entities.Dtos.OrganisationChangeRequestDtos;
+using TurkcellDigitalSchool.Core.Utilities.File;
+using TurkcellDigitalSchool.File.DataAccess.Abstract;
+using TurkcellDigitalSchool.Core.Utilities.File.Model;
+using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Entities.Dtos.OrganisationChangeReqContentDtos;
+using TurkcellDigitalSchool.Account.Business.Handlers.OrganisationLogos.Commands;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChangeRequests.Queries
 {
@@ -28,8 +34,11 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
         private GetOrganisationChangeRequestByIdQueryHandler _getOrganisationChangeRequestByIdQueryHandler;
         private Mock<ICityRepository> _cityRepository;
         private Mock<ICountyRepository> _countyRepository;
+        Mock<IFileRepository> _fileRepository;
+        Mock<IFileService> _fileService;
 
         private Mock<IOrganisationInfoChangeRequestRepository> _organisationInfoChangeRequestRepository;
+        private Mock<IOrganisationChangeReqContentRepository> _organisationChangeReqContentRepository;
 
         Mock<IMapper> _mapper;
 
@@ -55,12 +64,17 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
             _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
 
             _organisationInfoChangeRequestRepository = new Mock<IOrganisationInfoChangeRequestRepository>();
+            _organisationChangeReqContentRepository = new Mock<IOrganisationChangeReqContentRepository>();
+
             _countyRepository = new Mock<ICountyRepository>();
             _cityRepository = new Mock<ICityRepository>();
+            _fileRepository = new Mock<IFileRepository>();
+            _fileService = new Mock<IFileService>();
             _mapper = new Mock<IMapper>();
 
             _getOrganisationChangeRequestByIdQuery = new GetOrganisationChangeRequestByIdQuery();
-            _getOrganisationChangeRequestByIdQueryHandler = new GetOrganisationChangeRequestByIdQueryHandler(_organisationInfoChangeRequestRepository.Object, _cityRepository.Object,_countyRepository.Object, _mapper.Object);
+            _getOrganisationChangeRequestByIdQueryHandler = new GetOrganisationChangeRequestByIdQueryHandler(_organisationInfoChangeRequestRepository.Object, _cityRepository.Object, _countyRepository.Object,
+                _fileRepository.Object, _fileService.Object, _mapper.Object);
         }
 
         [Test]
@@ -99,6 +113,23 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     }
                 }
             };
+            var reqContent = new List<OrganisationChangeReqContent>{
+                        new OrganisationChangeReqContent
+                        {
+                            Id=1,
+                            RequestId=1,
+                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyValue="Test",
+                        },
+                        new OrganisationChangeReqContent
+                        {
+                            Id=1,
+                            RequestId=1,
+                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyValue="Test Adres",
+                        }
+
+                    };
             var organisations = new List<Organisation>{
                 new Organisation{
                     Id = 1,
@@ -131,13 +162,46 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
             _organisationInfoChangeRequestRepository.Setup(x => x.Query()).Returns(pageTypes.AsQueryable().BuildMock());
             _organisationInfoChangeRequestRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<OrganisationInfoChangeRequest, bool>>>())).ReturnsAsync(pageTypes.FirstOrDefault());
 
-            _mapper.Setup(s => s.Map<GetOrganisationInfoChangeRequestDto>(pageTypes[0])).Returns(new GetOrganisationInfoChangeRequestDto());
+            _organisationChangeReqContentRepository.Setup(x => x.Query()).Returns(reqContent.AsQueryable().BuildMock());
+            _organisationChangeReqContentRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<OrganisationChangeReqContent, bool>>>())).ReturnsAsync(reqContent.FirstOrDefault());
+
+            var sevenThousandItems = new byte[7000];
+            for (int i = 0; i < sevenThousandItems.Length; i++)
+            {
+                sevenThousandItems[i] = 0x20;
+            }
+
+
+            var saveFileReturn = new DataResult<byte[]>(sevenThousandItems, true);
+            _fileService.Setup(x => x.GetFile(It.IsAny<string>())).ReturnsAsync(() => saveFileReturn);
+
+            var logo = new List<Entities.Concrete.File> { 
+                new Entities.Concrete.File{
+                Id = 214, FileName = "test", FilePath="/kg/test" } };
+
+            var organisationLogos = new List<Entities.Concrete.File> { new Entities.Concrete.File { Id = 214, FileName = "test", FilePath = "/kg/test" } };
+            
+            _fileRepository.Setup(x => x.Query()).Returns(organisationLogos.AsQueryable().BuildMock());
+            _fileRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<Entities.Concrete.File, bool>>>())).ReturnsAsync(logo.FirstOrDefault());
+
+            _mapper.Setup(s => s.Map<GetOrganisationInfoChangeRequestDto>(pageTypes[0])).Returns(new GetOrganisationInfoChangeRequestDto {
+                OrganisationChangeReqContents= new List<GetOrganisationChangeReqContentDto> { 
+            new GetOrganisationChangeReqContentDto
+            {
+                Id=1,
+                PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.Logo,
+                RequestId=1,
+                PropertyValue="214"
+
+            }
+            
+            } });
 
             var result = await _getOrganisationChangeRequestByIdQueryHandler.Handle(_getOrganisationChangeRequestByIdQuery, CancellationToken.None);
 
             result.Success.Should().BeTrue();
         }
-       
+
         [Test]
         public async Task GetOrganisationChangeRequestByIdQueryTest_GetById_Null_Error()
         {

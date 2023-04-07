@@ -13,6 +13,7 @@ using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Entities.Concrete;
 using TurkcellDigitalSchool.Entities.Dtos.OrganisationChangeRequestDtos;
 using TurkcellDigitalSchool.File.DataAccess.Abstract;
 
@@ -67,13 +68,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                 var filePath= _fileRepository.Query().FirstOrDefault(x => x.Id == Convert.ToInt32(logo)).FilePath;
                 var fileResult = await _fileService.GetFile(filePath);
 
-                var fileSting = Convert.ToBase64String(fileResult.Data);
-                using (var ms = new MemoryStream())
-                {
-                    var fileBytes = ms.ToArray();
-                    string s = Convert.ToBase64String(fileBytes);
-                    // act on the Base64 data
-                }
+                var fileString = Convert.ToBase64String(fileResult.Data);
+                organisationInfoDto.OrganisationChangeReqContents.FirstOrDefault(x => x.PropertyEnum == Entities.Enums.OrganisationChangePropertyEnum.Logo).PropertyValue = fileString;
+
                 return new SuccessDataResult<GetOrganisationInfoChangeRequestDto>(organisationInfoDto, Messages.SuccessfulOperation);
             }
         }
