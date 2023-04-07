@@ -47,7 +47,7 @@ const OrganizationAdminForm = ({ form, organizationAdminData, sendValue }) => {
         </CustomFormItem>
 
         <CustomFormItem label="Kurum Admin Soyadı" name="adminSurname" rules={[{ required: true }, { whitespace: true }]}>
-          <CustomTextInput placeholder="Kurum Admin Adı" />
+          <CustomTextInput placeholder="Kurum Admin Soyadı" />
         </CustomFormItem>
 
         <CustomFormItem

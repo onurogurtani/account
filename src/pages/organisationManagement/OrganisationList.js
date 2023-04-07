@@ -25,7 +25,7 @@ const OrganisationList = () => {
           </CustomButton>
         </div>
 
-        {isFilter && <OrganisationFilter />}
+        {isFilter && <OrganisationFilter isFilter={isFilter} />}
         <OrganisationListTable />
       </CustomCollapseCard>
     </CustomPageHeader>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { UploadOutlined } from '@ant-design/icons';
 import {
   CustomForm,
   CustomFormItem,
@@ -7,9 +8,9 @@ import {
   CustomMaskInput,
   CustomSelect,
   CustomTextArea,
-  CustomTextInput,
   CustomNumberInput,
   Option,
+  CustomButton,
   Text,
 } from '../../../components';
 import CitySelector from '../../../components/CitySelector';
@@ -17,13 +18,35 @@ import CountySelector from '../../../components/CountySelector';
 import { segmentInformation } from '../../../constants/organisation';
 import { getOrganisationTypes } from '../../../store/slice/organisationTypesSlice';
 import { formMailRegex, formPhoneRegex } from '../../../utils/formRule';
-import { onChangeActiveStep } from '../../../store/slice/organisationsSlice';
+import { onChangeActiveStep, getImage } from '../../../store/slice/organisationsSlice';
 import '../../../styles/organisationManagement/organisationForm.scss';
+import LogoFormModal from './LogoFormModal';
+import { stringContainsNumber } from '../../../utils/utils';
 
-const OrganisationForm = ({ form, organizationData, isEdit, sendValue }) => {
+const OrganisationForm = ({ form, organizationData, isEdit, sendValue, cityId }) => {
   const dispatch = useDispatch();
   const { organisationTypes } = useSelector((state) => state.organisationTypes);
+  const { organisationImageId } = useSelector((state) => state?.organisations);
   const [selectedCityId, setSelectedCityId] = useState();
+  const [logoFormModalVisible, setLogoFormModalVisible] = useState(false);
+  const [logoUrl, setLogoUrl] = useState('');
+
+  const getImageDetail = async () => {
+    const response = await dispatch(getImage({ id: organisationImageId }));
+    const data = response.payload.data;
+    const imageUrl = `data:${data?.contentType};base64,${data?.image}`;
+    setLogoUrl(imageUrl);
+  };
+
+  useEffect(() => {
+    if (organisationImageId !== 0) {
+      getImageDetail()
+    }
+  }, [organisationImageId])
+
+  const addFormModal = () => {
+    setLogoFormModalVisible(true);
+  };
 
   useEffect(() => {
     dispatch(getOrganisationTypes());
@@ -36,6 +59,10 @@ const OrganisationForm = ({ form, organizationData, isEdit, sendValue }) => {
     }
   }, [organizationData]);
 
+  useEffect(() => {
+    setSelectedCityId(cityId);
+  }, [cityId])
+
   const onFinish = (values) => {
     sendValue(values);
     dispatch(onChangeActiveStep(1));
@@ -43,6 +70,26 @@ const OrganisationForm = ({ form, organizationData, isEdit, sendValue }) => {
   const onCityChange = (value) => {
     setSelectedCityId(value);
     form.resetFields(['countyId']);
+  };
+  
+  const renderLogoButton = () => {
+    const buttonProps = {
+      className: 'update-btn',
+      type: 'primary',
+      onClick: addFormModal,
+      style: { marginRight: '28px', width: 150 },
+      icon: <UploadOutlined />,
+    };
+  
+    if (isEdit && organisationImageId !== 0) {
+      return <CustomButton {...buttonProps}>Logo Değiştir</CustomButton>;
+    }
+  
+    if (organisationImageId === 0) {
+      return <CustomButton {...buttonProps}>Logo Yükle</CustomButton>;
+    }
+  
+    return null;
   };
 
   const validateMessages = { required: 'Lütfen Zorunlu Alanları Doldurunuz.' };
@@ -79,9 +126,19 @@ const OrganisationForm = ({ form, organizationData, isEdit, sendValue }) => {
         <CustomFormItem
           label="Kurum Yöneticisi"
           name="organisationManager"
-          rules={[{ required: true }, { whitespace: true }]}
+          rules={[
+            { required: true }, { whitespace: true },
+            ({ getFieldValue }) => ({
+              validator() {
+                if (stringContainsNumber(getFieldValue('organisationManager'))) {
+                  return Promise.reject(new Error("Bu alana sayı girilemez."))
+                }
+                return Promise.resolve();
+              }
+            }),
+          ]}
         >
-          <CustomTextInput placeholder="Kurum Yöneticisi" />
+          <CustomInput placeholder="Kurum Yöneticisi" />
         </CustomFormItem>
 
         <CustomFormItem
@@ -98,9 +155,19 @@ const OrganisationForm = ({ form, organizationData, isEdit, sendValue }) => {
         <CustomFormItem
           label="Müşteri Yöneticisi"
           name="customerManager"
-          rules={[{ required: true }, { whitespace: true }]}
+          rules={[
+            { required: true }, { whitespace: true },
+            ({ getFieldValue }) => ({
+              validator() {
+                if (stringContainsNumber(getFieldValue('customerManager'))) {
+                  return Promise.reject(new Error("Bu alana sayı girilemez."))
+                }
+                return Promise.resolve();
+              }
+            }),
+          ]}
         >
-          <CustomTextInput placeholder="Müşteri Yöneticisi" />
+          <CustomInput placeholder="Müşteri Yöneticisi" />
         </CustomFormItem>
 
         <CustomFormItem label="Segment Bilgisi" name="segmentType" rules={[{ required: true }]}>
@@ -136,11 +203,43 @@ const OrganisationForm = ({ form, organizationData, isEdit, sendValue }) => {
         </CustomFormItem>
 
         <CustomFormItem
-          label="Kurum Kontakt Kişi"
-          name="contactName"
-          rules={[{ required: true }, { whitespace: true }]}
+          label="Kurum Web Adresi"
+          name="organizationWebSite"
+          rules={[
+            { whitespace: true },
+          ]}
         >
-          <CustomTextInput placeholder="Kurum Kontakt Kişi" />
+          <CustomInput placeholder="Kurum Web Adresi" />
+        </CustomFormItem>
+
+        <CustomFormItem
+          label="Kurum E-posta"
+          name="organizationMail"
+          rules={[
+            {
+              validator: formMailRegex,
+              message: <Text t="enterValidEmail" />,
+            },
+          ]}
+        >
+          <CustomInput placeholder="Kurum E-posta" />
+        </CustomFormItem>
+
+        <CustomFormItem
+          label="Kurum Logo"
+          name="organisationImageId"
+        >
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {organisationImageId !== 0 &&
+              <img src={logoUrl} alt="logo" width="150" height="auto" style={{ marginBottom: 12 }} />}
+            {renderLogoButton()}
+          </div>
+        </CustomFormItem>
+
+        <CustomFormItem label="Kurum Kontakt Kişi"
+          name="contactName"
+          rules={[{ required: true }, { whitespace: true }]}>
+          <CustomInput placeholder="Kurum Kontakt Kişi" />
         </CustomFormItem>
 
         <CustomFormItem
@@ -166,8 +265,15 @@ const OrganisationForm = ({ form, organizationData, isEdit, sendValue }) => {
             <CustomInput placeholder="Kurum Kontakt Telefon" />
           </CustomMaskInput>
         </CustomFormItem>
-
       </CustomForm>
+
+      <LogoFormModal
+        modalVisible={logoFormModalVisible}
+        handleModalVisible={setLogoFormModalVisible}
+        organizationForm={form}
+        isEdit={isEdit}
+        getImageDetail={getImageDetail}
+      />
     </div>
   );
 };

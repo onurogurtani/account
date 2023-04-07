@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { Col, Input } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   CustomForm,
   CustomFormItem,
@@ -21,10 +21,10 @@ import '../../../styles/organisationManagement/organisationForm.scss';
 
 const JobForm = ({ form, jobData, sendValue }) => {
   const dispatch = useDispatch();
-  const [organisationPackagesNames, setOrganisationPackagesNames] = useState([]);
+  const { organisationPackagesNames } = useSelector((state) => state?.organisations);
 
   useEffect(() => {
-    loadOrganisationPackagesNames();
+    dispatch(getOrganisationPackagesNames());
   }, []);
 
   useEffect(() => {
@@ -37,15 +37,6 @@ const JobForm = ({ form, jobData, sendValue }) => {
     sendValue(values);
     dispatch(onChangeActiveStep(2));
   }
-
-  const loadOrganisationPackagesNames = async () => {
-    try {
-      const action = await dispatch(getOrganisationPackagesNames()).unwrap();
-      setOrganisationPackagesNames(action?.data);
-    } catch (err) {
-      setOrganisationPackagesNames([]);
-    }
-  };
 
   const disabledMembershipStartDate = (startValue) => {
     const { membershipFinishDate } = form?.getFieldsValue(['membershipFinishDate']);
@@ -68,7 +59,8 @@ const JobForm = ({ form, jobData, sendValue }) => {
     if (!startValue || !contractFinishDate) {
       return false;
     }
-    return startValue?.startOf('day') > contractFinishDate?.startOf('day');;
+    return startValue?.startOf('day') > contractFinishDate?.startOf('day') || startValue < dayjs().startOf('day');
+
   };
 
   const disabledContracEndDate = (endValue) => {
@@ -76,7 +68,7 @@ const JobForm = ({ form, jobData, sendValue }) => {
     if (!endValue || !contractStartDate) {
       return false;
     }
-    return endValue?.startOf('day') < contractStartDate?.startOf('day');
+    return endValue?.startOf('day') < contractStartDate?.startOf('day') || endValue < dayjs().startOf('day');
   };
 
   const validateMessages = { required: 'Lütfen Zorunlu Alanları Doldurunuz.' };
@@ -116,6 +108,7 @@ const JobForm = ({ form, jobData, sendValue }) => {
               className="form-filter-item"
               placeholder={'Tarih Seçiniz'}
               disabledDate={disabledContracStartDate}
+              showTime={true}
             />
           </CustomFormItem>
         </Col>
@@ -142,6 +135,7 @@ const JobForm = ({ form, jobData, sendValue }) => {
               className="form-filter-item"
               placeholder={'Tarih Seçiniz'}
               disabledDate={disabledContracEndDate}
+              showTime={true}
             />
           </CustomFormItem>
         </Col>

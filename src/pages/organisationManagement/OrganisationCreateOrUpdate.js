@@ -13,7 +13,7 @@ import {
   warningDialog,
   Text,
 } from '../../components';
-import { addOrganisation, onChangeActiveStep, UpdateOrganisationStatus, updateOrganisation, getOrganisationPackagesNames, getByOrganisationId } from '../../store/slice/organisationsSlice';
+import { addOrganisation, onChangeActiveStep, UpdateOrganisationStatus, updateOrganisation, getByOrganisationId, setOrganizationImageId } from '../../store/slice/organisationsSlice';
 import { getUnmaskedPhone, maskedPhone } from '../../utils/utils';
 import '../../styles/organisationManagement/createOrUpdate.scss';
 import OrganisationForm from './form/OrganisationForm';
@@ -30,10 +30,9 @@ const OrganisationCreateOrUpdate = () => {
   const history = useHistory();
   const isEdit = pathname.includes('edit');
   const { id } = useParams();
-  const { activeStep } = useSelector((state) => state?.organisations);
-  const [data, setData] = useState({})
+  const { activeStep, organisationPackagesNames, organisationImageId } = useSelector((state) => state?.organisations);
 
-  const [organisationPackagesNames, setOrganisationPackagesNames] = useState([]);
+  const [data, setData] = useState({})
 
   const [organizationForm] = Form.useForm();
   const [jobForm] = Form.useForm();
@@ -51,13 +50,13 @@ const OrganisationCreateOrUpdate = () => {
   }
 
   useEffect(() => {
-    loadOrganisationPackagesNames();
     isEdit && loadByOrganisationId();
-  }, []);
+  }, [isEdit]);
 
   const loadByOrganisationId = async () => {
     try {
       const action = await dispatch(getByOrganisationId({ Id: id })).unwrap();
+      dispatch(setOrganizationImageId(action?.data?.organisationImageId))
       const contractStartDate = action?.data?.contractStartDate ? dayjs(action?.data?.contractStartDate) : undefined;
       const contractFinishDate = action?.data?.contractStartDate ? dayjs(action?.data?.contractFinishDate) : undefined;
       const membershipStartDate = action?.data?.contractStartDate ? dayjs(action?.data?.membershipStartDate) : undefined;
@@ -85,14 +84,7 @@ const OrganisationCreateOrUpdate = () => {
       });
     }
   };
-  const loadOrganisationPackagesNames = async () => {
-    try {
-      const action = await dispatch(getOrganisationPackagesNames()).unwrap();
-      setOrganisationPackagesNames(action?.data);
-    } catch (err) {
-      setOrganisationPackagesNames([]);
-    }
-  };
+
   const sendValue = (value) => {
     setData({
       ...data,
@@ -107,6 +99,7 @@ const OrganisationCreateOrUpdate = () => {
       cancelText: 'Hayır',
       onOk: async () => {
         dispatch(onChangeActiveStep(0));
+        dispatch(setOrganizationImageId(0))
         history.push('/organisation-management/list');
       },
     });
@@ -119,15 +112,15 @@ const OrganisationCreateOrUpdate = () => {
     }
     onFinishForm(formData)
   }
-
   const onFinishForm = (formData) => {
-    let organizationData = isEdit ? formData : data
+    let organizationData = formData
     let packageName = organisationPackagesNames.find(i => i.id == data?.packageId)
     let values = {
       crmId: 0,
+      organisationImageId,
       reasonForStatus: "",
       organisationStatusInfo: (isEdit && data?.organisationStatusInfo !== 3) ? data?.organisationStatusInfo : 1,
-      packageName: packageName?.label,
+      packageName: packageName?.label || '',
       ...organizationData
     }
     if (isEdit) {
@@ -200,6 +193,17 @@ const OrganisationCreateOrUpdate = () => {
       });
     }
   };
+  const handleCompletedForm = async () => {
+    await activeForm[activeStep].submit()
+    let values = await activeForm[activeStep].validateFields();
+
+    const formData = {
+      ...data,
+      ...values,
+    }
+    onFinishForm(formData)
+  }
+
   const steps = [
     {
       title: 'Kurum Bilgileri',
@@ -208,6 +212,7 @@ const OrganisationCreateOrUpdate = () => {
         organizationData={data}
         sendValue={sendValue}
         isEdit={isEdit}
+        cityId={data?.cityId}
       />,
     },
     {
@@ -232,7 +237,6 @@ const OrganisationCreateOrUpdate = () => {
         form={serviceForm}
         serviceData={data}
         sendValue={sendValue}
-        onFinishForm={onFinishForm}
       />,
     },
   ];
@@ -306,7 +310,7 @@ const OrganisationCreateOrUpdate = () => {
             {activeStep === steps.length - 1 && !isEdit && <CustomButton
               className='submit-btn'
               type="primary"
-              onClick={() => activeForm[activeStep].submit()}
+              onClick={handleCompletedForm}
               style={{ marginRight: '10px' }}
             >
               Kaydı Tamamla

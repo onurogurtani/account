@@ -19,79 +19,40 @@ import {
   getOrganisationNames,
   getOrganisationPackagesNames,
 } from '../../store/slice/organisationsSlice';
-import { 
+import {
   segmentInformation,
   statusList
 } from '../../constants/organisation';
 import { Form } from 'antd';
 import { dateTimeFormat } from '../../utils/keys';
 
-const OrganisationFilter = () => {
+const OrganisationFilter = (isFilter) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const state = (state) => state?.organisations;
   const { filterObject } = useSelector(state);
+  const { organisationDetailSearch, organisationNames, organisationPackagesNames, organisationManagerNames, organisationDomainNames } = useSelector((state) => state.organisations);
   const { organisationTypes } = useSelector((state) => state.organisationTypes);
-  const { organisationDetailSearch } = useSelector((state) => state.organisations);
-  const [organisationNames, setOrganisationNames] = useState([]);
-  const [organisationPackagesNames, setOrganisationPackagesNames] = useState([]);
-  const [organisationManagerNames, setOrganisationManagerNames] = useState([]);
-  const [organisationDomainNames, setOrganisationDomainNames] = useState([]);
 
   useEffect(() => {
+    if (!isFilter) return false;
     dispatch(getOrganisationTypes());
-    loadOrganisationNames();
-    loadOrganisationPackagesNames();
-    loadOrganisationManagerNames();
-    loadOrganisationDomainNames();
-  }, []);
-
-  const loadOrganisationNames = async () => {
-    try {
-      const action = await dispatch(getOrganisationNames()).unwrap();
-      setOrganisationNames(action?.data);
-    } catch (err) {
-      setOrganisationNames([]);
-    }
-  };
-
-  const loadOrganisationPackagesNames = async () => {
-    try {
-      const action = await dispatch(getOrganisationPackagesNames()).unwrap();
-      setOrganisationPackagesNames(action?.data);
-    } catch (err) {
-      setOrganisationPackagesNames([]);
-    }
-  };
-
-  const loadOrganisationManagerNames = async () => {
-    try {
-      const action = await dispatch(getOrganisationManagerNames()).unwrap();
-      setOrganisationManagerNames(action?.data);
-    } catch (err) {
-      setOrganisationManagerNames([]);
-    }
-  };
-
-  const loadOrganisationDomainNames = async () => {
-    try {
-      const action = await dispatch(getOrganisationDomainNames()).unwrap();
-      setOrganisationDomainNames(action?.data);
-    } catch (err) {
-      setOrganisationDomainNames([]);
-    }
-  };
+    dispatch(getOrganisationNames());
+    dispatch(getOrganisationPackagesNames());
+    dispatch(getOrganisationManagerNames());
+    dispatch(getOrganisationDomainNames());
+}, [dispatch, isFilter]);
 
   const onFinish = useCallback(
     async (values) => {
       console.log(values)
       try {
         const action = await dispatch(
-          getByFilterPagedOrganisations({ 
-            ...filterObject, 
-            pageNumber: 1, 
+          getByFilterPagedOrganisations({
+            ...filterObject,
+            pageNumber: 1,
             body: values
-           }),
+          }),
         ).unwrap();
 
         if (action?.data?.items?.length === 0) {
@@ -133,18 +94,18 @@ const OrganisationFilter = () => {
     <TableFilter {...tableFilterProps}>
       <div className="form-item">
         <CustomFormItem label="Kurum Adı" name="name">
-        <CustomSelect
+          <CustomSelect
             allowClear
             showSearch
-            filterOption={(input, option) => 
+            filterOption={(input, option) =>
               turkishToLower(option.children).includes(turkishToLower(input))
             }
             placeholder='Bir Kayıt Arayın'>
             {organisationNames.map((item) => (
-                <Option key={item.id} value={item.label}>
-                  {item.label}
-                </Option>
-              ))}
+              <Option key={item.id} value={item.label}>
+                {item.label}
+              </Option>
+            ))}
           </CustomSelect>
         </CustomFormItem>
 
@@ -164,15 +125,15 @@ const OrganisationFilter = () => {
           <CustomSelect
             allowClear
             showSearch
-            filterOption={(input, option) =>   
-                turkishToLower(option.children).includes(turkishToLower(input))        
+            filterOption={(input, option) =>
+              turkishToLower(option.children).includes(turkishToLower(input))
             }
             placeholder='Bir Kayıt Arayın'>
             {organisationPackagesNames.map((item) => (
-                <Option key={item.id} value={item.label}>
-                  {item.label}
-                </Option>
-              ))}
+              <Option key={item.id} value={item.label}>
+                {item.label}
+              </Option>
+            ))}
           </CustomSelect>
         </CustomFormItem>
 
@@ -199,10 +160,10 @@ const OrganisationFilter = () => {
             filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
             placeholder='Bir Kayıt Arayın'>
             {organisationDomainNames.map((item) => (
-                <Option key={item.id} value={item.label}>
-                  {item.label}
-                </Option>
-              ))}
+              <Option key={item.id} value={item.label}>
+                {item.label}
+              </Option>
+            ))}
           </CustomSelect>
         </CustomFormItem>
 
@@ -213,13 +174,13 @@ const OrganisationFilter = () => {
             filterOption={(input, option) => turkishToLower(option.children).includes(turkishToLower(input))}
             placeholder='Bir Kayıt Arayın'>
             {segmentInformation.map((item) => (
-                <Option key={item.id} value={item.id}>
-                  {item.value}
-                </Option>
-              ))}
+              <Option key={item.id} value={item.id}>
+                {item.value}
+              </Option>
+            ))}
           </CustomSelect>
         </CustomFormItem>
-        
+
         <CustomFormItem label="Durumu" name="organisationStatusInfo">
           <CustomSelect allowClear placeholder="Seçiniz">
             {statusList.map((item) => (
@@ -244,7 +205,7 @@ const OrganisationFilter = () => {
             format={dateTimeFormat}
             className="form-filter-item"
             placeholder={'Tarih Seçiniz'}
-           disabledDate={disabledStartDate}
+            disabledDate={disabledStartDate}
           />
         </CustomFormItem>
 
@@ -262,7 +223,7 @@ const OrganisationFilter = () => {
             format={dateTimeFormat}
             className="form-filter-item"
             placeholder={'Tarih Seçiniz'}
-           disabledDate={disabledEndDate}
+            disabledDate={disabledEndDate}
           />
         </CustomFormItem>
       </div>
