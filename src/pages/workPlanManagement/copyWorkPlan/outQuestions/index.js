@@ -110,7 +110,6 @@ const OutQuestion = ({ outQuestionForm }) => {
     delete body.isActive;
     delete body.OutIn;
 
-    // console.log('body', body);
     if(!pageNumber){
       dispatch(selectedOutQuestionTabRowsData());
     }

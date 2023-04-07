@@ -37,7 +37,6 @@ const EvaluationTest = ({ setIsExit }) => {
 
 
   const onFinish = (values) => {
-    // console.log('values', values);
 
     if (Object.keys(evaluationTab.selectedRowData).length > 0 && evaluationTab.dataList.length > 0) {
       dispatch(onChangeActiveKey('3'));

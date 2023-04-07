@@ -194,9 +194,6 @@ const CopyWorkPlan = () => {
             <SubjectChoose subjectForm={subjectForm} outQuestionForm={outQuestionForm} practiceForm={practiceForm}
                            isEdit={true} />
           </TabPane>
-          {/*<TabPane tab='Pekiştirme Test Ekleme' key='1'>*/}
-          {/*  <ReinforcementTest />*/}
-          {/*</TabPane>*/}
           <TabPane tab='Ölçme ve Değerlendirme Testi Ekleme' key='2'>
             <EvaluationTest setIsExit={setIsExit} />
           </TabPane>

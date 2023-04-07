@@ -10,7 +10,6 @@ const ReinforcementTest = ({ sendValue }) => {
   const dispatch = useDispatch();
 
   const onFinish = (values) => {
-    console.log('values', values);
     dispatch(onChangeActiveKey('2'));
   };
 

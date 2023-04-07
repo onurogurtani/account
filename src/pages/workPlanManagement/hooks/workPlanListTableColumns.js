@@ -1,9 +1,9 @@
 import { Tag } from 'antd';
-import { confirmDialog, CustomButton, DeleteButton, errorDialog } from '../../../components';
-import { deleteWorkPlan, onChangeActiveKey, setCurrentData } from '../../../store/slice/workPlanSlice';
+import { confirmDialog, CustomButton, DeleteButton} from '../../../components';
+import { deleteWorkPlan } from '../../../store/slice/workPlanSlice';
 import React from 'react';
 
-const workPlanListTableColumns = (history, dispatch) => {
+const workPlanListTableColumns = (history) => {
 
   const onCopy = (row) => {
     confirmDialog({
@@ -115,7 +115,6 @@ const workPlanListTableColumns = (history, dispatch) => {
           <div className='action-btns'>
             <CustomButton
               onClick={async () => {
-                // dispatch(setCurrentData( record ));
                 history.push(
                   {
                     pathname: `/work-plan-management/edit`,
