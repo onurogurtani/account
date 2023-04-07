@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,8 +11,11 @@ using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Dtos.OrganisationChangeRequestDtos; 
+using TurkcellDigitalSchool.Entities.Concrete;
+using TurkcellDigitalSchool.Entities.Dtos.OrganisationChangeRequestDtos;
+using TurkcellDigitalSchool.File.DataAccess.Abstract;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Queries
 {
@@ -23,13 +28,18 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
             private readonly IOrganisationInfoChangeRequestRepository _organisationInfoChangeRequestRepository;
             private readonly ICityRepository _cityRepository;
             private readonly ICountyRepository _countyRepository;
+            private readonly IFileRepository _fileRepository;
+            private readonly IFileService _fileService;
             private readonly IMapper _mapper;
 
-            public GetOrganisationChangeRequestByIdQueryHandler(IOrganisationInfoChangeRequestRepository organisationInfoChangeRequestRepository, ICityRepository cityRepository, ICountyRepository countyRepository, IMapper mapper)
+            public GetOrganisationChangeRequestByIdQueryHandler(IOrganisationInfoChangeRequestRepository organisationInfoChangeRequestRepository, ICityRepository cityRepository,
+                ICountyRepository countyRepository, IFileRepository fileRepository, IFileService fileService, IMapper mapper)
             {
                 _organisationInfoChangeRequestRepository = organisationInfoChangeRequestRepository;
                 _cityRepository = cityRepository;
                 _countyRepository = countyRepository;
+                _fileRepository = fileRepository;
+                _fileService = fileService;
                 _mapper = mapper;
             }
 
@@ -53,6 +63,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                 organisationInfoDto.CityName = getCity.Name;
                 var getCounty = await _countyRepository.GetAsync(x => x.Id == organisationInfoDto.Organisation.CountyId);
                 organisationInfoDto.CountyName = getCounty.Name;
+
+                var logo = organisationInfoDto.OrganisationChangeReqContents.FirstOrDefault(w => w.PropertyEnum == Entities.Enums.OrganisationChangePropertyEnum.Logo).PropertyValue.ToString();
+                var filePath= _fileRepository.Query().FirstOrDefault(x => x.Id == Convert.ToInt32(logo)).FilePath;
+                var fileResult = await _fileService.GetFile(filePath);
+
+                var fileString = Convert.ToBase64String(fileResult.Data);
+                organisationInfoDto.OrganisationChangeReqContents.FirstOrDefault(x => x.PropertyEnum == Entities.Enums.OrganisationChangePropertyEnum.Logo).PropertyValue = fileString;
 
                 return new SuccessDataResult<GetOrganisationInfoChangeRequestDto>(organisationInfoDto, Messages.SuccessfulOperation);
             }
