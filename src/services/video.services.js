@@ -18,7 +18,7 @@ const editVideo = (data) => {
 
 const deleteVideoDocumentFile = (data) => {
     return api({
-        url: `Shared/Files`,
+        url: `File/Files`,
         method: 'DELETE',
         data,
     });
