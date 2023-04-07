@@ -70,12 +70,12 @@ const EditAnnouncementFooter = ({ form, history, currentId, fileImage, initialVa
             const startHour = values?.startDate ? dayjs(values?.startDate)?.utc().format('HH:mm:ss') : undefined;
             const endDate = values?.endDate ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD') : undefined;
             const endHour = values?.endDate ? dayjs(values?.endDate)?.utc().format('HH:mm:ss') : undefined;
-            const typeName = values.announcementType;
+            const typeId = values.announcementType;
 
-            const transFormedType = [];
+            const foundType = [];
             for (let i = 0; i < announcementTypes.length; i++) {
-                if (announcementTypes[i].name === typeName) {
-                    transFormedType.push(announcementTypes[i]);
+                if (announcementTypes[i].id == typeId) {
+                    foundType.push(announcementTypes[i]);
                 }
             }
             let fileId = updateAnnouncementObject?.fileId;
@@ -91,7 +91,7 @@ const EditAnnouncementFooter = ({ form, history, currentId, fileImage, initialVa
             const data = {
                 participantGroupIds: idsArr,
                 id: currentId,
-                announcementType: transFormedType[0],
+                announcementType: foundType[0],
                 headText: values.headText.trim(),
                 content: values.content,
                 homePageContent: values.homePageContent,

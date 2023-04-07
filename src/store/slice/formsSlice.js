@@ -272,9 +272,9 @@ export const formsSlice = createSlice({
         builder.addCase(getAllQuestionsOfForm.fulfilled, (state, action) => {
             state.questionsOfForm = action?.payload?.data;
         });
-        builder.addCase(getAllQuestionsOfForm.rejected, (state, action) => {
-            state.questionsOfForm = null;
-        });
+        // builder.addCase(getAllQuestionsOfForm.rejected, (state, action) => {
+        //     state.questionsOfForm = null;
+        // });
         builder.addCase(addNewForm.fulfilled, (state, action) => {
             state.currentForm = action?.payload?.data;
             // state.showFormObj=action?.payload?.data;

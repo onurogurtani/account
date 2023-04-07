@@ -33,6 +33,7 @@ const scoringTypes = [
         text: 'Soru Bazında Puanlama',
     },
 ];
+
 const scoringEnum = {
     'Grup Bazında Puanlama': 1,
     'Soru Bazında Puanlama': 2,
@@ -46,47 +47,51 @@ const QuestionGroup = ({ surveyData, groupKnowledge, questionsOfForm, preview, s
     const { currentForm } = useSelector((state) => state?.forms);
     const { questionType } = useSelector((state) => state?.questions);
     const [disableInput, setDisableInput] = useState(true);
-    const [index, setIndex] = useState(true);
-    const [questArray, setQuestArray] = useState([{ id: 1 }]); //Bunun yerine BE isteği yazmak laızm
-    const [scoringType, setScoringType] = useState(''); // bu önemli komponenti açıp kapatacak scroirng type
     const [selectedQuestionType, setSelectedQuestionType] = useState('');
     const [questionModalVisible, setQuestionModalVisible] = useState(false);
     const [open, setOpen] = useState(false);
     const [showDescription, setShowDescription] = useState(false);
     const [form] = Form.useForm();
     const [nameInput, setNameInput] = useState(groupKnowledge.name);
+    const [disabledScoringType, setdisabledScoringType] = useState(false);
 
     const [isEdit, setIsEdit] = useState(false);
 
     const dispatch = useDispatch();
+    const loadQuestionTypes = async () => {
+        questionType.length == 0 && (await dispatch(getQuestionsType()));
+    };
+
     useEffect(() => {
-        dispatch(getQuestionsType());
+        loadQuestionTypes();
     }, [dispatch]);
 
     const addGroupHandler = async () => {
         setOpen(true);
     };
 
+    const loadAllQuestionsOfForm = async () => {
+        await dispatch(getAllQuestionsOfForm({ formId: currentForm.id }));
+    };
+
     useEffect(() => {
         if (currentForm) {
-            dispatch(getAllQuestionsOfForm({ formId: currentForm.id }));
+            loadAllQuestionsOfForm();
         }
     }, [currentForm]);
 
     const onCancel = useCallback(() => {
-        {
-            confirmDialog({
-                title: 'Uyarı',
-                message: 'İptal Etmek İstediğinizden Emin Misiniz?',
-                okText: 'Evet',
-                cancelText: 'Hayır',
-                onOk: () => {
-                    form.resetFields();
-                    setOpen(false);
-                },
-            });
-        }
-    });
+        confirmDialog({
+            title: 'Uyarı',
+            message: 'İptal Etmek İstediğinizden Emin Misiniz?',
+            okText: 'Evet',
+            cancelText: 'Hayır',
+            onOk: () => {
+                form.resetFields();
+                setOpen(false);
+            },
+        });
+    }, [open]);
 
     const closeMessageModal = () => {
         form.resetFields();
@@ -122,9 +127,6 @@ const QuestionGroup = ({ surveyData, groupKnowledge, questionsOfForm, preview, s
         }
     }, [form]);
 
-    const selectScoringType = async (value) => {
-        setScoringType(value);
-    };
     const addNewQuestionToGroup = async (value) => {
         setQuestionModalVisible(true);
         setSelectedQuestionType(value);
@@ -147,7 +149,7 @@ const QuestionGroup = ({ surveyData, groupKnowledge, questionsOfForm, preview, s
         if (nameInput != groupKnowledge.name) {
             const actionUpdateGroup = await dispatch(updateGroupOfForm(data));
             if (updateGroupOfForm.fulfilled.match(actionUpdateGroup)) {
-                dispatch(getAllQuestionsOfForm({ formId: groupKnowledge.formId }));
+                await dispatch(getAllQuestionsOfForm({ formId: groupKnowledge.formId }));
                 successDialog({
                     title: <Text t="success" />,
                     message: 'Başarıyla Güncellendi',
@@ -164,6 +166,7 @@ const QuestionGroup = ({ surveyData, groupKnowledge, questionsOfForm, preview, s
         }
     };
     const updateScoringTypeOfGroupHandler = async (value) => {
+        console.log('"handler çalışıyor"', 'handler çalışıyor');
         let data = {
             entity: {
                 name: nameInput,
@@ -174,7 +177,7 @@ const QuestionGroup = ({ surveyData, groupKnowledge, questionsOfForm, preview, s
         };
         const actionUpdateGroupScoreType = await dispatch(updateGroupOfForm(data));
         if (updateGroupOfForm.fulfilled.match(actionUpdateGroupScoreType)) {
-            dispatch(getAllQuestionsOfForm({ formId: groupKnowledge.formId }));
+            await dispatch(getAllQuestionsOfForm({ formId: groupKnowledge.formId }));
             successDialog({
                 title: <Text t="success" />,
                 message: `${groupKnowledge.name} grubunun puanlama türü '${value}' olarak güncellendi`,
@@ -189,6 +192,28 @@ const QuestionGroup = ({ surveyData, groupKnowledge, questionsOfForm, preview, s
             });
         }
     };
+
+    const controlChoiceNumbers = async () => {
+        console.log('"fonk çalışıyor"', 'fonk çalışıyor');
+        let arr = [];
+        groupKnowledge?.questions?.map((item) => {
+            if (item?.questionTypeId != 1 && item?.questionTypeId != 4) {
+                arr.push(item?.choices.length);
+            }
+        });
+        let allEqual = arr.every((element) => element === arr[0]);
+        console.log('!allEqual', !allEqual);
+        console.log('groupKnowledge?.scroringType === 1', groupKnowledge?.scoringType === 1);
+        console.log('groupKnowledge?.scroringType', groupKnowledge?.scoringType);
+        if (!allEqual && groupKnowledge?.scoringType === 1) {
+            console.log('güncelle', 'güncelle');
+            updateScoringTypeOfGroupHandler('Soru Bazında Puanlama');
+        }
+        !allEqual && setdisabledScoringType(true);
+    };
+    useEffect(() => {
+        controlChoiceNumbers();
+    }, [groupKnowledge]);
 
     return (
         <>
@@ -268,12 +293,23 @@ const QuestionGroup = ({ surveyData, groupKnowledge, questionsOfForm, preview, s
                                                 updateScoringTypeOfGroupHandler(value);
                                             }}
                                             placeholder={'Seçiniz'}
+                                            disabled={disabledScoringType}
                                         >
-                                            {scoringTypes.map(({ id, text, value }) => (
+                                            {/* {scoringTypes.map(({ id, text }) => (
                                                 <Option id={id} key={id} value={text}>
                                                     <Text t={text} />
                                                 </Option>
-                                            ))}
+                                            ))} */}
+                                            <Option
+                                                key={1}
+                                                value={'Grup Bazında Puanlama'}
+                                                disabled={disabledScoringType}
+                                            >
+                                                {'Grup Bazında Puanlama'}
+                                            </Option>
+                                            <Option key={2} value={'Soru Bazında Puanlama'}>
+                                                {'Soru Bazında Puanlama'}
+                                            </Option>
                                         </CustomSelect>
                                     </div>
                                     <div className={classes.addBtnContainer}>
@@ -343,22 +379,14 @@ const QuestionGroup = ({ surveyData, groupKnowledge, questionsOfForm, preview, s
                                 className={classes.selectContainer}
                             >
                                 <CustomSelect placeholder="Seçiniz">
-                                    {scoringTypes.map(({ id, text }) => (
-                                        <Option key={id} value={id}>
-                                            {text}
-                                        </Option>
-                                    ))}
+                                    <Option key={1} value={1}>
+                                        {'Grup Bazında Puanlama'}
+                                    </Option>
+                                    <Option key={2} value={2}>
+                                        {'Soru Bazında Puanlama'}
+                                    </Option>
                                 </CustomSelect>
                             </CustomFormItem>
-                            {/* <Tooltip title={'Açıklama'} className={classes.toolTip}>
-                <Button
-                  // style={{ height: '48px', width: '40px', borderRadius: '0 5px 5px 0' }}
-                  icon={<QuestionCircleFilled />}
-                  onClick={() => {
-                    setShowDescription(!showDescription);
-                  }}
-                />
-              </Tooltip> */}
                         </div>
 
                         {showDescription && (

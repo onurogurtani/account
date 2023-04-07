@@ -19,6 +19,7 @@ import CustomQuillFormItem from '../../../../components/customQuill/CustomQuillF
 import EditAnnouncementFooter from '../editAnnouncement/EditAnnouncementFooter';
 import AnnouncementIcon from './AnnouncementIcon';
 import CustomParticipantSelectFormItems from '../../../../components/CustomParticipantSelectFormItems';
+// import { } from '../../../../constants/announcements';
 
 const announcementPublicationPlaces = [
     { id: 1, name: 'Anasayfa' },
@@ -47,6 +48,7 @@ const AnnouncementInfoForm = ({
 
     const [fileImage, setFileImage] = useState(null);
     const { announcementTypes } = useSelector((state) => state?.announcement);
+    console.log('announcementTypes', announcementTypes);
     const { participantGroupsList } = useSelector((state) => state?.events);
 
     useEffect(() => {
@@ -57,13 +59,14 @@ const AnnouncementInfoForm = ({
             const endDate = dayjs(initialValues?.endDate).utc().format('YYYY-MM-DD-HH-mm');
             let groupIds = initialValues?.participantGroup?.id?.split(',')?.map((item) => Number(item));
             let typeIds = initialValues?.participantType?.id?.split(',')?.map((item) => Number(item));
+
             let initialData = {
                 startDate: startDate >= currentDate ? dayjs(initialValues?.startDate) : undefined,
                 endDate: endDate >= currentDate ? dayjs(initialValues?.endDate) : undefined,
                 announcementPublicationPlaces: initialValues?.announcementPublicationPlaces,
                 fileId: initialValues?.fileId,
                 headText: initialValues.headText,
-                announcementType: initialValues.announcementType.id,
+                announcementType: initialValues?.announcementType?.id,
                 buttonName: initialValues?.buttonName,
                 buttonUrl: initialValues?.buttonUrl,
                 homePageContent: initialValues?.homePageContent,
@@ -132,12 +135,12 @@ const AnnouncementInfoForm = ({
                     style={{ width: '100%' }}
                     rules={[
                         { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-                        { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
+                        // { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
                     ]}
                 >
                     <CustomSelect className="form-filter-item" placeholder={'Seçiniz'} style={{ width: '100%' }}>
                         {announcementTypes?.map(({ id, name }) => (
-                            <Option id={id} key={id} value={id}>
+                            <Option key={id} value={id}>
                                 <Text t={name} />
                             </Option>
                         ))}

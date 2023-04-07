@@ -1,4 +1,4 @@
-import { Tabs, Tag } from 'antd';
+import { Tabs } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { CustomCollapseCard, Text, confirmDialog } from '../../../../components';
@@ -17,6 +17,7 @@ const formPublicationPlacesReverseEnum = {
 };
 
 const ShowFormTabs = ({ showData }) => {
+    console.log('ShowFormTabs te showFormObj', showData);
     const dispatch = useDispatch();
     const [preview, setPreview] = useState(true);
     const { formCategories, formPackages, questionsOfForm } = useSelector((state) => state?.forms);
@@ -25,16 +26,24 @@ const ShowFormTabs = ({ showData }) => {
             dispatch(getFormPackages());
         }
     }, [formPackages]);
+
+    const getQuestionData = async () => {
+        await dispatch(getAllQuestionsOfForm({ formId: showData.id }));
+    };
+
     useEffect(() => {
         if (showData) {
-            dispatch(getAllQuestionsOfForm({ formId: showData.id }));
+            getQuestionData();
         }
     }, [showData]);
 
     useEffect(() => {
-        dispatch(getAllClassStages());
-        dispatch(getFormCategories({ pageNumber: 0 }));
-        dispatch(getFormPackages());
+        const getData = async () => {
+            await dispatch(getAllClassStages());
+            await dispatch(getFormCategories({ pageNumber: 0 }));
+            await dispatch(getFormPackages());
+        };
+        getData();
     }, []);
     const { allClassList } = useSelector((state) => state?.classStages);
     const handleClose = async () => {
@@ -65,13 +74,33 @@ const ShowFormTabs = ({ showData }) => {
                             <>
                                 <li>
                                     <Text t="Sınıf Seviyesi" />:{' '}
-                                    <span>{showData?.formClassrooms[0]?.classroom.name}</span>
+                                    <span>{showData?.formClassrooms[0]?.classroom?.name}</span>
                                 </li>
                                 <li>
                                     <Text t="Paketler" />: <span>{showData?.packages[0].package?.name}</span>
                                 </li>
                             </>
                         )}
+                        <li>
+                            <Text t="Katılımcı Tipi" /> :
+                            <div className={classes.placesContainer}>
+                                {showData?.participantType?.name?.split(',').map((text, index) => (
+                                    <span key={index} className="roles">
+                                        {text}
+                                    </span>
+                                ))}
+                            </div>
+                        </li>
+                        <li>
+                            <Text t="Katılımcı Grubu" /> :
+                            <div className={classes.placesContainer}>
+                                {showData?.participantGroup?.name?.split(',').map((text, index) => (
+                                    <span key={index} className="roles">
+                                        {text}
+                                    </span>
+                                ))}
+                            </div>
+                        </li>
                         <li>
                             <Text t="Başlangıç Tarihi ve Saati" /> :{' '}
                             <span>{dayjs(showData?.startDate)?.format('YYYY-MM-DD HH:mm')}</span>

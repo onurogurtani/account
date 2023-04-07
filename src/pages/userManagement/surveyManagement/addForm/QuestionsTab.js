@@ -9,46 +9,48 @@ import QuestionGroup from './questionComponents/QuestionGroup';
 import QuestionTabFooter from './questionComponents/QuestionTabFooter';
 
 const QuestionsTab = ({ setStep, step }) => {
-  const [addFirstShow, setAddFirstShow] = useState(true);
-  const dispatch = useDispatch();
-  const [preview, setPreview] = useState(false);
-  const { currentForm, questionsOfForm, showFormObj } = useSelector((state) => state?.forms);
+    const [addFirstShow, setAddFirstShow] = useState(true);
+    const dispatch = useDispatch();
+    const [preview, setPreview] = useState(false);
+    const { currentForm, questionsOfForm, showFormObj } = useSelector((state) => state?.forms);
 
-  useEffect(() => {
-    if (currentForm) {
-      dispatch(getAllQuestionsOfForm({ formId: currentForm.id }));
-      dispatch(getLikertType());
-    }
-  }, []);
+    const loadData = async () => {
+        await dispatch(getAllQuestionsOfForm({ formId: currentForm.id }));
+        await dispatch(getLikertType());
+    };
 
-  
+    useEffect(() => {
+        if (currentForm) {
+            loadData();
+        }
+    }, [currentForm]);
 
-  return (
-    <CustomCollapseCard cardTitle={<Text t="Sorular" />}>
-      <p>Bilgilendirme yazısı olabilir burada...</p>
+    return (
+        <CustomCollapseCard cardTitle={<Text t="Sorular" />}>
+            <p>Bilgilendirme yazısı olabilir burada...</p>
 
-      {questionsOfForm?.groupQuestions.map((group, idx) => (
-        <QuestionGroup
-          preview={preview}
-          setPreview={setPreview}
-          surveyData={currentForm}
-          key={idx}
-          groupKnowledge={group}
-          questionsOfForm={questionsOfForm}
-        />
-      ))}
-      {(!addFirstShow || showFormObj.id != undefined || currentForm.id!=undefined) && (
-        <QuestionTabFooter
-          preview={preview}
-          setPreview={setPreview}
-          setStep={setStep}
-          step={step}
-          currentForm={currentForm}
-          questionsOfForm={questionsOfForm}
-        />
-      )}
-    </CustomCollapseCard>
-  );
+            {questionsOfForm?.groupQuestions.map((group, idx) => (
+                <QuestionGroup
+                    preview={preview}
+                    setPreview={setPreview}
+                    surveyData={currentForm}
+                    key={idx}
+                    groupKnowledge={group}
+                    questionsOfForm={questionsOfForm}
+                />
+            ))}
+            {(!addFirstShow || showFormObj.id != undefined || currentForm.id != undefined) && (
+                <QuestionTabFooter
+                    preview={preview}
+                    setPreview={setPreview}
+                    setStep={setStep}
+                    step={step}
+                    currentForm={currentForm}
+                    questionsOfForm={questionsOfForm}
+                />
+            )}
+        </CustomCollapseCard>
+    );
 };
 
 export default QuestionsTab;

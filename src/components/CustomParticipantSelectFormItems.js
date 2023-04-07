@@ -1,14 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomFormItem, CustomSelect, Option } from '../components';
 import { participantGroupTypes } from '../constants/settings/participantGroups';
 import { resetParticipantGroupsList } from '../store/slice/eventsSlice';
+import { getParticipantGroupsList } from '../store/slice/eventsSlice';
 
 const CustomParticipantSelectFormItems = ({ form, className, required, initialValues }) => {
+    const dispatch = useDispatch();
     const [groupVal, setGroupVal] = useState([]);
     const [participantIdsArr, setParticipantIdsArr] = useState([]);
-    const dispatch = useDispatch();
     const { participantGroupsList } = useSelector((state) => state?.events);
+    const loadParticipantGroups = async () => {
+        console.log('"part içinde"', 'part içinde');
+        participantGroupsList?.length === 0 &&
+            dispatch(
+                getParticipantGroupsList({
+                    params: {
+                        'ParticipantGroupDetailSearch.PageSize': 100000000,
+                    },
+                }),
+            );
+    };
+
+    loadParticipantGroups();
+
+    const [groups, setGroups] = useState([...participantGroupsList]);
 
     useEffect(() => {
         let typeIds = initialValues?.participantType?.id?.split(',')?.map((item) => Number(item));
@@ -17,8 +33,6 @@ const CustomParticipantSelectFormItems = ({ form, className, required, initialVa
             filterByParticipantTypeIds([...typeIds]);
         }
     }, [initialValues]);
-
-    const [groups, setGroups] = useState([]);
 
     const onParticipantGroupTypeSelect = async (value) => {};
     const onParticipantGroupTypeDeSelect = async (value) => {};

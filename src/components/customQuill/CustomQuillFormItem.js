@@ -37,7 +37,6 @@ const CustomQuillFormItem = ({ label, name, setQuillValue, quillValue, form, pla
                         let newObj = form.getFieldsValue([`${name}`]);
                         let key = newObj[`${name}`];
                         if (key) {
-                            console.log('val', key);
                             await removeTags(key);
                             if (quillError) {
                                 return Promise.reject(new Error('Lütfen Zorunlu Alanları Doldurunuz.'));
@@ -49,7 +48,7 @@ const CustomQuillFormItem = ({ label, name, setQuillValue, quillValue, form, pla
                 },
             ]}
         >
-            <CustomReactQuill onChange={onQuillChange} quillValue={quillValue} />
+            <CustomReactQuill onChange={onQuillChange} quillValue={quillValue} setQuillValue={setQuillValue} />
         </CustomFormItem>
     );
 };

@@ -21,19 +21,20 @@ import {
 import FormFilter from './FormFilter';
 
 const FormList = () => {
-    const { tableProperty, formList} = useSelector((state) => state?.forms);
+    const { tableProperty, formList } = useSelector((state) => state?.forms);
     const [filterFormVisible, setFilterFormVisible] = useState(false);
     const dispatch = useDispatch();
     const history = useHistory();
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        loadData();
     }, []);
 
-    useEffect(() => {
-        dispatch(getFilteredPagedForms({}));
-        dispatch(getFormCategories({ pageNumber: 0 }));
-    }, []);
+    const loadData = async () => {
+        await dispatch(getFilteredPagedForms({}));
+        await dispatch(getFormCategories({ pageNumber: 0 }));
+    };
 
     const paginationProps = {
         showSizeChanger: true,

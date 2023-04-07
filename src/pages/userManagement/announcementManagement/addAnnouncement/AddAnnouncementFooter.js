@@ -26,6 +26,7 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileIma
             };
             dispatch(getByFilterPagedAnnouncementTypes(typeData));
             const values = await form.validateFields();
+            console.log('values', values);
 
             const startOfAnnouncement = values?.startDate
                 ? dayjs(values?.startDate)?.utc().format('YYYY-MM-DD-HH-mm')
@@ -48,20 +49,14 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileIma
                 const startHour = values?.startDate ? dayjs(values?.startDate)?.utc().format('HH:mm:ss') : undefined;
                 const endDate = values?.endDate ? dayjs(values?.endDate)?.utc().format('YYYY-MM-DD') : undefined;
                 const endHour = values?.endDate ? dayjs(values?.endDate)?.utc().format('HH:mm:ss') : undefined;
-                const typeName = values.announcementType;
+                const typeId = values.announcementType;
 
                 const foundType = [];
                 for (let i = 0; i < announcementTypes.length; i++) {
-                    if (announcementTypes[i].name == typeName) {
+                    if (announcementTypes[i].id == typeId) {
                         foundType.push(announcementTypes[i]);
                     }
                 }
-                let selectedGroupsArray = participantGroupsList.filter((p) =>
-                    values.participantGroupIds.includes(p?.name),
-                );
-                let idsArr = [];
-                selectedGroupsArray?.map((item) => idsArr.push(item?.id));
-                idsArr.push();
                 const fileId = await dispatch(getAvatarUpload(fileImage));
                 let data = {
                     announcementType: foundType[0],
@@ -78,7 +73,7 @@ const AddAnnouncementFooter = ({ form, setAnnouncementInfoData, setStep, fileIma
                     announcementPublicationPlaces: values?.announcementPublicationPlaces,
                     isPopupAvailable: values?.announcementPublicationPlaces.includes(4),
                     isReadCheckbox: values?.isReadCheckbox,
-                    participantGroupIds: idsArr,
+                    participantGroupIds: values?.participantGroupIds,
                 };
                 const action = await dispatch(addAnnouncement(data));
 

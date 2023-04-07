@@ -113,23 +113,6 @@ const GroupScore = ({ groupKnowledge }) => {
             </CustomFormItem>
           </div>
         ))}
-        {/* <div className={classes.groupScoreButtonsContainer}>
-          <CustomFormItem className={classes.container}>
-            <CustomButton className={classes['clear-btn']} onClick={handleClose}>
-              <span className="cancel">
-                <Text t="Temizle" />
-              </span>
-            </CustomButton>
-          </CustomFormItem>
-
-          <CustomFormItem className={classes.container}>
-            <CustomButton className={classes['submit-btn']} type="primary" htmlType="submit">
-              <span className="submit">
-                <Text t="Kaydet" />
-              </span>
-            </CustomButton>
-          </CustomFormItem>
-        </div> */}
       </CustomForm>
     </>
   );
