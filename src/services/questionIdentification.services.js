@@ -22,7 +22,7 @@ const getUpdateQuestionOfExams = (data) => {
     });
 };
 const fileUpload = (data, options) => {
-    return axios.post(`${process.env.PUBLIC_HOST_API}/Shared/Files`, data, { ...options });
+    return axios.post(`${process.env.PUBLIC_HOST_API}File/Files`, data, { ...options });
 };
 
 const publisherServices = {

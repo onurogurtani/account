@@ -96,11 +96,11 @@ const getImage = ({ id }) => {
 };
 
 const addImage = (data, options) => {
-  return axios.post(`${process.env.PUBLIC_HOST_API}/Account/OrganisationLogo/Add`, data, { ...options });
+  return axios.post(`${process.env.PUBLIC_HOST_API}Account/OrganisationLogo/Add`, data, { ...options });
 };
 
 const updateImage = (data, options) => {
-  return axios.put(`${process.env.PUBLIC_HOST_API}/Account/OrganisationLogo/Update`, data, { ...options });
+  return axios.put(`${process.env.PUBLIC_HOST_API}Account/OrganisationLogo/Update`, data, { ...options });
 };
 
 const organisationsServices = {
