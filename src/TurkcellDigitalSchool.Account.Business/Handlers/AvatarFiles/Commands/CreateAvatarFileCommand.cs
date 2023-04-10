@@ -11,6 +11,8 @@ using TurkcellDigitalSchool.Entities.Enums;
 using TurkcellDigitalSchool.File.DataAccess.Abstract;
 using System.Linq;
 using IResult = TurkcellDigitalSchool.Core.Utilities.Results.IResult;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
 {
@@ -19,6 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
         public IFormFile Image { get; set; }
         public string FileName { get; set; }
 
+        [MessageClassAttr("Avatar Dosya Oluþtur")]
         public class CreateFrameFileCommandHandler : IRequestHandler<CreateAvatarFileCommand,IResult>
         {
             private readonly IFileRepository _fileRepository;
@@ -34,13 +37,18 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
                 _pathHelper = pathHelper;
             }
 
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string FileTypeError = Messages.FileTypeError;
+
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string Added = Messages.Added;
             public async Task<IResult> Handle(CreateAvatarFileCommand request, CancellationToken cancellationToken)
             {
                 string[] avatarType = new string[] { "image/jpeg", "image/png" };
 
                 if (!avatarType.Contains(request.Image.ContentType))
                 {
-                    return new ErrorResult(Messages.FileTypeError);
+                    return new ErrorResult(Messages.FileTypeError.PrepareRedisMessage());
                 }
                 if (request.Image.Length > 5000000)
                 {
@@ -61,7 +69,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
                     ContentType = request.Image.ContentType
                 });
                 await _fileRepository.SaveChangesAsync();
-                return new SuccessResult(Messages.Added);
+                return new SuccessResult(Messages.Added.PrepareRedisMessage());
 
             }
         }

@@ -19,6 +19,7 @@ using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Microsoft;
 using TurkcellDigitalSchool.Core.DependencyResolvers;
 using TurkcellDigitalSchool.Core.Extensions;
+using TurkcellDigitalSchool.Core.Services.CustomMessgeHelperService;
 using TurkcellDigitalSchool.Core.Services.KpsService;
 using TurkcellDigitalSchool.Core.Utilities.ElasticSearch;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
@@ -26,6 +27,8 @@ using TurkcellDigitalSchool.Core.Utilities.MessageBrokers.RabbitMq;
 using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
+using TurkcellDigitalSchool.Integration.Helper;
+using TurkcellDigitalSchool.Integration.Type;
 
 namespace TurkcellDigitalSchool.Account.Business
 {
@@ -75,7 +78,14 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddMediatR(typeof(BusinessStartup).GetTypeInfo().Assembly);
 
-             
+            services.AddTransient<ICustomMessgeHelperService, CustomMessgeHelperService>();
+
+            services.AddMsIntegrationServicesWithName(Configuration, MsType.Education);
+            services.AddMsIntegrationServicesWithName(Configuration, MsType.Event);
+            services.AddMsIntegrationServicesWithName(Configuration, MsType.Exam);
+            services.AddMsIntegrationServicesWithName(Configuration, MsType.File);
+            services.AddMsIntegrationServicesWithName(Configuration, MsType.Reporting);
+
             ValidatorOptions.Global.DisplayNameResolver = (type, memberInfo, expression) =>
             {
                 if (memberInfo != null)
