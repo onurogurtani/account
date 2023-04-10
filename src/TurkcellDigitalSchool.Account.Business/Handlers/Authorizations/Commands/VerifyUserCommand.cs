@@ -24,11 +24,11 @@ using TurkcellDigitalSchool.Entities.Concrete.Core;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
-    public class VerifyUserCommand : IRequest<IDataResult<User>>
+    public class VerifyUserCommand : IRequest<IResult>
     {
         public int Id { get; set; }
         public int VerificationKey { get; set; }
-        public class VerifyUserCommandHandler : IRequestHandler<VerifyUserCommand, IDataResult<User>>
+        public class VerifyUserCommandHandler : IRequestHandler<VerifyUserCommand, IResult>
         {
             private readonly IUserRepository _userRepository;
             private readonly IUnverifiedUserRepository _unverifiedUserRepository;
@@ -46,20 +46,23 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             [CacheRemoveAspect("Get")]
             [LogAspect(typeof(FileLogger))]
             [TransactionScopeAspectAsync]
-            public async Task<IDataResult<User>> Handle(VerifyUserCommand request, CancellationToken cancellationToken)
+            public async Task<IResult> Handle(VerifyUserCommand request, CancellationToken cancellationToken)
             {
 
-
+                var now = DateTime.Now;
                 var unverifiedUser = _unverifiedUserRepository.Get(x=>x.Id == request.Id);
                 if (unverifiedUser == null)
                 {
-                    return new ErrorDataResult<User>(Messages.UserNotFound);
+                    return new ErrorResult(Messages.UserNotFound);
                 }
                 if (unverifiedUser.VerificationKey != request.VerificationKey.ToString())
                 {
-                    return new ErrorDataResult<User>(Messages.InvalidOtp);
+                    return new ErrorResult(Messages.InvalidOtp);
                 }
-
+                if (unverifiedUser.VerificationKeyLastTime < now)
+                {
+                  //  return new ErrorResult(Messages.OtpTimeOut);
+                }
                 var user = new User
                 {
                     UserType = unverifiedUser.UserTypeId,
@@ -76,15 +79,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 {
                     _userRepository.Add(user);
                     await _userRepository.SaveChangesAsync();
-                    _unverifiedUserRepository.Delete(new UnverifiedUser { Id = request.Id });
+                    _unverifiedUserRepository.Delete(unverifiedUser);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
 
-                    return new ErrorDataResult<User>(Messages.TryAgain);
+                    return new ErrorResult(Messages.TryAgain);
                 }
                 
-                return new SuccessDataResult<User>(user, Messages.SuccessfulUserVerify);
+                return new SuccessResult(Messages.SuccessfulUserVerify);
             }
         }
     }
