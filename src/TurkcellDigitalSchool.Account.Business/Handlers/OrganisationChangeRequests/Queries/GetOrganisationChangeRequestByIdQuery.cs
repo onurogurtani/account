@@ -1,9 +1,12 @@
 using System;
+using System.Buffers.Text;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using Flurl.Http.Content;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
@@ -48,7 +51,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
             public virtual async Task<IDataResult<GetOrganisationInfoChangeRequestDto>> Handle(GetOrganisationChangeRequestByIdQuery request, CancellationToken cancellationToken)
             {
                 var query = _organisationInfoChangeRequestRepository.Query()
-                    .Include(x => x.Organisation).ThenInclude(x=>x.OrganisationType)
+                    .Include(x => x.Organisation).ThenInclude(x => x.OrganisationType)
                     .Include(x => x.OrganisationChangeReqContents)
                     .AsQueryable();
 
@@ -65,11 +68,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                 organisationInfoDto.CountyName = getCounty.Name;
 
                 var logo = organisationInfoDto.OrganisationChangeReqContents.FirstOrDefault(w => w.PropertyEnum == Entities.Enums.OrganisationChangePropertyEnum.Logo).PropertyValue.ToString();
-                var filePath= _fileRepository.Query().FirstOrDefault(x => x.Id == Convert.ToInt32(logo)).FilePath;
-                var fileResult = await _fileService.GetFile(filePath);
+                var filePath = _fileRepository.Query().FirstOrDefault(x => x.Id == Convert.ToInt32(logo)).FilePath;
+                Byte[] fileResult = _fileService.GetFile(filePath).Result.Data;
 
-                var fileString = Convert.ToBase64String(fileResult.Data);
-                organisationInfoDto.OrganisationChangeReqContents.FirstOrDefault(x => x.PropertyEnum == Entities.Enums.OrganisationChangePropertyEnum.Logo).PropertyValue = fileString;
+                if (fileResult != null)
+                {
+                    var fileString = Convert.ToBase64String(fileResult);
+                    string decodedString = Encoding.UTF8.GetString(fileResult);
+                    organisationInfoDto.OrganisationChangeReqContents.FirstOrDefault(x => x.PropertyEnum == Entities.Enums.OrganisationChangePropertyEnum.Logo).PropertyValue = decodedString;
+                }
 
                 return new SuccessDataResult<GetOrganisationInfoChangeRequestDto>(organisationInfoDto, Messages.SuccessfulOperation);
             }
