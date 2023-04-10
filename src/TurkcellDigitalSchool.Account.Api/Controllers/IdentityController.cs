@@ -233,6 +233,28 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
+
+        /// <summary>
+        /// Otp chek işlemi
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("loginFailCheckOtp")]
+        public async Task<IActionResult> LoginFailCheckOtpQuery([FromBody] LoginFailCheckOtpQuery request)
+        {
+            var result = await Mediator.Send(request);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
         /// <summary>
         ///  Make it User Register operations
         /// </summary>

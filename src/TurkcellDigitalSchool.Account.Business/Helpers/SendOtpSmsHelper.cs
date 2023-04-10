@@ -32,7 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Helpers
             var date = DateTime.Now;
 
             var mobileLogins = _mobileLoginRepository.Query()
-                .Where(m => m.Provider == providerType && m.UserId == userId && m.Status == MobileSendStatus.Send)
+                .Where(m => m.Provider == providerType && m.UserId == userId && m.Status == UsedStatus.Send)
                 .Where(w => w.SendDate.AddSeconds(120) > date)
                 .ToList();
 
@@ -40,7 +40,7 @@ namespace TurkcellDigitalSchool.Account.Business.Helpers
             {
                 foreach (var item in mobileLogins)
                 {
-                    item.Status = MobileSendStatus.Cancelled;
+                    item.Status = UsedStatus.Cancelled;
                     _mobileLoginRepository.Update(item);
                 }
                 await _mobileLoginRepository.SaveChangesAsync();
@@ -60,7 +60,7 @@ namespace TurkcellDigitalSchool.Account.Business.Helpers
             var mobileLogin = _mobileLoginRepository.Add(new MobileLogin
             {
                 Code = otp,
-                Status = MobileSendStatus.Send,
+                Status = UsedStatus.Send,
                 SendDate = date,
                 LastSendDate = date,
                 UserId = userId,

@@ -69,6 +69,12 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string RoleIsAlreadyActive = "Rol zaten aktif.";
         public static string RoleandTransferRoleCantBeTheSame = "Pasif etmek istediğiniz rol ile transfer etmek istediğiniz rol aynı olamaz.";
         public static string CanNotChangeForRealationOrganisation = "Kurum Tipi, Kurumsal Müşteri Listesindeki kayıtlar ile ilişkilendirilmiştir. Değişiklik yapılamaz.";
+        public static string InvalidOtpCode = "Girdiğiniz Doğrulama Kodu Yanlış, Lütfen Tekrar Deneyiniz";
+        public static string InvalidOtpId = "Hatalı otp kayıt Id. İşleme devam edilemez !";
+        public static string PhoneNotVerify = "Telefon numarası doğrulaması yapılmamış !";
+        public static string MailIsNotVerify = "E-Posta Doğrulaması yapılmamış işleme devam edilemez !";
+        public static string NotFountValidUser = "Geçerli bir kullanıcı sistemde bulunamadı !";
+        public static string PasswordChangeLinkSended = "Şifre yenileme linki {0} gönderilmiştir";
 #pragma warning restore CA2211
 #pragma warning restore S2223
 #pragma warning restore S1104

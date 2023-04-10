@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TurkcellDigitalSchool.Core.DataAccess;
 using TurkcellDigitalSchool.Entities.Concrete.Core;
 
@@ -12,5 +13,13 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Abstract
 
         List<OperationClaim> GetClaims(long userId);
         bool HasClaim(long userId,string claims);
+
+
+
+        public Task ResetFailLoginOtpCount(long userId);
+
+        public Task<int> IncFailLoginOtpCount(long userId);
+
+        public Task<int> GetFailLoginOtpCount(long userId);
     }
 }
