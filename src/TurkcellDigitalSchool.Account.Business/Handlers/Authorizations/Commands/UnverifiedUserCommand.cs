@@ -23,21 +23,21 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 using TurkcellDigitalSchool.Entities.Concrete;
+using TurkcellDigitalSchool.Entities.Dtos;
 using TurkcellDigitalSchool.Entities.Concrete.Core;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
-    public class UnverifiedUserCommand : IRequest<IDataResult<UnverifiedUser>>
+    public class UnverifiedUserCommand : IRequest<IDataResult<UnverifiedUserDto>>
     {
         public UserType UserTypeId { get; set; }
-        public long CitizenId { get; set; }
         public string Name { get; set; }
         public string SurName { get; set; }
         public string Email { get; set; }
         public string MobilePhones { get; set; }
         public string Password { get; set; }
 
-        public class UnverifiedUserCommandCommandHandler : IRequestHandler<UnverifiedUserCommand, IDataResult<UnverifiedUser>>
+        public class UnverifiedUserCommandCommandHandler : IRequestHandler<UnverifiedUserCommand, IDataResult<UnverifiedUserDto>>
         {
             private readonly IUnverifiedUserRepository _unverifiedUserRepository;
             private readonly IUserRepository _userRepository;
@@ -59,21 +59,18 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             [CacheRemoveAspect("Get")]
             [LogAspect(typeof(FileLogger))]
             [TransactionScopeAspectAsync]
-            public async Task<IDataResult<UnverifiedUser>> Handle(UnverifiedUserCommand request, CancellationToken cancellationToken)
+            public async Task<IDataResult<UnverifiedUserDto>> Handle(UnverifiedUserCommand request, CancellationToken cancellationToken)
             {
                 HashingHelper.CreatePasswordHash(request.Password, out var passwordSalt, out var passwordHash);
 
-                var citizenIdCheck = await _userRepository.GetAsync(w => w.Status && w.CitizenId == request.CitizenId && w.CitizenId != 0);
-                if (citizenIdCheck != null)
-                    return new ErrorDataResult<UnverifiedUser>(Messages.CitizenIdAlreadyExist);
 
                 var existEmail = await _userRepository.Query().AnyAsync(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
                 if (existEmail)
-                    return new ErrorDataResult<UnverifiedUser>(Messages.EmailAlreadyExist);
+                    return new ErrorDataResult<UnverifiedUserDto>(Messages.EmailAlreadyExist);
 
                 var existPhone = await _userRepository.Query().AnyAsync(x => x.MobilePhones == request.MobilePhones);
                 if (existPhone)
-                    return new ErrorDataResult<UnverifiedUser>(Messages.MobilePhoneAlreadyExist);
+                    return new ErrorDataResult<UnverifiedUserDto>(Messages.MobilePhoneAlreadyExist);
 
                 var unverifiedExistEmail = await _unverifiedUserRepository.Query().AnyAsync(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
                 if (existEmail)
@@ -89,24 +86,20 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     _unverifiedUserRepository.Delete(new UnverifiedUser { Id = unverifiedUserMobilePhone.Id });
                 }
 
-                var unverifiedExistCitizenId = await _unverifiedUserRepository.Query().AnyAsync(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
-                if (existEmail)
-                {
-                    var unverifiedUserCitizenId = _unverifiedUserRepository.Get(x => x.CitizenId == request.CitizenId);
-                    _unverifiedUserRepository.Delete(new UnverifiedUser { Id = unverifiedUserCitizenId.Id });
-                }
+
 
 
                 var unverifiedUser = new UnverifiedUser
                 {
                     UserTypeId = request.UserTypeId,
-                    CitizenId = request.CitizenId,
                     Name = request.Name,
                     SurName = request.SurName,
                     Email = request.Email,
                     MobilePhones = request.MobilePhones,
                     PasswordHash = passwordHash,
-                    PasswordSalt = passwordSalt
+                    PasswordSalt = passwordSalt,
+                    VerificationKeyLastTime = DateTime.UtcNow.AddSeconds(90),
+
                 };
 
 
@@ -133,7 +126,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     }
                     catch (Exception e)
                     {
-                        return new ErrorDataResult<UnverifiedUser>(e.Message);
+                        return new ErrorDataResult<UnverifiedUserDto>(e.Message);
                     }
 
                         
@@ -141,7 +134,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 
                 _unverifiedUserRepository.Add(unverifiedUser);
                 await _unverifiedUserRepository.SaveChangesAsync();
-                    return new SuccessDataResult<UnverifiedUser>(unverifiedUser);
+                UnverifiedUserDto unverifiedUserDto = new UnverifiedUserDto
+                {
+                    Id = unverifiedUser.Id,
+                    VerificationKey = unverifiedUser.VerificationKey,
+                };
+                
+                    return new SuccessDataResult<UnverifiedUserDto>(unverifiedUserDto);
 
             }
 
