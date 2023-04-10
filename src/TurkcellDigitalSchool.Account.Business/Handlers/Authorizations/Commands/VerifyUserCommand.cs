@@ -49,7 +49,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             public async Task<IResult> Handle(VerifyUserCommand request, CancellationToken cancellationToken)
             {
 
-                var now = DateTime.Now;
+
                 var unverifiedUser = _unverifiedUserRepository.Get(x=>x.Id == request.Id);
                 if (unverifiedUser == null)
                 {
@@ -59,9 +59,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 {
                     return new ErrorResult(Messages.InvalidOtp);
                 }
-                if (unverifiedUser.VerificationKeyLastTime < now)
+                if (unverifiedUser.VerificationKeyLastTime < DateTime.Now)
                 {
-                  //  return new ErrorResult(Messages.OtpTimeOut);
+                    return new ErrorResult(Messages.OtpTimeOut);
                 }
                 var user = new User
                 {
@@ -81,7 +81,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     await _userRepository.SaveChangesAsync();
                     _unverifiedUserRepository.Delete(unverifiedUser);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
 
                     return new ErrorResult(Messages.TryAgain);
