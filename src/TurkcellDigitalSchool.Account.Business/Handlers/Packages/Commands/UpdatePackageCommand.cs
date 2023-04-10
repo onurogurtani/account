@@ -6,7 +6,10 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Packages.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Concrete;
 using TurkcellDigitalSchool.Exam.DataAccess.Abstract;
@@ -20,6 +23,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
     {
         public Package Package { get; set; }
 
+        [MessageClassAttr("Paket Güncelleme")]
         public class UpdatePackageCommandHandler : IRequestHandler<UpdatePackageCommand, IResult>
         {
             private readonly IImageOfPackageRepository _imageOfPackageRepository;
@@ -54,19 +58,24 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 _packageTestExamRepository = packageTestExamRepository;
             }
 
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RecordAlreadyExists = Messages.RecordAlreadyExists;
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
+
             [SecuredOperation(Priority = 1)]
             [ValidationAspect(typeof(UpdatePackageValidator), Priority = 2)]
             public async Task<IResult> Handle(UpdatePackageCommand request, CancellationToken cancellationToken)
             {
-
-
                 var isExist = _packageRepository.Query().Any(x => x.Id != request.Package.Id && x.Name.Trim().ToLower() == request.Package.Name.Trim().ToLower() && x.IsActive);
                 if (isExist)
-                    return new ErrorResult(Constants.Messages.PackageNameAldreadyExist);
+                    return new ErrorResult(RecordAlreadyExists.PrepareRedisMessage());
 
                 var entity = await _packageRepository.GetAsync(x => x.Id == request.Package.Id);
                 if (entity == null)
-                    return new ErrorResult(Messages.RecordDoesNotExist);
+                    return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
 
                 var imageOfPackages = await _imageOfPackageRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _imageOfPackageRepository.DeleteRange(imageOfPackages);
@@ -106,7 +115,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
 
 
 
-                                entity.Name = request.Package.Name;
+                entity.Name = request.Package.Name;
                 entity.Summary = request.Package.Summary;
                 entity.Content = request.Package.Content;
                 entity.IsActive = request.Package.IsActive;
@@ -134,7 +143,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 var record = _packageRepository.Update(entity);
                 await _packageRepository.SaveChangesAsync();
 
-                return new SuccessDataResult<Package>(record, Messages.SuccessfulOperation);
+                return new SuccessDataResult<Package>(record, SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }

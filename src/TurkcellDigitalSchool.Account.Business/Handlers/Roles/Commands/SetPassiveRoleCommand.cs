@@ -5,10 +5,12 @@ using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Transaction;
+using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
-using TurkcellDigitalSchool.Core.Utilities.Results; 
+using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
 {
@@ -16,6 +18,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
     {
         public long RoleId { get; set; }
         public long? TransferRoleId { get; set; }
+
+        [MessageClassAttr("Rol Pasif Etme")]
         public class SetPassiveRoleCommandHandler : IRequestHandler<SetPassiveRoleCommand, IResult>
         {
             private readonly IRoleRepository _roleRepository;
@@ -30,6 +34,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
                 _packageRoleRepository = packageRoleRepository;
                 _mediator = mediator;
             }
+
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string TranferRoleIsNotActive = Messages.TranferRoleIsNotActive;
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RoleandTransferRoleCantBeTheSame = Messages.RoleandTransferRoleCantBeTheSame;
 
             [SecuredOperation(Priority = 1)]
             [CacheRemoveAspect("Get")]
@@ -53,12 +62,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
                     long transferRoleId = request.TransferRoleId ?? 0;
                     if (request.RoleId == request.TransferRoleId)
                     {
-                        return new ErrorResult(Messages.RoleandTransferRoleCantBeTheSame);
+                        return new ErrorResult(RoleandTransferRoleCantBeTheSame.PrepareRedisMessage());
                     }
                     var transferRole = await _mediator.Send(new GetRoleQuery { Id = transferRoleId }, cancellationToken);
                     if (transferRole.Data.RecordStatus == RecordStatus.Passive)
                     {
-                        return new ErrorResult(Messages.TranferRoleIsNotActive);
+                        return new ErrorResult(TranferRoleIsNotActive.PrepareRedisMessage());
                     }
 
                     await _packageRoleRepository.SetTransferRole(request.RoleId, transferRoleId);

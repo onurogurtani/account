@@ -5,7 +5,10 @@ using TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.ValidationRul
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Concrete;
 
@@ -18,7 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Commands
     {
         public PackageType PackageType { get; set; }
 
-
+        [MessageClassAttr("Paket Türü Güncelleme")]
         public class UpdatePackageTypeCommandHandler : IRequestHandler<UpdatePackageTypeCommand, IResult>
         {
             private readonly IPackageTypeRepository _packageTypeRepository;
@@ -30,6 +33,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Commands
                 _packageTypeTargetScreenRepository = packageTypeTargetScreenRepository;
             }
 
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
+
             [SecuredOperation(Priority = 1)]
             [ValidationAspect(typeof(CreatePackageTypeValidator), Priority = 2)]
             public async Task<IResult> Handle(UpdatePackageTypeCommand request, CancellationToken cancellationToken)
@@ -37,7 +45,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Commands
 
                 var entity = await _packageTypeRepository.GetAsync(x => x.Id == request.PackageType.Id);
                 if (entity == null)
-                    return new ErrorResult(Messages.RecordDoesNotExist);
+                    return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
 
                 var packageTypeTargetScreens = await _packageTypeTargetScreenRepository.GetListAsync(x => x.PackageTypeId == request.PackageType.Id);
                 _packageTypeTargetScreenRepository.DeleteRange(packageTypeTargetScreens);
@@ -51,7 +59,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Commands
                 var record = _packageTypeRepository.Update(entity);
                 await _packageTypeRepository.SaveChangesAsync();
 
-                return new SuccessDataResult<PackageType>(record, Messages.SuccessfulOperation);
+                return new SuccessDataResult<PackageType>(record, SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }

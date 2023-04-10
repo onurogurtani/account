@@ -6,13 +6,15 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
+using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Utilities.Toolkit;
-using TurkcellDigitalSchool.Entities.Concrete.Core; 
+using TurkcellDigitalSchool.Entities.Concrete.Core;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 {
@@ -28,6 +30,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
         public string Email { get; set; }
         public string MobilePhones { get; set; }
 
+        [MessageClassAttr("Kullanıcı Ekleme")]
         public class AddUserCommandHandler : IRequestHandler<AddUserCommand, IDataResult<SelectionItem>>
         {
             private readonly IUserRepository _userRepository;
@@ -40,6 +43,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                 _configuration = configuration;
                 _configurationManager = configurationManager;
             }
+
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string Added = Messages.Added;
+            [MessageConstAttr(MessageCodeType.Information)]
+            private static string UserInformations = Constants.Messages.UserInformations;
 
             [SecuredOperation(Priority = 1)]
             [ValidationAspect(typeof(AddUserValidator), Priority = 2)]
@@ -68,9 +76,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                 await _userRepository.SaveChangesAsync();
 
                 var link = _configuration.GetSection("PathSetting").GetSection("UserLink").Value;
-                var messageContent = "Kullanıcı adınız: " + request.Name + " " + request.SurName + " \nŞifreniz: " + randomPassword + " şeklinde belirlenmiştir. " + link + " link üzerinden sisteme giriş yapabilirsiniz.";
+                var messageContent = string.Format(UserInformations, request.Name, request.SurName, randomPassword, link);
 
-                return new SuccessDataResult<SelectionItem>(new SelectionItem { Label = messageContent }, Messages.Added);
+                return new SuccessDataResult<SelectionItem>(new SelectionItem { Label = messageContent }, Added.PrepareRedisMessage());
             }
         }
     }

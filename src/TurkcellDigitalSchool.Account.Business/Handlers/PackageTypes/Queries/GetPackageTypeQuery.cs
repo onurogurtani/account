@@ -23,8 +23,11 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Concrete;
 
@@ -37,6 +40,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Queries
     {
         public long Id { get; set; }
 
+        [MessageClassAttr("Paket Türü Görüntüleme")]
         public class GetPackageTypeQueryHandler : IRequestHandler<GetPackageTypeQuery, IDataResult<PackageType>>
         {
             private readonly IPackageTypeRepository _packageTypeRepository;
@@ -47,7 +51,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Queries
                 _packageTypeRepository = packageTypeRepository;
             }
 
-             
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RecordIsNotFound = Messages.RecordIsNotFound;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string Deleted = Messages.Deleted;
+
             [LogAspect(typeof(FileLogger))]
             [SecuredOperation(Priority = 1)]
             public virtual async Task<IDataResult<PackageType>> Handle(GetPackageTypeQuery request, CancellationToken cancellationToken)
@@ -56,17 +64,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Queries
                     .Include(x => x.PackageTypeTargetScreens).ThenInclude(x => x.TargetScreenId)
                     .AsQueryable();
 
-
                 var record = await query.FirstOrDefaultAsync(x => x.Id == request.Id);
 
                 if (record == null)
-                    return new ErrorDataResult<PackageType>(null, Messages.RecordIsNotFound);
+                    return new ErrorDataResult<PackageType>(null, RecordIsNotFound.PrepareRedisMessage());
 
-
-                return new SuccessDataResult<PackageType>(record, Messages.Deleted);
-
+                return new SuccessDataResult<PackageType>(record, Deleted.PrepareRedisMessage());
             }
         }
-
     }
 }

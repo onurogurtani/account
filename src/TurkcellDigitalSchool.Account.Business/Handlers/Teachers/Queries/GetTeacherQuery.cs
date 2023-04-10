@@ -7,12 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Dtos.TeacherDtos; 
+using TurkcellDigitalSchool.Entities.Dtos.TeacherDtos;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
 {
@@ -23,6 +24,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
         /// </summary>
         public long Id { get; set; }
 
+        [MessageClassAttr("Öðretmen Görüntüleme")]
         public class GetTeacherQueryHandler : IRequestHandler<GetTeacherQuery, IDataResult<GetTeacherResponseDto>>
         {
             private readonly IUserRepository _userRepository;
@@ -34,22 +36,24 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
                 _mapper = mapper;
             }
 
-            [CacheRemoveAspect("Get")]
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RecordIsNotFound = Messages.RecordIsNotFound;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
+
             [LogAspect(typeof(FileLogger))]
             [SecuredOperation(Priority = 1)]
             public async Task<IDataResult<GetTeacherResponseDto>> Handle(GetTeacherQuery request, CancellationToken cancellationToken)
             {
                 var teacherQueryable = _userRepository.Query().AsQueryable();
 
-
                 var data = await teacherQueryable.FirstOrDefaultAsync(x => x.Id == request.Id && x.UserType == UserType.Teacher);
-
                 if (data == null)
-                    return new ErrorDataResult<GetTeacherResponseDto>(null, Messages.RecordIsNotFound);
+                    return new ErrorDataResult<GetTeacherResponseDto>(null, RecordIsNotFound.PrepareRedisMessage());
 
                 var teacher = _mapper.Map<GetTeacherResponseDto>(data);
 
-                return new SuccessDataResult<GetTeacherResponseDto>(teacher, Messages.SuccessfulOperation);
+                return new SuccessDataResult<GetTeacherResponseDto>(teacher, SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }

@@ -8,9 +8,12 @@ using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Excel.Model;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
@@ -18,6 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
 {
     public class DownloadSchoolExcelCommand : IRequest<IDataResult<ExcelResponse>>
     {
+        [MessageClassAttr("Okul Excel İndirme")]
         public class DownloadSchoolExcelCommandHandler : IRequestHandler<DownloadSchoolExcelCommand, IDataResult<ExcelResponse>>
         {
             private readonly IInstitutionTypeRepository _institutionTypeRepository;
@@ -32,6 +36,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
                 _cityRepository = cityRepository;
                 _countyRepository = countyRepository;
             }
+
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RecordIsNotFound = Messages.RecordIsNotFound;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             /// <summary>
             /// Download School Sample Excel Document
@@ -58,7 +67,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
 
                     if (!cityList.Any() || !countyList.Any() || !institutionList.Any() || !institutionTypeList.Any())
                     {
-                        return new ErrorDataResult<ExcelResponse>(Messages.RecordIsNotFound);
+                        return new ErrorDataResult<ExcelResponse>(RecordIsNotFound.PrepareRedisMessage());
                     }
 
                     wsData.Cell(1, 1).Value = "KURUMLAR";
@@ -129,7 +138,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
                     workbookBytes = ms.ToArray();
                 }
 
-                return new SuccessDataResult<ExcelResponse>(new ExcelResponse { FileContents = workbookBytes, FileDownloadName = "Kurumlar_Listesi" }, Messages.SuccessfulOperation);
+                return new SuccessDataResult<ExcelResponse>(new ExcelResponse { FileContents = workbookBytes, FileDownloadName = "Kurumlar_Listesi" }, SuccessfulOperation.PrepareRedisMessage());
             }
 
         }

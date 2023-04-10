@@ -5,11 +5,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Excel.Model;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
@@ -17,8 +21,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
 {
     public class UploadTeacherExcelCommand : IRequest<IDataResult<ExcelResponse>>
     {
-        public Microsoft.AspNetCore.Http.IFormFile FormFile { get; set; }
+        public IFormFile FormFile { get; set; }
 
+        [MessageClassAttr("Öğretmen Excel Yükleme")]
         public class UploadTeacherExcelCommandHandler : IRequestHandler<UploadTeacherExcelCommand, IDataResult<ExcelResponse>>
         {
             private readonly IMediator _mediator;
@@ -27,6 +32,17 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
             {
                 _mediator = mediator;
             }
+
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string FileIsNotExcel = Constants.Messages.FileIsNotExcel;
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string ExcelRecordIsNotFound = Messages.ExcelRecordIsNotFound;
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string ExcelNumberOfColumnsNotValid = Constants.Messages.ExcelNumberOfColumnsNotValid;
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string TryAgain = Messages.TryAgain;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             /// <summary>
             /// Upload Teacher Sample Excel Document
@@ -42,7 +58,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
                 int startRow = 1;
                 var formFile = request.FormFile;
 
-                if (!request.FormFile.FileName.ToLower().EndsWith(".xlsx")) { return new ErrorDataResult<ExcelResponse>(Account.Business.Constants.Messages.FileIsNotExcel); }
+                if (!request.FormFile.FileName.ToLower().EndsWith(".xlsx")) { return new ErrorDataResult<ExcelResponse>(FileIsNotExcel.PrepareRedisMessage()); }
 
                 byte[] workbookBytes;
                 using (var ms = new MemoryStream())
@@ -56,12 +72,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
 
                             if (!worksheet.RowsUsed().Skip(startRow).Any())
                             {
-                                return new SuccessDataResult<ExcelResponse>(Messages.ExcelRecordIsNotFound);
+                                return new ErrorDataResult<ExcelResponse>(ExcelRecordIsNotFound.PrepareRedisMessage());
                             }
 
                             var currentColumnCount = worksheet.Row(1).Cells(q => !string.IsNullOrEmpty(q.Value?.ToString().Trim())).Count();
                             var targetColumnsCount = 5;
-                            if (currentColumnCount != targetColumnsCount) { return new ErrorDataResult<ExcelResponse>(string.Format(Constants.Messages.ExcelNumberOfColumnsNotValid, targetColumnsCount)); }
+                            if (currentColumnCount != targetColumnsCount) { return new ErrorDataResult<ExcelResponse>(string.Format(ExcelNumberOfColumnsNotValid.PrepareRedisMessage(), targetColumnsCount)); }
 
                             worksheet.Row(1).Cell(6).Value = "Durum";
                             worksheet.Row(1).Cell(7).Value = "Mesaj";
@@ -87,7 +103,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
                                         MobilePhones = mobilePhone
                                     });
 
-                                    if(result.Success)
+                                    if (result.Success)
                                     {
                                         row.Delete();
                                         continue;
@@ -117,11 +133,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
                     }
                     catch (Exception)
                     {
-                        return new ErrorDataResult<ExcelResponse>(Messages.TryAgain);
+                        return new ErrorDataResult<ExcelResponse>(TryAgain.PrepareRedisMessage());
                     }
                 }
 
-                return new SuccessDataResult<ExcelResponse>(new ExcelResponse { FileContents = workbookBytes, FileDownloadName = "Eklenemeyen_Ogretmenler" }, Messages.SuccessfulOperation);
+                return new SuccessDataResult<ExcelResponse>(new ExcelResponse { FileContents = workbookBytes, FileDownloadName = "Eklenemeyen_Ogretmenler" }, SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }

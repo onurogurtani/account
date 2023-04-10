@@ -29,7 +29,7 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string PassEmpty = "PassEmpty";
         public static string PassLength = "# karakter";
         public static string PassLengthMin = "En az # karakter";
-        public static string PassLengthMax = "En fazla # karakter";
+        public static string PassLengthMax = "En fazla {0} karakter olabilir.";
         public static string PassLengthMinMax = "En az #1, en fazla #2 karakter";
         public static string PassUppercaseLetter = "En az 1 büyük harf";
         public static string PassLowercaseLetter = "En az 1 küçük harf";
@@ -49,9 +49,26 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string SuccessfulLogOut = "LogOut İşlemi Başarılı";
         public static string SuccessfulOperation = "İşleminiz Başarıyla Gerçekleştirildi.";
         public static string ParameterIsNotValid = "Gönderilen parametre gecerli değil";
-
+        public static string UserInformations = "Kullanıcı adınız: {0} {1} \nŞifreniz: {2} şeklinde belirlenmiştir. {3} linki üzerinden sisteme giriş yapabilirsiniz.";
         public static string LogoPathIsNotDefined = "Logonun kayıt edileceği path bilgisi uygulama ayarlarında tanımlı değil";
         public static string NumberMustBe10Digit = "10 karakter uzunluğunda olmalıdır !";
+        public static string CannotBeLowerThanZero = "{0} 0'dan büyük olmalıdır.";
+        public static string MustBeOnlyLetter = "{0} sadece harflerden oluşmalıdır.";
+        public static string CitizenIdMust11Digits = "TCKN 11 hane olmalıdır.";
+        public static string PackageIsNotFound = "Paket bulunamadı !";
+        public static string TargetRangeIsAlreadyExist = "Bu paketin, net hedef aralığı daha önce eklenmiştir.";
+        public static string CheckDates = "Lütfen girilen tarihleri kontrol ediniz.";
+        public static string MinImageOfPackage = "En az {0} Paket Görseli eklenmeli.";
+        public static string MaxImageOfPackage = "En fazla {0} Paket Görseli eklenebilir.";
+        public static string MotivationIsNotExistCannotChoose = "Motivasyon Yoktur ise  motivasyon ile ilgili seçimler yapılamaz";
+        public static string ShouldChooseMotivationEvent = "Motivasyon etkinliği seçim yapmanız gerekmektedir";
+        public static string MotivationTabsOnlyOneChoose = "Motivasyon sekmelerden sadece seçtiğiniz bir tanesi üzerinde seçim yapabilirsiniz";
+        public static string MotivationTabsHaveToChoose = " Motivasyon  sekmelerden  seçtiğiniz bir tanesi üzerinde seçim yapmanız gerekmektedir";
+        public static string TestExamIsNotExistCannotChoose = "Deneme Sınavı Yoktur ise  deneme sınavı ile ilgili seçimler yapılamaz";
+        public static string ShouldChooseTestExam = "Deneme Sınavı seçim yapmanız gerekmektedir";
+        public static string TestExamTabsOnlyOneChoose = "Deneme Sınavı  sekmelerden sadece seçtiğiniz bir tanesi üzerinde seçim yapabilirsiniz";
+        public static string TestExamTabsHaveToChoose = "Deneme Sınavı sekmelerden  seçtiğiniz bir tanesi üzerinde seçim yapanız gerekmektedir";
+
         public static string OnlyNumbersAreSentInthePhoneNumber = "Telefon numarasında sadece rakam gönderilmelidir!";
         public static string ValueIsNotValidForField = "{0} Alanı için sadece belirtilen değerler gönderilir ! ( {1} ) ";
 
@@ -68,7 +85,7 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string TranferRoleIsNotActive = "Transfer etmek istediğiniz rol aktif değil.";
         public static string RoleIsAlreadyActive = "Rol zaten aktif.";
         public static string RoleandTransferRoleCantBeTheSame = "Pasif etmek istediğiniz rol ile transfer etmek istediğiniz rol aynı olamaz.";
-        public static string CanNotChangeForRealationOrganisation = "Kurum Tipi, Kurumsal Müşteri Listesindeki kayıtlar ile ilişkilendirilmiştir. Değişiklik yapılamaz.";
+        public static string CanNotChangeForRelationOrganisation = "Kurum Tipi, Kurumsal Müşteri Listesindeki kayıtlar ile ilişkilendirilmiştir. Değişiklik yapılamaz.";
 #pragma warning restore CA2211
 #pragma warning restore S2223
 #pragma warning restore S1104

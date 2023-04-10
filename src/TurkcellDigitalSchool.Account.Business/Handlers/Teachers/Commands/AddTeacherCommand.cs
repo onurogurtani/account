@@ -6,11 +6,13 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Teachers.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
+using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
-using TurkcellDigitalSchool.Entities.Concrete.Core; 
+using TurkcellDigitalSchool.Entities.Concrete.Core;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
 {
@@ -25,6 +27,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
         public string Email { get; set; }
         public string MobilePhones { get; set; }
 
+        [MessageClassAttr("Öğretmen Ekleme")]
         public class AddTeacherCommandHandler : IRequestHandler<AddTeacherCommand, IDataResult<long>>
         {
             private readonly IUserRepository _userRepository;
@@ -32,15 +35,19 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
             public AddTeacherCommandHandler(IUserRepository userRepository)
             {
                 _userRepository = userRepository;
-
             }
+
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string CitizenIdAlreadyExist = Messages.CitizenIdAlreadyExist;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string Added = Messages.Added;
 
             [SecuredOperation(Priority = 1)]
             [ValidationAspect(typeof(AddTeacherValidator), Priority = 2)]
             public async Task<IDataResult<long>> Handle(AddTeacherCommand request, CancellationToken cancellationToken)
             {
                 var isCitizenIdExist = _userRepository.Query().Any(q => q.CitizenId == request.CitizenId);
-                if (isCitizenIdExist) { return new ErrorDataResult<long>(Messages.CitizenIdAlreadyExist); }
+                if (isCitizenIdExist) { return new ErrorDataResult<long>(CitizenIdAlreadyExist.PrepareRedisMessage()); }
 
                 var teacherPassword = request.CitizenId.ToString().Substring(5);
 
@@ -64,7 +71,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
                 _userRepository.Add(user);
                 await _userRepository.SaveChangesAsync();
 
-                return new SuccessDataResult<long>(user.Id, Messages.Added);
+                return new SuccessDataResult<long>(user.Id, Added.PrepareRedisMessage());
             }
         }
     }

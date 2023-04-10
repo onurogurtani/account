@@ -8,11 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Dtos.OrganisationDtos; 
+using TurkcellDigitalSchool.Entities.Dtos.OrganisationDtos;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
 {
@@ -20,6 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
     {
         public long Id { get; set; }
 
+        [MessageClassAttr("Kurum Görüntüleme")]
         public class GetOrganisationQueryHandler : IRequestHandler<GetOrganisationQuery, IDataResult<OrganisationDto>>
         {
             private readonly IOrganisationRepository _organisationRepository;
@@ -37,7 +40,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
                 _mapper = mapper;
             }
 
-            [CacheRemoveAspect("Get")]
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RecordIsNotFound = Messages.RecordIsNotFound;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
+
             [LogAspect(typeof(FileLogger))]
             [SecuredOperation(Priority = 1)]
             public virtual async Task<IDataResult<OrganisationDto>> Handle(GetOrganisationQuery request, CancellationToken cancellationToken)
@@ -49,7 +56,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
                 var data = await query.FirstOrDefaultAsync(x => x.Id == request.Id);
 
                 if (data == null)
-                    return new ErrorDataResult<OrganisationDto>(null, Messages.RecordIsNotFound);
+                    return new ErrorDataResult<OrganisationDto>(null, RecordIsNotFound.PrepareRedisMessage());
 
                 var organisationDto = _mapper.Map<OrganisationDto>(data);
 
@@ -70,7 +77,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
                     organisationDto.InsertUserFullName = user.Name + " " + user.SurName;
                 }
 
-                return new SuccessDataResult<OrganisationDto>(organisationDto, Messages.SuccessfulOperation);
+                return new SuccessDataResult<OrganisationDto>(organisationDto, SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }
