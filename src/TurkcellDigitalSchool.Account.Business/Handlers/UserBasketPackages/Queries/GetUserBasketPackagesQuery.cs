@@ -5,8 +5,11 @@ using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
@@ -17,6 +20,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Que
     public class GetUserBasketPackagesQuery : IRequest<IDataResult<GetUserBasketPackagesResponseDto>>
     {
         public PaginationQuery Pagination { get; set; }
+
+        [MessageClassAttr("Kullanýcý Paket Sepeti Görüntüleme")]
         public class GetUserBasketPackagesQueryHandler : IRequestHandler<GetUserBasketPackagesQuery, IDataResult<GetUserBasketPackagesResponseDto>>
         {
             private readonly IUserBasketPackageRepository _userBasketPackageRepository;
@@ -27,7 +32,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Que
                 _userBasketPackageRepository = userBasketPackageRepository;
                 _tokenHelper = tokenHelper;
             }
-             
+
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
+
             [LogAspect(typeof(FileLogger))]
             [SecuredOperation(Priority = 1)]
             public async Task<IDataResult<GetUserBasketPackagesResponseDto>> Handle(GetUserBasketPackagesQuery request, CancellationToken cancellationToken)
@@ -85,7 +93,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Que
                     PagedItems = pagedList
                 };
 
-                return new SuccessDataResult<GetUserBasketPackagesResponseDto>(result, Messages.SuccessfulOperation);
+                return new SuccessDataResult<GetUserBasketPackagesResponseDto>(result, SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }

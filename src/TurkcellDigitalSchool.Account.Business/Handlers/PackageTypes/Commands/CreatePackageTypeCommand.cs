@@ -5,7 +5,10 @@ using TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.ValidationRul
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Concrete;
 
@@ -18,7 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Commands
     {
         public PackageType PackageType { get; set; }
 
-
+        [MessageClassAttr("Paket Türü Ekleme")]
         public class CreatePackageTypeCommandHandler : IRequestHandler<CreatePackageTypeCommand, IResult>
         {
             private readonly IPackageTypeRepository _packageTypeRepository;
@@ -28,6 +31,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Commands
                 _packageTypeRepository = packageTypeRepository;
             }
 
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
+
             [SecuredOperation(Priority = 1)]
             [ValidationAspect(typeof(CreatePackageTypeValidator), Priority = 2)]
             public async Task<IResult> Handle(CreatePackageTypeCommand request, CancellationToken cancellationToken)
@@ -36,7 +42,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Commands
                 var record = _packageTypeRepository.Add(request.PackageType);
                 await _packageTypeRepository.SaveChangesAsync();
 
-                return new SuccessDataResult<PackageType>(record, Messages.SuccessfulOperation);
+                return new SuccessDataResult<PackageType>(record, SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }

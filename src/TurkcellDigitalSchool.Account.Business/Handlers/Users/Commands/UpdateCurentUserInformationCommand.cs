@@ -4,12 +4,14 @@ using AutoMapper;
 using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Transaction;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Core.Utilities.Security.Jwt; 
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 {
@@ -22,20 +24,24 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
         public string School { get; set; }
         public string Institution { get; set; }
 
+        [MessageClassAttr("Şuanki Kullanıcı Bilgisi Güncelleme")]
         public class UpdateCurentUserInformationCommandHandler : IRequestHandler<UpdateCurentUserInformationCommand, IResult>
         {
-            private readonly IUserRepository _userRepository; 
+            private readonly IUserRepository _userRepository;
             private readonly IEducationRepository _educationRepository;
             private readonly IMapper _mapper;
             private readonly ITokenHelper _tokenHelper;
 
-            public UpdateCurentUserInformationCommandHandler(IUserRepository userRepository,  IEducationRepository educationRepository, IMapper mapper, ITokenHelper tokenHelper)
+            public UpdateCurentUserInformationCommandHandler(IUserRepository userRepository, IEducationRepository educationRepository, IMapper mapper, ITokenHelper tokenHelper)
             {
-                _userRepository = userRepository; 
+                _userRepository = userRepository;
                 _educationRepository = educationRepository;
                 _mapper = mapper;
                 _tokenHelper = tokenHelper;
             }
+
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             /// <summary>
             /// Update Curent User Information
@@ -71,9 +77,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                 _userRepository.Update(userEntity);
                 await _userRepository.SaveChangesAsync();
 
-                return new SuccessResult(Messages.SuccessfulOperation);
+                return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }
-
         }
     }
 }

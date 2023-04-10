@@ -8,8 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Dtos;
@@ -24,6 +27,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     public class GetPackageForUserQuery : IRequest<IDataResult<GetPackageForUserResponseDto>>
     {
         public long Id { get; set; }
+
+        [MessageClassAttr("Kullanýcý Detay Sayfasý Paket Görüntüleme")]
         public class GetPackageForUserQueryHandler : IRequestHandler<GetPackageForUserQuery, IDataResult<GetPackageForUserResponseDto>>
         {
 
@@ -38,7 +43,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
                 _fileService = fileService;
             }
 
-             
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
+
             [LogAspect(typeof(FileLogger))]
             [SecuredOperation(Priority = 1)]
             public async Task<IDataResult<GetPackageForUserResponseDto>> Handle(GetPackageForUserQuery request, CancellationToken cancellationToken)
@@ -49,7 +56,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
                     .FirstOrDefaultAsync();
 
                 if (package == null)
-                    return new ErrorDataResult<GetPackageForUserResponseDto>(Messages.RecordDoesNotExist);
+                    return new ErrorDataResult<GetPackageForUserResponseDto>(RecordDoesNotExist.PrepareRedisMessage());
 
                 var packageResponseDto = _mapper.Map<GetPackageForUserResponseDto>(package);
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Services.CustomMessgeHelperService;
@@ -23,18 +24,18 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ServiceMessages.Querie
                 _customMessgeHelperService = customMessgeHelperService;
             }
 
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string UnableToProccess = Messages.UnableToProccess;
             [MessageConstAttr(MessageCodeType.Success)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
-            [MessageConstAttr(MessageCodeType.Error)]
-            private static string UnableToProccess = Messages.UnableToProccess;
             public async Task<IDataResult<List<ConstantMessageDtos>>> Handle(GetAppMessagesQuery request, CancellationToken cancellationToken)
             {
                 var getAllMessage = _customMessgeHelperService.GetAllMessageDeclarations();
                 if (getAllMessage.Count <= 0)
-                    return new ErrorDataResult<List<ConstantMessageDtos>>(Messages.UnableToProccess);
+                    return new ErrorDataResult<List<ConstantMessageDtos>>(UnableToProccess.PrepareRedisMessage());
 
-                return new SuccessDataResult<List<ConstantMessageDtos>>(getAllMessage, Messages.SuccessfulOperation);
+                return new SuccessDataResult<List<ConstantMessageDtos>>(getAllMessage, SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }

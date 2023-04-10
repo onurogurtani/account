@@ -3,8 +3,11 @@ using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
@@ -16,12 +19,17 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
     {
         public string? Text { get; set; }
 
+        [MessageClassAttr("Geçerli Kelime Kontrolü")]
         public class CheckIsValidWordsQueryHandler : IRequestHandler<CheckIsValidWordsQuery, IResult>
         {
-
             public CheckIsValidWordsQueryHandler()
             {
             }
+
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string CheckMessage = Messages.CheckMessage;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [LogAspect(typeof(FileLogger))]
             [SecuredOperation(Priority = 1)]
@@ -37,12 +45,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
                     if (words.Length > i + 1)
                         check2 = SwearWords.Words.Contains(words[i] + " " + words[i + 1]);
                     if (check1 || check2)
-                        return new ErrorResult(Messages.CheckMessage);
+                        return new ErrorResult(CheckMessage.PrepareRedisMessage());
                 }
-
-                return new SuccessResult(Messages.SuccessfulOperation);
+                return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }
         }
-
     }
 }

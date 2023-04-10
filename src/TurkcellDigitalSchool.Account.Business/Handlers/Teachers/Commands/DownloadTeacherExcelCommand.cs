@@ -6,9 +6,12 @@ using ClosedXML.Excel;
 using MediatR;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Excel.Model;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
@@ -19,11 +22,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
     /// </summary>
     public class DownloadTeacherExcelCommand : IRequest<IDataResult<ExcelResponse>>
     {
+        [MessageClassAttr("Öðretmen Excel Tablosu Ýndirme")]
         public class DownloadTeacherExcelCommandHandler : IRequestHandler<DownloadTeacherExcelCommand, IDataResult<ExcelResponse>>
         {
 
             public DownloadTeacherExcelCommandHandler() { }
 
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [SecuredOperation(Priority = 1)]
             [CacheRemoveAspect("Get")]
@@ -53,7 +59,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
                     workbookBytes = ms.ToArray();
                 }
 
-                return new SuccessDataResult<ExcelResponse>(new ExcelResponse { FileContents = workbookBytes, FileDownloadName = "Ogretmenler" }, Messages.SuccessfulOperation);
+                return new SuccessDataResult<ExcelResponse>(new ExcelResponse { FileContents = workbookBytes, FileDownloadName = "Ogretmenler" }, SuccessfulOperation.PrepareRedisMessage());
             }
 
         }

@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Refit;
 using TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Organisations.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Transaction;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
+using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Concrete;
@@ -25,6 +25,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
     {
         public Organisation Organisation { get; set; }
 
+        [MessageClassAttr("Kurum Güncelleme")]
         public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisationCommand, IResult>
         {
             private readonly IOrganisationRepository _organisationRepository;
@@ -44,6 +45,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                 _userRepository = userRepository;
             }
 
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string SameNameAlreadyExist = Messages.SameNameAlreadyExist;
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
+
             [SecuredOperation(Priority = 1)]
             [ValidationAspect(typeof(UpdateOrganisationValidator), Priority = 2)]
             [TransactionScopeAspectAsync]
@@ -51,11 +59,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
             {
                 var organisation = await _organisationRepository.Query().AnyAsync(x => x.Id != request.Organisation.Id && x.Name.Trim().ToLower() == request.Organisation.Name.Trim().ToLower() && x.CrmId == request.Organisation.CrmId);
                 if (organisation)
-                    return new ErrorResult(Messages.SameNameAlreadyExist);
+                    return new ErrorResult(SameNameAlreadyExist.PrepareRedisMessage());
 
                 var entity = await _organisationRepository.GetAsync(x => x.Id == request.Organisation.Id);
                 if (entity == null)
-                    return new ErrorResult(Messages.RecordDoesNotExist);
+                    return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
 
                 var userType = await _organisationTypeRepository.Query().AnyAsync(x => x.Id == request.Organisation.OrganisationTypeId && x.IsSingularOrganisation);
 
@@ -81,17 +89,16 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                     }
                 };
 
-
                 var adminResult = await _mediator.Send(user);
                 if (!adminResult.Success)
                 {
                     return adminResult;
                 }
 
-                _mapper.Map(request.Organisation, entity); 
-                var record = _organisationRepository.Update(entity); 
-                await _organisationRepository.SaveChangesAsync(); 
-                return new SuccessDataResult<Organisation>(record, Messages.SuccessfulOperation);
+                _mapper.Map(request.Organisation, entity);
+                var record = _organisationRepository.Update(entity);
+                await _organisationRepository.SaveChangesAsync();
+                return new SuccessDataResult<Organisation>(record, SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }

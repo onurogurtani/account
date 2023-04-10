@@ -6,7 +6,10 @@ using TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Validat
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.Entities.Concrete;
@@ -20,6 +23,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Com
     {
         public long PackageId { get; set; }
 
+        [MessageClassAttr("Kullanýcý Paket Sepeti Ekleme")]
         public class CreateUserBasketPackageCommandHandler : IRequestHandler<CreateUserBasketPackageCommand, IResult>
         {
             private readonly IUserBasketPackageRepository _userBasketPackageRepository;
@@ -31,11 +35,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Com
                 _tokenHelper = tokenHelper;
             }
 
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
+
             [SecuredOperation(Priority = 1)]
             [ValidationAspect(typeof(CreateUserBasketPackageValidator), Priority = 2)]
             public async Task<IResult> Handle(CreateUserBasketPackageCommand request, CancellationToken cancellationToken)
             {
-                
+
                 var currentUserId = _tokenHelper.GetUserIdByCurrentToken();
                 var entity = _userBasketPackageRepository.All().FirstOrDefault(q => q.UserId == currentUserId && q.PackageId == request.PackageId);
 
@@ -57,7 +64,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Com
 
                 await _userBasketPackageRepository.SaveChangesAsync();
 
-                return new SuccessDataResult<UserBasketPackage>(entity, Messages.SuccessfulOperation);
+                return new SuccessDataResult<UserBasketPackage>(entity, SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }

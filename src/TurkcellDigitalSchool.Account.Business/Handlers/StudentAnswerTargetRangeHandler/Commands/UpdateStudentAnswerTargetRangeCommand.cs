@@ -4,7 +4,10 @@ using MediatR;
 using TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRangeHandler.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRangeHandler.Commands
@@ -15,6 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRan
         public decimal TargetRangeMin { get; set; }
         public decimal TargetRangeMax { get; set; }
 
+        [MessageClassAttr("Öğrenci Net Hedef Aralığı Güncelleme")]
         public class UpdateStudentAnswerTargetRangeCommandHandler : IRequestHandler<UpdateStudentAnswerTargetRangeCommand, IResult>
         {
             IStudentAnswerTargetRangeRepository _studentAnswerTargetRangeRepository;
@@ -27,6 +31,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRan
                 _studentAnswerTargetRangeRepository = studentAnswerTargetRangeRepository;
             }
 
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RecordIsNotFound = Messages.RecordIsNotFound;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
+
             [ValidationAspect(typeof(UpdateStudentAnswerTargetRangeValidator), Priority = 2)]
             public async Task<IResult> Handle(UpdateStudentAnswerTargetRangeCommand request, CancellationToken cancellationToken)
             {
@@ -34,7 +43,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRan
 
                 if (getStudentAnswerTargetRange == null)
                 {
-                    return new ErrorResult("Kayıt bulunamadı");
+                    return new ErrorResult(RecordIsNotFound.PrepareRedisMessage());
                 }
 
                 getStudentAnswerTargetRange.TargetRangeMin = request.TargetRangeMin;
@@ -42,8 +51,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRan
 
                 await _studentAnswerTargetRangeRepository.UpdateAndSaveAsync(getStudentAnswerTargetRange);
 
-                return new SuccessResult(Messages.SuccessfulOperation);
-
+                return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }
