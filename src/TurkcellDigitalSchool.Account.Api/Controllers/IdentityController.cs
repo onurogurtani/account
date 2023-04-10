@@ -324,6 +324,29 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         }
 
         /// <summary>
+        /// Generate New Verification Code
+        /// </summary>
+        /// <param name="user Id"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("generatenewverificationcode")]
+        public async Task<IActionResult> GenereteNewVerificationCode([FromBody] GenerateNewVerificationCodeCommand command)
+        {
+            var result = await Mediator.Send(command);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        /// <summary>
         /// Otp Register
         /// </summary>
         /// <param name="query"></param>
