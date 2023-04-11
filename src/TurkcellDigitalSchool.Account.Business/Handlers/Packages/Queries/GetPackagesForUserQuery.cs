@@ -48,7 +48,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
                     .Include(x => x.ImageOfPackages).ThenInclude(q => q.File)
                     .AsQueryable();
 
-                var pagedList = query.GetPagedList(request.Pagination);
+                var pagedList = query.ToPagedList(request.Pagination);
 
                 var mappedItems = _mapper.Map<List<GetPackagesForUserResponseDto>>(pagedList.Items);
 
