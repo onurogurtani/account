@@ -5,7 +5,10 @@ using TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.ValidationRu
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Commands
@@ -17,6 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Commands
     {
         public long Id { get; set; }
 
+        [MessageClassAttr("Hedef Ekraný Silme")]
         public class DeleteTargetScreenCommandHandler : IRequestHandler<DeleteTargetScreenCommand, IResult>
         {
             private readonly ITargetScreenRepository _targetScreenRepository;
@@ -26,17 +30,22 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Commands
                 _targetScreenRepository = targetScreenRepository;
             }
 
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
+
             [SecuredOperation(Priority = 1)]
             [ValidationAspect(typeof(DeleteTargetScreenValidator), Priority = 2)]
             public async Task<IResult> Handle(DeleteTargetScreenCommand request, CancellationToken cancellationToken)
             {
                 var getTargetScreen = await _targetScreenRepository.GetAsync(x => x.Id == request.Id);
                 if (getTargetScreen == null)
-                    return new ErrorResult(Messages.RecordDoesNotExist);
+                    return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
 
                 _targetScreenRepository.Delete(getTargetScreen);
                 await _targetScreenRepository.SaveChangesAsync();
-                return new SuccessResult(Messages.SuccessfulOperation);
+                return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }

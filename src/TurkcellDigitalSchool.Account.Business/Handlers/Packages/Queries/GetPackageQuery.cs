@@ -6,8 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Concrete;
 
@@ -20,6 +23,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     {
         public long Id { get; set; }
 
+        [MessageClassAttr("Paket Görüntüleme")]
         public class GetPackageQueryHandler : IRequestHandler<GetPackageQuery, IDataResult<Package>>
         {
             private readonly IPackageRepository _packageRepository;
@@ -29,6 +33,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
             {
                 _packageRepository = packageRepository;
             }
+
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RecordIsNotFound = Messages.RecordIsNotFound;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [LogAspect(typeof(FileLogger))]
             [SecuredOperation(Priority = 1)]
@@ -50,17 +59,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
                     .Include(x => x.PackageTestExams)
                     .AsQueryable();
 
-
                 var record = await query.FirstOrDefaultAsync(x => x.Id == request.Id);
 
                 if (record == null)
-                    return new ErrorDataResult<Package>(null, Messages.RecordIsNotFound);
+                    return new ErrorDataResult<Package>(null, RecordIsNotFound.PrepareRedisMessage());
 
-
-                return new SuccessDataResult<Package>(record, Messages.Deleted);
-
+                return new SuccessDataResult<Package>(record, SuccessfulOperation.PrepareRedisMessage());
             }
         }
-
     }
 }

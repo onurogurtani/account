@@ -5,7 +5,10 @@ using MediatR;
 using TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRangeHandler.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Concrete.Student;
 using TurkcellDigitalSchool.Entities.Enums;
@@ -19,6 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRan
         public decimal TargetRangeMin { get; set; }
         public decimal TargetRangeMax { get; set; }
 
+        [MessageClassAttr("Öğrenci Net Hedef Aralığı Ekleme")]
         public class CreateStudentAnswerTargetCommandHandler : IRequestHandler<CreateStudentAnswerTargetRangeCommand, IResult>
         {
             IStudentAnswerTargetRangeRepository _studentAnswerTargetRangeRepository;
@@ -34,19 +38,26 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRan
                 _packageRepository = packageRepository;
             }
 
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string PackageIsNotFound = Constants.Messages.PackageIsNotFound;
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string TargetRangeIsAlreadyExist = Constants.Messages.TargetRangeIsAlreadyExist;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
+
             [ValidationAspect(typeof(CreateStudentAnswerTargetRangeValidator), Priority = 2)]
             public async Task<IResult> Handle(CreateStudentAnswerTargetRangeCommand request, CancellationToken cancellationToken)
             {
                 var isExistPackage = _packageRepository.Query().Any(x => x.Id == request.PackageId && x.IsDeleted == IsDeletedEnum.NotDeleted);
                 if (!isExistPackage)
                 {
-                    return new ErrorResult("Paket bulunamadı");
+                    return new ErrorResult(PackageIsNotFound.PrepareRedisMessage());
                 }
 
                 var existRecord = _studentAnswerTargetRangeRepository.Query().Any(x => x.UserId == request.UserId && x.PackageId == request.PackageId && x.IsDeleted == IsDeletedEnum.NotDeleted);
                 if (existRecord)
                 {
-                    return new ErrorResult("Bu paketin, net hedef aralığı daha önce eklenmiştir.");
+                    return new ErrorResult(TargetRangeIsAlreadyExist.PrepareRedisMessage());
                 }
 
                 var newRecord = new StudentAnswerTargetRange
@@ -59,7 +70,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRan
 
                 await _studentAnswerTargetRangeRepository.CreateAndSaveAsync(newRecord);
 
-                return new SuccessResult(Messages.SuccessfulOperation);
+                return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }

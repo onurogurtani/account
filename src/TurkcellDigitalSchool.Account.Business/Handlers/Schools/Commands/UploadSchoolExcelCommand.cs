@@ -4,12 +4,16 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Excel;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Concrete;
@@ -17,11 +21,12 @@ using TurkcellDigitalSchool.Entities.Dtos;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
 {
-  
+
     public class UploadSchoolExcelCommand : IRequest<IDataResult<List<School>>>
     {
-        public Microsoft.AspNetCore.Http.IFormFile FormFile { get; set; }
+        public IFormFile FormFile { get; set; }
 
+        [MessageClassAttr("Okul Excel Yükleme")]
         public class UploadSchoolExcelCommandHandler : IRequestHandler<UploadSchoolExcelCommand, IDataResult<List<School>>>
         {
             private readonly IExcelService _excelService;
@@ -36,6 +41,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
                 _institutionRepository = institutionRepository;
                 _institutionTypeRepository = institutionTypeRepository;
             }
+
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string TryAgain = Messages.TryAgain;
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string ExcelRecordIsNotFound = Messages.ExcelRecordIsNotFound;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string Added = Messages.Added;
 
             /// <summary>
             /// Upload School Sample Excel Document
@@ -54,12 +66,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
                 var schoolExcelDtos = _excelService.ImportExcel<SchoolExcelDto>(request.FormFile, startRow);
                 if (!schoolExcelDtos.Success)
                 {
-                    return new ErrorDataResult<List<School>>(Messages.TryAgain);
+                    return new ErrorDataResult<List<School>>(TryAgain.PrepareRedisMessage());
                 }
 
                 if (!schoolExcelDtos.Data.Any())
                 {
-                    return new SuccessDataResult<List<School>>(Messages.ExcelRecordIsNotFound);
+                    return new SuccessDataResult<List<School>>(ExcelRecordIsNotFound.PrepareRedisMessage());
                 }
 
                 try
@@ -70,17 +82,17 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
                         CountyId = _institutionRepository.Get(w => w.Name == x.KURUMLAR).Code == _institutionRepository.Get(w => w.Code == "OpenEducationInstitutions").Code && string.IsNullOrEmpty(x.ILCE_ADI) ? 0 : long.Parse(x.ILCE_ADI.Split("-")[0]),
                         InstitutionId = _institutionRepository.GetAsync(w => w.Name == x.KURUMLAR).Result.Id,
                         InstitutionTypeId = _institutionTypeRepository.GetAsync(w => w.Name == x.KURUM_TURU).Result.Id,
-                        Name = x.KURUM_ADI != "" ? x.KURUM_ADI : throw new ArgumentException(Messages.TryAgain)
+                        Name = x.KURUM_ADI != "" ? x.KURUM_ADI : throw new ArgumentException(TryAgain.PrepareRedisMessage())
                     }).ToList();
                 }
                 catch (Exception)
                 {
-                    return new ErrorDataResult<List<School>>(Messages.TryAgain);
+                    return new ErrorDataResult<List<School>>(TryAgain.PrepareRedisMessage());
                 }
 
                 await _schoolRepository.AddRangeAsync(schoolList);
                 await _schoolRepository.SaveChangesAsync();
-                return new SuccessDataResult<List<School>>(Messages.Added);
+                return new SuccessDataResult<List<School>>(Added.PrepareRedisMessage());
             }
         }
     }

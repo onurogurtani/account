@@ -5,9 +5,12 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Organisations.ValidationRu
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Enums;
 
@@ -19,6 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
         public OrganisationStatusInfo OrganisationStatusInfo { get; set; }
         public string ReasonForStatus { get; set; }
 
+        [MessageClassAttr("Kurum Durum Güncelleme")]
         public class UpdateOrganisationStatusCommandHandler : IRequestHandler<UpdateOrganisationStatusCommand, IResult>
         {
             private readonly IOrganisationRepository _organisationRepository;
@@ -27,6 +31,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
             {
                 _organisationRepository = organisationRepository;
             }
+
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [SecuredOperation(Priority = 1)]
             [ValidationAspect(typeof(UpdateOrganisationStatusValidator), Priority = 2)]
@@ -40,7 +47,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                 _organisationRepository.Update(organisation);
                 await _organisationRepository.SaveChangesAsync();
 
-                return new SuccessResult(Messages.SuccessfulOperation);
+                return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }

@@ -4,7 +4,10 @@ using MediatR;
 using TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRangeHandler.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRangeHandler.Commands
@@ -12,6 +15,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRan
     public class DeleteStudentAnswerTargetRangeCommand : IRequest<IResult>
     {
         public long Id { get; set; }
+
+        [MessageClassAttr("Öğrenci Net Hedef Aralığı Silme")]
         public class DeleteStudentAnswerTargetRangeCommandHandler : IRequestHandler<DeleteStudentAnswerTargetRangeCommand, IResult>
         {
             IStudentAnswerTargetRangeRepository _studentAnswerTargetRangeRepository;
@@ -24,6 +29,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRan
                 _studentAnswerTargetRangeRepository = studentAnswerTargetRangeRepository;
             }
 
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RecordIsNotFound = Messages.RecordIsNotFound;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [ValidationAspect(typeof(DeleteStudentAnswerTargetRangeValidator), Priority = 2)]
             public async Task<IResult> Handle(DeleteStudentAnswerTargetRangeCommand request, CancellationToken cancellationToken)
@@ -32,13 +41,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRan
 
                 if (getStudentAnswerTargetRange == null)
                 {
-                    return new ErrorResult("Kayıt bulunamadı");
+                    return new ErrorResult(RecordIsNotFound.PrepareRedisMessage());
                 }
 
                 _studentAnswerTargetRangeRepository.HardDeleteAndSave(getStudentAnswerTargetRange);
 
-                return new SuccessResult(Messages.SuccessfulOperation);
-
+                return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }

@@ -18,6 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ServiceMessages.Comman
         {
             private readonly ICustomMessgeHelperService _customMessgeHelperService;
             private readonly IMediator _mediator;
+
             public CreateAppMessageCommandHandler(ICustomMessgeHelperService customMessgeHelperService, IMediator mediator)
             {
                 _customMessgeHelperService = customMessgeHelperService;
@@ -28,11 +29,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ServiceMessages.Comman
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string UnableToProccess = Messages.UnableToProccess;
+
             public async Task<IResult> Handle(CreateAppMessageCommand request, CancellationToken cancellationToken)
             {
                 var getAllMessage = _customMessgeHelperService.GetAllMessageDeclarations();
                 if (getAllMessage.Count <= 0)
-                    return new ErrorResult(Messages.UnableToProccess.PrepareRedisMessage());
+                    return new ErrorResult(UnableToProccess.PrepareRedisMessage());
 
                 var result = await _mediator.Send(new CreateMessageMapCommand
                 {
@@ -41,9 +43,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ServiceMessages.Comman
                 }, cancellationToken);
 
                 if (result.Success == true)
-                    return new SuccessResult(Messages.SuccessfulOperation.PrepareRedisMessage());
+                    return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
 
-                return new ErrorResult(Messages.UnableToProccess.PrepareRedisMessage());
+                return new ErrorResult(UnableToProccess.PrepareRedisMessage());
             }
         }
     }

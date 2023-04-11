@@ -6,7 +6,10 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Teachers.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Concrete.Core;
 
@@ -20,6 +23,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
         public long UserId { get; set; }
         public long OrganisationId { get; set; }
 
+        [MessageClassAttr("Öğretmen Silme")]
         public class DeleteTeacherCommandHandler : IRequestHandler<DeleteTeacherCommand, IResult>
         {
             private readonly IUserRepository _userRepository;
@@ -31,13 +35,18 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
                 _organisationUserRepository = organisationUserRepository;
             }
 
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
+
             [SecuredOperation(Priority = 1)]
             [ValidationAspect(typeof(DeleteTeacherValidator), Priority = 2)]
             public async Task<IResult> Handle(DeleteTeacherCommand request, CancellationToken cancellationToken)
             {
                 var targetOrganisationUser = _organisationUserRepository.Query().Where(x => x.UserId == request.UserId && x.OrganisationId == request.OrganisationId).FirstOrDefault();
                 if (targetOrganisationUser == null)
-                    return new ErrorResult(Messages.RecordDoesNotExist);
+                    return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
 
                 _organisationUserRepository.Delete(targetOrganisationUser);
                 await _organisationUserRepository.SaveChangesAsync();
@@ -48,7 +57,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
                     var userEntity = await _userRepository.GetAsync(x => x.Id == request.UserId);
                     if (userEntity == null)
                     {
-                        return new ErrorDataResult<User>(Messages.RecordDoesNotExist);
+                        return new ErrorDataResult<User>(RecordDoesNotExist.PrepareRedisMessage());
                     }
 
                     userEntity.Status = false;
@@ -56,7 +65,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
                     await _userRepository.SaveChangesAsync();
                 }
 
-                return new SuccessResult(Messages.SuccessfulOperation);
+                return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }

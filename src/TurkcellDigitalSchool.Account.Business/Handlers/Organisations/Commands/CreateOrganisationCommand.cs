@@ -1,17 +1,16 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Refit;
 using TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Organisations.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
+using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Concrete;
@@ -23,6 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
     {
         public Organisation Organisation { get; set; }
 
+        [MessageClassAttr("Kurum Ekleme")]
         public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisationCommand, IResult>
         {
             private readonly IOrganisationRepository _organisationRepository;
@@ -38,13 +38,18 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                 _mediator = mediator;
             }
 
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string SameNameAlreadyExist = Messages.SameNameAlreadyExist;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
+
             [SecuredOperation(Priority = 1)]
             [ValidationAspect(typeof(CreateOrganisationValidator), Priority = 2)]
             public async Task<IResult> Handle(CreateOrganisationCommand request, CancellationToken cancellationToken)
             {
                 var organisation = await _organisationRepository.Query().AnyAsync(x => x.Name.Trim().ToLower() == request.Organisation.Name.Trim().ToLower() && x.CrmId == request.Organisation.CrmId);
                 if (organisation)
-                    return new ErrorResult(Messages.SameNameAlreadyExist);
+                    return new ErrorResult(SameNameAlreadyExist.PrepareRedisMessage());
 
                 var userType = await _organisationTypeRepository.Query().AnyAsync(x => x.Id == request.Organisation.OrganisationTypeId && x.IsSingularOrganisation);
 
@@ -67,7 +72,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                     }
                 };
 
-
                 var adminCreateResult = await _mediator.Send(user);
                 if (!adminCreateResult.Success)
                 {
@@ -76,7 +80,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                 var record = _organisationRepository.Add(request.Organisation);
                 await _organisationRepository.SaveChangesAsync();
 
-                return new SuccessDataResult<Organisation>(record, Messages.SuccessfulOperation);
+                return new SuccessDataResult<Organisation>(record, SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }

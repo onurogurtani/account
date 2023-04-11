@@ -106,7 +106,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 
                 var items = _mapper.Map<List<User>, List<UserDto>>(query.ToList());
 
-                PagedList<UserDto> pagedDtoList = items.AsQueryable().GetPagedList(new PaginationQuery { PageNumber = request.UserDetailSearch.PageNumber, PageSize = request.UserDetailSearch.PageSize});
+                PagedList<UserDto> pagedDtoList = items.AsQueryable().ToPagedList(new PaginationQuery { PageNumber = request.UserDetailSearch.PageNumber, PageSize = request.UserDetailSearch.PageSize});
                 return new SuccessDataResult<PagedList<UserDto>>(pagedDtoList);
             }
         }

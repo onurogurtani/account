@@ -7,8 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.Entities.Dtos.OrganisationDtos;
@@ -18,7 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
 {
     public class GetOrganisationByUserIdQuery : IRequest<IDataResult<OrganisationUsersDto>>
     {
-
+        [MessageClassAttr("Kullanýcý Kurumlarýný Görüntüleme")]
         public class GetOrganisationByUserIdQueryHandler : IRequestHandler<GetOrganisationByUserIdQuery, IDataResult<OrganisationUsersDto>>
         {
             private readonly IOrganisationUserRepository _organisationUserRepository;
@@ -29,6 +32,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
                 _organisationUserRepository = organisationUserRepository;
                 _tokenHelper = tokenHelper;
             }
+
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RecordIsNotFound = Messages.RecordIsNotFound;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [LogAspect(typeof(FileLogger))]
             [SecuredOperation(Priority = 1)]
@@ -44,8 +52,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
 
                 var data = await query.ToListAsync();
 
-                if (data == null || data.Count() ==0)
-                    return new ErrorDataResult<OrganisationUsersDto>(null, Messages.RecordIsNotFound);
+                if (data == null || data.Count() == 0)
+                    return new ErrorDataResult<OrganisationUsersDto>(null, RecordIsNotFound.PrepareRedisMessage());
 
                 var organisationList = new List<OrganisationUserDto>();
 
@@ -78,7 +86,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
                     UserId = userId,
                 };
 
-                return new SuccessDataResult<OrganisationUsersDto>(organisationUsersDto, Messages.SuccessfulOperation);
+                return new SuccessDataResult<OrganisationUsersDto>(organisationUsersDto, SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }

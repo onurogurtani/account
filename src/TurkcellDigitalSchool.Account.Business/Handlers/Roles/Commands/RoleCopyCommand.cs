@@ -8,9 +8,12 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Roles.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete.Core; 
+using TurkcellDigitalSchool.Entities.Concrete.Core;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
 {
@@ -19,6 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
         public long RoleId { get; set; }
         public string RoleName { get; set; }
 
+        [MessageClassAttr("Rol Kopyalama")]
         public class RoleCopyCommandHandler : IRequestHandler<RoleCopyCommand, IResult>
         {
             private readonly IRoleRepository _roleRepository;
@@ -32,13 +36,20 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
                 _mediator = mediator;
             }
 
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string SameNameAlreadyExist = Messages.SameNameAlreadyExist;
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
+            [MessageConstAttr(MessageCodeType.Success)]
+            private static string RoleAdded = Constants.Messages.RoleAdded;
+
             [SecuredOperation(Priority = 1)]
             [ValidationAspect(typeof(RoleCopyValidator), Priority = 2)]
             public async Task<IResult> Handle(RoleCopyCommand request, CancellationToken cancellationToken)
             {
                 var role = await _roleRepository.Query().AnyAsync(x => x.Name.Trim().ToLower() == request.RoleName.Trim().ToLower());
                 if (role)
-                    return new ErrorResult(Common.Constants.Messages.SameNameAlreadyExist);
+                    return new ErrorResult(SameNameAlreadyExist.PrepareRedisMessage());
 
                 var sourceRoleResponse = await _mediator.Send(new GetRoleQuery
                 {
@@ -47,7 +58,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
                 }, cancellationToken);
 
                 if (sourceRoleResponse == null)
-                    return new ErrorResult(Messages.RecordDoesNotExist);
+                    return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
 
                 var copyRole = _mapper.Map<Role>(sourceRoleResponse.Data);
 
@@ -64,7 +75,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
                 var record = _roleRepository.Add(copyRole);
                 await _roleRepository.SaveChangesAsync();
 
-                return new SuccessResult(string.Format(Account.Business.Constants.Messages.RoleAdded, record.Name));
+                return new SuccessResult(string.Format(RoleAdded.PrepareRedisMessage(), record.Name));
             }
         }
     }

@@ -7,7 +7,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
@@ -27,7 +26,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
                 _organisationRepository = organisationRepository;
             }
 
-            [CacheRemoveAspect("Get")]
             [LogAspect(typeof(FileLogger))]
             [SecuredOperation(Priority = 1)]
             public async Task<IDataResult<List<SelectionItem>>> Handle(GetOrganisationPackageNamesQuery request, CancellationToken cancellationToken)
