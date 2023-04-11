@@ -85,9 +85,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 mobileLogin.Status = UsedStatus.Used;
                 mobileLogin.UsedDate = date;
                 mobileLogin.NewPassGuid = Guid.NewGuid().ToString();
-                mobileLogin.NewPassGuidExp = DateTime.Now.AddHours(OtpConst.NewPassLinkExpHour);
-
+                mobileLogin.NewPassGuidExp = DateTime.Now.AddHours(OtpConst.NewPassLinkExpHour); 
                 _mobileLoginRepository.Update(mobileLogin); 
+
+
 
                 await _mobileLoginRepository.SaveChangesAsync(); 
                 await _userRepository.ResetFailLoginOtpCount(mobileLogin.UserId);
@@ -99,14 +100,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 });
             }
         }
-
-
+         
         public class LoginFailCheckOtpResponse
         {
             public PasswordChangeType PasswordChangeType { get; set; }
             public string Guid { get; set; } 
-        }
-
-
+        } 
     }
 }

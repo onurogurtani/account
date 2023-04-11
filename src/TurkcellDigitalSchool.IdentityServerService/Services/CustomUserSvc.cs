@@ -1,8 +1,8 @@
-﻿using System.Linq.Expressions; 
+﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Extensions;
-using TurkcellDigitalSchool.Core.Utilities.Security.Hashing; 
+using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Entities.Concrete.Core;
 using TurkcellDigitalSchool.IdentityServerService.Services.Contract;
 using TurkcellDigitalSchool.IdentityServerService.Services.Model;
@@ -12,11 +12,13 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
     public class CustomUserSvc : ICustomUserSvc
     {
 
-        private readonly IUserRepository _userRepository; 
+        private readonly IUserRepository _userRepository;
+        private readonly IUserPackageRepository _userPackageRepository;
 
-        public CustomUserSvc(IUserRepository userRepository )
+        public CustomUserSvc(IUserRepository userRepository, IUserPackageRepository userPackageRepository)
         {
-            _userRepository = userRepository; 
+            _userRepository = userRepository;
+            _userPackageRepository = userPackageRepository;
         }
         public async Task<bool> Validate(string userName, string password)
         {
@@ -67,7 +69,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             }
 
             var user = await _userRepository.GetAsync(expression);
-            if (user==null)
+            if (user == null)
             {
                 return null;
             }
@@ -108,6 +110,11 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 ).ToListAsync();
             return user;
         }
- 
+
+        public async Task<bool> UserHasPackage(long id)
+        {
+            var user = await _userPackageRepository.Query().AnyAsync(w => w.UserId == id && w.IsDeleted);
+            return user;
+        }
     }
 }

@@ -55,31 +55,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
 
             return BadRequest(result);
         }
-
-
-
-        /// <summary>
-        /// Captcha kontrolü için kullanılır.
-        /// </summary>
-        /// <param name="loginModel"></param>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [Consumes("application/json")]
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPost("checkCaptcha")]
-        public async Task<IActionResult> CheckCaptcha([FromBody] LoginCheckCaptchaKeyQuery request)
-        {
-            var result = await Mediator.Send(request);
-
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-
-            return BadRequest(result);
-        }
+         
 
         /// <summary>
         /// Otp İçin Gönderilir Ldap
@@ -210,6 +186,37 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
+
+
+
+        /// <summary>
+        /// Yeniden Sms Gönderme
+        /// </summary>
+        /// <param name="loginModel"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("loginFailReSendOtpSms")]
+        public async Task<IActionResult> LoginFailReSendOtpSms([FromBody] LoginFailReSendOtpSmsQuery loginModel)
+        {
+            var result = await Mediator.Send(loginModel);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+
+
+
+
+
         /// <summary>
         /// Login Servisleri Sonrası Dönen Otp İle Token Alınır 
         /// </summary>
@@ -246,6 +253,49 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("loginFailCheckOtp")]
         public async Task<IActionResult> LoginFailCheckOtpQuery([FromBody] LoginFailCheckOtpQuery request)
+        {
+            var result = await Mediator.Send(request);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+
+        /// <summary>
+        /// Otp chek işlemi
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("loginFailOtpNewPassword")]
+        public async Task<IActionResult> LoginFailOtpNewPassword([FromBody] LoginFailOtpNewPasswordCommand request)
+        {
+            var result = await Mediator.Send(request);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        /// <summary>
+        /// Parola değiştirme link ile beraber şifre değiştirmek için kullanılır.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("forgotPasswordSendLinkCheck")]
+        public async Task<IActionResult> LoginFailOtpNewPassword([FromBody] ForgotPasswordSendLinkCheckCommand request)
         {
             var result = await Mediator.Send(request);
             if (result.Success)

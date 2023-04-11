@@ -23,7 +23,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
         private readonly IUserSessionRepository _userSessionRepository;
         private readonly ICaptchaManager _captchaManager;
         private readonly IMobileLoginRepository _mobileLoginRepository;
-        private readonly ISmsOtpRepository _smsOtpRepository; 
+        private readonly ISmsOtpRepository _smsOtpRepository;
         private readonly string _environment;
 
         public ResourceOwnerPasswordValidator(ICustomUserSvc customUserSvc, IHttpContextAccessor httpContextAccessor,
@@ -177,13 +177,14 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             }
 
             var addedSession = _userSessionRepository.AddUserSession(session);
-
+            await _userSessionRepository.SaveChangesAsync();
 
             context.Result = new GrantValidationResult(user.Id.ToString(), OidcConstants.AuthenticationMethods.Password,
                 new List<Claim>
                 {
-                    new Claim("SessionType", session.SessionType.ToString()),
-                    new Claim("SessionId", addedSession.Id.ToString())
+                    new Claim(IdentityServerConst.IDENTITY_RESOURCE_SESSION_TYPE  , session.SessionType.ToString()),
+                    new Claim(IdentityServerConst.IDENTITY_RESOURCE_SESSION_ID , addedSession.Id.ToString()),
+                    new Claim(IdentityServerConst.IDENTITY_RESOURCE_USER_HAS_PACKAGE_ID  , (await _customUserSvc.UserHasPackage(user.Id)).ToString())
                 });
         }
 

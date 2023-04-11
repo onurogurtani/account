@@ -8,6 +8,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services.Contract
         Task<CustomUserDto> FindById(long id);
         Task<CustomUserDto> FindByUserName(string userName);  
         Task<List<OrganisationUsersDto>> GetUserOrganisation(long id);
+        Task<bool> UserHasPackage (long id);
  
     }
 }
