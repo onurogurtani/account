@@ -30,7 +30,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             private readonly ISmsOtpRepository _smsOtpRepository;
             private readonly ILoginFailForgetPassSendLinkRepository _loginFailForgetPassSendLinkRepository;
 
-            public ForgotPasswordSendLinkCommandHandler(IUserRepository userRepository, IMailService mailService, IConfiguration configuration, ISmsOtpRepository smsOtpRepository, ILoginFailForgetPassSendLinkRepository loginFailForgetPassSendLinkRepository)
+            public ForgotPasswordSendLinkCommandHandler(IUserRepository userRepository, IMailService mailService, IConfiguration configuration,
+                ISmsOtpRepository smsOtpRepository, ILoginFailForgetPassSendLinkRepository loginFailForgetPassSendLinkRepository)
             {
                 _userRepository = userRepository;
                 _mailService = mailService;

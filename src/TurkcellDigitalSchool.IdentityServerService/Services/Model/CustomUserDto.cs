@@ -22,5 +22,6 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services.Model
         public UserType UserType { get; set; }
 
         public int? FailLoginCount { get; set; }
+        public int? FailOtpCount { get; set; }
     }
 }

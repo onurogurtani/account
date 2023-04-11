@@ -2,7 +2,8 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
+using MediatR; 
+using Microsoft.IdentityModel.Tokens;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
@@ -13,15 +14,16 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Toolkit;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
+using TurkcellDigitalSchool.Entities.Concrete.Core; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
-    public class LoginFailReSendOtpSmsQuery : IRequest<IDataResult<string>>
+    public class LoginFailReSendOtpSmsQuery : IRequest<IDataResult<LoginFailReSendOtpSmsQuery.LoginFailReSendOtpSmsQueryResponse>>
     {
         public long MobileLoginId { get; set; }
-
-        public class LoginFailReSendOtpSmsQueryHandler : IRequestHandler<LoginFailReSendOtpSmsQuery, IDataResult<string>>
+        public string XId { get; set; }
+         
+        public class LoginFailReSendOtpSmsQueryHandler : IRequestHandler<LoginFailReSendOtpSmsQuery, IDataResult<LoginFailReSendOtpSmsQueryResponse>>
         {
             private readonly IUserRepository _userRepository;
             private readonly IMobileLoginRepository _mobileLoginRepository;
@@ -37,38 +39,58 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 
 
             [LogAspect(typeof(FileLogger))]
-            [ValidationAspect(typeof(ReSendOtpSmsValidator))]
-            public async Task<IDataResult<string>> Handle(LoginFailReSendOtpSmsQuery request, CancellationToken cancellationToken)
+            [ValidationAspect(typeof(LoginFailReSendOtpSmsQueryValidator))]
+            public async Task<IDataResult<LoginFailReSendOtpSmsQueryResponse>> Handle(LoginFailReSendOtpSmsQuery request, CancellationToken cancellationToken)
             {
-                MobileLogin mobileLogin = await _mobileLoginRepository.GetAsync(w => w.Id == request.MobileLoginId);
 
+                MobileLogin mobileLogin = await _mobileLoginRepository.GetAsync(w => w.Id == request.MobileLoginId && w.Status == UsedStatus.Send);
+
+                if (mobileLogin == null)
+                {
+                    return new ErrorDataResult<LoginFailReSendOtpSmsQueryResponse>(Messages.otpKodeIsUsed);
+                }
+
+                try
+                {
+                    var userId = Convert.ToInt64(Base64UrlEncoder.Decode(request.XId));
+                    if (mobileLogin.UserId != userId)
+                    {
+                        return new ErrorDataResult<LoginFailReSendOtpSmsQueryResponse>(Messages.otpNotThisUser);
+                    }
+                }
+                catch (Exception)
+                { 
+                    return new ErrorDataResult<LoginFailReSendOtpSmsQueryResponse>(Messages.XIdIsNotCorrenctFormat);
+                }
+                  
                 var query = _userRepository.Query().Where(u => u.Id == mobileLogin.UserId);
 
                 var user = query.FirstOrDefault();
                 if (user == null)
                 {
-                    return new ErrorDataResult<string>(Messages.UserNotFound);
+                    return new ErrorDataResult<LoginFailReSendOtpSmsQueryResponse>(Messages.UserNotFound);
                 }
 
                 try
                 {
-                    mobileLogin = await ReSendOtpSms(request.MobileLoginId, AuthenticationProviderType.Person, user.MobilePhones.MaskPhoneNumber(), user.Id);
+                    mobileLogin = await ReSendOtpSms(mobileLogin, user);
                 }
                 catch (Exception e)
                 {
-                    return new ErrorDataResult<string>(e.Message);
+                    return new ErrorDataResult<LoginFailReSendOtpSmsQueryResponse>(e.Message);
                 }
 
-                return new SuccessDataResult<string>(mobileLogin.Code.ToString(),Messages.SendMobileCodeSuccessfully); 
-            } 
-            private async Task<MobileLogin> ReSendOtpSms(long mobileLoginId, AuthenticationProviderType providerType, string cellPhone, long userId)
+                return new SuccessDataResult<LoginFailReSendOtpSmsQueryResponse>(
+                    new LoginFailReSendOtpSmsQueryResponse
+                    {
+                        MobileLoginId = request.MobileLoginId,
+                        OtpCode = mobileLogin.Code,
+                        OtpMobilePhone = user.MobilePhones.MaskPhoneNumber()
+                    }, Messages.SendMobileCodeSuccessfully);
+            }
+            private async Task<MobileLogin> ReSendOtpSms(MobileLogin mobileLogin, User user)
             {
-                var mobileLogin = await _mobileLoginRepository.GetAsync(
-                    m => m.Provider == providerType &&
-                    m.UserId == userId &&
-                    m.Status == UsedStatus.Send &&
-                    m.Id == mobileLoginId
-                );
+
 
                 if (mobileLogin != default)
                 {
@@ -87,12 +109,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 
                     if (_environment == ApplicationMode.PROD.ToString())
                     {
-                        await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
+                        await _smsOtpRepository.ExecInsertSpForSms(user.MobilePhones, user.Id, otp.ToString());
                     }
 
                     mobileLogin.LastSendDate = DateTime.Now;
                     mobileLogin.ReSendCount++;
                     mobileLogin.Code = otp;
+                    mobileLogin.CellPhone = user.MobilePhones;
                     _mobileLoginRepository.Update(mobileLogin);
                     await _mobileLoginRepository.SaveChangesAsync();
                 }
@@ -102,6 +125,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 }
                 return mobileLogin;
             }
+        }
+
+        public class LoginFailReSendOtpSmsQueryResponse
+        {
+            public string OtpMobilePhone { get; set; }
+            public long MobileLoginId { get; set; }
+            public int OtpCode { get; set; }
         }
     }
 }

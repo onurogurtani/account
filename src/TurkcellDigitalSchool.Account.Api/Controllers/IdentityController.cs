@@ -189,29 +189,6 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
 
 
 
-        /// <summary>
-        /// Yeniden Sms Gönderme
-        /// </summary>
-        /// <param name="loginModel"></param>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [Consumes("application/json")]
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPost("loginFailReSendOtpSms")]
-        public async Task<IActionResult> LoginFailReSendOtpSms([FromBody] LoginFailReSendOtpSmsQuery loginModel)
-        {
-            var result = await Mediator.Send(loginModel);
-
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-
-            return BadRequest(result);
-        }
-
 
 
 
@@ -229,6 +206,34 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("loginOtp")]
         public async Task<IActionResult> LoginOtp([FromBody] LoginOtpQuery loginModel)
+        {
+            var result = await Mediator.Send(loginModel);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+
+
+
+
+
+        /// <summary>
+        /// Yeniden Sms Gönderme
+        /// </summary>
+        /// <param name="loginModel"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("loginFailReSendOtpSms")]
+        public async Task<IActionResult> LoginFailReSendOtpSms([FromBody] LoginFailReSendOtpSmsQuery loginModel)
         {
             var result = await Mediator.Send(loginModel);
 

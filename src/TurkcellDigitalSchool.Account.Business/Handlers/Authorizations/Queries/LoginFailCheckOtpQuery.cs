@@ -57,8 +57,19 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 }
 
                 DateTime date = DateTime.Now;
-                if (!(mobileLogin.Code == request.Otp && mobileLogin.LastSendDate.AddSeconds(OtpConst.OtpExpSec) > date
-                                                  && mobileLogin.Status == UsedStatus.Send))
+
+                if (mobileLogin.LastSendDate.ToUniversalTime().AddSeconds(OtpConst.OtpExpSec) < date)
+                {
+                    return new ErrorDataResult<LoginFailCheckOtpResponse>(Messages.OtpTimeIsFinished);
+                }
+
+                if (mobileLogin.Status != UsedStatus.Send)
+                {
+                    return new ErrorDataResult<LoginFailCheckOtpResponse>(Messages.otpIsNotReUsed);
+                }
+
+
+                if (mobileLogin.Code != request.Otp)
                 {
                     var errorCount = await _userRepository.IncFailLoginOtpCount(mobileLogin.UserId);
                     if (errorCount >= 10)
@@ -85,7 +96,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 mobileLogin.Status = UsedStatus.Used;
                 mobileLogin.UsedDate = date;
                 mobileLogin.NewPassGuid = Guid.NewGuid().ToString();
-                mobileLogin.NewPassGuidExp = DateTime.Now.AddHours(OtpConst.NewPassLinkExpHour); 
+                mobileLogin.NewPassGuidExp = DateTime.Now.AddHours(OtpConst.NewPassLinkExpHour);
+                mobileLogin.NewPassStatus = UsedStatus.Send;
                 _mobileLoginRepository.Update(mobileLogin); 
 
 

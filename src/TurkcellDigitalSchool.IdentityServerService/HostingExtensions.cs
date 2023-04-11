@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Serilog;
+using System.Configuration;
 using System.Globalization;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
@@ -23,20 +24,27 @@ namespace TurkcellDigitalSchool.IdentityServerService
         {
             builder.Services.AddRazorPages();
             var connectionString = builder.Configuration.GetConnectionString("DArchPostgreContext");
-            builder.Services.AddDbContext<PostgreDbContext>(options =>
-            {
-                options.UseNpgsql(connectionString);
-            });
-            builder.Services.AddScoped<ProjectDbContext, PostgreDbContext>(); 
+   
+
+            builder.Services.AddDbContext<PostgreDbContext>();
+            builder.Services.AddScoped<ProjectDbContext, PostgreDbContext>();
+ 
+
+
             builder.Services.AddScoped<ICustomUserSvc, CustomUserSvc>(); 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserSessionRepository, UserSessionRepository>();
+            builder.Services.AddScoped<ILoginFailCounterRepository, LoginFailCounterRepository>();
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
             builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
-            builder.Services.AddScoped<IRoleClaimRepository, RoleClaimRepository>();
+            builder.Services.AddScoped<IRoleClaimRepository, RoleClaimRepository>(); 
+            builder.Services.AddScoped<IUserPackageRepository,UserPackageRepository>();
+            builder.Services.AddScoped<IMobileLoginRepository, MobileLoginRepository>();
             builder.Services.AddScoped<IOperationClaimRepository, OperationClaimRepository>();
             builder.Services.AddScoped<ITokenHelper, JwtHelper>();
+            builder.Services.AddScoped<ISmsOtpRepository, SmsOtpRepository>();
             builder.Services.AddTransient<ICaptchaManager, CaptchaManager>();
+
 
             builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

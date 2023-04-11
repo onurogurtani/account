@@ -26,7 +26,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             var cliamTypes = new List<string>
             {
                 IdentityServerConst.IDENTITY_RESOURCE_SESSION_TYPE,
-                IdentityServerConst.IDENTITY_RESOURCE_SESSION_ID
+                IdentityServerConst.IDENTITY_RESOURCE_SESSION_ID,
+                IdentityServerConst.IDENTITY_RESOURCE_USER_HAS_PACKAGE_ID
             };
             
             var addedClaimFromLogin =  context.Subject.Identities.Where(w => w.Claims.Any(ww => cliamTypes.Contains(ww.Type))) 

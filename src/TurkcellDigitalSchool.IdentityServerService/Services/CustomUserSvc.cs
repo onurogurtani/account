@@ -91,9 +91,11 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 TcNo = user.CitizenId == 0 ? "" : user.CitizenId + "",
                 UserType = user.UserType,
                 FailLoginCount = user.FailLoginCount,
+                FailOtpCount = user.FailOtpCount,
                 EMailVerify = user.EmailVerify,
                 MobilPhone = user.MobilePhones,
-                MobilPhoneVerify = user.MobilePhonesVerify
+                MobilPhoneVerify = user.MobilePhonesVerify,
+
             };
             return result;
         }
@@ -115,6 +117,11 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
         {
             var user = await _userPackageRepository.Query().AnyAsync(w => w.UserId == id && w.IsDeleted);
             return user;
+        }
+
+        public async Task ResetUserOtpFailount(long userId)
+        {
+           await _userRepository.ResetFailLoginOtpCount(userId);
         }
     }
 }

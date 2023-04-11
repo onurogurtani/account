@@ -1,4 +1,6 @@
 ﻿
+using TurkcellDigitalSchool.Core.Constants.IdentityServer;
+
 namespace TurkcellDigitalSchool.Account.Business.Constants
 {
     /// <summary>
@@ -43,7 +45,7 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string Unknown = "Unknown";
         public static string NewPass = "NewPass";
         public static string InvalidPhoneNumber = "Geçersiz Telefon ";
-        public static string SendMobileCodeSuccessfully = "SMS gönderildi. Gönderilen kodu 120 saniye içinde giriniz.";
+        public static string SendMobileCodeSuccessfully = "SMS gönderildi. Gönderilen kodu "+ OtpConst.OtpExpSec +" saniye içinde giriniz.";
         public static string UnableToProccess = "İşleminizi Gerçekleştiremiyoruz.";
         public static string InvalidCaptchaKey = "Captcha bilgisini yanlış girdiniz, lütfen tekrar deneyiniz.";
         public static string SuccessfulLogOut = "LogOut İşlemi Başarılı";
@@ -96,6 +98,13 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string PasswordNotEqual = "Şifreler eşit değil işleme devam edilemez!";
         public static string PasswordChanged = "Şifreniz değiştirildi.";
         public static string CanNotChangeForRelationOrganisation = "Kurum Tipi, Kurumsal Müşteri Listesindeki kayıtlar ile ilişkilendirilmiştir. Değişiklik yapılamaz.";
+        public static string OtpTimeIsFinished = "Otp doğrulama süresi doldu. Tekrar otp kodu gönderiniz !";
+        public static string otpIsNotReUsed = "Daha önce kullanılan bir otp kodu. İşleme devam edilemez. Tekrar otp kodu gönderiniz !";
+        public static string PasswordChangeLinkTimeout = "Şifre değişitrme linknin süresi dolmuş. İşleme devam edilemez !";
+        public static string PasswordChangeLinkIsUsed = "Şifre değişitrme linki daha önce kullanılmış. İşleme devam edilemez !";
+        public static string otpKodeIsUsed = "Daha önce kullanılan bir otp kodu. İşleme devam edilemez";
+        public static string otpNotThisUser = "Otp kodu kullanıcı ile eşleşmiyor. İşleme devam edilemez !";
+        public static string XIdIsNotCorrenctFormat = "XId Parametresi uygun formatta değildir. İşleme devam edilemez !";
 #pragma warning restore CA2211
 #pragma warning restore S2223
 #pragma warning restore S1104

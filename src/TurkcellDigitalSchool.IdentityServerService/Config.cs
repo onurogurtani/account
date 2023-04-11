@@ -7,7 +7,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
     public static class Config
     {
         public static IEnumerable<ApiResource> ApiResources =>
-            new List<ApiResource>
+        new List<ApiResource>
             {
                 new ApiResource(IdentityServerConst.API_RESOURCE_ACCOUNT)
                 {
@@ -45,23 +45,12 @@ namespace TurkcellDigitalSchool.IdentityServerService
                             .Sha256())
                     }
                 },
-                new ApiResource(IdentityServerConst.API_RESOURCE_EXAM)
-                {
-                    Scopes = { IdentityServerConst.API_RESOURCE_EXAM  },
-                    ApiSecrets = new[]
-                    {
-                        new Secret(("&%****+$$$dijital_dershanem++++!!!____" + IdentityServerConst.API_RESOURCE_EXAM)
-                            .Sha256())
-                    }
-                },
                 new ApiResource(IdentityServerConst.API_RESOURCE_FILE)
                 {
-                    Scopes =
-                        { IdentityServerConst.API_RESOURCE_FILE },
+                    Scopes = { IdentityServerConst.API_RESOURCE_FILE  },
                     ApiSecrets = new[]
                     {
-                        new Secret(
-                            ("&%****+$$$dijital_dershanem++++!!!____" + IdentityServerConst.API_RESOURCE_FILE)
+                        new Secret(("&%****+$$$dijital_dershanem++++!!!____" + IdentityServerConst.API_RESOURCE_FILE)
                             .Sha256())
                     }
                 },
@@ -83,8 +72,8 @@ namespace TurkcellDigitalSchool.IdentityServerService
             new IdentityResources.Profile(),
             new IdentityResources.Email(),
         new(){Name = IdentityServerConst.IDENTITY_RESOURCE_USER_ORGANISATION,DisplayName = IdentityServerConst.IDENTITY_RESOURCE_USER_ORGANISATION, Description = "Kullanıcının yetkili olduğu kurumlar", UserClaims  = new []{ IdentityServerConst.IDENTITY_RESOURCE_USER_ORGANISATION } },
-          new(){Name = IdentityServerConst.IDENTITY_RESOURCE_USER_ALL_TYPES,DisplayName = IdentityServerConst.IDENTITY_RESOURCE_USER_ALL_TYPES, Description = "Kullanıcının Admin ve User Type bilgilerini barındırır ", UserClaims  = new []{ IdentityServerConst.IDENTITY_RESOURCE_USER_ADMIN_TYPE, IdentityServerConst.IDENTITY_RESOURCE_USER_TYPE } },
-          new(){Name = IdentityServerConst.IDENTITY_RESOURCE_USER_SESSININFO,DisplayName = IdentityServerConst.IDENTITY_RESOURCE_USER_SESSININFO, Description = "Kullanıcı session bilgileri", UserClaims  = new []{ IdentityServerConst.IDENTITY_RESOURCE_SESSION_TYPE, IdentityServerConst.IDENTITY_RESOURCE_SESSION_ID } },
+          new(){Name = IdentityServerConst.IDENTITY_RESOURCE_USER_ALL_TYPES,DisplayName = IdentityServerConst.IDENTITY_RESOURCE_USER_ALL_TYPES, Description = "Kullanıcının  User Type bilgilerini barındırır ", UserClaims  = new []{ IdentityServerConst.IDENTITY_RESOURCE_USER_TYPE } },
+          new(){Name = IdentityServerConst.IDENTITY_RESOURCE_USER_SESSININFO,DisplayName = IdentityServerConst.IDENTITY_RESOURCE_USER_SESSININFO, Description = "Kullanıcı session bilgileri", UserClaims  = new []{ IdentityServerConst.IDENTITY_RESOURCE_SESSION_TYPE, IdentityServerConst.IDENTITY_RESOURCE_SESSION_ID, IdentityServerConst.IDENTITY_RESOURCE_USER_HAS_PACKAGE_ID } },
             };
 
         public static IEnumerable<ApiScope> ApiScopes =>

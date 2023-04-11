@@ -40,7 +40,10 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 
             if (loginFailCounter == null)
             {
-                loginFailCounter = new LoginFailCounter();
+                loginFailCounter = new LoginFailCounter
+                {
+                    CsrfToken = csrfToken
+                };
                 Context.LoginFailCounters.Add(loginFailCounter); 
             }
             else

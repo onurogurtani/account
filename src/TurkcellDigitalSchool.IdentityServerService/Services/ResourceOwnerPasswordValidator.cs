@@ -2,6 +2,8 @@
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Validation;
 using IdentityModel;
+using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Asn1.Ocsp;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
 using TurkcellDigitalSchool.Core.Enums;
@@ -28,7 +30,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
         public ResourceOwnerPasswordValidator(ICustomUserSvc customUserSvc, IHttpContextAccessor httpContextAccessor,
             IUserSessionRepository userSessionRepository, IMobileLoginRepository mobileLoginRepository, ISmsOtpRepository smsOtpRepository,
-            ILoginFailCounterRepository loginFailCounterRepository)
+            ILoginFailCounterRepository loginFailCounterRepository, ICaptchaManager captchaManager)
         {
             _customUserSvc = customUserSvc;
             _httpContextAccessor = httpContextAccessor;
@@ -36,6 +38,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             _mobileLoginRepository = mobileLoginRepository;
             _smsOtpRepository = smsOtpRepository;
             _loginFailCounterRepository = loginFailCounterRepository;
+            _captchaManager = captchaManager;
             _environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         }
 
@@ -62,7 +65,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
             var errorCount = await _loginFailCounterRepository.GetCsrfTokenFailLoginCount(csrf_token);
 
-            if (errorCount > 3 && errorCount <= 5)
+            if (errorCount >= 3 && errorCount < 5)
             {
                 var captchaKey = _httpContextAccessor.HttpContext.Request.Headers[CaptchaKeyHeaderText].ToString();
 
@@ -75,7 +78,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
 
 
-                if (_environment != ApplicationMode.PROD.ToString() && captchaKey == "kg")
+                if ( !((_environment == ApplicationMode.DEV.ToString() || _environment == ApplicationMode.DEV.ToString()) && captchaKey == "kg" ) )
                 {
                     if (!_captchaManager.Validate(captchaKey))
                     {
@@ -124,6 +127,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                     customResponse.Add(CapthcaShowRequestText, false);
                     customResponse.Add(OtpCodeSendPhoneRequestText, otpResult.CellPhone.MaskPhoneNumber());
                     customResponse.Add("MobileLoginId", otpResult.Id);
+                    customResponse.Add("XId", Base64UrlEncoder.Encode(otpResult.UserId.ToString()));
                     if (_environment == ApplicationMode.DEV.ToString() ||
                          _environment == ApplicationMode.DEVTURKCELL.ToString())
                     {
@@ -157,6 +161,11 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 await _loginFailCounterRepository.ResetCsrfTokenFailLoginCount(csrf_token);
             }
 
+            if (user.FailOtpCount>0)
+            {
+                await _customUserSvc.ResetUserOtpFailount(user.Id);
+            }
+
             var ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
             var session = new UserSession()
             {
@@ -178,13 +187,13 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
             var addedSession = _userSessionRepository.AddUserSession(session);
             await _userSessionRepository.SaveChangesAsync();
-
+            var hasPackage = (await _customUserSvc.UserHasPackage(user.Id)).ToString();
             context.Result = new GrantValidationResult(user.Id.ToString(), OidcConstants.AuthenticationMethods.Password,
                 new List<Claim>
                 {
                     new Claim(IdentityServerConst.IDENTITY_RESOURCE_SESSION_TYPE  , session.SessionType.ToString()),
                     new Claim(IdentityServerConst.IDENTITY_RESOURCE_SESSION_ID , addedSession.Id.ToString()),
-                    new Claim(IdentityServerConst.IDENTITY_RESOURCE_USER_HAS_PACKAGE_ID  , (await _customUserSvc.UserHasPackage(user.Id)).ToString())
+                    new Claim(IdentityServerConst.IDENTITY_RESOURCE_USER_HAS_PACKAGE_ID  ,hasPackage )
                 });
         }
 
