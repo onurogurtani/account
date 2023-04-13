@@ -18,12 +18,11 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
         private readonly int CsrfTokenExpireHours = 6;
 
         public async Task ResetCsrfTokenFailLoginCount(string csrfToken)
-        {
-            var expTime = DateTime.Now.AddHours(CsrfTokenExpireHours * -1);
+        { 
             var loginFailCounter = await Context.LoginFailCounters.FirstOrDefaultAsync(w =>
-                w.CsrfToken == csrfToken  && w.InsertTime > expTime);
+                w.CsrfToken == csrfToken );
 
-            if (loginFailCounter != null)
+            if (loginFailCounter == null)
             {
                 return;
             }

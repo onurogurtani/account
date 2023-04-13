@@ -19,8 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
     public class LoginFailCheckOtpQuery : IRequest<IDataResult<LoginFailCheckOtpResponse>>
     {
         public long MobileLoginId { get; set; }
-        public int Otp { get; set; }
-        public SendType PassResetLinkSendingType { get; set; }
+        public int Otp { get; set; } 
 
         public class LoginFailCheckOtpQueryHandler : IRequestHandler<LoginFailCheckOtpQuery, IDataResult<LoginFailCheckOtpResponse>>
         {
@@ -76,7 +75,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                     { 
                         var sendPasswordResetLinkResult = await _mediator.Send(new ForgotPasswordSendLinkCommand
                         {
-                            SendingType = request.PassResetLinkSendingType,
+                            SendingType = user.EmailVerify ? SendType.Mail : SendType.MobilPhone,
                             UserId = user.Id
                         }, cancellationToken);
 

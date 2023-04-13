@@ -7,6 +7,7 @@ using System.Configuration;
 using System.Globalization;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
+using TurkcellDigitalSchool.Core.Utilities.Mail;
 using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
@@ -44,6 +45,8 @@ namespace TurkcellDigitalSchool.IdentityServerService
             builder.Services.AddScoped<ITokenHelper, JwtHelper>();
             builder.Services.AddScoped<ISmsOtpRepository, SmsOtpRepository>();
             builder.Services.AddTransient<ICaptchaManager, CaptchaManager>();
+            builder.Services.AddTransient<ILoginFailForgetPassSendLinkRepository, LoginFailForgetPassSendLinkRepository>();
+            builder.Services.AddTransient<IMailService, MailManager>();
 
 
             builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
