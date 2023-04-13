@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Organisations.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
@@ -31,19 +32,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
             private readonly IOrganisationRepository _organisationRepository;
             private readonly IOrganisationTypeRepository _organisationTypeRepository;
             private readonly IMapper _mapper;
-            private readonly IRoleRepository _roleRepository;
+            private readonly IPackageRoleRepository _packageRoleRepository;
             private readonly IUserRepository _userRepository;
             private readonly IMediator _mediator;
 
-            public UpdateOrganisationCommandHandler(IOrganisationRepository organisationRepository, IOrganisationTypeRepository organisationTypeRepository, IMapper mapper, IMediator mediator, IRoleRepository roleRepository, IUserRepository userRepository)
-            {
-                _organisationRepository = organisationRepository;
-                _organisationTypeRepository = organisationTypeRepository;
-                _mediator = mediator;
-                _mapper = mapper;
-                _roleRepository = roleRepository;
-                _userRepository = userRepository;
-            }
 
             [MessageConstAttr(MessageCodeType.Error)]
             private static string SameNameAlreadyExist = Messages.SameNameAlreadyExist;
@@ -51,6 +43,16 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
             [MessageConstAttr(MessageCodeType.Success)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
+
+            public UpdateOrganisationCommandHandler(IOrganisationRepository organisationRepository, IOrganisationTypeRepository organisationTypeRepository, IMapper mapper, IPackageRoleRepository packageRoleRepository, IUserRepository userRepository, IMediator mediator)
+            {
+                _organisationRepository = organisationRepository;
+                _organisationTypeRepository = organisationTypeRepository;
+                _mapper = mapper;
+                _packageRoleRepository = packageRoleRepository;
+                _userRepository = userRepository;
+                _mediator = mediator;
+            }
 
             [SecuredOperation(Priority = 1)]
             [ValidationAspect(typeof(UpdateOrganisationValidator), Priority = 2)]
@@ -65,10 +67,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                 if (entity == null)
                     return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
 
-                var userType = await _organisationTypeRepository.Query().AnyAsync(x => x.Id == request.Organisation.OrganisationTypeId && x.IsSingularOrganisation);
+                var isSingleOrPluralOrganisation = await _organisationTypeRepository.Query().AnyAsync(x => x.Id == request.Organisation.OrganisationTypeId && x.IsSingularOrganisation);
 
-                //TODO paketten gelen roleId kurumAdmininin RoleIds kýsmýna eklenecek. Geçici olarak roleId deðeri 1 olarak yazýldý orasý da  kaldýrýlacak.
-                var roleIds = new List<long> { 1 };
+                var userType = isSingleOrPluralOrganisation ? UserType.OrganisationAdmin : UserType.FranchiseAdmin;
+                var roleId = await _packageRoleRepository.Query().Include(p => p.Role).Where(p => p.PackageId == request.Organisation.PackageId && p.Role.UserType == userType).Select(p => p.RoleId).FirstOrDefaultAsync();
+                var roleIds = new List<long> { roleId };
 
                 var organisationAdminId = await _userRepository.Query().Where(x => x.CitizenId.ToString() == request.Organisation.AdminTc).Select(x => x.Id).FirstOrDefaultAsync();
 
@@ -78,7 +81,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                     {
                         Id = organisationAdminId,
                         UserName = request.Organisation.AdminTc,
-                        UserType = userType ? UserType.OrganisationAdmin : UserType.FranchiseAdmin,
+                        UserType = userType,
                         CitizenId = request.Organisation.AdminTc,
                         Name = request.Organisation.AdminName,
                         SurName = request.Organisation.AdminSurname,

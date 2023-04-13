@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Organisations.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
@@ -27,14 +29,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
         {
             private readonly IOrganisationRepository _organisationRepository;
             private readonly IOrganisationTypeRepository _organisationTypeRepository;
-            private readonly IRoleRepository _roleRepository;
+            private readonly IPackageRoleRepository _packageRoleRepository;
             private readonly IMediator _mediator;
 
-            public CreateOrganisationCommandHandler(IOrganisationRepository organisationRepository, IOrganisationTypeRepository organisationTypeRepository, IMediator mediator, IRoleRepository roleRepository)
+            public CreateOrganisationCommandHandler(IOrganisationRepository organisationRepository, IOrganisationTypeRepository organisationTypeRepository, IPackageRoleRepository packageRoleRepository, IMediator mediator)
             {
                 _organisationRepository = organisationRepository;
                 _organisationTypeRepository = organisationTypeRepository;
-                _roleRepository = roleRepository;
+                _packageRoleRepository = packageRoleRepository;
                 _mediator = mediator;
             }
 
@@ -51,17 +53,18 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                 if (organisation)
                     return new ErrorResult(SameNameAlreadyExist.PrepareRedisMessage());
 
-                var userType = await _organisationTypeRepository.Query().AnyAsync(x => x.Id == request.Organisation.OrganisationTypeId && x.IsSingularOrganisation);
+                var isSingleOrPluralOrganisation = await _organisationTypeRepository.Query().AnyAsync(x => x.Id == request.Organisation.OrganisationTypeId && x.IsSingularOrganisation);
 
-                //TODO paketten gelen roleId kurumAdmininin RoleIds kýsmýna eklenecek. Geçici olarak roleId deðeri 1 olarak yazýldý orasý da  kaldýrýlacak.
-                var roleIds = new List<long> { 1 };
+                var userType = isSingleOrPluralOrganisation ? UserType.OrganisationAdmin : UserType.FranchiseAdmin;
+                var roleId = await _packageRoleRepository.Query().Include(p => p.Role).Where(p => p.PackageId == request.Organisation.PackageId && p.Role.UserType == userType).Select(p => p.RoleId).FirstOrDefaultAsync();
+                var roleIds = new List<long> { roleId };
 
                 var user = new CreateAdminCommand
                 {
                     Admin = new CreateUpdateAdminDto
                     {
                         UserName = request.Organisation.AdminTc,
-                        UserType = userType ? UserType.OrganisationAdmin : UserType.FranchiseAdmin,
+                        UserType = userType,
                         CitizenId = request.Organisation.AdminTc,
                         Name = request.Organisation.AdminName,
                         SurName = request.Organisation.AdminSurname,
