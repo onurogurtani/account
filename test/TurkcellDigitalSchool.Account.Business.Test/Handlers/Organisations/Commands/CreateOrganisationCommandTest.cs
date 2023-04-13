@@ -16,8 +16,8 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
+using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Concrete;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
 using TurkcellDigitalSchool.Entities.Dtos.Admin;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Commands
@@ -27,8 +27,8 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
     public class CreateOrganisationCommandTest
     {
         Mock<IOrganisationRepository> _organisationRepository;
-        Mock<IOrganisationTypeRepository> _organisationTypeRepository; 
-        Mock<IRoleRepository> _roleRepository;
+        Mock<IOrganisationTypeRepository> _organisationTypeRepository;
+        Mock<IPackageRoleRepository> _packageRoleRepository;
 
         private CreateOrganisationCommand _createOrganisationCommand;
         private CreateOrganisationCommand.CreateOrganisationCommandHandler _createOrganisationCommandHandler;
@@ -46,12 +46,12 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
             _organisationRepository = new Mock<IOrganisationRepository>();
             _organisationTypeRepository = new Mock<IOrganisationTypeRepository>();
             _mediator = new Mock<IMediator>();
-            _roleRepository = new Mock<IRoleRepository>();
+            _packageRoleRepository = new Mock<IPackageRoleRepository>();
 
             _createOrganisationCommand = new CreateOrganisationCommand();
-            _createOrganisationCommandHandler = new(_organisationRepository.Object, _organisationTypeRepository.Object, _mediator.Object, _roleRepository.Object);
+            _createOrganisationCommandHandler = new(_organisationRepository.Object, _organisationTypeRepository.Object, _packageRoleRepository.Object, _mediator.Object);
 
-         
+
             _serviceProvider = new Mock<IServiceProvider>();
             _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
             ServiceTool.ServiceProvider = _serviceProvider.Object;
@@ -75,7 +75,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
                     Code = "Test",
                     Name = "Test",
                     InsertTime = DateTime.Now,
-                    RecordStatus = Core.Enums.RecordStatus.Active,
+                    RecordStatus = RecordStatus.Active,
                     PackageName = "Test",
                     VirtualMeetingRoomQuota = 1,
                     VirtualTrainingRoomQuota = 1,
@@ -88,9 +88,9 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
                 new OrganisationType{ Id = 1, Name = "Deneme", IsSingularOrganisation = true }
             };
 
-            var roles = new List<Role>
+            var packageRole = new List<PackageRole>
             {
-                new Role{ Id = 1, Name = "Deneme" }
+                new PackageRole{ Id = 1, PackageId = 123, RoleId = 62 }
             };
 
             var user = new CreateAdminCommand
@@ -119,10 +119,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
             _organisationTypeRepository.Setup(x => x.Query()).Returns(organisationTypes.AsQueryable().BuildMock());
             _organisationTypeRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<OrganisationType, bool>>>())).ReturnsAsync(organisationTypes.First());
 
-            _roleRepository.Setup(x => x.Query()).Returns(roles.AsQueryable().BuildMock());
-            _roleRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<Role, bool>>>())).ReturnsAsync(roles.First());
+            _packageRoleRepository.Setup(x => x.Query()).Returns(packageRole.AsQueryable().BuildMock());
+            _packageRoleRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<PackageRole, bool>>>())).ReturnsAsync(packageRole.First());
 
-            _mediator.Setup(x => x.Send(It.IsAny<CreateAdminCommand>(),CancellationToken.None));
+            _mediator.Setup(x => x.Send(It.IsAny<CreateAdminCommand>(), CancellationToken.None)).ReturnsAsync(new SuccessResult(Messages.SuccessfulOperation));
 
             _organisationRepository.Setup(x => x.Add(It.IsAny<Organisation>())).Returns(new Organisation());
 
