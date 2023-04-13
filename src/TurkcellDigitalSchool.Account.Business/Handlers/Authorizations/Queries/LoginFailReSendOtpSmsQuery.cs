@@ -8,7 +8,7 @@ using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
+using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation; 
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
@@ -115,7 +115,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                     mobileLogin.LastSendDate = DateTime.Now;
                     mobileLogin.ReSendCount++;
                     mobileLogin.Code = otp;
-                    mobileLogin.CellPhone = user.MobilePhones;
+                    mobileLogin.CellPhone = user.MobilePhones; 
+
                     _mobileLoginRepository.Update(mobileLogin);
                     await _mobileLoginRepository.SaveChangesAsync();
                 }

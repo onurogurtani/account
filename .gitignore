@@ -69,6 +69,4 @@ Thumbs.db
 /test/TurkcellDigitalSchool.Account.Business.Test/bin
 /test/TurkcellDigitalSchool.Account.Business.Test/obj
 /src/TurkcellDigitalSchool.Account.Domain/bin/Debug/net6.0
-/src/TurkcellDigitalSchool.Account.Domain/obj/Debug/net6.0
-/src/TurkcellDigitalSchool.Account.Domain/obj/Release/net6.0
 /src/TurkcellDigitalSchool.Account.Domain/obj

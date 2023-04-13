@@ -1,0 +1,18 @@
+﻿using TurkcellDigitalSchool.Core.Entities;
+
+namespace TurkcellDigitalSchool.Account.Entities.Concrete
+{
+    public class Education : EntityDefault
+    {
+        public long UserId { get; set; }
+        public string GraduationStatus { get; set; }
+        public string GraduationYear { get; set; }
+        public string DiplomaGrade { get; set; }
+        public string YKSExperienceInformation { get; set; }
+        public string Institution { get; set; }
+        public string School { get; set; }
+        public string Classroom { get; set; }
+        public string Field { get; set; }
+        public bool IsReligiousCultureCourseMust { get; set; }
+    }
+}

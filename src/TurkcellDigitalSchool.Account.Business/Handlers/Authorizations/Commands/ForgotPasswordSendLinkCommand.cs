@@ -24,9 +24,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 
         public class ForgotPasswordSendLinkCommandHandler : IRequestHandler<ForgotPasswordSendLinkCommand, IResult>
         {
-            private readonly IConfiguration _configuration;
+            
             private readonly IUserRepository _userRepository;
             private readonly IMailService _mailService;
+            private readonly IConfiguration _configuration;
             private readonly ISmsOtpRepository _smsOtpRepository;
             private readonly ILoginFailForgetPassSendLinkRepository _loginFailForgetPassSendLinkRepository;
 
