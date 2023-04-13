@@ -68,9 +68,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 if (existEmail)
                     return new ErrorDataResult<UnverifiedUserDto>(Messages.EmailAlreadyExist);
 
-                var existPhone = await _userRepository.Query().AnyAsync(x => x.MobilePhones == request.MobilePhones);
-                if (existPhone)
-                    return new ErrorDataResult<UnverifiedUserDto>(Messages.MobilePhoneAlreadyExist);
+
+                if (!string.IsNullOrEmpty(request.MobilePhones))
+                {
+                    var existPhone = await _userRepository.Query().AnyAsync(x => x.MobilePhones == request.MobilePhones);
+                    if (existPhone)
+                        return new ErrorDataResult<UnverifiedUserDto>(Messages.MobilePhoneAlreadyExist); 
+                }
 
                 var unverifiedExistEmail = await _unverifiedUserRepository.Query().AnyAsync(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
                 if (existEmail)
