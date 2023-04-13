@@ -1,7 +1,7 @@
-﻿using TurkcellDigitalSchool.Core.Entities;
-using TurkcellDigitalSchool.Entities.Concrete;
+﻿using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
+using TurkcellDigitalSchool.Core.Entities;
 
-namespace TurkcellDigitalSchool.Account.Entities.Concrete
+namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
     public class ImageOfPackage : EntityDefault
     {

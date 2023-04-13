@@ -10,6 +10,7 @@ using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Concrete;
@@ -93,14 +94,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                         Content = content
                     });
 
-                    messsgePach = "E-Posta adresine";
+                    messsgePach = user.Email.MaskEMail() +  "e-posta adresine";
                 }
                 else if (request.SendingType == SendType.MobilPhone)
                 {
                     await _smsOtpRepository.ExecInsertSpForSms(user.MobilePhones, user.Id, guid);
-                    messsgePach = "Sms olarak";
-                }
 
+                    messsgePach = user.MobilePhones.MaskPhoneNumber() + "mobil hattına";
+                } 
                 return new SuccessResult(string.Format(Messages.PasswordChangeLinkSended, messsgePach));
             }
         }

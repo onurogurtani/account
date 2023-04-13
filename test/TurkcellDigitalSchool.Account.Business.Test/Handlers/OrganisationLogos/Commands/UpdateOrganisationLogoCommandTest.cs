@@ -48,7 +48,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationLogos
             _formFile = new Mock<IFormFile>();
 
             _updateOrganisationLogoCommand = new UpdateOrganisationLogoCommand();
-            _updateOrganisationLogoCommandHandler = new(_fileRepository.Object, _fileService.Object, _pathHelper.Object);
+            _updateOrganisationLogoCommandHandler = new( _fileService.Object, _pathHelper.Object);
 
             _mediator = new Mock<IMediator>();
             _serviceProvider = new Mock<IServiceProvider>();

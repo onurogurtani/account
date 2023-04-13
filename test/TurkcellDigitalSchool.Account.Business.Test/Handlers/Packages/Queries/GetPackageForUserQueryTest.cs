@@ -18,6 +18,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Concrete;
 using TurkcellDigitalSchool.Entities.Dtos;
 using TurkcellDigitalSchool.Entities.Dtos.PackageDtos;
+using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
 using static TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries.GetPackageForUserQuery;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
@@ -30,6 +31,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
         private Mock<IPackageRepository> _packageRepository;
         private Mock<IFileService> _fileService;
+        private Mock<IFileServices> _fileIntegrationService;
 
         Mock<IMapper> _mapper;
 
@@ -42,7 +44,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
         [SetUp]
         public void Setup()
         {
-            _mediator = new Mock<IMediator>();
+            _mediator = new Mock<IMediator>(); 
             _serviceProvider = new Mock<IServiceProvider>();
             _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
             ServiceTool.ServiceProvider = _serviceProvider.Object;
@@ -56,11 +58,13 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             _packageRepository = new Mock<IPackageRepository>();
             _fileService = new Mock<IFileService>();
+            _fileIntegrationService = new Mock<IFileServices>();
 
             _mapper = new Mock<IMapper>();
 
+         //   IPackageRepository packageRepository, IMapper mapper, IFileService fileService, IFileServices fileServiceIntegration
             _getPackageForUserQuery = new GetPackageForUserQuery();
-            _getPackageForUserQueryHandler = new GetPackageForUserQueryHandler(_packageRepository.Object, _mapper.Object, _fileService.Object);
+            _getPackageForUserQueryHandler = new GetPackageForUserQueryHandler(_packageRepository.Object ,_mapper.Object, _fileService.Object, _fileIntegrationService.Object);
         }
 
         [Test]

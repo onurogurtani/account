@@ -38,7 +38,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Queries
                 var query = _fileRepository.Query().Where(x => x.FileType == FileType.Avatar);
 
                 var files = await _fileRepository.GetPagedListAsync(query, request.PaginationQuery);
-                var dtoList = _mapper.Map<List<Entities.Concrete.File>, List<AvatarFilesDto>>(files.Items);
+                var dtoList = _mapper.Map<List<TurkcellDigitalSchool.Entities.Concrete.File>, List<AvatarFilesDto>>(files.Items);
 
                 foreach (var item in dtoList)
                 {

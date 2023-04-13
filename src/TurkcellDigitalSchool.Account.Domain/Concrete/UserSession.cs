@@ -3,7 +3,7 @@ using System;
 using TurkcellDigitalSchool.Core.Entities;
 using TurkcellDigitalSchool.Core.Enums;
 
-namespace TurkcellDigitalSchool.Account.Entities.Concrete
+namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
     public class UserSession : EntityDefault
     {

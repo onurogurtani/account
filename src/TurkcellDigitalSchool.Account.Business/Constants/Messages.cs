@@ -93,7 +93,7 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string PhoneNotVerify = "Telefon numarası doğrulaması yapılmamış !";
         public static string MailIsNotVerify = "E-Posta Doğrulaması yapılmamış işleme devam edilemez !";
         public static string NotFountValidUser = "Geçerli bir kullanıcı sistemde bulunamadı !";
-        public static string PasswordChangeLinkSended = "Şifre yenileme linki {0} gönderilmiştir";
+        public static string PasswordChangeLinkSended = "Lütfen {0} gönderdiğimiz linke tıklayarak Şifreni sıfırla";
         public static string PasswordChangeTimeExpired = "Şifre yenileme süresi dolmuştur. İşleme devam edilemez !";
         public static string PasswordNotEqual = "Şifreler eşit değil işleme devam edilemez!";
         public static string PasswordChanged = "Şifreniz değiştirildi.";
@@ -101,7 +101,8 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string OtpTimeIsFinished = "Otp doğrulama süresi doldu. Tekrar otp kodu gönderiniz !";
         public static string otpIsNotReUsed = "Daha önce kullanılan bir otp kodu. İşleme devam edilemez. Tekrar otp kodu gönderiniz !";
         public static string PasswordChangeLinkTimeout = "Şifre değişitrme linknin süresi dolmuş. İşleme devam edilemez !";
-        public static string PasswordChangeLinkIsUsed = "Şifre değişitrme linki daha önce kullanılmış. İşleme devam edilemez !";
+        public static string PasswordChangeLinkIsUsed = "Şifre değişitrme linki daha önce kullanılmış. İşleme devam edilemez !"; 
+        public static string PasswordChange  = "Şifre değişitrme linki daha önce kullanılmış. İşleme devam edilemez !";
         public static string otpKodeIsUsed = "Daha önce kullanılan bir otp kodu. İşleme devam edilemez";
         public static string otpNotThisUser = "Otp kodu kullanıcı ile eşleşmiyor. İşleme devam edilemez !";
         public static string XIdIsNotCorrenctFormat = "XId Parametresi uygun formatta değildir. İşleme devam edilemez !";

@@ -68,6 +68,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 user.PasswordHash = passwordHash;
                 user.PasswordSalt = passwordSalt;
                 user.FailOtpCount = 0; 
+                user.LastPasswordDate = DateTime.Now;
                 await _userRepository.UpdateAndSaveAsync(user);
 
                 mobileLogin.NewPassStatus = UsedStatus.Used; 

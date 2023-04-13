@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TurkcellDigitalSchool.Core.Entities;
 using TurkcellDigitalSchool.Core.Enums;
 
-namespace TurkcellDigitalSchool.Account.Entities.Concrete
+namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
     /// <summary>
     /// İmzalatılacak Evrak-Dökümanlar

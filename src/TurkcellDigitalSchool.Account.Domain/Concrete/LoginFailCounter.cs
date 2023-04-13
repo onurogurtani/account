@@ -1,7 +1,7 @@
 ﻿using System;
 using TurkcellDigitalSchool.Core.Entities;
 
-namespace TurkcellDigitalSchool.Account.Entities.Concrete
+namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
     public class LoginFailCounter: IEntity 
     {

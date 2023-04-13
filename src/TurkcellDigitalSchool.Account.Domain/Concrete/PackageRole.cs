@@ -1,7 +1,6 @@
-﻿using TurkcellDigitalSchool.Core.Entities;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
+﻿using TurkcellDigitalSchool.Core.Entities; 
 
-namespace TurkcellDigitalSchool.Account.Entities.Concrete
+namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
     public class PackageRole : EntityDefault
     {

@@ -217,9 +217,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
-
-
-
+         
 
 
         /// <summary>
@@ -289,6 +287,58 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
+
+
+        
+
+
+        /// <summary>
+        /// Parolamı unuttum işlemleri için kullanılır.
+        /// 400  ise gelen datadaki bilgilere göre captcha gösterilir.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("forgotPasswordWithCheckFailCount")]
+        public async Task<IActionResult> ForgotPasswordWithCheckFailCount([FromBody] ForgotPasswordWithCheckFailCountCommand request)
+        {
+            var result = await Mediator.Send(request);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+
+        /// <summary>
+        /// Parola değiştirme link in kontrol işlerinin yapılması için kullanılır. 200 ise parola değiştirme adımı işletilir.
+        /// 400 ise şifremi unuttum adımı işletilir.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("ForgotPasswordSendLinkCheck")]
+        public async Task<IActionResult> ForgotPasswordSendLinkCheck([FromBody] ForgotPasswordSendLinkCheckCommand request)
+        {
+            var result = await Mediator.Send(request);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+
+
         /// <summary>
         /// Parola değiştirme link ile beraber şifre değiştirmek için kullanılır.
         /// </summary>
@@ -299,8 +349,8 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPost("forgotPasswordSendLinkCheck")]
-        public async Task<IActionResult> LoginFailOtpNewPassword([FromBody] ForgotPasswordSendLinkCheckCommand request)
+        [HttpPost("forgotPasswordSendLinkChangePassword")]
+        public async Task<IActionResult> ForgotPasswordSendLinkChangePassword([FromBody] ForgotPasswordSendLinkChangePasswordCommand request)
         {
             var result = await Mediator.Send(request);
             if (result.Success)

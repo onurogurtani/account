@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
+using TurkcellDigitalSchool.Entities.Enums;
 
-namespace TurkcellDigitalSchool.Account.Entities.Concrete
+namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
     public class User : UserDto
     {
@@ -25,15 +25,6 @@ namespace TurkcellDigitalSchool.Account.Entities.Concrete
         public int? FailOtpCount { get; set; }
         public virtual ICollection<UserRole> UserRoles { get; set; }
 
-        public virtual ICollection<TurkcellDigitalSchool.Entities.Concrete.OrganisationUser> OrganisationUsers { get; set; }
-    }
-
-    public enum UserAddingType
-    {
-        Default = 0,
-
-        TurkcellFastLogin = 1,
-
-        Ldap = 2
-    }
+        public virtual ICollection<OrganisationUser> OrganisationUsers { get; set; }
+    } 
 }

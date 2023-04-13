@@ -23,6 +23,10 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
         public async Task<bool> Validate(string userName, string password)
         {
             var user = await FindByUserName(userName);
+            if (user == null)
+            {
+                return false; 
+            }
             var result = HashingHelper.VerifyPasswordHash(password, user.PassSalt, user.PassHash);
             return result;
         }
@@ -95,7 +99,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 EMailVerify = user.EmailVerify,
                 MobilPhone = user.MobilePhones,
                 MobilPhoneVerify = user.MobilePhonesVerify,
-
+                LastPasswordDate = user.LastPasswordDate
             };
             return result;
         }
@@ -121,7 +125,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
         public async Task ResetUserOtpFailount(long userId)
         {
-           await _userRepository.ResetFailLoginOtpCount(userId);
+            await _userRepository.ResetFailLoginOtpCount(userId);
         }
     }
 }

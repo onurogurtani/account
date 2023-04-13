@@ -1,13 +1,12 @@
-﻿using TurkcellDigitalSchool.Core.Entities;
-using TurkcellDigitalSchool.Entities.Concrete;
+﻿using TurkcellDigitalSchool.Core.Entities; 
 
-namespace TurkcellDigitalSchool.Account.Entities.Concrete
+namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
     public class PackageTypeTargetScreen : EntityDefault
     {
         public long TargetScreenId { get; set; }
         public TargetScreen TargetScreen { get; set; }
         public long PackageTypeId { get; set; }
-        public TurkcellDigitalSchool.Entities.Concrete.PackageType PackageType { get; set; } 
+        public  PackageType PackageType { get; set; } 
     }
 }

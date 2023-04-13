@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,8 +12,7 @@ using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.File.Model;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Enums;
-using TurkcellDigitalSchool.File.DataAccess.Abstract;
+using TurkcellDigitalSchool.Entities.Enums; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationLogos.Commands
 {
@@ -25,14 +25,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationLogos.Comm
 
         public class UpdateOrganisationLogoCommandHandler : IRequestHandler<UpdateOrganisationLogoCommand, Core.Utilities.Results.IResult>
         {
-            private readonly IFileRepository _fileRepository;
+         //   private readonly IFileRepository _fileRepository;
             private readonly IFileService _fileService;
             private readonly IPathHelper _pathHelper;
 
             private readonly string _filePath = "OrganisationLogo";
-            public UpdateOrganisationLogoCommandHandler(IFileRepository fileRepository, IFileService fileService, IPathHelper pathHelper)
+            public UpdateOrganisationLogoCommandHandler( IFileService fileService, IPathHelper pathHelper)
             {
-                _fileRepository = fileRepository;
+              // _fileRepository = fileRepository;
                 _fileService = fileService;
                 _pathHelper = pathHelper;
             }
@@ -51,29 +51,38 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationLogos.Comm
                 {
                     return new ErrorResult(Messages.FileSizeError);
                 }
-                var fileRecord = await _fileRepository.GetAsync(w => w.Id == request.Id);
 
-                if (fileRecord == null)
-                {
-                    return new ErrorResult(Messages.RecordIsNotFound);
-                }
 
-                var path = _pathHelper.GetPath(_filePath);
-                var fileSaveResult = await _fileService.SaveFile(new SaveFileRequest
-                {
-                    File = request.Image,
-                    Path = path,
-                    FileName = fileRecord.FileName
-                });
 
-                fileRecord.FilePath = fileSaveResult.Data;
-                fileRecord.FileName = request.FileName;
-                fileRecord.FileType = FileType.OrganisationLogo;
-                fileRecord.ContentType = request.Image.ContentType;
+                //todo:#MS_DUZENLEMESI   
+                // Bu entity için düzenleme burada yapýlamaz Servis entegrasyonu kullanýlmalý      IFileServices    yada bu iþlem Direk File MS de yapýlmalý
+                throw new Exception("Yazýlýmsal düzenleme yapýlmasý");
 
-                await _fileRepository.SaveChangesAsync();
+                //var fileRecord = await _fileRepository.GetAsync(w => w.Id == request.Id);
 
-                return new SuccessResult(Messages.Updated);
+                //if (fileRecord == null)
+                //{
+                //    return new ErrorResult(Messages.RecordIsNotFound);
+                //}
+
+                //var path = _pathHelper.GetPath(_filePath);
+
+
+                //var fileSaveResult = await _fileService.SaveFile(new SaveFileRequest
+                //{
+                //    File = request.Image,
+                //    Path = path,
+                //    FileName = fileRecord.FileName
+                //});
+
+                //fileRecord.FilePath = fileSaveResult.Data;
+                //fileRecord.FileName = request.FileName;
+                //fileRecord.FileType = FileType.OrganisationLogo;
+                //fileRecord.ContentType = request.Image.ContentType;
+
+                //await _fileRepository.SaveChangesAsync();
+
+                //return new SuccessResult(Messages.Updated);
             }
         }
     }

@@ -14,7 +14,6 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Entities.Concrete;
-using TurkcellDigitalSchool.Exam.DataAccess.Abstract;
 using static TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands.UpdatePackageCommand;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands

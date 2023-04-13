@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using TurkcellDigitalSchool.Core.Entities; 
+using System.ComponentModel.DataAnnotations.Schema; 
+using TurkcellDigitalSchool.Core.Entities;
 
-namespace TurkcellDigitalSchool.Account.Entities.Concrete
+namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
     public class ContractKind : EntityDefinition
     {

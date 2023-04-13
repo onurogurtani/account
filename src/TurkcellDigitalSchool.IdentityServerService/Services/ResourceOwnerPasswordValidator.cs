@@ -5,6 +5,7 @@ using IdentityModel;
 using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Asn1.Ocsp;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
@@ -15,6 +16,7 @@ using TurkcellDigitalSchool.Entities.Concrete;
 using TurkcellDigitalSchool.Entities.Concrete.Core;
 using TurkcellDigitalSchool.IdentityServerService.Constants;
 using TurkcellDigitalSchool.IdentityServerService.Services.Contract;
+using TurkcellDigitalSchool.IdentityServerService.Services.Model;
 using UserSession = TurkcellDigitalSchool.Entities.Concrete.Core.UserSession;
 
 namespace TurkcellDigitalSchool.IdentityServerService.Services
@@ -31,12 +33,13 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
         private readonly IMailService _mailService;
         private readonly IConfiguration _configuration;
         private readonly ILoginFailForgetPassSendLinkRepository _loginFailForgetPassSendLinkRepository;
+        private readonly IAppSettingRepository _appSettingRepository;
         private readonly string _environment;
 
         public ResourceOwnerPasswordValidator(ICustomUserSvc customUserSvc, IHttpContextAccessor httpContextAccessor,
             IUserSessionRepository userSessionRepository, IMobileLoginRepository mobileLoginRepository, ISmsOtpRepository smsOtpRepository,
             ILoginFailCounterRepository loginFailCounterRepository, ICaptchaManager captchaManager, IMailService mailService,
-            IConfiguration configuration, ILoginFailForgetPassSendLinkRepository loginFailForgetPassSendLinkRepository)
+            IConfiguration configuration, ILoginFailForgetPassSendLinkRepository loginFailForgetPassSendLinkRepository, IAppSettingRepository appSettingRepository)
         {
             _customUserSvc = customUserSvc;
             _httpContextAccessor = httpContextAccessor;
@@ -49,12 +52,14 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             _configuration = configuration;
             _loginFailForgetPassSendLinkRepository = loginFailForgetPassSendLinkRepository;
             _environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            _appSettingRepository = appSettingRepository;
         }
 
         private const string CapthcaShowRequestText = "IsCapthcaShow";
         private const string ResetMailSendedRequestText = "IdsResetMailSended";
         private const string FailLoginCountRequestText = "FailLoginCount";
         private const string SendOtpRequestText = "IsSendOtp";
+        private const string IsPasswordOldResponseText = "IsPasswordOld";
         private const string OtpCodeRequestText = "OtpCode";
         private const string OtpCodeSendPhoneRequestText = "OtpMobilePhone";
         private const string CsrdTokenHeaderText = "CSRFTOKEN";
@@ -81,19 +86,21 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
                 if (string.IsNullOrEmpty(captchaKey))
                 {
+                    var responseObject = new Dictionary<string, object> { { FailLoginCountRequestText, errorCount } };
+                    responseObject.Add(CapthcaShowRequestText, true);
                     context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
-                        Messages.captchaKeyIsNotValid);
+                        Messages.captchaKeyIsNotValid, responseObject);
                     return;
                 }
-
-
 
                 if (!((_environment == ApplicationMode.DEV.ToString() || _environment == ApplicationMode.DEV.ToString()) && captchaKey == "kg"))
                 {
                     if (!_captchaManager.Validate(captchaKey))
                     {
+                        var responseObject = new Dictionary<string, object> { { FailLoginCountRequestText, errorCount } };
+                        responseObject.Add(CapthcaShowRequestText, true);
                         context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
-                           Messages.captchaKeyIsNotValid);
+                           Messages.captchaKeyIsNotValid, responseObject);
                         return;
                     }
                 }
@@ -205,13 +212,29 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             var addedSession = _userSessionRepository.AddUserSession(session);
             await _userSessionRepository.SaveChangesAsync();
             var hasPackage = (await _customUserSvc.UserHasPackage(user.Id)).ToString();
+
+            var customResponse = new Dictionary<string, object> { { IsPasswordOldResponseText, IsOldPassword(user) } };
             context.Result = new GrantValidationResult(user.Id.ToString(), OidcConstants.AuthenticationMethods.Password,
-                new List<Claim>
+            new List<Claim>
                 {
                     new Claim(IdentityServerConst.IDENTITY_RESOURCE_SESSION_TYPE  , session.SessionType.ToString()),
                     new Claim(IdentityServerConst.IDENTITY_RESOURCE_SESSION_ID , addedSession.Id.ToString()),
                     new Claim(IdentityServerConst.IDENTITY_RESOURCE_USER_HAS_PACKAGE_ID  ,hasPackage )
-                });
+            }, "local", customResponse);
+        }
+
+        private async Task<bool> IsOldPassword(CustomUserDto user)
+        {
+            var value = _appSettingRepository.Query().Where(x => x.Code == "PasswordRefreshPeriod").Select(x => x.Value).FirstOrDefault();
+            var intVal = 0;
+            if (Int32.TryParse(value, out intVal))
+            {
+                if (user.LastPasswordDate.ToUniversalTime().AddMonths(intVal) < DateTime.Now)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private async Task<MobileLogin> SendOtpSms(AuthenticationProviderType providerType, string cellPhone, long userId)

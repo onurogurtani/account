@@ -1,8 +1,7 @@
-﻿using TurkcellDigitalSchool.Core.Entities;
-using TurkcellDigitalSchool.Entities.Concrete;
+﻿using TurkcellDigitalSchool.Core.Entities; 
 using TurkcellDigitalSchool.Entities.Enums;
 
-namespace TurkcellDigitalSchool.Account.Entities.Concrete
+namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
     public class PackageFieldType : EntityDefault
     {

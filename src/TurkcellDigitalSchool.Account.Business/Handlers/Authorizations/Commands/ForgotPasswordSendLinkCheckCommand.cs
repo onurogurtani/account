@@ -13,19 +13,14 @@ using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers; 
 using TurkcellDigitalSchool.Core.Enums;
-using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Core.Utilities.Security.Hashing; 
-using IResult = TurkcellDigitalSchool.Core.Utilities.Results.IResult;
+using TurkcellDigitalSchool.Core.Utilities.Results; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
     public class ForgotPasswordSendLinkCheckCommand : IRequest<IResult>
     {
         public string XId { get; set; }
-        public string Guid { get; set; }
-        public string CsrfToken { get; set; }
-        public string NewPass { get; set; }
-        public string NewPassAgain { get; set; }
+        public string Guid { get; set; } 
 
         public class ForgotPasswordSendLinkCheckCommandHandler : IRequestHandler<ForgotPasswordSendLinkCheckCommand, IResult>
         {
@@ -42,15 +37,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             }
 
             [LogAspect(typeof(FileLogger))]
-            [ValidationAspect(typeof(ForgotPasswordSendLinkCheckCommandValidator), Priority = 2)]
+            [ValidationAspect(typeof(ForgotPasswordSendLinkChangePasswordCommandValidator), Priority = 2)]
             public async Task<IResult> Handle(ForgotPasswordSendLinkCheckCommand request, CancellationToken cancellationToken)
-            {
-                if (request.NewPass != request.NewPassAgain)
-                {
-                    return new ErrorResult(Messages.PasswordNotEqual);
-                }
-                 
-
+            { 
                 var userId = Convert.ToInt64(Base64UrlEncoder.Decode(request.XId));
 
                 var user = await _userRepository.GetAsync(u => u.Id == userId);
@@ -76,15 +65,21 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     return new ErrorResult(Messages.PasswordChangeLinkIsUsed);
                 }
 
+
+                if (linkData.UsedStatus != UsedStatus.Send)
+                {
+                    return new ErrorResult(Messages.PasswordChangeLinkIsUsed);
+                }
+
                 linkData.UsedStatus = UsedStatus.Used;
+                linkData.CheckCount += 1;
                 await _loginFailForgetPassSendLinkRepository.UpdateAndSaveAsync(linkData);
 
-                HashingHelper.CreatePasswordHash(request.NewPass, out var passwordSalt, out var passwordHash);
-                user.PasswordHash = passwordHash;
-                user.PasswordSalt = passwordSalt;
-                user.FailOtpCount = 0;
-                await _userRepository.UpdateAndSaveAsync(user);
-                await _loginFailCounterRepository.ResetCsrfTokenFailLoginCount(request.CsrfToken);
+                if (linkData.CheckCount>1)
+                {
+                    return new ErrorResult(Messages.PasswordChangeLinkIsUsed);
+                }
+                 
                 return new SuccessResult(Messages.PasswordChanged);
             }
         }

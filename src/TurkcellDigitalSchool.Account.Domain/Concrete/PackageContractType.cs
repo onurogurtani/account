@@ -1,13 +1,12 @@
-﻿using TurkcellDigitalSchool.Core.Entities;
-using TurkcellDigitalSchool.Entities.Concrete;
+﻿using TurkcellDigitalSchool.Core.Entities; 
 
-namespace TurkcellDigitalSchool.Account.Entities.Concrete
+namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
     public class PackageContractType : EntityDefault
     {
         public long PackageId { get; set; }
         public Package Package { get; set; }
         public long ContractTypeId { get; set; }
-        public TurkcellDigitalSchool.Entities.Concrete.ContractType ContractType { get; set; }
+        public ContractType ContractType { get; set; }
     }
 }

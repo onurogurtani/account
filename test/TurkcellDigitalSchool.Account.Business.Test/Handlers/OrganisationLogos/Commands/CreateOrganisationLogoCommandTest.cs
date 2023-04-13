@@ -43,7 +43,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationLogos
             _formFile = new Mock<IFormFile>();
 
             _createOrganisationLogoCommand = new CreateOrganisationLogoCommand();
-            _createOrganisationLogoCommandHandler = new(_fileRepository.Object, _fileService.Object, _pathHelper.Object);
+            _createOrganisationLogoCommandHandler = new(_fileService.Object, _pathHelper.Object);
 
             _mediator = new Mock<IMediator>();
             _serviceProvider = new Mock<IServiceProvider>();

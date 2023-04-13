@@ -1,14 +1,13 @@
-﻿using TurkcellDigitalSchool.Core.Entities;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
+﻿using TurkcellDigitalSchool.Core.Entities; 
 
-namespace TurkcellDigitalSchool.Account.Entities.Concrete
+namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
     public class OrganisationUser : EntityDefault
     {
         public long UserId { get; set; }
         public User User { get; set; }
         public long OrganisationId { get; set; }
-        public TurkcellDigitalSchool.Entities.Concrete.Organisation Organisation { get; set; }
+        public Organisation Organisation { get; set; }
         public bool IsActive { get; set; }
     }
 }

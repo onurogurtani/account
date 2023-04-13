@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using TurkcellDigitalSchool.Core.Entities;
 using TurkcellDigitalSchool.Entities.Concrete;
 using TurkcellDigitalSchool.Entities.Enums;
+using PackageTestExam = TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly.PackageTestExam;
 
-namespace TurkcellDigitalSchool.Account.Entities.Concrete
+namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
     public class Package : EntityDefault
     {

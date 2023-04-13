@@ -3,7 +3,7 @@ using TurkcellDigitalSchool.Core.Entities;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Entities.Concrete.Core;
 
-namespace TurkcellDigitalSchool.Account.Entities.Concrete
+namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
     public class Role : EntityDefinition
     {

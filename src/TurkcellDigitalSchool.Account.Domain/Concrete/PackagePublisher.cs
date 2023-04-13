@@ -1,7 +1,8 @@
 ﻿using TurkcellDigitalSchool.Core.Entities;
 using TurkcellDigitalSchool.Entities.Concrete;
+using Publisher = TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly.Publisher;
 
-namespace TurkcellDigitalSchool.Account.Entities.Concrete
+namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
     public class PackagePublisher : EntityDefault
     {
