@@ -9,7 +9,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
 {
     public interface IUserService
     {
-        PersonalInformationDto GetByUserPersonalInformation(long userId);
-        EducationInformationDto GetByUserEducationInformation(long userId);
+        PersonalInfoDto GetByUserPersonalInformation(long userId);
+        EducationInfoDto GetByUserEducationInformation(long userId);
     }
 }
