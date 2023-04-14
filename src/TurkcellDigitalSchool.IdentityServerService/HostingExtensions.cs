@@ -32,7 +32,9 @@ namespace TurkcellDigitalSchool.IdentityServerService
  
 
 
-            builder.Services.AddScoped<ICustomUserSvc, CustomUserSvc>(); 
+            builder.Services.AddScoped<ICustomUserSvc, CustomUserSvc>();
+            builder.Services.AddScoped<IAppSettingRepository,AppSettingRepository>();
+              
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserSessionRepository, UserSessionRepository>();
             builder.Services.AddScoped<ILoginFailCounterRepository, LoginFailCounterRepository>();

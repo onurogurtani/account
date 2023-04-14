@@ -17,6 +17,8 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string Deleted = "İşleminiz Başarıyla Gerçekleştirildi.";
         public static string Updated = "İşleminiz Başarıyla Gerçekleştirildi.";
         public static string UserNotFound = "Kullanıcı Bulunamadı";
+        public static string PasswordChangeTimeFinished = "Parola değiştirme süresi dolmuştur !";
+        public static string oldPassIsNotCorrect = "Girmiş olduğunuz eski parolanız hatalıdır !";
         public static string MultipleUsersFound = "Birden Kullanıcı Bulunamadı";
         public static string PassError = "Kullanıcı Adı ve / veya Şifresi Hatalı.";
         public static string CouldNotValidate = "Bilgiler doğrulanamadı";

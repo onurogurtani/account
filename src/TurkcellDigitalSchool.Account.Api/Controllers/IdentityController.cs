@@ -55,7 +55,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
 
             return BadRequest(result);
         }
-         
+
 
         /// <summary>
         /// Otp İçin Gönderilir Ldap
@@ -217,8 +217,8 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
-         
 
+        #region New Login Endpoinds
 
         /// <summary>
         /// Yeniden Sms Gönderme
@@ -288,10 +288,6 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         }
 
 
-
-        
-
-
         /// <summary>
         /// Parolamı unuttum işlemleri için kullanılır.
         /// 400  ise gelen datadaki bilgilere göre captcha gösterilir.
@@ -359,6 +355,35 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             }
             return BadRequest(result);
         }
+         
+
+        /// <summary>
+        /// Loginde parola değiştirme süresi gelen kullanıcı için parola değiştirme işlemi yapılır.
+        /// </summary>
+        /// <return></return>
+        /// <response code="200"></response>
+        [AllowAnonymous]
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string))]
+        [HttpPut("oldPasswordToNewPassword")]
+        public async Task<IActionResult> OldPasswordToNewPassword([FromBody] OldPasswordToNewPasswordCommand command)
+        {
+            var result = await Mediator.Send(command);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+          
+        #endregion
+
+
+
+
 
         /// <summary>
         ///  Make it User Register operations
@@ -547,29 +572,6 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         }
 
 
-
-        /// <summary>
-        /// Make it Change Password operation
-        /// </summary>
-        /// <return></return>
-        /// <response code="200"></response>
-        [AllowAnonymous]
-        [Consumes("application/json")]
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string))]
-        [HttpPut("changepassword")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
-        {
-            var result = await Mediator.Send(command);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-
-            return BadRequest(result);
-        }
-
         /// <summary>
         /// Make it Change Password operation
         /// </summary>
@@ -644,6 +646,29 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         {
             var result = await Mediator.Send(new PermissionsAssignToAdminCommand());
             return Ok(result);
+        }
+
+
+        /// <summary>
+        /// Make it Change Password operation
+        /// </summary>
+        /// <return></return>
+        /// <response code="200"></response>
+        [AllowAnonymous]
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string))]
+        [HttpPut("changepassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
+        {
+            var result = await Mediator.Send(command);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
         }
     }
 }

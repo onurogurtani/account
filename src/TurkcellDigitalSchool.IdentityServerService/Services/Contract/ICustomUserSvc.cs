@@ -10,6 +10,9 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services.Contract
         Task<List<OrganisationUsersDto>> GetUserOrganisation(long id);
         Task<bool> UserHasPackage (long id);
         Task ResetUserOtpFailount (long userId);
- 
+
+        Task<string> GenerateUserOldPassChange(long userId);
+
+
     }
 }

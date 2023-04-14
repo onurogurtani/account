@@ -2,6 +2,7 @@
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Validation;
 using IdentityModel;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Asn1.Ocsp;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
@@ -110,7 +111,23 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
             if (result)
             {
-                await LoginSuccessProcess(context, errorCount, csrf_token);
+                var user = await _customUserSvc.FindByUserName(context.UserName);
+
+                var isOldPass = await IsOldPassword(user);
+
+                if (isOldPass)
+                {
+                    var responseObject = new Dictionary<string, object>
+                    {
+                        { IsPasswordOldResponseText, isOldPass },
+                        { "XId", Base64UrlEncoder.Encode(user.Id.ToString()) },
+                        { "PasswordChangeGuid", Base64UrlEncoder.Encode(user.Id.ToString()) }
+                    };
+                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
+                        Messages.passwordIsOldMessage, responseObject);
+                    return;
+                } 
+                await LoginSuccessProcess(context, errorCount, csrf_token, user);
                 return;
             }
 
@@ -176,10 +193,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 Messages.PassError + " " + Messages.LoginFail, customResponse);
         }
 
-        private async Task LoginSuccessProcess(ResourceOwnerPasswordValidationContext context, int errorCount, string csrf_token)
+        private async Task LoginSuccessProcess(ResourceOwnerPasswordValidationContext context, int errorCount, string csrf_token, CustomUserDto user)
         {
-            var user = await _customUserSvc.FindByUserName(context.UserName);
-
             if (errorCount > 0)
             {
                 await _loginFailCounterRepository.ResetCsrfTokenFailLoginCount(csrf_token);
@@ -213,14 +228,14 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             await _userSessionRepository.SaveChangesAsync();
             var hasPackage = (await _customUserSvc.UserHasPackage(user.Id)).ToString();
 
-            var customResponse = new Dictionary<string, object> { { IsPasswordOldResponseText, IsOldPassword(user) } };
+
             context.Result = new GrantValidationResult(user.Id.ToString(), OidcConstants.AuthenticationMethods.Password,
             new List<Claim>
                 {
                     new Claim(IdentityServerConst.IDENTITY_RESOURCE_SESSION_TYPE  , session.SessionType.ToString()),
                     new Claim(IdentityServerConst.IDENTITY_RESOURCE_SESSION_ID , addedSession.Id.ToString()),
                     new Claim(IdentityServerConst.IDENTITY_RESOURCE_USER_HAS_PACKAGE_ID  ,hasPackage )
-            }, "local", customResponse);
+            });
         }
 
         private async Task<bool> IsOldPassword(CustomUserDto user)
