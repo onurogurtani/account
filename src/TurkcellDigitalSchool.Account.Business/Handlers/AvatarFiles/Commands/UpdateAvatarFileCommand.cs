@@ -7,9 +7,9 @@ using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.File.Model;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Enums;
-using TurkcellDigitalSchool.File.DataAccess.Abstract;
+using TurkcellDigitalSchool.Entities.Enums; 
 using System.Linq;
+using System;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
 {
@@ -20,51 +20,57 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
         public string FileName { get; set; }
         public class UpdateAvatarFileCommandHandler : IRequestHandler<UpdateAvatarFileCommand, Core.Utilities.Results.IResult>
         {
-            private readonly IFileRepository _fileRepository;
+          // private readonly IFileRepository _fileRepository;
             private readonly IFileService _fileService;
             private readonly IPathHelper _pathHelper;
             private readonly string _framesFilePath = "avatar";
-            public UpdateAvatarFileCommandHandler(IFileRepository fileRepository, IFileService fileService, IPathHelper pathHelper)
+            public UpdateAvatarFileCommandHandler( IFileService fileService, IPathHelper pathHelper)
             {
-                _fileRepository = fileRepository;
+              //  _fileRepository = fileRepository;
                 _fileService = fileService;
                 _pathHelper = pathHelper;
             }
 
             public async Task<Core.Utilities.Results.IResult> Handle(UpdateAvatarFileCommand request, CancellationToken cancellationToken)
             {
-                string[] avatarType = new string[] { "image/jpeg", "image/png" };
 
-                if (!avatarType.Contains(request.Image.ContentType))
-                {
-                    return new ErrorResult(Messages.FileTypeError);
-                }
-                if (request.Image.Length > 5000000)
-                {
-                    return new ErrorResult(Messages.FileSizeError);
-                }
-                var fileRecord = await _fileRepository.GetAsync(w => w.Id == request.Id);
+                //todo:#MS_DUZENLEMESI   
+                // Bu entity için düzenleme burada yapýlamaz 
+                throw new Exception("Yazýlýmsal düzenleme yapýlmasý");
 
-                if (fileRecord == null)
-                {
-                    return new ErrorResult(Messages.RecordIsNotFound);
-                }
 
-                var path = _pathHelper.GetPath(_framesFilePath);
-                var fileSaveResult = await _fileService.SaveFile(new SaveFileRequest
-                {
-                    File = request.Image,
-                    Path = path,
-                    FileName = fileRecord.FileName
-                });
+                //string[] avatarType = new string[] { "image/jpeg", "image/png" };
 
-                fileRecord.FilePath = fileSaveResult.Data;
-                fileRecord.FileName = request.FileName;
-                fileRecord.FileType = FileType.Avatar;
-                fileRecord.ContentType = request.Image.ContentType;
+                //if (!avatarType.Contains(request.Image.ContentType))
+                //{
+                //    return new ErrorResult(Messages.FileTypeError);
+                //}
+                //if (request.Image.Length > 5000000)
+                //{
+                //    return new ErrorResult(Messages.FileSizeError);
+                //}
+                //var fileRecord = await _fileRepository.GetAsync(w => w.Id == request.Id);
 
-                await _fileRepository.SaveChangesAsync();
-                return new SuccessResult(Messages.Updated);
+                //if (fileRecord == null)
+                //{
+                //    return new ErrorResult(Messages.RecordIsNotFound);
+                //}
+
+                //var path = _pathHelper.GetPath(_framesFilePath);
+                //var fileSaveResult = await _fileService.SaveFile(new SaveFileRequest
+                //{
+                //    File = request.Image,
+                //    Path = path,
+                //    FileName = fileRecord.FileName
+                //});
+
+                //fileRecord.FilePath = fileSaveResult.Data;
+                //fileRecord.FileName = request.FileName;
+                //fileRecord.FileType = FileType.Avatar;
+                //fileRecord.ContentType = request.Image.ContentType;
+
+                //await _fileRepository.SaveChangesAsync();
+                //return new SuccessResult(Messages.Updated);
             }
         }
     }

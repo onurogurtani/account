@@ -89,7 +89,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 var mobileLogin = await _mobileLoginRepository.GetAsync(
                     m => m.Provider == providerType &&
                     m.UserId == userId &&
-                    m.Status == MobileSendStatus.Send &&
+                    m.Status == UsedStatus.Send &&
                     m.Id == mobileLoginId
                 );
 
@@ -97,7 +97,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 {
                     if (mobileLogin.ReSendCount >= 3)
                     {
-                        mobileLogin.Status = MobileSendStatus.Cancelled;
+                        mobileLogin.Status = UsedStatus.Cancelled;
                         _mobileLoginRepository.Update(mobileLogin);
                         await _mobileLoginRepository.SaveChangesAsync();
                         throw new Exception(Messages.UnableToProccess);

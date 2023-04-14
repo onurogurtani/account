@@ -72,8 +72,18 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     Email = unverifiedUser.Email,
                     MobilePhones = unverifiedUser.MobilePhones,
                     PasswordHash = unverifiedUser.PasswordHash,
-                    PasswordSalt = unverifiedUser.PasswordSalt
+                    PasswordSalt = unverifiedUser.PasswordSalt,
+                    
                 };
+
+                if (unverifiedUser.UserTypeId == UserType.Parent)
+                {
+                    user.MobilePhonesVerify = true;
+                }
+                if (unverifiedUser.UserTypeId == UserType.Student)
+                {
+                    user.EmailVerify = true;
+                }
 
                 try
                 {

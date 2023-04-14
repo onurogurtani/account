@@ -24,9 +24,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 
             public async Task<IResult> Handle(PermissionsAssignToAdminCommand request, CancellationToken cancellationToken)
             {
-                var optionBuilder = new DbContextOptionsBuilder<ProjectDbContext>();
-                optionBuilder.UseNpgsql(_configuration.GetConnectionString("DArchPostgreContext"));
-                var context = new ProjectDbContext(optionBuilder.Options, _tokenHelper);
+                var context = new ProjectDbContext(_tokenHelper, _configuration);
                 var affectedRows = context.Database.ExecuteSqlRaw(@"
 insert into ""RoleClaims"" (""RoleId"", ""ClaimName"",""IsDeleted"")
 select 1 RoleId,oc.""Name"" ""ClaimName""  , false ""IsDeleted""  

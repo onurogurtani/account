@@ -17,6 +17,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
+using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Concrete;
 using TurkcellDigitalSchool.Entities.Concrete.Core;
 using TurkcellDigitalSchool.Entities.Dtos.Admin;
@@ -28,8 +29,8 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
     public class UpdateOrganisationCommandTest
     {
         Mock<IOrganisationRepository> _organisationRepository;
-        Mock<IOrganisationTypeRepository> _organisationTypeRepository; 
-        Mock<IRoleRepository> _roleRepository;
+        Mock<IOrganisationTypeRepository> _organisationTypeRepository;
+        Mock<IPackageRoleRepository> _packageRoleRepository;
         Mock<IUserRepository> _userRepository;
 
         private UpdateOrganisationCommand _UpdateOrganisationCommand;
@@ -51,13 +52,13 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
             _organisationRepository = new Mock<IOrganisationRepository>();
             _organisationTypeRepository = new Mock<IOrganisationTypeRepository>();
             _mediator = new Mock<IMediator>();
-            _roleRepository = new Mock<IRoleRepository>();
+            _packageRoleRepository = new Mock<IPackageRoleRepository>();
             _userRepository = new Mock<IUserRepository>();
 
             _UpdateOrganisationCommand = new UpdateOrganisationCommand();
-            _UpdateOrganisationCommandHandler = new(_organisationRepository.Object, _organisationTypeRepository.Object, _mapper.Object, _mediator.Object, _roleRepository.Object, _userRepository.Object);
+            _UpdateOrganisationCommandHandler = new(_organisationRepository.Object, _organisationTypeRepository.Object, _mapper.Object, _packageRoleRepository.Object, _userRepository.Object, _mediator.Object);
 
-           
+
             _serviceProvider = new Mock<IServiceProvider>();
             _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
             ServiceTool.ServiceProvider = _serviceProvider.Object;
@@ -81,7 +82,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
                     Code = "Test",
                     Name = "Test",
                     InsertTime = DateTime.Now,
-                    RecordStatus = Core.Enums.RecordStatus.Active,
+                    RecordStatus = RecordStatus.Active,
                 }
             };
 
@@ -95,9 +96,9 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
                 new OrganisationType{ Id = 1, Name = "Deneme", IsSingularOrganisation = true }
             };
 
-            var roles = new List<Role>
+            var packageRoles = new List<PackageRole>
             {
-                new Role{ Id = 1, Name = "Deneme" }
+                new PackageRole{ Id = 1, PackageId = 124, RoleId = 59}
             };
 
             var users = new List<User>
@@ -105,7 +106,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
                 new User{ Id = 1, Name = "Deneme" }
             };
 
-            var user = new UpdateAdminCommand 
+            var user = new UpdateAdminCommand
             {
                 Admin = new CreateUpdateAdminDto
                 {
@@ -122,13 +123,13 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
                 }
             };
 
-            _mediator.Setup(x => x.Send(It.IsAny<UpdateAdminCommand>(),CancellationToken.None));
+            _mediator.Setup(x => x.Send(It.IsAny<UpdateAdminCommand>(), CancellationToken.None)).ReturnsAsync(new SuccessResult(Messages.SuccessfulOperation));
 
             _organisationTypeRepository.Setup(x => x.Query()).Returns(organisationTypes.AsQueryable().BuildMock());
             _organisationTypeRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<OrganisationType, bool>>>())).ReturnsAsync(organisationTypes.First());
 
-            _roleRepository.Setup(x => x.Query()).Returns(roles.AsQueryable().BuildMock());
-            _roleRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<Role, bool>>>())).ReturnsAsync(roles.First());
+            _packageRoleRepository.Setup(x => x.Query()).Returns(packageRoles.AsQueryable().BuildMock());
+            _packageRoleRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<PackageRole, bool>>>())).ReturnsAsync(packageRoles.First());
 
             _userRepository.Setup(x => x.Query()).Returns(users.AsQueryable().BuildMock());
             _userRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<User, bool>>>())).ReturnsAsync(users.First());
@@ -153,14 +154,14 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
                     Code = "Test",
                     Name = "Test",
                     InsertTime = DateTime.Now,
-                    RecordStatus = Core.Enums.RecordStatus.Active,
+                    RecordStatus = RecordStatus.Active,
                     CrmId = 1,
                 }
             };
 
             var organisations = new List<Organisation>
             {
-                new Organisation{Id = 2, Name = "Test", CrmId=1 }
+                new Organisation{Id = 2, Name = "Test", CrmId = 1 }
             };
 
             _organisationRepository.Setup(x => x.Query()).Returns(organisations.AsQueryable().BuildMock());

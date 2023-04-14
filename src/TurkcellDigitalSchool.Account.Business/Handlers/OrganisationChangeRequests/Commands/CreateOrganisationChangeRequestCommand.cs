@@ -104,6 +104,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                         return new ErrorResult(saveFileResult.Message);
                     }
 
+                    //todo:#MS_DUZENLEMESI   
+                    // Bu entity için düzenleme burada yapýlamaz Servis entegrasyonu kullanýlmalý      IFileServices   
+                    throw new Exception("Yazýlýmsal düzenleme yapýlmasý");
+
+
                     var recordLogo = _fileRepository.Add(new Entities.Concrete.File()
                     {
                         FileType = FileType.OrganisationLogo,
@@ -113,6 +118,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                     });
 
                     await _fileRepository.SaveChangesAsync();
+
+
+
                     //Üretilen FileId logo içeriðine setleniyor.
                     entity.OrganisationChangeReqContents.FirstOrDefault(x=>x.PropertyEnum== Entities.Enums.OrganisationChangePropertyEnum.Logo).PropertyValue= recordLogo.Id.ToString();
 

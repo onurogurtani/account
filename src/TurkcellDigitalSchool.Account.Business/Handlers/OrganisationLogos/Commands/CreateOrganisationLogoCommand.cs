@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,15 +24,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationLogos.Comm
 
         public class CreateOrganisationLogoCommandHandler : IRequestHandler<CreateOrganisationLogoCommand, Core.Utilities.Results.IResult>
         {
-            private readonly IFileRepository _fileRepository;
+            //private readonly IFileRepository _fileRepository;
             private readonly IFileService _fileService;
             private readonly IPathHelper _pathHelper;
 
             private readonly string _filePath = "OrganisationLogo";
 
-            public CreateOrganisationLogoCommandHandler(IFileRepository fileRepository, IFileService fileService, IPathHelper pathHelper)
+            public CreateOrganisationLogoCommandHandler(  IFileService fileService, IPathHelper pathHelper)
             {
-                _fileRepository = fileRepository;
+               // _fileRepository = fileRepository;
                 _fileService = fileService;
                 _pathHelper = pathHelper;
             }
@@ -58,17 +59,21 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationLogos.Comm
                     return new ErrorResult(saveFileResult.Message);
                 }
 
-                var record = _fileRepository.Add(new Entities.Concrete.File()
-                {
-                    FileType = FileType.OrganisationLogo,
-                    FilePath = saveFileResult.Data,
-                    FileName = request.FileName,
-                    ContentType = request.Image.ContentType
-                });
+                //todo:#MS_DUZENLEMESI   
+                // Bu entity için düzenleme burada yapýlamaz Servis entegrasyonu kullanýlmalý      IFileServices    yada bu iþlem Direk File MS de yapýlmalý
+                throw new Exception("Yazýlýmsal düzenleme yapýlmasý");
 
-                await _fileRepository.SaveChangesAsync();
+                //var record = _fileRepository.Add(new Entities.Concrete.File()
+                //{
+                //    FileType = FileType.OrganisationLogo,
+                //    FilePath = saveFileResult.Data,
+                //    FileName = request.FileName,
+                //    ContentType = request.Image.ContentType
+                //});
 
-                return new SuccessDataResult<long>(record.Id, Messages.SuccessfulOperation);
+                //await _fileRepository.SaveChangesAsync();
+
+                //return new SuccessDataResult<long>(record.Id, Messages.SuccessfulOperation);
             }
         }
     }

@@ -38,7 +38,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
 
                 var entity = await _organisationInfoChangeRequestRepository.GetAsync(x => x.Id == request.Id);
                 if (entity == null)
-                    return new ErrorResult(Common.Constants.Messages.RecordDoesNotExist);
+                    return new ErrorResult(Messages.RecordDoesNotExist);
 
                 if (entity.RequestState != Entities.Enums.OrganisationChangeRequestState.Forwarded)
                     return new ErrorResult(Common.Constants.Messages.ErrorInDeletingProcess);

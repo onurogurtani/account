@@ -39,7 +39,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Authentication
                 throw new ArgumentException(Messages.TokenProviderException);
             }
 
-            login.Status = MobileSendStatus.Used;
+            login.Status = UsedStatus.Used;
             login.UsedDate = date;
             _logins.Update(login);
             await _logins.SaveChangesAsync();

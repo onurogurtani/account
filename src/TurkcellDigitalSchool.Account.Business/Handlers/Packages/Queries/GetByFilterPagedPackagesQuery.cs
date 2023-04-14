@@ -36,7 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
             public virtual async Task<IDataResult<PagedList<Package>>> Handle(GetByFilterPagedPackagesQuery request, CancellationToken cancellationToken)
             {
                 var query = _packageRepository.Query()
-                    .Include(x => x.ImageOfPackages).ThenInclude(x => x.File)
+                    .Include(x => x.ImageOfPackages).ThenInclude(x => x.File)  
                     .Include(x => x.PackageLessons).ThenInclude(x => x.Lesson).ThenInclude(x => x.Classroom)
                     .Include(x => x.PackageRoles).ThenInclude(x => x.Role)
                     .Include(x => x.PackageDocuments).ThenInclude(x => x.Document)

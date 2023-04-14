@@ -17,6 +17,7 @@ using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Dtos;
 using TurkcellDigitalSchool.Entities.Dtos.PackageDtos;
+using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
 {
@@ -35,12 +36,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
             private readonly IPackageRepository _packageRepository;
             private readonly IMapper _mapper;
             private readonly IFileService _fileService;
+            private readonly IFileServices _fileServiceIntegration;
 
-            public GetPackageForUserQueryHandler(IPackageRepository packageRepository, IMapper mapper, IFileService fileService)
+            public GetPackageForUserQueryHandler(IPackageRepository packageRepository, IMapper mapper, IFileService fileService, IFileServices fileServiceIntegration)
             {
                 _packageRepository = packageRepository;
                 _mapper = mapper;
                 _fileService = fileService;
+                _fileServiceIntegration = fileServiceIntegration;
             }
 
             [MessageConstAttr(MessageCodeType.Error)]
@@ -52,8 +55,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
             {
                 var package = await _packageRepository.Query().Where(q => q.Id == request.Id && q.IsActive)
                     .Include(x => x.PackageLessons).ThenInclude(x => x.Lesson)
-                    .Include(x => x.ImageOfPackages).ThenInclude(q => q.File)
-                    .FirstOrDefaultAsync();
+                    .Include(x => x.ImageOfPackages).ThenInclude(q => q.File)  
+                    .FirstOrDefaultAsync(cancellationToken);
 
                 if (package == null)
                     return new ErrorDataResult<GetPackageForUserResponseDto>(RecordDoesNotExist.PrepareRedisMessage());
@@ -69,7 +72,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
 
                 packageResponseDto.Images = new();
                 foreach (var image in package.ImageOfPackages)
-                {
+                { 
                     var fileResult = _fileService.GetFile(image.File.FilePath).GetAwaiter().GetResult();
                     var filePath = Path.GetFileName(image.File.FilePath);
 

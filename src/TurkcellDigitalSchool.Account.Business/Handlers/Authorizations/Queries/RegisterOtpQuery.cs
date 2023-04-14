@@ -60,7 +60,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                                                             m.Code == request.Otp &&
                                                             m.Id == request.MobileLoginId &&
                                                             m.LastSendDate.AddSeconds(120) > date &&
-                                                            m.Status == MobileSendStatus.Send);
+                                                            m.Status == UsedStatus.Send);
 
                     if (mobileLogin == null)
                     {
@@ -93,7 +93,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                     addedSessionRecord.NotBefore = accessToken.NotBefore;
                     _userSessionRepository.UpdateAndSave(addedSessionRecord);
 
-                    mobileLogin.Status = MobileSendStatus.Used;
+                    mobileLogin.Status = UsedStatus.Used;
                     mobileLogin.UsedDate = date;
                     _mobileLoginRepository.Update(mobileLogin);
                     await _mobileLoginRepository.SaveChangesAsync();

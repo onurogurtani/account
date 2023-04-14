@@ -70,10 +70,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
 
                 var entity = await _organisationInfoChangeRequestRepository.GetAsync(x => x.Id == request.OrganisationInfoChangeRequest.Id);
                 if (entity == null)
-                    return new ErrorResult(Common.Constants.Messages.RecordDoesNotExist);
+                    return new ErrorResult(Messages.RecordDoesNotExist);
 
-                if (entity.RequestState != Entities.Enums.OrganisationChangeRequestState.Forwarded)
-                    return new ErrorResult(Common.Constants.Messages.ErrorInUpdatingProcess);
+                if (entity.RequestState !=  OrganisationChangeRequestState.Forwarded)
+                    return new ErrorResult(Messages.ErrorInUpdatingProcess);
 
                 var organisationId = _tokenHelper.GetCurrentOrganisationId();
 
@@ -116,6 +116,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                     {
                         return new ErrorResult(saveFileResult.Message);
                     }
+
+                    //todo:#MS_DUZENLEMESI   
+                    // Bu entity için düzenleme burada yapýlamaz Servis entegrasyonu kullanýlmalý      IFileServices   
+                    throw new Exception("Yazýlýmsal düzenleme yapýlmasý");
 
                     var recordLogo = _fileRepository.Add(new Entities.Concrete.File()
                     {

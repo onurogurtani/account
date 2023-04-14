@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;
 using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Entities.Concrete.Core;
+using TurkcellDigitalSchool.Entities.Enums;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 {
@@ -128,9 +131,45 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 
         public bool HasClaim(long userId, string claimName)
         {
-          return  Context.Users.Include(i => i.UserRoles).ThenInclude(i => i.Role).ThenInclude(i => i.RoleClaims)
-                .Any(a => a.Id == userId &&
-                          a.UserRoles.Any(aa => aa.Role.RoleClaims.Any(aaa => aaa.ClaimName == claimName)));
+            return Context.Users.Include(i => i.UserRoles).ThenInclude(i => i.Role).ThenInclude(i => i.RoleClaims)
+                  .Any(a => a.Id == userId &&
+                            a.UserRoles.Any(aa => aa.Role.RoleClaims.Any(aaa => aaa.ClaimName == claimName)));
+        }
+
+        public async Task ResetFailLoginOtpCount(long userId)
+        {
+            var user = await Context.Users.FirstOrDefaultAsync(w =>
+                w.Id == userId);
+
+            if (user == null)
+            {
+                return;
+            }
+            user.FailOtpCount = 0;
+            await Context.SaveChangesAsync(CancellationToken.None);
+
+        }
+
+        public async Task<int> IncFailLoginOtpCount(long userId)
+        {
+            var user =
+                await Context.Users.FirstOrDefaultAsync(w =>
+                    w.Id == userId);
+
+            if (user == null)
+            {
+                return 0;
+            }
+
+            user.FailOtpCount = (user.FailOtpCount ?? 0) + 1;
+            await Context.SaveChangesAsync();
+            return (user.FailOtpCount ?? 0);
+        }
+
+        public async Task<int> GetFailLoginOtpCount(long userId)
+        {
+            var loginFailCounter = await Context.Users.FirstOrDefaultAsync(w => w.Id == userId);
+            return (loginFailCounter?.FailOtpCount ?? 0);
         }
     }
 }

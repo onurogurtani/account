@@ -1,10 +1,9 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Utilities.File;
-using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.File.DataAccess.Abstract;
+using TurkcellDigitalSchool.Core.Utilities.Results; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
 {
@@ -15,28 +14,32 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
         {
 
             private readonly IFileService _fileService;
-            private readonly IFileRepository _repository;
+          //  private readonly IFileRepository _repository;
 
-            public DeleteAvatarFileCommandHandler(IFileRepository repository, IFileService fileService)
+            public DeleteAvatarFileCommandHandler(  IFileService fileService)
             {
-                _repository = repository;
+              //  _repository = repository;
                 _fileService = fileService;
             }
 
             public async Task<IResult> Handle(DeleteAvatarFileCommand request, CancellationToken cancellationToken)
             {
-                var fileRecord = await _repository.GetAsync(w => w.Id == request.Id);
-                if (fileRecord == null)
-                    return new ErrorResult(Messages.RecordIsNotFound);
-                var deleteFileResult = _fileService.DeleteFile(fileRecord.FilePath);
-                if (!deleteFileResult.Success)
-                {
-                    return deleteFileResult;
-                }
-                var entityToDelete = _repository.Get(p => p.Id == request.Id);
-                _repository.Delete(entityToDelete);
-                await _repository.SaveChangesAsync();
-                return new SuccessResult(Messages.Deleted);
+                //todo:#MS_DUZENLEMESI   
+                // Bu entity için düzenleme burada yapýlamaz 
+                throw new Exception("Yazýlýmsal düzenleme yapýlmasý");
+
+                //var fileRecord = await _repository.GetAsync(w => w.Id == request.Id);
+                //if (fileRecord == null)
+                //    return new ErrorResult(Messages.RecordIsNotFound);
+                //var deleteFileResult = _fileService.DeleteFile(fileRecord.FilePath);
+                //if (!deleteFileResult.Success)
+                //{
+                //    return deleteFileResult;
+                //}
+                //var entityToDelete = _repository.Get(p => p.Id == request.Id);
+                //_repository.Delete(entityToDelete);
+                //await _repository.SaveChangesAsync();
+                //return new SuccessResult(Messages.Deleted);
             }
         }
     }
