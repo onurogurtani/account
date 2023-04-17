@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Core.Constants.IdentityServer;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Entities.Concrete.Core;
@@ -25,7 +26,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             var user = await FindByUserName(userName);
             if (user == null)
             {
-                return false; 
+                return false;
             }
             var result = HashingHelper.VerifyPasswordHash(password, user.PassSalt, user.PassHash);
             return result;
@@ -126,6 +127,15 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
         public async Task ResetUserOtpFailount(long userId)
         {
             await _userRepository.ResetFailLoginOtpCount(userId);
+        }
+
+        public async Task<string> GenerateUserOldPassChange(long userId)
+        {
+            var user = await _userRepository.GetAsync(w => w.Id == userId);
+            user.LastPasswordChangeGuid = Guid.NewGuid().ToString();
+            user.LastPasswordChangeExpTime = DateTime.Now.AddSeconds(OtpConst.NewPassOtpExpHour);
+            await _userRepository.UpdateAndSaveAsync(user);
+            return user.LastPasswordChangeGuid;
         }
     }
 }

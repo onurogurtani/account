@@ -18,6 +18,7 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
 using TurkcellDigitalSchool.Entities.Concrete;
 using TurkcellDigitalSchool.Entities.Concrete.Core; 
 
@@ -27,6 +28,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
     {
         public string SendingAdress { get; set; }
         public string CsrfToken { get; set; }
+        public string CaptchaKey { get; set; }
 
         public class ForgotPasswordWithCheckFailCountCommandHandler : IRequestHandler<ForgotPasswordWithCheckFailCountCommand, IResult>
         {
@@ -37,9 +39,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             private readonly IMailService _mailService;
             private readonly ISmsOtpRepository _smsOtpRepository;
             private readonly ILoginFailForgetPassSendLinkRepository _loginFailForgetPassSendLinkRepository;
-
+            private readonly ICaptchaManager _captchaManager;
+            private readonly string _environment;
             public ForgotPasswordWithCheckFailCountCommandHandler(IUserRepository userRepository, IForgetPasswordFailCounterRepository forgetPasswordFailCounterRepository, IConfiguration configuration,
-                ISmsOtpRepository smsOtpRepository, ILoginFailForgetPassSendLinkRepository loginFailForgetPassSendLinkRepository, IMailService mailService)
+                ISmsOtpRepository smsOtpRepository, ILoginFailForgetPassSendLinkRepository loginFailForgetPassSendLinkRepository, IMailService mailService, ICaptchaManager captchaManager)
             {
                 _userRepository = userRepository;
                 _forgetPasswordFailCounterRepository = forgetPasswordFailCounterRepository;
@@ -47,6 +50,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 _smsOtpRepository = smsOtpRepository;
                 _loginFailForgetPassSendLinkRepository = loginFailForgetPassSendLinkRepository;
                 _mailService = mailService;
+                _environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+                _captchaManager = captchaManager;
             }
 
             /// <summary>
@@ -70,33 +75,56 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 
                 var errorCount = await _forgetPasswordFailCounterRepository.GetCsrfTokenForgetPasswordFailCount(request.CsrfToken);
 
-
-
-                var user = await _userRepository.GetAsync(expression);
-
                 var result = true;
                 var message = "";
-                if (user == null)
-                {
-                    errorCount = await _forgetPasswordFailCounterRepository.IncCsrfTokenForgetPasswordFailCount(request.CsrfToken);
-                    result = false;
-                    message = Messages.UserNotFound;
+
+                if (errorCount>=5)
+                { 
+                    if (string.IsNullOrEmpty(request.CaptchaKey))
+                    { 
+                        result = false;
+                        message = Messages.InvalidCaptchaKey;
+                    }
+
+                    if (!((_environment == ApplicationMode.DEV.ToString() || _environment == ApplicationMode.DEV.ToString()) && request.CaptchaKey == "kg"))
+                    {
+                        if (!_captchaManager.Validate(request.CaptchaKey))
+                        {
+                            result = false;
+                            message = Messages.InvalidCaptchaKey;
+                        }
+                    }
                 }
 
-                if (user != null && isMail && !user.EmailVerify)
+                User user = null;
+                if (result)
                 {
-                    errorCount = await _forgetPasswordFailCounterRepository.IncCsrfTokenForgetPasswordFailCount(request.CsrfToken);
-                    message = Messages.MailIsNotVerify;
+                    user = await _userRepository.GetAsync(expression); 
+
+                    if (user == null)
+                    {
+                        result = false;
+                        message = Messages.UserNotFound;
+                    }
+
+                    if (user != null && isMail && !user.EmailVerify)
+                    {
+                        result = false;
+                        message = Messages.MailIsNotVerify;
+                    }
+
+                    if (user != null && !isMail && !user.MobilePhonesVerify)
+                    {
+                        result = false;
+                        message = Messages.PhoneNotVerify;
+                    }
                 }
 
-                if (user != null && !isMail && !user.MobilePhonesVerify)
-                {
-                    errorCount = await _forgetPasswordFailCounterRepository.IncCsrfTokenForgetPasswordFailCount(request.CsrfToken);
-                    message = Messages.PhoneNotVerify;
-                }
+               
 
                 if (!result)
                 {
+                    errorCount = await _forgetPasswordFailCounterRepository.IncCsrfTokenForgetPasswordFailCount(request.CsrfToken);
                     return new DataResult<ForgotPasswordWithCheckFailCountCommandResponse>(new ForgotPasswordWithCheckFailCountCommandResponse
                     {
                         ErrorCount = errorCount,
@@ -140,8 +168,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 }
                 return new SuccessResult(string.Format(Messages.PasswordChangeLinkSended, messsgePach));
             }
-
-
+             
             public class ForgotPasswordWithCheckFailCountCommandResponse
             {
                 public bool IsCaptchaShow { get; set; }

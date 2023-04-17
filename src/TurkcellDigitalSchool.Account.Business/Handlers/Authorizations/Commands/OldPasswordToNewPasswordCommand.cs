@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.IdentityModel.Tokens;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries;
 using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.ValidationRules;
@@ -10,75 +10,78 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
-using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
 using TurkcellDigitalSchool.Integration.IntegrationServices.IdentityServerServices.Model.Response;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
-    public class LoginFailOtpNewPasswordCommand : IRequest<IDataResult<TokenIntegraitonResponse>>
+    public class OldPasswordToNewPasswordCommand : IRequest<IDataResult<TokenIntegraitonResponse>>
     {
-        public long MobileLoginId { get; set; }
-        public string Guid { get; set; }
+        public string XId { get; set; }
+        public string Guid { get; set; } 
+        public string OldPass { get; set; }
         public string NewPass { get; set; }
         public string NewPassAgain { get; set; }
-        public string CsrfToken { get; set; }
         public string ClientId { get; set; }
 
-        public class LoginFailOtpNewPasswordCommandHandler : IRequestHandler<LoginFailOtpNewPasswordCommand, IDataResult<TokenIntegraitonResponse>>
+        public class OldPasswordToNewPasswordCommandHandler : IRequestHandler<OldPasswordToNewPasswordCommand, IDataResult<TokenIntegraitonResponse>>
         {
             private readonly IUserRepository _userRepository;
-            private readonly IMobileLoginRepository _mobileLoginRepository;
-            private readonly ILoginFailCounterRepository _loginFailCounterRepository;
             private readonly IMediator _mediator;
 
-            public LoginFailOtpNewPasswordCommandHandler(IUserRepository userRepository, IMobileLoginRepository mobileLoginRepository, ILoginFailCounterRepository loginFailCounterRepository, IMediator mediator)
+            public OldPasswordToNewPasswordCommandHandler(IUserRepository userRepository, IMobileLoginRepository mobileLoginRepository, ILoginFailCounterRepository loginFailCounterRepository, IMediator mediator)
             {
                 _userRepository = userRepository;
-                _mobileLoginRepository = mobileLoginRepository;
-                _loginFailCounterRepository = loginFailCounterRepository;
                 _mediator = mediator;
             }
 
 
             [LogAspect(typeof(FileLogger))]
-            [ValidationAspect(typeof(LoginFailOtpNewPasswordCommandValidator))]
-            public async Task<IDataResult<TokenIntegraitonResponse>> Handle(LoginFailOtpNewPasswordCommand request, CancellationToken cancellationToken)
+            [ValidationAspect(typeof(OldPasswordToNewPasswordCommandValidator))]
+            public async Task<IDataResult<TokenIntegraitonResponse>> Handle(OldPasswordToNewPasswordCommand request, CancellationToken cancellationToken)
             {
                 if (request.NewPass != request.NewPassAgain)
                 {
                     return new ErrorDataResult<TokenIntegraitonResponse>(Messages.PasswordNotEqual);
                 }
 
-                var now = DateTime.Now;
-                MobileLogin mobileLogin = await _mobileLoginRepository.GetAsync(w => w.Id == request.MobileLoginId && w.NewPassGuid == request.Guid && w.NewPassGuidExp >= now && w.NewPassStatus == UsedStatus.Send);
+                var userId = Convert.ToInt64(Base64UrlEncoder.Decode(request.XId));
 
-                if (mobileLogin == null)
-                {
-                    return new ErrorDataResult<TokenIntegraitonResponse>(Messages.PasswordChangeTimeExpired);
-                }
+                var user = await _userRepository.GetAsync(u => u.Id == userId);
 
-                var query = _userRepository.Query().Where(u => u.Id == mobileLogin.UserId);
 
-                var user = query.FirstOrDefault();
                 if (user == null)
                 {
                     return new ErrorDataResult<TokenIntegraitonResponse>(Messages.UserNotFound);
                 }
 
+             
+
+
+                if (!(user.LastPasswordChangeGuid == request.Guid 
+                    && user.LastPasswordChangeExpTime != null && user.LastPasswordChangeExpTime.Value.ToUniversalTime() > DateTime.Now))
+                {
+                    return new ErrorDataResult<TokenIntegraitonResponse>(Messages.PasswordChangeTimeFinished);
+                }
+
+                HashingHelper.CreatePasswordHash(request.NewPass, out var oldPasswordSalt, out var oldPasswordHash);
+
+                if (!(user.PasswordHash==oldPasswordHash && user.PasswordSalt==oldPasswordSalt))
+                {
+                    return new ErrorDataResult<TokenIntegraitonResponse>(Messages.oldPassIsNotCorrect);
+                }
+                 
                 HashingHelper.CreatePasswordHash(request.NewPass, out var passwordSalt, out var passwordHash);
                 user.PasswordHash = passwordHash;
                 user.PasswordSalt = passwordSalt;
                 user.FailOtpCount = 0;
                 user.LastPasswordDate = DateTime.Now;
+                user.LastPasswordChangeExpTime = null;
+                user.LastPasswordChangeGuid = null;
+                
                 await _userRepository.UpdateAndSaveAsync(user);
-
-                mobileLogin.NewPassStatus = UsedStatus.Used;
-                await _mobileLoginRepository.UpdateAndSaveAsync(mobileLogin);
-
-                await _loginFailCounterRepository.ResetCsrfTokenFailLoginCount(request.CsrfToken);
+                 
 
                 var tokenResponse = await _mediator.Send(new GetTokenQuery
                 {

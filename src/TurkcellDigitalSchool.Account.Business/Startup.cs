@@ -85,6 +85,7 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddMsIntegrationServicesWithName(Configuration, MsType.Exam);
             services.AddMsIntegrationServicesWithName(Configuration, MsType.File);
             services.AddMsIntegrationServicesWithName(Configuration, MsType.Reporting);
+            services.AddMsIntegrationServicesWithName(Configuration, MsType.IdentityServer);
 
             ValidatorOptions.Global.DisplayNameResolver = (type, memberInfo, expression) =>
             {
