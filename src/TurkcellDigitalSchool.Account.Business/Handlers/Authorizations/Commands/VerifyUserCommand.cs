@@ -73,6 +73,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     MobilePhones = unverifiedUser.MobilePhones,
                     PasswordHash = unverifiedUser.PasswordHash,
                     PasswordSalt = unverifiedUser.PasswordSalt,
+                    RegisterStatus = RegisterStatus.Registered
                     
                 };
 
