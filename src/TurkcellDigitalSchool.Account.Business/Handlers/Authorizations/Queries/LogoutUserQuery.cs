@@ -1,41 +1,38 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using TurkcellDigitalSchool.Account.Business.Constants;
+using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
+using IResult = TurkcellDigitalSchool.Core.Utilities.Results.IResult;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
-    public class LogoutUserQuery : IRequest<IDataResult<AccessToken>>
+    public class LogoutUserQuery : IRequest<IResult>
     {
-        public class LogoutUserQueryHandler : IRequestHandler<LogoutUserQuery, IDataResult<AccessToken>>
+        public class LogoutUserQueryHandler : IRequestHandler<LogoutUserQuery, IResult>
         {
             private readonly ITokenHelper _tokenHelper;
-            private readonly ICacheManager _cacheManager;
-
-            public LogoutUserQueryHandler(ITokenHelper tokenHelper, ICacheManager cacheManager)
+            private readonly IUserSessionRepository _userSession;
+            public LogoutUserQueryHandler(ITokenHelper tokenHelper, IUserSessionRepository userSession)
             {
                 _tokenHelper = tokenHelper;
-                _cacheManager = cacheManager;
+                _userSession = userSession;
             }
 
-      
             [LogAspect(typeof(FileLogger))]
-            public async Task<IDataResult<AccessToken>> Handle(LogoutUserQuery request, CancellationToken cancellationToken)
+            public async Task<IResult> Handle(LogoutUserQuery request, CancellationToken cancellationToken)
             {
-                //todo:orkun  kullanıcı logout olduktan sonra token sona ermelidir tekrar login olmadan kullancı oluşturulabilmekte 
                 var userId = await Task.FromResult(_tokenHelper.GetUserIdByCurrentToken());
-                _cacheManager.Remove($"{CacheKeys.UserIdForClaim}={userId}");
-                return new SuccessDataResult<AccessToken>(
-                    new AccessToken { 
-                        Token = ""
-                    } , Messages.SuccessfulLogOut);
-            }
-
+                var sessionId = _tokenHelper.GetUserSessionIdByCurrentToken();
+                await _userSession.Logout(sessionId);
+                return new SuccessResult();
+            } 
         }
     }
 }

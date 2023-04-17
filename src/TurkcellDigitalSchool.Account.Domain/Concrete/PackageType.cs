@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using TurkcellDigitalSchool.Core.Entities;
-using TurkcellDigitalSchool.Entities.Concrete;
+using TurkcellDigitalSchool.Core.Entities; 
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {

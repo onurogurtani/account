@@ -11,7 +11,8 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly
         public string Description { get; set; }
         public bool IsActive { get; set; }
         public bool IsPublised { get; set; }
-        public bool IsDraft { get; set; }
+        public bool IsDraft { get; set; } 
+        public long? FormId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public EventTypeEnum EventTypeEnum { get; set; }

@@ -19,6 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Validat
             RuleFor(p => p.NewPass).NotEmpty();
             RuleFor(p => p.NewPassAgain).NotEmpty();
             RuleFor(p => p.CsrfToken).NotEmpty(); 
+            RuleFor(p => p.ClientId).NotEmpty(); 
         }
     }
 }

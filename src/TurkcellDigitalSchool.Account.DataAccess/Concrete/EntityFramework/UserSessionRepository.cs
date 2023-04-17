@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
@@ -89,6 +91,14 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
             #endregion Update On Redis 
 
             return entity;
+        }
+
+        public async Task Logout(long id)
+        {
+            var userSession = await Context.UserSessions.Where(w => w.Id == id).FirstOrDefaultAsync();
+            if (userSession != null) { return; }
+            userSession.EndTime = DateTime.Now;
+            await Context.SaveChangesAsync();
         }
 
     }
