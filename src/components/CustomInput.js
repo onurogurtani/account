@@ -77,8 +77,11 @@ export const CustomPassword = styled(Input.Password)(
 `,
 );
 
-const CustomInput = (props, ref) => {
-  return <CustomInputs ref={ref} autoComplete="off" {...props} />;
+const CustomInput = ({ onChange, externalData, ...props }, ref) => {
+  const _onChange = (e) => {
+    onChange?.(e, externalData);
+  }
+  return <CustomInputs ref={ref} autoComplete="off" onChange={_onChange} {...props} />;
 };
 
 export default forwardRef(CustomInput);

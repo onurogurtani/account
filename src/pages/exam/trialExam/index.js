@@ -1,7 +1,8 @@
-import { Form, Tabs } from 'antd';
+import { Form, Select, Switch, Tabs } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+    confirmDialog,
     CustomButton,
     CustomCheckbox,
     CustomCollapseCard,
@@ -11,29 +12,36 @@ import {
     CustomInput,
     CustomPageHeader,
     CustomSelect,
+    errorDialog,
     Option,
+    successDialog,
 } from '../../../components';
 import { getAllClassStages } from '../../../store/slice/classStageSlice';
 import { getLessonsQuesiton } from '../../../store/slice/lessonsSlice';
 import { getLessonSubjectsList, resetLessonSubjects } from '../../../store/slice/lessonSubjectsSlice';
 import { getLessonSubSubjectsList, resetLessonSubSubjects } from '../../../store/slice/lessonSubSubjectsSlice';
 import { getUnitsList, resetLessonUnits } from '../../../store/slice/lessonUnitsSlice';
-import { setTrialExamFormData } from '../../../store/slice/trialExamSlice';
+import { getTrialExamUpdate, setTrialExamFormData } from '../../../store/slice/trialExamSlice';
 import { getTrialTypeList } from '../../../store/slice/trialTypeSlice';
 import { getByFilterPagedVideosList, setVideos } from '../../../store/slice/videoSlice';
 import '../../../styles/exam/trialExam.scss';
 import { dateFormat } from '../../../utils/keys';
 import { validation } from '../../../utils/utils';
 import AddQuestion from './AddQuestion';
+import moment from 'moment';
+import { useHistory } from 'react-router-dom';
 
 const TrialExam = () => {
+    const history = useHistory();
     const { TabPane } = Tabs;
     const [activeKey, setActiveKey] = useState('0');
     const dispatch = useDispatch();
     const [form] = Form.useForm();
+    const dateStaticFormat = { showTime: { format: 'HH:mm' }, format: 'DD.MM.YYYY HH:mm' };
     const { trialTypeList } = useSelector((state) => state.trialType);
     const { allClassList } = useSelector((state) => state.classStages);
     const { trialExamFormData } = useSelector((state) => state?.tiralExam);
+    const [schoolLevel, setSchoolLevel] = useState('');
 
     /*  const { lessons } = useSelector((state) => state.lessons);
     const { lessonUnits } = useSelector((state) => state?.lessonUnits);
@@ -43,6 +51,27 @@ const TrialExam = () => {
     const [dependLecturingVideo, setDependLecturingVideo] = useState(false);
 */
 
+    useEffect(() => {
+        if (trialExamFormData.id) {
+            form.setFieldsValue({
+                examType: trialExamFormData.examType,
+                classroomId: trialExamFormData.classroomId,
+                difficulty: trialExamFormData.difficulty,
+                finishDate: moment(trialExamFormData.finishDate),
+                startDate: moment(trialExamFormData.startDate),
+                keyWords: trialExamFormData.keyWords.split(','),
+                name: trialExamFormData.name,
+                testExamTime: trialExamFormData.testExamTime,
+                testExamTypeId: trialExamFormData.testExamTypeId,
+                transitionBetweenQuestions: trialExamFormData.transitionBetweenQuestions,
+                transitionBetweenSections: trialExamFormData.transitionBetweenSections,
+                IsLiveTextExam: trialExamFormData.IsLiveTextExam,
+                IsAllowDownloadPdf: trialExamFormData.IsAllowDownloadPdf,
+            });
+            const school = allClassList.find((q) => q.id === trialExamFormData.classroomId).schoolLevel;
+            setSchoolLevel(school);
+        }
+    }, [form, allClassList]);
     const disabledEndDate = useCallback(
         (endValue) => {
             const { startDate } = form?.getFieldsValue(['startDate']);
@@ -86,18 +115,89 @@ const TrialExam = () => {
         dispatch(getAllClassStages());
     }, [dispatch]);
 
+    const trialExamActiveAndPassive = async () => {
+        const aciton = await dispatch(
+            getTrialExamUpdate({
+                data: {
+                    testExam: { ...trialExamFormData, recordStatus: 0 },
+                },
+            }),
+        );
+        if (getTrialExamUpdate.fulfilled.match(aciton)) {
+            successDialog({
+                title: 'Başarılı',
+                message: aciton.payload.message,
+            });
+            dispatch(
+                setTrialExamFormData({
+                    ...trialExamFormData,
+                    recordStatus: trialExamFormData.recordStatus === 1 ? 0 : 1,
+                }),
+            );
+        } else {
+            errorDialog({ title: 'Hata', message: aciton.payload.message });
+        }
+    };
     return (
         <div className=" trial-exam-add">
             <CustomPageHeader>
-                <CustomCollapseCard cardTitle={'Deneme Sınavı Ekle'}>
+                <CustomCollapseCard
+                    cardTitle={trialExamFormData.id ? 'Deneme Sınavı Ön İzle Ve Güncelle' : 'Deneme Sınavı Ekle'}
+                >
                     <div className="trial-exam-add-content">
                         <Tabs
                             onChange={(e) => {
-                                // setActiveKey(e);
+                                if (trialExamFormData.id) {
+                                    setActiveKey(e);
+                                }
                             }}
                             activeKey={activeKey}
                         >
                             <TabPane tab="Genel Bilgiler" key={'0'}>
+                                {trialExamFormData.id && (
+                                    <div className=" update-action-button">
+                                        <CustomButton
+                                            onClick={() => {
+                                                history.go(-1);
+                                            }}
+                                        >
+                                            Geri
+                                        </CustomButton>
+
+                                        <CustomButton
+                                            onClick={async () => {
+                                                trialExamActiveAndPassive();
+                                            }}
+                                        >
+                                            {trialExamFormData.recordStatus === 1 ? 'Pasifleştir' : 'Aktifleştir'}
+                                        </CustomButton>
+
+                                        <CustomButton
+                                            onClick={() => {
+                                                confirmDialog({
+                                                    title: 'Kopyala',
+                                                    message: 'Deneme sınavını kopyalamak istedğinizden eminmisiniz?',
+                                                    onOk: () => {
+                                                        dispatch(
+                                                            setTrialExamFormData({
+                                                                ...trialExamFormData,
+                                                                id: undefined,
+                                                            }),
+                                                        );
+
+                                                        successDialog({
+                                                            title: 'Başarılı',
+                                                            message: 'Kopyalama Başarılı',
+                                                        });
+                                                    },
+                                                });
+                                            }}
+                                        >
+                                            Kopyala
+                                        </CustomButton>
+                                    </div>
+                                )}
+
                                 <CustomForm
                                     onFinish={(e) => {
                                         const data = {
@@ -123,13 +223,16 @@ const TrialExam = () => {
                                         name={'testExamTypeId'}
                                         label="Deneme Türü"
                                     >
-                                        <CustomSelect>
+                                        <CustomSelect disabled={trialExamFormData.id ? true : false}>
                                             {trialTypeList?.items?.map((item, index) => (
                                                 <Option value={item.id} key={item.id}>
                                                     {item.name}
                                                 </Option>
                                             ))}
                                         </CustomSelect>
+                                    </CustomFormItem>
+                                    <CustomFormItem name={'IsLiveTextExam'} label="Canlı Deneme">
+                                        <Switch />
                                     </CustomFormItem>
                                     <CustomFormItem
                                         rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
@@ -143,7 +246,13 @@ const TrialExam = () => {
                                         name={'classroomId'}
                                         label="Sınıf"
                                     >
-                                        <CustomSelect>
+                                        <CustomSelect
+                                            disabled={trialExamFormData.id ? true : false}
+                                            onChange={(e) => {
+                                                const school = allClassList.find((q) => q.id === e).schoolLevel;
+                                                setSchoolLevel(school);
+                                            }}
+                                        >
                                             {allClassList?.map((item, index) => (
                                                 <Option value={item.id} key={item.id}>
                                                     {item.name}
@@ -151,12 +260,19 @@ const TrialExam = () => {
                                             ))}
                                         </CustomSelect>
                                     </CustomFormItem>
+
                                     <CustomFormItem
-                                        rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
+                                        rules={[
+                                            {
+                                                required: schoolLevel === 30 ? true : false,
+                                                message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                                            },
+                                        ]}
                                         name={'examType'}
                                         label="Sınav Türü"
                                     >
                                         <CustomSelect
+                                            disabled={schoolLevel !== 30 ? true : false}
                                             options={[
                                                 {
                                                     value: 1,
@@ -173,12 +289,14 @@ const TrialExam = () => {
                                             ]}
                                         ></CustomSelect>
                                     </CustomFormItem>
+
                                     <CustomFormItem
                                         rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
                                         name={'difficulty'}
                                         label="Zorluk"
                                     >
                                         <CustomSelect
+                                            disabled={trialExamFormData.id ? true : false}
                                             options={[
                                                 {
                                                     value: '1',
@@ -209,7 +327,10 @@ const TrialExam = () => {
                                                 { required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
                                                 {
                                                     validator: (field, value) => {
-                                                        if (validation.isNumber(value) && value.search(' ') === -1) {
+                                                        if (
+                                                            validation.isNumber(value) &&
+                                                            value.toString().search(' ') === -1
+                                                        ) {
                                                             return Promise.resolve();
                                                         } else {
                                                             return Promise.reject(new Error());
@@ -239,7 +360,10 @@ const TrialExam = () => {
                                         name={'startDate'}
                                         label="Başlangıç Tarihi"
                                     >
-                                        <CustomDatePicker />
+                                        <CustomDatePicker
+                                            showTime={dateStaticFormat.showTime}
+                                            format={dateStaticFormat.format}
+                                        />
                                     </CustomFormItem>
                                     <CustomFormItem
                                         rules={[
@@ -252,7 +376,11 @@ const TrialExam = () => {
                                         name={'finishDate'}
                                         label="Bitiş Tarihi"
                                     >
-                                        <CustomDatePicker disabledDate={disabledEndDate} />
+                                        <CustomDatePicker
+                                            showTime={dateStaticFormat.showTime}
+                                            format={dateStaticFormat.format}
+                                            disabledDate={disabledEndDate}
+                                        />
                                     </CustomFormItem>
 
                                     {/**    <CustomFormItem name={'dependLecturingVideo'}>
@@ -403,7 +531,11 @@ const TrialExam = () => {
                                             </CustomFormItem>
                                         </>
                                     )} */}
-
+                                    <CustomFormItem valuePropName="checked" name={'IsAllowDownloadPdf'}>
+                                        <CustomCheckbox>
+                                            Sınavın PDF Dosyası Olarak İndirilmesine İzin Ver
+                                        </CustomCheckbox>
+                                    </CustomFormItem>
                                     <CustomFormItem valuePropName="checked" name={'transitionBetweenQuestions'}>
                                         <CustomCheckbox>Sorular Arası Geçise İzin Ver</CustomCheckbox>
                                     </CustomFormItem>
@@ -415,7 +547,7 @@ const TrialExam = () => {
                                             form.submit();
                                         }}
                                     >
-                                        İleri
+                                        Kaydet Ve İleri
                                     </CustomButton>
                                 </CustomForm>
                             </TabPane>

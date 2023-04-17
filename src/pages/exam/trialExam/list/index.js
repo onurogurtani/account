@@ -13,16 +13,44 @@ import {
     CustomTable,
     Option,
 } from '../../../../components';
+import { useHistory } from 'react-router-dom';
+
 import { Form, Row, Col } from 'antd';
 import '../../../../styles/exam/trialExamList.scss';
 import { getAllClassStages } from '../../../../store/slice/classStageSlice';
-import { getTrialExamList } from '../../../../store/slice/trialExamSlice';
-import { SearchOutlined } from '@ant-design/icons';
+import { getTrialExamList, setTrialExamFormData } from '../../../../store/slice/trialExamSlice';
+import { RightOutlined, SearchOutlined } from '@ant-design/icons';
 const TrialExamList = () => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
+    const history = useHistory();
+
     const { trialExamList } = useSelector((state) => state.tiralExam);
     const { allClassList } = useSelector((state) => state.classStages);
+    const getTrialExamDetail = (record) => {
+        dispatch(
+            setTrialExamFormData({
+                id: record.id,
+                classroomId: record.classroomId,
+                difficulty: record.difficulty,
+                examType: record.examType,
+                finishDate: record.finishDate,
+                keyWords: record.keyWords,
+                name: record.name,
+                recordStatus: record.recordStatus,
+                sections: record.sections,
+                startDate: record.startDate,
+                testExamStatus: record.testExamStatus,
+                testExamTime: record.testExamTime,
+                testExamTypeId: record.testExamTypeId,
+                transitionBetweenQuestions: record.transitionBetweenQuestions,
+                transitionBetweenSections: record.transitionBetweenSections,
+                IsLiveTextExam: record.IsLiveTextExam,
+                IsAllowDownloadPdf: record.IsAllowDownloadPdf,
+            }),
+        );
+        history.push('/exam/trial-exam');
+    };
 
     const columns = [
         {
@@ -128,6 +156,19 @@ const TrialExamList = () => {
             key: 'testExamStatusName',
             render: (item, record) => {
                 return <div>{item}</div>;
+            },
+        },
+        {
+            render: (item, record) => {
+                return (
+                    <CustomButton
+                        onClick={() => {
+                            getTrialExamDetail(record);
+                        }}
+                    >
+                        <RightOutlined />
+                    </CustomButton>
+                );
             },
         },
     ];

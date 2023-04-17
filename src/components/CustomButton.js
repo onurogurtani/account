@@ -21,8 +21,12 @@ const CustomButtons = styled(Button)(
 );
 //color: #fff;
 
-const CustomButton = (props) => {
-  return <CustomButtons {...props} />;
+const CustomButton = ({ onClick, externalData, ...props }) => {
+
+  const _onClick = (event) => {
+    onClick?.(event, externalData)
+  }
+  return <CustomButtons onClick={_onClick} {...props} />;
 };
 
 export default CustomButton;

@@ -15,6 +15,10 @@ const CustomPageHeader = ({
 }) => {
   const history = useHistory();
 
+  const childs = React.Children.toArray(children);
+  const actionButtons = childs.filter((x) => x.key?.includes(".$action"));
+  const defaultChilds = childs.filter((x) => !x.key?.includes(".$action"));
+
   return (
     <>
       <div className="custom-header-content" {...props}>
@@ -23,6 +27,7 @@ const CustomPageHeader = ({
             <CustomImage onClick={() => history.goBack()} src={arrowLeft} />
             {title}
           </h2>
+          {actionButtons}
           {showHelpButton && (
             <CustomButton className="custom-btn-success">
               <CustomImage src={help} />{' '}
@@ -55,7 +60,7 @@ const CustomPageHeader = ({
           </div>
         )}
       </div>
-      {children}
+      {defaultChilds}
     </>
   );
 };

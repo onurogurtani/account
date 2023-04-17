@@ -15,9 +15,17 @@ const getTrialExamList = (data) => {
         data: data,
     });
 };
+const trialExamsUpdate = (data) => {
+    return api({
+        url: '/Exam/TestExams/Update',
+        method: 'PUT',
+        data: data,
+    });
+};
 const trialExamServices = {
     trialExamsAdd,
     getTrialExamList,
+    trialExamsUpdate,
 };
 
 export default trialExamServices;

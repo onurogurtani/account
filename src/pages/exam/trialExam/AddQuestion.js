@@ -12,6 +12,7 @@ import {
     CustomSelect,
     errorDialog,
     Option,
+    successDialog,
 } from '../../../components';
 import { getLessonsQuesitonFilter, resetLessonsFilterList } from '../../../store/slice/lessonsSlice';
 import { getLessonSubjectsListFilter, resetLessonSubjectsFilter } from '../../../store/slice/lessonSubjectsSlice';
@@ -21,7 +22,13 @@ import {
 } from '../../../store/slice/lessonSubSubjectsSlice';
 import { getUnitsListFilter, resetLessonUnitsFilter } from '../../../store/slice/lessonUnitsSlice';
 import { getByFilterPagedQuestionOfExamsList } from '../../../store/slice/questionIdentificationSlice';
-import { setTrialExamFormData, deleteAddQuesiton, getTrialExamAdd } from '../../../store/slice/trialExamSlice';
+import {
+    setTrialExamFormData,
+    deleteAddQuesiton,
+    getTrialExamAdd,
+    getTrialExamUpdate,
+    canceledQuesiton,
+} from '../../../store/slice/trialExamSlice';
 import Preview from './Preview';
 const AddQuestion = ({ setActiveKey }) => {
     const [step, setStep] = useState(1);
@@ -110,22 +117,75 @@ const AddQuestion = ({ setActiveKey }) => {
         );
     }, [dispatch, trialExamFormData.classroomId]);
 
-    const addSumbit = async () => {
-        const aciton = await dispatch(
-            getTrialExamAdd({
-                data: {
-                    testExam: {
-                        ...trialExamFormData,
-                        keyWords: trialExamFormData.keyWords.toString(),
-                        testExamStatus: 1,
+    const addSumbit = async ({ testExamStatus }) => {
+        if (trialExamFormData.id) {
+            const aciton = await dispatch(
+                getTrialExamUpdate({
+                    data: {
+                        testExam: {
+                            ...trialExamFormData,
+                            keyWords: trialExamFormData.keyWords.toString(),
+                            testExamStatus: testExamStatus ? testExamStatus : 1,
+                        },
                     },
-                },
-            }),
-        );
-        if (getTrialExamAdd.fulfilled.match(aciton)) {
+                }),
+            );
+            if (getTrialExamUpdate.fulfilled.match(aciton)) {
+                successDialog({ title: 'Başarılı', message: aciton.payload.message });
+            } else {
+                errorDialog({ title: 'Hata', message: aciton.payload.message });
+            }
         } else {
-            errorDialog({ title: 'Hata', message: aciton.payload.message });
+            const aciton = await dispatch(
+                getTrialExamAdd({
+                    data: {
+                        testExam: {
+                            ...trialExamFormData,
+                            keyWords: trialExamFormData.keyWords.toString(),
+                            testExamStatus: testExamStatus ? testExamStatus : 1,
+                        },
+                    },
+                }),
+            );
+            if (getTrialExamAdd.fulfilled.match(aciton)) {
+            } else {
+                errorDialog({ title: 'Hata', message: aciton.payload.message });
+            }
         }
+    };
+
+    const questionCanceled = async (item, index) => {
+        confirmDialog({
+            title: 'Uyarı',
+            okText: 'Evet',
+            cancelText: 'Hayır',
+            onOk: () => {
+                dispatch(
+                    setTrialExamFormData({
+                        ...trialExamFormData,
+                        id: undefined,
+                    }),
+                );
+
+                successDialog({
+                    title: 'Başarılı',
+                    message: 'Kopyalama Başarılı',
+                });
+                setActiveKey('0');
+            },
+            onCancel: () => {
+                const findIndex = trialExamFormData?.sections?.findIndex((q) => q.name === selectSection);
+                dispatch(
+                    canceledQuesiton({
+                        index: findIndex,
+                        quesitonIndex: index,
+                        isCanceled: !item.isCanceled,
+                    }),
+                );
+            },
+            message:
+                'Soruyu iptal ettiğinizden dolayı deneme sınavını güncellemek ister misiniz? Deneme sınavının kopyasını oluşturarak yeni bir sınav yayınlayabilirsiniz. Sınavı yayınlayıp yeni bir kopya üzerinden değişiklik yapmak ister misiniz?',
+        });
     };
     return (
         <div className="add-question-trial">
@@ -230,19 +290,32 @@ const AddQuestion = ({ setActiveKey }) => {
                                             <div key={index} className="question-image-main">
                                                 <img className="question-image" src={item?.file?.base64} />
                                                 {item.filePath}
+                                                {item.isCanceled && <div className="canceled-quesiton"> İPTAL</div>}
                                             </div>
+
                                             <div
                                                 onClick={() => {
                                                     const findIndex = trialExamFormData?.sections?.findIndex(
                                                         (q) => q.name === selectSection,
                                                     );
                                                     dispatch(
-                                                        deleteAddQuesiton({ index: findIndex, quesitonIndex: index }),
+                                                        deleteAddQuesiton({
+                                                            index: findIndex,
+                                                            quesitonIndex: index,
+                                                        }),
                                                     );
                                                 }}
                                             >
                                                 <CustomButton className="button-red">Sil</CustomButton>
                                             </div>
+
+                                            <CustomButton
+                                                onClick={() => {
+                                                    questionCanceled(item, index);
+                                                }}
+                                            >
+                                                {item.isCanceled ? 'Geri Al' : 'İptal Et'}
+                                            </CustomButton>
                                         </div>
                                     ))}
                                 {trialExamFormData?.sections?.find((q) => q.name === selectSection)
@@ -260,7 +333,13 @@ const AddQuestion = ({ setActiveKey }) => {
                             Geri
                         </CustomButton>
                         <CustomButton>İptal</CustomButton>
-                        <CustomButton>Taslak Olarak Kaydet</CustomButton>
+                        <CustomButton
+                            onClick={() => {
+                                addSumbit({ testExamStatus: 2 });
+                            }}
+                        >
+                            Taslak Olarak Kaydet
+                        </CustomButton>
                         <CustomButton onClick={addSumbit}>Kaydet Ve Kullanıma Aç</CustomButton>
                     </div>
                 </div>

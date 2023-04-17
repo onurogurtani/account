@@ -52,6 +52,9 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
   const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
   const columns = videoListTableColumn(dispatch, subjectChooseTab, usedVideoIdsQueryListData);
 
+  const [currentLessonId, setCurrentLessonId] = useState();
+  const [currentUnitId, setCurrentUnitId] = useState();
+
   const paginationSetFilteredVideoList = (res) => {
     dispatch(setSubjectChooseVideoFilteredList(res?.payload));
   };
@@ -73,6 +76,9 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
         setClassroomId(showData.classroomId);
         setLessonId(showData.lessonId);
         setUnitId(showData.lessonUnitId);
+
+        setCurrentLessonId(showData.lessonId)
+        setCurrentUnitId(showData.lessonUnitId)
       }
     }, [],
   );
@@ -80,9 +86,6 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
   useEffect(async () => {
       if (activeKey === '0') {
         const educationYearVal = await subjectForm.getFieldValue(['educationYear']);
-        await setClassroomId(currentData.classroomId);
-        await setLessonId(currentData.lessonId);
-        await setUnitId(currentData.lessonUnitId);
 
         await subjectForm.setFieldsValue({
           educationYear: educationYearVal ? educationYearVal : currentData.recordStatus === 1 ? currentData.educationYearId : undefined,
@@ -102,8 +105,6 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
         currentData.workPlanVideos?.forEach((item) => {
           dispatch(selectedPracticeQuestionTabRowsVideo(item.video));
         });
-        // const res = allClassList.find((q) => q.id === currentData.classroomId)
-        // if(res) { dispatch(setSubjectChooseSchoolLevel(res.schoolLevel))}
         await handleSearchVideo('edit');
         showData?.activeKey && dispatch(onChangeActiveKey(showData?.activeKey));
 
@@ -137,10 +138,12 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
     }
     if (fromEl === 'lessonId') {
       setLessonId(value);
+      setCurrentLessonId(value);
       subjectForm.resetFields(['LessonUnitIds', 'LessonSubjectIds']);
     }
     if (fromEl === 'lessonUnitId') {
       setUnitId(value);
+      setCurrentUnitId(value);
       subjectForm.resetFields(['LessonSubjectIds']);
     }
   };
@@ -187,7 +190,6 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
     };
 
     dispatch(setSubjectChooseFilterData(data));
-    // console.log('subjectChooseTab.filterObject', subjectChooseTab.filterObject);
 
     const body = {
       ...data,
@@ -197,8 +199,6 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
     const action = await dispatch(getByFilterPagedVideos(body));
     if (getByFilterPagedVideos?.fulfilled?.match(action)) {
       await dispatch(setSubjectChooseVideoFilteredList(action?.payload));
-      // console.log('subjectChooseTab.videos', subjectChooseTab.videos);
-      // console.log('subjectChooseTab.form', subjectChooseTab.formData);
       await dispatch(getUsedVideoIdsQuery());
       if (from === 'edit') {
         dispatch(selectedSubjectTabRowVideo(currentData.video));
@@ -309,7 +309,7 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
               placeholder='Ünite'
             >
               {lessonUnits
-                ?.filter((item) => item.lessonId === lessonId && item.isActive === true)
+                ?.filter((item) => item.lessonId === currentLessonId && item.isActive === true)
                 ?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>
@@ -336,7 +336,7 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
               placeholder='Konu'
             >
               {lessonSubjects
-                ?.filter((item) => item.lessonUnitId === unitId && item.isActive === true)
+                ?.filter((item) => item.lessonUnitId === currentUnitId && item.isActive === true)
                 ?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>
