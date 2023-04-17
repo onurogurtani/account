@@ -1,13 +1,16 @@
-﻿using MediatR;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using TurkcellDigitalSchool.Account.Business.Handlers.Student.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -20,13 +23,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
         public long UserId { get; set; }
         public string Name { get; set; }
         public string SurName { get; set; }
-        public int? CitizenId { get; set; }
+        public int CitizenId { get; set; }
         public string Email { get; set; }
         public string MobilPhones { get; set; }
         public class UpdateStudentGuardianInformationCommandHandler : IRequestHandler<UpdateStudentGuardianInformationCommand, IResult>
         {
             IStudentGuardianInformationRepository _studentGuardianInformationRepository;
-
             public UpdateStudentGuardianInformationCommandHandler(IStudentGuardianInformationRepository studentGuardianInformationRepository)
             {
                 _studentGuardianInformationRepository = studentGuardianInformationRepository;
@@ -35,7 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 
             [MessageConstAttr(MessageCodeType.Success)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
+            [ValidationAspect(typeof(UpdateStudentGuardianInformationValidator), Priority = 2)]
             public async Task<IResult> Handle(UpdateStudentGuardianInformationCommand request, CancellationToken cancellationToken)
             {
                 var existStudentGuardianInfo = _studentGuardianInformationRepository.Query().FirstOrDefault(w => w.UserId == request.UserId);

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using TurkcellDigitalSchool.Account.Business.Handlers.Student.ValidationRules;
 using TurkcellDigitalSchool.Account.Business.Services.User;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
@@ -27,12 +28,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
     public class UpdateStudentEducationInformationCommand : IRequest<IResult>
     {
         public long UserId { get; set; }
-        public int ExamType { get; set; }
+        public ExamType ExamType { get; set; }
         public long CityId { get; set; }
         public long CountyId { get; set; }
         public SchoolTypeEnum SchoolType { get; set; }
         public long SchoolId { get; set; }
-        public long ClassroomId { get; set; }
+        public long? ClassroomId { get; set; }
         public int? GraduationYear { get; set; }
         public int? DiplomaGrade { get; set; }
         public YKSStatementEnum? YKSExperienceInformation { get; set; }
@@ -43,7 +44,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
         public class UpdateStudentEducationInformationCommandHandler : IRequestHandler<UpdateStudentEducationInformationCommand, IResult>
         {
             IStudentEducationInformationRepository _studentEducationInformationRepository;
-            public UpdateStudentEducationInformationCommandHandler(IStudentEducationInformationRepository studentEducationInformationRepository, IUserService userService)
+            public UpdateStudentEducationInformationCommandHandler(IStudentEducationInformationRepository studentEducationInformationRepository)
             {
                 _studentEducationInformationRepository = studentEducationInformationRepository;
             }
@@ -52,7 +53,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             [MessageConstAttr(MessageCodeType.Success)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
-
+            [ValidationAspect(typeof(UpdateStudentEducationInformationValidator), Priority = 2)]
             public async Task<IResult> Handle(UpdateStudentEducationInformationCommand request, CancellationToken cancellationToken)
             {
                 var existStudentEducationInfo = _studentEducationInformationRepository.Query().FirstOrDefault(w => w.UserId == request.UserId);

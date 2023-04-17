@@ -43,8 +43,4 @@
     <ProjectReference Include="..\TurkcellDigitalSchool.Account.DataAccess\TurkcellDigitalSchool.Account.DataAccess.csproj" />
   </ItemGroup>
   
-  <ItemGroup>
-    <Folder Include="Handlers\Student\ValidationRules\" />
-  </ItemGroup>
-  
 </Project>
