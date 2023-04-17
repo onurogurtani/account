@@ -1,10 +1,10 @@
-import React, { useState, useContext, useEffect, useCallback, useMemo } from 'react';
+import React, { useState} from 'react';
 import { Tabs } from 'antd';
 import { CustomCollapseCard, Text } from '../../../../components';
 import '../../../../styles/temporaryFile/asEvGeneral.scss';
 import AsEvForm from '../form/AsEvForm';
 import AsEvQuestions from './AsEvQuestions';
-import ChangeQuestionForm from './ChangeQuestionForm';
+
 const { TabPane } = Tabs;
 
 const AddAsEv = () => {
@@ -15,10 +15,7 @@ const AddAsEv = () => {
       <TabPane tab="Genel Bilgiler" key="1">
         <AsEvForm step={step} setStep={setStep} disabled={disabled} setDisabled={setDisabled} />
       </TabPane>
-      {/* //TODO DİSABLED AYARLANMASI LAZIM */}
-
       <TabPane disabled={disabled} tab="Sorular" key="2">
-        {/* TODO SORU ESÇİMİ KONTROL EMEK LAZIM */}
         <CustomCollapseCard cardTitle={<Text t="Soru Seçimi" />}>
           <AsEvQuestions />
         </CustomCollapseCard>{' '}

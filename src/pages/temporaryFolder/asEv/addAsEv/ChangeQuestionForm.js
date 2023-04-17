@@ -10,7 +10,6 @@ import {
 } from '../../../../components';
 import '../../../../styles/temporaryFile/asEvGeneral.scss';
 
-import { getVideoNames } from '../../../../store/slice/asEvSlice';
 import { getAllClassStages } from '../../../../store/slice/classStageSlice';
 import { getLessons } from '../../../../store/slice/lessonsSlice';
 import '../../../../styles/temporaryFile/asEv.scss';
@@ -69,7 +68,6 @@ const ChangeQuestionForm = ({
     form.resetFields();
     dispatch(getAllClassStages());
     dispatch(getLessons());
-    dispatch(getVideoNames());
   }, []);
 
   const { lessonSubSubjects } = useSelector((state) => state?.lessonSubSubjects);

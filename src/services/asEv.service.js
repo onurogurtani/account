@@ -1,18 +1,5 @@
 import { api } from './api';
 
-const getVideoNames = () => {
-    return api({
-        url: `Exam/AsEvs/getVideoNames`,
-        method: 'GET',
-    });
-};
-
-const getCreatedNames = () => {
-    return api({
-        url: `Exam/AsEvs/getCreatedNames`,
-        method: 'GET',
-    });
-};
 const adAsEv = (data) => {
     return api({
         url: `Exam/AsEvs`,
@@ -42,13 +29,56 @@ const getAsEvQuestionOfExamsByAsEvId = (data) => {
     });
 };
 
+const getByFilterPagedAsEvQuestions = (data) => {
+    return api({
+        url: `Exam/AsEvs/GetByFilterPagedAsEvQuestions`,
+        method: 'POST',
+        data,
+    });
+};
+
+const addAsEvQuestion = (data) => {
+    return api({
+        url: `Exam/AsEvs/AsEvAddQuestion`,
+        method: 'POST',
+        data,
+    });
+};
+
+const removeAsEvQuestion = (data) => {
+    return api({
+        url: `Exam/AsEvs/AsEvRemovalQuestion`,
+        method: 'POST',
+        data,
+    });
+};
+
+const getAsEvTestPreview = (data) => {
+    return api({
+        url: `Exam/AsEvs/GetAsEvTestPreview`,
+        method: 'POST',
+        data,
+    });
+};
+
+const setQuestionSequence = (data) => {
+    return api({
+        url: `Exam/AsEvs/SetQuestionSequence`,
+        method: 'POST',
+        data,
+    });
+};
+
 const asEvServices = {
-    getVideoNames,
-    getCreatedNames,
     adAsEv,
     getFilterPagedAsEvs,
     deleteAsEv,
     getAsEvQuestionOfExamsByAsEvId,
+    getByFilterPagedAsEvQuestions,
+    addAsEvQuestion,
+    removeAsEvQuestion,
+    getAsEvTestPreview,
+    setQuestionSequence
 };
 
 export default asEvServices;
