@@ -1,79 +1,125 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import SwiperCore, { Navigation, Pagination } from 'swiper';
-import 'swiper/components/navigation/navigation.scss';
-import 'swiper/swiper.scss';
-import { CustomButton } from '../../../../components';
+import { CustomButton, CustomFormItem, CustomForm,CustomPagination } from '../../../../components';
 import '../../../../styles/temporaryFile/asEvSwiper.scss';
-import AsEvQuestionSwiper from './AsEvQuestionSwiper';
-import NewQuestionModal from './NewQuestionModal';
-import QuestionKnowledgeList from './QuestionKnowledgeList';
-import QuestionSideBar from './QuestionSideBar';
+import { Card,Rate } from 'antd';
+import AsEvQuestionFilter from '../addAsEv/AsEvQuestionFilter';
+import { adAsEvQuestion, getByFilterPagedAsEvQuestions,removeAsEvQuestion,getAsEvTestPreview } from '../../../../store/slice/asEvSlice';
+import { EChooices } from '../../../../constants/questions';
+import '../../../../styles/temporaryFile/asEvForm.scss';
+import DifficultiesModal from '../addAsEv/DifficultiesModal'
 
-SwiperCore.use([Pagination, Navigation]);
 
-const AsEvQuestions = ({ updateAsEv }) => {
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  const dummyIds = [1490, 1491];
-  const dummyIds2 = [1390, 1391, 1392, 1393, 1394, 1395, 1396, 1397, 1398, 1399];
-  const [selectnewQuestion, setSelectnewQuestion] = useState(false);
-  const { newAsEv, asEvQuestions } = useSelector((state) => state?.asEv);
-  const dispatch = useDispatch();
-  const completeAsEv = async () => {
-    setSelectnewQuestion(false);
-  };
+const AsEvQuestions = () => {
+    const { questions,asEvTestPreview } = useSelector((state) => state?.asEv);
+    const [isVisible, setIsVisible] = useState(false);
+    const dispatch = useDispatch();
 
-  return (
-    <>
-      <div className="slider-filter-container">
-        <AsEvQuestionSwiper setCurrentSlideIndex={setCurrentSlideIndex} data={dummyIds} />
-        <QuestionSideBar
-          setSelectnewQuestion={setSelectnewQuestion}
-          currentSlideIndex={currentSlideIndex}
-          data={dummyIds}
-        />
+    const handlePagination = (value) => {
+        console.log(value);
+    };
 
-        <div
-          style={{
-            width: '100%',
-            // border: '2px solid red',
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            padding: '16px',
-          }}
-        >
-          <CustomButton onClick={completeAsEv}>Tamamla</CustomButton>
-        </div>
-      </div>
-      {selectnewQuestion && (
-        <NewQuestionModal isVisible={selectnewQuestion} setIsVisible={setSelectnewQuestion}>
-          <h3>Soru Değiştir</h3>
-          <div className="slider-filter-container">
-            <AsEvQuestionSwiper setCurrentSlideIndex={setCurrentSlideIndex} data={dummyIds2} className={'swiper2'} />
-            <div
-              style={{
-                width: '30%',
-                height: '800px',
-                display: 'flex',
-              }}
-            >
-              <QuestionKnowledgeList
-                style={{
-                  width: '30% !important',
-                }}
-                data={[]}
-                currentSlideIndex={currentSlideIndex}
-              />
+    const openDifficultiesModal = async() => {
+        await dispatch(getAsEvTestPreview({asEvTestPreviewDetailSearch: {asEvId: 130}}))
+        setIsVisible(true)
+    };
+
+    const handleQuestionAction = async (id,isAdded) => {
+        if(isAdded) {
+            const action = await dispatch(removeAsEvQuestion({ asEvId: 130, questionOfExamId: id }));
+
+            if (removeAsEvQuestion.fulfilled.match(action)) {
+                await dispatch(
+                    getByFilterPagedAsEvQuestions({
+                        asEvQuestionsDetailSearch: {
+                            asEvId: 130,
+                        },
+                    }),
+                );
+            }
+        } else{
+            const action = await dispatch(adAsEvQuestion({ asEvId: 130, questionOfExamId: id }));
+
+            if (adAsEvQuestion.fulfilled.match(action)) {
+                await dispatch(
+                    getByFilterPagedAsEvQuestions({
+                        asEvQuestionsDetailSearch: {
+                            asEvId: 130,
+                        },
+                    }),
+                );
+            }
+        }
+      
+    };
+
+    return (
+        <>
+            <AsEvQuestionFilter />
+            <div className="slider-filter-container">
+                {questions?.items &&
+                    questions?.items[0]?.asEvQuestions &&
+                    questions?.items[0]?.asEvQuestions.map((item) => (
+                        <>
+                            <Card
+                                hoverable
+                                style={{ width: '60%', height: '25%', marginTop: '20px' }}
+                                cover={
+                                    <img
+                                        alt="example"
+                                        src={`data:image/png;base64,${item?.fileBase64}`}
+                                    />
+                                }
+                            ></Card>
+                            <div style={{ width: '37%', height: '10%', marginTop: '20px', marginLeft: '5px' }}>
+                                <CustomForm autoComplete="off" layout={'horizontal'}>
+                                    <CustomFormItem label="Konu">{item?.lessonSubject}</CustomFormItem>
+                                    <CustomFormItem label="Cevap"> {EChooices[item?.correctAnswer]}</CustomFormItem>
+                                    <CustomFormItem label="Zorluk Seviyesi">
+                                        <Rate style={{ marginBottom: '10px' }} value={item?.difficulty} />
+                                    </CustomFormItem>
+                                    <CustomFormItem>
+                                        <CustomButton
+                                            onClick={() => handleQuestionAction(item?.questionOfExamId,item?.isAddedAsEv )}
+                                            type="primary"
+                                        >
+                                            {item?.isAddedAsEv ? "Soruyu Testten Çıkar" : "Soruyu Teste Ekle"}
+                                        </CustomButton>
+                                    </CustomFormItem>
+                                </CustomForm>
+                            </div>
+                        </>
+                    ))}
+                {questions?.items && (
+                    <>
+                    <CustomPagination
+                        onChange={handlePagination}
+                        showSizeChanger={true}
+                        total={questions?.pagedProperty?.totalCount}
+                        current={questions?.pagedProperty?.currentPage}
+                        pageSize={questions?.pagedProperty?.pageSize}
+                    ></CustomPagination>
+                      <div className="add-as-ev-footer">
+                        <CustomButton  className="cancel-btn">
+                            İptal
+                        </CustomButton>
+                        <CustomFormItem style={{ float: 'right' }}>
+                            <CustomButton
+                                onClick={openDifficultiesModal}
+                                type="primary"
+                                className="save-btn"
+                              
+                            >
+                                Testi Ön İzle
+                            </CustomButton>
+                        </CustomFormItem>
+                        <DifficultiesModal difficultiesData={asEvTestPreview} setIsVisible={setIsVisible} isVisible={isVisible}/>
+                    </div>
+                    </>
+                )}
             </div>
-          </div>
-          <div>
-            <CustomButton onClick={completeAsEv}>Soruyu Seç</CustomButton>
-          </div>
-        </NewQuestionModal>
-      )}
-    </>
-  );
+        </>
+    );
 };
 
 export default AsEvQuestions;

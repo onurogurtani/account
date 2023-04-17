@@ -51,7 +51,7 @@ const AsEvInfo = ({ showData }) => {
   return (
     <>
       <ul className="info-list">
-        <li>
+        {/* <li>
           <Text t="Sınıf Seviyesi" /> : <span>{showData?.classroomName}</span>
         </li>
         <li>
@@ -67,31 +67,31 @@ const AsEvInfo = ({ showData }) => {
               {item}{' '}
             </Tag>
           ))}
-        </li>
+        </li> */}
         <li>
           <Text t="Alt Başlık" />:{' '}
-          {showData?.subSubjectNames.map((item, index) => (
+          {/* {showData?.subSubjectNames.map((item, index) => (
             <Tag color="green" key={index}>
               {item}{' '}
             </Tag>
-          ))}
+          ))} */}
         </li>
         <li>
-          <Text t="Ölçme Değerlendirme Test Adı" /> : <span>{showData?.kalturaVideoName}</span>
+          {/* <Text t="Ölçme Değerlendirme Test Adı" /> : <span>{showData?.kalturaVideoName}</span> */}
         </li>
         <li>
           <Text t="Döküman Tanımlama Başlangıç Tarihi" /> :{' '}
-          <span>{dayjs(showData?.startDate)?.format('YYYY-MM-DD')}</span>
+          {/* <span>{dayjs(showData?.startDate)?.format('YYYY-MM-DD')}</span> */}
         </li>
         <li>
-          <Text t="Döküman Tanımlama Bitiş Tarihi" /> : <span>{dayjs(showData?.endDate)?.format('YYYY-MM-DD')}</span>
+          {/* <Text t="Döküman Tanımlama Bitiş Tarihi" /> : <span>{dayjs(showData?.endDate)?.format('YYYY-MM-DD')}</span> */}
         </li>
         <li>
-          <Text t="Soru Adedi" /> : <span>{showData?.questionCount}</span>
+          {/* <Text t="Soru Adedi" /> : <span>{showData?.questionCount}</span> */}
         </li>
       </ul>
       <div className="countsContainer">
-        <h3 className="counts-header">Seçilecek Soru Sayısı : {showData?.questionCount} </h3>
+        {/* <h3 className="counts-header">Seçilecek Soru Sayısı : {showData?.questionCount} </h3>
         <div className="counts">
           {countsArr.map((id, index) => (
             <div key={index}>
@@ -106,7 +106,7 @@ const AsEvInfo = ({ showData }) => {
               </CustomFormItem>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
     </>
   );

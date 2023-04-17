@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 
 import { CustomButton, CustomPagination } from '../../../../components';
 import '../../../../styles/temporaryFile/asEv.scss';
-import QuestionSideBar from '../addAsEv/QuestionSideBar';
-import SingleQuestion from '../addAsEv/SingleQuestion';
+
+
 
 const dummyIds = [
   1390, 1391, 1392, 1393, 1394, 1395, 1396, 1397, 1398, 1399, 1400, 1402, 1403, 1404, 1405, 1406, 1407, 1408, 1409,
@@ -69,10 +69,10 @@ const ShowAsEvQuestions = () => {
           <div className="show-question-container">
             <div className="image-container">
               {' '}
-              <SingleQuestion id={data} index={index} key={index} />
+             
             </div>
             <div className="question-data-container">
-              <QuestionSideBar data={data} key={index} showAsEv={true} />
+           
             </div>
           </div>
         ))}

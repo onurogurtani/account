@@ -21,11 +21,18 @@ const UpdateAsEv = lazy(() =>
   })),
 );
 
+const AsEvTestPreview = lazy(() =>
+  import('./AsEvTestPreview').then(({ default: Component }) => ({
+    default: Component,
+  })),
+);
+
 const AsEv = {
   AsEvList,
   ShowAsEv,
   AddAsEv,
   UpdateAsEv,
+  AsEvTestPreview
 };
 
 export default AsEv;
