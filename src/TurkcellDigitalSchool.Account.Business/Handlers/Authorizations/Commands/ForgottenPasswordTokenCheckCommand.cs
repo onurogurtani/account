@@ -8,6 +8,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.Constants;
+using TurkcellDigitalSchool.Core.Constants.IdentityServer;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -52,7 +53,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                         return new ErrorDataResult<UserSession>("İşlem Geçersiz.");
                     }
 
-                    var sessionId = long.Parse(token.Split("}.")[1].ToJObject()[TokenClaimKeys.SessionId].ToString());
+                    var sessionId = long.Parse(token.Split("}.")[1].ToJObject()[IdentityServerConst.IDENTITY_RESOURCE_SESSION_ID].ToString());
 
                     userId = Int64.Parse(token.Split('"')[11]);
 

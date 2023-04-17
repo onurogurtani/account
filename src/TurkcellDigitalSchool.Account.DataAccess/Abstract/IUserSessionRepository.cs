@@ -1,4 +1,5 @@
-﻿using TurkcellDigitalSchool.Core.DataAccess;
+﻿using System.Threading.Tasks;
+using TurkcellDigitalSchool.Core.DataAccess;
 using TurkcellDigitalSchool.Entities.Concrete.Core;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Abstract
@@ -7,5 +8,6 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Abstract
     {
         UserSession AddUserSession(UserSession entity);
         UserSession GetByToken();
+        Task Logout(long id);
     }
 }
