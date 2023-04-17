@@ -469,6 +469,22 @@ const Menus = () => {
                         </span>
                     </MenuItemText>
                 </CustomItem>
+                <CustomItem key="/settings/update-version-info">
+                    <MenuItemText>
+                        <CustomImage src={menuIcons} />
+                        <span>
+                            <Text t="Versiyon Bilgileri Güncelleme" />
+                        </span>
+                    </MenuItemText>
+                </CustomItem>
+                 <CustomItem key="/settings/messages">
+                    <MenuItemText>
+                        <CustomImage src={menuIcons} />
+                        <span>
+                            <Text t="Hata ve Uyarı Mesajları" />
+                        </span>
+                    </MenuItemText>
+                </CustomItem>
             </CustomSubMenu>
 
             <CustomSubMenu key="QuestionMenu" title="Soru Yönetimi" icon={<CustomImage src={menuIcons} />}>

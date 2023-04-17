@@ -138,7 +138,17 @@ const JobSettings = lazy(() =>
         default: Component,
     })),
 );
+const UpdateVersion = lazy(() =>
+    import('./updateVersion').then(({ default: Component }) => ({
+        default: Component,
+    })),
+);
 
+const Messages = lazy(() =>
+    import('./messages').then(({ default: Component }) => ({
+        default: Component,
+    })),
+);
 const Settings = {
     Categories,
     Packages,
@@ -166,6 +176,8 @@ const Settings = {
     EditContracts,
     ShowContracts,
     JobSettings,
+    UpdateVersion,
+    Messages,
 };
 
 export default Settings;

@@ -23,6 +23,17 @@ export const getTrialExamAdd = createAsyncThunk(
         }
     },
 );
+export const getTrialExamUpdate = createAsyncThunk(
+    'getTrialExamUpdate',
+    async ({ params, data } = {}, { dispatch, rejectWithValue }) => {
+        try {
+            const response = await trialExamServices.trialExamsUpdate(data);
+            return response;
+        } catch (error) {
+            return rejectWithValue(error?.data);
+        }
+    },
+);
 
 const initialState = {
     trialExamList: [],
@@ -42,6 +53,11 @@ export const trialExamSlice = createSlice({
                 1,
             );
         },
+        canceledQuesiton: (state, action) => {
+            state.trialExamFormData.sections[action.payload.index].sectionQuestionOfExams[
+                action.payload.quesitonIndex
+            ].isCanceled = action.payload.isCanceled;
+        },
     },
 
     extraReducers: (builder) => {
@@ -51,4 +67,4 @@ export const trialExamSlice = createSlice({
     },
 });
 
-export const { setTrialExamFormData, deleteAddQuesiton } = trialExamSlice.actions;
+export const { setTrialExamFormData, deleteAddQuesiton, canceledQuesiton } = trialExamSlice.actions;

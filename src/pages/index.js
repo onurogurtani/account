@@ -1,5 +1,4 @@
 import { lazy } from 'react';
-
 const Login = lazy(() => import('./login').then(({ default: Component }) => ({ default: Component })));
 const ForgotPassword = lazy(() =>
   import('./forgotPassword').then(({ default: Component }) => ({ default: Component })),

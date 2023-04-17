@@ -1,0 +1,11 @@
+.customFilter {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+
+    & footer {
+        margin-left: auto;
+        display: flex;
+        gap: 8px;
+    }
+}

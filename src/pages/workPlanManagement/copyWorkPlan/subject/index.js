@@ -37,7 +37,7 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
   const showData = location?.state?.data;
   const [currentData, setCurrentData] = useState(showData);
 
-  const { classroomId, setClassroomId, lessonId, setLessonId, unitId, setUnitId } =
+  const { classroomId, setClassroomId, setLessonId, setUnitId } =
     useAcquisitionTree();
 
   const {
@@ -51,6 +51,9 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
   const { lessonUnits } = useSelector((state) => state?.lessonUnits);
   const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
   const columns = videoListTableColumn(dispatch, subjectChooseTab, usedVideoIdsQueryListData);
+
+  const [currentLessonId, setCurrentLessonId] = useState();
+  const [currentUnitId, setCurrentUnitId] = useState();
 
   const paginationSetFilteredVideoList = (res) => {
     dispatch(setSubjectChooseVideoFilteredList(res?.payload));
@@ -73,6 +76,8 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
         setClassroomId(showData.classroomId);
         setLessonId(showData.lessonId);
         setUnitId(showData.lessonUnitId);
+        setCurrentLessonId(showData.lessonId)
+        setCurrentUnitId(showData.lessonUnitId)
       }
     }, [],
   );
@@ -80,9 +85,6 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
   useEffect(async () => {
       if (activeKey === '0') {
         const educationYearVal = await subjectForm.getFieldValue(['educationYear']);
-        await setClassroomId(currentData.classroomId);
-        await setLessonId(currentData.lessonId);
-        await setUnitId(currentData.lessonUnitId);
 
         await subjectForm.setFieldsValue({
           educationYear: educationYearVal ? educationYearVal : currentData.recordStatus === 1 ? currentData.educationYearId : undefined,
@@ -96,7 +98,7 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
         const values = await subjectForm.getFieldsValue(['ClassroomId', 'LessonIds', 'LessonUnitIds', 'LessonSubjectIds', 'educationYear']);
         dispatch(setSubjectChooseData(values));
         dispatch(selectedEvaluationTabRowData({ id: currentData.asEvId }));
-        currentData.workPlanQuestionOfExams?.forEach((item) => {debugger
+        currentData.workPlanQuestionOfExams?.forEach((item) => {
           dispatch(selectedOutQuestionTabRowsData(item.questionOfExam));
         });
         currentData.workPlanVideos?.forEach((item) => {
@@ -134,10 +136,12 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
     }
     if (fromEl === 'lessonId') {
       setLessonId(value);
+      setCurrentLessonId(value);
       subjectForm.resetFields(['LessonUnitIds', 'LessonSubjectIds']);
     }
     if (fromEl === 'lessonUnitId') {
       setUnitId(value);
+      setCurrentUnitId(value);
       subjectForm.resetFields(['LessonSubjectIds']);
     }
   };
@@ -302,7 +306,7 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
               placeholder='Ünite'
             >
               {lessonUnits
-                ?.filter((item) => item.lessonId === lessonId && item.isActive === true)
+                ?.filter((item) => item.lessonId === currentLessonId && item.isActive === true)
                 ?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>
@@ -329,7 +333,7 @@ const SubjectChoose = ({ subjectForm, outQuestionForm, practiceForm }) => {
               placeholder='Konu'
             >
               {lessonSubjects
-                ?.filter((item) => item.lessonUnitId === unitId && item.isActive === true)
+                ?.filter((item) => item.lessonUnitId === currentUnitId && item.isActive === true)
                 ?.map((item) => {
                   return (
                     <Option key={item?.id} value={item?.id}>

@@ -31,6 +31,7 @@ import SetStatusButton from './SetStatusButton';
 import DeleteButton from './DeleteButton';
 import DeclarationSection from './DeclarationSection';
 import CustomInputNumber from './CustomInputNumber';
+import CustomPageWrapper from './CustomPageWrapper';
 
 export {
     CustomInput,
@@ -79,4 +80,5 @@ export {
     DeleteButton,
     DeclarationSection,
     CustomInputNumber,
+    CustomPageWrapper,
 };

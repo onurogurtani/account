@@ -418,6 +418,17 @@ const App = () => {
                                                     Component={Settings?.JobSettings}
                                                     authority="dashboard"
                                                 />
+                                                <PrivateRoute
+                                                    path={`${match?.path}/update-version-info`}
+                                                    Component={Settings?.UpdateVersion}
+                                                    authority="dashboard"
+                                                />
+
+                                                 <PrivateRoute
+                                                    path={`${match?.path}/messages`}
+                                                    Component={Settings?.Messages}
+                                                    authority="dashboard"
+                                                />
                                                 <Route
                                                     component={() => (
                                                         <Redirect
