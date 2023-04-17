@@ -10,7 +10,6 @@ using TurkcellDigitalSchool.Entities.Concrete;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 {
-
     public class StudentEducationInformationRepository : EfEntityRepositoryBase<StudentEducationInformation, ProjectDbContext>, IStudentEducationInformationRepository
     {
         public StudentEducationInformationRepository(ProjectDbContext context) : base(context)
