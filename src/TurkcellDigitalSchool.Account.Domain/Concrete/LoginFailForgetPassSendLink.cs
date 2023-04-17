@@ -9,6 +9,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public long Id { get; set; }
         public string Guid { get; set; }
         public long UserId { get; set; }
+        public int CheckCount { get; set; }
         public UsedStatus UsedStatus { get; set; }
         public DateTime ExpDate { get; set; }
         public DateTime InsertTime { get; set; }

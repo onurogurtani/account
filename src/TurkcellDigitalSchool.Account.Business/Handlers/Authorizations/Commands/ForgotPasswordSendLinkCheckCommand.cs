@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DocumentFormat.OpenXml.Wordprocessing;
-using FluentValidation;
 using MediatR;
 using Microsoft.IdentityModel.Tokens; 
 using TurkcellDigitalSchool.Account.Business.Constants;
@@ -24,15 +22,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 
         public class ForgotPasswordSendLinkCheckCommandHandler : IRequestHandler<ForgotPasswordSendLinkCheckCommand, IResult>
         {
-            private readonly IUserRepository _userRepository;
-            private readonly ILoginFailCounterRepository _loginFailCounterRepository;
+            private readonly IUserRepository _userRepository; 
             private readonly ILoginFailForgetPassSendLinkRepository _loginFailForgetPassSendLinkRepository; 
 
-            public ForgotPasswordSendLinkCheckCommandHandler(IUserRepository userRepository, 
-                ILoginFailCounterRepository loginFailCounterRepository, ILoginFailForgetPassSendLinkRepository loginFailForgetPassSendLinkRepository)
+            public ForgotPasswordSendLinkCheckCommandHandler(IUserRepository userRepository,  ILoginFailForgetPassSendLinkRepository loginFailForgetPassSendLinkRepository)
             {
-                _userRepository = userRepository;
-                _loginFailCounterRepository = loginFailCounterRepository;
+                _userRepository = userRepository; 
                 _loginFailForgetPassSendLinkRepository = loginFailForgetPassSendLinkRepository; 
             }
 
