@@ -19,8 +19,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
     {
         public string NameSurname { get; set; }
         public string MobilePhones { get; set; }
-        public string ResidenceCounty { get; set; }
-        public string ResidenceCity { get; set; }
+        public long ResidenceCountyId { get; set; }
+        public long ResidenceCityId { get; set; }
         public string School { get; set; }
         public string Institution { get; set; }
 
@@ -56,8 +56,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                 if (userEntity.UserType == UserType.Student)
                 {
                     userEntity.NameSurname = request.NameSurname;
-                    userEntity.ResidenceCounty = request.ResidenceCounty;
-                    userEntity.ResidenceCity = request.ResidenceCity;
+                    userEntity.ResidenceCountyId = request.ResidenceCountyId;
+                    userEntity.ResidenceCityId = request.ResidenceCityId;
                     userEntity.MobilePhones = request.MobilePhones;
 
                     //var education = await _educationRepository.GetAsync(x => x.UserId == userId);
