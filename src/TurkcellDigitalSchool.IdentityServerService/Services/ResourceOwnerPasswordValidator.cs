@@ -114,11 +114,12 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
                 if (isOldPass)
                 {
+                    var guid= await _customUserSvc.GenerateUserOldPassChange(user.Id);
                     var responseObject = new Dictionary<string, object>
                     {
                         { IsPasswordOldResponseText, isOldPass },
                         { "XId", Base64UrlEncoder.Encode(user.Id.ToString()) },
-                        { "PasswordChangeGuid", Base64UrlEncoder.Encode(user.Id.ToString()) }
+                        { "PasswordChangeGuid", guid}
                     };
                     context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
                         Messages.passwordIsOldMessage, responseObject);

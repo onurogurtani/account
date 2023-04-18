@@ -66,7 +66,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     return new ErrorResult(Messages.PasswordChangeLinkIsUsed);
                 }
 
-                linkData.UsedStatus = UsedStatus.Used;
+           
                 linkData.CheckCount += 1;
                 await _loginFailForgetPassSendLinkRepository.UpdateAndSaveAsync(linkData);
 
@@ -75,7 +75,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     return new ErrorResult(Messages.PasswordChangeLinkIsUsed);
                 }
                  
-                return new SuccessResult(Messages.PasswordChanged);
+                return new SuccessResult();
             }
         }
     }

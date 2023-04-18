@@ -1,8 +1,9 @@
 ﻿using TurkcellDigitalSchool.Core.Entities;
+using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract;
 
-namespace TurkcellDigitalSchool.Account.Domain.Concrete
+namespace TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly
 {
-    public class BranchMainField : EntityDefault
+    public class BranchMainField : EntityDefault , IReadOnlyEntity
     {
         public string Name { get; set; }
         public string Description { get; set; }

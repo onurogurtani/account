@@ -8,6 +8,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Refit;
 using TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
@@ -15,14 +16,13 @@ using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Transaction;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
-using TurkcellDigitalSchool.Core.Utilities.File;
-using TurkcellDigitalSchool.Core.Utilities.File.Model;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.Entities.Concrete;
 using TurkcellDigitalSchool.Entities.Dtos.OrganisationChangeRequestDtos;
 using TurkcellDigitalSchool.Entities.Enums;
 using TurkcellDigitalSchool.File.DataAccess.Abstract;
+using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Commands
 {
@@ -37,25 +37,19 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
             private readonly IOrganisationInfoChangeRequestRepository _organisationInfoChangeRequestRepository;
             private readonly IOrganisationChangeReqContentRepository _organisationChangeReqContentRepository;
             private readonly IOrganisationRepository _organisationRepository;
-
-            private readonly IFileRepository _fileRepository;
-            private readonly IFileService _fileService;
-            private readonly IPathHelper _pathHelper;
+            private readonly IFileServices _fileService;
             private readonly ITokenHelper _tokenHelper;
             public readonly IMapper _mapper;
             public readonly IMediator _mediator;
 
-            private readonly string _filePath = "OrganisationLogo";
 
             public UpdateOrganisationChangeRequestCommandHandler(IOrganisationInfoChangeRequestRepository organisationInfoChangeRequestRepository, IOrganisationChangeReqContentRepository organisationChangeReqContentRepository,
-                IOrganisationRepository organisationRepository, ITokenHelper tokenHelper, IMapper mapper, IFileRepository fileRepository, IFileService fileService, IPathHelper pathHelper, IMediator mediator)
+                IOrganisationRepository organisationRepository, ITokenHelper tokenHelper, IMapper mapper, IFileServices fileService, IMediator mediator)
             {
                 _organisationInfoChangeRequestRepository = organisationInfoChangeRequestRepository;
                 _organisationChangeReqContentRepository = organisationChangeReqContentRepository;
                 _organisationRepository= organisationRepository;
-                _fileRepository = fileRepository;
                 _fileService = fileService;
-                _pathHelper = pathHelper;
                 _tokenHelper = tokenHelper;
                 _mapper = mapper;
                 _mediator = mediator;
@@ -99,40 +93,17 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
 
                     IFormFile file = new FormFile(stream, 0, contentBytes.Length, "name", filename);
 
-                    string[] logoType = new string[] { "image/jpeg", "image/png" };
-
-                    if (!logoType.Contains(request.ContentType))
+                    using (var ms = new MemoryStream())
                     {
-                        return new ErrorResult(Messages.FileTypeError);
+                        ms.Position = 0;
+                        file.CopyTo(ms);
+                        var bytePartFile = new ByteArrayPart(ms.ToArray(), filename, request.ContentType);
+                        var resulImageSolution = await _fileService.CreateFileCommand(
+                            bytePartFile,
+                            FileType.OrganisationLogo.GetHashCode(),
+                            filename, "");
+                        entity.OrganisationChangeReqContents.FirstOrDefault(x => x.PropertyEnum == Entities.Enums.OrganisationChangePropertyEnum.Logo).PropertyValue = resulImageSolution.Data.Id.ToString();
                     }
-                    if (file.Length > 5000000)
-                    {
-                        return new ErrorResult(Messages.FileSizeError);
-                    }
-
-                    var fullPath = _pathHelper.GetPath(_filePath);
-                    var saveFileResult = await _fileService.SaveFile(new SaveFileRequest { File = file, Path = fullPath });
-                    if (!saveFileResult.Success)
-                    {
-                        return new ErrorResult(saveFileResult.Message);
-                    }
-
-                    //todo:#MS_DUZENLEMESI   
-                    // Bu entity için düzenleme burada yapýlamaz Servis entegrasyonu kullanýlmalý      IFileServices   
-                    throw new Exception("Yazýlýmsal düzenleme yapýlmasý");
-
-                    var recordLogo = _fileRepository.Add(new Entities.Concrete.File()
-                    {
-                        FileType = FileType.OrganisationLogo,
-                        FilePath = saveFileResult.Data,
-                        FileName = filename,
-                        ContentType = request.ContentType
-                    });
-
-                    await _fileRepository.SaveChangesAsync();
-                    //Üretilen FileId logo içeriðine setleniyor.
-                    changeRequest.OrganisationChangeReqContents.FirstOrDefault(x => x.PropertyEnum == Entities.Enums.OrganisationChangePropertyEnum.Logo).PropertyValue = recordLogo.Id.ToString();
-
                 }
                 else if (logo != null && string.IsNullOrEmpty(request.ContentType))
                 {
