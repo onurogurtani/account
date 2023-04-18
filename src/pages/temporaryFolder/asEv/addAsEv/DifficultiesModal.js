@@ -3,6 +3,8 @@ import { CustomModal, CustomTable } from '../../../../components';
 import '../../../../styles/temporaryFile/asEv.scss';
 import AsEvTestPreview from '../AsEvTestPreview';
 
+
+
 const columns = [
     {
         title: 'Test Konu Sıralaması',

@@ -18,7 +18,7 @@ const AsEvQuestionFilter = () => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
 
-    const { questions } = useSelector((state) => state?.asEv);
+    const { questions,newAsEv } = useSelector((state) => state?.asEv);
 
     useEffect(() => {
         form.setFieldValue('questionCount', questions?.items?.[0]?.asEvQuestionsDetail.questionCount);
@@ -33,7 +33,7 @@ const AsEvQuestionFilter = () => {
         const action = await dispatch(
             getByFilterPagedAsEvQuestions({
                 asEvQuestionsDetailSearch: {
-                    asEvId: 130,
+                    asEvId: newAsEv?.id,
                     difficultyLevel: value === 0 ? undefined : value,
                 },
             }),
@@ -48,7 +48,7 @@ const AsEvQuestionFilter = () => {
                         await dispatch(
                             getByFilterPagedAsEvQuestions({
                                 asEvQuestionsDetailSearch: {
-                                    asEvId: 130,
+                                    asEvId: newAsEv?.id,
                                 },
                             }),
                         );

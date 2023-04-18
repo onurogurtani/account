@@ -69,6 +69,14 @@ const setQuestionSequence = (data) => {
     });
 };
 
+const updateAsEv = (data) => {
+    return api({
+        url: `Exam/AsEvs`,
+        method: 'PUT',
+        data,
+    });
+};
+
 const asEvServices = {
     adAsEv,
     getFilterPagedAsEvs,
@@ -78,7 +86,8 @@ const asEvServices = {
     addAsEvQuestion,
     removeAsEvQuestion,
     getAsEvTestPreview,
-    setQuestionSequence
+    setQuestionSequence,
+    updateAsEv
 };
 
 export default asEvServices;

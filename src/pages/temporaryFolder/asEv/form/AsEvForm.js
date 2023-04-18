@@ -27,7 +27,7 @@ const AsEvForm = ({ setStep, step }) => {
 
     const { allClassList } = useSelector((state) => state?.classStages);
     const { lessonsGetByClassroom } = useSelector((state) => state?.lessons);
-    const id = useSelector((state) => state?.adAsEv?.newAsEv?.id);
+    const { newAsEv } = useSelector((state) => state?.asEv);
 
     const { videos } = useSelector((state) => state?.videos);
     const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
@@ -37,9 +37,20 @@ const AsEvForm = ({ setStep, step }) => {
     const [classroomId, setClassroomId] = useState(null);
     const [lessonId, setLessonId] = useState([]);
 
+
     useEffect(() => {
         dispatch(getAllClassStages());
     }, [dispatch]);
+
+    useEffect(() => {
+        dispatch(
+            getByFilterPagedAsEvQuestions({
+                asEvQuestionsDetailSearch: {
+                    asEvId: newAsEv?.id,
+                },
+            }),
+        );
+    }, [newAsEv?.id]);
 
     const onClassroomChange = (value) => {
         dispatch(getByClassromIdLessons(value));
@@ -81,14 +92,6 @@ const AsEvForm = ({ setStep, step }) => {
         const action = await dispatch(adAsEv(asEvReqBody));
 
         if (adAsEv.fulfilled.match(action)) {
-            await dispatch(
-                getByFilterPagedAsEvQuestions({
-                    asEvQuestionsDetailSearch: {
-                        asEvId: 130,
-                    },
-                }),
-            );
-
             setStep('2');
         } else {
             if (action?.payload?.message) {
