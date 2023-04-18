@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CustomButton, CustomFormItem, CustomForm,CustomPagination } from '../../../../components';
-import '../../../../styles/temporaryFile/asEvSwiper.scss';
-import { Card,Rate } from 'antd';
+import { CustomButton, CustomFormItem, CustomForm, CustomPagination } from '../../../../components';
+import '../../../../styles/temporaryFile/asEvQuestions.scss';
+import { Card, Rate} from 'antd';
 import AsEvQuestionFilter from '../addAsEv/AsEvQuestionFilter';
-import { adAsEvQuestion, getByFilterPagedAsEvQuestions,removeAsEvQuestion,getAsEvTestPreview } from '../../../../store/slice/asEvSlice';
+import {adAsEvQuestion,getByFilterPagedAsEvQuestions,removeAsEvQuestion,getAsEvTestPreview} from '../../../../store/slice/asEvSlice';
 import { EChooices } from '../../../../constants/questions';
-import '../../../../styles/temporaryFile/asEvForm.scss';
-import DifficultiesModal from '../addAsEv/DifficultiesModal'
-
+import DifficultiesModal from '../addAsEv/DifficultiesModal';
 
 const AsEvQuestions = () => {
-    const { questions,asEvTestPreview } = useSelector((state) => state?.asEv);
+    const { questions, asEvTestPreview, newAsEv } = useSelector((state) => state?.asEv);
     const [isVisible, setIsVisible] = useState(false);
     const dispatch = useDispatch();
 
@@ -19,38 +17,37 @@ const AsEvQuestions = () => {
         console.log(value);
     };
 
-    const openDifficultiesModal = async() => {
-        await dispatch(getAsEvTestPreview({asEvTestPreviewDetailSearch: {asEvId: 130}}))
-        setIsVisible(true)
+    const openDifficultiesModal = async () => {
+        await dispatch(getAsEvTestPreview({ asEvTestPreviewDetailSearch: { asEvId: newAsEv?.id } }));
+        setIsVisible(true);
     };
 
-    const handleQuestionAction = async (id,isAdded) => {
-        if(isAdded) {
-            const action = await dispatch(removeAsEvQuestion({ asEvId: 130, questionOfExamId: id }));
+    const handleQuestionAction = async (id, isAdded) => {
+        if (isAdded) {
+            const action = await dispatch(removeAsEvQuestion({ asEvId: newAsEv?.id, questionOfExamId: id }));
 
             if (removeAsEvQuestion.fulfilled.match(action)) {
                 await dispatch(
                     getByFilterPagedAsEvQuestions({
                         asEvQuestionsDetailSearch: {
-                            asEvId: 130,
+                            asEvId: newAsEv?.id,
                         },
                     }),
                 );
             }
-        } else{
-            const action = await dispatch(adAsEvQuestion({ asEvId: 130, questionOfExamId: id }));
+        } else {
+            const action = await dispatch(adAsEvQuestion({ asEvId: newAsEv?.id, questionOfExamId: id }));
 
             if (adAsEvQuestion.fulfilled.match(action)) {
                 await dispatch(
                     getByFilterPagedAsEvQuestions({
                         asEvQuestionsDetailSearch: {
-                            asEvId: 130,
+                            asEvId: newAsEv?.id,
                         },
                     }),
                 );
             }
         }
-      
     };
 
     return (
@@ -61,22 +58,19 @@ const AsEvQuestions = () => {
                     questions?.items[0]?.asEvQuestions &&
                     questions?.items[0]?.asEvQuestions.map((item) => (
                         <>
-                            <Card
-                                hoverable
-                                style={{ width: '60%', height: '25%', marginTop: '20px' }}
-                                cover={
-                                    <img
-                                        alt="example"
-                                        src={`data:image/png;base64,${item?.fileBase64}`}
-                                    />
-                                }
-                            ></Card>
-                            <div style={{ width: '37%', height: '10%', marginTop: '20px', marginLeft: '5px' }}>
-                                <CustomForm autoComplete="off" layout={'horizontal'}>
+                            <div className="col-md-6">
+                                <Card
+                                    hoverable
+                                    className='question-card'
+                                    cover={<img alt="example" src={`data:image/png;base64,${item?.fileBase64}`} />}
+                                ></Card>
+                            </div>
+                            <div className="col-md-6">
+                                <CustomForm className="info-form " autoComplete="off" layout={'horizontal'}>
                                     <CustomFormItem label="Konu">{item?.lessonSubject}</CustomFormItem>
                                     <CustomFormItem label="Cevap"> {EChooices[item?.correctAnswer]}</CustomFormItem>
                                     <CustomFormItem label="Zorluk Seviyesi">
-                                        <Rate style={{ marginBottom: '10px' }} value={item?.difficulty} />
+                                        <Rate className='question-difficultly-rat' value={item?.difficulty} />
                                     </CustomFormItem>
                                     <CustomFormItem>
                                         <CustomButton
@@ -92,29 +86,26 @@ const AsEvQuestions = () => {
                     ))}
                 {questions?.items && (
                     <>
-                    <CustomPagination
-                        onChange={handlePagination}
-                        showSizeChanger={true}
-                        total={questions?.pagedProperty?.totalCount}
-                        current={questions?.pagedProperty?.currentPage}
-                        pageSize={questions?.pagedProperty?.pageSize}
-                    ></CustomPagination>
-                      <div className="add-as-ev-footer">
-                        <CustomButton  className="cancel-btn">
-                            İptal
-                        </CustomButton>
-                        <CustomFormItem style={{ float: 'right' }}>
-                            <CustomButton
-                                onClick={openDifficultiesModal}
-                                type="primary"
-                                className="save-btn"
-                              
-                            >
-                                Testi Ön İzle
-                            </CustomButton>
-                        </CustomFormItem>
-                        <DifficultiesModal difficultiesData={asEvTestPreview} setIsVisible={setIsVisible} isVisible={isVisible}/>
-                    </div>
+                        <CustomPagination
+                            onChange={handlePagination}
+                            showSizeChanger={true}
+                            total={questions?.pagedProperty?.totalCount}
+                            current={questions?.pagedProperty?.currentPage}
+                            pageSize={questions?.pagedProperty?.pageSize}
+                        ></CustomPagination>
+                        <div className="add-as-ev-footer">
+                            <CustomButton  className="cancel-btn">İptal</CustomButton>
+                            <CustomFormItem style={{ float: 'right' }}>
+                                <CustomButton onClick={openDifficultiesModal} type="primary" className="save-btn">
+                                    Testi Ön İzle
+                                </CustomButton>
+                            </CustomFormItem>
+                            <DifficultiesModal
+                                difficultiesData={asEvTestPreview}
+                                setIsVisible={setIsVisible}
+                                isVisible={isVisible}
+                            />
+                        </div>
                     </>
                 )}
             </div>

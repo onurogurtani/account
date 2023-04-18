@@ -11,6 +11,15 @@ export const adAsEv = createAsyncThunk('adAsEv', async (data, { dispatch, reject
     }
 });
 
+export const updateAsEv = createAsyncThunk('updateAsEv ', async (data, { dispatch, rejectWithValue }) => {
+    try {
+        const response = await asEvServices.updateAsEv(data);
+        return response;
+    } catch (error) {
+        return rejectWithValue(error?.data);
+    }
+});
+
 export const adAsEvQuestion = createAsyncThunk('adAsEvQuestion', async (data, { dispatch, rejectWithValue }) => {
     try {
         const response = await asEvServices.addAsEvQuestion(data);
