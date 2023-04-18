@@ -1,254 +1,334 @@
 .addSurveyInfo-container {
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  width: 100%;
-  height: 100%;
-  padding: 2rem 0;
-  padding: 15px 16px 26px;
-
-  .addSurveyForm {
-    padding: o;
-    margin: 0;
-    border-radius: 5px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
     width: 100%;
-    max-width: 1200px;
-    margin: 0 1px 0 0;
-    background-color: #fff;
-    padding-right: 16px;
+    height: 100%;
+    padding: 2rem 0;
+    padding: 15px 16px 26px;
 
-    .ant-form-item {
-      display: flex;
-      flex-direction: row;
-      align-content: space-between;
-      label {
-        width: 200px;
-        padding: 0;
-        z-index: 100;
-      }
-      // Input{
-      //   right: 16px ;
-      // }
-      // .select {
-      //   border:1px solid black;
-      //   right: 16px ;
-      // }
-      // .date{
-      //   border:1px solid black;
-      //   right: 16px ;
-      //   padding-left:2rem ;
-      // }
-      .radioGroup {
+    .addSurveyForm {
+        padding: o;
+        margin: 0;
+        border-radius: 5px;
         width: 100%;
-        right: 16px;
-        display: flex;
-        flex-direction: column;
-        .radio {
-          width: 100%;
-          margin: 0 5px 5px 0;
-        }
-      }
+        max-width: 1200px;
+        margin: 0 1px 0 0;
+        background-color: #fff;
+        padding-right: 16px;
 
-      .ant-form-item-control {
-        .ant-form-item-control-input {
-          .ant-form-item-control-input-content {
-            input {
+        .ant-form-item {
+            // border: 2px solid red;
+            display: flex;
+            flex-direction: row;
+            align-content: space-between;
+            label {
+                width: 200px;
+                padding: 0;
+                z-index: 100;
+            }
+            // Input{
+            //   right: 16px ;
+            // }
+            > select {
+                border: 1px solid black;
+                right: 16px;
+                width: 287px;
+            }
+            // .date{
+            //   border:1px solid black;
+            //   right: 16px ;
+            //   padding-left:2rem ;
+            // }
+            .radioGroup {
+                width: 100%;
+                right: 16px;
+                display: flex;
+                flex-direction: column;
+                .radio {
+                    width: 100%;
+                    margin: 0 5px 5px 0;
+                }
             }
 
-            .ant-select {
-              border: 2px solid black;
-              width: 287px;
+            .ant-form-item-control {
+                .ant-form-item-control-input {
+                    .ant-form-item-control-input-content {
+                        input {
+                        }
 
-              .ant-select-selector {
-                padding: 1px 10px !important;
-              }
+                        .ant-select {
+                            border: 2px solid red;
+
+                            // border: 2px solid black;
+                            width: 287px;
+
+                            .ant-select-selector {
+                                padding: 1px 10px !important;
+                            }
+                        }
+                    }
+                }
             }
-          }
         }
-      }
-    }
 
-    .ant-tooltip {
-      visibility: hidden !important;
-    }
-    .footer-form-item {
-      margin-bottom: 0;
-      left: 0 !important;
-      display: flex;
-      width: 100%;
-      max-width: 1200px;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      justify-items: center;
-      justify-content: center;
+        .ant-tooltip {
+            visibility: hidden !important;
+        }
+        .footer-form-item {
+            margin-bottom: 0;
+            left: 0 !important;
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-items: center;
+            justify-content: center;
 
-      .buttonContainer {
-        display: flex;
-        justify-content: flex-end;
-        flex-wrap: nowrap;
-        flex-direction: row;
-        .submit-btn {
-          background-color: #699a00;
-          color: #fff;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-family: UbuntuMedium, sans-serif;
-          line-height: 12px;
-          border-radius: 4px;
-          outline: 0;
-          box-shadow: none;
-          border: none;
-          margin: 10px;
+            .buttonContainer {
+                display: flex;
+                justify-content: flex-end;
+                flex-wrap: nowrap;
+                flex-direction: row;
+                .submit-btn {
+                    background-color: #699a00;
+                    color: #fff;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-family: UbuntuMedium, sans-serif;
+                    line-height: 12px;
+                    border-radius: 4px;
+                    outline: 0;
+                    box-shadow: none;
+                    border: none;
+                    margin: 10px;
+                }
+                .cancel-btn {
+                    background-color: grey;
+                    color: #fff;
+                    justify-content: center;
+                    align-items: center;
+                    font-family: UbuntuMedium, sans-serif;
+                    line-height: 12px;
+                    border-radius: 4px;
+                    outline: 0;
+                    box-shadow: none;
+                    border: none;
+                    margin: 10px;
+                }
+                .back-btn {
+                    background-color: #162056;
+                    color: #fff;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-family: UbuntuMedium, sans-serif;
+                    line-height: 12px;
+                    border-radius: 4px;
+                    outline: 0;
+                    box-shadow: none;
+                    border: none;
+                }
+                .draft-button {
+                    background-color: #b8ae3c;
+                    color: #fff;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-family: UbuntuMedium, sans-serif;
+                    line-height: 12px;
+                    border-radius: 4px;
+                    outline: 0;
+                    box-shadow: none;
+                    border: none;
+                    margin: 10px;
+                }
+            }
         }
-        .cancel-btn {
-          background-color: grey;
-          color: #fff;
-          justify-content: center;
-          align-items: center;
-          font-family: UbuntuMedium, sans-serif;
-          line-height: 12px;
-          border-radius: 4px;
-          outline: 0;
-          box-shadow: none;
-          border: none;
-          margin: 10px;
-        }
-        .back-btn {
-          background-color: #162056;
-          color: #fff;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-family: UbuntuMedium, sans-serif;
-          line-height: 12px;
-          border-radius: 4px;
-          outline: 0;
-          box-shadow: none;
-          border: none;
-        }
-        .draft-button{
-          background-color: #b8ae3c;
-          color: #fff;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-family: UbuntuMedium, sans-serif;
-          line-height: 12px;
-          border-radius: 4px;
-          outline: 0;
-          box-shadow: none;
-          border: none;
-          margin: 10px;
-        }
-      }
     }
-  }
-  @media (max-width: 768px) {
-    .editor {
-      .ant-form-item-control {
-        height: 250px;
-      }
+    @media (max-width: 768px) {
+        .editor {
+            .ant-form-item-control {
+                height: 250px;
+            }
+        }
     }
-  }
 }
 .generalContainer {
-  .questionGroup {
-    border:2px solid rgb(0, 170, 255);
-    margin: 16px 0;
-    border-radius:1em;
-    .groupNameContainer {
-      width: 100%;
-      display: flex;
-      margin: 16px;
-      justify-content: flex-start;
-      Button {
-        background-color: purple;
-        margin: 0 16px;
-        color: #fff;
-      }
+    .questionGroup {
+        border: 2px solid rgb(0, 170, 255);
+        margin: 16px 0;
+        border-radius: 1em;
+        .groupNameContainer {
+            width: 100%;
+            display: flex;
+            margin: 16px;
+            justify-content: flex-start;
+            Button {
+                background-color: purple;
+                margin: 0 16px;
+                color: #fff;
+            }
 
-      .nameEditContainer {
-        margin-right: 1rem;
-        input {
-          width: 300px;
-          margin: 0;
-          border-radius: 5px 0 0 5px;
+            .nameEditContainer {
+                margin-right: 1rem;
+                input {
+                    width: 300px;
+                    margin: 0;
+                    border-radius: 5px 0 0 5px;
+                }
+                Button {
+                    height: 48px;
+                    width: 40px;
+                    border-radius: 0 5px 5px 0;
+                    margin: 0;
+                }
+            }
         }
-        Button {
-          height: 48px;
-          width: 40px;
-          border-radius: 0 5px 5px 0;
-          margin: 0;
+
+        .questionGroupsContainer {
+            margin: 16px;
+            border: 2px solid gray;
+            border-radius: 10px;
+            position: relative;
+            .questionGroupHeader {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                padding: 16px;
+
+                .anyContainer {
+                    z-index: 5;
+                    display: flex;
+                    align-items: center;
+                    left: 1em;
+                    .select {
+                        left: 2em;
+                        width: 250px;
+                    }
+                }
+                .addBtnContainer {
+                    display: flex;
+                    justify-content: center;
+
+                    .add-btn {
+                        z-index: 5;
+                        background-color: rgb(17, 137, 193);
+                        // color: #fff;
+                        justify-content: center;
+                        align-items: center;
+                        // font-family: UbuntuMedium, sans-serif;
+                        line-height: 12px;
+                        border-radius: 4px;
+                        box-shadow: none;
+                        border: none;
+                        margin: auto;
+                        width: 250px !important;
+                    }
+                }
+            }
+            .questionContainer {
+                margin: 2px;
+                border: 2px solid red;
+                border-radius: 5px;
+                .answersContainer {
+                    width: 100%;
+                    display: flex;
+                    justify-content: flex-start;
+                    align-content: space-between;
+                    .answer {
+                        display: block;
+                        margin: 1rem;
+                    }
+                }
+                .control-buttons {
+                    display: flex;
+                    justify-content: flex-end;
+                    justify-items: center;
+                    align-items: center;
+                }
+            }
         }
-      }
     }
-
-    .questionGroupsContainer {
-      margin: 16px;
-      border: 2px solid gray;
-      border-radius: 10px;
-      position: relative;
-      .questionGroupHeader {
+    .questionsFooter {
         display: flex;
+        justify-content: flex-end;
         flex-wrap: wrap;
-        justify-content: space-between;
-        padding: 16px;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
 
-        .anyContainer {
-          z-index: 5;
-          display: flex;
-          align-items: center;
-          left: 1em;
-          .select {
-            left: 2em;
-            width: 250px;
-          }
-        }
-        .addBtnContainer {
-          display: flex;
-          justify-content: center;
-
-          .add-btn {
-            z-index: 5;
-            background-color: rgb(17, 137, 193);
-            // color: #fff;
+        .saveAndFinish-btn {
+            background-color: #699a00;
+            color: #fff;
+            display: flex;
             justify-content: center;
             align-items: center;
-            // font-family: UbuntuMedium, sans-serif;
+            font-family: UbuntuMedium, sans-serif;
             line-height: 12px;
             border-radius: 4px;
+            outline: 0;
             box-shadow: none;
             border: none;
-            margin: auto;
-            width: 250px !important;
-          }
+            margin: 10px;
         }
-      }
-      .questionContainer {
-        margin: 2px;
-        border: 2px solid red;
-        border-radius: 5px;
-        .answersContainer {
-          width: 100%;
-          display: flex;
-          justify-content: flex-start;
-          align-content: space-between;
-          .answer {
-            display: block;
-            margin: 1rem;
-          }
+        .cancel-btn {
+            background-color: grey;
+            color: #fff;
+            justify-content: center;
+            align-items: center;
+            font-family: UbuntuMedium, sans-serif;
+            line-height: 12px;
+            border-radius: 4px;
+            outline: 0;
+            box-shadow: none;
+            border: none;
+            margin: 10px;
         }
-        .control-buttons {
-          display: flex;
-          justify-content: flex-end;
-          justify-items: center;
-          align-items: center;
+        .saveAsDraft-btn {
+            background-color: rgb(150, 150, 25);
+            color: #fff;
+            justify-content: center;
+            align-items: center;
+            font-family: UbuntuMedium, sans-serif;
+            line-height: 12px;
+            border-radius: 4px;
+            outline: 0;
+            box-shadow: none;
+            border: none;
+            margin: 10px;
         }
-      }
+        .back-btn {
+            background-color: #162056;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: UbuntuMedium, sans-serif;
+            line-height: 12px;
+            border-radius: 4px;
+            outline: 0;
+            box-shadow: none;
+            border: none;
+        }
+        .show-btn {
+            background-color: #784c4c;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: UbuntuMedium, sans-serif;
+            line-height: 12px;
+            border-radius: 4px;
+            outline: 0;
+            box-shadow: none;
+            border: none;
+        }
     }
-  }
-  .questionsFooter {
+}
+.questionsFooter {
     display: flex;
     justify-content: flex-end;
     flex-wrap: wrap;
@@ -257,269 +337,192 @@
     align-items: center;
 
     .saveAndFinish-btn {
-      background-color: #699a00;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: UbuntuMedium, sans-serif;
-      line-height: 12px;
-      border-radius: 4px;
-      outline: 0;
-      box-shadow: none;
-      border: none;
-      margin: 10px;
+        background-color: #699a00;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: UbuntuMedium, sans-serif;
+        line-height: 12px;
+        border-radius: 4px;
+        outline: 0;
+        box-shadow: none;
+        border: none;
+        margin: 10px;
     }
     .cancel-btn {
-      background-color: grey;
-      color: #fff;
-      justify-content: center;
-      align-items: center;
-      font-family: UbuntuMedium, sans-serif;
-      line-height: 12px;
-      border-radius: 4px;
-      outline: 0;
-      box-shadow: none;
-      border: none;
-      margin: 10px;
+        background-color: grey;
+        color: #fff;
+        justify-content: center;
+        align-items: center;
+        font-family: UbuntuMedium, sans-serif;
+        line-height: 12px;
+        border-radius: 4px;
+        outline: 0;
+        box-shadow: none;
+        border: none;
+        margin: 10px;
     }
     .saveAsDraft-btn {
-      background-color: rgb(150, 150, 25);
-      color: #fff;
-      justify-content: center;
-      align-items: center;
-      font-family: UbuntuMedium, sans-serif;
-      line-height: 12px;
-      border-radius: 4px;
-      outline: 0;
-      box-shadow: none;
-      border: none;
-      margin: 10px;
+        background-color: rgb(150, 150, 25);
+        color: #fff;
+        justify-content: center;
+        align-items: center;
+        font-family: UbuntuMedium, sans-serif;
+        line-height: 12px;
+        border-radius: 4px;
+        outline: 0;
+        box-shadow: none;
+        border: none;
+        margin: 10px;
     }
     .back-btn {
-      background-color: #162056;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: UbuntuMedium, sans-serif;
-      line-height: 12px;
-      border-radius: 4px;
-      outline: 0;
-      box-shadow: none;
-      border: none;
+        background-color: #162056;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: UbuntuMedium, sans-serif;
+        line-height: 12px;
+        border-radius: 4px;
+        outline: 0;
+        box-shadow: none;
+        border: none;
     }
     .show-btn {
-      background-color: #784c4c;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: UbuntuMedium, sans-serif;
-      line-height: 12px;
-      border-radius: 4px;
-      outline: 0;
-      box-shadow: none;
-      border: none;
+        background-color: #784c4c;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: UbuntuMedium, sans-serif;
+        line-height: 12px;
+        border-radius: 4px;
+        outline: 0;
+        box-shadow: none;
+        border: none;
     }
-  }
-}
-.questionsFooter {
-  display: flex;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-
-  .saveAndFinish-btn {
-    background-color: #699a00;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: UbuntuMedium, sans-serif;
-    line-height: 12px;
-    border-radius: 4px;
-    outline: 0;
-    box-shadow: none;
-    border: none;
-    margin: 10px;
-  }
-  .cancel-btn {
-    background-color: grey;
-    color: #fff;
-    justify-content: center;
-    align-items: center;
-    font-family: UbuntuMedium, sans-serif;
-    line-height: 12px;
-    border-radius: 4px;
-    outline: 0;
-    box-shadow: none;
-    border: none;
-    margin: 10px;
-  }
-  .saveAsDraft-btn {
-    background-color: rgb(150, 150, 25);
-    color: #fff;
-    justify-content: center;
-    align-items: center;
-    font-family: UbuntuMedium, sans-serif;
-    line-height: 12px;
-    border-radius: 4px;
-    outline: 0;
-    box-shadow: none;
-    border: none;
-    margin: 10px;
-  }
-  .back-btn {
-    background-color: #162056;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: UbuntuMedium, sans-serif;
-    line-height: 12px;
-    border-radius: 4px;
-    outline: 0;
-    box-shadow: none;
-    border: none;
-  }
-  .show-btn {
-    background-color: #784c4c;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: UbuntuMedium, sans-serif;
-    line-height: 12px;
-    border-radius: 4px;
-    outline: 0;
-    box-shadow: none;
-    border: none;
-  }
 }
 .addGroupModalFooter {
-  display: flex;
-  // justify-content: center;
-  justify-content: flex-end;
-  // align-items: flex-end;
-  .cancelButton {
-    margin-right: 16px;
-    // background: rgb(224, 73, 73);
-    // color: #fff;
-  }
-  .submitButton {
-    background: darkblue;
-    color: #fff;
-  }
+    display: flex;
+    // justify-content: center;
+    justify-content: flex-end;
+    // align-items: flex-end;
+    .cancelButton {
+        margin-right: 16px;
+        // background: rgb(224, 73, 73);
+        // color: #fff;
+    }
+    .submitButton {
+        background: darkblue;
+        color: #fff;
+    }
 }
 .toolTipContainer {
-  // border: 2px solid red;
-  width: 100%;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  justify-content: center;
-  .selectContainer {
+    // border: 2px solid red;
     width: 100%;
-  }
-
-  .toolTip {
-    border: 2px solid red Button {
-      border: 2px solid pink;
-      height: 48px;
-      width: 20%;
-      margin: auto 0;
+    display: flex;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    .selectContainer {
+        width: 100%;
     }
-  }
+
+    .toolTip {
+        border: 2px solid red Button {
+            border: 2px solid pink;
+            height: 48px;
+            width: 20%;
+            margin: auto 0;
+        }
+    }
 }
 .buttonsContainer {
-  padding: 1em;
-  display: flex;
-  justify-content: flex-end;
-  flex-direction: row;
-  flex-wrap: wrap;
-  .saveButton {
-    background-color: #699a00;
-    margin: 0.3em 0.3em;
-    color: white;
-  }
-  .previewButton {
-    background-color: rgb(214, 90, 90);
-    margin: 0.3em 0.3em;
-    color: white;
-  }
-  .cancelButton {
-    background-color: rgb(86, 70, 70);
-    margin: 0.3em 0.3em;
-    color: white;
-  }
-  .backButton {
-    background-color: rgb(29, 21, 196);
-    margin: 0.3em 0.3em;
-    color: white;
-  }
-  .saveAndPublishButton {
-    background-color: rgb(38, 122, 211);
-    margin: 0.3em;
-    color: white;
-  }
+    padding: 1em;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+    flex-wrap: wrap;
+    .saveButton {
+        background-color: #699a00;
+        margin: 0.3em 0.3em;
+        color: white;
+    }
+    .previewButton {
+        background-color: rgb(214, 90, 90);
+        margin: 0.3em 0.3em;
+        color: white;
+    }
+    .cancelButton {
+        background-color: rgb(86, 70, 70);
+        margin: 0.3em 0.3em;
+        color: white;
+    }
+    .backButton {
+        background-color: rgb(29, 21, 196);
+        margin: 0.3em 0.3em;
+        color: white;
+    }
+    .saveAndPublishButton {
+        background-color: rgb(38, 122, 211);
+        margin: 0.3em;
+        color: white;
+    }
 }
 
 .previewModal {
-  width: 1200px !important;
+    width: 1200px !important;
 }
 .previewFooter {
-  padding: 0.5em;
-  display: flex;
-  justify-content: flex-end;
-  flex-direction: row;
-  flex-wrap: wrap;
-  .backButton {
-    // background-color: rgb(19, 42, 189);
-    // color: #fff;
-    margin-right: 0.5em;
-  }
-  .nextButton {
-    // background-color: darkcyan;
-    // color: #fff;
-    margin-right: 0.5em;
-  }
-  .finishButton {
-    background-color: #d25f57;
-    color: #fff;
-    margin-right: 0.5em;
-  }
+    padding: 0.5em;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+    flex-wrap: wrap;
+    .backButton {
+        // background-color: rgb(19, 42, 189);
+        // color: #fff;
+        margin-right: 0.5em;
+    }
+    .nextButton {
+        // background-color: darkcyan;
+        // color: #fff;
+        margin-right: 0.5em;
+    }
+    .finishButton {
+        background-color: #d25f57;
+        color: #fff;
+        margin-right: 0.5em;
+    }
 }
 .previewGroupContainer {
-  margin: 0;
-  padding: 0;
-  height: 650px;
-  overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    height: 650px;
+    overflow-y: auto;
 }
 .groupHeader {
-  background-color: rgb(236, 236, 14);
-  border: 2px solid blue;
-  border-radius: 0.5em;
-  color: white;
-  padding: 0.5em;
+    background-color: rgb(236, 236, 14);
+    border: 2px solid blue;
+    border-radius: 0.5em;
+    color: white;
+    padding: 0.5em;
 }
 
-.addFirsContainer{
-  width: 100%;
-  margin: 1em;
-  padding: 0 3em;
-  display: flex;
-  justify-content: flex-end;
-  .addfirstButton{
-    background: #059de4;
-    color:white;
-  }
+.addFirsContainer {
+    width: 100%;
+    margin: 1em;
+    padding: 0 3em;
+    display: flex;
+    justify-content: flex-end;
+    .addfirstButton {
+        background: #059de4;
+        color: white;
+    }
 }
 
-.ant-form-item{
-  .ant-form-item-control-input-content {
-    
-  }
+.ant-form-item {
+    .ant-form-item-control-input-content {
+    }
 }

@@ -1,67 +1,40 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { CustomFormItem, CustomSelect, Option } from '../components';
 import { participantGroupTypes } from '../constants/settings/participantGroups';
-import { resetParticipantGroupsList } from '../store/slice/eventsSlice';
-import { getParticipantGroupsList } from '../store/slice/eventsSlice';
+import participantGroupsServices from '../services/participantGroups.services';
+import { getByFilterPagedParamsHelper } from '../utils/utils';
 
 const CustomParticipantSelectFormItems = ({ form, className, required, initialValues }) => {
     const dispatch = useDispatch();
     const [groupVal, setGroupVal] = useState([]);
     const [participantIdsArr, setParticipantIdsArr] = useState([]);
-    const { participantGroupsList } = useSelector((state) => state?.events);
-    const loadParticipantGroups = async () => {
-        console.log('"part içinde"', 'part içinde');
-        participantGroupsList?.length === 0 &&
-            dispatch(
-                getParticipantGroupsList({
-                    params: {
-                        'ParticipantGroupDetailSearch.PageSize': 100000000,
-                    },
-                }),
-            );
+    const [groups, setGroups] = useState([]);
+
+    const loadParticipantGroups = async (value) => {
+        console.log('value', value);
+        let data = { pageSize: 1000 };
+        if (value) {
+            data.UserTypes = value;
+        }
+        const params = getByFilterPagedParamsHelper(data, 'ParticipantGroupDetailSearch.');
+        const response = await participantGroupsServices.getParticipantGroupsPagedList(params);
+        const partGroups = response?.data?.items;
+        setGroups(partGroups);
     };
 
-    loadParticipantGroups();
-
-    const [groups, setGroups] = useState([...participantGroupsList]);
-
     useEffect(() => {
-        let typeIds = initialValues?.participantType?.id?.split(',')?.map((item) => Number(item));
+        let typeIds = initialValues?.participantType?.id?.split(',');
         if (typeIds?.length > 0) {
             setParticipantIdsArr([...typeIds]);
-            filterByParticipantTypeIds([...typeIds]);
+            loadParticipantGroups(typeIds);
         }
     }, [initialValues]);
 
-    const onParticipantGroupTypeSelect = async (value) => {};
-    const onParticipantGroupTypeDeSelect = async (value) => {};
-
-    const handleSelectChange = (value) => {
+    const handleSelectChange = async (value) => {
         form.resetFields(['participantGroupIds']);
         setParticipantIdsArr([...value]);
-        if (value.length === 0) {
-            dispatch(resetParticipantGroupsList());
-        } else {
-            filterByParticipantTypeIds(value);
-        }
-    };
-
-    const filterByParticipantTypeIds = async (value) => {
-        let newArr = participantGroupsList.filter((item) => {
-            return value.some((v) => v === item?.userType);
-        });
-        const uniqueArr = [];
-
-        newArr.forEach((obj) => {
-            const isDuplicate = uniqueArr.some((uniqueObj) => {
-                return obj.id === uniqueObj.id;
-            });
-            if (!isDuplicate) {
-                uniqueArr.push(obj);
-            }
-        });
-        setGroups([...uniqueArr]);
+        await loadParticipantGroups(value);
     };
 
     return (
@@ -82,8 +55,8 @@ const CustomParticipantSelectFormItems = ({ form, className, required, initialVa
                     mode="multiple"
                     placeholder="Seçiniz"
                     onChange={handleSelectChange}
-                    onSelect={onParticipantGroupTypeSelect}
-                    onDeselect={onParticipantGroupTypeDeSelect}
+                    // onSelect={onParticipantGroupTypeSelect}
+                    // onDeselect={onParticipantGroupTypeDeSelect}
                     style={{ width: '100%' }}
                 >
                     {Object.keys(participantGroupTypes)?.map((item) => {
@@ -116,12 +89,13 @@ const CustomParticipantSelectFormItems = ({ form, className, required, initialVa
                     style={{ width: '100%' }}
                     onChange={(value) => {
                         setGroupVal(value);
+                        console.log(value);
                     }}
                 >
-                    {groups?.map((item) => {
+                    {groups?.map(({ name, id }) => {
                         return (
-                            <Option key={item?.id} value={item?.id}>
-                                {item?.name}
+                            <Option key={id} value={id}>
+                                {name}
                             </Option>
                         );
                     })}

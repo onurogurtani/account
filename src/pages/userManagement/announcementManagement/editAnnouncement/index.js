@@ -13,7 +13,6 @@ const EditAnnouncement = () => {
     const [announcementInfoData, setAnnouncementInfoData] = useState({});
     const [updated, setUpdated] = useState(false);
     const { announcementTypes } = useSelector((state) => state?.announcement);
-    const { participantGroupsList } = useSelector((state) => state?.events);
     const history = useHistory();
     const loadAnnouncemenTypes = useCallback(async () => {
         let typeData = {
@@ -24,27 +23,10 @@ const EditAnnouncement = () => {
         announcementTypes?.length === 0 && (await dispatch(getByFilterPagedAnnouncementTypes(typeData)));
     }, [dispatch, announcementTypes]);
 
-    const loadParticipantGroups = async () => {
-        console.log('"part içinde"', 'part içinde');
-        participantGroupsList?.length === 0 &&
-            dispatch(
-                getParticipantGroupsList({
-                    params: {
-                        'ParticipantGroupDetailSearch.PageSize': 100000000,
-                    },
-                }),
-            );
-    };
-
-    loadParticipantGroups();
 
     useEffect(() => {
         window.scrollTo(0, 0);
         loadAnnouncemenTypes();
-    }, []);
-
-    useEffect(() => {
-        window.scrollTo(0, 0);
     }, []);
 
     const handleBackButton = () => {
