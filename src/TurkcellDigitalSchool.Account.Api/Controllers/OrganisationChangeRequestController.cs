@@ -91,7 +91,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<OrganisationInfoChangeRequest>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("Add")]
-        public async Task<IActionResult> Add([FromBody] CreateOrganisationChangeRequestCommand createOrganisationChangeRequestCommand)
+        public async Task<IActionResult> Add([FromHeader(Name = "CurrentOrganisationId")] long CurrentOrganisationId, [FromBody] CreateOrganisationChangeRequestCommand createOrganisationChangeRequestCommand)
         {
             var result = await Mediator.Send(createOrganisationChangeRequestCommand);
             if (result.Success)
@@ -111,7 +111,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<OrganisationInfoChangeRequest>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] UpdateOrganisationChangeRequestCommand updateOrganisationChangeRequestCommand)
+        public async Task<IActionResult> Update([FromHeader(Name = "CurrentOrganisationId")] long CurrentOrganisationId, [FromBody] UpdateOrganisationChangeRequestCommand updateOrganisationChangeRequestCommand)
         {
             var result = await Mediator.Send(updateOrganisationChangeRequestCommand);
             if (result.Success)
