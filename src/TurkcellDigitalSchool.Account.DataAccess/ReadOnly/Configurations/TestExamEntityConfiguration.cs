@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract; 
+using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract;
 
-namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations.ReadOnly
+namespace TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Configurations
 {
     public class TestExamEntityConfiguration : EntityDefaultConfigurationBase<TestExam>
     {
@@ -23,7 +23,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations.Rea
             builder.Property(x => x.ExamType);
             builder.Property(x => x.TransitionBetweenQuestions).HasDefaultValue(true).IsRequired();
             builder.Property(x => x.TransitionBetweenSections).HasDefaultValue(true).IsRequired();
-            builder.Property(x => x.IsAllowDownloadPdf).HasDefaultValue(true).IsRequired(); 
+            builder.Property(x => x.IsAllowDownloadPdf).HasDefaultValue(true).IsRequired();
         }
     }
 }

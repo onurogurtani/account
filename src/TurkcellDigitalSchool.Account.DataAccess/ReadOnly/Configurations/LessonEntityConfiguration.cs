@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract; 
+using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract;
 
-namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations.ReadOnly
+namespace TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Configurations
 {
     public class LessonEntityConfiguration : EntityDefaultConfigurationBase<Lesson>
     {
@@ -12,7 +12,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations.Rea
             base.Configure(builder);
             builder.Property(x => x.Name).HasMaxLength(300);
             builder.Property(x => x.Order);
-            builder.Property(x => x.IsActive).HasDefaultValue(false).IsRequired(); 
+            builder.Property(x => x.IsActive).HasDefaultValue(false).IsRequired();
         }
     }
 }
