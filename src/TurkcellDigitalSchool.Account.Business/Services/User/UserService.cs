@@ -31,11 +31,13 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             {
                 Name = getUser.Name,
                 SurName = getUser.SurName,
-                UserName = getUser.Name,
+                UserName = getUser.UserName,
+                Avatar = getUser.AvatarId,
                 CitizenId = getUser.CitizenId,
                 PlaceOfBirth = getUser.BirthPlace,
                 DateOfBirth = getUser.BirthDate,
                 Email = getUser.Email,
+                
                 MobilePhone = getUser.MobilePhones,
 
                 //Avatar = ,
