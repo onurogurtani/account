@@ -56,7 +56,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                 var isSingleOrPluralOrganisation = await _organisationTypeRepository.Query().AnyAsync(x => x.Id == request.Organisation.OrganisationTypeId && x.IsSingularOrganisation);
 
                 var userType = isSingleOrPluralOrganisation ? UserType.OrganisationAdmin : UserType.FranchiseAdmin;
-                var roleId = await _packageRoleRepository.Query().Include(p => p.Role).Where(p => p.PackageId == request.Organisation.PackageId && p.Role.UserType == userType).Select(p => p.RoleId).FirstOrDefaultAsync();
+
+                //TODO paketlerin içine rol atamalarý yapýldýktan sonra aþaðýdaki istek ile kurum admini rolünü alýp admin ekleme servisine gönderilecek.
+                var roleId = 1;
+                //var roleId = await _packageRoleRepository.Query().Include(p => p.Role).Where(p => p.PackageId == request.Organisation.PackageId && p.Role.UserType == userType).Select(p => p.RoleId).FirstOrDefaultAsync();
                 var roleIds = new List<long> { roleId };
 
                 var user = new CreateAdminCommand
