@@ -1,11 +1,10 @@
 ﻿using System;
-using TurkcellDigitalSchool.Core.Entities;
 using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract;
 using TurkcellDigitalSchool.Entities.Enums;
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly
 {
-    public class Event : EntityDefault, IReadOnlyEntity
+    public class Event :   IReadOnlyEntity
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -19,5 +18,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly
         public string KeyWords { get; set; }
         public LocationType LocationType { get; set; }
         public string? PhysicalAddress { get; set; }
+        public long Id { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

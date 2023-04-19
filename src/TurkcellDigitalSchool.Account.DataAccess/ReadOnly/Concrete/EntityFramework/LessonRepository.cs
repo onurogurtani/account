@@ -1,13 +1,13 @@
-﻿using TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Abstract;
+﻿using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
+using TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
-using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
+using TurkcellDigitalSchool.Core.DataAccess.EntityFramework; 
 
 namespace TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Concrete.EntityFramework
 {
-    public class LessonRepository : EfEntityReadRepositoryBase<Lesson, ProjectDbContext>, ILessonRepository
+    public class LessonRepository : EfEntityReadRepositoryBase<Lesson, AccountDbContext>, ILessonRepository
     {
-        public LessonRepository(ProjectDbContext context) : base(context)
+        public LessonRepository(AccountDbContext context) : base(context)
         {
         }
     }

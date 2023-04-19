@@ -1,18 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly; 
 
 namespace TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Configurations
 {
-    public class PackageTestExamEntityConfiguration : EntityDefaultConfigurationBase<PackageTestExam>
+    public class PackageTestExamEntityConfiguration : IEntityTypeConfiguration<PackageTestExam>
     {
-        public override void Configure(EntityTypeBuilder<PackageTestExam> builder)
+        public   void Configure(EntityTypeBuilder<PackageTestExam> builder)
         {
-            base.Configure(builder);
+            builder.HasKey(x => x.Id);
             builder.Property(x => x.TestExamId);
-            builder.Property(x => x.PackageId);
-            builder.Property(x => x.InsertTime).HasDefaultValueSql("NOW()");
+            builder.Property(x => x.PackageId); 
         }
     }
 }
