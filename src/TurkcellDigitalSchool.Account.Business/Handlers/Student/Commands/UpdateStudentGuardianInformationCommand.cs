@@ -28,7 +28,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
         public string MobilPhones { get; set; }
         public class UpdateStudentGuardianInformationCommandHandler : IRequestHandler<UpdateStudentGuardianInformationCommand, IResult>
         {
-            IStudentGuardianInformationRepository _studentGuardianInformationRepository;
+            private readonly IStudentGuardianInformationRepository _studentGuardianInformationRepository;
             public UpdateStudentGuardianInformationCommandHandler(IStudentGuardianInformationRepository studentGuardianInformationRepository)
             {
                 _studentGuardianInformationRepository = studentGuardianInformationRepository;

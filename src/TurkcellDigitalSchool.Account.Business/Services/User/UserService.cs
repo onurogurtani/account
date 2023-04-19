@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,16 +18,27 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         private readonly IUserRepository _userRepository;
         private readonly IStudentEducationInformationRepository _studentEducationInformationRepository;
         private readonly IStudentGuardianInformationRepository _studentGuardianInformationRepository;
+        private readonly ICityRepository _cityRepository;
+        private readonly ICountyRepository _countyRepository;
 
-        public UserService(IUserRepository userRepository, IStudentEducationInformationRepository studentEducationInformationRepository, IStudentGuardianInformationRepository studentGuardianInformationRepository)
+        public UserService(IUserRepository userRepository, IStudentEducationInformationRepository studentEducationInformationRepository, IStudentGuardianInformationRepository studentGuardianInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository)
         {
             _userRepository = userRepository;
             _studentEducationInformationRepository = studentEducationInformationRepository;
             _studentGuardianInformationRepository = studentGuardianInformationRepository;
+            _cityRepository = cityRepository;
+            _countyRepository = countyRepository;
         }
         public PersonalInfoDto GetByStudentPersonalInformation(long userId)
         {
+            //TODO AvatarId CND entegrasyonunda, City ve County tabloları dublice tablo olunca join yapılacak.
             var getUser = _userRepository.Get(w => w.Id == userId);
+            if (getUser == null)
+            {
+                return new PersonalInfoDto();
+            }
+            var city = _cityRepository.Get(w => w.Id == getUser.ResidenceCityId);
+            var county = _countyRepository.Get(w => w.Id == getUser.ResidenceCountyId);
             return new PersonalInfoDto
             {
                 Name = getUser.Name,
@@ -37,12 +49,19 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 PlaceOfBirth = getUser.BirthPlace,
                 DateOfBirth = getUser.BirthDate,
                 Email = getUser.Email,
-                
+                EmailVerify=getUser.EmailVerify,
+                City = new UserInformationDefinationDto
+                {
+                    Name = city.Name,
+                    Id = city.Id
+                },
+                County = new UserInformationDefinationDto
+                {
+                    Name = county.Name,
+                    Id = county.Id
+                },
                 MobilePhone = getUser.MobilePhones,
-
-                //Avatar = ,
-                //City= getUser.ResidenceCity,
-                //County=getUser.ResidenceCounty
+                MobilePhoneVerify=getUser.MobilePhonesVerify,
             };
         }
         public EducationInfoDto GetByStudentEducationInformation(long userId)
@@ -93,5 +112,21 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 MobilPhones = getGuardian.MobilPhones
             };
         }
+
+        public bool IsExistEmail(long UserId, string Email)
+        {
+            return _userRepository.Query().Any(w => w.Id != UserId && w.Email == Email);
+        }
+        public bool IsExistUserName(long UserId, string UserName)
+        {
+            return _userRepository.Query().Any(w => w.Id != UserId && w.UserName == UserName);
+        }
+
+        public Entities.Concrete.Core.User GetUserById(long UserId)
+        {
+            return _userRepository.Get(w => w.Id == UserId);
+        }
+
+       
     }
 }
