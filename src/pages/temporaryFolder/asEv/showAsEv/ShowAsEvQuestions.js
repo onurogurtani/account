@@ -1,92 +1,108 @@
 import React, { useEffect, useState } from 'react';
+import { CustomPagination, CustomForm, CustomFormItem, Text, CustomInput } from '../../../../components';
+import '../../../../styles/temporaryFile/asEvQuestions.scss';
+import '../../../../styles/temporaryFile/asEvQuestionFilter.scss';
+import { useSelector } from 'react-redux';
+import { Card, Rate, Form } from 'antd';
+import { EChooices } from '../../../../constants/questions';
 
-import { CustomButton, CustomPagination } from '../../../../components';
-import '../../../../styles/temporaryFile/asEv.scss';
-
-
-
-const dummyIds = [
-  1390, 1391, 1392, 1393, 1394, 1395, 1396, 1397, 1398, 1399, 1400, 1402, 1403, 1404, 1405, 1406, 1407, 1408, 1409,
-  1410, 1390, 1391, 1392, 1393, 1394, 1395, 1396, 1397, 1398, 1399, 1400, 1402, 1403, 1404, 1405, 1406, 1407, 1408,
-  1409, 1410,
-];
 
 const ShowAsEvQuestions = () => {
-  const pagedProperty = {
-    totalCount: 8,
-    currentPage: 1,
-    pageSize: 10,
-  };
+    const { asEvDetail } = useSelector((state) => state?.asEv);
 
-  const [tableProp, setTableProp] = useState(pagedProperty);
-  const [filteredDummy, setFilteredDummy] = useState([]);
+    const [form] = Form.useForm();
 
-  const paginateQuestions = async (page, pageSize) => {
-    let newDummy = dummyIds
-      .filter((item, index) => index < page * pageSize)
-      .filter((item, index) => index > (page - 1) * pageSize - 1);
-    setFilteredDummy([...newDummy]);
-  };
+    useEffect(() => {
+        form.setFieldValue(
+            'questionCount',
+            asEvDetail?.items?.[0]?.asEvQuestionsResponse?.asEvQuestionsDetail.questionCount,
+        );
+        form.setFieldValue(
+            'difficulty1',
+            asEvDetail?.items?.[0]?.asEvQuestionsResponse?.asEvQuestionsDetail.difficulty1,
+        );
+        form.setFieldValue(
+            'difficulty2',
+            asEvDetail?.items?.[0]?.asEvQuestionsResponse?.asEvQuestionsDetail.difficulty2,
+        );
+        form.setFieldValue(
+            'difficulty3',
+            asEvDetail?.items?.[0]?.asEvQuestionsResponse?.asEvQuestionsDetail.difficulty3,
+        );
+        form.setFieldValue(
+            'difficulty4',
+            asEvDetail?.items?.[0]?.asEvQuestionsResponse?.asEvQuestionsDetail.difficulty4,
+        );
+        form.setFieldValue(
+            'difficulty5',
+            asEvDetail?.items?.[0]?.asEvQuestionsResponse?.asEvQuestionsDetail.difficulty5,
+        );
+    }, []);
 
-  useEffect(() => {
-    paginateQuestions(pagedProperty.currentPage, pagedProperty.pageSize);
-    // return (cleanUp = () => {});
-  }, []);
-
-  const paginationProps = {
-    showSizeChanger: true,
-    showQuickJumper: {
-      goButton: <CustomButton className="go-button">Git</CustomButton>,
-    },
-    total: tableProp?.totalCount,
-    current: tableProp?.currentPage,
-    pageSize: tableProp.pageSize || 10,
-    onChange: (page, pageSize) => {
-      setTableProp({
-        ...tableProp,
-        currentPage: page,
-        pageSize: pageSize,
-      });
-      let newDummy = dummyIds
-        .filter((item, index) => index < page * pageSize)
-        .filter((item, index) => index > (page - 1) * pageSize - 1);
-      setFilteredDummy([...newDummy]);
-    },
-  };
-
-  const TableFooter = ({ paginationProps }) => {
     return (
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <CustomPagination className="custom-pagination" {...paginationProps} />
-      </div>
+        <>
+            <div className="table-filter">
+                <CustomForm
+                    form={form}
+                    name="filterForm"
+                    className="filter-form"
+                    autoComplete="off"
+                    layout="horizontal"
+                >
+                    <div className="form-item">
+                        <CustomFormItem name={'classroomId'} label={<Text t="Ders:" />}>
+                            {asEvDetail?.items[0]?.asEvDetail?.lesson?.name}
+                        </CustomFormItem>
+                        <CustomFormItem name={'lessonUnitId'} label={<Text t="Ünite:" />}>
+                            {asEvDetail?.items[0]?.asEvQuestionsResponse?.asEvQuestionsDetail?.lessonUnitName}
+                        </CustomFormItem>
+                        <CustomFormItem name={'questionCount'} label={<Text t="Seçilen Soru Sayısı:" />}>
+                            <CustomInput disabled style={{ width: '100px' }} />
+                        </CustomFormItem>
+                        <CustomFormItem name={'difficulty1'} label={<Text t="Zorluk 1:" />}>
+                            <CustomInput disabled style={{ width: '100px' }} />
+                        </CustomFormItem>
+                        <CustomFormItem name={'difficulty2'} label={<Text t="Zorluk 2:" />}>
+                            <CustomInput disabled style={{ width: '100px' }} />
+                        </CustomFormItem>
+                        <CustomFormItem name={'difficulty3'} label={<Text t="Zorluk 3:" />}>
+                            <CustomInput disabled style={{ width: '100px' }} />
+                        </CustomFormItem>
+                        <CustomFormItem name={'difficulty4'} label={<Text t="Zorluk 4:" />}>
+                            <CustomInput disabled style={{ width: '100px' }} />
+                        </CustomFormItem>
+                        <CustomFormItem name={'difficulty5'} label={<Text t="Zorluk 5:" />}>
+                            <CustomInput disabled style={{ width: '100px' }} />
+                        </CustomFormItem>
+                    </div>
+                </CustomForm>
+            </div>
+            <div className="slider-filter-container">
+                {asEvDetail?.items &&
+                    asEvDetail?.items[0]?.asEvQuestionsResponse?.asEvQuestions &&
+                    asEvDetail?.items[0]?.asEvQuestionsResponse?.asEvQuestions.map((item) => (
+                        <>
+                            <div className="col-md-6">
+                                <Card
+                                    hoverable
+                                    className="question-card"
+                                    cover={<img alt="example" src={`data:image/png;base64,${item?.fileBase64}`} />}
+                                ></Card>
+                            </div>
+                            <div className="col-md-6">
+                                <CustomForm className="info-form " autoComplete="off" layout={'horizontal'}>
+                                    <CustomFormItem label="Konu">{item?.lessonSubject}</CustomFormItem>
+                                    <CustomFormItem label="Cevap"> {EChooices[item?.correctAnswer]}</CustomFormItem>
+                                    <CustomFormItem label="Zorluk Seviyesi">
+                                        <Rate className="question-difficultly-rat" value={item?.difficulty} />
+                                    </CustomFormItem>
+                                </CustomForm>
+                            </div>
+                        </>
+                    ))}
+            </div>
+        </>
     );
-  };
-
-  return (
-    <>
-      <article className="scrollable-container">
-        {filteredDummy?.map((data, index) => (
-          <div className="show-question-container">
-            <div className="image-container">
-              {' '}
-             
-            </div>
-            <div className="question-data-container">
-           
-            </div>
-          </div>
-        ))}
-      </article>
-
-      <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center' }}>
-        <CustomPagination
-          className="custom-pagination"
-          style={{ backGroundColor: 'white !important' }}
-          {...paginationProps}
-        />
-      </div>
-    </>
-  );
 };
 
 export default ShowAsEvQuestions;

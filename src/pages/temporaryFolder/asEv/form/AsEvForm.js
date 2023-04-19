@@ -47,6 +47,8 @@ const AsEvForm = ({ setStep, step }) => {
             getByFilterPagedAsEvQuestions({
                 asEvQuestionsDetailSearch: {
                     asEvId: newAsEv?.id,
+                    pageNumber:1,
+                    pageSize:5
                 },
             }),
         );

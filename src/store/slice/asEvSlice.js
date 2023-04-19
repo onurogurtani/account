@@ -20,6 +20,15 @@ export const updateAsEv = createAsyncThunk('updateAsEv ', async (data, { dispatc
     }
 });
 
+export const getAsEvById = createAsyncThunk('getAsEvById ', async (data, { dispatch, rejectWithValue }) => {
+    try {
+        const response = await asEvServices.getAsEvById(data);
+        return response;
+    } catch (error) {
+        return rejectWithValue(error?.data);
+    }
+});
+
 export const adAsEvQuestion = createAsyncThunk('adAsEvQuestion', async (data, { dispatch, rejectWithValue }) => {
     try {
         const response = await asEvServices.addAsEvQuestion(data);
@@ -115,6 +124,7 @@ const initialState = {
     asEvQuestions: [],
     filteredPagedQuestions: [],
     asEvTestPreview: [],
+    asEvDetail: [],
 };
 
 export const asEvSlice = createSlice({
@@ -127,6 +137,12 @@ export const asEvSlice = createSlice({
         });
         builder.addCase(getByFilterPagedAsEvQuestions.rejected, (state, action) => {
             state.questions = [];
+        });
+        builder.addCase(getAsEvById.fulfilled, (state, action) => {
+            state.asEvDetail = action?.payload?.data;
+        });
+        builder.addCase(getAsEvById.rejected, (state, action) => {
+            state.asEvDetail = [];
         });
 
         builder.addCase(getAsEvTestPreview.fulfilled, (state, action) => {

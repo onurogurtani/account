@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     CustomButton,
@@ -16,7 +16,7 @@ import { setQuestionSequence, getAsEvTestPreview, updateAsEv } from '../../../st
 import { useHistory } from 'react-router-dom';
 
 const AsEvTestPreview = () => {
-    const { questions, asEvTestPreview, newAsEv } = useSelector((state) => state?.asEv);
+    const { asEvTestPreview, newAsEv } = useSelector((state) => state?.asEv);
 
     const dispatch = useDispatch();
     const history = useHistory();
@@ -38,8 +38,8 @@ const AsEvTestPreview = () => {
         }
     };
 
-    const handlePagination = (value) => {
-        console.log(value);
+    const handlePagination = async(value) => {
+        await dispatch(getAsEvTestPreview({ asEvTestPreviewDetailSearch: { asEvId: newAsEv?.id,pageNumber:value,pageSize:6 } }));
     };
 
     const handleSequence = async (value,id) => {
@@ -88,9 +88,9 @@ const AsEvTestPreview = () => {
                         <CustomPagination
                             onChange={handlePagination}
                             showSizeChanger={true}
-                            total={questions?.pagedProperty?.totalCount}
-                            current={questions?.pagedProperty?.currentPage}
-                            pageSize={questions?.pagedProperty?.pageSize}
+                            total={asEvTestPreview?.pagedProperty?.totalCount}
+                            current={asEvTestPreview?.pagedProperty?.currentPage}
+                            pageSize={asEvTestPreview?.pagedProperty?.pageSize}
                         ></CustomPagination>
                         <CustomFormItem style={{ float: 'right' }}>
                             <CustomButton onClick={createTest} type="primary" className="save-btn">
