@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.LdapLoginService;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.TurkcellFastLoginService;
+using TurkcellDigitalSchool.Account.Business.Services.User;
 using TurkcellDigitalSchool.Common.DependencyResolvers;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
@@ -74,6 +75,7 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddScoped<ILdapLoginService, LdapLoginService>();
             services.AddScoped<ITurkcellFastLoginService, TurkcellFastLoginService>(); 
             services.AddScoped<IKpsService, KpsService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddAutoMapper(typeof(Common.ConfigurationManager));
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddMediatR(typeof(BusinessStartup).GetTypeInfo().Assembly);
