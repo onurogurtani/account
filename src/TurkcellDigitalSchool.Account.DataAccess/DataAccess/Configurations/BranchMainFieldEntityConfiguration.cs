@@ -1,14 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly; 
 
 namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations
 {
-    public class BranchMainFieldEntityConfiguration : EntityDefaultConfigurationBase<BranchMainField>
+    public class BranchMainFieldEntityConfiguration : IEntityTypeConfiguration<BranchMainField>
     {
-        public override void Configure(EntityTypeBuilder<BranchMainField> builder)
+        public void Configure(EntityTypeBuilder<BranchMainField> builder)
         {
-            base.Configure(builder);
+            builder.HasKey(e => e.Id); 
         }
     }
-}
+} 
