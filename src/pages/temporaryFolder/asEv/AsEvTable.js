@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { CustomButton, CustomPagination, CustomTable, errorDialog } from '../../../components';
-import { getFilterPagedAsEvs } from '../../../store/slice/asEvSlice';
+import { getFilterPagedAsEvs,getAsEvById } from '../../../store/slice/asEvSlice';
 import '../../../styles/announcementManagement/announcementList.scss';
 import '../../../styles/temporaryFile/asEv.scss';
 
@@ -212,10 +212,9 @@ const AsEvTable = () => {
         },
     ];
     const showRecordHandler = async (record) => {
-        history.push({
-            pathname: '/test-management/assessment-and-evaluation/show',
-            state: { data: { ...record } },
-        });
+
+        await dispatch(getAsEvById({id:record?.id}))
+        history.push('/test-management/assessment-and-evaluation/show')
     };
 
     return (

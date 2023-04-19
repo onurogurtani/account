@@ -27,6 +27,7 @@ const ShowAsEv = () => {
   }, [currentAsEv]);
 
   const dispatch = useDispatch();
+  
   const handleBack = () => {
     history.push('/test-management/assessment-and-evaluation/list');
   };

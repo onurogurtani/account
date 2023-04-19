@@ -13,12 +13,20 @@ const AsEvQuestions = () => {
     const [isVisible, setIsVisible] = useState(false);
     const dispatch = useDispatch();
 
-    const handlePagination = (value) => {
-        console.log(value);
+    const handlePagination =async (value) => {
+        await dispatch(
+            getByFilterPagedAsEvQuestions({
+                asEvQuestionsDetailSearch: {
+                    asEvId: newAsEv?.id,
+                    pageNumber:value,
+                    pageSize:5
+                },
+            }),
+        );
     };
 
     const openDifficultiesModal = async () => {
-        await dispatch(getAsEvTestPreview({ asEvTestPreviewDetailSearch: { asEvId: newAsEv?.id } }));
+        await dispatch(getAsEvTestPreview({ asEvTestPreviewDetailSearch: { asEvId: newAsEv?.id,pageNumber:1,pageSize:6 } }));
         setIsVisible(true);
     };
 
@@ -31,6 +39,8 @@ const AsEvQuestions = () => {
                     getByFilterPagedAsEvQuestions({
                         asEvQuestionsDetailSearch: {
                             asEvId: newAsEv?.id,
+                            pageNumber:questions?.pagedProperty?.currentPage,
+                            pageSize:5
                         },
                     }),
                 );
@@ -43,6 +53,8 @@ const AsEvQuestions = () => {
                     getByFilterPagedAsEvQuestions({
                         asEvQuestionsDetailSearch: {
                             asEvId: newAsEv?.id,
+                            pageNumber:questions?.pagedProperty?.currentPage,
+                            pageSize:5
                         },
                     }),
                 );
@@ -96,7 +108,7 @@ const AsEvQuestions = () => {
                         <div className="add-as-ev-footer">
                             <CustomButton  className="cancel-btn">İptal</CustomButton>
                             <CustomFormItem style={{ float: 'right' }}>
-                                <CustomButton onClick={openDifficultiesModal} type="primary" className="save-btn">
+                                <CustomButton disabled={questions?.items[0]?.asEvQuestionsDetail?.questionCount  <  2} onClick={openDifficultiesModal} type="primary" className="save-btn">
                                     Testi Ön İzle
                                 </CustomButton>
                             </CustomFormItem>

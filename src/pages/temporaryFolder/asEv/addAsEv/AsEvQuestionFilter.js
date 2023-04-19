@@ -102,9 +102,6 @@ const AsEvQuestionFilter = () => {
                         </CustomSelect>
                     </CustomFormItem>
                 </div>
-                <div className="form-footer">
-                    <div className="action-buttons"></div>
-                </div>
             </CustomForm>
         </div>
     );
