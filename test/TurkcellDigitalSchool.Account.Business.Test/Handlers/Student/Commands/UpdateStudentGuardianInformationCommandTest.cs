@@ -11,7 +11,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Entities.Concrete;
 using TurkcellDigitalSchool.Entities.Enums.QuestionOfExamEnums;
-using static TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands.UpdateStudentGuardianInformationCommand;
+using static TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands.UpdateStudentParentInformationCommand;
 using System.Linq.Expressions;
 using TurkcellDigitalSchool.Common.Constants;
 using FluentAssertions;
@@ -21,12 +21,12 @@ using MockQueryable.Moq;
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
 {
     [TestFixture]
-    public class UpdateStudentGuardianInformationCommandTest
+    public class UpdateStudentParentInformationCommandTest
     {
-        Mock<IStudentGuardianInformationRepository> _studentGuardianInformationRepository;
+        Mock<IStudentParentInformationRepository> _studentParentInformationRepository;
 
-        UpdateStudentGuardianInformationCommand _updateStudentGuardianInformationCommand;
-        UpdateStudentGuardianInformationCommandHandler _updateStudentGuardianInformationCommandHandler;
+        UpdateStudentParentInformationCommand _updateStudentParentInformationCommand;
+        UpdateStudentParentInformationCommandHandler _updateStudentParentInformationCommandHandler;
 
         Mock<IServiceProvider> _serviceProvider;
         Mock<IHttpContextAccessor> _httpContextAccessor;
@@ -38,10 +38,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
         [SetUp]
         public void Setup()
         {
-            _studentGuardianInformationRepository = new Mock<IStudentGuardianInformationRepository>();
+            _studentParentInformationRepository = new Mock<IStudentParentInformationRepository>();
 
-            _updateStudentGuardianInformationCommand = new UpdateStudentGuardianInformationCommand();
-            _updateStudentGuardianInformationCommandHandler = new UpdateStudentGuardianInformationCommandHandler(_studentGuardianInformationRepository.Object);
+            _updateStudentParentInformationCommand = new UpdateStudentParentInformationCommand();
+            _updateStudentParentInformationCommandHandler = new UpdateStudentParentInformationCommandHandler(_studentParentInformationRepository.Object);
 
             _mediator = new Mock<IMediator>();
             _serviceProvider = new Mock<IServiceProvider>();
@@ -58,11 +58,11 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
         }
 
         [Test]
-        public async Task UpdateStudentGuardianInformationCommand_Create_Success()
+        public async Task UpdateStudentParentInformationCommand_Create_Success()
         {
             // TODO Unittest generic mesaj yapısından ötürü çalışmıyor. tekrar test edielcek.
 
-            _updateStudentGuardianInformationCommand = new()
+            _updateStudentParentInformationCommand = new()
             {
                 UserId = 1,
                 CitizenId = 1,
@@ -71,17 +71,17 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
                 SurName = "Daşkın",
                 MobilPhones = "05332100700"
             };
-            _studentGuardianInformationRepository.Setup(x => x.CreateAndSave(It.IsAny<StudentGuardianInformation>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            _studentParentInformationRepository.Setup(x => x.CreateAndSave(It.IsAny<StudentParentInformation>(), It.IsAny<int?>(), It.IsAny<bool>()));
 
-            var result = await _updateStudentGuardianInformationCommandHandler.Handle(_updateStudentGuardianInformationCommand, new CancellationToken());
+            var result = await _updateStudentParentInformationCommandHandler.Handle(_updateStudentParentInformationCommand, new CancellationToken());
             result.Success.Should().BeTrue();
         }
 
         [Test]
-        public async Task UpdateStudentGuardianInformationCommand_Update_Success()
+        public async Task UpdateStudentParentInformationCommand_Update_Success()
         {
             // TODO Unittest generic mesaj yapısından ötürü çalışmıyor. tekrar test edielcek.
-            _updateStudentGuardianInformationCommand = new()
+            _updateStudentParentInformationCommand = new()
             {
                 UserId = 1,
                 CitizenId = 1,
@@ -92,19 +92,19 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
             };
 
 
-            var list = new List<StudentGuardianInformation>()
+            var list = new List<StudentParentInformation>()
             {
-                new StudentGuardianInformation
+                new StudentParentInformation
                 {
                     Id=1,
                     UserId=1
                 }
             };
 
-            _studentGuardianInformationRepository.Setup(x => x.Query()).Returns(list.AsQueryable().BuildMock());
-            _studentGuardianInformationRepository.Setup(x => x.UpdateAndSave(It.IsAny<StudentGuardianInformation>(), It.IsAny<int?>(), It.IsAny<bool>()));
+            _studentParentInformationRepository.Setup(x => x.Query()).Returns(list.AsQueryable().BuildMock());
+            _studentParentInformationRepository.Setup(x => x.UpdateAndSave(It.IsAny<StudentParentInformation>(), It.IsAny<int?>(), It.IsAny<bool>()));
 
-            var result = await _updateStudentGuardianInformationCommandHandler.Handle(_updateStudentGuardianInformationCommand, new CancellationToken());
+            var result = await _updateStudentParentInformationCommandHandler.Handle(_updateStudentParentInformationCommand, new CancellationToken());
             result.Success.Should().BeTrue();
         }
 

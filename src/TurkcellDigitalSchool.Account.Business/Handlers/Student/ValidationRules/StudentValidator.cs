@@ -63,11 +63,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.ValidationRule
     }
 
     [MessageClassAttr("Öğrenci Profilim Veli Bilgilerim Ekleme/Güncelleme Validasyonu")]
-    public class UpdateStudentGuardianInformationValidator : AbstractValidator<UpdateStudentGuardianInformationCommand>
+    public class UpdateStudentParentInformationValidator : AbstractValidator<UpdateStudentParentInformationCommand>
     {
         [MessageConstAttr(MessageCodeType.Error)]
         private static string RequiredField = Messages.RequiredField;
-        public UpdateStudentGuardianInformationValidator()
+        public UpdateStudentParentInformationValidator()
         {
             RuleFor(x => x.UserId).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
             RuleFor(x => x.Name).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());

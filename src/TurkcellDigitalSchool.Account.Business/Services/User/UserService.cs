@@ -17,15 +17,15 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
     {
         private readonly IUserRepository _userRepository;
         private readonly IStudentEducationInformationRepository _studentEducationInformationRepository;
-        private readonly IStudentGuardianInformationRepository _studentGuardianInformationRepository;
+        private readonly IStudentParentInformationRepository _studentParentInformationRepository;
         private readonly ICityRepository _cityRepository;
         private readonly ICountyRepository _countyRepository;
 
-        public UserService(IUserRepository userRepository, IStudentEducationInformationRepository studentEducationInformationRepository, IStudentGuardianInformationRepository studentGuardianInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository)
+        public UserService(IUserRepository userRepository, IStudentEducationInformationRepository studentEducationInformationRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository)
         {
             _userRepository = userRepository;
             _studentEducationInformationRepository = studentEducationInformationRepository;
-            _studentGuardianInformationRepository = studentGuardianInformationRepository;
+            _studentParentInformationRepository = studentParentInformationRepository;
             _cityRepository = cityRepository;
             _countyRepository = countyRepository;
         }
@@ -95,21 +95,21 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 ReligionLessonStatus = getEducation.ReligionLessonStatus
             };
         }
-        public GuardianInfoDto GetByStudentGuardianInfoInformation(long userId)
+        public ParentInfoDto GetByStudentParentInfoInformation(long userId)
         {
-            var getGuardian = _studentGuardianInformationRepository.Query().FirstOrDefault(w => w.UserId == userId);
-            if (getGuardian == null)
+            var getParent = _studentParentInformationRepository.Query().FirstOrDefault(w => w.UserId == userId);
+            if (getParent == null)
             {
-                return new GuardianInfoDto { };
+                return new ParentInfoDto { };
             }
-            return new GuardianInfoDto
+            return new ParentInfoDto
             {
-                Id = getGuardian.Id,
-                CitizenId = getGuardian.CitizenId,
-                Name = getGuardian.Name,
-                SurName = getGuardian.SurName,
-                Email = getGuardian.Email,
-                MobilPhones = getGuardian.MobilPhones
+                Id = getParent.Id,
+                CitizenId = getParent.CitizenId,
+                Name = getParent.Name,
+                SurName = getParent.SurName,
+                Email = getParent.Email,
+                MobilPhones = getParent.MobilPhones
             };
         }
 

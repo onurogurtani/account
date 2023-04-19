@@ -18,7 +18,7 @@ using TurkcellDigitalSchool.Entities.Concrete;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 {
-    public class UpdateStudentGuardianInformationCommand : IRequest<IResult>
+    public class UpdateStudentParentInformationCommand : IRequest<IResult>
     {
         public long UserId { get; set; }
         public string Name { get; set; }
@@ -26,24 +26,24 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
         public int CitizenId { get; set; }
         public string Email { get; set; }
         public string MobilPhones { get; set; }
-        public class UpdateStudentGuardianInformationCommandHandler : IRequestHandler<UpdateStudentGuardianInformationCommand, IResult>
+        public class UpdateStudentParentInformationCommandHandler : IRequestHandler<UpdateStudentParentInformationCommand, IResult>
         {
-            private readonly IStudentGuardianInformationRepository _studentGuardianInformationRepository;
-            public UpdateStudentGuardianInformationCommandHandler(IStudentGuardianInformationRepository studentGuardianInformationRepository)
+            private readonly IStudentParentInformationRepository _studentParentInformationRepository;
+            public UpdateStudentParentInformationCommandHandler(IStudentParentInformationRepository studentParentInformationRepository)
             {
-                _studentGuardianInformationRepository = studentGuardianInformationRepository;
+                _studentParentInformationRepository = studentParentInformationRepository;
             }
 
 
             [MessageConstAttr(MessageCodeType.Success)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-            [ValidationAspect(typeof(UpdateStudentGuardianInformationValidator), Priority = 2)]
-            public async Task<IResult> Handle(UpdateStudentGuardianInformationCommand request, CancellationToken cancellationToken)
+            [ValidationAspect(typeof(UpdateStudentParentInformationValidator), Priority = 2)]
+            public async Task<IResult> Handle(UpdateStudentParentInformationCommand request, CancellationToken cancellationToken)
             {
-                var existStudentGuardianInfo = _studentGuardianInformationRepository.Query().FirstOrDefault(w => w.UserId == request.UserId);
-                if (existStudentGuardianInfo == null)
+                var existStudentParentInfo = _studentParentInformationRepository.Query().FirstOrDefault(w => w.UserId == request.UserId);
+                if (existStudentParentInfo == null)
                 {
-                    var newRecord = new StudentGuardianInformation
+                    var newRecord = new StudentParentInformation
                     {
                         UserId = request.UserId,
                         Name = request.Name,
@@ -52,16 +52,16 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                         Email = request.Email,
                         MobilPhones = request.MobilPhones,
                     };
-                    await _studentGuardianInformationRepository.CreateAndSaveAsync(newRecord);
+                    await _studentParentInformationRepository.CreateAndSaveAsync(newRecord);
                     return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
                 }
-                existStudentGuardianInfo.UserId = request.UserId;
-                existStudentGuardianInfo.Name = request.Name;
-                existStudentGuardianInfo.SurName = request.SurName;
-                existStudentGuardianInfo.CitizenId = request.CitizenId;
-                existStudentGuardianInfo.Email = request.Email;
-                existStudentGuardianInfo.MobilPhones = request.MobilPhones;
-                await _studentGuardianInformationRepository.UpdateAndSaveAsync(existStudentGuardianInfo);
+                existStudentParentInfo.UserId = request.UserId;
+                existStudentParentInfo.Name = request.Name;
+                existStudentParentInfo.SurName = request.SurName;
+                existStudentParentInfo.CitizenId = request.CitizenId;
+                existStudentParentInfo.Email = request.Email;
+                existStudentParentInfo.MobilPhones = request.MobilPhones;
+                await _studentParentInformationRepository.UpdateAndSaveAsync(existStudentParentInfo);
                 return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }
         }

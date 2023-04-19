@@ -8,7 +8,7 @@ using TurkcellDigitalSchool.Entities.Concrete;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Abstract
 {
-    public interface IStudentGuardianInformationRepository : IEntityDefaultRepository<StudentGuardianInformation>
+    public interface IStudentParentInformationRepository : IEntityDefaultRepository<StudentParentInformation>
     {
     }
 }
