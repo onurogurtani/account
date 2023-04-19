@@ -43,7 +43,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 
         public class UpdateStudentEducationInformationCommandHandler : IRequestHandler<UpdateStudentEducationInformationCommand, IResult>
         {
-            IStudentEducationInformationRepository _studentEducationInformationRepository;
+            private readonly IStudentEducationInformationRepository _studentEducationInformationRepository;
             public UpdateStudentEducationInformationCommandHandler(IStudentEducationInformationRepository studentEducationInformationRepository)
             {
                 _studentEducationInformationRepository = studentEducationInformationRepository;

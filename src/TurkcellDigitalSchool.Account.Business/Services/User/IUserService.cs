@@ -11,6 +11,10 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
     {
         PersonalInfoDto GetByStudentPersonalInformation(long userId);
         EducationInfoDto GetByStudentEducationInformation(long userId);
-        GuardianInfoDto GetByStudentGuardianInfoInformation(long userId);
+        ParentInfoDto GetByStudentParentInfoInformation(long userId);
+        bool IsExistEmail(long UserId, string Email);
+        bool IsExistUserName(long UserId, string UserName);
+
+        TurkcellDigitalSchool.Entities.Concrete.Core.User GetUserById(long UserId);
     }
 }
