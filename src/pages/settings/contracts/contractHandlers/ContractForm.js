@@ -17,6 +17,7 @@ import {
     Text,
 } from '../../../../components';
 import { getByFilterPagedContractKinds, getFilteredContractTypes } from '../../../../store/slice/contractsSlice';
+import contractsServices from '../../../../services/contracts.service';
 import { dateValidator, reactQuillValidator } from '../../../../utils/formRule';
 import '../../../../styles/settings/contracts.scss';
 import HandleContractFormButton from './HandleContractFormButton';
@@ -27,18 +28,22 @@ const statusObj = [
 ];
 
 const ContractForm = ({ initialValues }) => {
-    const [filteredKinds, setFilteredKinds] = useState([]);
-    const history = useHistory();
-
     const [versionValue, setVersionValue] = useState(
         initialValues ? (initialValues.handleType === 'edit' ? initialValues?.version : initialValues?.version + 1) : 1,
     );
+    const initialData = {
+        recordStatus: 1,
+        version: `V${versionValue}`,
+    };
+    const [filteredKinds, setFilteredKinds] = useState([]);
+    const history = useHistory();
+    const [initialObj, setInitialObj] = useState(initialValues || initialData);
+
     const [isErrorReactQuill, setIsErrorReactQuill] = useState(false);
     const dispatch = useDispatch();
     const [quillValue] = useState('');
 
     const [form] = Form.useForm();
-    form.setFieldsValue({ recordStatus: 1 });
 
     const loadContractsData = useCallback(async () => {
         let typeData = {
@@ -64,50 +69,71 @@ const ContractForm = ({ initialValues }) => {
     useEffect(() => {
         setFilteredKinds([...contractKinds]);
     }, [contractKinds]);
+    const handleFindKinds = useCallback(async (arr) => {
+        form.resetFields(['contractKinds']);
+        let filteredKinds = contractKinds.filter((obj) => arr.includes(obj?.contractTypeId));
+        setFilteredKinds([...filteredKinds]);
+    }, []);
 
     useEffect(() => {
         form.setFieldsValue({});
         if (initialValues) {
-            initialValues.handleType === 'copy' &&
+            const currentDate = dayjs().utc().format('YYYY-MM-DD-HH-mm');
+            const startDate = dayjs(initialValues?.startDate).utc().format('YYYY-MM-DD-HH-mm');
+            const endDate = dayjs(initialValues?.endDate).utc().format('YYYY-MM-DD-HH-mm');
+            let initialDate = {
+                startDate: startDate >= currentDate ? dayjs(initialValues?.validStartDate) : undefined,
+                endDate: endDate >= currentDate ? dayjs(initialValues?.validEndDate) : undefined,
+            };
+            let types = [];
+            initialObj?.contractTypes?.map((t) => types.push(t.contractType?.id));
+            handleFindKinds(types);
+            let initialData = {
+                ...initialDate,
+                contractTypes: types,
+                contractKinds: initialObj?.contractKind?.id,
+                clientRequiredApproval: initialObj?.clientRequiredApproval,
+                requiredApproval: initialObj?.requiredApproval,
+                content: initialObj?.content,
+                version: `V${initialObj.version}`,
+                recordStatus: initialObj?.recordStatus,
+            };
+            console.log('"two', 'two');
+            setInitialObj({ ...initialData });
+            form.setFieldsValue({ ...initialData });
+            if (initialValues.handleType === 'copy') {
                 confirmDialog({
                     title: <Text t="attention" />,
                     message: 'Kopyalamak istediğiniz kaydın versiyon bilgisi otomatik olarak değiştirilecektir.',
                     okText: <Text t="Evet" />,
                     cancelText: 'Vazgeç',
+                    onOk: async () => {
+                        console.log('"one', 'one');
+                        let data = await contractsServices.getVersionForCopiedContract({ id: initialValues?.id });
+                        setInitialObj(data?.data);
+                        console.log('data.data.version', data.data.version);
+                        setVersionValue(data?.data?.version);
+                        initialData.id = data?.data?.id;
+                        initialData.version = `V${data?.data?.version}`;
+                        await form.setFieldsValue({ ...initialData });
+                    },
                     onCancel: async () => {
                         history.push('/settings/contracts');
                     },
                 });
-            const currentDate = dayjs().utc().format('YYYY-MM-DD-HH-mm');
-            const startDate = dayjs(initialValues?.startDate).utc().format('YYYY-MM-DD-HH-mm');
-            const endDate = dayjs(initialValues?.endDate).utc().format('YYYY-MM-DD-HH-mm');
-
-            let types = [];
-            initialValues?.contractTypes?.map((t) => types.push(t.contractType.name));
-            handleFindKinds(types);
-            let initialData = {
-                startDate: startDate >= currentDate ? dayjs(initialValues?.validStartDate) : undefined,
-                endDate: endDate >= currentDate ? dayjs(initialValues?.validEndDate) : undefined,
-                contractTypes: types,
-                contractKinds: initialValues?.contractKind.id,
-                clientRequiredApproval: initialValues?.clientRequiredApproval,
-                requiredApproval: initialValues?.requiredApproval,
-                content: initialValues?.content,
-                version:
-                    initialValues.handleType === 'edit' ? `V${initialValues.version}` : `V${initialValues.version + 1}`,
-            };
-            form.setFieldsValue({ ...initialData });
+            }
         }
-    }, [form, initialValues, history]);
+    }, [form, initialValues, history, handleFindKinds]);
+
     const disabledStartDate = (startValue) => {
         const { endDate } = form?.getFieldsValue(['endDate']);
-        return startValue?.startOf('day') > endDate?.startOf('day');
+        return startValue?.startOf('day') > endDate?.startOf('day') || startValue < dayjs().startOf('day');
     };
 
     const disabledEndDate = (endValue) => {
         const { startDate } = form?.getFieldsValue(['startDate']);
 
-        return endValue?.startOf('day') < startDate?.startOf('day');
+        return endValue?.startOf('day') < startDate?.startOf('day') || endValue < dayjs().startOf('day');
     };
     const text = Form.useWatch('text', form);
     useEffect(() => {
@@ -118,14 +144,6 @@ const ContractForm = ({ initialValues }) => {
         }
     }, [text]);
 
-    const handleFindKinds = async (arr) => {
-        form.resetFields(['contractKinds']);
-        let idsArr = [];
-        contractTypes?.filter((type) => arr?.includes(type.name)).map((item) => idsArr.push(item?.id));
-        let filteredKinds = contractKinds.filter((obj) => idsArr.includes(obj?.contractTypeId));
-        setFilteredKinds([...filteredKinds]);
-    };
-
     return (
         <CustomForm
             name="contractInfo"
@@ -133,6 +151,7 @@ const ContractForm = ({ initialValues }) => {
             form={form}
             autoComplete="off"
             layout={'horizontal'}
+            initialValues={initialObj}
         >
             <CustomFormItem
                 label={
@@ -144,18 +163,7 @@ const ContractForm = ({ initialValues }) => {
                 validateTrigger={['onChange', 'onBlur']}
                 rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
             >
-                <CustomSelect
-                    className="form-filter-item"
-                    style={{
-                        width: '60%',
-                    }}
-                    mode="multiple"
-                    allowClear
-                    showArrow
-                    // value={typeValue}
-                    placeholder="Seçiniz"
-                    onChange={handleFindKinds}
-                >
+                <CustomSelect mode="multiple" allowClear showArrow placeholder="Seçiniz" onChange={handleFindKinds}>
                     {contractTypes
                         ?.filter((t) => t.recordStatus !== 0)
                         ?.map(({ id, name }) => (
@@ -174,15 +182,7 @@ const ContractForm = ({ initialValues }) => {
                 name="contractKinds"
                 rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
             >
-                <CustomSelect
-                    placeholder={'Seçiniz'}
-                    className="form-filter-item"
-                    style={{
-                        width: '50%',
-                    }}
-                    allowClear
-                    showArrow
-                >
+                <CustomSelect placeholder={'Seçiniz'} allowClear showArrow>
                     {filteredKinds?.map(({ id, name }, index) => (
                         <Option id={id} key={index} value={id}>
                             <Text t={name} />
@@ -206,38 +206,22 @@ const ContractForm = ({ initialValues }) => {
             >
                 <ReactQuill className={isErrorReactQuill ? 'quill-error' : ''} theme="snow" />
             </CustomFormItem>
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                }}
-            >
-                <CustomFormItem
-                    // rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
-                    label="Versiyon"
-                    name="version"
-                    value={`V${versionValue}`}
-                >
-                    <CustomInput defaultValue={`V${versionValue}`} disabled={true} />
+            <div className="version-container">
+                <CustomFormItem label="Versiyon" name="version" value={`V${versionValue}`}>
+                    <CustomInput disabled />
                 </CustomFormItem>
                 <CustomButton
-                    style={{
-                        // backGroundColor: 'purple',
-                        left: '16px',
-                        backgroundColor: '#BF40BF',
-                    }}
+                    className="version-increase-button"
                     onClick={() => {
                         form.setFieldsValue({ version: `V${versionValue + 1}` });
                         setVersionValue(versionValue + 1);
                     }}
+                    disabled={initialValues?.handleType === 'copy'}
                 >
                     Versiyon Ekle
                 </CustomButton>
             </div>
-            <p style={{ color: 'red', marginTop: '-10px', marginLeft: '200px' }}>
-                Versiyon bilgisi sistem tarafından otomatik olarak sağlanacaktır.
-            </p>
+            <p className="version-info-pgh">Versiyon bilgisi sistem tarafından otomatik olarak sağlanacaktır.</p>
             <Row gutter={16}>
                 <Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} lg={{ span: 16 }}>
                     <CustomFormItem
@@ -261,7 +245,7 @@ const ContractForm = ({ initialValues }) => {
                     </CustomFormItem>
                 </Col>
             </Row>
-            <p style={{ color: 'red', marginTop: '5px', marginLeft: '200px' }}>
+            <p className="date-info-pgh">
                 Başlangıç tarihi sözleşmenin geçerliliğinin başladığı tarihi göstermenizi sağlar.
             </p>
             <Row gutter={16}>
@@ -287,29 +271,27 @@ const ContractForm = ({ initialValues }) => {
                     </CustomFormItem>
                 </Col>
             </Row>
-            <p style={{ color: 'red', marginTop: '5px', marginLeft: '200px' }}>
+            <p className="date-info-pgh">
                 Başlangıç tarihi sözleşmenin geçerliliğinin bittiği tarihi göstermenizi sağlar.
             </p>
             <CustomFormItem
                 name="requiredApproval"
                 className="custom-form-item"
                 valuePropName="checked"
-                // style={{ marginLeft: '200px' }}
                 rules={[{ required: false, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
             >
                 <CustomCheckbox value="true">
-                    <p style={{ fontSize: '16px', fontWeight: '500' }}>Onay Talebi</p>
+                    <p className="check-info">Onay Talebi</p>
                 </CustomCheckbox>
             </CustomFormItem>
             <CustomFormItem
                 name="clientRequiredApproval"
                 className="custom-form-item"
                 valuePropName="checked"
-                // style={{ marginLeft: '200px' }}
                 rules={[{ required: false, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
             >
-                <CustomCheckbox value="true" disabled="true">
-                    <p style={{ fontSize: '16px', fontWeight: '500' }}>Son Kullanıcı Ekranına Onaya Gönder</p>
+                <CustomCheckbox value="true" disabled>
+                    <p className="check-info">Son Kullanıcı Ekranına Onaya Gönder</p>
                 </CustomCheckbox>
             </CustomFormItem>
             <CustomFormItem
@@ -321,14 +303,7 @@ const ContractForm = ({ initialValues }) => {
                 name="recordStatus"
                 rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
             >
-                <CustomSelect
-                    className="form-filter-item"
-                    placeholder={'Seçiniz'}
-                    style={{
-                        width: '30%',
-                    }}
-                    defaultValue="Aktif"
-                >
+                <CustomSelect className="record-status-select" placeholder={'Seçiniz'}>
                     {statusObj.map(({ id, name }, index) => (
                         <Option id={id} key={index} value={id}>
                             <Text t={name} />
@@ -340,7 +315,7 @@ const ContractForm = ({ initialValues }) => {
                 contractTypes={contractKinds}
                 contractKinds={contractTypes}
                 form={form}
-                initialValues={initialValues}
+                initialValues={initialObj}
             />
         </CustomForm>
     );
