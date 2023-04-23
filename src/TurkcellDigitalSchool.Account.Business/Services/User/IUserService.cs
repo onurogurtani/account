@@ -12,9 +12,13 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         PersonalInfoDto GetByStudentPersonalInformation(long userId);
         EducationInfoDto GetByStudentEducationInformation(long userId);
         ParentInfoDto GetByStudentParentInfoInformation(long userId);
-        bool IsExistEmail(long UserId, string Email);
-        bool IsExistUserName(long UserId, string UserName);
+        bool IsExistEmail(long userId, string email);
+        bool IsExistUserName(long userId, string userName);
+        TurkcellDigitalSchool.Entities.Concrete.Core.User GetUserById(long userId);
+        string StudentEducationValidationRules(StudentEducationRequestDto studentEducationRequestDto);
+        bool IsExistCity(long cityId);
+        bool IsExistCounty(long cityId, long countyId);
 
-        TurkcellDigitalSchool.Entities.Concrete.Core.User GetUserById(long UserId);
+
     }
 }

@@ -17,6 +17,7 @@ using TurkcellDigitalSchool.Common.Constants;
 using FluentAssertions;
 using System.Linq;
 using MockQueryable.Moq;
+using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
 {
@@ -33,6 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
         Mock<IHeaderDictionary> _headerDictionary;
         Mock<HttpRequest> _httpContext;
         Mock<IMediator> _mediator;
+        Mock<RedisService> _redisService;
 
 
         [SetUp]
@@ -48,6 +50,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
             _httpContextAccessor = new Mock<IHttpContextAccessor>();
             _httpContext = new Mock<HttpRequest>();
             _headerDictionary = new Mock<IHeaderDictionary>();
+            _redisService = new Mock<RedisService>();
 
             _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
             ServiceTool.ServiceProvider = _serviceProvider.Object;
@@ -55,6 +58,8 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
             _httpContext.Setup(x => x.Headers).Returns(_headerDictionary.Object);
             _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpContext.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
+            _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
+
         }
 
         [Test]
@@ -65,7 +70,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
             _updateStudentParentInformationCommand = new()
             {
                 UserId = 1,
-                CitizenId = 1,
+                CitizenId = "52265263252",
                 Email = "yadaskin@gmail.com",
                 Name = "Yusuf",
                 SurName = "Daşkın",
@@ -84,7 +89,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
             _updateStudentParentInformationCommand = new()
             {
                 UserId = 1,
-                CitizenId = 1,
+                CitizenId = "52265263252",
                 Email = "yadaskin@gmail.com",
                 Name = "Yusuf",
                 SurName = "Daşkın",
