@@ -1,5 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Wordprocessing;
 using MediatR;
+using ServiceStack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,8 +26,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
         public string UserName { get; set; }
         public int AvatarId { get; set; }
         public string MobilPhone { get; set; }
-        public long ResidenceCityId { get; set; }
-        public long ResidenceCountyId { get; set; }
+        public long? ResidenceCityId { get; set; }
+        public long? ResidenceCountyId { get; set; }
         public class UpdateStudentPersonalInformationCommandHandler : IRequestHandler<UpdateStudentPersonalInformationCommand, IResult>
         {
             private readonly IUserRepository _userRepository;
@@ -40,10 +41,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             [MessageConstAttr(MessageCodeType.Success)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
             [MessageConstAttr(MessageCodeType.Error)]
-            private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
-            [MessageConstAttr(MessageCodeType.Error)]
             private static string UserNameAlreadyExist = Constants.Messages.UserNameAlreadyExist;
-
+            [MessageConstAttr(MessageCodeType.Error,"Kullanıcı,İl,İlçe")]
+            private static string RecordsDoesNotExist = Constants.Messages.RecordsDoesNotExist;
 
             [ValidationAspect(typeof(UpdateStudentPersonalInformationValidator), Priority = 2)]
             public async Task<IResult> Handle(UpdateStudentPersonalInformationCommand request, CancellationToken cancellationToken)
@@ -51,7 +51,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                 var getUser = _userService.GetUserById(request.UserId);
 
                 if (getUser == null)
-                    return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
+                    return new ErrorResult(string.Format(RecordsDoesNotExist.PrepareRedisMessage(),"Kullanıcı"));
+
+                if (request.ResidenceCityId != null && !_userService.IsExistCity((long)request.ResidenceCityId))
+                    return new ErrorResult(string.Format(RecordsDoesNotExist.PrepareRedisMessage(), "İl"));
+
+
+                if (request.ResidenceCityId != null && request.ResidenceCountyId != null && !_userService.IsExistCounty((long)request.ResidenceCityId, (long)request.ResidenceCountyId))
+                    return new ErrorResult(string.Format(RecordsDoesNotExist.PrepareRedisMessage(), "İlçe"));
+
 
                 if (_userService.IsExistUserName(request.UserId, request.UserName))
                     return new ErrorResult(UserNameAlreadyExist.PrepareRedisMessage());
