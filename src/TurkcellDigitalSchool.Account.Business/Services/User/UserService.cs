@@ -226,8 +226,9 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         public PackageInfoDto GetByStudentPackageInformation(long userId)
         {
             var getPackage = _userPackageRepository.Query()
-                .Include(w => w.Package)
+                .Include(w => w.Package.ImageOfPackages).ThenInclude(w => w.File)
                 .FirstOrDefault(w => w.UserId == userId);
+
             if (getPackage == null)
             {
                 return new PackageInfoDto { };
@@ -235,10 +236,10 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             return new PackageInfoDto
             {
                 Id = getPackage.Id,
-                File = new Entities.Concrete.File(),
+                File = getPackage.Package.ImageOfPackages.First().File,
                 PackageName = getPackage.Package.Name,
                 PurchaseDate = getPackage.PurchaseDate,
-                Package=getPackage.Package
+                Package = getPackage.Package
             };
         }
     }
