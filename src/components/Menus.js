@@ -477,11 +477,19 @@ const Menus = () => {
                         </span>
                     </MenuItemText>
                 </CustomItem>
-                 <CustomItem key="/settings/messages">
+                <CustomItem key="/settings/messages">
                     <MenuItemText>
                         <CustomImage src={menuIcons} />
                         <span>
-                            <Text t="Hata ve Uyarı Mesajları" />
+                            <Text t="Hata ve Uyarı Mesajları  section-description" />
+                        </span>
+                    </MenuItemText>
+                </CustomItem>
+                <CustomItem key="/settings/section-description">
+                    <MenuItemText>
+                        <CustomImage src={menuIcons} />
+                        <span>
+                            <Text t="Bölüm Tanımlama" />
                         </span>
                     </MenuItemText>
                 </CustomItem>
