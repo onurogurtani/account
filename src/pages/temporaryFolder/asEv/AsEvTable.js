@@ -212,9 +212,11 @@ const AsEvTable = () => {
         },
     ];
     const showRecordHandler = async (record) => {
-
-        await dispatch(getAsEvById({id:record?.id}))
-        history.push('/test-management/assessment-and-evaluation/show')
+        history.push({
+            pathname: '/test-management/assessment-and-evaluation/show',
+            state: { data: record },
+        });
+      
     };
 
     return (
