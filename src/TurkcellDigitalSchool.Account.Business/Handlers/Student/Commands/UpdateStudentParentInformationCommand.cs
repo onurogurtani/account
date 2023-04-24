@@ -23,7 +23,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
         public long UserId { get; set; }
         public string Name { get; set; }
         public string SurName { get; set; }
-        public int CitizenId { get; set; }
+        public string CitizenId { get; set; }
         public string Email { get; set; }
         public string MobilPhones { get; set; }
         public class UpdateStudentParentInformationCommandHandler : IRequestHandler<UpdateStudentParentInformationCommand, IResult>

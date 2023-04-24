@@ -15,6 +15,8 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Entities.Concrete;
 using FluentAssertions;
+using TurkcellDigitalSchool.Account.Business.Services.User;
+using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
 {
@@ -22,6 +24,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
     public class UpdateStudentEducationInformationCommandTest
     {
         Mock<IStudentEducationInformationRepository> _studentEducationInformationRepository;
+        Mock<IUserService> _userService;
 
         UpdateStudentEducationInformationCommand _updateStudentEducationInformationCommand;
         UpdateStudentEducationInformationCommandHandler _updateStudentEducationInformationCommandHandler;
@@ -32,20 +35,23 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
         Mock<HttpRequest> _httpContext;
         Mock<IMediator> _mediator;
 
+        Mock<RedisService> _redisService;
 
         [SetUp]
         public void Setup()
         {
             _studentEducationInformationRepository = new Mock<IStudentEducationInformationRepository>();
+            _userService = new Mock<IUserService>();
 
             _updateStudentEducationInformationCommand = new UpdateStudentEducationInformationCommand();
-            _updateStudentEducationInformationCommandHandler = new UpdateStudentEducationInformationCommandHandler(_studentEducationInformationRepository.Object);
+            _updateStudentEducationInformationCommandHandler = new UpdateStudentEducationInformationCommandHandler(_studentEducationInformationRepository.Object, _userService.Object);
 
             _mediator = new Mock<IMediator>();
             _serviceProvider = new Mock<IServiceProvider>();
             _httpContextAccessor = new Mock<IHttpContextAccessor>();
             _httpContext = new Mock<HttpRequest>();
             _headerDictionary = new Mock<IHeaderDictionary>();
+            _redisService = new Mock<RedisService>();
 
             _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
             ServiceTool.ServiceProvider = _serviceProvider.Object;
@@ -53,23 +59,25 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
             _httpContext.Setup(x => x.Headers).Returns(_headerDictionary.Object);
             _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpContext.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
+            _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
+
         }
 
         [Test]
         public async Task UpdateStudentEducationInformationCommand_Create_Success()
         {
-            // TODO Unittest generic mesaj yapısından ötürü çalışmıyor. tekrar test edielcek.
-
             _updateStudentEducationInformationCommand = new()
             {
-                UserId = 1,
-               CityId = 1,
-               ClassroomId = 1, 
-               CountyId = 1,
-               DiplomaGrade = 1,
-               SchoolId = 1,
-               ExamType = Entities.Enums.ExamType.LGS, 
-               
+                StudentEducationRequest = new()
+                {
+                    UserId = 1,
+                    CityId = 1,
+                    ClassroomId = 1,
+                    CountyId = 1,
+                    DiplomaGrade = 1,
+                    SchoolId = 1,
+                    ExamType = Entities.Enums.ExamType.LGS,
+                }
             };
             _studentEducationInformationRepository.Setup(x => x.CreateAndSave(It.IsAny<StudentEducationInformation>(), It.IsAny<int?>(), It.IsAny<bool>()));
 
@@ -80,16 +88,18 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
         [Test]
         public async Task UpdateStudentEducationInformationCommand_Update_Success()
         {
-            // TODO Unittest generic mesaj yapısından ötürü çalışmıyor. tekrar test edielcek.
             _updateStudentEducationInformationCommand = new()
             {
-                UserId = 1,
-                CityId = 1,
-                ClassroomId = 1,
-                CountyId = 1,
-                DiplomaGrade = 1,
-                SchoolId = 1,
-                ExamType = Entities.Enums.ExamType.LGS,
+                StudentEducationRequest = new()
+                {
+                    UserId = 1,
+                    CityId = 1,
+                    ClassroomId = 1,
+                    CountyId = 1,
+                    DiplomaGrade = 1,
+                    SchoolId = 1,
+                    ExamType = Entities.Enums.ExamType.LGS,
+                }
             };
 
 

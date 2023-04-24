@@ -110,6 +110,7 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string XIdIsNotCorrenctFormat = "XId Parametresi uygun formatta değildir. İşleme devam edilemez !";
         public static string EnterDifferentEmail = "Kullandığınız e-postadan farklı bir adres giriniz.";
         public static string UserNameAlreadyExist = "Bu kullanıcı adı(Nickname) kullanımda.";
+        public static string RecordsDoesNotExist = "{0} bulunamadı!";
 
 
 

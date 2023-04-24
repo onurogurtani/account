@@ -17,6 +17,7 @@ using static TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands.Up
 using FluentAssertions;
 using static TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands.UpdateStudentPersonalInformationCommand;
 using FluentAssertions.Common;
+using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
 {
@@ -34,6 +35,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
         Mock<IHeaderDictionary> _headerDictionary;
         Mock<HttpRequest> _httpContext;
         Mock<IMediator> _mediator;
+        Mock<RedisService> _redisService;
 
 
         [SetUp]
@@ -50,6 +52,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
             _httpContextAccessor = new Mock<IHttpContextAccessor>();
             _httpContext = new Mock<HttpRequest>();
             _headerDictionary = new Mock<IHeaderDictionary>();
+            _redisService = new Mock<RedisService>();
 
             _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
             ServiceTool.ServiceProvider = _serviceProvider.Object;
@@ -57,6 +60,8 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
             _httpContext.Setup(x => x.Headers).Returns(_headerDictionary.Object);
             _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpContext.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
+            _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
+
         }
 
 
@@ -64,7 +69,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
         [Test]
         public async Task UpdateStudentEmailCommand_Success()
         {
-            // TODO Unittest generic mesaj yapısından ötürü çalışmıyor. tekrar test edielcek.
             _updateStudentEmailCommand = new()
             {
                 UserId = 1,
@@ -80,7 +84,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
         [Test]
         public async Task UpdateStudentEmailCommand_RecordDoesNotExist_Error()
         {
-            // TODO Unittest generic mesaj yapısından ötürü çalışmıyor. tekrar test edielcek.
             _updateStudentEmailCommand = new()
             {
                 UserId = 1,
@@ -95,7 +98,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
         [Test]
         public async Task UpdateStudentEmailCommand_EnterDifferentEmail_Error()
         {
-            // TODO Unittest generic mesaj yapısından ötürü çalışmıyor. tekrar test edielcek.
             _updateStudentEmailCommand = new()
             {
                 UserId = 1,
@@ -117,7 +119,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
         [Test]
         public async Task UpdateStudentEmailCommand_ExistEmail_Error()
         {
-            // TODO Unittest generic mesaj yapısından ötürü çalışmıyor. tekrar test edielcek.
             _updateStudentEmailCommand = new()
             {
                 UserId = 1,
