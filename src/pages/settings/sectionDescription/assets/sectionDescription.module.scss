@@ -1,0 +1,18 @@
+.informPghContainer {
+    height: 500px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.header {
+    padding: 16px;
+}
+.actionsContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    > button {
+        margin-right: 16px;
+    }
+}

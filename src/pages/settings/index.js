@@ -149,6 +149,11 @@ const Messages = lazy(() =>
         default: Component,
     })),
 );
+const SectionDescription = lazy(() =>
+    import('./sectionDescription').then(({ default: Component }) => ({
+        default: Component,
+    })),
+);
 const Settings = {
     Categories,
     Packages,
@@ -178,6 +183,7 @@ const Settings = {
     JobSettings,
     UpdateVersion,
     Messages,
+    SectionDescription,
 };
 
 export default Settings;

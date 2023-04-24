@@ -424,9 +424,14 @@ const App = () => {
                                                     authority="dashboard"
                                                 />
 
-                                                 <PrivateRoute
+                                                <PrivateRoute
                                                     path={`${match?.path}/messages`}
                                                     Component={Settings?.Messages}
+                                                    authority="dashboard"
+                                                />
+                                                <PrivateRoute
+                                                    path={`${match?.path}/section-description`}
+                                                    Component={Settings?.SectionDescription}
                                                     authority="dashboard"
                                                 />
                                                 <Route
