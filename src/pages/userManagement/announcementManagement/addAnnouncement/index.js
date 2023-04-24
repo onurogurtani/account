@@ -16,7 +16,6 @@ const AddAnnouncement = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
         loadAnnouncemenTypes();
-        loadParticipantGroups();
     }, []);
 
     const loadAnnouncemenTypes = useCallback(async () => {
@@ -27,17 +26,6 @@ const AddAnnouncement = () => {
         };
         announcementTypes?.length === 0 && (await dispatch(getByFilterPagedAnnouncementTypes(typeData)));
     }, [dispatch, announcementTypes]);
-
-    const loadParticipantGroups = useCallback(async () => {
-        participantGroupsList?.length === 0 &&
-            dispatch(
-                getParticipantGroupsList({
-                    params: {
-                        'ParticipantGroupDetailSearch.PageSize': 100000000,
-                    },
-                }),
-            );
-    }, [dispatch, participantGroupsList]);
 
     const handleBackButton = () => {
         history.push('/user-management/announcement-management');
