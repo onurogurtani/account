@@ -79,6 +79,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 .Include(w => w.School)
                 .Include(w => w.User)
                 .Include(w => w.Institution)
+                .Include(w => w.GraduationYear)
                 .Where(w => w.UserId == userId)
                 .FirstOrDefault();
             if (getEducation == null)
@@ -94,7 +95,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 Institution = new UserInformationDefinationDto { Id = getEducation.Institution.Id, Name = getEducation.Institution.Name },
                 School = new UserInformationDefinationDto { Id = getEducation.School.Id, Name = getEducation.School.Name },
                 Classroom = getEducation.ExamType == ExamType.LGS ? new UserInformationDefinationDto { Id = getEducation.Classroom.Id, Name = getEducation.Classroom?.Name } : null,
-                GraduationYear = getEducation.ExamType == ExamType.LGS ? null : getEducation.GraduationYear,
+                GraduationYear = getEducation.ExamType == ExamType.LGS ? null : new UserInformationDefinationDto { Id = getEducation.GraduationYear?.Id, Name = getEducation.GraduationYear?.Name },
                 DiplomaGrade = getEducation.ExamType == ExamType.LGS ? null : getEducation.DiplomaGrade,
                 YKSExperienceInformation = getEducation.ExamType == ExamType.LGS ? null : getEducation.YKSStatement,
                 FieldType = getEducation.ExamType == ExamType.LGS ? null : getEducation.FieldType,
@@ -186,7 +187,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                     return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "YKS Deneyimi");
                 }
 
-                if (studentEducationRequestDto.GraduationYear == null && !_graduationYearRepository.Query().Any(w => w.Id == studentEducationRequestDto.GraduationYear))
+                if (studentEducationRequestDto.GraduationYearId == null && !_graduationYearRepository.Query().Any(w => w.Id == studentEducationRequestDto.GraduationYearId))
                 {
                     return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Mezuniyet Yılı");
                 }

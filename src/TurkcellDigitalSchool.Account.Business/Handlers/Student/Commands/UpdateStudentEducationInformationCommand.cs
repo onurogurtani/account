@@ -63,8 +63,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                         InstitutionId = request.StudentEducationRequest.InstitutionId,
                         SchoolId = request.StudentEducationRequest.SchoolId,
                         ClassroomId = request.StudentEducationRequest.ExamType == ExamType.LGS ? request.StudentEducationRequest.ClassroomId : null,
-                        GraduationYear = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.GraduationYear,
-                        DiplomaGrade = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.GraduationYear,
+                        GraduationYearId = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.GraduationYearId,
+                        DiplomaGrade = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.DiplomaGrade,
                         YKSStatement = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.YKSExperienceInformation,
                         FieldType = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.FieldType,
                         PointType = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.PointType,
@@ -82,8 +82,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                 existStudentEducationInfo.InstitutionId = request.StudentEducationRequest.InstitutionId;
                 existStudentEducationInfo.SchoolId = request.StudentEducationRequest.SchoolId;
                 existStudentEducationInfo.ClassroomId = request.StudentEducationRequest.ExamType == ExamType.LGS ? request.StudentEducationRequest.ClassroomId : null;
-                existStudentEducationInfo.GraduationYear = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.GraduationYear;
-                existStudentEducationInfo.DiplomaGrade = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.GraduationYear;
+                existStudentEducationInfo.GraduationYearId = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.GraduationYearId;
+                existStudentEducationInfo.DiplomaGrade = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.DiplomaGrade;
                 existStudentEducationInfo.YKSStatement = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.YKSExperienceInformation;
                 existStudentEducationInfo.FieldType = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.FieldType;
                 existStudentEducationInfo.PointType = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.PointType;
