@@ -17,13 +17,14 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         private readonly IUserRepository _userRepository;
         private readonly IStudentEducationInformationRepository _studentEducationInformationRepository;
         private readonly IStudentParentInformationRepository _studentParentInformationRepository;
+        private readonly IUserPackageRepository _userPackageRepository;
         private readonly ICityRepository _cityRepository;
         private readonly ICountyRepository _countyRepository;
         private readonly IGraduationYearRepository _graduationYearRepository;
         private readonly ISchoolRepository _schoolRepository;
         //private readonly IClassroomRepository _classroomRepository;
 
-        public UserService(IUserRepository userRepository, IStudentEducationInformationRepository studentEducationInformationRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, IGraduationYearRepository graduationYearRepository, ISchoolRepository schoolRepository)
+        public UserService(IUserRepository userRepository, IStudentEducationInformationRepository studentEducationInformationRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, IGraduationYearRepository graduationYearRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository)
         {
             _userRepository = userRepository;
             _studentEducationInformationRepository = studentEducationInformationRepository;
@@ -32,6 +33,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             _countyRepository = countyRepository;
             _graduationYearRepository = graduationYearRepository;
             _schoolRepository = schoolRepository;
+            _userPackageRepository = userPackageRepository;
         }
         public PersonalInfoDto GetByStudentPersonalInformation(long userId)
         {
@@ -219,6 +221,25 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         public bool IsExistCounty(long cityId, long countyId)
         {
             return _countyRepository.Query().Any(w => w.CityId == cityId && w.Id == countyId);
+        }
+
+        public PackageInfoDto GetByStudentPackageInformation(long userId)
+        {
+            var getPackage = _userPackageRepository.Query()
+                .Include(w => w.Package)
+                .FirstOrDefault(w => w.UserId == userId);
+            if (getPackage == null)
+            {
+                return new PackageInfoDto { };
+            }
+            return new PackageInfoDto
+            {
+                Id = getPackage.Id,
+                File = new Entities.Concrete.File(),
+                PackageName = getPackage.Package.Name,
+                PurchaseDate = getPackage.PurchaseDate,
+                Package=getPackage.Package
+            };
         }
     }
 }
