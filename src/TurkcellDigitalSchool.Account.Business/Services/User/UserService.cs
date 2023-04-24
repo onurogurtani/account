@@ -236,7 +236,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             return new PackageInfoDto
             {
                 Id = getPackage.Id,
-                File = getPackage.Package.ImageOfPackages.First().File,
+                File = getPackage.Package.ImageOfPackages.First().File,//TODO file dosya ve base64 işlemleri daha sonra test edilecek.
                 PackageName = getPackage.Package.Name,
                 PurchaseDate = getPackage.PurchaseDate,
                 Package = getPackage.Package
