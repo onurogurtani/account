@@ -9,7 +9,7 @@ import {
   successDialog,
   Text
 } from '../../../../components';
-import { deleteAsEv } from '../../../../store/slice/asEvSlice';
+import { deleteAsEv} from '../../../../store/slice/asEvSlice';
 import '../../../../styles/temporaryFile/asEv.scss';
 import AsEvInfo from './AsEvInfo';
 import ShowAsEvQuestions from './ShowAsEvQuestions';

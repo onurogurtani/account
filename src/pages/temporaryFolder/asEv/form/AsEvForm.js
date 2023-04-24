@@ -48,7 +48,8 @@ const AsEvForm = ({ setStep, step }) => {
                 asEvQuestionsDetailSearch: {
                     asEvId: newAsEv?.id,
                     pageNumber:1,
-                    pageSize:5
+                    pageSize:5,
+                    isChangeQuestion: false,
                 },
             }),
         );

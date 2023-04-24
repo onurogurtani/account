@@ -53,6 +53,14 @@ const removeAsEvQuestion = (data) => {
     });
 };
 
+const cancelAsEvQuestion = (data) => {
+    return api({
+        url: `Exam/AsEvs/AsEvCancelQuestion`,
+        method: 'POST',
+        data,
+    });
+};
+
 const getAsEvTestPreview = (data) => {
     return api({
         url: `Exam/AsEvs/GetAsEvTestPreview`,
@@ -93,6 +101,7 @@ const asEvServices = {
     getByFilterPagedAsEvQuestions,
     addAsEvQuestion,
     removeAsEvQuestion,
+    cancelAsEvQuestion,
     getAsEvTestPreview,
     setQuestionSequence,
     updateAsEv,

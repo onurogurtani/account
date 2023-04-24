@@ -72,6 +72,17 @@ export const removeAsEvQuestion = createAsyncThunk(
         }
     },
 );
+export const cancelAsEvQuestion = createAsyncThunk(
+    'cancelAsEvQuestion',
+    async (data, { dispatch, rejectWithValue }) => {
+        try {
+            const response = await asEvServices.cancelAsEvQuestion(data);
+            return response;
+        } catch (error) {
+            return rejectWithValue(error?.data);
+        }
+    },
+);
 export const getFilterPagedAsEvs = createAsyncThunk(
     'getFilterPagedAsEvs',
     async (data, { dispatch, rejectWithValue }) => {
