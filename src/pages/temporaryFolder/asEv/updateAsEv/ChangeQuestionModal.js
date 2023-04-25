@@ -1,34 +1,27 @@
-import { Tabs, Form, Rate, Card } from 'antd';
-import React, { useEffect, useState } from 'react';
-import {
-    CustomButton,
-    Text,
-    CustomCollapseCard,
-    CustomForm,
-    CustomFormItem,
-    CustomInput,
-    CustomModal,
-    CustomPagination
-} from '../../../../components';
+import { Rate, Card, Result } from 'antd';
+import React from 'react';
+import { CustomButton, CustomForm, CustomFormItem, CustomModal, CustomPagination } from '../../../../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { EChooices } from '../../../../constants/questions';
-import { getByFilterPagedAsEvQuestions,removeAsEvQuestion,adAsEvQuestion,getAsEvById } from '../../../../store/slice/asEvSlice';
-import DifficultiesModal from '../addAsEv/DifficultiesModal';
+import {
+    getByFilterPagedAsEvQuestions,
+    removeAsEvQuestion,
+    adAsEvQuestion,
+    getAsEvById,
+} from '../../../../store/slice/asEvSlice';
 
-
-const ChangeQuestionModal = ({ visible, setVisible,asEvId,selectQuestionId }) => {
-
-    const { questions,newAsEv } = useSelector((state) => state?.asEv);
+const ChangeQuestionModal = ({ visible, setVisible, asEvId, selectQuestionId }) => {
+    const { questions } = useSelector((state) => state?.asEv);
 
     const dispatch = useDispatch();
 
-    const handlePagination =async (value) => {
+    const handlePagination = async (value) => {
         await dispatch(
             getByFilterPagedAsEvQuestions({
                 asEvQuestionsDetailSearch: {
                     asEvId: asEvId,
-                    pageNumber:value,
-                    pageSize:5,
+                    pageNumber: value,
+                    pageSize: 5,
                     isChangeQuestion: true,
                 },
             }),
@@ -36,16 +29,15 @@ const ChangeQuestionModal = ({ visible, setVisible,asEvId,selectQuestionId }) =>
     };
 
     const onCancel = () => {
-      setVisible(false)
-    }
+        setVisible(false);
+    };
 
     const chooseQuestion = async (id) => {
         await dispatch(removeAsEvQuestion({ asEvId: asEvId, questionOfExamId: selectQuestionId }));
         await dispatch(adAsEvQuestion({ asEvId: asEvId, questionOfExamId: id }));
         await dispatch(getAsEvById({ id: asEvId }));
-        setVisible(false)
-    
-    }
+        setVisible(false);
+    };
     return (
         <CustomModal
             visible={visible}
@@ -56,7 +48,7 @@ const ChangeQuestionModal = ({ visible, setVisible,asEvId,selectQuestionId }) =>
             footer={null}
             width={1000}
         >
-              <div className="slider-filter-container">
+            <div className="slider-filter-container">
                 {questions?.items &&
                     questions?.items[0]?.asEvQuestions &&
                     questions?.items[0]?.asEvQuestions.map((item) => (
@@ -64,7 +56,7 @@ const ChangeQuestionModal = ({ visible, setVisible,asEvId,selectQuestionId }) =>
                             <div className="col-md-6">
                                 <Card
                                     hoverable
-                                    className='question-card'
+                                    className="question-card"
                                     cover={<img alt="example" src={`data:image/png;base64,${item?.fileBase64}`} />}
                                 ></Card>
                             </div>
@@ -73,11 +65,11 @@ const ChangeQuestionModal = ({ visible, setVisible,asEvId,selectQuestionId }) =>
                                     <CustomFormItem label="Konu">{item?.lessonSubject}</CustomFormItem>
                                     <CustomFormItem label="Cevap"> {EChooices[item?.correctAnswer]}</CustomFormItem>
                                     <CustomFormItem label="Zorluk Seviyesi">
-                                        <Rate className='question-difficultly-rat' value={item?.difficulty} />
+                                        <Rate className="question-difficultly-rat" value={item?.difficulty} />
                                     </CustomFormItem>
                                     <CustomFormItem>
                                         <CustomButton
-                                            onClick={() => chooseQuestion(item?.questionOfExamId )}
+                                            onClick={() => chooseQuestion(item?.questionOfExamId)}
                                             type="primary"
                                         >
                                             Seç
@@ -96,10 +88,10 @@ const ChangeQuestionModal = ({ visible, setVisible,asEvId,selectQuestionId }) =>
                             current={questions?.pagedProperty?.currentPage}
                             pageSize={questions?.pagedProperty?.pageSize}
                         ></CustomPagination>
-                       
                     </>
                 )}
             </div>
+            {!questions?.items && <Result status="error" title="Seçtiğiniz kritelerde soru bulunamadı" />}
         </CustomModal>
     );
 };

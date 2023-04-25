@@ -29,15 +29,16 @@ const AsEvInfo = ({ showData }) => {
                         <Text t="Ünite" /> :{' '}
                         <span>{asEvDetail?.items[0]?.asEvQuestionsResponse?.asEvQuestionsDetail?.lessonUnitName}</span>
                     </li>
-                    <li>
-                        <Text t="Konu" />:{' '}
-                        {asEvDetail?.items[0]?.asEvDetail?.subjects.map((item, index) => (
-                            <Tag color="red" key={index}>
-                                {item?.name}{' '}
-                            </Tag>
-                        ))}
-                    </li>
-
+                    {asEvDetail?.items[0]?.asEvDetail?.subjects && (
+                        <li>
+                            <Text t="Konu" />:{' '}
+                            {asEvDetail?.items[0]?.asEvDetail?.subjects.map((item, index) => (
+                                <Tag color="red" key={index}>
+                                    {item?.name}{' '}
+                                </Tag>
+                            ))}
+                        </li>
+                    )}
                     <li>
                         <Text t="Ölçme Değerlendirme Testi Adı" /> :{' '}
                         <span>{asEvDetail?.items[0]?.asEvDetail?.video?.name}</span>

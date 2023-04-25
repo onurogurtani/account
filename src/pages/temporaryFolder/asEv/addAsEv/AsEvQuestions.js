@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomButton, CustomFormItem, CustomForm, CustomPagination } from '../../../../components';
 import '../../../../styles/temporaryFile/asEvQuestions.scss';
-import { Card, Rate} from 'antd';
+import { Card, Rate,Alert} from 'antd';
 import AsEvQuestionFilter from '../addAsEv/AsEvQuestionFilter';
 import {adAsEvQuestion,getByFilterPagedAsEvQuestions,removeAsEvQuestion,getAsEvTestPreview} from '../../../../store/slice/asEvSlice';
 import { EChooices } from '../../../../constants/questions';
@@ -19,7 +19,7 @@ const AsEvQuestions = () => {
                 asEvQuestionsDetailSearch: {
                     asEvId: newAsEv?.id,
                     pageNumber:value,
-                    pageSize:5
+                    pageSize:10
                 },
             }),
         );
@@ -84,6 +84,11 @@ const AsEvQuestions = () => {
                                     <CustomFormItem label="Zorluk Seviyesi">
                                         <Rate className='question-difficultly-rat' value={item?.difficulty} />
                                     </CustomFormItem>
+                                    {item?.isAddedAsEv &&
+                                                                  <CustomFormItem>
+                                                                     <Alert style={{width:"200px"}} message="Soru Seçildi" type="success" showIcon />
+                                                              </CustomFormItem>
+                                                                }
                                     <CustomFormItem>
                                         <CustomButton
                                             onClick={() => handleQuestionAction(item?.questionOfExamId,item?.isAddedAsEv )}

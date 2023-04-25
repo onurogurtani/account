@@ -1,4 +1,4 @@
-import { Tabs, Form, Rate, Card, Popconfirm } from 'antd';
+import { Tabs, Form, Rate, Card, Popconfirm,Alert } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -13,20 +13,22 @@ import {
     CustomPagination,
     Option,
 } from '../../../../components';
-import AsEvForm from '../form/AsEvForm';
 import { EChooices } from '../../../../constants/questions';
 import {
     removeAsEvQuestion,
     getAsEvById,
     cancelAsEvQuestion,
     getByFilterPagedAsEvQuestions,
+    getAsEvTestPreview,
+    adAsEvQuestion,
 } from '../../../../store/slice/asEvSlice';
 import '../../../../styles/tableFilter.scss';
 import '../../../../styles/temporaryFile/asEvQuestions.scss';
+import '../../../../styles/temporaryFile/asEvUpdate.scss';
 import ChangeQuestionModal from './ChangeQuestionModal';
 import { getLessonSubjects } from '../../../../store/slice/lessonSubjectsSlice';
 import DifficultiesModal from '../addAsEv/DifficultiesModal';
-
+import AsEvInfo from '../showAsEv/AsEvInfo';
 
 const { TabPane } = Tabs;
 
@@ -35,17 +37,18 @@ const UpdateAsEv = () => {
     const location = useLocation();
     const showData = location?.state?.data;
 
-    const { asEvDetail } = useSelector((state) => state?.asEv);
+    const { asEvDetail, asEvTestPreview, questions } = useSelector((state) => state?.asEv);
     const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
 
     const [form] = Form.useForm();
 
     const [currentAsEv, setCurrentAsEv] = useState(showData);
-    const [step, setStep] = useState('2');
-    const [disabled, setDisabled] = useState(false);
     const [visible, setVisible] = useState(false);
     const [difficultlyModalVisible, setDifficultlyModalVisible] = useState(false);
     const [questionId, setQuestionId] = useState(null);
+    const [allQuestionGet, setAllQuestionGet] = useState(false);
+    const [difficultlyLevel, setDifficultlyLevel] = useState(null);
+    const [selectSubject, setSelectSubject] = useState(null);
 
     const history = useHistory();
 
@@ -80,10 +83,40 @@ const UpdateAsEv = () => {
         );
     }, [asEvDetail?.items]);
 
-    const removeQuestion = async (id) => {
-        await dispatch(removeAsEvQuestion({ asEvId: asEvDetail?.items[0].asEvDetail?.id, questionOfExamId: id }));
-        await dispatch(getAsEvById({ id: currentAsEv?.id }));
+    const handleQuestionAction = async (id, isAdded) => {
+        if (isAdded) {
+            const action = await dispatch(removeAsEvQuestion({ asEvId: currentAsEv?.id, questionOfExamId: id }));
+
+            if (removeAsEvQuestion.fulfilled.match(action)) {
+                await dispatch(
+                    getByFilterPagedAsEvQuestions({
+                        asEvQuestionsDetailSearch: {
+                            asEvId: currentAsEv?.id,
+                            pageNumber: questions?.pagedProperty?.currentPage,
+                            pageSize: 10,
+                        },
+                    }),
+                );
+                await dispatch(getAsEvById({ id: currentAsEv?.id }));
+            }
+        } else {
+            const action = await dispatch(adAsEvQuestion({ asEvId: currentAsEv?.id, questionOfExamId: id }));
+
+            if (adAsEvQuestion.fulfilled.match(action)) {
+                await dispatch(
+                    getByFilterPagedAsEvQuestions({
+                        asEvQuestionsDetailSearch: {
+                            asEvId: currentAsEv?.id,
+                            pageNumber: questions?.pagedProperty?.currentPage,
+                            pageSize: 10,
+                        },
+                    }),
+                );
+                await dispatch(getAsEvById({ id: currentAsEv?.id }));
+            }
+        }
     };
+
     const cancelQuestion = async (id) => {
         await dispatch(cancelAsEvQuestion({ asEvId: asEvDetail?.items[0].asEvDetail?.id, questionOfExamId: id }));
         await dispatch(getAsEvById({ id: currentAsEv?.id }));
@@ -104,8 +137,10 @@ const UpdateAsEv = () => {
                 asEvQuestionsDetailSearch: {
                     asEvId: asEvDetail?.items[0].asEvDetail?.id,
                     pageNumber: 1,
-                    pageSize: 5,
+                    pageSize: 10,
                     isChangeQuestion: true,
+                    difficultyLevel: difficultlyLevel,
+                    lessonSubjectId: selectSubject,
                 },
             }),
         );
@@ -118,16 +153,53 @@ const UpdateAsEv = () => {
         });
     };
 
-    const getAllQuestion = () => {
-        console.log('getAllQuestions');
+    const getAllQuestion = async () => {
+        setAllQuestionGet(true);
+        await dispatch(
+            getByFilterPagedAsEvQuestions({
+                asEvQuestionsDetailSearch: {
+                    asEvId: asEvDetail?.items[0].asEvDetail?.id,
+                    pageNumber: 1,
+                    pageSize: 10,
+                    isChangeQuestion: false,
+                },
+            }),
+        );
     };
 
-    const handlePagination = (value) => {
-        console.log("value")
+    const handlePagination = async (value) => {
+        if (allQuestionGet) {
+            console.log(value);
+            await dispatch(
+                getByFilterPagedAsEvQuestions({
+                    asEvQuestionsDetailSearch: {
+                        asEvId: asEvDetail?.items[0].asEvDetail?.id,
+                        pageNumber: value,
+                        pageSize: 10,
+                        isChangeQuestion: false,
+                    },
+                }),
+            );
+        } else {
+            await dispatch(getAsEvById({ id: currentAsEv?.id, pageNumber: value, pageSize: 5 }));
+        }
+    };
+
+    const previewTest = async () => {
+        setDifficultlyModalVisible(true);
+        await dispatch(
+            getAsEvTestPreview({
+                asEvTestPreviewDetailSearch: { asEvId: currentAsEv?.id, pageNumber: 1, pageSize: 6 },
+            }),
+        );
+    };
+
+    const handleSubject = (value) => {
+       setSelectSubject(value)
     }
 
-    const previewTest = () => {
-        setDifficultlyModalVisible(true)
+    const handleDifficultLevel = (value) => {
+      setDifficultlyLevel(value)
     }
 
     return (
@@ -135,14 +207,9 @@ const UpdateAsEv = () => {
             {asEvDetail?.items && (
                 <Tabs defaultActiveKey={'2'}>
                     <TabPane tab="Genel Bilgiler" key="1">
-                        <AsEvForm
-                            step={step}
-                            setStep={setStep}
-                            disabled={disabled}
-                            setDisabled={setDisabled}
-                            initialValues={currentAsEv}
-                            updateAsEv={true}
-                        />
+                        <CustomCollapseCard cardTitle={<Text t="Genel Bilgiler" />}>
+                            <AsEvInfo showData={currentAsEv} />
+                        </CustomCollapseCard>
                     </TabPane>
                     <TabPane tab="Sorular" key="2">
                         <CustomCollapseCard cardTitle={<Text t="Sorular" />}>
@@ -169,54 +236,59 @@ const UpdateAsEv = () => {
                                                 name={'questionCount'}
                                                 label={<Text t="Seçilen Soru Sayısı:" />}
                                             >
-                                                <CustomInput disabled style={{ width: '100px' }} />
+                                                <CustomInput className="difficultlyInput" disabled />
                                             </CustomFormItem>
                                             <CustomFormItem name={'difficulty1'} label={<Text t="Zorluk 1:" />}>
-                                                <CustomInput disabled style={{ width: '100px' }} />
+                                                <CustomInput className="difficultlyInput" disabled />
                                             </CustomFormItem>
                                             <CustomFormItem name={'difficulty2'} label={<Text t="Zorluk 2:" />}>
-                                                <CustomInput disabled style={{ width: '100px' }} />
+                                                <CustomInput className="difficultlyInput" disabled />
                                             </CustomFormItem>
                                             <CustomFormItem name={'difficulty3'} label={<Text t="Zorluk 3:" />}>
-                                                <CustomInput disabled style={{ width: '100px' }} />
+                                                <CustomInput className="difficultlyInput" disabled />
                                             </CustomFormItem>
                                             <CustomFormItem name={'difficulty4'} label={<Text t="Zorluk 4:" />}>
-                                                <CustomInput disabled style={{ width: '100px' }} />
+                                                <CustomInput className="difficultlyInput" disabled />
                                             </CustomFormItem>
                                             <CustomFormItem name={'difficulty5'} label={<Text t="Zorluk 5:" />}>
-                                                <CustomInput disabled style={{ width: '100px' }} />
+                                                <CustomInput className="difficultlyInput" disabled />
                                             </CustomFormItem>
                                         </div>
                                     </CustomForm>
                                 </div>
                                 <div className="slider-filter-container">
-                                    {asEvDetail?.items &&
-                                        asEvDetail?.items[0]?.asEvQuestionsResponse?.asEvQuestions &&
-                                        asEvDetail?.items[0]?.asEvQuestionsResponse?.asEvQuestions.map((item) => (
+                                    {allQuestionGet &&
+                                        questions?.items &&
+                                        questions?.items[0]?.asEvQuestions &&
+                                        questions?.items[0]?.asEvQuestions.map((item) => (
                                             <>
                                                 <div className="col-md-6">
                                                     <Card
-                                                        style={{ minHeight: 400 }}
                                                         hoverable
-                                                        className="question-card"
+                                                        className="questionDetailCard"
                                                         cover={
-                                                            <img
-                                                                alt="example"
-                                                                src={`data:image/png;base64,${item?.fileBase64}`}
-                                                            />
+                                                            <div>
+                                                                <img
+                                                                    alt="example"
+                                                                    src={`data:image/png;base64,${item?.fileBase64}`}
+                                                                    className="questionImage"
+                                                                />
+                                                                {item?.isCancel && (
+                                                                    <div className="cancelText">İPTAL SORU</div>
+                                                                )}
+                                                            </div>
                                                         }
                                                     ></Card>
                                                     <br />
                                                 </div>
                                                 <div className="col-md-6">
                                                     <CustomForm
-                                                        className="info-form "
-                                                        style={{ marginLeft: '10px' }}
+                                                        className="filter-form"
                                                         autoComplete="off"
                                                         layout={'horizontal'}
                                                     >
                                                         {!(questionId === item?.questionOfExamId) && (
-                                                            <>
+                                                            <div className="form-item">
                                                                 <CustomFormItem label="Konu">
                                                                     {item?.lessonSubject}
                                                                 </CustomFormItem>
@@ -230,6 +302,11 @@ const UpdateAsEv = () => {
                                                                         value={item?.difficulty}
                                                                     />
                                                                 </CustomFormItem>
+                                                                {item?.isAddedAsEv &&
+                                                                  <CustomFormItem>
+                                                                     <Alert style={{width:"200px"}} message="Soru Seçildi" type="success" showIcon />
+                                                              </CustomFormItem>
+                                                                }
                                                                 <CustomFormItem>
                                                                     {asEvDetail?.items[0].asEvDetail
                                                                         ?.isWorkPlanAttached && (
@@ -237,16 +314,17 @@ const UpdateAsEv = () => {
                                                                             title="Bu değişiklik sonucu ilgili kullanıcıların performans skorları tekrar hesaplanacaktır. İşlemi onaylıyor musunuz?"
                                                                             okText="Kaydet"
                                                                             cancelText="Hayır"
+                                                                            onConfirm={() =>
+                                                                                handleQuestionAction(
+                                                                                    item?.questionOfExamId,
+                                                                                    item?.isAddedAsEv,
+                                                                                )
+                                                                            }
                                                                         >
-                                                                            <CustomButton
-                                                                                onClick={() =>
-                                                                                    removeQuestion(
-                                                                                        item?.questionOfExamId,
-                                                                                    )
-                                                                                }
-                                                                                type="primary"
-                                                                            >
-                                                                                Soruyu Testten Çıkar
+                                                                            <CustomButton type="primary">
+                                                                                {item?.isAddedAsEv
+                                                                                    ? 'Soruyu Testten Çıkar'
+                                                                                    : 'Soruyu Teste Ekle'}
                                                                             </CustomButton>
                                                                         </Popconfirm>
                                                                     )}
@@ -257,10 +335,7 @@ const UpdateAsEv = () => {
                                                                             cancelQuestion(item?.questionOfExamId)
                                                                         }
                                                                         type="primary"
-                                                                        style={{
-                                                                            backgroundColor: 'red',
-                                                                            border: 'none',
-                                                                        }}
+                                                                        className="cancelQuestionButton"
                                                                     >
                                                                         Soruyu İptal Et
                                                                     </CustomButton>
@@ -270,24 +345,35 @@ const UpdateAsEv = () => {
                                                                         onClick={() =>
                                                                             changeQuestion(item?.questionOfExamId)
                                                                         }
-                                                                        style={{
-                                                                            backgroundColor: 'orange',
-                                                                            border: 'none',
-                                                                        }}
+                                                                        className="changeQuestionButton"
                                                                         type="primary"
                                                                     >
                                                                         Soruyu Değiştir
                                                                     </CustomButton>
                                                                 </CustomFormItem>
-                                                            </>
+                                                            </div>
                                                         )}
                                                         {questionId === item?.questionOfExamId && (
                                                             <>
                                                                 <CustomFormItem label="Konu">
                                                                     <CustomSelect
                                                                         placeholder="Konu Seçiniz"
-                                                                        style={{ width: '200px' }}
-                                                                    ></CustomSelect>
+                                                                        className="changeSubjectSelect"
+                                                                        onChange={handleSubject}
+                                                                    >
+                                                                        {asEvDetail?.items[0]?.asEvDetail?.subjects.map(
+                                                                            (item) => {
+                                                                                return (
+                                                                                    <Option
+                                                                                        key={item?.id}
+                                                                                        value={item?.id}
+                                                                                    >
+                                                                                        {item?.name}
+                                                                                    </Option>
+                                                                                );
+                                                                            },
+                                                                        )}
+                                                                    </CustomSelect>
                                                                 </CustomFormItem>
                                                                 <CustomFormItem
                                                                     name="difficultyLevel"
@@ -295,8 +381,9 @@ const UpdateAsEv = () => {
                                                                 >
                                                                     <CustomSelect
                                                                         placeholder="Zorluk Seviyesi Seçiniz"
-                                                                        style={{ width: '240px' }}
+                                                                        className="changeDifficultySelect"
                                                                         defaultValue={item?.difficulty}
+                                                                        onChange={handleDifficultLevel}
                                                                     >
                                                                         <Option value="1" key="1">
                                                                             1
@@ -321,13 +408,173 @@ const UpdateAsEv = () => {
                                                                         Vazgeç
                                                                     </CustomButton>
                                                                     <CustomButton
-                                                                        style={{
-                                                                            marginLeft: '10px',
-                                                                            backgroundColor: 'green',
-                                                                            border: 'none',
-                                                                        }}
                                                                         type="primary"
                                                                         onClick={getQuestions}
+                                                                        className="getQuestionsButton"
+                                                                    >
+                                                                        Soruları Getir
+                                                                    </CustomButton>
+                                                                </CustomFormItem>
+                                                            </>
+                                                        )}
+                                                    </CustomForm>
+                                                </div>
+                                            </>
+                                        ))}
+                                </div>
+                                <div className="slider-filter-container">
+                                    {!allQuestionGet &&
+                                        asEvDetail?.items &&
+                                        asEvDetail?.items[0]?.asEvQuestionsResponse?.asEvQuestions &&
+                                        asEvDetail?.items[0]?.asEvQuestionsResponse?.asEvQuestions.map((item) => (
+                                            <>
+                                                <div className="col-md-6">
+                                                    <Card
+                                                        hoverable
+                                                        className="questionDetailCard"
+                                                        cover={
+                                                            <div>
+                                                                <img
+                                                                    alt="example"
+                                                                    src={`data:image/png;base64,${item?.fileBase64}`}
+                                                                    className="questionImage"
+                                                                />
+                                                                {item?.isCancel && (
+                                                                    <div className="cancelText">İPTAL SORU</div>
+                                                                )}
+                                                            </div>
+                                                        }
+                                                    ></Card>
+                                                    <br />
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <CustomForm
+                                                        className="infoForm"
+                                                        autoComplete="off"
+                                                        layout={'horizontal'}
+                                                    >
+                                                        {!(questionId === item?.questionOfExamId) && (
+                                                            <>
+                                                                <CustomFormItem label="Konu">
+                                                                    {item?.lessonSubject}
+                                                                </CustomFormItem>
+                                                                <CustomFormItem label="Cevap">
+                                                                    {' '}
+                                                                    {EChooices[item?.correctAnswer]}
+                                                                </CustomFormItem>
+                                                                <CustomFormItem label="Zorluk Seviyesi">
+                                                                    <Rate
+                                                                        className="question-difficultly-rate"
+                                                                        value={item?.difficulty}
+                                                                    />
+                                                                </CustomFormItem>
+
+                                                                <CustomFormItem>
+                                                                     <Alert style={{width:"200px"}} message="Soru Seçildi" type="success" showIcon />
+                                                              </CustomFormItem>
+                                                              
+                                                                <CustomFormItem>
+                                                                    {asEvDetail?.items[0].asEvDetail
+                                                                        ?.isWorkPlanAttached && (
+                                                                        <Popconfirm
+                                                                            title="Bu değişiklik sonucu ilgili kullanıcıların performans skorları tekrar hesaplanacaktır. İşlemi onaylıyor musunuz?"
+                                                                            okText="Kaydet"
+                                                                            cancelText="Hayır"
+                                                                            onConfirm={() =>
+                                                                                handleQuestionAction(
+                                                                                    item?.questionOfExamId,
+                                                                                    item?.isAddedAsEv,
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            <CustomButton type="primary">
+                                                                                Soruyu Testten Çıkar
+                                                                            </CustomButton>
+                                                                        </Popconfirm>
+                                                                    )}
+                                                                </CustomFormItem>
+                                                                <CustomFormItem>
+                                                                    <CustomButton
+                                                                        onClick={() =>
+                                                                            cancelQuestion(item?.questionOfExamId)
+                                                                        }
+                                                                        type="primary"
+                                                                        className="cancelQuestionButton"
+                                                                    >
+                                                                        Soruyu İptal Et
+                                                                    </CustomButton>
+                                                                </CustomFormItem>
+                                                                <CustomFormItem>
+                                                                    <CustomButton
+                                                                        onClick={() =>
+                                                                            changeQuestion(item?.questionOfExamId)
+                                                                        }
+                                                                        className="changeQuestionButton"
+                                                                        type="primary"
+                                                                    >
+                                                                        Soruyu Değiştir
+                                                                    </CustomButton>
+                                                                </CustomFormItem>
+                                                            </>
+                                                        )}
+                                                        {questionId === item?.questionOfExamId && (
+                                                            <>
+                                                                <CustomFormItem label="Konu">
+                                                                    <CustomSelect
+                                                                        placeholder="Konu Seçiniz"
+                                                                        className="changeSubjectSelect"
+                                                                        onChange={handleSubject}
+                                                                    >
+                                                                           {asEvDetail?.items[0]?.asEvDetail?.subjects.map(
+                                                                            (item) => {
+                                                                                return (
+                                                                                    <Option
+                                                                                        key={item?.id}
+                                                                                        value={item?.id}
+                                                                                    >
+                                                                                        {item?.name}
+                                                                                    </Option>
+                                                                                );
+                                                                            },
+                                                                        )}
+                                                                    </CustomSelect>
+                                                                </CustomFormItem>
+                                                                <CustomFormItem
+                                                                    name="difficultyLevel"
+                                                                    label="Zorluk Seviyesi"
+                                                                >
+                                                                    <CustomSelect
+                                                                        placeholder="Zorluk Seviyesi Seçiniz"
+                                                                        className="changeDifficultySelect"
+                                                                        defaultValue={item?.difficulty}
+                                                                        onChange={handleDifficultLevel}
+                                                                    >
+                                                                        <Option value="1" key="1">
+                                                                            1
+                                                                        </Option>
+                                                                        <Option value="2" key="2">
+                                                                            2
+                                                                        </Option>
+                                                                        <Option value="3" key="3">
+                                                                            3
+                                                                        </Option>
+                                                                        <Option value="4" key="4">
+                                                                            4
+                                                                        </Option>
+                                                                        <Option value="5" key="5">
+                                                                            5
+                                                                        </Option>
+                                                                    </CustomSelect>
+                                                                </CustomFormItem>
+                                                                <br />
+                                                                <CustomFormItem>
+                                                                    <CustomButton onClick={giveUp} type="primary">
+                                                                        Vazgeç
+                                                                    </CustomButton>
+                                                                    <CustomButton
+                                                                        type="primary"
+                                                                        onClick={getQuestions}
+                                                                        className="getQuestionsButton"
                                                                     >
                                                                         Soruları Getir
                                                                     </CustomButton>
@@ -340,34 +587,43 @@ const UpdateAsEv = () => {
                                         ))}
                                 </div>
                                 <hr />
-                                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                {allQuestionGet && questions?.items && (
+                                    <CustomPagination
+                                        onChange={handlePagination}
+                                        showSizeChanger={true}
+                                        total={questions?.pagedProperty?.totalCount}
+                                        current={questions?.pagedProperty?.currentPage}
+                                        pageSize={questions?.pagedProperty?.pageSize}
+                                        style={{ justifyContent: 'center' }}
+                                    ></CustomPagination>
+                                )}
+                                {!allQuestionGet && (
                                     <CustomPagination
                                         onChange={handlePagination}
                                         showSizeChanger={true}
                                         total={asEvDetail?.pagedProperty?.totalCount}
                                         current={asEvDetail?.pagedProperty?.currentPage}
                                         pageSize={asEvDetail?.pagedProperty?.pageSize}
+                                        style={{ justifyContent: 'center' }}
                                     ></CustomPagination>
+                                )}
 
+                                <div className="detailPageFooter">
                                     <CustomFormItem style={{ marginRight: '10px' }}>
-                                        <CustomButton
-                                            onClick={cancelProcess}
-                                            style={{ backgroundColor: 'red', color: 'white', border: 'none' }}
-                                        >
+                                        <CustomButton onClick={cancelProcess} className="cancelProcessButton">
                                             İşlemi İptal Et
                                         </CustomButton>
                                     </CustomFormItem>
                                     <CustomFormItem style={{ marginRight: '10px' }}>
-                                        <CustomButton
-                                            style={{ color: 'white', backgroundColor: 'orange', border: 'none' }}
-                                            onClick={getAllQuestion}
-                                        >
+                                        <CustomButton className="getAllQuestionButton" onClick={getAllQuestion}>
                                             Tüm Soruları Getir
                                         </CustomButton>
                                     </CustomFormItem>
 
                                     <CustomFormItem style={{ marginRight: '10px' }}>
-                                        <CustomButton onClick={previewTest} type="primary">Testi Ön İzle</CustomButton>
+                                        <CustomButton onClick={previewTest} type="primary">
+                                            Testi Ön İzle
+                                        </CustomButton>
                                     </CustomFormItem>
                                 </div>
                             </>
@@ -377,11 +633,10 @@ const UpdateAsEv = () => {
                                 setVisible={setVisible}
                                 visible={visible}
                             />
-                               <DifficultiesModal
-                                  difficultiesData={[]}
-                                  setIsVisible={setDifficultlyModalVisible}
-                                  isVisible={difficultlyModalVisible}
-                            
+                            <DifficultiesModal
+                                difficultiesData={asEvTestPreview}
+                                setIsVisible={setDifficultlyModalVisible}
+                                isVisible={difficultlyModalVisible}
                             />
                         </CustomCollapseCard>
                     </TabPane>
