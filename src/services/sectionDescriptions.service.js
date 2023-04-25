@@ -1,11 +1,9 @@
 import { api } from './api';
 
-//todo aş servisi düzelt
-const getSectionDescriptions = (data) => {
+const getSectionDescriptions = () => {
     return api({
-        url: `Account/Schools/getPagedList?PageNumber=${data.pageNumber || 0}&PageSize=${data.pageSize || 0}`,
+        url: `Exam/SectionDescriptions/getList`,
         method: 'POST',
-        data,
     });
 };
 

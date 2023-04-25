@@ -1,19 +1,21 @@
-import React from 'react';
-import { examKinds } from '../../assets/constants';
-import { Row, Col, Form } from 'antd';
-
+import { Col, Form, Row } from 'antd';
 import {
+    CustomButton,
     CustomForm,
     CustomFormItem,
     CustomInput,
+    CustomInputNumber,
     CustomSelect,
     Option,
-    CustomButton,
     Text,
 } from '../../../../../components';
-const SectionActionsForm = ({ form }) => {
+import { examKinds } from '../../assets/constants';
+import { validateNumber } from '../../assets/utils';
+import ActiveRecordWarnInfo from '../atoms/ActiveRecordWarnInfo';
+
+const SectionActionsForm = ({ form, actionType, styles, onSelectChange, formListVisible, activeDescriptionErr }) => {
     return (
-        <CustomForm autoComplete="off" layout="horizontal" form={form} name="sectionForm">
+        <CustomForm autoComplete="off" layout="horizontal" form={form} className={styles.descForm}>
             <CustomFormItem
                 rules={[
                     {
@@ -22,9 +24,14 @@ const SectionActionsForm = ({ form }) => {
                     },
                 ]}
                 label="Sınav Türü"
-                name="examType"
+                name="examKind"
+                className={styles.selectContainer}
             >
-                <CustomSelect className="form-filter-item" placeholder={'Seçiniz'}>
+                <CustomSelect
+                    disabled={actionType !== 'add'}
+                    placeholder={'Seçiniz'}
+                    onChange={(value) => onSelectChange(value)}
+                >
                     {examKinds?.map(({ id, description }, index) => (
                         <Option key={index} value={id}>
                             {description}
@@ -32,77 +39,73 @@ const SectionActionsForm = ({ form }) => {
                     ))}
                 </CustomSelect>
             </CustomFormItem>
-            <Form.List name={'sectionDescriptionChapters'}>
-                {(fields, { add, remove }) => (
-                    <>
-                        {fields.map(({ key, name, ...restField }, index) => {
-                            return (
-                                <Row gutter={16} className="">
-                                    <Col
-                                        // span={groupKnowledge.scoringType == 2 ? '15' : '20'}
-                                        className=""
-                                    >
-                                        <Form.Item
-                                            {...restField}
-                                            key={key}
-                                            label={`${index + 1}.Seçenek`}
-                                            validateTrigger={['onChange', 'onBlur']}
-                                            name={[name, 'text']}
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
-                                                },
-                                            ]}
-                                            className=""
-                                        >
-                                            <CustomInput
+            {formListVisible && !activeDescriptionErr && (
+                <Form.List name={'sectionDescriptionChapters'} className={styles.formListContainer}>
+                    {(fields, { add, remove }) => (
+                        <>
+                            {fields.map(({ key, name, ...restField }, index) => {
+                                return (
+                                    <Row gutter={16}>
+                                        <Col span={fields.length > 1 ? 17 : 19}>
+                                            <Form.Item
+                                                {...restField}
                                                 key={key}
-                                                placeholder="Seçenek Metni"
-                                                theme="snow"
-                                                className="" // !FIX
-                                                height={100}
-                                            />
-                                        </Form.Item>
-                                    </Col>
-                                    <Col span={3}>
-                                        <div className="">
-                                            {fields.length > 2 ? (
+                                                label={`${index + 1}`}
+                                                validateTrigger={['onChange', 'onBlur']}
+                                                name={[name, 'name']}
+                                                rules={[
+                                                    {
+                                                        required: true,
+                                                        message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
+                                                    },
+                                                ]}
+                                            >
+                                                <CustomInput
+                                                    key={key}
+                                                    placeholder="Bölüm adı giriniz..."
+                                                    className=""
+                                                />
+                                            </Form.Item>
+                                        </Col>
+                                        <Col span={fields.length > 1 ? 5 : 5} style={{}}>
+                                            <Form.Item
+                                                label={'Katsayı'}
+                                                validateTrigger={['onChange', 'onBlur']}
+                                                name={[index, 'coefficient']}
+                                                rules={[{ validator: validateNumber }]}
+                                            >
+                                                <CustomInputNumber step={0.1} min={0} max={100} />
+                                            </Form.Item>
+                                        </Col>
+                                        <Col span={2}>
+                                            {fields.length > 1 ? (
                                                 <CustomButton
-                                                    style={{ marginTop: '5px' }}
+                                                    className={styles.deleteButton}
                                                     onClick={() => remove(name)}
-                                                    type="danger"
                                                 >
                                                     Sil
                                                 </CustomButton>
                                             ) : null}
-                                        </div>
-                                    </Col>
-                                </Row>
-                            );
-                        })}
-                        <Form.Item
-                            style={{
-                                display: 'flex',
-                                alignContent: 'flex-start',
-                                justifyContent: 'center',
-                                alignContent: 'center',
-                                padding: '0 16px',
-                            }}
-                        >
-                            <div className="add-answer">
-                                <CustomButton
-                                    onClick={() => {
-                                        add();
-                                    }}
-                                >
-                                    Cevap Şıkkı Ekle
-                                </CustomButton>
-                            </div>
-                        </Form.Item>
-                    </>
-                )}
-            </Form.List>
+                                        </Col>
+                                    </Row>
+                                );
+                            })}
+                            <Form.Item>
+                                <div className={styles.formFooter}>
+                                    <CustomButton
+                                        onClick={() => {
+                                            add();
+                                        }}
+                                    >
+                                        Bölüm Ekle
+                                    </CustomButton>
+                                </div>
+                            </Form.Item>
+                        </>
+                    )}
+                </Form.List>
+            )}
+            {activeDescriptionErr && <ActiveRecordWarnInfo />}
         </CustomForm>
     );
 };
