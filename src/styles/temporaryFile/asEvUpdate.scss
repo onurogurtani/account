@@ -20,6 +20,10 @@
 
 .infoForm {
     margin-left: 10px;
+
+    .ant-form-item-label {
+      margin-top: 5px;
+    }
 }
 
 .cancelQuestionButton {
