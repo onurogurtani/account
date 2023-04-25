@@ -20,10 +20,9 @@ const UseSectionHandlers = () => {
     const [actionType, setActionType] = useState(null);
     const [formListVisible, setformListVisible] = useState(false);
     const [activeDescriptionErr, setActiveDescriptionErr] = useState(false);
-    const [tableData, setTableData] = useState(sectionDescriptions || []);
 
     const filterDescriptions = async (examKind) => {
-        let data = tableData.filter((item) => item.recordStatus !== 0);
+        let data = sectionDescriptions.filter((item) => item.recordStatus !== 0);
         let activeRecord = data?.filter((item) => item?.examKind === examKind);
         if (activeRecord.length > 0) {
             setActiveDescriptionErr(true);
@@ -37,21 +36,12 @@ const UseSectionHandlers = () => {
         form.setFieldsValue({ ...addNewSectionInitValues });
     };
     const loadData = async () => {
-        let res = await dispatch(getSectionDescriptions());
-        let data = await res?.payload?.data;
-        setTableData(data);
+        await dispatch(getSectionDescriptions());
     };
 
     useEffect(() => {
         loadData();
     }, []);
-
-    const openModalHandler = async (type, initialValues) => {
-        setModalVisible(true);
-        setActionType(type);
-        setInitialValueForModal(initialValues);
-    };
-    const copySectionHandler = async () => {};
 
     const addNewSectionDesc = async (data) => {
         try {
@@ -180,11 +170,8 @@ const UseSectionHandlers = () => {
         setInitialValueForModal,
         actionType,
         setActionType,
-        openModalHandler,
-        copySectionHandler,
         onFinish,
         loadData,
-        tableData,
         closeModalHandler,
         openNewSectionModalHandler,
         openCopySectionModalHandler,
@@ -192,6 +179,7 @@ const UseSectionHandlers = () => {
         onSelectChange,
         formListVisible,
         activeDescriptionErr,
+        sectionDescriptions,
     };
 };
 
