@@ -1,0 +1,100 @@
+.difficultlyInput {
+    width: 100px;
+}
+
+.questionDetailCard {
+    min-height: 450px;
+}
+
+.questionImage {
+    max-width: 480px;
+}
+
+.cancelText {
+    position: absolute;
+    top: 30%;
+    right: 40%;
+    font-size: 48px;
+    color: red;
+}
+
+.infoForm {
+    margin-left: 10px;
+}
+
+.cancelQuestionButton {
+    background-color: red;
+    border: none;
+}
+
+.changeQuestionButton {
+    background-color: orange;
+    border: none;
+}
+
+.cancelQuestionButton:hover {
+    background-color: red;
+    border: none;
+}
+
+.changeQuestionButton:hover {
+    background-color: orange;
+    border: none;
+}
+
+.changeSubjectSelect {
+    width: 200px !important;
+}
+
+.changeDifficultySelect {
+    width: 240px !important;
+}
+.getQuestionsButton {
+    background-color: green;
+    border: none;
+    margin-left: 10px;
+}
+
+.getQuestionsButton:hover {
+    background-color: green;
+    border: none;
+    margin-left: 10px;
+}
+.getQuestionsButton:focus {
+    background-color: green;
+    border: none;
+    margin-left: 10px;
+}
+.detailPageFooter {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.cancelProcessButton {
+    border: none;
+    color: white;
+    background-color: red;
+}
+
+.cancelProcessButton:hover {
+    border: none;
+    color: white;
+    background-color: red;
+}
+.getAllQuestionButton {
+    border: none;
+    color: white;
+    background-color: orange;
+}
+
+.getAllQuestionButton:hover {
+    border: none;
+    color: white;
+    background-color: orange;
+}
+
+.getAllQuestionButton:focus {
+    border: none;
+    color: white;
+    background-color: orange;
+}
