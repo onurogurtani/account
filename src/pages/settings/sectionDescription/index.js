@@ -8,17 +8,22 @@ import UseSectionHandlers from './hooks/UseSectionHandlers';
 
 const SectionDescription = () => {
     const props = UseSectionHandlers();
-    const { openCopySectionModalHandler, tableData, openUpdateSectionModalHandler, openNewSectionModalHandler } = props;
+    const {
+        sectionDescriptions,
+        openCopySectionModalHandler,
+        openUpdateSectionModalHandler,
+        openNewSectionModalHandler,
+    } = props;
     return (
         <CustomPageWrapper title="Bölüm Tanımlama" routes={['Tanımlar']} cardTitle={'Bölüm Tanımlama'}>
             <HeadSection onClick={openNewSectionModalHandler} />
-            {tableData?.length === 0 ? (
+            {sectionDescriptions?.length === 0 ? (
                 <InformMessage />
             ) : (
                 <SectionDescTable
                     onCopy={openCopySectionModalHandler}
                     onUpdate={openUpdateSectionModalHandler}
-                    data={tableData}
+                    data={sectionDescriptions}
                 />
             )}
 
