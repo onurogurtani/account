@@ -283,7 +283,7 @@ const UpdateAsEv = () => {
                                                 </div>
                                                 <div className="col-md-6">
                                                     <CustomForm
-                                                        className="filter-form"
+                                                        className="infoForm"
                                                         autoComplete="off"
                                                         layout={'horizontal'}
                                                     >
