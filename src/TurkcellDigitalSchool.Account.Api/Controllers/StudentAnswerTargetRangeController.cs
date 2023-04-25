@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,9 +30,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("Add")]
-        public async Task<IActionResult> Add([FromBody] CreateStudentAnswerTargetRangeCommand createStudentAnswerTargetRangeCommand)
+        public async Task<IActionResult> Add([FromBody] CreateStudentAnswerTargetRangeCommand createStudentAnswerTargetRangeCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(createStudentAnswerTargetRangeCommand);
+            var result = await Mediator.Send(createStudentAnswerTargetRangeCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -49,9 +50,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] UpdateStudentAnswerTargetRangeCommand updateStudentAnswerTargetRangeCommand)
+        public async Task<IActionResult> Update([FromBody] UpdateStudentAnswerTargetRangeCommand updateStudentAnswerTargetRangeCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(updateStudentAnswerTargetRangeCommand);
+            var result = await Mediator.Send(updateStudentAnswerTargetRangeCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -69,9 +70,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpDelete("Delete")]
-        public async Task<IActionResult> Delete([FromBody] DeleteStudentAnswerTargetRangeCommand deleteStudentAnswerTargetRangeCommand)
+        public async Task<IActionResult> Delete([FromBody] DeleteStudentAnswerTargetRangeCommand deleteStudentAnswerTargetRangeCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(deleteStudentAnswerTargetRangeCommand);
+            var result = await Mediator.Send(deleteStudentAnswerTargetRangeCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -91,7 +92,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<IEntity>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("GetByFilterPagedStudentAnswerTargetRange")]
-        public async Task<IActionResult> GetByFilterPagedStudentAnswerTargetRange([FromQuery] GetByFilterPagedStudentAnswerTargetRangeQuery query)
+        public async Task<IActionResult> GetByFilterPagedStudentAnswerTargetRange([FromQuery] GetByFilterPagedStudentAnswerTargetRangeQuery query, CancellationToken cancellationToken)
         {
             if (query.StudentAnswerTargetRangeDetailSearch == null)
             {
@@ -101,7 +102,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
                     PageSize = 10
                 };
             }
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);

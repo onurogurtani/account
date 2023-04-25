@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries;
@@ -22,9 +23,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut("UpdateStudentGuardianInformation")]
-        public async Task<IActionResult> UpdateStudentGuardianInformation([FromBody] UpdateStudentGuardianInformationCommand request)
+        public async Task<IActionResult> UpdateStudentGuardianInformation([FromBody] UpdateStudentGuardianInformationCommand request, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(request);
+            var result = await Mediator.Send(request, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -36,9 +37,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<GuardianInfoDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("GetStudentGuardianInformation")]
-        public async Task<IActionResult> GetStudentGuardianInformation([FromQuery] GetStudentGuardianInformationQuery request)
+        public async Task<IActionResult> GetStudentGuardianInformation([FromQuery] GetStudentGuardianInformationQuery request, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(request);
+            var result = await Mediator.Send(request, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -50,9 +51,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut("UpdateStudentEducationInformation")]
-        public async Task<IActionResult> UpdateStudentEducationInformation([FromBody] UpdateStudentEducationInformationCommand request)
+        public async Task<IActionResult> UpdateStudentEducationInformation([FromBody] UpdateStudentEducationInformationCommand request, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(request);
+            var result = await Mediator.Send(request, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -64,9 +65,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<EducationInfoDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("GetStudentEducationInformation")]
-        public async Task<IActionResult> GetStudentEducationInformation([FromQuery] GetStudentEducationInformationQuery request)
+        public async Task<IActionResult> GetStudentEducationInformation([FromQuery] GetStudentEducationInformationQuery request, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(request);
+            var result = await Mediator.Send(request, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);

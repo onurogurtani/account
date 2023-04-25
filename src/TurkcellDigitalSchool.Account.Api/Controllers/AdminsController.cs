@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,9 +28,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PagedList<AdminDto>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("GetByFilterPagedAdmins")]
-        public async Task<IActionResult> GetByFilterPagedAdmins([FromQuery] GetByFilterPagedAdminsQuery query)
+        public async Task<IActionResult> GetByFilterPagedAdmins([FromQuery] GetByFilterPagedAdminsQuery query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -50,9 +51,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AdminDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getbyid")]
-        public async Task<IActionResult> GetById([FromQuery] GetAdminQuery query)
+        public async Task<IActionResult> GetById([FromQuery] GetAdminQuery query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -69,9 +70,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("setStatus")]
-        public async Task<IActionResult> SetStatus([FromBody] SetStatusAdminCommand setStatusAdminCommand)
+        public async Task<IActionResult> SetStatus([FromBody] SetStatusAdminCommand setStatusAdminCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(setStatusAdminCommand);
+            var result = await Mediator.Send(setStatusAdminCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -90,9 +91,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<AdminDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("Add")]
-        public async Task<IActionResult> Add([FromBody] CreateAdminCommand createAdminCommand)
+        public async Task<IActionResult> Add([FromBody] CreateAdminCommand createAdminCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(createAdminCommand);
+            var result = await Mediator.Send(createAdminCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -111,9 +112,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<AdminDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] UpdateAdminCommand updateAdminCommand)
+        public async Task<IActionResult> Update([FromBody] UpdateAdminCommand updateAdminCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(updateAdminCommand);
+            var result = await Mediator.Send(updateAdminCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -131,9 +132,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpDelete("Delete")]
-        public async Task<IActionResult> Delete([FromBody] DeleteAdminCommand deleteAdminCommand)
+        public async Task<IActionResult> Delete([FromBody] DeleteAdminCommand deleteAdminCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(deleteAdminCommand);
+            var result = await Mediator.Send(deleteAdminCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);

@@ -22,7 +22,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Pages.Admin.IdentityScopes
         {
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(CancellationToken cancellationToken)
         {
             if (ModelState.IsValid)
             {

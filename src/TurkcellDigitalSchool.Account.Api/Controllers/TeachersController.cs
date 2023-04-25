@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands;
@@ -30,9 +31,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<ExcelResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("uploadTeacherExcel")]
-        public async Task<IActionResult> UploadTeacherExcel([FromForm] UploadTeacherExcelCommand command)
+        public async Task<IActionResult> UploadTeacherExcel([FromForm] UploadTeacherExcelCommand command, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(command);
+            var result = await Mediator.Send(command, cancellationToken);
             if (result.Success)
             {
                 return File(result.Data.FileContents, result.Data.ContentType, result.Data.FileDownloadName);
@@ -52,9 +53,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("downloadTeacherExcel")]
-        public async Task<IActionResult> DownloadTeacherExcel()
+        public async Task<IActionResult> DownloadTeacherExcel(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new DownloadTeacherExcelCommand());
+            var result = await Mediator.Send(new DownloadTeacherExcelCommand(), cancellationToken);
             if (result.Success)
             {
                 return File(result.Data.FileContents, result.Data.ContentType, result.Data.FileDownloadName);
@@ -73,9 +74,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PagedList<GetTeachersResponseDto>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("GetByFilterPagedTeachers")]
-        public async Task<IActionResult> GetByFilterPagedTeachers([FromBody] GetByFilterPagedTeachersQuery request)
+        public async Task<IActionResult> GetByFilterPagedTeachers([FromBody] GetByFilterPagedTeachersQuery request, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(request);
+            var result = await Mediator.Send(request, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -94,9 +95,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<GetTeacherResponseDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getbyid")]
-        public async Task<IActionResult> GetById(long id)
+        public async Task<IActionResult> GetById(long id, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetTeacherQuery { Id = id });
+            var result = await Mediator.Send(new GetTeacherQuery { Id = id }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -114,9 +115,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("SetActivateStatus")]
-        public async Task<IActionResult> SetActivateStatus([FromBody] SetTeacherActivateStatusCommand request)
+        public async Task<IActionResult> SetActivateStatus([FromBody] SetTeacherActivateStatusCommand request, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(request);
+            var result = await Mediator.Send(request, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -135,9 +136,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<User>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("Add")]
-        public async Task<IActionResult> Add([FromBody] AddTeacherCommand addTeacherCommand)
+        public async Task<IActionResult> Add([FromBody] AddTeacherCommand addTeacherCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(addTeacherCommand);
+            var result = await Mediator.Send(addTeacherCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -157,9 +158,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<User>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] UpdateTeacherCommand updateTeacherCommand)
+        public async Task<IActionResult> Update([FromBody] UpdateTeacherCommand updateTeacherCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(updateTeacherCommand);
+            var result = await Mediator.Send(updateTeacherCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -177,9 +178,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpDelete("Delete")]
-        public async Task<IActionResult> Delete([FromBody] DeleteTeacherCommand deleteTeacherCommand)
+        public async Task<IActionResult> Delete([FromBody] DeleteTeacherCommand deleteTeacherCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(deleteTeacherCommand);
+            var result = await Mediator.Send(deleteTeacherCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);

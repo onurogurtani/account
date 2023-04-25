@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -32,9 +33,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PagedList<Organisation>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("GetByFilterPagedOrganisations")]
-        public async Task<IActionResult> GetByFilterPagedOrganisations(GetByFilterPagedOrganisationsQuery query)
+        public async Task<IActionResult> GetByFilterPagedOrganisations(GetByFilterPagedOrganisationsQuery query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -52,9 +53,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Organisation>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("getList")]
-        public async Task<IActionResult> GetList([FromQuery] PaginationQuery query, [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] FilterQuery[] filterQuery = null)
+        public async Task<IActionResult> GetList([FromQuery] PaginationQuery query, CancellationToken cancellationToken, [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] FilterQuery[] filterQuery = null)
         {
-            var result = await Mediator.Send(new QueryByFilterRequestBase<Organisation> { PaginationQuery = query, FilterQuery = filterQuery });
+            var result = await Mediator.Send(new QueryByFilterRequestBase<Organisation> { PaginationQuery = query, FilterQuery = filterQuery }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -72,9 +73,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<OrganisationDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getbyid")]
-        public async Task<IActionResult> GetById([FromQuery] GetOrganisationQuery getOrganisationQuery)
+        public async Task<IActionResult> GetById([FromQuery] GetOrganisationQuery getOrganisationQuery, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(getOrganisationQuery);
+            var result = await Mediator.Send(getOrganisationQuery, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -91,9 +92,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SelectionItem>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getOrganisationNames")]
-        public async Task<IActionResult> GetOrganisationNames()
+        public async Task<IActionResult> GetOrganisationNames(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetOrganisationNamesQuery());
+            var result = await Mediator.Send(new GetOrganisationNamesQuery(), cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -111,9 +112,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SelectionItem>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getOrganisationPackageNames")]
-        public async Task<IActionResult> GetOrganisationPackageNames()
+        public async Task<IActionResult> GetOrganisationPackageNames(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetOrganisationPackageNamesQuery());
+            var result = await Mediator.Send(new GetOrganisationPackageNamesQuery(), cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -131,9 +132,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SelectionItem>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getOrganisationManagerNames")]
-        public async Task<IActionResult> GetOrganisationManagerNames()
+        public async Task<IActionResult> GetOrganisationManagerNames(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetOrganisationManagerNamesQuery());
+            var result = await Mediator.Send(new GetOrganisationManagerNamesQuery(), cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -151,9 +152,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SelectionItem>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getOrganisationDomainNames")]
-        public async Task<IActionResult> GetOrganisationDomainNames()
+        public async Task<IActionResult> GetOrganisationDomainNames(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetOrganisationDomainNamesQuery());
+            var result = await Mediator.Send(new GetOrganisationDomainNamesQuery(), cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -171,9 +172,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<Organisation>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("Add")]
-        public async Task<IActionResult> Add([FromBody] CreateOrganisationCommand createOrganisationCommand)
+        public async Task<IActionResult> Add([FromBody] CreateOrganisationCommand createOrganisationCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(createOrganisationCommand);
+            var result = await Mediator.Send(createOrganisationCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -191,9 +192,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<Organisation>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] UpdateOrganisationCommand updateOrganisationCommand)
+        public async Task<IActionResult> Update([FromBody] UpdateOrganisationCommand updateOrganisationCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(updateOrganisationCommand);
+            var result = await Mediator.Send(updateOrganisationCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -211,9 +212,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<Organisation>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut("UpdateOrganisationStatus")]
-        public async Task<IActionResult> Update([FromBody] UpdateOrganisationStatusCommand updateOrganisationStatusCommand)
+        public async Task<IActionResult> Update([FromBody] UpdateOrganisationStatusCommand updateOrganisationStatusCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(updateOrganisationStatusCommand);
+            var result = await Mediator.Send(updateOrganisationStatusCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -230,9 +231,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<Organisation>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpDelete("Delete")]
-        public async Task<IActionResult> Delete(long id)
+        public async Task<IActionResult> Delete(long id, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new DeleteRequestBase<Organisation> { Id = id });
+            var result = await Mediator.Send(new DeleteRequestBase<Organisation> { Id = id }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -250,9 +251,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<OrganisationUsersDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("GetOrganisationByUserIdQuery")]
-        public async Task<IActionResult> GetOrganisationByUserIdQuery([FromQuery] GetOrganisationByUserIdQuery getOrganisationUserQuery)
+        public async Task<IActionResult> GetOrganisationByUserIdQuery([FromQuery] GetOrganisationByUserIdQuery getOrganisationUserQuery, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(getOrganisationUserQuery);
+            var result = await Mediator.Send(getOrganisationUserQuery, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -264,9 +265,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<OrganisationUserDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("GetUserOrganisationInfoByOrganisationIdQuery")]
-        public async Task<IActionResult> GetUserOrganisationInfoByOrganisationIdQuery([FromQuery] GetUserOrganisationInfoByOrganisationIdQuery getUserOrganisationInfoByOrganisationIdQuery)
+        public async Task<IActionResult> GetUserOrganisationInfoByOrganisationIdQuery([FromQuery] GetUserOrganisationInfoByOrganisationIdQuery getUserOrganisationInfoByOrganisationIdQuery, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(getUserOrganisationInfoByOrganisationIdQuery);
+            var result = await Mediator.Send(getUserOrganisationInfoByOrganisationIdQuery, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);

@@ -34,7 +34,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Pages.ExternalLogin
             _events = events;
         }
 
-        public async Task<IActionResult> OnGet()
+        public async Task<IActionResult> OnGet(CancellationToken cancellationToken)
         {
             // read external identity from the temporary cookie
             var result = await HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);

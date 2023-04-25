@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,9 +29,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<string>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getContractTypeNames")]
-        public async Task<IActionResult> GetContractTypeNames()
+        public async Task<IActionResult> GetContractTypeNames(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetContractTypeNamesQuery());
+            var result = await Mediator.Send(new GetContractTypeNamesQuery(), cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -49,9 +50,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<ContractType>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("Add")]
-        public async Task<IActionResult> Add([FromBody] CreateContractTypeCommand createContractTypeCommand)
+        public async Task<IActionResult> Add([FromBody] CreateContractTypeCommand createContractTypeCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(createContractTypeCommand);
+            var result = await Mediator.Send(createContractTypeCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -70,9 +71,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<ContractType>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] UpdateContractTypeCommand updateContractTypeCommand)
+        public async Task<IActionResult> Update([FromBody] UpdateContractTypeCommand updateContractTypeCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(updateContractTypeCommand);
+            var result = await Mediator.Send(updateContractTypeCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -89,9 +90,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpDelete]
-        public async Task<IActionResult> Delete(long id)
+        public async Task<IActionResult> Delete(long id, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new DeleteRequestBase<ContractType> { Id = id });
+            var result = await Mediator.Send(new DeleteRequestBase<ContractType> { Id = id }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -109,9 +110,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<ContractType>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getbyid")]
-        public async Task<IActionResult> GetById(long id)
+        public async Task<IActionResult> GetById(long id, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new QueryByIdRequestBase<ContractType> { Id = id });
+            var result = await Mediator.Send(new QueryByIdRequestBase<ContractType> { Id = id }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -129,9 +130,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ContractType>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("getList")]
-        public async Task<IActionResult> GetList([FromQuery] PaginationQuery query, [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] FilterQuery[] filterQuery = null)
+        public async Task<IActionResult> GetList([FromQuery] PaginationQuery query, CancellationToken cancellationToken, [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] FilterQuery[] filterQuery = null)
         {
-            var result = await Mediator.Send(new QueryByFilterRequestBase<ContractType> { PaginationQuery = query, FilterQuery = filterQuery });
+            var result = await Mediator.Send(new QueryByFilterRequestBase<ContractType> { PaginationQuery = query, FilterQuery = filterQuery }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -149,9 +150,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PagedList<ContractType>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("GetByFilterPagedContractTypes")]
-        public async Task<IActionResult> GetByFilterPagedContractTypes(GetByFilterPagedContractTypesQuery query)
+        public async Task<IActionResult> GetByFilterPagedContractTypes(GetByFilterPagedContractTypesQuery query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);

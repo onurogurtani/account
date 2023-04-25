@@ -44,7 +44,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Pages.ServerSideSessions
         [BindProperty]
         public string SessionId { get; set; }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPost(CancellationToken cancellationToken)
         {
             await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext
             {

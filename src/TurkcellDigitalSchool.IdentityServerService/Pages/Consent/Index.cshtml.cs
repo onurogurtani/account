@@ -33,7 +33,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Pages.Consent
         [BindProperty]
         public InputModel Input { get; set; }
 
-        public async Task<IActionResult> OnGet(string returnUrl)
+        public async Task<IActionResult> OnGet(string returnUrl, CancellationToken cancellationToken)
         {
             View = await BuildViewModelAsync(returnUrl);
             if (View == null)
@@ -49,7 +49,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Pages.Consent
             return Page();
         }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPost(CancellationToken cancellationToken)
         {
             // validate return url is still valid
             var request = await _interaction.GetAuthorizationContextAsync(Input.ReturnUrl);

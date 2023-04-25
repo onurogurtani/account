@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,9 +32,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PagedList<PackageType>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("GetByFilterPagedPackageTypes")]
-        public async Task<IActionResult> GetByFilterPagedPackageTypes([FromQuery] GetByFilterPagedPackageTypesQuery query)
+        public async Task<IActionResult> GetByFilterPagedPackageTypes([FromQuery] GetByFilterPagedPackageTypesQuery query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -51,9 +52,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PackageType>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("getList")]
-        public async Task<IActionResult> GetList([FromQuery] PaginationQuery query, [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] FilterQuery[] filterQuery = null)
+        public async Task<IActionResult> GetList([FromQuery] PaginationQuery query, CancellationToken cancellationToken, [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] FilterQuery[] filterQuery = null)
         {
-            var result = await Mediator.Send(new QueryByFilterRequestBase<PackageType> { PaginationQuery = query, FilterQuery = filterQuery });
+            var result = await Mediator.Send(new QueryByFilterRequestBase<PackageType> { PaginationQuery = query, FilterQuery = filterQuery }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -72,9 +73,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PackageType>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getbyid")]
-        public async Task<IActionResult> GetById([FromQuery] GetPackageTypeQuery query)
+        public async Task<IActionResult> GetById([FromQuery] GetPackageTypeQuery query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -95,9 +96,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<PackageType>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("Add")]
-        public async Task<IActionResult> Add([FromBody] CreatePackageTypeCommand createPackageTypeCommand)
+        public async Task<IActionResult> Add([FromBody] CreatePackageTypeCommand createPackageTypeCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(createPackageTypeCommand);
+            var result = await Mediator.Send(createPackageTypeCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -116,9 +117,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<PackageType>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] UpdatePackageTypeCommand updatePackageTypeCommand)
+        public async Task<IActionResult> Update([FromBody] UpdatePackageTypeCommand updatePackageTypeCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(updatePackageTypeCommand);
+            var result = await Mediator.Send(updatePackageTypeCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -136,9 +137,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<PackageType>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpDelete("Delete")]
-        public async Task<IActionResult> Delete([FromBody] DeletePackageTypeCommand deletePackageTypeCommand)
+        public async Task<IActionResult> Delete([FromBody] DeletePackageTypeCommand deletePackageTypeCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(deletePackageTypeCommand);
+            var result = await Mediator.Send(deletePackageTypeCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);

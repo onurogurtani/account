@@ -70,7 +70,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Pages.Grants
         [Required]
         public string ClientId { get; set; }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPost(CancellationToken cancellationToken)
         {
             await _interaction.RevokeUserConsentAsync(ClientId);
             await _events.RaiseAsync(new GrantsRevokedEvent(User.GetSubjectId(), ClientId));

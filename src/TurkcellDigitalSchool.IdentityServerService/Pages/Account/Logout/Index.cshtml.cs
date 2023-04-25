@@ -25,7 +25,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Pages.Account.Logout
             _events = events;
         }
 
-        public async Task<IActionResult> OnGet(string logoutId)
+        public async Task<IActionResult> OnGet(string logoutId, CancellationToken cancellationToken)
         {
             LogoutId = logoutId;
 
@@ -50,13 +50,13 @@ namespace TurkcellDigitalSchool.IdentityServerService.Pages.Account.Logout
             {
                 // if the request for logout was properly authenticated from IdentityServer, then
                 // we don't need to show the prompt and can just log the user out directly.
-                return await OnPost();
+                return await OnPost(cancellationToken);
             }
 
             return Page();
         }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPost(CancellationToken cancellationToken)
         {
             if (User?.Identity.IsAuthenticated == true)
             {

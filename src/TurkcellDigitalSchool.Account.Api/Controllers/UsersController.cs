@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands;
@@ -26,9 +27,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("updateCurentUserInformation")]
-        public async Task<IActionResult> UpdateCurentUserInformation([FromBody] UpdateCurentUserInformationCommand query)
+        public async Task<IActionResult> UpdateCurentUserInformation([FromBody] UpdateCurentUserInformationCommand query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -49,9 +50,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Entities.Dtos.UserDtos.CurrentUserDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getCurrentUser")]
-        public async Task<IActionResult> GetCurrentUser()
+        public async Task<IActionResult> GetCurrentUser(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetUserSelfQuery { });
+            var result = await Mediator.Send(new GetUserSelfQuery { }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -68,9 +69,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("getByFilterPaged")]
-        public async Task<IActionResult> GetByFilterPaged([FromQuery] GetByFilterPagedUsersQuery query)
+        public async Task<IActionResult> GetByFilterPaged([FromQuery] GetByFilterPagedUsersQuery query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -87,9 +88,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("setStatus")]
-        public async Task<IActionResult> SetStatus([FromBody] SetStatusUserCommand command)
+        public async Task<IActionResult> SetStatus([FromBody] SetStatusUserCommand command, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(command);
+            var result = await Mediator.Send(command, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -106,9 +107,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("add")]
-        public async Task<IActionResult> Add([FromBody] AddUserCommand command)
+        public async Task<IActionResult> Add([FromBody] AddUserCommand command, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(command);
+            var result = await Mediator.Send(command, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -122,9 +123,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("GetById")]
-        public async Task<IActionResult> GetById([FromBody] GetUserQuery getUserQuery)
+        public async Task<IActionResult> GetById([FromBody] GetUserQuery getUserQuery, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(getUserQuery);
+            var result = await Mediator.Send(getUserQuery, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);

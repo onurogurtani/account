@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,9 +32,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PagedList<TargetScreen>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("GetByFilterPagedTargetScreens")]
-        public async Task<IActionResult> GetByFilterPagedTargetScreens([FromQuery] GetByFilterPagedTargetScreensQuery query)
+        public async Task<IActionResult> GetByFilterPagedTargetScreens([FromQuery] GetByFilterPagedTargetScreensQuery query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -52,9 +53,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TargetScreen>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("getList")]
-        public async Task<IActionResult> GetList([FromQuery] PaginationQuery query, [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] FilterQuery[] filterQuery = null)
+        public async Task<IActionResult> GetList([FromQuery] PaginationQuery query, CancellationToken cancellationToken, [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] FilterQuery[] filterQuery = null)
         {
-            var result = await Mediator.Send(new QueryByFilterRequestBase<TargetScreen> { PaginationQuery = query, FilterQuery = filterQuery });
+            var result = await Mediator.Send(new QueryByFilterRequestBase<TargetScreen> { PaginationQuery = query, FilterQuery = filterQuery }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -73,9 +74,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<TargetScreen>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getbyid")]
-        public async Task<IActionResult> GetById([FromQuery] GetTargetScreenQuery query)
+        public async Task<IActionResult> GetById([FromQuery] GetTargetScreenQuery query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -97,9 +98,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<TargetScreen>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("Add")]
-        public async Task<IActionResult> Add([FromBody] CreateTargetScreenCommand createTargetScreenCommand)
+        public async Task<IActionResult> Add([FromBody] CreateTargetScreenCommand createTargetScreenCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(createTargetScreenCommand);
+            var result = await Mediator.Send(createTargetScreenCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -118,9 +119,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<TargetScreen>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] UpdateTargetScreenCommand updateTargetScreenCommand)
+        public async Task<IActionResult> Update([FromBody] UpdateTargetScreenCommand updateTargetScreenCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(updateTargetScreenCommand);
+            var result = await Mediator.Send(updateTargetScreenCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -138,9 +139,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<TargetScreen>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpDelete("Delete")]
-        public async Task<IActionResult> Delete([FromBody] DeleteTargetScreenCommand deleteTargetScreenCommand)
+        public async Task<IActionResult> Delete([FromBody] DeleteTargetScreenCommand deleteTargetScreenCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(deleteTargetScreenCommand);
+            var result = await Mediator.Send(deleteTargetScreenCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);

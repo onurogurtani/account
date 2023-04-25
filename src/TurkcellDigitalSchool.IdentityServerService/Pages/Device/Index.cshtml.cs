@@ -38,7 +38,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Pages.Device
         [BindProperty]
         public InputModel Input { get; set; }
 
-        public async Task<IActionResult> OnGet(string userCode)
+        public async Task<IActionResult> OnGet(string userCode, CancellationToken cancellationToken)
         {
             if (String.IsNullOrWhiteSpace(userCode))
             {
@@ -64,7 +64,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Pages.Device
             return Page();
         }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPost(CancellationToken cancellationToken)
         {
             var request = await _interaction.GetAuthorizationContextAsync(Input.UserCode);
             if (request == null) return RedirectToPage("/Home/Error/Index");

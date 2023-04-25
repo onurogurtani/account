@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TurkcellDigitalSchool.Core.Services.KpsService;
@@ -20,7 +21,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Core.Utilities.Results.IResult))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("TcNoValidate")]
-        public async Task<IActionResult> ValidateUser(long TCKNo, string FirstName, string LastName, int BirthYear)
+        public async Task<IActionResult> ValidateUser(long TCKNo, string FirstName, string LastName, int BirthYear, CancellationToken cancellationToken)
         {
             var result = await _kpsService.ValidateUser(TCKNo, FirstName, LastName, BirthYear);
             if (result.Success)

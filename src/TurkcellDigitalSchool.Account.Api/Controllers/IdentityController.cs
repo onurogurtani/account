@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -44,9 +45,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginUserQuery loginModel)
+        public async Task<IActionResult> Login([FromBody] LoginUserQuery loginModel, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(loginModel);
+            var result = await Mediator.Send(loginModel, cancellationToken);
 
             if (result.Success)
             {
@@ -68,9 +69,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("LoginByLdap")]
-        public async Task<IActionResult> LoginByLdap([FromBody] LoginUserByLdapQuery loginModel)
+        public async Task<IActionResult> LoginByLdap([FromBody] LoginUserByLdapQuery loginModel, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(loginModel);
+            var result = await Mediator.Send(loginModel, cancellationToken);
 
             if (result.Success)
             {
@@ -91,9 +92,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("LoginByTurkcellFastLogin")]
-        public async Task<IActionResult> LoginByTurkcellFastLogin([FromBody] LoginUserByTurkcellFastLoginQuery loginModel)
+        public async Task<IActionResult> LoginByTurkcellFastLogin([FromBody] LoginUserByTurkcellFastLoginQuery loginModel, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(loginModel);
+            var result = await Mediator.Send(loginModel, cancellationToken);
 
             if (result.Success)
             {
@@ -113,9 +114,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("BehalfOfLogin")]
-        public async Task<IActionResult> BehalfOfLogin([FromBody] BehalfOfLoginQuery loginModel)
+        public async Task<IActionResult> BehalfOfLogin([FromBody] BehalfOfLoginQuery loginModel, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(loginModel);
+            var result = await Mediator.Send(loginModel, cancellationToken);
 
             if (result.Success)
             {
@@ -136,9 +137,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("loginTry")]
-        public async Task<IActionResult> LoginTry([FromBody] LoginUserTryQuery loginModel)
+        public async Task<IActionResult> LoginTry([FromBody] LoginUserTryQuery loginModel, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(loginModel);
+            var result = await Mediator.Send(loginModel, cancellationToken);
             return Ok(result);
         }
 
@@ -152,9 +153,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout([FromBody] LogoutUserQuery logoutUserQuery)
+        public async Task<IActionResult> Logout([FromBody] LogoutUserQuery logoutUserQuery, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(logoutUserQuery);
+            var result = await Mediator.Send(logoutUserQuery, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -174,9 +175,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("resendotpsms")]
-        public async Task<IActionResult> ReSendOtpSms([FromBody] ReSendOtpSmsQuery loginModel)
+        public async Task<IActionResult> ReSendOtpSms([FromBody] ReSendOtpSmsQuery loginModel, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(loginModel);
+            var result = await Mediator.Send(loginModel, cancellationToken);
 
             if (result.Success)
             {
@@ -205,9 +206,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("loginOtp")]
-        public async Task<IActionResult> LoginOtp([FromBody] LoginOtpQuery loginModel)
+        public async Task<IActionResult> LoginOtp([FromBody] LoginOtpQuery loginModel, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(loginModel);
+            var result = await Mediator.Send(loginModel, cancellationToken);
 
             if (result.Success)
             {
@@ -231,9 +232,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("loginFailReSendOtpSms")]
-        public async Task<IActionResult> LoginFailReSendOtpSms([FromBody] LoginFailReSendOtpSmsQuery loginModel)
+        public async Task<IActionResult> LoginFailReSendOtpSms([FromBody] LoginFailReSendOtpSmsQuery loginModel, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(loginModel);
+            var result = await Mediator.Send(loginModel, cancellationToken);
 
             if (result.Success)
             {
@@ -255,9 +256,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("loginFailCheckOtp")]
-        public async Task<IActionResult> LoginFailCheckOtpQuery([FromBody] LoginFailCheckOtpQuery request)
+        public async Task<IActionResult> LoginFailCheckOtpQuery([FromBody] LoginFailCheckOtpQuery request, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(request);
+            var result = await Mediator.Send(request, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -277,9 +278,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("loginFailOtpNewPassword")]
-        public async Task<IActionResult> LoginFailOtpNewPassword([FromBody] LoginFailOtpNewPasswordCommand request)
+        public async Task<IActionResult> LoginFailOtpNewPassword([FromBody] LoginFailOtpNewPasswordCommand request, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(request);
+            var result = await Mediator.Send(request, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -300,9 +301,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("forgotPasswordWithCheckFailCount")]
-        public async Task<IActionResult> ForgotPasswordWithCheckFailCount([FromBody] ForgotPasswordWithCheckFailCountCommand request)
+        public async Task<IActionResult> ForgotPasswordWithCheckFailCount([FromBody] ForgotPasswordWithCheckFailCountCommand request, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(request);
+            var result = await Mediator.Send(request, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -323,9 +324,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("ForgotPasswordSendLinkCheck")]
-        public async Task<IActionResult> ForgotPasswordSendLinkCheck([FromBody] ForgotPasswordSendLinkCheckCommand request)
+        public async Task<IActionResult> ForgotPasswordSendLinkCheck([FromBody] ForgotPasswordSendLinkCheckCommand request, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(request);
+            var result = await Mediator.Send(request, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -346,16 +347,16 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("forgotPasswordSendLinkChangePassword")]
-        public async Task<IActionResult> ForgotPasswordSendLinkChangePassword([FromBody] ForgotPasswordSendLinkChangePasswordCommand request)
+        public async Task<IActionResult> ForgotPasswordSendLinkChangePassword([FromBody] ForgotPasswordSendLinkChangePasswordCommand request, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(request);
+            var result = await Mediator.Send(request, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
             }
             return BadRequest(result);
         }
-         
+
 
         /// <summary>
         /// Loginde parola değiştirme süresi gelen kullanıcı için parola değiştirme işlemi yapılır.
@@ -368,9 +369,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string))]
         [HttpPut("oldPasswordToNewPassword")]
-        public async Task<IActionResult> OldPasswordToNewPassword([FromBody] OldPasswordToNewPasswordCommand command)
+        public async Task<IActionResult> OldPasswordToNewPassword([FromBody] OldPasswordToNewPasswordCommand command, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(command);
+            var result = await Mediator.Send(command, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -378,7 +379,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
-          
+
         #endregion
 
 
@@ -396,9 +397,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterUserCommand command)
+        public async Task<IActionResult> Register([FromBody] RegisterUserCommand command, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(command);
+            var result = await Mediator.Send(command, cancellationToken);
 
             if (result.Success)
             {
@@ -419,9 +420,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("unverifiedregister")]
-        public async Task<IActionResult> UnverifiedRegister([FromBody] UnverifiedUserCommand command)
+        public async Task<IActionResult> UnverifiedRegister([FromBody] UnverifiedUserCommand command, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(command);
+            var result = await Mediator.Send(command, cancellationToken);
 
             if (result.Success)
             {
@@ -441,9 +442,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("verifyuser")]
-        public async Task<IActionResult> UnverifiedRegister([FromBody] VerifyUserCommand command)
+        public async Task<IActionResult> UnverifiedRegister([FromBody] VerifyUserCommand command, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(command);
+            var result = await Mediator.Send(command, cancellationToken);
 
             if (result.Success)
             {
@@ -464,9 +465,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("generatenewverificationcode")]
-        public async Task<IActionResult> GenereteNewVerificationCode([FromBody] GenerateNewVerificationCodeCommand command)
+        public async Task<IActionResult> GenereteNewVerificationCode([FromBody] GenerateNewVerificationCodeCommand command, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(command);
+            var result = await Mediator.Send(command, cancellationToken);
 
             if (result.Success)
             {
@@ -487,9 +488,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("registerOtp")]
-        public async Task<IActionResult> RegisterOtp([FromBody] RegisterOtpQuery query)
+        public async Task<IActionResult> RegisterOtp([FromBody] RegisterOtpQuery query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, cancellationToken);
 
             if (result.Success)
             {
@@ -511,9 +512,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut("forgotpassword")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand forgotPassword)
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand forgotPassword, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(forgotPassword);
+            var result = await Mediator.Send(forgotPassword, cancellationToken);
 
             if (result.Success)
             {
@@ -535,9 +536,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut("forgottenpasswordchange")]
-        public async Task<IActionResult> ForgottenPasswordChange([FromBody] ForgottenPasswordChangeCommand forgottenPasswordChangeCommand)
+        public async Task<IActionResult> ForgottenPasswordChange([FromBody] ForgottenPasswordChangeCommand forgottenPasswordChangeCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(forgottenPasswordChangeCommand);
+            var result = await Mediator.Send(forgottenPasswordChangeCommand, cancellationToken);
 
             if (result.Success)
             {
@@ -559,9 +560,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string))]
         [HttpPut("forgottenPasswordTokenCheck")]
-        public async Task<IActionResult> ForgottenPasswordTokenCheck([FromBody] ForgottenPasswordTokenCheckCommand forgottenPasswordTokenCheckCommand)
+        public async Task<IActionResult> ForgottenPasswordTokenCheck([FromBody] ForgottenPasswordTokenCheckCommand forgottenPasswordTokenCheckCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(forgottenPasswordTokenCheckCommand);
+            var result = await Mediator.Send(forgottenPasswordTokenCheckCommand, cancellationToken);
 
             if (result.Success)
             {
@@ -582,9 +583,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut("changeuserpassword")]
-        public async Task<IActionResult> ChangeUserPassword([FromBody] UserChangePasswordCommand command)
+        public async Task<IActionResult> ChangeUserPassword([FromBody] UserChangePasswordCommand command, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(command);
+            var result = await Mediator.Send(command, cancellationToken);
 
             if (result.Success)
             {
@@ -620,9 +621,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SelectionItem>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("userNameSuggest")]
-        public async Task<IActionResult> UserNameSuggest([FromBody] GetUserNameSuggestQuery query)
+        public async Task<IActionResult> UserNameSuggest([FromBody] GetUserNameSuggestQuery query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, cancellationToken);
 
             if (result.Success)
             {
@@ -642,9 +643,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("NewPermissionsAssignToAdmin")]
-        public async Task<IActionResult> NewPermissionsAssignToAdmin()
+        public async Task<IActionResult> NewPermissionsAssignToAdmin(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new PermissionsAssignToAdminCommand());
+            var result = await Mediator.Send(new PermissionsAssignToAdminCommand(), cancellationToken);
             return Ok(result);
         }
 
@@ -660,9 +661,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string))]
         [HttpPut("changepassword")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(command);
+            var result = await Mediator.Send(command, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);

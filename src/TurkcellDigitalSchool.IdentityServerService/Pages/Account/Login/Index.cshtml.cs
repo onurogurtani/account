@@ -42,7 +42,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Pages.Account.Login
             _events = events;
         }
 
-        public async Task<IActionResult> OnGet(string returnUrl)
+        public async Task<IActionResult> OnGet(string returnUrl, CancellationToken cancellationToken)
         {
             await BuildModelAsync(returnUrl);
 
@@ -55,7 +55,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Pages.Account.Login
             return Page();
         }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPost(CancellationToken cancellationToken)
         {
             // check if we are in the context of an authorization request
             var context = await _interaction.GetAuthorizationContextAsync(Input.ReturnUrl);

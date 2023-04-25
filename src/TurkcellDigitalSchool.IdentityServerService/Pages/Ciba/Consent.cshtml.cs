@@ -32,7 +32,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Pages.Ciba
         [BindProperty]
         public InputModel Input { get; set; }
 
-        public async Task<IActionResult> OnGet(string id)
+        public async Task<IActionResult> OnGet(string id, CancellationToken cancellationToken)
         {
             View = await BuildViewModelAsync(id);
             if (View == null)
@@ -48,7 +48,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Pages.Ciba
             return Page();
         }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPost(CancellationToken cancellationToken)
         {
             // validate return url is still valid
             var request = await _interaction.GetLoginRequestByInternalIdAsync(Input.Id);

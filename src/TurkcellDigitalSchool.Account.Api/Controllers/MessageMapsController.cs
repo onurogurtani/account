@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalMessageMap.Account.Business.Handlers.MessageMaps.Queries;
 using TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands;
@@ -29,9 +30,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MessageMap>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("getPagedList")]
-        public async Task<IActionResult> GetList([FromBody] GetMessageMapsQuery query)
+        public async Task<IActionResult> GetList([FromBody] GetMessageMapsQuery query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -49,9 +50,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut()]
-        public async Task<IActionResult> Update([FromBody] UpdateMessageMapCommand command)
+        public async Task<IActionResult> Update([FromBody] UpdateMessageMapCommand command, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(command);
+            var result = await Mediator.Send(command, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -69,9 +70,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("messagesToDatabase")]
-        public async Task<IActionResult> MessagesToDatabase()
+        public async Task<IActionResult> MessagesToDatabase(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new MessagesToDatabaseCommand());
+            var result = await Mediator.Send(new MessagesToDatabaseCommand(), cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -91,9 +92,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("messageMapToRedis")]
-        public async Task<IActionResult> MessageMapToRedis()
+        public async Task<IActionResult> MessageMapToRedis(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new MessageMapToRedisCommand());
+            var result = await Mediator.Send(new MessageMapToRedisCommand(), cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -110,9 +111,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(byte[]))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("downloadFile")]
-        public async Task<IActionResult> DownloadFile([FromBody] DownloadMessageMapCommand command)
+        public async Task<IActionResult> DownloadFile([FromBody] DownloadMessageMapCommand command, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(command);
+            var result = await Mediator.Send(command, cancellationToken);
             if (result.Success)
             {
                 return File(result.Data.File, result.Data.ContentType, result.Data.FileName);

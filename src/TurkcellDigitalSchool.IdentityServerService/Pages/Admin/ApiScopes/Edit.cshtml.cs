@@ -20,7 +20,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Pages.Admin.ApiScopes
         [BindProperty]
         public string Button { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(string id, CancellationToken cancellationToken)
         {
             InputModel = await _repository.GetByIdAsync(id);
             if (InputModel == null)
@@ -31,7 +31,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Pages.Admin.ApiScopes
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string id)
+        public async Task<IActionResult> OnPostAsync(string id, CancellationToken cancellationToken)
         {
             if (Button == "delete")
             {

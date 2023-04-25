@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,9 +29,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<School>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("getPagedList")]
-        public async Task<IActionResult> GetPagedList([FromQuery] PaginationQuery query, [FromBody] GetSchoolListQuery.SchoolDto filter = null)
+        public async Task<IActionResult> GetPagedList([FromQuery] PaginationQuery query, CancellationToken cancellationToken, [FromBody] GetSchoolListQuery.SchoolDto filter = null)
         {
-            var result = await Mediator.Send(new GetSchoolListQuery { PaginationQuery = query, QueryDto = filter });
+            var result = await Mediator.Send(new GetSchoolListQuery { PaginationQuery = query, QueryDto = filter }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -48,9 +49,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("uploadSchoolExcel")]
-        public async Task<IActionResult> UploadSchoolExcel([FromForm] UploadSchoolExcelCommand command)
+        public async Task<IActionResult> UploadSchoolExcel([FromForm] UploadSchoolExcelCommand command, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(command);
+            var result = await Mediator.Send(command, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -68,9 +69,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("downloadSchoolExcel")]
-        public async Task<IActionResult> DownloadSchoolExcel()
+        public async Task<IActionResult> DownloadSchoolExcel(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new DownloadSchoolExcelCommand());
+            var result = await Mediator.Send(new DownloadSchoolExcelCommand(), cancellationToken);
             if (result.Success)
             {
                 return File(result.Data.FileContents, result.Data.ContentType, result.Data.FileDownloadName);

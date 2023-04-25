@@ -24,7 +24,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Pages.Ciba
             _logger = logger;
         }
 
-        public async Task<IActionResult> OnGet(string id)
+        public async Task<IActionResult> OnGet(string id, CancellationToken cancellationToken)
         {
             LoginRequest = await _backchannelAuthenticationInteraction.GetLoginRequestByInternalIdAsync(id);
             if (LoginRequest == null)

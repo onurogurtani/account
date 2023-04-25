@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,9 +32,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PagedList<GetRoleDto>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("GetByFilterPagedRoles")]
-        public async Task<IActionResult> GetByFilterPagedRoles(GetByFilterPagedRolesQuery query)
+        public async Task<IActionResult> GetByFilterPagedRoles(GetByFilterPagedRolesQuery query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -51,9 +52,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Role>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("getList")]
-        public async Task<IActionResult> GetList([FromQuery] PaginationQuery query, [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] FilterQuery[] filterQuery = null)
+        public async Task<IActionResult> GetList([FromQuery] PaginationQuery query, CancellationToken cancellationToken, [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] FilterQuery[] filterQuery = null)
         {
-            var result = await Mediator.Send(new QueryByFilterRequestBase<Role> { PaginationQuery = query, FilterQuery = filterQuery });
+            var result = await Mediator.Send(new QueryByFilterRequestBase<Role> { PaginationQuery = query, FilterQuery = filterQuery }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -71,9 +72,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<GetRoleDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getbyid")]
-        public async Task<IActionResult> GetById([FromQuery] GetRoleQuery getRoleQuery)
+        public async Task<IActionResult> GetById([FromQuery] GetRoleQuery getRoleQuery, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(getRoleQuery);
+            var result = await Mediator.Send(getRoleQuery, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -90,9 +91,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<Role>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("PassiveCheckControlRole")]
-        public async Task<IActionResult> GetById([FromQuery] PassiveCheckControlRoleQuery passiveCheckControlRoleQuery)
+        public async Task<IActionResult> GetById([FromQuery] PassiveCheckControlRoleQuery passiveCheckControlRoleQuery, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(passiveCheckControlRoleQuery);
+            var result = await Mediator.Send(passiveCheckControlRoleQuery, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -110,9 +111,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<Role>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("SetPassiveRole")]
-        public async Task<IActionResult> Add([FromBody] SetPassiveRoleCommand setPassiveRoleCommand)
+        public async Task<IActionResult> Add([FromBody] SetPassiveRoleCommand setPassiveRoleCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(setPassiveRoleCommand);
+            var result = await Mediator.Send(setPassiveRoleCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -130,9 +131,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<Role>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("SetActiveRole")]
-        public async Task<IActionResult> SetActiveRole([FromBody] SetActiveRoleCommand setActiveRoleCommand)
+        public async Task<IActionResult> SetActiveRole([FromBody] SetActiveRoleCommand setActiveRoleCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(setActiveRoleCommand);
+            var result = await Mediator.Send(setActiveRoleCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -150,9 +151,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("RoleCopy")]
-        public async Task<IActionResult> Add([FromBody] RoleCopyCommand roleCopyCommand)
+        public async Task<IActionResult> Add([FromBody] RoleCopyCommand roleCopyCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(roleCopyCommand);
+            var result = await Mediator.Send(roleCopyCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -170,9 +171,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("Add")]
-        public async Task<IActionResult> Add([FromBody] CreateRoleCommand createRoleCommand)
+        public async Task<IActionResult> Add([FromBody] CreateRoleCommand createRoleCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(createRoleCommand);
+            var result = await Mediator.Send(createRoleCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -190,9 +191,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] UpdateRoleCommand updateRoleCommand)
+        public async Task<IActionResult> Update([FromBody] UpdateRoleCommand updateRoleCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(updateRoleCommand);
+            var result = await Mediator.Send(updateRoleCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -209,9 +210,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SelectionItem>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getRoleTypes")]
-        public async Task<IActionResult> GetRoleTypes()
+        public async Task<IActionResult> GetRoleTypes(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetRoleTypesQuery());
+            var result = await Mediator.Send(new GetRoleTypesQuery(), cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -228,9 +229,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SelectionItem>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getAdminTypes")]
-        public async Task<IActionResult> GetAdminTypes()
+        public async Task<IActionResult> GetAdminTypes(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetAdminTypesQuery());
+            var result = await Mediator.Send(new GetAdminTypesQuery(), cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -247,9 +248,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SelectionItem>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getUserTypes")]
-        public async Task<IActionResult> GetUserTypes()
+        public async Task<IActionResult> GetUserTypes(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetUserTypesQuery());
+            var result = await Mediator.Send(new GetUserTypesQuery(), cancellationToken);
             if (result.Success)
             {
                 return Ok(result);

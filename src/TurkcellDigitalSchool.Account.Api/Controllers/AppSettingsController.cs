@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -29,9 +30,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [AllowAnonymous]
         [HttpGet("getJobSettings")]
-        public async Task<IActionResult> GetJobSettings()
+        public async Task<IActionResult> GetJobSettings(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetJobSettingsQuery());
+            var result = await Mediator.Send(new GetJobSettingsQuery(), cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -48,9 +49,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [AllowAnonymous]
         [HttpGet("getPasswordRules")]
-        public async Task<IActionResult> GetPasswordRules()
+        public async Task<IActionResult> GetPasswordRules(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetPasswordRulesQuery());
+            var result = await Mediator.Send(new GetPasswordRulesQuery(), cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -70,9 +71,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AppSetting>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("getAppSetting")]
-        public async Task<IActionResult> GetAppSetting([FromBody] GetAppSettingByCodeQuery query)
+        public async Task<IActionResult> GetAppSetting([FromBody] GetAppSettingByCodeQuery query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetAppSettingByCodeQuery { CustomerId = query.CustomerId, Code = query.Code, VouId = query.VouId });
+            var result = await Mediator.Send(new GetAppSettingByCodeQuery { CustomerId = query.CustomerId, Code = query.Code, VouId = query.VouId }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -91,9 +92,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("SetPasswordRuleAndPeriodValue")]
-        public async Task<IActionResult> Add([FromBody] SetPasswordRuleAndPeriodValueCommand setPasswordRuleAndPeriodValueCommand)
+        public async Task<IActionResult> Add([FromBody] SetPasswordRuleAndPeriodValueCommand setPasswordRuleAndPeriodValueCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(setPasswordRuleAndPeriodValueCommand);
+            var result = await Mediator.Send(setPasswordRuleAndPeriodValueCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -112,9 +113,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [HttpGet("GetPasswordRuleAndPeriod")]
-        public async Task<IActionResult> GetPasswordRuleAndPeriod()
+        public async Task<IActionResult> GetPasswordRuleAndPeriod(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetPasswordRuleAndPeriodQuery());
+            var result = await Mediator.Send(new GetPasswordRuleAndPeriodQuery(), cancellationToken);
 
             if (result.Success)
             {

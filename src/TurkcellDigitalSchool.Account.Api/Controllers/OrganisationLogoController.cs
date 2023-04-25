@@ -29,9 +29,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<OrganisationLogoDto>))]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         //[HttpGet("getbyid")]
-        //public async Task<IActionResult> GetById([FromQuery] GetOrganisationLogoQuery getOrganisationLogoQuery)
+        //public async Task<IActionResult> GetById([FromQuery] GetOrganisationLogoQuery getOrganisationLogoQuery, CancellationToken cancellationToken)
         //{
-        //    var result = await Mediator.Send(getOrganisationLogoQuery);
+        //    var result = await Mediator.Send(getOrganisationLogoQuery, cancellationToken);
         //    if (result.Success)
         //    {
         //        return Ok(result);
@@ -48,9 +48,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         //[HttpPost("Add")]
-        //public async Task<IActionResult> Add([FromForm] CreateOrganisationLogoCommand createOrganisationLogoCommand)
+        //public async Task<IActionResult> Add([FromForm] CreateOrganisationLogoCommand createOrganisationLogoCommand, CancellationToken cancellationToken)
         //{
-        //    var result = await Mediator.Send(createOrganisationLogoCommand);
+        //    var result = await Mediator.Send(createOrganisationLogoCommand, cancellationToken);
         //    if (result.Success)
         //    {
         //        return Ok(result);
@@ -67,9 +67,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<Entities.Concrete.File>))]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         //[HttpPut("Update")]
-        //public async Task<IActionResult> Update([FromForm] UpdateOrganisationLogoCommand updateOrganisationLogoCommand)
+        //public async Task<IActionResult> Update([FromForm] UpdateOrganisationLogoCommand updateOrganisationLogoCommand, CancellationToken cancellationToken)
         //{
-        //    var result = await Mediator.Send(updateOrganisationLogoCommand);
+        //    var result = await Mediator.Send(updateOrganisationLogoCommand, cancellationToken);
         //    if (result.Success)
         //    {
         //        return Ok(result);

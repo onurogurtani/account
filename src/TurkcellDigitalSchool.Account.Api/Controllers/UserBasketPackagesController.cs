@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,9 +30,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<GetUserBasketPackagesResponseDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("getList")]
-        public async Task<IActionResult> GetList([FromBody] PaginationQuery pagination)
+        public async Task<IActionResult> GetList([FromBody] PaginationQuery pagination, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetUserBasketPackagesQuery { Pagination = pagination });
+            var result = await Mediator.Send(new GetUserBasketPackagesQuery { Pagination = pagination }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -49,9 +50,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<UserBasketPackage>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("Add")]
-        public async Task<IActionResult> Add([FromBody] CreateUserBasketPackageCommand createUserBasketPackageCommand)
+        public async Task<IActionResult> Add([FromBody] CreateUserBasketPackageCommand createUserBasketPackageCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(createUserBasketPackageCommand);
+            var result = await Mediator.Send(createUserBasketPackageCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -70,9 +71,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<UserBasketPackage>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] UpdateUserBasketPackageCommand updateUserBasketPackageCommand)
+        public async Task<IActionResult> Update([FromBody] UpdateUserBasketPackageCommand updateUserBasketPackageCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(updateUserBasketPackageCommand);
+            var result = await Mediator.Send(updateUserBasketPackageCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -90,9 +91,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<UserBasketPackage>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpDelete("Delete")]
-        public async Task<IActionResult> Delete([FromBody] DeleteUserBasketPackageCommand deleteUserBasketPackageCommand)
+        public async Task<IActionResult> Delete([FromBody] DeleteUserBasketPackageCommand deleteUserBasketPackageCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(deleteUserBasketPackageCommand);
+            var result = await Mediator.Send(deleteUserBasketPackageCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);

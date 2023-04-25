@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,9 +29,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<DocumentVersionDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("getNewVersion")]
-        public async Task<IActionResult> GetNewVersion([FromQuery] GetNewVersionQuery query)
+        public async Task<IActionResult> GetNewVersion([FromQuery] GetNewVersionQuery query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -48,9 +49,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<Document>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("copyDocument")]
-        public async Task<IActionResult> CopyDocument(CopyDocumentCommand query)
+        public async Task<IActionResult> CopyDocument(CopyDocumentCommand query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -68,9 +69,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<Document>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut("UpdateDocument")]
-        public async Task<IActionResult> Update([FromBody] UpdateDocumentCommand updateDocumentCommand)
+        public async Task<IActionResult> Update([FromBody] UpdateDocumentCommand updateDocumentCommand, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(updateDocumentCommand);
+            var result = await Mediator.Send(updateDocumentCommand, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -89,9 +90,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Document))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("getByDocument")]
-        public async Task<IActionResult> GetByDocument([FromQuery] GetDocumentQuery query)
+        public async Task<IActionResult> GetByDocument([FromQuery] GetDocumentQuery query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -109,9 +110,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<DocumentDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("getByFilterPagedDocuments")]
-        public async Task<IActionResult> GetByFilterPagedDocuments([FromQuery] GetByFilterPagedDocumentsQuery query)
+        public async Task<IActionResult> GetByFilterPagedDocuments([FromQuery] GetByFilterPagedDocumentsQuery query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);

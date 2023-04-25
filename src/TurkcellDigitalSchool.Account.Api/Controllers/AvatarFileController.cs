@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,9 +27,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost]
-        public async Task<IActionResult> Add([FromForm] CreateAvatarFileCommand data)
+        public async Task<IActionResult> Add([FromForm] CreateAvatarFileCommand data, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(data);
+            var result = await Mediator.Send(data, cancellationToken);
             if (!result.Success)
             {
                 return BadRequest(result.Message);
@@ -45,9 +46,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut]
-        public async Task<IActionResult> Update([FromForm] UpdateAvatarFileCommand data)
+        public async Task<IActionResult> Update([FromForm] UpdateAvatarFileCommand data, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(data);
+            var result = await Mediator.Send(data, cancellationToken);
             if (!result.Success)
             {
                 return BadRequest(result.Message);
@@ -65,9 +66,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpDelete]
-        public async Task<IActionResult> Delete(DeleteAvatarFileCommand data)
+        public async Task<IActionResult> Delete(DeleteAvatarFileCommand data, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(data);
+            var result = await Mediator.Send(data, cancellationToken);
             if (!result.Success)
             {
                 return BadRequest(result.Message);
@@ -84,9 +85,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AvatarFilesDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("getList")]
-        public async Task<IActionResult> GetList([FromQuery] PaginationQuery query)
+        public async Task<IActionResult> GetList([FromQuery] PaginationQuery query, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetAvatarFilesQuery { PaginationQuery = query });
+            var result = await Mediator.Send(new GetAvatarFilesQuery { PaginationQuery = query }, cancellationToken);
 
             if (!result.Success)
             {
@@ -104,9 +105,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(byte[]))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getbyid")]
-        public async Task<IActionResult> GetById(long id)
+        public async Task<IActionResult> GetById(long id, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetAvatarFileQuery { Id = id });
+            var result = await Mediator.Send(new GetAvatarFileQuery { Id = id }, cancellationToken);
             if (!result.Success)
             {
                 return BadRequest(result);
@@ -123,9 +124,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(byte[]))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getBase64")]
-        public async Task<IActionResult> GetBase64(long id)
+        public async Task<IActionResult> GetBase64(long id, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetAvatarFileQuery { Id = id });
+            var result = await Mediator.Send(new GetAvatarFileQuery { Id = id }, cancellationToken);
             if (!result.Success)
             {
                 return BadRequest(result);
