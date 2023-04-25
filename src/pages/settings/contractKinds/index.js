@@ -242,7 +242,6 @@ const ContractKinds = () => {
         cancelText="İptal"
         onCancel={onCancel}
         bodyStyle={{ overflowY: 'auto', maxHeight: 'calc(100vh - 300px)' }}
-      // width={600}
       >
         <CustomForm form={form} layout="vertical" name="form" onFinish={onFinish}>
           <CustomFormItem
@@ -268,7 +267,7 @@ const ContractKinds = () => {
             name="contractTypeId"
           >
             <CustomSelect placeholder="Seçiniz">
-              {contractTypeAllList.map((item) => (
+              {contractTypeAllList?.filter(contract => contract.recordStatus === 1).map((item) => (
                 <Option key={item.id} value={item.id}>
                   {item?.name}
                 </Option>
