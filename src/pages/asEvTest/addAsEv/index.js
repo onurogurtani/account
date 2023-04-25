@@ -1,7 +1,7 @@
 import React, { useState} from 'react';
 import { Tabs } from 'antd';
 import { CustomCollapseCard, Text } from '../../../components';
-import '../../../styles/temporaryFile/asEvGeneral.scss';
+import '../../../styles/asEvTest/asEvGeneral.scss';
 import AsEvForm from '../form/AsEvForm';
 import AsEvQuestions from './AsEvQuestions';
 

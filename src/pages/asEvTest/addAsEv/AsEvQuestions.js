@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomButton, CustomFormItem, CustomForm, CustomPagination } from '../../../components';
-import '../../../styles/temporaryFile/asEvQuestions.scss';
+import '../../../styles/asEvTest/asEvQuestions.scss';
 import { Card, Rate,Alert} from 'antd';
 import AsEvQuestionFilter from '../addAsEv/AsEvQuestionFilter';
 import {adAsEvQuestion,getByFilterPagedAsEvQuestions,removeAsEvQuestion,getAsEvTestPreview} from '../../../store/slice/asEvSlice';

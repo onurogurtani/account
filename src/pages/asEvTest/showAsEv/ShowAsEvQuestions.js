@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { CustomPagination, CustomForm, CustomFormItem, Text, CustomInput } from '../../../components';
-import '../../../styles/temporaryFile/asEvQuestions.scss';
-import '../../../styles/temporaryFile/asEvQuestionFilter.scss';
+import '../../../styles/asEvTest/asEvQuestions.scss';
+import '../../../styles/asEvTest/asEvQuestionFilter.scss';
 import { useSelector } from 'react-redux';
 import { Card, Rate, Form } from 'antd';
 import { EChooices } from '../../../constants/questions';

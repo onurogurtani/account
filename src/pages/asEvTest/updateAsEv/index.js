@@ -23,8 +23,8 @@ import {
     adAsEvQuestion,
 } from '../../../store/slice/asEvSlice';
 import '../../../styles/tableFilter.scss';
-import '../../../styles/temporaryFile/asEvQuestions.scss';
-import '../../../styles/temporaryFile/asEvUpdate.scss';
+import '../../../styles/asEvTest/asEvQuestions.scss';
+import '../../../styles/asEvTest/asEvUpdate.scss';
 import ChangeQuestionModal from './ChangeQuestionModal';
 import { getLessonSubjects } from '../../../store/slice/lessonSubjectsSlice';
 import DifficultiesModal from '../addAsEv/DifficultiesModal';

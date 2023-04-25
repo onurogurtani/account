@@ -1,7 +1,7 @@
 import { Tag } from 'antd';
 import React from 'react';
 import { Text } from '../../../components';
-import '../../../styles/temporaryFile/asEv.scss';
+import '../../../styles/asEvTest/asEv.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAsEvById } from '../../../store/slice/asEvSlice';
 import { useEffect } from 'react';

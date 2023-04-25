@@ -9,7 +9,7 @@ import {
     Text,
     errorDialog,
 } from '../../../components';
-import '../../../styles/temporaryFile/asEvQuestionFilter.scss';
+import '../../../styles/asEvTest/asEvQuestionFilter.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { difficultyLevel } from '../../../constants/questions';
 import { getByFilterPagedAsEvQuestions } from '../../../store/slice/asEvSlice';
