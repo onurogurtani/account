@@ -10,16 +10,16 @@ import {
     errorDialog,
     Option,
     Text,
-} from '../../../../components';
-import { getAllClassStages } from '../../../../store/slice/classStageSlice';
-import { getByClassromIdLessons } from '../../../../store/slice/lessonsSlice';
-import { getLessonSubjects } from '../../../../store/slice/lessonSubjectsSlice';
-import { getLessonSubSubjects } from '../../../../store/slice/lessonSubSubjectsSlice';
-import { adAsEv, getByFilterPagedAsEvQuestions } from '../../../../store/slice/asEvSlice';
-import { getUnits } from '../../../../store/slice/lessonUnitsSlice';
-import '../../../../styles/temporaryFile/asEvForm.scss';
-import { getListFilterParams } from '../../../../utils/utils';
-import { getByFilterPagedVideos } from '../../../../store/slice/videoSlice';
+} from '../../../components';
+import { getAllClassStages } from '../../../store/slice/classStageSlice';
+import { getByClassromIdLessons } from '../../../store/slice/lessonsSlice';
+import { getLessonSubjects } from '../../../store/slice/lessonSubjectsSlice';
+import { getLessonSubSubjects } from '../../../store/slice/lessonSubSubjectsSlice';
+import { adAsEv, getByFilterPagedAsEvQuestions } from '../../../store/slice/asEvSlice';
+import { getUnits } from '../../../store/slice/lessonUnitsSlice';
+import '../../../styles/temporaryFile/asEvForm.scss';
+import { getListFilterParams } from '../../../utils/utils';
+import { getByFilterPagedVideos } from '../../../store/slice/videoSlice';
 
 const AsEvForm = ({ setStep, step }) => {
     const dispatch = useDispatch();

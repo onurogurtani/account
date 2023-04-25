@@ -1,11 +1,11 @@
 import { Form } from 'antd';
 import React, { useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
-import { CustomButton, CustomForm, CustomFormItem, CustomImage, CustomSelect, CustomTextInput, Option, Text,CustomInput } from '../../../components';
-import { getFilterPagedAsEvs } from '../../../store/slice/asEvSlice';
-import { getAllClassStages } from '../../../store/slice/classStageSlice';
-import '../../../styles/tableFilter.scss';
+import iconSearchWhite from '../../assets/icons/icon-white-search.svg';
+import { CustomButton, CustomForm, CustomFormItem, CustomImage, CustomSelect, CustomTextInput, Option, Text,CustomInput } from '../../components';
+import { getFilterPagedAsEvs } from '../../store/slice/asEvSlice';
+import { getAllClassStages } from '../../store/slice/classStageSlice';
+import '../../styles/tableFilter.scss';
 
 const AsEvFilter = () => {
     const [form] = Form.useForm();

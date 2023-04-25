@@ -1,14 +1,14 @@
 import { Rate, Card, Result } from 'antd';
 import React from 'react';
-import { CustomButton, CustomForm, CustomFormItem, CustomModal, CustomPagination } from '../../../../components';
+import { CustomButton, CustomForm, CustomFormItem, CustomModal, CustomPagination } from '../../../components';
 import { useDispatch, useSelector } from 'react-redux';
-import { EChooices } from '../../../../constants/questions';
+import { EChooices } from '../../../constants/questions';
 import {
     getByFilterPagedAsEvQuestions,
     removeAsEvQuestion,
     adAsEvQuestion,
     getAsEvById,
-} from '../../../../store/slice/asEvSlice';
+} from '../../../store/slice/asEvSlice';
 
 const ChangeQuestionModal = ({ visible, setVisible, asEvId, selectQuestionId }) => {
     const { questions } = useSelector((state) => state?.asEv);

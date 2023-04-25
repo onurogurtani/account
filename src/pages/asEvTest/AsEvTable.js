@@ -4,10 +4,10 @@ import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { CustomButton, CustomPagination, CustomTable, errorDialog } from '../../../components';
-import { getFilterPagedAsEvs,getAsEvById } from '../../../store/slice/asEvSlice';
-import '../../../styles/announcementManagement/announcementList.scss';
-import '../../../styles/temporaryFile/asEv.scss';
+import { CustomButton, CustomPagination, CustomTable, errorDialog } from '../../components';
+import { getFilterPagedAsEvs,getAsEvById } from '../../store/slice/asEvSlice';
+import '../../styles/announcementManagement/announcementList.scss';
+import '../../styles/temporaryFile/asEv.scss';
 
 const AsEvTable = () => {
     const dispatch = useDispatch();

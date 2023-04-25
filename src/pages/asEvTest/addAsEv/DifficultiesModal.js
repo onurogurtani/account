@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
-import { CustomModal, CustomTable } from '../../../../components';
-import '../../../../styles/temporaryFile/asEv.scss';
+import { CustomModal, CustomTable } from '../../../components';
+import '../../../styles/temporaryFile/asEv.scss';
 import AsEvTestPreview from '../AsEvTestPreview';
 
 

@@ -12,8 +12,8 @@ import {
     CustomSelect,
     CustomPagination,
     Option,
-} from '../../../../components';
-import { EChooices } from '../../../../constants/questions';
+} from '../../../components';
+import { EChooices } from '../../../constants/questions';
 import {
     removeAsEvQuestion,
     getAsEvById,
@@ -21,12 +21,12 @@ import {
     getByFilterPagedAsEvQuestions,
     getAsEvTestPreview,
     adAsEvQuestion,
-} from '../../../../store/slice/asEvSlice';
-import '../../../../styles/tableFilter.scss';
-import '../../../../styles/temporaryFile/asEvQuestions.scss';
-import '../../../../styles/temporaryFile/asEvUpdate.scss';
+} from '../../../store/slice/asEvSlice';
+import '../../../styles/tableFilter.scss';
+import '../../../styles/temporaryFile/asEvQuestions.scss';
+import '../../../styles/temporaryFile/asEvUpdate.scss';
 import ChangeQuestionModal from './ChangeQuestionModal';
-import { getLessonSubjects } from '../../../../store/slice/lessonSubjectsSlice';
+import { getLessonSubjects } from '../../../store/slice/lessonSubjectsSlice';
 import DifficultiesModal from '../addAsEv/DifficultiesModal';
 import AsEvInfo from '../showAsEv/AsEvInfo';
 

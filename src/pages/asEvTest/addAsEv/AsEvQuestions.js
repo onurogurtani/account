@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CustomButton, CustomFormItem, CustomForm, CustomPagination } from '../../../../components';
-import '../../../../styles/temporaryFile/asEvQuestions.scss';
+import { CustomButton, CustomFormItem, CustomForm, CustomPagination } from '../../../components';
+import '../../../styles/temporaryFile/asEvQuestions.scss';
 import { Card, Rate,Alert} from 'antd';
 import AsEvQuestionFilter from '../addAsEv/AsEvQuestionFilter';
-import {adAsEvQuestion,getByFilterPagedAsEvQuestions,removeAsEvQuestion,getAsEvTestPreview} from '../../../../store/slice/asEvSlice';
-import { EChooices } from '../../../../constants/questions';
+import {adAsEvQuestion,getByFilterPagedAsEvQuestions,removeAsEvQuestion,getAsEvTestPreview} from '../../../store/slice/asEvSlice';
+import { EChooices } from '../../../constants/questions';
 import DifficultiesModal from '../addAsEv/DifficultiesModal';
 
 const AsEvQuestions = () => {

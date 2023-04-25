@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import iconSearchWhite from '../../../assets/icons/icon-white-search.svg';
-import { CustomButton, CustomCollapseCard, CustomImage, CustomPageHeader, Text } from '../../../components';
-import '../../../styles/announcementManagement/announcementList.scss';
+import iconSearchWhite from '../../assets/icons/icon-white-search.svg';
+import { CustomButton, CustomCollapseCard, CustomImage, CustomPageHeader, Text } from '../../components';
+import '../../styles/announcementManagement/announcementList.scss';
 import AsEvTable from './AsEvTable';
 import AsEvFilter from './AsEvFilter';
 
