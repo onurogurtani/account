@@ -28,7 +28,7 @@ import UserListManagement from './pages/userManagement/userListManagement';
 import WorkPlanManagement from './pages/workPlanManagement';
 import AdminUsersManagement from './pages/userManagement/adminUsersManagement';
 import QuestionManagement from './pages/questionManagement/index';
-import AsEv from './pages/temporaryFolder/asEv';
+import AsEv from './pages/asEvTest';
 import QuestionDifficultyReports from './pages/reports/questionDifficulty';
 import OrganisationManagement from './pages/organisationManagement';
 import Exam from './pages/exam/index';

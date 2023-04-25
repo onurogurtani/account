@@ -7,12 +7,12 @@ import {
     CustomPagination,
     successDialog,
     errorDialog,
-} from '../../../components';
-import '../../../styles/temporaryFile/asEvSwiper.scss';
+} from '../../components';
+import '../../styles/temporaryFile/asEvSwiper.scss';
 import { Card, Rate } from 'antd';
-import '../../../styles/temporaryFile/asEvForm.scss';
+import '../../styles/temporaryFile/asEvForm.scss';
 import AsEvTestPreviewInfoBar from './AsEvTestPreviewInfoBar';
-import { setQuestionSequence, getAsEvTestPreview, updateAsEv } from '../../../store/slice/asEvSlice';
+import { setQuestionSequence, getAsEvTestPreview, updateAsEv } from '../../store/slice/asEvSlice';
 import { useHistory } from 'react-router-dom';
 
 const AsEvTestPreview = () => {

@@ -1,7 +1,7 @@
 import { Form, Rate } from 'antd';
 import React from 'react';
-import { CustomForm, CustomFormItem, Text } from '../../../components';
-import '../../../styles/temporaryFile/asEvQuestionFilter.scss';
+import { CustomForm, CustomFormItem, Text } from '../../components';
+import '../../styles/temporaryFile/asEvQuestionFilter.scss';
 import { useSelector } from 'react-redux';
 
 const AsEvTestPreviewInfoBar = () => {

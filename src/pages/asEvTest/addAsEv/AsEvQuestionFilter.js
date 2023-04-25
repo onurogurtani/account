@@ -8,11 +8,11 @@ import {
     CustomInput,
     Text,
     errorDialog,
-} from '../../../../components';
-import '../../../../styles/temporaryFile/asEvQuestionFilter.scss';
+} from '../../../components';
+import '../../../styles/temporaryFile/asEvQuestionFilter.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { difficultyLevel } from '../../../../constants/questions';
-import { getByFilterPagedAsEvQuestions } from '../../../../store/slice/asEvSlice';
+import { difficultyLevel } from '../../../constants/questions';
+import { getByFilterPagedAsEvQuestions } from '../../../store/slice/asEvSlice';
 
 const AsEvQuestionFilter = () => {
     const [form] = Form.useForm();
