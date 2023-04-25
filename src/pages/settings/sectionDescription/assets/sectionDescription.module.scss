@@ -1,9 +1,16 @@
 .informPghContainer {
-    height: 500px;
+    height: 250px;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.warnPghContainer {
+    height: 250px;
+    width: 100%;
+    > p {
+        color: red;
+    }
 }
 .header {
     padding: 16px;
@@ -14,5 +21,41 @@
     align-items: center;
     > button {
         margin-right: 16px;
+    }
+}
+
+.sectionDescTable {
+    margin: 16px;
+}
+.actionsModal {
+    width: 80% !important;
+    max-width: 800px !important;
+    height: 80%;
+    .descForm {
+        .selectContainer {
+            width: 80% !important;
+        }
+        .formListContainer {
+            width: 100% !important;
+            border: 2px solid pink;
+        }
+        input {
+            height: 48px !important;
+        }
+        .deleteButton {
+            background-color: gray;
+            color: white;
+        }
+        .formFooter {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+
+            > button {
+                margin-left: 16px !important;
+                background-color: gray;
+                color: white;
+            }
+        }
     }
 }

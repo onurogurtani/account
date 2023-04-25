@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import sectionDescriptionsServices from '../../services/sectionDescriptions.service';
 
-
 export const getSectionDescriptions = createAsyncThunk(
     'getSectionDescriptions',
     async (body, { dispatch, rejectWithValue }) => {
@@ -44,7 +43,7 @@ export const copySectionDescriptions = createAsyncThunk(
     'copySectionDescriptions',
     async (data, { dispatch, rejectWithValue }) => {
         try {
-            const response = await sectionDescriptionsServices.addSectionDescriptions(data);
+            const response = await sectionDescriptionsServices.copySectionDescriptions(data);
             dispatch(getSectionDescriptions());
             return response;
         } catch (error) {
@@ -63,10 +62,10 @@ export const sectionDescriptionsSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(getSectionDescriptions.fulfilled, (state, action) => {
-            state.sectionDescriptions = action?.payload?.data?.items; // todo knt etm lazım
+            state.sectionDescriptions = action?.payload?.data;
         });
         builder.addCase(getSectionDescriptions.rejected, (state, action) => {
-            state.schools = [];
+            state.sectionDescriptions = [];
         });
     },
 });
