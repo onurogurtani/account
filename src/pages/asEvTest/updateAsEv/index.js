@@ -621,7 +621,7 @@ const UpdateAsEv = () => {
                                     </CustomFormItem>
 
                                     <CustomFormItem style={{ marginRight: '10px' }}>
-                                        <CustomButton onClick={previewTest} type="primary">
+                                        <CustomButton disabled={asEvDetail?.items[0]?.asEvDetail?.questionCount  <  2} onClick={previewTest} type="primary">
                                             Testi Ön İzle
                                         </CustomButton>
                                     </CustomFormItem>
