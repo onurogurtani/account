@@ -17,7 +17,7 @@ import { getLessonSubjects } from '../../../store/slice/lessonSubjectsSlice';
 import { getLessonSubSubjects } from '../../../store/slice/lessonSubSubjectsSlice';
 import { adAsEv, getByFilterPagedAsEvQuestions } from '../../../store/slice/asEvSlice';
 import { getUnits } from '../../../store/slice/lessonUnitsSlice';
-import '../../../styles/temporaryFile/asEvForm.scss';
+import '../../../styles/asEvTest/asEvForm.scss';
 import { getListFilterParams } from '../../../utils/utils';
 import { getByFilterPagedVideos } from '../../../store/slice/videoSlice';
 

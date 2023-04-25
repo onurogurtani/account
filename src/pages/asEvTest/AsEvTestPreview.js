@@ -8,9 +8,9 @@ import {
     successDialog,
     errorDialog,
 } from '../../components';
-import '../../styles/temporaryFile/asEvSwiper.scss';
+import '../../styles/asEvTest/asEvSwiper.scss';
 import { Card, Rate } from 'antd';
-import '../../styles/temporaryFile/asEvForm.scss';
+import '../../styles/asEvTest/asEvForm.scss';
 import AsEvTestPreviewInfoBar from './AsEvTestPreviewInfoBar';
 import { setQuestionSequence, getAsEvTestPreview, updateAsEv } from '../../store/slice/asEvSlice';
 import { useHistory } from 'react-router-dom';
