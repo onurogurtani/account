@@ -24,6 +24,9 @@ using TurkcellDigitalSchool.Core.Utilities.File.Model;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Dtos.OrganisationChangeReqContentDtos;
 using TurkcellDigitalSchool.Account.Business.Handlers.OrganisationLogos.Commands;
+using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
+using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.Request;
+using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.Response;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChangeRequests.Queries
 {
@@ -34,8 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
         private GetOrganisationChangeRequestByIdQueryHandler _getOrganisationChangeRequestByIdQueryHandler;
         private Mock<ICityRepository> _cityRepository;
         private Mock<ICountyRepository> _countyRepository;
-        Mock<IFileRepository> _fileRepository;
-        Mock<IFileService> _fileService;
+        Mock<IFileServices> _fileService;
 
         private Mock<IOrganisationInfoChangeRequestRepository> _organisationInfoChangeRequestRepository;
         private Mock<IOrganisationChangeReqContentRepository> _organisationChangeReqContentRepository;
@@ -68,13 +70,12 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
             _countyRepository = new Mock<ICountyRepository>();
             _cityRepository = new Mock<ICityRepository>();
-            _fileRepository = new Mock<IFileRepository>();
-            _fileService = new Mock<IFileService>();
+            _fileService = new Mock<IFileServices>();
             _mapper = new Mock<IMapper>();
 
             _getOrganisationChangeRequestByIdQuery = new GetOrganisationChangeRequestByIdQuery();
             _getOrganisationChangeRequestByIdQueryHandler = new GetOrganisationChangeRequestByIdQueryHandler(_organisationInfoChangeRequestRepository.Object, _cityRepository.Object, _countyRepository.Object,
-                _fileRepository.Object, _fileService.Object, _mapper.Object);
+               _fileService.Object, _mapper.Object);
         }
 
         [Test]
@@ -165,15 +166,17 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
             _organisationChangeReqContentRepository.Setup(x => x.Query()).Returns(reqContent.AsQueryable().BuildMock());
             _organisationChangeReqContentRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<OrganisationChangeReqContent, bool>>>())).ReturnsAsync(reqContent.FirstOrDefault());
 
-            var sevenThousandItems = new byte[7000];
-            for (int i = 0; i < sevenThousandItems.Length; i++)
+            _fileService.Setup(x => x.GetFileQuery(It.IsAny<GetFileIntegrationRequest>())).ReturnsAsync(new GetFileQueryIntegrationResponse()
             {
-                sevenThousandItems[i] = 0x20;
-            }
+                Data = new Entities.Dtos.FileDto()
+                {
+                    Id = 1,
+                    FileName = "Test.jpg",
+                    File = new byte[1024]
+                },
+                Success = true
+            });
 
-
-            var saveFileReturn = new DataResult<byte[]>(sevenThousandItems, true);
-            _fileService.Setup(x => x.GetFile(It.IsAny<string>())).ReturnsAsync(() => saveFileReturn);
 
             var logo = new List<Entities.Concrete.File> { 
                 new Entities.Concrete.File{
@@ -181,8 +184,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
             var organisationLogos = new List<Entities.Concrete.File> { new Entities.Concrete.File { Id = 214, FileName = "test", FilePath = "/kg/test" } };
             
-            _fileRepository.Setup(x => x.Query()).Returns(organisationLogos.AsQueryable().BuildMock());
-            _fileRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<Entities.Concrete.File, bool>>>())).ReturnsAsync(logo.FirstOrDefault());
 
             _mapper.Setup(s => s.Map<GetOrganisationInfoChangeRequestDto>(pageTypes[0])).Returns(new GetOrganisationInfoChangeRequestDto {
                 OrganisationChangeReqContents= new List<GetOrganisationChangeReqContentDto> { 

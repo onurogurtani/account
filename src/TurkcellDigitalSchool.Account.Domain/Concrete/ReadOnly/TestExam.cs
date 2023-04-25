@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using TurkcellDigitalSchool.Core.Entities;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract;
-using TurkcellDigitalSchool.Entities.Concrete;
+using System.Collections.Generic; 
+using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract; 
 using TurkcellDigitalSchool.Entities.Enums;
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly
@@ -10,8 +9,11 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly
     /// <summary>
     /// Deneme Sınavı
     /// </summary>
-    public class TestExam : EntityDefinition, IReadOnlyEntity
+    public class TestExam :   IReadOnlyEntity
     {
+        public RecordStatus RecordStatus { get; set; } = RecordStatus.Active;
+        public string Name { get; set; }
+        public string Code { get; set; }
         public long TestExamTypeId { get; set; }
         public TestExamType TestExamType { get; set; }
         public bool IsLiveTestExam { get; set; }
@@ -28,5 +30,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly
         public bool TransitionBetweenSections { get; set; }
         public bool IsAllowDownloadPdf { get; set; } 
         public ICollection<PackageTestExam> PackageTestExams { get; set; }
+        public long Id { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

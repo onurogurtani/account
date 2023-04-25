@@ -27,28 +27,17 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 {
     public class UpdateStudentEducationInformationCommand : IRequest<IResult>
     {
-        public long UserId { get; set; }
-        public ExamType ExamType { get; set; }
-        public long CityId { get; set; }
-        public long CountyId { get; set; }
-        public SchoolTypeEnum SchoolType { get; set; }
-        public long SchoolId { get; set; }
-        public long? ClassroomId { get; set; }
-        public int? GraduationYear { get; set; }
-        public int? DiplomaGrade { get; set; }
-        public YKSStatementEnum? YKSExperienceInformation { get; set; }
-        public PointTypeEnum? FieldType { get; set; }
-        public PointTypeEnum? PointType { get; set; }
-        public bool? ReligionLessonStatus { get; set; }
+        public StudentEducationRequestDto StudentEducationRequest { get; set; }
 
         public class UpdateStudentEducationInformationCommandHandler : IRequestHandler<UpdateStudentEducationInformationCommand, IResult>
         {
-            IStudentEducationInformationRepository _studentEducationInformationRepository;
-            public UpdateStudentEducationInformationCommandHandler(IStudentEducationInformationRepository studentEducationInformationRepository)
+            private readonly IStudentEducationInformationRepository _studentEducationInformationRepository;
+            private readonly IUserService _userService;
+            public UpdateStudentEducationInformationCommandHandler(IStudentEducationInformationRepository studentEducationInformationRepository, IUserService userService)
             {
                 _studentEducationInformationRepository = studentEducationInformationRepository;
+                _userService = userService;
             }
-
 
             [MessageConstAttr(MessageCodeType.Success)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
@@ -56,42 +45,51 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             [ValidationAspect(typeof(UpdateStudentEducationInformationValidator), Priority = 2)]
             public async Task<IResult> Handle(UpdateStudentEducationInformationCommand request, CancellationToken cancellationToken)
             {
-                var existStudentEducationInfo = _studentEducationInformationRepository.Query().FirstOrDefault(w => w.UserId == request.UserId);
+                var validationMessages = _userService.StudentEducationValidationRules(request.StudentEducationRequest);
+                if (!string.IsNullOrWhiteSpace(validationMessages))
+                {
+                    return new ErrorResult(validationMessages);
+                }
+
+                var existStudentEducationInfo = _studentEducationInformationRepository.Query().FirstOrDefault(w => w.UserId == request.StudentEducationRequest.UserId);
                 if (existStudentEducationInfo == null)
                 {
                     var newRecord = new StudentEducationInformation
                     {
-                        UserId = request.UserId,
-                        ExamType = request.ExamType,
-                        CityId = request.CityId,
-                        CountyId = request.CountyId,
-                        SchoolType = request.SchoolType,
-                        SchoolId = request.SchoolId,
-                        ClassroomId = request.ClassroomId,
-                        GraduationYear = request.GraduationYear,
-                        DiplomaGrade = request.GraduationYear,
-                        YKSStatement = request.YKSExperienceInformation,
-                        FieldType = request.FieldType,
-                        PointType = request.PointType,
-                        ReligionLessonStatus = request.ReligionLessonStatus,
+                        UserId = request.StudentEducationRequest.UserId,
+                        ExamType = request.StudentEducationRequest.ExamType,
+                        CityId = request.StudentEducationRequest.CityId,
+                        CountyId = request.StudentEducationRequest.CountyId,
+                        InstitutionId = request.StudentEducationRequest.InstitutionId,
+                        SchoolId = request.StudentEducationRequest.SchoolId,
+                        ClassroomId = request.StudentEducationRequest.ExamType == ExamType.LGS ? request.StudentEducationRequest.ClassroomId : null,
+                        GraduationYearId = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.GraduationYearId,
+                        DiplomaGrade = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.DiplomaGrade,
+                        YKSStatement = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.YKSExperienceInformation,
+                        FieldType = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.FieldType,
+                        PointType = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.PointType,
+                        ReligionLessonStatus = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.ReligionLessonStatus,
+                        IsGraduate = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.IsGraduate
                     };
 
                     await _studentEducationInformationRepository.CreateAndSaveAsync(newRecord);
                     return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
                 }
 
-                existStudentEducationInfo.ExamType = request.ExamType;
-                existStudentEducationInfo.CityId = request.CityId;
-                existStudentEducationInfo.CountyId = request.CountyId;
-                existStudentEducationInfo.SchoolType = request.SchoolType;
-                existStudentEducationInfo.SchoolId = request.SchoolId;
-                existStudentEducationInfo.ClassroomId = request.ClassroomId;
-                existStudentEducationInfo.GraduationYear = request.GraduationYear;
-                existStudentEducationInfo.DiplomaGrade = request.GraduationYear;
-                existStudentEducationInfo.YKSStatement = request.YKSExperienceInformation;
-                existStudentEducationInfo.FieldType = request.FieldType;
-                existStudentEducationInfo.PointType = request.PointType;
-                existStudentEducationInfo.ReligionLessonStatus = request.ReligionLessonStatus;
+                existStudentEducationInfo.ExamType = request.StudentEducationRequest.ExamType;
+                existStudentEducationInfo.CityId = request.StudentEducationRequest.CityId;
+                existStudentEducationInfo.CountyId = request.StudentEducationRequest.CountyId;
+                existStudentEducationInfo.InstitutionId = request.StudentEducationRequest.InstitutionId;
+                existStudentEducationInfo.SchoolId = request.StudentEducationRequest.SchoolId;
+                existStudentEducationInfo.ClassroomId = request.StudentEducationRequest.ExamType == ExamType.LGS ? request.StudentEducationRequest.ClassroomId : null;
+                existStudentEducationInfo.GraduationYearId = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.GraduationYearId;
+                existStudentEducationInfo.DiplomaGrade = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.DiplomaGrade;
+                existStudentEducationInfo.YKSStatement = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.YKSExperienceInformation;
+                existStudentEducationInfo.FieldType = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.FieldType;
+                existStudentEducationInfo.PointType = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.PointType;
+                existStudentEducationInfo.ReligionLessonStatus = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.ReligionLessonStatus;
+                existStudentEducationInfo.IsGraduate = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.IsGraduate;
+
                 await _studentEducationInformationRepository.UpdateAndSaveAsync(existStudentEducationInfo);
                 return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
 

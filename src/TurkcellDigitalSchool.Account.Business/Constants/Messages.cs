@@ -108,6 +108,13 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string otpKodeIsUsed = "Daha önce kullanılan bir otp kodu. İşleme devam edilemez";
         public static string otpNotThisUser = "Otp kodu kullanıcı ile eşleşmiyor. İşleme devam edilemez !";
         public static string XIdIsNotCorrenctFormat = "XId Parametresi uygun formatta değildir. İşleme devam edilemez !";
+        public static string EnterDifferentEmail = "Kullandığınız e-postadan farklı bir adres giriniz.";
+        public static string UserNameAlreadyExist = "Bu kullanıcı adı(Nickname) kullanımda.";
+        public static string RecordsDoesNotExist = "{0} bulunamadı!";
+
+
+
+
 #pragma warning restore CA2211
 #pragma warning restore S2223
 #pragma warning restore S1104

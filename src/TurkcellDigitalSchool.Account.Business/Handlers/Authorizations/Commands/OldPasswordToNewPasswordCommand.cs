@@ -65,9 +65,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     return new ErrorDataResult<TokenIntegraitonResponse>(Messages.PasswordChangeTimeFinished);
                 }
 
-                HashingHelper.CreatePasswordHash(request.OldPass , out var oldPasswordSalt, out var oldPasswordHash);
-
-                if (!(user.PasswordHash==oldPasswordHash && user.PasswordSalt==oldPasswordSalt))
+                var isOldPassCorrect = HashingHelper.VerifyPasswordHash(request.OldPass, user.PasswordSalt, user.PasswordHash);
+                 
+                if (!isOldPassCorrect)
                 {
                     return new ErrorDataResult<TokenIntegraitonResponse>(Messages.oldPassIsNotCorrect);
                 }

@@ -5,9 +5,9 @@ using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Concrete.EntityFramework
 {
-    public class ClassroomRepository : EfEntityReadRepositoryBase<Classroom, AccountDbContext>, IClassroomRepository
+    public class BranchMainFieldRepository : EfEntityReadRepositoryBase<BranchMainField, AccountDbContext>, IBranchMainFieldRepository
     {
-        public ClassroomRepository(AccountDbContext context) : base(context)
+        public BranchMainFieldRepository(AccountDbContext context) : base(context)
         {
         }
     }

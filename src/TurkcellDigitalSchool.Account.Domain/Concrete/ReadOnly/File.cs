@@ -1,11 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using TurkcellDigitalSchool.Core.Entities;
+﻿using System.ComponentModel.DataAnnotations.Schema; 
 using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract;
 using TurkcellDigitalSchool.Entities.Enums;
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly
 {
-    public class File : EntityDefault , IReadOnlyEntity
+    public class File :   IReadOnlyEntity
     {
         public FileType FileType { get; set; }
         public string FileName { get; set; }
@@ -17,6 +16,8 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly
         /// only use if you want it. ignored Migration.
         /// </summary>
         [NotMapped]
-        public byte[] FileBase64 { get; set; }
+        public byte[] FileBase64 { get; set; } 
+        public long Id { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

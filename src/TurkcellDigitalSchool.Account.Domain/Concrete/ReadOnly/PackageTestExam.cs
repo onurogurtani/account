@@ -8,7 +8,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly
     /// <summary>
     /// Paket - Deneme sınavı ilişkili ortak tablo
     /// </summary>
-    public class PackageTestExam : EntityDefault, IReadOnlyEntity
+    public class PackageTestExam :   IReadOnlyEntity
     {
         public long TestExamId { get; set; }
         public TestExam TestExam { get; set; }
@@ -16,5 +16,8 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly
         [JsonIgnore]
         [IgnoreDataMember]
         public Package Package { get; set; }
+
+        public long Id { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

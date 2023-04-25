@@ -1,15 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract; 
+using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly; 
 
-namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations.ReadOnly
+namespace TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Configurations
 {
-    public class EventEntityConfiguration : EntityDefaultConfigurationBase<Event>
+    public class EventEntityConfiguration : IEntityTypeConfiguration<Event>
     {
-        public override void Configure(EntityTypeBuilder<Event> builder)
+        public void Configure(EntityTypeBuilder<Event> builder)
         {
-            base.Configure(builder);
+            builder.HasKey(x => x.Id); 
             builder.Property(x => x.Name).HasMaxLength(100);
             builder.Property(x => x.Description).HasMaxLength(100);
             builder.Property(x => x.IsActive).HasDefaultValue(false).IsRequired();

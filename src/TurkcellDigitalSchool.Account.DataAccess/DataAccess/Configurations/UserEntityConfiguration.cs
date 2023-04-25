@@ -17,7 +17,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations
             builder.Property(x => x.EmailVerify).HasDefaultValue(false).IsRequired();
             builder.Property(x => x.Status).IsRequired();
             builder.Property(x => x.BirthDate);
-            builder.Property(x => x.Gender);
+            builder.Property(x => x.GenderId);
             builder.Property(x => x.RecordDate);
             builder.Property(x => x.Address).HasMaxLength(200);
             builder.Property(x => x.MobilePhones).HasMaxLength(30);

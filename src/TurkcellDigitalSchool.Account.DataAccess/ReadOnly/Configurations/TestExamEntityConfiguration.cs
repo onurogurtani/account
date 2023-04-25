@@ -1,15 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract; 
+using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly; 
 
-namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations.ReadOnly
+namespace TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Configurations
 {
-    public class TestExamEntityConfiguration : EntityDefaultConfigurationBase<TestExam>
+    public class TestExamEntityConfiguration : IEntityTypeConfiguration<TestExam>
     {
-        public override void Configure(EntityTypeBuilder<TestExam> builder)
+        public  void Configure(EntityTypeBuilder<TestExam> builder)
         {
-            base.Configure(builder);
+            builder.HasKey(x => x.Id);
             builder.Property(x => x.TestExamTypeId);
             builder.Property(x => x.IsLiveTestExam).HasDefaultValue(false).IsRequired();
             builder.Property(x => x.Name).HasMaxLength(100);
@@ -23,7 +22,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations.Rea
             builder.Property(x => x.ExamType);
             builder.Property(x => x.TransitionBetweenQuestions).HasDefaultValue(true).IsRequired();
             builder.Property(x => x.TransitionBetweenSections).HasDefaultValue(true).IsRequired();
-            builder.Property(x => x.IsAllowDownloadPdf).HasDefaultValue(true).IsRequired(); 
+            builder.Property(x => x.IsAllowDownloadPdf).HasDefaultValue(true).IsRequired();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
@@ -15,8 +16,14 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
 
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            var asssebly = Assembly.GetExecutingAssembly();
+            modelBuilder.ApplyConfigurationsFromAssembly(asssebly);
+        }
+
         #region Owner Entities
-         
+
         public DbSet<User> Users { get; set; }
         public DbSet<AppSetting> AppSettings { get; set; }
         public DbSet<BranchMainField> BranchMainFields { get; set; }
