@@ -8,6 +8,7 @@ import {
   errorDialog,
   successDialog,
   Text,
+  CustomCheckbox,
 } from '../../../components';
 import { UploadOutlined } from '@ant-design/icons';
 import { Form, Upload } from 'antd';
@@ -16,10 +17,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import useAcquisitionTree from '../../../hooks/useAcquisitionTree';
 import usePublishers from '../../../hooks/usePublishers';
 import { getEducationYears, uploadZipFileOfQuestion } from '../../../store/slice/questionFileSlice';
+import { getAllClassStages } from '../../../store/slice/classStageSlice';
 
-const QuestionFileCreate = ({}) => {
+const QuestionFileCreate = ({ }) => {
   const [showFileList, setShowFileList] = useState(true);
   const [uploadDisabled, setUploadDisabled] = useState(false);
+  const [isTrialExamFile, setIsTrialExamFile] = useState(false);
 
   const lessons = useSelector((state) => state?.lessons?.lessons);
   const classStages = useSelector((state) => state?.classStages?.allClassList);
@@ -38,7 +41,7 @@ const QuestionFileCreate = ({}) => {
   };
 
   const onUploadChange = (value) => {
-    if(value.fileList.length == 0) {
+    if (value.fileList.length == 0) {
       setUploadDisabled(false)
     }
   };
@@ -100,12 +103,15 @@ const QuestionFileCreate = ({}) => {
         labelAlign="left"
         layout="horizontal"
         labelWrap
-        className="add-question-form "
+        className="add-question-form"
         form={form}
         onFinish={submitForm}
       >
         <CustomFormItem rules={[{ required: true }]} label="Eğitim Öğretim Yılı" name="EducationYearId">
-          <CustomSelect placeholder="Eğitim Öğretim Yılı Seçiniz">
+          <CustomSelect
+            placeholder="Eğitim Öğretim Yılı Seçiniz"
+            onChange={(e) =>
+              dispatch(getAllClassStages([{ field: 'educationYearId', value: e.toString(), compareType: 0 }]))}>
             {educationYears.map((item) => {
               return (
                 <Option key={item.id} value={item.id}>
@@ -115,8 +121,17 @@ const QuestionFileCreate = ({}) => {
             })}
           </CustomSelect>
         </CustomFormItem>
+        <CustomFormItem valuePropName="checked" name="isTrialExamFile">
+          <CustomCheckbox
+            onChange={(e) => {
+              setIsTrialExamFile(e.target.checked)
+            }}
+          >
+            Deneme Sınavı Dosyası
+          </CustomCheckbox>
+        </CustomFormItem>
         <CustomFormItem label="Sınıf Seviyesi" name="classStage">
-          <CustomSelect onChange={onClassroomChange} placeholder="Sınıf Seçiniz">
+          <CustomSelect onChange={onClassroomChange} disabled={isTrialExamFile} placeholder="Sınıf Seçiniz">
             {classStages.map((item) => {
               return (
                 <Option key={item.id} value={item.id}>
@@ -126,8 +141,8 @@ const QuestionFileCreate = ({}) => {
             })}
           </CustomSelect>
         </CustomFormItem>
-        <CustomFormItem rules={[{ required: true }]} label="Soruların Bağlı Olduğu Ders" name="LessonId">
-          <CustomSelect placeholder="Ders Seçiniz">
+        <CustomFormItem rules={[{ required: !isTrialExamFile }]} label="Soruların Bağlı Olduğu Ders" name="LessonId">
+          <CustomSelect placeholder="Ders Seçiniz" disabled={isTrialExamFile}>
             {lessons
               ?.filter((item) => item.classroomId === classroomId)
               ?.map((item) => {
@@ -181,7 +196,7 @@ const QuestionFileCreate = ({}) => {
           </CustomButton>
         </CustomFormItem>
       </div>
-    </div>
+    </div >
   );
 };
 
