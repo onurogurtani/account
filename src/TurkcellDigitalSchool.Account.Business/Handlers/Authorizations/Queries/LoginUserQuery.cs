@@ -24,6 +24,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
     public class LoginUserQuery : IRequest<IDataResult<AccessToken>>
     {
         public long CitizenId { get; set; }
+        public string Email { get; set; }
         public string Password { get; set; }
         public string CaptchaKey { get; set; }
 
@@ -55,8 +56,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                         return new ErrorDataResult<AccessToken>(Messages.InvalidCaptchaKey);
                     }
                 }
-
-                var user = await _userRepository.GetAsync(u => u.CitizenId == request.CitizenId && u.Status);
+                User user = null;
+                if (request.CitizenId != 0)
+                {
+                    user = await _userRepository.GetAsync(u => u.CitizenId == request.CitizenId  && u.Status);
+                }
+                else
+                {
+                    user = await _userRepository.GetAsync(u =>  u.Email == request.Email && u.Status);
+                }
 
                 if (user == null)
                 {
