@@ -159,12 +159,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                         Content = content
                     });
 
-                    messsgePach = user.Email.MaskEMail() + "e-posta adresine";
+                    messsgePach = user.Email.MaskEMail() + " e-posta adresine";
                 }
                 else
                 {
                     await _smsOtpRepository.ExecInsertSpForSms(user.MobilePhones, user.Id, guid);
-                    messsgePach = user.MobilePhones.MaskPhoneNumber() + "mobil hattına";
+                    messsgePach = user.MobilePhones.MaskPhoneNumber() + " mobil hattına";
                 }
                 return new SuccessResult(string.Format(Messages.PasswordChangeLinkSended, messsgePach));
             }

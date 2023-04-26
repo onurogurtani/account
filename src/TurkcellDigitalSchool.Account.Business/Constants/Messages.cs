@@ -95,7 +95,7 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string PhoneNotVerify = "Telefon numarası doğrulaması yapılmamış !";
         public static string MailIsNotVerify = "E-Posta Doğrulaması yapılmamış işleme devam edilemez !";
         public static string NotFountValidUser = "Geçerli bir kullanıcı sistemde bulunamadı !";
-        public static string PasswordChangeLinkSended = "Lütfen {0} gönderdiğimiz linke tıklayarak Şifreni sıfırla";
+        public static string PasswordChangeLinkSended = "Lütfen {0} gönderdiğimiz linke tıklayarak şifreni sıfırla";
         public static string PasswordChangeTimeExpired = "Şifre yenileme süresi dolmuştur. İşleme devam edilemez !";
         public static string PasswordNotEqual = "Şifreler eşit değil işleme devam edilemez!";
         public static string PasswordChanged = "Şifreniz değiştirildi.";

@@ -132,6 +132,14 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
         public async Task<string> GenerateUserOldPassChange(long userId)
         {
             var user = await _userRepository.GetAsync(w => w.Id == userId);
+
+
+            if (!string.IsNullOrEmpty(user.LastPasswordChangeGuid) && 
+                user.LastPasswordChangeExpTime != null && user.LastPasswordChangeExpTime.Value.ToUniversalTime() > DateTime.Now )
+            {
+                return user.LastPasswordChangeGuid;
+            } 
+
             user.LastPasswordChangeGuid = Guid.NewGuid().ToString();
             user.LastPasswordChangeExpTime = DateTime.Now.AddSeconds(OtpConst.NewPassOtpExpHour);
             await _userRepository.UpdateAndSaveAsync(user);
