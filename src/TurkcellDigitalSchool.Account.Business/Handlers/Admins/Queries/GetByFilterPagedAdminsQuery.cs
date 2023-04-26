@@ -29,13 +29,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
         {
             private readonly IMapper _mapper;
             private readonly IUserRepository _userRepository;
+            private readonly IOrganisationUserRepository _organisationUserRepository;
             private readonly IUserRoleRepository _userRoleRepository;
             private readonly IUserSessionRepository _userSessionRepository;
             private readonly ITokenHelper _tokenHelper;
 
-            public GetByFilterPagedAdminsQueryHandler(IUserRoleRepository userRoleRepository, IUserRepository userRepository, IMapper mapper, IUserSessionRepository userSessionRepository, ITokenHelper tokenHelper)
+            public GetByFilterPagedAdminsQueryHandler(IUserRoleRepository userRoleRepository, IUserRepository userRepository, IOrganisationUserRepository organisationUserRepository, IMapper mapper, IUserSessionRepository userSessionRepository, ITokenHelper tokenHelper)
             {
                 _userRepository = userRepository;
+                _organisationUserRepository = organisationUserRepository;
                 _userRoleRepository = userRoleRepository;
                 _userSessionRepository = userSessionRepository;
                 _mapper = mapper;
@@ -52,15 +54,30 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
                 if (currentUser.UserType !=  UserType.Admin && currentUser.UserType != UserType.OrganisationAdmin && currentUser.UserType != UserType.FranchiseAdmin)
                     return new ErrorDataResult<PagedList<AdminDto>>(Messages.AutorizationRoleError);
 
-                if (currentUser.UserType == UserType.OrganisationAdmin)
+                var query = _userRepository.Query()
+                            .Include(cc => cc.UserRoles).ThenInclude(rol => rol.Role)
+                            .Include(cc => cc.OrganisationUsers).ThenInclude(org => org.Organisation)
+                            .AsQueryable();
+
+                if (currentUser.UserType == UserType.Admin)
+                    request.AdminDetailSearch.UserType = UserType.OrganisationAdmin;                   
+
+                if (currentUser.UserType == UserType.OrganisationAdmin )
+                {
                     request.AdminDetailSearch.UserType = UserType.OrganisationAdmin;
 
+                    var currentOrganisations = _organisationUserRepository.Query().Where(g => g.UserId == currentUserId).Distinct().Select(s => s.OrganisationId).ToList();
+                    query = query.Where(x => currentOrganisations.Contains(x.OrganisationUsers.Select(s => s.OrganisationId).FirstOrDefault()));
+                }
+
                 if (currentUser.UserType == UserType.FranchiseAdmin)
-                    request.AdminDetailSearch.UserType = UserType.OrganisationAdmin;
-                
-                var query = _userRepository.Query().Include(cc => cc.UserRoles).ThenInclude(rol => rol.Role)
-                    .Where(x => x.UserType == UserType.Admin   || x.UserType == UserType.OrganisationAdmin || x.UserType == UserType.FranchiseAdmin )
-                    .AsQueryable();
+                {
+                    request.AdminDetailSearch.UserType = UserType.FranchiseAdmin;
+
+                    //Todo - Alt kurum ilgili çalýþma olduktan sonra geliþtirilecek.
+                    var currentOrganisations = _organisationUserRepository.Query().Where(g => g.UserId == currentUserId).Distinct().Select(s => s.OrganisationId).ToList();
+                    query = query.Where(x => currentOrganisations.Contains(x.OrganisationUsers.Select(s => s.OrganisationId).FirstOrDefault()));
+                }
 
                 if (!string.IsNullOrWhiteSpace(request.AdminDetailSearch.Name))
                     query = query.Where(x => x.Name.ToLower().Contains(request.AdminDetailSearch.Name.ToLower()));
@@ -83,6 +100,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
                 if (request.AdminDetailSearch.UserType != null)
                     query = query.Where(x => x.UserType == request.AdminDetailSearch.UserType);
 
+                if (request.AdminDetailSearch.OrganisationIds.Length > 0)
+                    query = query.Where(x => x.OrganisationUsers.Any(s => request.AdminDetailSearch.OrganisationIds.Contains((long)s.OrganisationId)));
+
 
                 var items = await query.OrderByDescending(x => x.UpdateTime ?? DateTime.MinValue).Select(s => new AdminDto
                 {
@@ -97,6 +117,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
                         Name = ss.Role.Name,
                         Id = ss.Role.Id
                     }).ToList(),
+                    TheInstitutionConnected = s.OrganisationUsers.Select(s=>s.Organisation.Name).FirstOrDefault(),
                     Status = s.Status,
                     SurName = s.SurName,
                     UserName = s.UserType == UserType.OrganisationAdmin ? (s.CitizenId + "") : s.UserName,
