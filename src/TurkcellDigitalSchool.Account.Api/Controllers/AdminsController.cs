@@ -8,6 +8,7 @@ using TurkcellDigitalSchool.Common.Controllers;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Entities.Dtos.Admin;
+using TurkcellDigitalSchool.Entities.Dtos.OrganisationDtos;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
 {
@@ -143,7 +144,25 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
-
+        ///<summary>
+        ///It brings the details according to its id.
+        ///</summary>
+        ///<remarks>TEntity</remarks>
+        ///<return>TEntity</return>
+        ///<response code="200"></response>
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<OrganisationUsersDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpGet("GetOrganisationByAdminTypeQuery")]
+        public async Task<IActionResult> GetOrganisationByAdminTypeQuery([FromQuery] GetOrganisationByAdminTypeQuery getOrganisationByAdminTypeQuery, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(getOrganisationByAdminTypeQuery, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
 
     }
 }

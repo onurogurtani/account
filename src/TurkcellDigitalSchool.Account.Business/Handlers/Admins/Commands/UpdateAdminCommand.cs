@@ -7,7 +7,9 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.Entities.Concrete.Core;
 using TurkcellDigitalSchool.Entities.Dtos.Admin; 
 
@@ -20,30 +22,36 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
     {
         public CreateUpdateAdminDto Admin { get; set; }
 
-
         public class UpdateAdminCommandHandler : IRequestHandler<UpdateAdminCommand, IResult>
         {
             private readonly IUserRepository _userRepository;
             private readonly IUserRoleRepository _userRoleRepository;
             private readonly IMapper _mapper;
+            private readonly ITokenHelper _tokenHelper;
 
-            public UpdateAdminCommandHandler(IUserRoleRepository userRoleRepository, IUserRepository userRepository, IMapper mapper)
+            public UpdateAdminCommandHandler(IUserRoleRepository userRoleRepository, IUserRepository userRepository, IMapper mapper, ITokenHelper tokenHelper)
             {
                 _userRepository = userRepository;
                 _userRoleRepository = userRoleRepository;
                 _mapper = mapper;
+                _tokenHelper = tokenHelper;
             }
-
 
             [SecuredOperation(Priority = 1)]
             [ValidationAspect(typeof(CreateAdminValidator), Priority = 2)]
             public async Task<IResult> Handle(UpdateAdminCommand request, CancellationToken cancellationToken)
             {
+                long currentuserId = _tokenHelper.GetUserIdByCurrentToken();
+                var currentUser = await _userRepository.GetAsync(p => p.Id == currentuserId);
 
                 var entity = await _userRepository.GetAsync(x => x.Id == request.Admin.Id);
                 if (entity == null)
                     return new ErrorResult(Messages.RecordDoesNotExist);
 
+                if (currentUser.UserType == UserType.OrganisationAdmin || currentUser.UserType == UserType.FranchiseAdmin)
+                    request.Admin.UserType = UserType.OrganisationAdmin;
+
+                request.Admin.UserName = entity.UserName;
                 _mapper.Map(request.Admin, entity);
 
                 var record = _userRepository.Update(entity);
