@@ -67,7 +67,7 @@ const AsEvTestPreview = () => {
                                 style={{ width: '48%', marginTop: '10px',marginLeft:"2px" }}
                                 title={
                                     <div style={{ display: 'flex' }}>
-                                        {' '}
+                                       
                                         <CustomForm layout={"inline"}  form={form}>
                                             <CustomFormItem key={item?.asEvQuestionId}  initialValue={item?.sequence} name="sequence">
                                         <CustomInputNumber
@@ -76,13 +76,13 @@ const AsEvTestPreview = () => {
                                             style={{ marginTop: '10px' }}
                                             height={38}
                                             defaultValue={item?.sequence}
-                                        />{' '}
+                                        />
                                         </CustomFormItem>
                                         <Rate
                                             disabled
                                             style={{ marginTop: '10px', marginLeft:"20px" }}
                                             defaultValue={item?.difficulty}
-                                        />{' '}
+                                        />
                                         </CustomForm>
                                     </div>
                                 }

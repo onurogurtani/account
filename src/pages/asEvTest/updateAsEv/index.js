@@ -13,7 +13,6 @@ import {
     CustomPagination,
     Option,
 } from '../../../components';
-import { EChooices } from '../../../constants/questions';
 import {
     removeAsEvQuestion,
     getAsEvById,
@@ -29,6 +28,7 @@ import ChangeQuestionModal from './ChangeQuestionModal';
 import { getLessonSubjects } from '../../../store/slice/lessonSubjectsSlice';
 import DifficultiesModal from '../addAsEv/DifficultiesModal';
 import AsEvInfo from '../showAsEv/AsEvInfo';
+import { getChoicesText } from '../../../utils/utils';
 
 const { TabPane } = Tabs;
 
@@ -291,10 +291,7 @@ const UpdateAsEv = () => {
                                                                 <CustomFormItem label="Konu">
                                                                     {item?.lessonSubject}
                                                                 </CustomFormItem>
-                                                                <CustomFormItem label="Cevap">
-                                                                    {' '}
-                                                                    {EChooices[item?.correctAnswer]}
-                                                                </CustomFormItem>
+                                                                <CustomFormItem label="Cevap"> {getChoicesText(item?.correctAnswer) }</CustomFormItem>
                                                                 <CustomFormItem label="Zorluk Seviyesi">
                                                                     <Rate
                                                                         className="question-difficultly-rate"
@@ -458,10 +455,7 @@ const UpdateAsEv = () => {
                                                                 <CustomFormItem label="Konu">
                                                                     {item?.lessonSubject}
                                                                 </CustomFormItem>
-                                                                <CustomFormItem label="Cevap">
-                                                                    {' '}
-                                                                    {EChooices[item?.correctAnswer]}
-                                                                </CustomFormItem>
+                                                                <CustomFormItem label="Cevap"> {getChoicesText(item?.correctAnswer) }</CustomFormItem>
                                                                 <CustomFormItem label="Zorluk Seviyesi">
                                                                     <Rate
                                                                         className="question-difficultly-rate"

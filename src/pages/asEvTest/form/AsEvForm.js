@@ -81,9 +81,13 @@ const AsEvForm = ({ setStep, step }) => {
     const onLessonSubjectsChange = (value) => {
         const data = [];
         form.resetFields(['asEvLessonSubSubjects']);
-        value?.map((item) => data.push({ field: 'lessonSubjectId', value: item, compareType: 0 }));
+        value?.forEach((item) => data.push({ field: 'lessonSubjectId', value: item, compareType: 0 }));
         dispatch(getLessonSubSubjects(data));
     };
+
+    const submitForm = () => {
+        form.submit()
+    }
 
     const onFinish = async (values) => {
         const asEvReqBody = {
@@ -205,7 +209,7 @@ const AsEvForm = ({ setStep, step }) => {
                         </CustomButton>
                         <CustomFormItem style={{ float: 'right' }}>
                             <CustomButton
-                                onClick={() => form.submit()}
+                                onClick={submitForm}
                                 type="primary"
                                 className="save-btn"
                                 htmlType="submit"

@@ -2,13 +2,13 @@ import { Rate, Card, Result } from 'antd';
 import React from 'react';
 import { CustomButton, CustomForm, CustomFormItem, CustomModal, CustomPagination } from '../../../components';
 import { useDispatch, useSelector } from 'react-redux';
-import { EChooices } from '../../../constants/questions';
 import {
     getByFilterPagedAsEvQuestions,
     removeAsEvQuestion,
     adAsEvQuestion,
     getAsEvById,
 } from '../../../store/slice/asEvSlice';
+import { getChoicesText } from '../../../utils/utils';
 
 const ChangeQuestionModal = ({ visible, setVisible, asEvId, selectQuestionId }) => {
     const { questions } = useSelector((state) => state?.asEv);
@@ -63,7 +63,7 @@ const ChangeQuestionModal = ({ visible, setVisible, asEvId, selectQuestionId }) 
                             <div className="col-md-6">
                                 <CustomForm className="info-form " autoComplete="off" layout={'horizontal'}>
                                     <CustomFormItem label="Konu">{item?.lessonSubject}</CustomFormItem>
-                                    <CustomFormItem label="Cevap"> {EChooices[item?.correctAnswer]}</CustomFormItem>
+                                    <CustomFormItem label="Cevap"> {getChoicesText(item?.correctAnswer) }</CustomFormItem>
                                     <CustomFormItem label="Zorluk Seviyesi">
                                         <Rate className="question-difficultly-rat" value={item?.difficulty} />
                                     </CustomFormItem>

@@ -169,7 +169,6 @@ const AsEvTable = () => {
                         onClick={() => showRecordHandler(record)}
                     >
                         <span style={{ margin: '0', marginTop: '-20px', fontSize: '25px', padding: '0' }}>
-                            {' '}
                             <RightOutlined />
                         </span>
                     </Button>
