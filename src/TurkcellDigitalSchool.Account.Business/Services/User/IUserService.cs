@@ -21,6 +21,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         string StudentCommunicationPreferencesValidationRules(StudentCommunicationPreferencesDto studentCommunicationPreferencesDto);
         bool IsExistCity(long cityId);
         bool IsExistCounty(long cityId, long countyId);
-        Task SetDefaultCommunicationPreferences(long UserId);
+        Task SetDefaultSettingValues(long UserId);
     }
 }

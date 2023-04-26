@@ -29,10 +29,11 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         private readonly ISchoolRepository _schoolRepository;
         private readonly IUserContratRepository _userContratRepository;
         private readonly IUserCommunicationPreferencesRepository _userCommunicationPreferencesRepository;
+        private readonly IUserSupportTeamViewMyDataRepository _userSupportTeamViewMyDataRepository;
 
         //private readonly IClassroomRepository _classroomRepository;
 
-        public UserService(IUserRepository userRepository, IStudentEducationInformationRepository studentEducationInformationRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, IGraduationYearRepository graduationYearRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository, IUserContratRepository userContratRepository, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository)
+        public UserService(IUserRepository userRepository, IStudentEducationInformationRepository studentEducationInformationRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, IGraduationYearRepository graduationYearRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository, IUserContratRepository userContratRepository, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository)
         {
             _userRepository = userRepository;
             _studentEducationInformationRepository = studentEducationInformationRepository;
@@ -44,6 +45,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             _userPackageRepository = userPackageRepository;
             _userContratRepository = userContratRepository;
             _userCommunicationPreferencesRepository = userCommunicationPreferencesRepository;
+            _userSupportTeamViewMyDataRepository = userSupportTeamViewMyDataRepository;
         }
         public PersonalInfoDto GetByStudentPersonalInformation(long userId)
         {
@@ -195,7 +197,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                     return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "YKS Deneyimi");
                 }
 
-                if (studentEducationRequestDto.GraduationYearId == null && !_graduationYearRepository.Query().Any(w => w.Id == studentEducationRequestDto.GraduationYearId))
+                if (studentEducationRequestDto.GraduationYearId == null || !_graduationYearRepository.Query().Any(w => w.Id == studentEducationRequestDto.GraduationYearId))
                 {
                     return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Mezuniyet Yılı");
                 }
@@ -249,8 +251,11 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         {
             var getUserContractList = _userContratRepository.Query()
                                    .Include(w => w.Document).ThenInclude(x => x.ContractKind)
-                                   .Where(w => w.UserId == userId).ToList();
+                                   .Where(w => w.IsLastVersion && w.UserId == userId).ToList();
             var getUserCommunicationPreferences = _userCommunicationPreferencesRepository.Get(w => w.UserId == userId);
+
+
+            var getUserSupportTeamViewMyData = _userSupportTeamViewMyDataRepository.Get(w => w.UserId == userId);
 
             var userContratsList = new List<UserContratDto>();
 
@@ -280,7 +285,15 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                     IsNotification = getUserCommunicationPreferences?.IsNotification,
                     IsSms = getUserCommunicationPreferences?.IsSms
                 },
-                UserContrats = userContratsList
+                UserContrats = userContratsList,
+                UserSupportTeamViewMyData = new UserSupportTeamViewMyDataDto
+                {
+                    Id = getUserSupportTeamViewMyData?.Id,
+                    IsViewMyData = getUserSupportTeamViewMyData?.IsViewMyData,
+                    IsAlways = getUserSupportTeamViewMyData?.IsAlways,
+                    IsFifteenMinutes = getUserSupportTeamViewMyData?.IsFifteenMinutes,
+                    IsOneMonth = getUserSupportTeamViewMyData?.IsOneMonth
+                }
             };
         }
         public string StudentCommunicationPreferencesValidationRules(StudentCommunicationPreferencesDto studentCommunicationPreferencesDto)
@@ -303,8 +316,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             }
             return string.Empty;
         }
-
-        public async Task SetDefaultCommunicationPreferences(long UserId)
+        public async Task SetDefaultSettingValues(long UserId)
         {
             var existUserCommunicationPreferences = _userCommunicationPreferencesRepository.Get(w => w.UserId == UserId);
             if (existUserCommunicationPreferences == null)
@@ -316,6 +328,17 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                     IsCall = true,
                 };
                 await _userCommunicationPreferencesRepository.CreateAndSaveAsync(newRecord);
+            }
+
+            var existUserSupportTeamViewMyData = _userSupportTeamViewMyDataRepository.Get(w => w.UserId == UserId);
+            if (existUserSupportTeamViewMyData == null)
+            {
+                var newRecord = new UserSupportTeamViewMyData
+                {
+                    UserId = UserId,
+                    IsViewMyData = false
+                };
+                await _userSupportTeamViewMyDataRepository.CreateAndSaveAsync(newRecord);
             }
         }
     }
