@@ -1,12 +1,15 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Entities.Concrete;
 using TurkcellDigitalSchool.Entities.Dtos.UserDtos;
 using TurkcellDigitalSchool.Entities.Enums;
 
@@ -22,9 +25,12 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         private readonly ICountyRepository _countyRepository;
         private readonly IGraduationYearRepository _graduationYearRepository;
         private readonly ISchoolRepository _schoolRepository;
+        private readonly IUserContratRepository _userContratRepository;
+        private readonly IUserCommunicationPreferencesRepository _userCommunicationPreferencesRepository;
+
         //private readonly IClassroomRepository _classroomRepository;
 
-        public UserService(IUserRepository userRepository, IStudentEducationInformationRepository studentEducationInformationRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, IGraduationYearRepository graduationYearRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository)
+        public UserService(IUserRepository userRepository, IStudentEducationInformationRepository studentEducationInformationRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, IGraduationYearRepository graduationYearRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository, IUserContratRepository userContratRepository, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository)
         {
             _userRepository = userRepository;
             _studentEducationInformationRepository = studentEducationInformationRepository;
@@ -34,6 +40,8 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             _graduationYearRepository = graduationYearRepository;
             _schoolRepository = schoolRepository;
             _userPackageRepository = userPackageRepository;
+            _userContratRepository = userContratRepository;
+            _userCommunicationPreferencesRepository = userCommunicationPreferencesRepository;
         }
         public PersonalInfoDto GetByStudentPersonalInformation(long userId)
         {
@@ -123,7 +131,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 MobilPhones = getParent.MobilPhones
             };
         }
-
         public bool IsExistEmail(long userId, string Email)
         {
             return _userRepository.Query().Any(w => w.Id != userId && w.Email == Email);
@@ -132,15 +139,12 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         {
             return _userRepository.Query().Any(w => w.Id != userId && w.UserName == userName);
         }
-
         public Entities.Concrete.Core.User GetUserById(long userId)
         {
             return _userRepository.Get(w => w.Id == userId);
         }
-
         [MessageConstAttr(MessageCodeType.Error, "İl,İlçe,Okul İl/İlçe/Kurum Türü ile eşleşmiyor,Sınıf,Öğrenim Durumu,YKS Deneyimi,Mezuniyet Yılı,Diploma Notu,Alan,Puan Türü")]
         private static string FieldIsNotNullOrEmpty = Messages.FieldIsNotNullOrEmpty;
-
         public string StudentEducationValidationRules(StudentEducationRequestDto studentEducationRequestDto)
         {
             var existCity = IsExistCity(studentEducationRequestDto.CityId);
@@ -212,17 +216,14 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
 
             return string.Empty;
         }
-
         public bool IsExistCity(long cityId)
         {
             return _cityRepository.Query().Any(w => w.Id == cityId);
         }
-
         public bool IsExistCounty(long cityId, long countyId)
         {
             return _countyRepository.Query().Any(w => w.CityId == cityId && w.Id == countyId);
         }
-
         public PackageInfoDto GetByStudentPackageInformation(long userId)
         {
             var getPackage = _userPackageRepository.Query()
@@ -240,6 +241,45 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 PackageName = getPackage.Package.Name,
                 PurchaseDate = getPackage.PurchaseDate,
                 Package = getPackage.Package
+            };
+        }
+
+        public SettingsInfoDto GetByStudentSettingsInfoInformation(long userId)
+        {
+            var getUserContractList = _userContratRepository.Query()
+                                   .Include(w => w.Document).ThenInclude(x => x.ContractKind)
+                                   .Where(w => w.UserId == userId).ToList();
+            var getUserCommunicationPreferences = _userCommunicationPreferencesRepository.Get(w => w.UserId == userId);
+
+            var userContratsList = new List<UserContratDto>();
+
+            foreach (var userContract in getUserContractList)
+            {
+                userContratsList.Add(new UserContratDto
+                {
+                    Id = userContract.Id,
+                    AcceptedDate = userContract.AcceptedDate,
+                    IsAccepted = userContract.IsAccepted,
+                    Contracts = new UserInfoDocumentDto
+                    {
+                        Id = userContract.Document.Id,
+                        Content = userContract.Document.Content,
+                        Name = userContract.Document.ContractKind.Name
+                    }
+                });
+            }
+
+            return new SettingsInfoDto
+            {
+                UserCommunicationPreferences = new CommunicationPreferencesDto
+                {
+                    Id = getUserCommunicationPreferences?.Id,
+                    IsCall = getUserCommunicationPreferences?.IsCall,
+                    IsEMail = getUserCommunicationPreferences?.IsEMail,
+                    IsNotification = getUserCommunicationPreferences?.IsNotification,
+                    IsSms = getUserCommunicationPreferences?.IsSms
+                },
+                UserContrats = userContratsList
             };
         }
     }
