@@ -50,7 +50,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
                 if (currentUser.UserType != UserType.Admin && currentUser.UserType != UserType.OrganisationAdmin && currentUser.UserType != UserType.FranchiseAdmin)
                     return new ErrorResult(Messages.AutorizationRoleError);
 
-                if (currentUser.UserType == UserType.OrganisationAdmin)
+                if (currentUser.UserType == UserType.OrganisationAdmin || currentUser.UserType == UserType.FranchiseAdmin)
                     request.Admin.UserType = UserType.OrganisationAdmin;
 
                 var citizenIdCheck = await _userRepository.GetAsync(
@@ -70,6 +70,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
                         return new ErrorResult(Messages.MobilePhoneAlreadyExist);
                 }
 
+                if (request.Admin.UserType == UserType.OrganisationAdmin || request.Admin.UserType == UserType.FranchiseAdmin)
+                {
+                    request.Admin.UserName = request.Admin.CitizenId;
+                }
 
                 var password = request.Admin.CitizenId[^6..];
                 HashingHelper.CreatePasswordHash(password, out var passwordSalt, out var passwordHash);

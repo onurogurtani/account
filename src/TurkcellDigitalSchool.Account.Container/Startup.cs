@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,6 +24,7 @@ using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Core.Utilities.Security.Encyption;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
+using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
 
 namespace TurkcellDigitalSchool.Account.Container
 {
@@ -114,6 +116,16 @@ namespace TurkcellDigitalSchool.Account.Container
                     break;
                 case ApplicationMode.DEV:
                     break;
+                case ApplicationMode.DEVTURKCELL:
+                    {
+                        using (var scope = app.ApplicationServices.CreateScope())
+                        {
+                            var services = scope.ServiceProvider;
+                            var context = services.GetRequiredService<ProjectDbContext>();
+                            context.Database.Migrate();
+                        }
+                        break;
+                    }
                 case ApplicationMode.STB:
                     //app.UseConsul(Configuration);
                     break;

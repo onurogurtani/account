@@ -1,6 +1,5 @@
 ﻿using Duende.IdentityServer.EntityFramework.DbContexts;
-using Duende.IdentityServer.EntityFramework.Mappers;
-using Duende.IdentityServer.Models;
+using Duende.IdentityServer.EntityFramework.Mappers; 
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -18,10 +17,16 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 //Add - Migration initialPersistedGrantDbContext - context PersistedGrantDbContext
                 //Update - Database - context PersistedGrantDbContext
 
+                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "DEVTURKCELL")
+                {
+                    scope.ServiceProvider.GetService<PersistedGrantDbContext>().Database.Migrate();
+                }
 
-                //scope.ServiceProvider.GetService<PersistedGrantDbContext>().Database.Migrate();
                 var context = scope.ServiceProvider.GetService<ConfigurationDbContext>();
-               // context.Database.Migrate();
+                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "DEVTURKCELL")
+                {
+                    context.Database.Migrate();
+                }
                 EnsureSeedData(context);
             }
         }
@@ -42,7 +47,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 Log.Debug("Clients already populated");
             }
 
-             
+
             if (!context.ApiResources.Any())
             {
                 Log.Debug("ApiResource being populated");
@@ -71,7 +76,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
             {
                 Log.Debug("IdentityResources already populated");
             }
-             
+
 
             if (!context.ApiScopes.Any())
             {
@@ -85,7 +90,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
             else
             {
                 Log.Debug("ApiScopes already populated");
-            } 
+            }
         }
     }
 }

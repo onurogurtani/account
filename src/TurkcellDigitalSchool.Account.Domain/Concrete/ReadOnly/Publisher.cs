@@ -1,4 +1,5 @@
-﻿using TurkcellDigitalSchool.Core.Enums;
+﻿using TurkcellDigitalSchool.Core.Entities;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract;
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly

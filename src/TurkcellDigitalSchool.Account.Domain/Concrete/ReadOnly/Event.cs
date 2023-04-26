@@ -1,4 +1,5 @@
 ﻿using System;
+using TurkcellDigitalSchool.Core.Entities;
 using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract;
 using TurkcellDigitalSchool.Entities.Enums;
 

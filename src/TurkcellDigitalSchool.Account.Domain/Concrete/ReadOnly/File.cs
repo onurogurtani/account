@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema; 
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using TurkcellDigitalSchool.Core.Entities;
 using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract;
 using TurkcellDigitalSchool.Entities.Enums;
 

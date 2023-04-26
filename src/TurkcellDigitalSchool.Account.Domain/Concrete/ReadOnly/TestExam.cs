@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using TurkcellDigitalSchool.Core.Entities;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract; 
 using TurkcellDigitalSchool.Entities.Enums;
