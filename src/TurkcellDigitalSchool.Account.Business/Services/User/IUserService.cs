@@ -18,8 +18,9 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         bool IsExistUserName(long userId, string userName);
         TurkcellDigitalSchool.Entities.Concrete.Core.User GetUserById(long userId);
         string StudentEducationValidationRules(StudentEducationRequestDto studentEducationRequestDto);
+        string StudentCommunicationPreferencesValidationRules(StudentCommunicationPreferencesDto studentCommunicationPreferencesDto);
         bool IsExistCity(long cityId);
         bool IsExistCounty(long cityId, long countyId);
-
+        Task SetDefaultCommunicationPreferences(long UserId);
     }
 }

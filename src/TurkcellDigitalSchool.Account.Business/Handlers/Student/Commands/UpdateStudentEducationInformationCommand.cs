@@ -41,10 +41,17 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 
             [MessageConstAttr(MessageCodeType.Success)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
 
             [ValidationAspect(typeof(UpdateStudentEducationInformationValidator), Priority = 2)]
             public async Task<IResult> Handle(UpdateStudentEducationInformationCommand request, CancellationToken cancellationToken)
             {
+
+                var getUser = _userService.GetUserById(request.StudentEducationRequest.UserId);
+                if (getUser == null)
+                    return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
+
                 var validationMessages = _userService.StudentEducationValidationRules(request.StudentEducationRequest);
                 if (!string.IsNullOrWhiteSpace(validationMessages))
                 {

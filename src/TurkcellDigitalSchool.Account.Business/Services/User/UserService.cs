@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Common.Constants;
@@ -10,6 +11,7 @@ using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Entities.Concrete;
+using TurkcellDigitalSchool.Entities.Concrete.Core;
 using TurkcellDigitalSchool.Entities.Dtos.UserDtos;
 using TurkcellDigitalSchool.Entities.Enums;
 
@@ -243,7 +245,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 Package = getPackage.Package
             };
         }
-
         public SettingsInfoDto GetByStudentSettingsInfoInformation(long userId)
         {
             var getUserContractList = _userContratRepository.Query()
@@ -281,6 +282,41 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 },
                 UserContrats = userContratsList
             };
+        }
+        public string StudentCommunicationPreferencesValidationRules(StudentCommunicationPreferencesDto studentCommunicationPreferencesDto)
+        {
+            var getUser = GetUserById(studentCommunicationPreferencesDto.UserId);
+
+            if (!studentCommunicationPreferencesDto.IsCall && !studentCommunicationPreferencesDto.IsSms && !studentCommunicationPreferencesDto.IsEMail && !studentCommunicationPreferencesDto.IsNotification)
+            {
+                return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "En az 1 adet iletişim kanalı açık olmalıdır");
+            }
+
+            if ((studentCommunicationPreferencesDto.IsCall || studentCommunicationPreferencesDto.IsSms) && string.IsNullOrWhiteSpace(getUser.MobilePhones))
+            {
+                return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Bu kanalı seçmek için telefon bilgisi eklemelisiniz");
+            }
+
+            if ((studentCommunicationPreferencesDto.IsCall || studentCommunicationPreferencesDto.IsSms) && !getUser.MobilePhonesVerify)
+            {
+                return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Bu kanalını seçmek için telefon bilgisi doğrulanmalıdır");
+            }
+            return string.Empty;
+        }
+
+        public async Task SetDefaultCommunicationPreferences(long UserId)
+        {
+            var existUserCommunicationPreferences = _userCommunicationPreferencesRepository.Get(w => w.UserId == UserId);
+            if (existUserCommunicationPreferences == null)
+            {
+                var newRecord = new UserCommunicationPreferences
+                {
+                    UserId = UserId,
+                    IsEMail = true,
+                    IsCall = true,
+                };
+                await _userCommunicationPreferencesRepository.CreateAndSaveAsync(newRecord);
+            }
         }
     }
 }

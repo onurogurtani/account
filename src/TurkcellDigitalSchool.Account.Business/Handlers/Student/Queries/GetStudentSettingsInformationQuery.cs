@@ -31,7 +31,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
                 {
                     return new ErrorDataResult<SettingsInfoDto>(RecordIsNotFound.PrepareRedisMessage());
                 }
-                return new SuccessDataResult<SettingsInfoDto>(_userService.GetByStudentSettingsInfoInformation((int)request.UserId));
+                await _userService.SetDefaultCommunicationPreferences((long)request.UserId);
+                return new SuccessDataResult<SettingsInfoDto>(_userService.GetByStudentSettingsInfoInformation((long)request.UserId));
             }
 
         }
