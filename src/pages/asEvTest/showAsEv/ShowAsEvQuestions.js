@@ -4,8 +4,8 @@ import '../../../styles/asEvTest/asEvQuestions.scss';
 import '../../../styles/asEvTest/asEvQuestionFilter.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, Rate, Form } from 'antd';
-import { EChooices } from '../../../constants/questions';
 import { getAsEvById } from '../../../store/slice/asEvSlice';
+import { getChoicesText } from '../../../utils/utils';
 
 
 const ShowAsEvQuestions = () => {
@@ -98,7 +98,7 @@ const ShowAsEvQuestions = () => {
                             <div className="col-md-6">
                                 <CustomForm className="info-form " autoComplete="off" layout={'horizontal'}>
                                     <CustomFormItem label="Konu">{item?.lessonSubject}</CustomFormItem>
-                                    <CustomFormItem label="Cevap"> {EChooices[item?.correctAnswer]}</CustomFormItem>
+                                    <CustomFormItem label="Cevap"> {getChoicesText(item?.correctAnswer) }</CustomFormItem>
                                     <CustomFormItem label="Zorluk Seviyesi">
                                         <Rate className="question-difficultly-rat" value={item?.difficulty} />
                                     </CustomFormItem>

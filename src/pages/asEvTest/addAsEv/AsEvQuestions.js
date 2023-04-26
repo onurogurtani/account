@@ -5,8 +5,8 @@ import '../../../styles/asEvTest/asEvQuestions.scss';
 import { Card, Rate,Alert} from 'antd';
 import AsEvQuestionFilter from '../addAsEv/AsEvQuestionFilter';
 import {adAsEvQuestion,getByFilterPagedAsEvQuestions,removeAsEvQuestion,getAsEvTestPreview} from '../../../store/slice/asEvSlice';
-import { EChooices } from '../../../constants/questions';
 import DifficultiesModal from '../addAsEv/DifficultiesModal';
+import { getChoicesText } from '../../../utils/utils';
 
 const AsEvQuestions = () => {
     const { questions, asEvTestPreview, newAsEv } = useSelector((state) => state?.asEv);
@@ -80,7 +80,7 @@ const AsEvQuestions = () => {
                             <div className="col-md-6">
                                 <CustomForm className="info-form " autoComplete="off" layout={'horizontal'}>
                                     <CustomFormItem label="Konu">{item?.lessonSubject}</CustomFormItem>
-                                    <CustomFormItem label="Cevap"> {EChooices[item?.correctAnswer]}</CustomFormItem>
+                                    <CustomFormItem label="Cevap"> {getChoicesText(item?.correctAnswer) }</CustomFormItem>
                                     <CustomFormItem label="Zorluk Seviyesi">
                                         <Rate className='question-difficultly-rat' value={item?.difficulty} />
                                     </CustomFormItem>

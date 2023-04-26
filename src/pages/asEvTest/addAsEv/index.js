@@ -18,7 +18,7 @@ const AddAsEv = () => {
       <TabPane disabled={disabled} tab="Sorular" key="2">
         <CustomCollapseCard cardTitle={<Text t="Soru Seçimi" />}>
           <AsEvQuestions />
-        </CustomCollapseCard>{' '}
+        </CustomCollapseCard>
       </TabPane>
     </Tabs>
   );
