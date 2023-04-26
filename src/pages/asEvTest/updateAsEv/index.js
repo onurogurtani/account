@@ -169,7 +169,6 @@ const UpdateAsEv = () => {
 
     const handlePagination = async (value) => {
         if (allQuestionGet) {
-            console.log(value);
             await dispatch(
                 getByFilterPagedAsEvQuestions({
                     asEvQuestionsDetailSearch: {
@@ -347,6 +346,7 @@ const UpdateAsEv = () => {
                                                                         }
                                                                         className="changeQuestionButton"
                                                                         type="primary"
+                                                                        disabled={!item?.isAddedAsEv}
                                                                     >
                                                                         Soruyu Değiştir
                                                                     </CustomButton>

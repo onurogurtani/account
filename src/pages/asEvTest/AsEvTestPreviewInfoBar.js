@@ -10,8 +10,10 @@ const AsEvTestPreviewInfoBar = () => {
     const { asEvTestPreview } = useSelector((state) => state?.asEv);
     return (
         <div className="table-filter">
+                {asEvTestPreview?.items &&
             <CustomForm name="filterForm" className="filter-form" autoComplete="off" layout="vertical" form={form}>
                 <div className="form-item">
+            
                     <CustomFormItem name={'classroomId'} label={<Text t="Ders" />}>
                         {asEvTestPreview?.items[0]?.asEvTestPreviewDetail?.lessonName}
                     </CustomFormItem>
@@ -24,8 +26,10 @@ const AsEvTestPreviewInfoBar = () => {
                     <CustomFormItem name={'difficulty1'} label={<Text t="Ortalama Zorluk Seviyesi" />}>
                         <Rate disabled defaultValue={3} />
                     </CustomFormItem>
+                  
                 </div>
             </CustomForm>
+              }
         </div>
     );
 };

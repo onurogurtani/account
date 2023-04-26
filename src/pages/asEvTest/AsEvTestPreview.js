@@ -1,28 +1,31 @@
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     CustomButton,
     CustomFormItem,
     CustomInputNumber,
+    CustomForm,
     CustomPagination,
     successDialog,
     errorDialog,
 } from '../../components';
 import '../../styles/asEvTest/asEvSwiper.scss';
-import { Card, Rate } from 'antd';
+import { Card, Rate,Form } from 'antd';
 import '../../styles/asEvTest/asEvForm.scss';
 import AsEvTestPreviewInfoBar from './AsEvTestPreviewInfoBar';
 import { setQuestionSequence, getAsEvTestPreview, updateAsEv } from '../../store/slice/asEvSlice';
 import { useHistory } from 'react-router-dom';
 
 const AsEvTestPreview = () => {
-    const { asEvTestPreview, newAsEv } = useSelector((state) => state?.asEv);
+    const { asEvTestPreview, newAsEv,asEvDetail } = useSelector((state) => state?.asEv);
 
     const dispatch = useDispatch();
     const history = useHistory();
 
+    const [form] = Form.useForm();
+
     const createTest = async () => {
-        const action = await dispatch(updateAsEv({ id: newAsEv?.id }));
+        const action = await dispatch(updateAsEv({ id: newAsEv?.id ? newAsEv?.id : asEvDetail?.items[0]?.asEvDetail?.id }));
 
         if (updateAsEv.fulfilled.match(action)) {
             successDialog({
@@ -39,15 +42,16 @@ const AsEvTestPreview = () => {
     };
 
     const handlePagination = async(value) => {
-        await dispatch(getAsEvTestPreview({ asEvTestPreviewDetailSearch: { asEvId: newAsEv?.id,pageNumber:value,pageSize:6 } }));
+        await dispatch(getAsEvTestPreview({ asEvTestPreviewDetailSearch: { asEvId: newAsEv?.id ? newAsEv?.id : asEvDetail?.items[0]?.asEvDetail?.id ,pageNumber:value,pageSize:6 } }));
     };
 
     const handleSequence = async (value,id) => {
         const action = await dispatch(setQuestionSequence({ asEvQuestionId: id, sequence: value }));
 
         if (setQuestionSequence.fulfilled.match(action)) {
-            await dispatch(getAsEvTestPreview({ asEvTestPreviewDetailSearch: { asEvId: newAsEv?.id } }));
+            await dispatch(getAsEvTestPreview({ asEvTestPreviewDetailSearch: { asEvId: newAsEv?.id ? newAsEv?.id : asEvDetail?.items[0]?.asEvDetail?.id} }));
         }
+
     };
 
     return (
@@ -64,17 +68,22 @@ const AsEvTestPreview = () => {
                                 title={
                                     <div style={{ display: 'flex' }}>
                                         {' '}
+                                        <CustomForm layout={"inline"}  form={form}>
+                                            <CustomFormItem key={item?.asEvQuestionId}  initialValue={item?.sequence} name="sequence">
                                         <CustomInputNumber
+                                           min={1}
                                             onChange={(value) => handleSequence(value,item?.asEvQuestionId)}
                                             style={{ marginTop: '10px' }}
-                                            defaultValue={item?.sequence}
                                             height={38}
+                                            defaultValue={item?.sequence}
                                         />{' '}
+                                        </CustomFormItem>
                                         <Rate
                                             disabled
                                             style={{ marginTop: '10px', marginLeft:"20px" }}
                                             defaultValue={item?.difficulty}
                                         />{' '}
+                                        </CustomForm>
                                     </div>
                                 }
                                 cover={<img alt="example" src={`data:image/png;base64,${item?.fileBase64}`} />}

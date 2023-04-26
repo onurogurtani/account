@@ -40,7 +40,7 @@ const AsEvQuestions = () => {
                         asEvQuestionsDetailSearch: {
                             asEvId: newAsEv?.id,
                             pageNumber:questions?.pagedProperty?.currentPage,
-                            pageSize:5
+                            pageSize:10
                         },
                     }),
                 );
@@ -54,7 +54,7 @@ const AsEvQuestions = () => {
                         asEvQuestionsDetailSearch: {
                             asEvId: newAsEv?.id,
                             pageNumber:questions?.pagedProperty?.currentPage,
-                            pageSize:5
+                            pageSize:10
                         },
                     }),
                 );

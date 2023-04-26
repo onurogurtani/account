@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { CustomPagination, CustomForm, CustomFormItem, Text, CustomInput } from '../../../components';
 import '../../../styles/asEvTest/asEvQuestions.scss';
 import '../../../styles/asEvTest/asEvQuestionFilter.scss';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Card, Rate, Form } from 'antd';
 import { EChooices } from '../../../constants/questions';
+import { getAsEvById } from '../../../store/slice/asEvSlice';
 
 
 const ShowAsEvQuestions = () => {
     const { asEvDetail } = useSelector((state) => state?.asEv);
 
     const [form] = Form.useForm();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         form.setFieldValue(
@@ -38,6 +40,10 @@ const ShowAsEvQuestions = () => {
             asEvDetail?.items?.[0]?.asEvQuestionsResponse?.asEvQuestionsDetail.difficulty5,
         );
     }, []);
+
+    const handlePagination = async(value) => {
+        await dispatch(getAsEvById({ id: asEvDetail?.items?.[0]?.asEvDetail?.id, pageNumber: value, pageSize: 10 }));
+    }
 
     return (
         <>
@@ -98,8 +104,18 @@ const ShowAsEvQuestions = () => {
                                     </CustomFormItem>
                                 </CustomForm>
                             </div>
+
                         </>
                     ))}
+               
+                          <CustomPagination
+                            onChange={handlePagination}
+                            showSizeChanger={true}
+                            total={asEvDetail?.pagedProperty?.totalCount}
+                            current={asEvDetail?.pagedProperty?.currentPage}
+                            pageSize={asEvDetail?.pagedProperty?.pageSize}
+                        ></CustomPagination>
+                     
             </div>
         </>
     );
