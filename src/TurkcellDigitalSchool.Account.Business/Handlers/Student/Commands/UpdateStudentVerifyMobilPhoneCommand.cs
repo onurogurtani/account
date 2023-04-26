@@ -41,6 +41,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             [ValidationAspect(typeof(UpdateStudentVerifyMobilPhoneValidator), Priority = 2)]
             public async Task<IResult> Handle(UpdateStudentVerifyMobilPhoneCommand request, CancellationToken cancellationToken)
             {
+                //TODO UserId Tokendan alınacaktır?
 
                 //TODO Generic OPT servisi yazılacak. ek efor istenecek.
                 var getUser = _userService.GetUserById(request.UserId);

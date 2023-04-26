@@ -45,7 +45,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 
             public async Task<IResult> Handle(UpdateStudentSupportTeamViewMyDataCommand request, CancellationToken cancellationToken)
             {
-
+                //TODO UserId Tokendan alınacaktır?
                 var getUser = _userService.GetUserById(request.UserId);
                 if (getUser == null)
                     return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());

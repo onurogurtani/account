@@ -47,7 +47,7 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string Unknown = "Unknown";
         public static string NewPass = "NewPass";
         public static string InvalidPhoneNumber = "Geçersiz Telefon ";
-        public static string SendMobileCodeSuccessfully = "SMS gönderildi. Gönderilen kodu "+ OtpConst.OtpExpSec +" saniye içinde giriniz.";
+        public static string SendMobileCodeSuccessfully = "SMS gönderildi. Gönderilen kodu " + OtpConst.OtpExpSec + " saniye içinde giriniz.";
         public static string UnableToProccess = "İşleminizi Gerçekleştiremiyoruz.";
         public static string InvalidCaptchaKey = "Captcha bilgisini yanlış girdiniz, lütfen tekrar deneyiniz.";
         public static string SuccessfulLogOut = "LogOut İşlemi Başarılı";
@@ -103,14 +103,19 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string OtpTimeIsFinished = "Otp doğrulama süresi doldu. Tekrar otp kodu gönderiniz !";
         public static string otpIsNotReUsed = "Daha önce kullanılan bir otp kodu. İşleme devam edilemez. Tekrar otp kodu gönderiniz !";
         public static string PasswordChangeLinkTimeout = "Şifre değişitrme linknin süresi dolmuş. İşleme devam edilemez !";
-        public static string PasswordChangeLinkIsUsed = "Şifre değişitrme linki daha önce kullanılmış. İşleme devam edilemez !"; 
-        public static string PasswordChange  = "Şifre değişitrme linki daha önce kullanılmış. İşleme devam edilemez !";
+        public static string PasswordChangeLinkIsUsed = "Şifre değişitrme linki daha önce kullanılmış. İşleme devam edilemez !";
+        public static string PasswordChange = "Şifre değişitrme linki daha önce kullanılmış. İşleme devam edilemez !";
         public static string otpKodeIsUsed = "Daha önce kullanılan bir otp kodu. İşleme devam edilemez";
         public static string otpNotThisUser = "Otp kodu kullanıcı ile eşleşmiyor. İşleme devam edilemez !";
         public static string XIdIsNotCorrenctFormat = "XId Parametresi uygun formatta değildir. İşleme devam edilemez !";
         public static string EnterDifferentEmail = "Kullandığınız e-postadan farklı bir adres giriniz.";
         public static string UserNameAlreadyExist = "Bu kullanıcı adı(Nickname) kullanımda.";
         public static string RecordsDoesNotExist = "{0} bulunamadı!";
+
+        public static string CommunicationChannelOneOpen = "En az 1 adet iletişim kanalı açık olmalıdır";
+        public static string CommunicationChannelRequiredPhone = "Bu kanalı seçmek için telefon bilgisi eklemelisiniz";
+        public static string CommunicationChannelVerifyPhone = "Bu kanalını seçmek için telefon bilgisi doğrulanmalıdır";
+
 
 
 

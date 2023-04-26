@@ -22,12 +22,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 {
     public class UpdateStudentPersonalInformationCommand : IRequest<IResult>
     {
+        //TODO UserId Tokendan alınacaktır?
         public long UserId { get; set; }
         public string UserName { get; set; }
         public int AvatarId { get; set; }
         public string MobilPhone { get; set; }
         public long? ResidenceCityId { get; set; }
         public long? ResidenceCountyId { get; set; }
+
+        [MessageClassAttr("Öğrenci Profil Kişisel Bilgiler Ekleme/Güncelleme")]
         public class UpdateStudentPersonalInformationCommandHandler : IRequestHandler<UpdateStudentPersonalInformationCommand, IResult>
         {
             private readonly IUserRepository _userRepository;

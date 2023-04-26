@@ -31,8 +31,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         private readonly IUserCommunicationPreferencesRepository _userCommunicationPreferencesRepository;
         private readonly IUserSupportTeamViewMyDataRepository _userSupportTeamViewMyDataRepository;
 
-        //private readonly IClassroomRepository _classroomRepository;
-
         public UserService(IUserRepository userRepository, IStudentEducationInformationRepository studentEducationInformationRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, IGraduationYearRepository graduationYearRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository, IUserContratRepository userContratRepository, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository)
         {
             _userRepository = userRepository;
@@ -149,6 +147,15 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         }
         [MessageConstAttr(MessageCodeType.Error, "İl,İlçe,Okul İl/İlçe/Kurum Türü ile eşleşmiyor,Sınıf,Öğrenim Durumu,YKS Deneyimi,Mezuniyet Yılı,Diploma Notu,Alan,Puan Türü")]
         private static string FieldIsNotNullOrEmpty = Messages.FieldIsNotNullOrEmpty;
+
+        [MessageConstAttr(MessageCodeType.Error)]
+        private static string CommunicationChannelOneOpen = Constants.Messages.CommunicationChannelOneOpen;
+        [MessageConstAttr(MessageCodeType.Error)]
+        private static string CommunicationChannelRequiredPhone = Constants.Messages.CommunicationChannelRequiredPhone;
+
+        [MessageConstAttr(MessageCodeType.Error)]
+        private static string CommunicationChannelVerifyPhone = Constants.Messages.CommunicationChannelVerifyPhone;
+
         public string StudentEducationValidationRules(StudentEducationRequestDto studentEducationRequestDto)
         {
             var existCity = IsExistCity(studentEducationRequestDto.CityId);
@@ -302,17 +309,17 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
 
             if (!studentCommunicationPreferencesDto.IsCall && !studentCommunicationPreferencesDto.IsSms && !studentCommunicationPreferencesDto.IsEMail && !studentCommunicationPreferencesDto.IsNotification)
             {
-                return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "En az 1 adet iletişim kanalı açık olmalıdır");
+                return string.Format(CommunicationChannelOneOpen.PrepareRedisMessage());
             }
 
             if ((studentCommunicationPreferencesDto.IsCall || studentCommunicationPreferencesDto.IsSms) && string.IsNullOrWhiteSpace(getUser.MobilePhones))
             {
-                return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Bu kanalı seçmek için telefon bilgisi eklemelisiniz");
+                return string.Format(CommunicationChannelRequiredPhone.PrepareRedisMessage());
             }
 
             if ((studentCommunicationPreferencesDto.IsCall || studentCommunicationPreferencesDto.IsSms) && !getUser.MobilePhonesVerify)
             {
-                return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Bu kanalını seçmek için telefon bilgisi doğrulanmalıdır");
+                return string.Format(CommunicationChannelVerifyPhone.PrepareRedisMessage());
             }
             return string.Empty;
         }
