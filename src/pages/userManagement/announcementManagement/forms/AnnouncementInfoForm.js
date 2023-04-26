@@ -49,7 +49,6 @@ const AnnouncementInfoForm = ({
     const [fileImage, setFileImage] = useState(null);
     const { announcementTypes } = useSelector((state) => state?.announcement);
     console.log('announcementTypes', announcementTypes);
-    const { participantGroupsList } = useSelector((state) => state?.events);
 
     useEffect(() => {
         if (initialValues) {
@@ -58,7 +57,7 @@ const AnnouncementInfoForm = ({
             const startDate = dayjs(initialValues?.startDate).utc().format('YYYY-MM-DD-HH-mm');
             const endDate = dayjs(initialValues?.endDate).utc().format('YYYY-MM-DD-HH-mm');
             let groupIds = initialValues?.participantGroup?.id?.split(',')?.map((item) => Number(item));
-            let typeIds = initialValues?.participantType?.id?.split(',')?.map((item) => Number(item));
+            let typeIds = initialValues?.participantType?.id?.split(',');
 
             let initialData = {
                 startDate: startDate >= currentDate ? dayjs(initialValues?.startDate) : undefined,
@@ -133,10 +132,7 @@ const AnnouncementInfoForm = ({
                     label={<Text t="Duyuru Tipi" />}
                     name="announcementType"
                     style={{ width: '100%' }}
-                    rules={[
-                        { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-                        // { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
-                    ]}
+                    rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}
                 >
                     <CustomSelect className="form-filter-item" placeholder={'Seçiniz'} style={{ width: '100%' }}>
                         {announcementTypes?.map(({ id, name }) => (
