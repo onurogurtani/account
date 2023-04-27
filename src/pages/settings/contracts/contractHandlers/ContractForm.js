@@ -69,11 +69,12 @@ const ContractForm = ({ initialValues }) => {
     useEffect(() => {
         setFilteredKinds([...contractKinds]);
     }, [contractKinds]);
-    const handleFindKinds = useCallback(async (arr) => {
+
+    const handleFindKinds = async (arr) => {
         form.resetFields(['contractKinds']);
         let filteredKinds = contractKinds.filter((obj) => arr.includes(obj?.contractTypeId));
         setFilteredKinds([...filteredKinds]);
-    }, []);
+    };
 
     useEffect(() => {
         form.setFieldsValue({});
