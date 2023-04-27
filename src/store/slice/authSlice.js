@@ -2,9 +2,9 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import authServices from '../../services/auth.services';
 import { PURGE } from 'redux-persist';
 
-export const login = createAsyncThunk('login', async (body, { rejectWithValue }) => {
+export const login = createAsyncThunk('login', async ({ body, headers }, { rejectWithValue }) => {
   try {
-    const response = await authServices.login(body);
+    const response = await authServices.login(body, headers);
     console.log('otp şifresi =', response?.data?.claims?.toString());
     return response;
   } catch (error) {
@@ -146,8 +146,8 @@ export const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, action) => {
-      state.msisdn = action?.payload?.data?.msisdn;
-      state.mobileLoginId = action?.payload?.data?.token;
+      console.log(action)
+      state.token = action?.payload?.access_token;
     });
     builder.addCase(loginOtp.fulfilled, (state, action) => {
       localStorage.setItem('persist:crossTabs', 'false');

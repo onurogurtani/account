@@ -1,10 +1,11 @@
 import { api } from './api';
 
-const login = (data) => {
+const login = (data, headers) => {
     return api({
-        url: 'Account/Identity/login',
+        url: 'IdentityServer/connect/token',
         method: 'POST',
-        data,
+        headers,
+        data
     });
 };
 
