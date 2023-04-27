@@ -1,12 +1,17 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Entities.Concrete;
+using TurkcellDigitalSchool.Entities.Concrete.Core;
 using TurkcellDigitalSchool.Entities.Dtos.UserDtos;
 using TurkcellDigitalSchool.Entities.Enums;
 
@@ -22,9 +27,11 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         private readonly ICountyRepository _countyRepository;
         private readonly IGraduationYearRepository _graduationYearRepository;
         private readonly ISchoolRepository _schoolRepository;
-        //private readonly IClassroomRepository _classroomRepository;
+        private readonly IUserContratRepository _userContratRepository;
+        private readonly IUserCommunicationPreferencesRepository _userCommunicationPreferencesRepository;
+        private readonly IUserSupportTeamViewMyDataRepository _userSupportTeamViewMyDataRepository;
 
-        public UserService(IUserRepository userRepository, IStudentEducationInformationRepository studentEducationInformationRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, IGraduationYearRepository graduationYearRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository)
+        public UserService(IUserRepository userRepository, IStudentEducationInformationRepository studentEducationInformationRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, IGraduationYearRepository graduationYearRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository, IUserContratRepository userContratRepository, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository)
         {
             _userRepository = userRepository;
             _studentEducationInformationRepository = studentEducationInformationRepository;
@@ -34,6 +41,9 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             _graduationYearRepository = graduationYearRepository;
             _schoolRepository = schoolRepository;
             _userPackageRepository = userPackageRepository;
+            _userContratRepository = userContratRepository;
+            _userCommunicationPreferencesRepository = userCommunicationPreferencesRepository;
+            _userSupportTeamViewMyDataRepository = userSupportTeamViewMyDataRepository;
         }
         public PersonalInfoDto GetByStudentPersonalInformation(long userId)
         {
@@ -123,7 +133,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 MobilPhones = getParent.MobilPhones
             };
         }
-
         public bool IsExistEmail(long userId, string Email)
         {
             return _userRepository.Query().Any(w => w.Id != userId && w.Email == Email);
@@ -132,14 +141,20 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         {
             return _userRepository.Query().Any(w => w.Id != userId && w.UserName == userName);
         }
-
         public Entities.Concrete.Core.User GetUserById(long userId)
         {
             return _userRepository.Get(w => w.Id == userId);
         }
-
         [MessageConstAttr(MessageCodeType.Error, "İl,İlçe,Okul İl/İlçe/Kurum Türü ile eşleşmiyor,Sınıf,Öğrenim Durumu,YKS Deneyimi,Mezuniyet Yılı,Diploma Notu,Alan,Puan Türü")]
         private static string FieldIsNotNullOrEmpty = Messages.FieldIsNotNullOrEmpty;
+
+        [MessageConstAttr(MessageCodeType.Error)]
+        private static string CommunicationChannelOneOpen = Constants.Messages.CommunicationChannelOneOpen;
+        [MessageConstAttr(MessageCodeType.Error)]
+        private static string CommunicationChannelRequiredPhone = Constants.Messages.CommunicationChannelRequiredPhone;
+
+        [MessageConstAttr(MessageCodeType.Error)]
+        private static string CommunicationChannelVerifyPhone = Constants.Messages.CommunicationChannelVerifyPhone;
 
         public string StudentEducationValidationRules(StudentEducationRequestDto studentEducationRequestDto)
         {
@@ -189,7 +204,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                     return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "YKS Deneyimi");
                 }
 
-                if (studentEducationRequestDto.GraduationYearId == null && !_graduationYearRepository.Query().Any(w => w.Id == studentEducationRequestDto.GraduationYearId))
+                if (studentEducationRequestDto.GraduationYearId == null || !_graduationYearRepository.Query().Any(w => w.Id == studentEducationRequestDto.GraduationYearId))
                 {
                     return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Mezuniyet Yılı");
                 }
@@ -212,17 +227,14 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
 
             return string.Empty;
         }
-
         public bool IsExistCity(long cityId)
         {
             return _cityRepository.Query().Any(w => w.Id == cityId);
         }
-
         public bool IsExistCounty(long cityId, long countyId)
         {
             return _countyRepository.Query().Any(w => w.CityId == cityId && w.Id == countyId);
         }
-
         public PackageInfoDto GetByStudentPackageInformation(long userId)
         {
             var getPackage = _userPackageRepository.Query()
@@ -241,6 +253,100 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 PurchaseDate = getPackage.PurchaseDate,
                 Package = getPackage.Package
             };
+        }
+        public SettingsInfoDto GetByStudentSettingsInfoInformation(long userId)
+        {
+            var getUserContractList = _userContratRepository.Query()
+                                   .Include(w => w.Document).ThenInclude(x => x.ContractKind)
+                                   .Where(w => w.IsLastVersion && w.UserId == userId).ToList();
+            var getUserCommunicationPreferences = _userCommunicationPreferencesRepository.Get(w => w.UserId == userId);
+
+
+            var getUserSupportTeamViewMyData = _userSupportTeamViewMyDataRepository.Get(w => w.UserId == userId);
+
+            var userContratsList = new List<UserContratDto>();
+
+            foreach (var userContract in getUserContractList)
+            {
+                userContratsList.Add(new UserContratDto
+                {
+                    Id = userContract.Id,
+                    AcceptedDate = userContract.AcceptedDate,
+                    IsAccepted = userContract.IsAccepted,
+                    Contracts = new UserInfoDocumentDto
+                    {
+                        Id = userContract.Document.Id,
+                        Content = userContract.Document.Content,
+                        Name = userContract.Document.ContractKind.Name
+                    }
+                });
+            }
+
+            return new SettingsInfoDto
+            {
+                UserCommunicationPreferences = new CommunicationPreferencesDto
+                {
+                    Id = getUserCommunicationPreferences?.Id,
+                    IsCall = getUserCommunicationPreferences?.IsCall,
+                    IsEMail = getUserCommunicationPreferences?.IsEMail,
+                    IsNotification = getUserCommunicationPreferences?.IsNotification,
+                    IsSms = getUserCommunicationPreferences?.IsSms
+                },
+                UserContrats = userContratsList,
+                UserSupportTeamViewMyData = new UserSupportTeamViewMyDataDto
+                {
+                    Id = getUserSupportTeamViewMyData?.Id,
+                    IsViewMyData = getUserSupportTeamViewMyData?.IsViewMyData,
+                    IsAlways = getUserSupportTeamViewMyData?.IsAlways,
+                    IsFifteenMinutes = getUserSupportTeamViewMyData?.IsFifteenMinutes,
+                    IsOneMonth = getUserSupportTeamViewMyData?.IsOneMonth
+                }
+            };
+        }
+        public string StudentCommunicationPreferencesValidationRules(StudentCommunicationPreferencesDto studentCommunicationPreferencesDto)
+        {
+            var getUser = GetUserById(studentCommunicationPreferencesDto.UserId);
+
+            if (!studentCommunicationPreferencesDto.IsCall && !studentCommunicationPreferencesDto.IsSms && !studentCommunicationPreferencesDto.IsEMail && !studentCommunicationPreferencesDto.IsNotification)
+            {
+                return string.Format(CommunicationChannelOneOpen.PrepareRedisMessage());
+            }
+
+            if ((studentCommunicationPreferencesDto.IsCall || studentCommunicationPreferencesDto.IsSms) && string.IsNullOrWhiteSpace(getUser.MobilePhones))
+            {
+                return string.Format(CommunicationChannelRequiredPhone.PrepareRedisMessage());
+            }
+
+            if ((studentCommunicationPreferencesDto.IsCall || studentCommunicationPreferencesDto.IsSms) && !getUser.MobilePhonesVerify)
+            {
+                return string.Format(CommunicationChannelVerifyPhone.PrepareRedisMessage());
+            }
+            return string.Empty;
+        }
+        public async Task SetDefaultSettingValues(long UserId)
+        {
+            var existUserCommunicationPreferences = _userCommunicationPreferencesRepository.Get(w => w.UserId == UserId);
+            if (existUserCommunicationPreferences == null)
+            {
+                var newRecord = new UserCommunicationPreferences
+                {
+                    UserId = UserId,
+                    IsEMail = true,
+                    IsCall = true,
+                };
+                await _userCommunicationPreferencesRepository.CreateAndSaveAsync(newRecord);
+            }
+
+            var existUserSupportTeamViewMyData = _userSupportTeamViewMyDataRepository.Get(w => w.UserId == UserId);
+            if (existUserSupportTeamViewMyData == null)
+            {
+                var newRecord = new UserSupportTeamViewMyData
+                {
+                    UserId = UserId,
+                    IsViewMyData = false
+                };
+                await _userSupportTeamViewMyDataRepository.CreateAndSaveAsync(newRecord);
+            }
         }
     }
 }

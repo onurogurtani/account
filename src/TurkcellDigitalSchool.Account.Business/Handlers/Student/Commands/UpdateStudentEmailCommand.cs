@@ -23,6 +23,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
         public long UserId { get; set; }
         public string Email { get; set; }
 
+        [MessageClassAttr("Öğrenci Profil Email Bilgisi Ekleme/Güncelleme")]
         public class UpdateStudentEmailCommandHandler : IRequestHandler<UpdateStudentEmailCommand, IResult>
         {
             private readonly IUserRepository _userRepository;

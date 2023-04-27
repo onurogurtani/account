@@ -140,6 +140,65 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
 
 
         /// <summary>
+        /// Get Student Settings information
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>PersonalInfoDto</returns>
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<SettingsInfoDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpGet("GetStudentSettingsInformation")]
+        public async Task<IActionResult> GetStudentSettingsInformation([FromQuery] GetStudentSettingsInformationQuery request, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(request, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        /// <summary>
+        /// student Communication Preferences information update
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPut("UpdateStudentCommunicationPreferences")]
+        public async Task<IActionResult> UpdateStudentCommunicationPreferences([FromBody] UpdateStudentCommunicationPreferencesCommand request, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(request, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        /// <summary>
+        /// Student Support Team View My Data  information update
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPut("UpdateStudentSupportTeamViewMyData")]
+        public async Task<IActionResult> UpdateStudentSupportTeamViewMyData([FromBody] UpdateStudentSupportTeamViewMyDataCommand request, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(request, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+
+
+        /// <summary>
         /// student email information update
         /// </summary>
         /// <param name="request"></param>

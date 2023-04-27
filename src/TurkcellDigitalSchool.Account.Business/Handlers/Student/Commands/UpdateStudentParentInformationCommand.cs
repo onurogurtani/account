@@ -40,6 +40,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             [ValidationAspect(typeof(UpdateStudentParentInformationValidator), Priority = 2)]
             public async Task<IResult> Handle(UpdateStudentParentInformationCommand request, CancellationToken cancellationToken)
             {
+                //TODO UserId Tokendan alınacaktır?
                 var existStudentParentInfo = _studentParentInformationRepository.Query().FirstOrDefault(w => w.UserId == request.UserId);
                 if (existStudentParentInfo == null)
                 {
