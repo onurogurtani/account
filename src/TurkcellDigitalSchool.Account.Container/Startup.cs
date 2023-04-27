@@ -68,6 +68,17 @@ namespace TurkcellDigitalSchool.Account.Container
 
             var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
+
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+            //    {
+            //        var identityConf =  Configuration.GetSection("IdentityServerConfig").Get<IdentityServerConfig>();
+            //        options.Authority = identityConf.BaseUrl;  // "https://localhost:7246"; // IdentityServerUrl
+            //        options.Audience = identityConf.Audience; //"resource_sahaIzleApi";
+            //    });
+
+
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
