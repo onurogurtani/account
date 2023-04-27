@@ -44,20 +44,18 @@ const UseSectionHandlers = () => {
     }, []);
 
     const addNewSectionDesc = async (data) => {
-        try {
-            const action = await dispatch(addSectionDescriptions(data));
-            if (addSectionDescriptions.fulfilled.match(action)) {
-                successDialog({
-                    title: <Text t="success" />,
-                    message: action?.payload?.message,
-                    onOk: async () => {
-                        await closeModalHandler();
-                        await loadData();
-                    },
-                });
-            }
-        } catch (error) {
-            errorDialog({ title: <Text t="error" />, message: error?.data?.message });
+        const action = await dispatch(addSectionDescriptions(data));
+        if (addSectionDescriptions.fulfilled.match(action)) {
+            successDialog({
+                title: <Text t="success" />,
+                message: action?.payload?.message,
+                onOk: async () => {
+                    await closeModalHandler();
+                    await loadData();
+                },
+            });
+        } else {
+            errorDialog({ title: <Text t="error" />, message: action?.payload?.message });
         }
     };
     const updateSectionDesc = async (data) => {
@@ -67,20 +65,18 @@ const UseSectionHandlers = () => {
             okText: 'Güncelle',
             cancelText: 'Vazgeç',
             onOk: async () => {
-                try {
-                    const action = await dispatch(updateSectionDescriptions(data));
-                    if (updateSectionDescriptions.fulfilled.match(action)) {
-                        successDialog({
-                            title: <Text t="success" />,
-                            message: action?.payload?.message,
-                            onOk: async () => {
-                                await closeModalHandler();
-                                await loadData();
-                            },
-                        });
-                    }
-                } catch (error) {
-                    errorDialog({ title: <Text t="error" />, message: error?.data?.message });
+                const action = await dispatch(updateSectionDescriptions(data));
+                if (updateSectionDescriptions.fulfilled.match(action)) {
+                    successDialog({
+                        title: <Text t="success" />,
+                        message: action?.payload?.message,
+                        onOk: async () => {
+                            await closeModalHandler();
+                            await loadData();
+                        },
+                    });
+                } else {
+                    errorDialog({ title: <Text t="error" />, message: action?.payload?.message });
                 }
             },
         });
@@ -92,20 +88,18 @@ const UseSectionHandlers = () => {
             okText: 'Evet',
             cancelText: 'Hayır',
             onOk: async () => {
-                try {
-                    const action = await dispatch(copySectionDescriptions(data));
-                    if (copySectionDescriptions.fulfilled.match(action)) {
-                        successDialog({
-                            title: <Text t="success" />,
-                            message: action?.payload?.message,
-                            onOk: async () => {
-                                await closeModalHandler();
-                                await loadData();
-                            },
-                        });
-                    }
-                } catch (error) {
-                    errorDialog({ title: <Text t="error" />, message: error?.data?.message });
+                const action = await dispatch(copySectionDescriptions(data));
+                if (copySectionDescriptions.fulfilled.match(action)) {
+                    successDialog({
+                        title: <Text t="success" />,
+                        message: action?.payload?.message,
+                        onOk: async () => {
+                            await closeModalHandler();
+                            await loadData();
+                        },
+                    });
+                } else {
+                    errorDialog({ title: <Text t="error" />, message: action?.payload?.message });
                 }
             },
         });
