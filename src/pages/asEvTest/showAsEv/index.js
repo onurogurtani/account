@@ -8,9 +8,9 @@ import {
   errorDialog,
   successDialog,
   Text
-} from '../../../../components';
-import { deleteAsEv } from '../../../../store/slice/asEvSlice';
-import '../../../../styles/temporaryFile/asEv.scss';
+} from '../../../components';
+import { deleteAsEv} from '../../../store/slice/asEvSlice';
+import '../../../styles/asEvTest/asEv.scss';
 import AsEvInfo from './AsEvInfo';
 import ShowAsEvQuestions from './ShowAsEvQuestions';
 
@@ -27,6 +27,7 @@ const ShowAsEv = () => {
   }, [currentAsEv]);
 
   const dispatch = useDispatch();
+  
   const handleBack = () => {
     history.push('/test-management/assessment-and-evaluation/list');
   };

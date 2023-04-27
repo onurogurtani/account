@@ -1,7 +1,9 @@
+import { EChooices } from '../constants/questions';
 import { logout, removeToken } from '../store/slice/authSlice';
 import { persist } from '../store/store';
 import { Modal } from 'antd';
 import FormData from 'form-data';
+
 
 export const objectEmptyCheck = (obj) => {
     return Object.keys(obj).length === 0 && obj.constructor === Object;
@@ -20,6 +22,17 @@ export const moneyFormat = (money, moneyIcon) => {
         return valueFormat?.replace('₺', '')?.replaceAll(' ', '');
     }
 };
+
+export const getChoicesText = (choiceValue) => {
+    const textList = {
+      [EChooices.A]: 'A',
+      [EChooices.B]: 'B',
+      [EChooices.C]: 'C',
+      [EChooices.D]: 'D',
+      [EChooices.E]: 'E',
+    };
+    return textList[choiceValue];
+  };
 
 export const responseJsonIgnore = (obj) => {
     try {
