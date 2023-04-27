@@ -26,12 +26,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 
         public class UpdateStudentSupportTeamViewMyDataCommandHandler : IRequestHandler<UpdateStudentSupportTeamViewMyDataCommand, IResult>
         {
-            private readonly IUserRepository _userRepository;
             private readonly IUserService _userService;
             private readonly IUserSupportTeamViewMyDataRepository _userSupportTeamViewMyDataRepository;
-            public UpdateStudentSupportTeamViewMyDataCommandHandler(IUserRepository userRepository, IUserService userService, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository)
+            public UpdateStudentSupportTeamViewMyDataCommandHandler(IUserService userService, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository)
             {
-                _userRepository = userRepository;
                 _userService = userService;
                 _userSupportTeamViewMyDataRepository = userSupportTeamViewMyDataRepository;
             }
@@ -43,6 +41,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
 
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string OnlyOneCanBeSelected = Constants.Messages.OnlyOneCanBeSelected;
+
             public async Task<IResult> Handle(UpdateStudentSupportTeamViewMyDataCommand request, CancellationToken cancellationToken)
             {
                 //TODO UserId Tokendan alınacaktır?
@@ -50,16 +51,31 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                 if (getUser == null)
                     return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
 
+                if (request.IsFifteenMinutes is not null and true && (request.IsOneMonth is not null and true || request.IsAlways is not null and true))
+                {
+                    return new ErrorResult(OnlyOneCanBeSelected.PrepareRedisMessage());
+                }
+
+                if (request.IsOneMonth is not null and true && (request.IsFifteenMinutes is not null and true || request.IsAlways is not null and true))
+                {
+                    return new ErrorResult(OnlyOneCanBeSelected.PrepareRedisMessage());
+                }
+
+                if (request.IsAlways is not null and true && (request.IsFifteenMinutes is not null and true || request.IsOneMonth is not null and true))
+                {
+                    return new ErrorResult(OnlyOneCanBeSelected.PrepareRedisMessage());
+                }
+
                 var getStudentSupportTeamViewMyData = _userSupportTeamViewMyDataRepository.Get(w => w.UserId == request.UserId);
                 getStudentSupportTeamViewMyData.IsViewMyData = request.IsViewMyData;
-                getStudentSupportTeamViewMyData.IsFifteenMinutes = request.IsFifteenMinutes;
-                getStudentSupportTeamViewMyData.IsOneMonth = request.IsOneMonth;
-                getStudentSupportTeamViewMyData.IsAlways = request.IsAlways;
+                getStudentSupportTeamViewMyData.IsFifteenMinutes = request.IsViewMyData ? request.IsFifteenMinutes : null;
+                getStudentSupportTeamViewMyData.IsOneMonth = request.IsViewMyData ? request.IsOneMonth : null;
+                getStudentSupportTeamViewMyData.IsAlways = request.IsViewMyData ? request.IsAlways : null;
                 await _userSupportTeamViewMyDataRepository.UpdateAndSaveAsync(getStudentSupportTeamViewMyData);
 
                 return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }
-  
+
 }

@@ -1,4 +1,5 @@
 ﻿
+using System.Security.Policy;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
 
 namespace TurkcellDigitalSchool.Account.Business.Constants
@@ -115,7 +116,7 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string CommunicationChannelOneOpen = "En az 1 adet iletişim kanalı açık olmalıdır";
         public static string CommunicationChannelRequiredPhone = "Bu kanalı seçmek için telefon bilgisi eklemelisiniz";
         public static string CommunicationChannelVerifyPhone = "Bu kanalını seçmek için telefon bilgisi doğrulanmalıdır";
-
+        public static string OnlyOneCanBeSelected = "Sadece bir tane seçilebilir";
 
 
 
