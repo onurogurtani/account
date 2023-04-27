@@ -1,101 +1,106 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useContext, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Form } from 'antd';
 import { isCancel, CancelToken } from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import fileServices from '../../../../services/file.services';
+import yokSyncVersionService from '../../../../services/yokSyncVersion.service';
+import { errorDialog, Text, warningDialog } from '../../../../components';
+import {
+    loadLgsDataChanges,
+    getLgsDataChanges,
+    getVersionList,
+    getYksAscDataChanges,
+    getYksLicenceDataChanges,
+    syncYksAscPrefs,
+    syncYksLicencePrefs,
+} from '../../../../store/slice/yokSyncVersionSlice';
 
 const useUploadFile = () => {
+    const [informType, setInformType] = useState(undefined);
     const [selectVal, setSelectVal] = useState('Versiyon Ekle');
     const [isVisible, setIsVisible] = useState(false);
     const [form] = Form.useForm();
     const cancelFileUpload = useRef(null);
     const [uploadedFile, setUploadedFile] = useState();
     const token = useSelector((state) => state?.auth?.token);
+    const { versionDiffData } = useSelector((state) => state.yokSyncVersion);
+    console.log('first', versionDiffData);
     const dispatch = useDispatch();
 
-    const onSelectChange = (value) => {
+    const loadTableData = async () => {
+        console.log('"hopp"', 'hopp');
+        await dispatch(getVersionList());
+    };
+
+    useEffect(() => {
+        loadTableData();
+    }, []);
+
+    const checkTable = async (value) => {
+        let relevantRecords = versionDiffData?.filter((item) => item?.yokType === value && item?.confirmStatus === 0);
+        if (relevantRecords?.length > 0) {
+            warningDialog({
+                title: <Text t="attention" />,
+                closeIcon: false,
+                message:
+                    'Halihazırda onay bekleyen statüsünde versiyonlanmış veriler bulunmaktadır. Bu işleme aksiyon alınmadan aynı türdeki sınıf seviye tipi için işlem yapamazsınız!',
+                okText: 'Tamam',
+            });
+            setInformType(undefined);
+        }
+        return false;
+        //!burada işlemi durudrmak lazım
+    };
+
+    const onSelectChange = async (value) => {
+        await checkTable(value);
         setSelectVal(value);
+        console.log('"devcam"', 'devcam'); //todo kaldır bunu
         switch (value) {
             case 1:
                 updateAscVersion();
                 break;
             case 2:
-                updateUnderGraduateVersion();
+                updateLicenceVersion();
                 break;
             case 3:
                 updateHighSchoolVersion();
                 break;
             default:
-                console.log('No valid option selected');
+                alert('Lütfen seçim yapınız!');
         }
     };
 
-    const uploadPdf = async (options) => {
-        console.log('options', options);
-        const { onSuccess, onError, file, onProgress } = options;
+    const updateAscVersion = async () => {
+        setInformType(undefined);
 
-        const option = {
-            onUploadProgress: (progressEvent) => {
-                onProgress({ percent: (progressEvent.loaded / progressEvent.total) * 100 });
-            },
-            cancelToken: new CancelToken((cancel) => (cancelFileUpload.current = cancel)),
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                authorization: `Bearer ${token}`,
-            },
-        };
+        const action = await dispatch(syncYksAscPrefs());
 
-        const formData = new FormData();
-        formData.append('File', file);
-        formData.append('FileType', 4);
-        formData.append('FileName', file?.name);
-        formData.append('Description', file?.name);
-
-        try {
-            const res = await fileServices.uploadFile(formData, option);
-            onSuccess('Ok');
-            setUploadedFile({ id: res?.data?.data?.id, fileName: res?.data?.data?.fileName });
-        } catch (err) {
-            if (isCancel(err)) {
-                form.setFields([
-                    {
-                        name: 'pdf',
-                        errors: [],
-                    },
-                ]);
-                return;
-            }
-            form.setFields([
-                {
-                    name: 'pdf',
-                    errors: ['Dosya yüklenemedi yeniden deneyiniz'],
-                },
-            ]);
-            onError({ err });
+        if (syncYksAscPrefs.fulfilled.match(action)) {
+            setInformType(1);
+        } else {
+            errorDialog({
+                title: <Text t="error" />,
+                message: action?.payload?.message,
+            });
         }
     };
-    const cancelUpload = () => {
-        if (cancelFileUpload?.current) cancelFileUpload?.current('User has canceled the file upload.');
-    };
+    const updateLicenceVersion = async () => {
+        setInformType(undefined);
 
-    const updateAscVersion = () => {
-        alert('servisler hazırlandığında eklenecek');
-    };
-    const updateUnderGraduateVersion = () => {
-        alert('servisler hazırlandığında eklenecek');
+        const action = await dispatch(syncYksLicencePrefs());
+
+        if (syncYksLicencePrefs.fulfilled.match(action)) {
+            setInformType(0);
+        } else {
+            errorDialog({
+                title: <Text t="error" />,
+                message: action?.payload?.message,
+            });
+        }
     };
     const updateHighSchoolVersion = () => {
         setIsVisible(true);
-    };
-
-    const handleDeletePdf = () => {
-        cancelUpload();
-        form.setFields([
-            {
-                name: 'pdf',
-                errors: [],
-            },
-        ]);
     };
 
     const onCancel = () => {};
@@ -103,22 +108,22 @@ const useUploadFile = () => {
 
     const onFinish = async () => {
         const values = await form.validateFields();
-        console.log('values', values);
     };
 
     return {
         isVisible,
         setIsVisible,
         updateAscVersion,
-        updateUnderGraduateVersion,
+        updateLicenceVersion,
         onSelectChange,
         selectVal,
         setSelectVal,
         onFinish,
         onOk,
-        handleDeletePdf,
-        uploadPdf,
         onCancel,
+        informType,
+        setInformType,
+        versionDiffData,
     };
 };
 
