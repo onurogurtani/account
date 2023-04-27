@@ -30,6 +30,9 @@ import {
     canceledQuesiton,
 } from '../../../store/slice/trialExamSlice';
 import Preview from './Preview';
+import { getFileUpload } from '../../../store/slice/questionIdentificationSlice';
+import SectionDescriptionsAdd from './SectionDescriptionsAdd';
+
 const AddQuestion = ({ setActiveKey }) => {
     const [step, setStep] = useState(1);
     const { allClassList } = useSelector((state) => state.classStages);
@@ -39,13 +42,34 @@ const AddQuestion = ({ setActiveKey }) => {
     const { lessonSubSubjectsFilter } = useSelector((state) => state?.lessonSubSubjects);
     const { trialExamFormData } = useSelector((state) => state?.tiralExam);
     const { questionOfExamsList, pagedProperty } = useSelector((state) => state.questionIdentification);
-    const [sectionName, setSectionName] = useState('');
+    const [sectionName, setSectionName] = useState({});
     const [selectSection, setSelectSection] = useState(null);
     const [sortData, setSortData] = useState([]);
     const [previewShow, setPreviewShow] = useState(false);
+    const token = useSelector((state) => state?.auth?.token);
 
     const [form] = Form.useForm();
+
     const dispatch = useDispatch();
+    const addFile = async (file, fileType) => {
+        const fileData = new FormData();
+        fileData.append('File', file);
+        fileData.append('FileType', fileType);
+        fileData.append('FileName', file.name);
+        fileData.append('Description', file.name);
+        const action = await dispatch(
+            getFileUpload({
+                data: fileData,
+                options: {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        authorization: `Bearer ${token}`,
+                    },
+                },
+            }),
+        );
+        return action;
+    };
     const searchQuesiton = (pageNumber) => {
         const formValue = form.getFieldValue();
         const data = {
@@ -64,9 +88,22 @@ const AddQuestion = ({ setActiveKey }) => {
         });
         dispatch(getByFilterPagedQuestionOfExamsList(data));
     };
-
+    const addSection = () => {
+        if (trialExamFormData.sections.find((q) => q.sectionDescriptionChapterId === sectionName.id)) {
+            errorDialog({ title: 'Hata', message: 'Bu isimde bölüm var' });
+        } else {
+            let newData = [...trialExamFormData.sections];
+            newData.push({
+                name: sectionName.name,
+                sectionDescriptionChapterId: sectionName.id,
+                sectionQuestionOfExams: [],
+            });
+            dispatch(setTrialExamFormData({ ...trialExamFormData, sections: newData }));
+            setSectionName({});
+        }
+    };
     const addQuestion = useCallback(
-        (item) => {
+        async (item) => {
             let newData = [...trialExamFormData.sections];
             const findIndex = newData.findIndex((q) => q.name === selectSection);
             if (newData[findIndex]?.sectionQuestionOfExams) {
@@ -95,7 +132,20 @@ const AddQuestion = ({ setActiveKey }) => {
                     ...newData[findIndex],
                     sectionQuestionOfExams: [...newData[findIndex].sectionQuestionOfExams, newQuestion],
                 };
-                dispatch(setTrialExamFormData({ ...trialExamFormData, sections: newData }));
+                let fileId = null;
+                if (trialExamFormData.pdfFile) {
+                    const action = await addFile(trialExamFormData.pdfFile, 1);
+                    if (getFileUpload.fulfilled.match(action)) {
+                        successDialog({ title: 'Başarılı', message: 'Eklendi' });
+                        fileId = action.payload.data.data.id;
+                    } else {
+                        errorDialog({
+                            title: 'Hata',
+                            message: action?.payload?.message,
+                        });
+                    }
+                }
+                dispatch(setTrialExamFormData({ ...trialExamFormData, fileId: fileId, sections: newData }));
             }
         },
         [dispatch, selectSection, trialExamFormData],
@@ -572,6 +622,12 @@ const AddQuestion = ({ setActiveKey }) => {
             >
                 <Preview />
             </CustomModal>
+            <SectionDescriptionsAdd
+                setValue={setSectionName}
+                open={true}
+                onOkModal={addSection}
+                onCancelModal={() => {}}
+            />
         </div>
     );
 };

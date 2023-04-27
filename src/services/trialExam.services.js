@@ -22,6 +22,7 @@ const trialExamsUpdate = (data) => {
         data: data,
     });
 };
+
 const trialExamServices = {
     trialExamsAdd,
     getTrialExamList,

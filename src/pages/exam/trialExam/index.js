@@ -34,7 +34,7 @@ import { useHistory } from 'react-router-dom';
 const TrialExam = () => {
     const history = useHistory();
     const { TabPane } = Tabs;
-    const [activeKey, setActiveKey] = useState('0');
+    const [activeKey, setActiveKey] = useState('1');
     const dispatch = useDispatch();
     const [form] = Form.useForm();
     const dateStaticFormat = { showTime: { format: 'HH:mm' }, format: 'DD.MM.YYYY HH:mm' };
@@ -42,6 +42,8 @@ const TrialExam = () => {
     const { allClassList } = useSelector((state) => state.classStages);
     const { trialExamFormData } = useSelector((state) => state?.tiralExam);
     const [schoolLevel, setSchoolLevel] = useState('');
+    const IsAllowDownloadPdf = Form.useWatch('IsAllowDownloadPdf', form);
+    const [pdfFile, setPdfFile] = useState(null);
 
     /*  const { lessons } = useSelector((state) => state.lessons);
     const { lessonUnits } = useSelector((state) => state?.lessonUnits);
@@ -50,6 +52,20 @@ const TrialExam = () => {
     const { videos } = useSelector((state) => state?.videos);
     const [dependLecturingVideo, setDependLecturingVideo] = useState(false);
 */
+
+    const formSumbit = (e) => {
+        const data = {
+            ...trialExamFormData,
+            ...e,
+            finishDate: e?.finishDate?.$d,
+            startDate: e?.startDate?.$d,
+            transitionBetweenQuestions: e.transitionBetweenQuestions ? e.transitionBetweenQuestions : false,
+            transitionBetweenSections: e.transitionBetweenSections ? e.transitionBetweenSections : false,
+            pdfFile: e.IsAllowDownloadPdf ? pdfFile : null,
+        };
+        dispatch(setTrialExamFormData(data));
+        setActiveKey('1');
+    };
 
     useEffect(() => {
         if (trialExamFormData.id) {
@@ -138,6 +154,7 @@ const TrialExam = () => {
             errorDialog({ title: 'Hata', message: aciton.payload.message });
         }
     };
+
     return (
         <div className=" trial-exam-add">
             <CustomPageHeader>
@@ -200,20 +217,7 @@ const TrialExam = () => {
 
                                 <CustomForm
                                     onFinish={(e) => {
-                                        const data = {
-                                            ...trialExamFormData,
-                                            ...e,
-                                            finishDate: e?.finishDate?.$d,
-                                            startDate: e?.startDate?.$d,
-                                            transitionBetweenQuestions: e.transitionBetweenQuestions
-                                                ? e.transitionBetweenQuestions
-                                                : false,
-                                            transitionBetweenSections: e.transitionBetweenSections
-                                                ? e.transitionBetweenSections
-                                                : false,
-                                        };
-                                        dispatch(setTrialExamFormData(data));
-                                        setActiveKey('1');
+                                        formSumbit(e);
                                     }}
                                     form={form}
                                     className="form"
@@ -531,11 +535,31 @@ const TrialExam = () => {
                                             </CustomFormItem>
                                         </>
                                     )} */}
-                                    <CustomFormItem valuePropName="checked" name={'IsAllowDownloadPdf'}>
-                                        <CustomCheckbox>
-                                            Sınavın PDF Dosyası Olarak İndirilmesine İzin Ver
-                                        </CustomCheckbox>
-                                    </CustomFormItem>
+                                    <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+                                        <CustomFormItem valuePropName="checked" name={'IsAllowDownloadPdf'}>
+                                            <CustomCheckbox>
+                                                Sınavın PDF Dosyası Olarak İndirilmesine İzin Ver
+                                            </CustomCheckbox>
+                                        </CustomFormItem>
+                                        {IsAllowDownloadPdf && (
+                                            <CustomFormItem
+                                                rules={[
+                                                    { required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
+                                                ]}
+                                                name={'pdf'}
+                                            >
+                                                <input
+                                                    onChange={(e) => {
+                                                        setPdfFile(e.target.files[0]);
+                                                    }}
+                                                    type="file"
+                                                    accept=".pdf"
+                                                    className=" file-upload-input "
+                                                ></input>
+                                            </CustomFormItem>
+                                        )}
+                                    </div>
+
                                     <CustomFormItem valuePropName="checked" name={'transitionBetweenQuestions'}>
                                         <CustomCheckbox>Sorular Arası Geçise İzin Ver</CustomCheckbox>
                                     </CustomFormItem>
