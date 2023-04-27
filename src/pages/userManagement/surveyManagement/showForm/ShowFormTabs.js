@@ -55,6 +55,7 @@ const ShowFormTabs = ({ showData }) => {
             cancelText: <Text t="" />,
         });
     };
+    console.log('showData', showData);
 
     return (
         <Tabs defaultActiveKey={'1'}>
@@ -70,15 +71,19 @@ const ShowFormTabs = ({ showData }) => {
                         <li>
                             <Text t="Kategori" /> : <span>{showData?.categoryOfForm?.name}</span>
                         </li>
-                        {showData?.categoryOfFormId == 5 && (
+                        {showData?.categoryOfFormId === 5 && (
                             <>
-                                <li>
-                                    <Text t="Sınıf Seviyesi" />:{' '}
-                                    <span>{showData?.formClassrooms[0]?.classroom?.name}</span>
-                                </li>
-                                <li>
-                                    <Text t="Paketler" />: <span>{showData?.packages[0].package?.name}</span>
-                                </li>
+                                {showData?.formClassrooms?.length > 0 && (
+                                    <li>
+                                        <Text t="Sınıf Seviyesi" />:{' '}
+                                        <span>{showData?.formClassrooms[0]?.classroom?.name}</span>
+                                    </li>
+                                )}
+                                {showData?.packages?.length > 0 && (
+                                    <li>
+                                        <Text t="Paketler" />: <span>{showData?.packages[0].package?.name}</span>
+                                    </li>
+                                )}
                             </>
                         )}
                         <li>

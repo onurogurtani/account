@@ -132,6 +132,18 @@ export const videoTimeValidator = async (field, value) => {
     }
 };
 
+export const mailAndTCValidator = async (field, value) => {
+    try {
+        const regexMail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+        if (!checkTcNum(value) && !regexMail.test(value)) {
+            return Promise.reject(new Error('Lütfen geçerli eposta ya da T.C. kimlik no giriniz'));
+        }
+        return Promise.resolve();
+    } catch (e) {
+        return Promise.reject(new Error());
+    }
+};
+
 const rule = {
     formStringMatching,
     formPhoneRegex,
@@ -140,6 +152,7 @@ const rule = {
     dateValidator,
     nameSurnameValidator,
     videoTimeValidator,
+    mailAndTCValidator
 };
 
 export default rule;
