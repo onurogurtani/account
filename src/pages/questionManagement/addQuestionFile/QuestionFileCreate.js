@@ -22,7 +22,7 @@ import { getAllClassStages } from '../../../store/slice/classStageSlice';
 const QuestionFileCreate = ({ }) => {
   const [showFileList, setShowFileList] = useState(true);
   const [uploadDisabled, setUploadDisabled] = useState(false);
-  const [isTrialExamFile, setIsTrialExamFile] = useState(false);
+  const [isTryingTest, setIsTryingTest] = useState(false);
 
   const lessons = useSelector((state) => state?.lessons?.lessons);
   const classStages = useSelector((state) => state?.classStages?.allClassList);
@@ -61,8 +61,9 @@ const QuestionFileCreate = ({ }) => {
     const data = new FormData();
     data.append('CreateGroupOfQuestionOfExam.ZipFile', fileData);
     data.append('CreateGroupOfQuestionOfExam.BookId', values?.BookId);
-    data.append('CreateGroupOfQuestionOfExam.LessonId', values?.LessonId);
+    !isTryingTest && data.append('CreateGroupOfQuestionOfExam.LessonId', values?.LessonId);
     data.append('CreateGroupOfQuestionOfExam.EducationYearId', values?.EducationYearId);
+    data.append('CreateGroupOfQuestionOfExam.IsTryingTest', values?.IsTryingTest);
 
     const action = await dispatch(uploadZipFileOfQuestion(data));
 
@@ -71,7 +72,8 @@ const QuestionFileCreate = ({ }) => {
         title: <Text t="success" />,
         message: 'İşlem Başarıyla Gerçekleştirildi.',
       });
-      form.resetFields(['LessonId', 'BookId', 'EducationYearId', 'ZipFile', 'classStage', 'PublishingHouseName']);
+      form.resetFields(['IsTryingTest', 'LessonId', 'BookId', 'EducationYearId', 'ZipFile', 'classStage', 'PublishingHouseName']);
+      setIsTryingTest(false)
     } else {
       errorDialog({
         title: <Text t="error" />,
@@ -81,7 +83,7 @@ const QuestionFileCreate = ({ }) => {
   };
 
   const beforeUpload = (file) => {
-    const isZip = file.type === 'application/x-zip-compressed';
+    const isZip = ['application/x-zip-compressed', 'application/zip'].find(item => item === file.type);
     if (!isZip) {
       setShowFileList(false);
       errorDialog({
@@ -111,7 +113,10 @@ const QuestionFileCreate = ({ }) => {
           <CustomSelect
             placeholder="Eğitim Öğretim Yılı Seçiniz"
             onChange={(e) =>
-              dispatch(getAllClassStages([{ field: 'educationYearId', value: e.toString(), compareType: 0 }]))}>
+              dispatch(getAllClassStages([
+                { field: 'educationYearId', value: e.toString(), compareType: 0 },
+                { field: 'isActive', value: true, compareType: 0 }
+              ]))}>
             {educationYears.map((item) => {
               return (
                 <Option key={item.id} value={item.id}>
@@ -121,17 +126,18 @@ const QuestionFileCreate = ({ }) => {
             })}
           </CustomSelect>
         </CustomFormItem>
-        <CustomFormItem valuePropName="checked" name="isTrialExamFile">
+        <CustomFormItem valuePropName="checked" name="IsTryingTest">
           <CustomCheckbox
+            checked={isTryingTest}
             onChange={(e) => {
-              setIsTrialExamFile(e.target.checked)
+              setIsTryingTest(e.target.checked)
             }}
           >
             Deneme Sınavı Dosyası
           </CustomCheckbox>
         </CustomFormItem>
         <CustomFormItem label="Sınıf Seviyesi" name="classStage">
-          <CustomSelect onChange={onClassroomChange} disabled={isTrialExamFile} placeholder="Sınıf Seçiniz">
+          <CustomSelect onChange={onClassroomChange} disabled={isTryingTest} placeholder="Sınıf Seçiniz">
             {classStages.map((item) => {
               return (
                 <Option key={item.id} value={item.id}>
@@ -141,8 +147,8 @@ const QuestionFileCreate = ({ }) => {
             })}
           </CustomSelect>
         </CustomFormItem>
-        <CustomFormItem rules={[{ required: !isTrialExamFile }]} label="Soruların Bağlı Olduğu Ders" name="LessonId">
-          <CustomSelect placeholder="Ders Seçiniz" disabled={isTrialExamFile}>
+        <CustomFormItem rules={[{ required: !isTryingTest }]} label="Soruların Bağlı Olduğu Ders" name="LessonId">
+          <CustomSelect placeholder="Ders Seçiniz" disabled={isTryingTest}>
             {lessons
               ?.filter((item) => item.classroomId === classroomId)
               ?.map((item) => {
