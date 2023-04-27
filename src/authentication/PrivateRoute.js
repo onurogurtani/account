@@ -10,16 +10,17 @@ const PrivateRoute = ({ Component, authority, isLayout = false, ...routerProps }
     <Route
       {...routerProps}
       render={(props) => {
-        
+
         if (!store?.token) {
           return <Redirect to={{ pathname: '/login', state: { from: props.location } }} />;
         }
         const userAuthorities = store?.authority;
+        console.log(userAuthorities)
         if (userAuthorities?.includes(authority)) {
           return <Component {...props} />;
         }
         return <NotFound />;
-        
+
       }}
     />
   );
