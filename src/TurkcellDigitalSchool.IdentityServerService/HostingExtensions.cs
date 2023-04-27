@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.IdentityModel.Logging;
 using Serilog;
 using System.Configuration;
 using System.Globalization;
@@ -62,6 +63,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
                     options.Events.RaiseSuccessEvents = true;
                     // see https://docs.duendesoftware.com/identityserver/v5/fundamentals/resources/
                     options.EmitStaticAudienceClaim = true;
+                 
                 }) 
                 .AddProfileService<CustomProfileService>()
                 .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
@@ -105,6 +107,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
 
         public static WebApplication ConfigurePipeline(this WebApplication app)
         {
+            
 
             app.UseRequestLocalization(new RequestLocalizationOptions
             {

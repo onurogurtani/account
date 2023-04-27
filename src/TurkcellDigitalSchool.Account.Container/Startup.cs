@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -11,18 +10,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using ServiceStack;
-using TurkcellDigitalSchool.Account.Business;
-using TurkcellDigitalSchool.Common;
+using TurkcellDigitalSchool.Account.Business; 
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Common.Middleware;
+using TurkcellDigitalSchool.Core.Constants.IdentityServer;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
-using TurkcellDigitalSchool.Core.Utilities.Security.Encyption;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
 
@@ -65,35 +62,33 @@ namespace TurkcellDigitalSchool.Account.Container
                     "AllowOrigin",
                     builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
+             
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                {
+                    var identityConf = Configuration.GetSection("IdentityServerConfig").Get<IdentityServerConfig>();
+                    options.Authority = identityConf.BaseUrl;  // IdentityServerUrl gateway or direct
+                    options.Audience = IdentityServerConst.API_RESOURCE_ACCOUNT;
+                    options.RequireHttpsMetadata = false; 
+                });
 
-            var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
-
-
+            //var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
             //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+            //    .AddJwtBearer(options =>
             //    {
-            //        var identityConf =  Configuration.GetSection("IdentityServerConfig").Get<IdentityServerConfig>();
-            //        options.Authority = identityConf.BaseUrl;  // "https://localhost:7246"; // IdentityServerUrl
-            //        options.Audience = identityConf.Audience; //"resource_sahaIzleApi";
+            //        options.TokenValidationParameters = new TokenValidationParameters
+            //        {
+            //            ValidateIssuer = true,
+            //            ValidateAudience = true,
+            //            ValidateLifetime = true,
+            //            ValidIssuer = tokenOptions.Issuer,
+            //            ValidAudience = tokenOptions.Audience,
+            //            ValidateIssuerSigningKey = true,
+            //            IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey),
+            //            ClockSkew = TimeSpan.Zero
+            //        };
             //    });
 
-
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidIssuer = tokenOptions.Issuer,
-                        ValidAudience = tokenOptions.Audience,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey),
-                        ClockSkew = TimeSpan.Zero
-                    };
-                });
             services.AddSwaggerGen(c =>
             {
                 c.IncludeXmlComments(Path.ChangeExtension(Assembly.GetEntryAssembly().Location, ".xml"));
