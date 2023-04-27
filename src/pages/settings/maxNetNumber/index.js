@@ -25,6 +25,13 @@ import { getMaxNetCounts, getMaxNetCountsAdd, getMaxNetCountsUpdate } from '../.
 const MaxNetNumber = () => {
     const { educationYearList } = useSelector((state) => state.educationYears);
     const { allClassList } = useSelector((state) => state.classStages);
+     const sinavTurleri = {
+        tyt: 'TYT',
+        ayt: 'AYT',
+        lgs: 'LGS',
+        yks: 'YKS',
+        diger: 'Diğer'
+      };
     const { lessons } = useSelector((state) => state.lessons);
     const [step, setStep] = useState(1);
 
@@ -263,7 +270,9 @@ const MaxNetNumber = () => {
         });
         setFormNumberValue(newData);
     }, []);
+    console.log(allClassList)
     return (
+       
         <CustomPageHeader>
             <CustomCollapseCard cardTitle={'Max Net Sayıları'}>
                 <div className="max-net-main">
@@ -308,6 +317,19 @@ const MaxNetNumber = () => {
                                                 ))}
                                             </CustomSelect>
                                         </CustomFormItem>
+
+
+                                        <CustomFormItem name="sinavTurleriIds" label="Sınav Türü">
+                                            <CustomSelect mode="multiple">
+                                            <select>
+  {Object.keys(sinavTurleri).map(key => (
+    <option value={key}>{sinavTurleri[key]}</option>
+  ))}
+</select>
+                                            </CustomSelect>
+                                        </CustomFormItem>
+
+
                                         <CustomFormItem name="isActive" label="Durum">
                                             <CustomSelect>
                                                 <Option value={true}>Aktif</Option>
