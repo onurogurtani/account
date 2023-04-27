@@ -146,8 +146,9 @@ export const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, action) => {
-      console.log(action)
+      localStorage.setItem('persist:crossTabs', 'false');
       state.token = action?.payload?.access_token;
+      state.authority = ['dashboard'];
     });
     builder.addCase(loginOtp.fulfilled, (state, action) => {
       localStorage.setItem('persist:crossTabs', 'false');
