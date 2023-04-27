@@ -117,7 +117,7 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string CommunicationChannelRequiredPhone = "Bu kanalı seçmek için telefon bilgisi eklemelisiniz";
         public static string CommunicationChannelVerifyPhone = "Bu kanalını seçmek için telefon bilgisi doğrulanmalıdır";
         public static string OnlyOneCanBeSelected = "Sadece bir tane seçilebilir";
-
+        public static string YouMustChoose = "Seçim yapmalısınız";
 
 
 

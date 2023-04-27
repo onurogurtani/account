@@ -20,9 +20,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
     {
         public long UserId { get; set; }
         public bool IsViewMyData { get; set; }
-        public bool? IsFifteenMinutes { get; set; }
-        public bool? IsOneMonth { get; set; }
-        public bool? IsAlways { get; set; }
+        public bool IsFifteenMinutes { get; set; }
+        public bool IsOneMonth { get; set; }
+        public bool IsAlways { get; set; }
 
         public class UpdateStudentSupportTeamViewMyDataCommandHandler : IRequestHandler<UpdateStudentSupportTeamViewMyDataCommand, IResult>
         {
@@ -44,6 +44,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             [MessageConstAttr(MessageCodeType.Error)]
             private static string OnlyOneCanBeSelected = Constants.Messages.OnlyOneCanBeSelected;
 
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string YouMustChoose = Constants.Messages.YouMustChoose;
+
             public async Task<IResult> Handle(UpdateStudentSupportTeamViewMyDataCommand request, CancellationToken cancellationToken)
             {
                 //TODO UserId Tokendan alınacaktır?
@@ -51,17 +54,22 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                 if (getUser == null)
                     return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
 
-                if (request.IsFifteenMinutes is not null and true && (request.IsOneMonth is not null and true || request.IsAlways is not null and true))
+                if (request.IsViewMyData && (!request.IsOneMonth && !request.IsAlways && !request.IsOneMonth ))
+                {
+                    return new ErrorResult(YouMustChoose.PrepareRedisMessage());
+                }
+
+                if (request.IsFifteenMinutes && (request.IsOneMonth || request.IsAlways))
                 {
                     return new ErrorResult(OnlyOneCanBeSelected.PrepareRedisMessage());
                 }
 
-                if (request.IsOneMonth is not null and true && (request.IsFifteenMinutes is not null and true || request.IsAlways is not null and true))
+                if (request.IsOneMonth && (request.IsFifteenMinutes || request.IsAlways))
                 {
                     return new ErrorResult(OnlyOneCanBeSelected.PrepareRedisMessage());
                 }
 
-                if (request.IsAlways is not null and true && (request.IsFifteenMinutes is not null and true || request.IsOneMonth is not null and true))
+                if (request.IsAlways && (request.IsFifteenMinutes || request.IsOneMonth))
                 {
                     return new ErrorResult(OnlyOneCanBeSelected.PrepareRedisMessage());
                 }
