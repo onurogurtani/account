@@ -18,6 +18,7 @@ import { login } from '../../store/slice/authSlice';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { ReCAPTCHAKeys } from '../../utils/keys';
 import fastLoginImg from '../../assets/images/login/fastLoginImg.png';
+import { mailAndTCValidator } from '../../utils/formRule';
 
 const Login = ({ history }) => {
   const dispatch = useDispatch();
@@ -33,19 +34,37 @@ const Login = ({ history }) => {
 
   const onFinish = useCallback(
     async (values) => {
-      const body = {
-        citizenId: values?.citizenId,
+      // const body = {
+      //   citizenId: values?.citizenId,
+      //   password: values?.password,
+      //   captchaKey: values?.captchaKey,
+      // };
+      const data = {
+        username: values?.username,
         password: values?.password,
-        captchaKey: values?.captchaKey,
+        grant_type: 'password',
+        client_id: 'DijitalDershaneWebUI',
       };
-      const action = await dispatch(login(body));
+      const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        ...(values?.captchaKey && { captchaKey: values?.captchaKey }),
+        CSRFTOKEN: 'admin'
+      };
+      var body = [];
+      for (var property in data) {
+        var encodedKey = encodeURIComponent(property);
+        var encodedValue = encodeURIComponent(data[property]);
+        body.push(encodedKey + '=' + encodedValue);
+      }
+      body = body.join('&');
+      const action = await dispatch(login({ body, headers }));
       if (login.fulfilled.match(action)) {
-        history?.push('/sms-verification');
+        history?.push('/');
       } else {
         form.resetFields(['captchaKey']);
         errorDialog({
           title: <Text t="error" />,
-          message: action.payload?.message,
+          message: action.payload?.error_description,
         });
       }
     },
@@ -66,14 +85,14 @@ const Login = ({ history }) => {
         layout={'vertical'}
       >
         <CustomFormItem
-          label={<Text t="T.C. Kimlik No" />}
-          name="citizenId"
+          label='T.C. kimlik no veya e-posta'
+          name="username"
           rules={[
-            { required: true, message: 'Lütfen T.C. kimlik no bilginizi giriniz.' },
-            { type: 'number', min: 10000000000, message: '11 karakter olmalı' },
+            { required: true, message: 'Zorunlu alan.' },
+            { validator: mailAndTCValidator },
           ]}
         >
-          <CustomNumberInput height="58" maxLength="11" placeholder="T.C. Kimlik No Girinizı" />
+          <CustomNumberInput height="58" maxLength="11" placeholder="T.C. kimlik no veya e-posta" />
         </CustomFormItem>
 
         <CustomFormItem
