@@ -21,6 +21,26 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
 
 
         /// <summary>
+        /// Get Student information
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>ParentInfoDto</returns>
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<StudentInfoDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpGet("GetStudentInformations")]
+        public async Task<IActionResult> GetStudentInformations([FromQuery] GetStudentInformationsQuery request, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(request, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+
+        /// <summary>
         /// Get Student Package information
         /// </summary>
         /// <param name="request"></param>
