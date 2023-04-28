@@ -14,7 +14,7 @@ function useQuery() {
   const { search } = useLocation();
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
-
+// TODO: servis gelince ??? olan alanları kontrol et
 const VideoList = () => {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -130,6 +130,16 @@ const VideoList = () => {
       },
     },
     {
+      title: 'EĞİTİM ÖĞRETİM YILI',
+      dataIndex: '???',
+      key: '???',
+      sorter: true,
+      sortOrder: sorterObject?.columnKey === '???' ? sorterObject?.order : null,
+      render: (text, record) => {
+        return <div>{text?.startYear} - {text?.endYear} </div>;
+      },
+    },
+    {
       title: 'SINIF SEVİYESİ',
       dataIndex: 'classroom',
       key: 'classroom',
@@ -170,7 +180,25 @@ const VideoList = () => {
       },
     },
     {
-      title: 'ALT BAŞLIK',
+      title: 'Kazanım',
+      dataIndex: '???',
+      key: '???',
+      sorter: true,
+      sortOrder: sorterObject?.columnKey === '???' ? sorterObject?.order : null,
+      render: (_, record) => (
+        <>
+          {record.lessonSubSubjects?.map((item, id) => {
+            return (
+              <Tag className="m-1" color="gold" key={id}>
+                {item.lessonSubSubject.name}
+              </Tag>
+            );
+          })}
+        </>
+      ),
+    },
+    {
+      title: 'AYRAÇ',
       dataIndex: 'lessonSubSubjects',
       key: 'lessonSubSubjects',
       sorter: true,
