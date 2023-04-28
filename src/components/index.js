@@ -32,6 +32,7 @@ import DeleteButton from './DeleteButton';
 import DeclarationSection from './DeclarationSection';
 import CustomInputNumber from './CustomInputNumber';
 import CustomPageWrapper from './CustomPageWrapper';
+import CustomTooltip from './CustomTooltip';
 
 export {
     CustomInput,
@@ -81,4 +82,5 @@ export {
     DeclarationSection,
     CustomInputNumber,
     CustomPageWrapper,
+    CustomTooltip
 };
