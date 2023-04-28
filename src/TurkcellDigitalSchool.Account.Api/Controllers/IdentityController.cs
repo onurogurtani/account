@@ -39,23 +39,23 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// </summary>
         /// <param name="loginModel"></param>
         /// <returns></returns>
-        [AllowAnonymous]
-        [Consumes("application/json")]
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginUserQuery loginModel, CancellationToken cancellationToken)
-        {
-            var result = await Mediator.Send(loginModel, cancellationToken);
+        //[AllowAnonymous]
+        //[Consumes("application/json")]
+        //[Produces("application/json", "text/plain")]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        //[HttpPost("login")]
+        //public async Task<IActionResult> Login([FromBody] LoginUserQuery loginModel, CancellationToken cancellationToken)
+        //{
+        //    var result = await Mediator.Send(loginModel, cancellationToken);
 
-            if (result.Success)
-            {
-                return Ok(result);
-            }
+        //    if (result.Success)
+        //    {
+        //        return Ok(result);
+        //    }
 
-            return BadRequest(result);
-        }
+        //    return BadRequest(result);
+        //}
 
 
         /// <summary>
@@ -63,85 +63,85 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// </summary>
         /// <param name="loginModel"></param>
         /// <returns></returns>
-        [AllowAnonymous]
-        [Consumes("application/json")]
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPost("LoginByLdap")]
-        public async Task<IActionResult> LoginByLdap([FromBody] LoginUserByLdapQuery loginModel, CancellationToken cancellationToken)
-        {
-            var result = await Mediator.Send(loginModel, cancellationToken);
+        //[AllowAnonymous]
+        //[Consumes("application/json")]
+        //[Produces("application/json", "text/plain")]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        //[HttpPost("LoginByLdap")]
+        //public async Task<IActionResult> LoginByLdap([FromBody] LoginUserByLdapQuery loginModel, CancellationToken cancellationToken)
+        //{
+        //    var result = await Mediator.Send(loginModel, cancellationToken);
 
-            if (result.Success)
-            {
-                return Ok(result);
-            }
+        //    if (result.Success)
+        //    {
+        //        return Ok(result);
+        //    }
 
-            return BadRequest(result);
-        }
+        //    return BadRequest(result);
+        //}
 
         /// <summary>
         /// Otp İçin Gönderilir Hızlı Giriş
         /// </summary>
         /// <param name="loginModel"></param>
         /// <returns></returns>
-        [AllowAnonymous]
-        [Consumes("application/json")]
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPost("LoginByTurkcellFastLogin")]
-        public async Task<IActionResult> LoginByTurkcellFastLogin([FromBody] LoginUserByTurkcellFastLoginQuery loginModel, CancellationToken cancellationToken)
-        {
-            var result = await Mediator.Send(loginModel, cancellationToken);
+        //[AllowAnonymous]
+        //[Consumes("application/json")]
+        //[Produces("application/json", "text/plain")]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        //[HttpPost("LoginByTurkcellFastLogin")]
+        //public async Task<IActionResult> LoginByTurkcellFastLogin([FromBody] LoginUserByTurkcellFastLoginQuery loginModel, CancellationToken cancellationToken)
+        //{
+        //    var result = await Mediator.Send(loginModel, cancellationToken);
 
-            if (result.Success)
-            {
-                return Ok(result);
-            }
+        //    if (result.Success)
+        //    {
+        //        return Ok(result);
+        //    }
 
-            return BadRequest(result);
-        }
+        //    return BadRequest(result);
+        //}
 
         /// <summary>
         /// Otp İçin Gönderilir
         /// </summary>
         /// <param name="loginModel"></param>
         /// <returns></returns>
-        [Consumes("application/json")]
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPost("BehalfOfLogin")]
-        public async Task<IActionResult> BehalfOfLogin([FromBody] BehalfOfLoginQuery loginModel, CancellationToken cancellationToken)
-        {
-            var result = await Mediator.Send(loginModel, cancellationToken);
+        //[Consumes("application/json")]
+        //[Produces("application/json", "text/plain")]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        //[HttpPost("BehalfOfLogin")]
+        //public async Task<IActionResult> BehalfOfLogin([FromBody] BehalfOfLoginQuery loginModel, CancellationToken cancellationToken)
+        //{
+        //    var result = await Mediator.Send(loginModel, cancellationToken);
 
-            if (result.Success)
-            {
-                return Ok(result);
-            }
+        //    if (result.Success)
+        //    {
+        //        return Ok(result);
+        //    }
 
-            return BadRequest(result);
-        }
+        //    return BadRequest(result);
+        //}
 
         /// <summary>
         /// Direk Token Almak İçin Development İçin
         /// </summary>
         /// <param name="loginModel"></param>
         /// <returns></returns>
-        [AllowAnonymous]
-        [Consumes("application/json")]
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPost("loginTry")]
-        public async Task<IActionResult> LoginTry([FromBody] LoginUserTryQuery loginModel, CancellationToken cancellationToken)
-        {
-            var result = await Mediator.Send(loginModel, cancellationToken);
-            return Ok(result);
-        }
+        //[AllowAnonymous]
+        //[Consumes("application/json")]
+        //[Produces("application/json", "text/plain")]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        //[HttpPost("loginTry")]
+        //public async Task<IActionResult> LoginTry([FromBody] LoginUserTryQuery loginModel, CancellationToken cancellationToken)
+        //{
+        //    var result = await Mediator.Send(loginModel, cancellationToken);
+        //    return Ok(result);
+        //}
 
         /// <summary>
         /// Logout
@@ -200,23 +200,23 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// </summary>
         /// <param name="loginModel"></param>
         /// <returns></returns>
-        [AllowAnonymous]
-        [Consumes("application/json")]
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPost("loginOtp")]
-        public async Task<IActionResult> LoginOtp([FromBody] LoginOtpQuery loginModel, CancellationToken cancellationToken)
-        {
-            var result = await Mediator.Send(loginModel, cancellationToken);
+        //[AllowAnonymous]
+        //[Consumes("application/json")]
+        //[Produces("application/json", "text/plain")]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        //[HttpPost("loginOtp")]
+        //public async Task<IActionResult> LoginOtp([FromBody] LoginOtpQuery loginModel, CancellationToken cancellationToken)
+        //{
+        //    var result = await Mediator.Send(loginModel, cancellationToken);
 
-            if (result.Success)
-            {
-                return Ok(result);
-            }
+        //    if (result.Success)
+        //    {
+        //        return Ok(result);
+        //    }
 
-            return BadRequest(result);
-        }
+        //    return BadRequest(result);
+        //}
 
 
         #region New Login Endpoinds
@@ -599,17 +599,17 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// Token decode test
         /// </summary>
         /// <returns></returns>
-        [Consumes("application/json")]
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [HttpPost("test")]
-        public IActionResult LoginTest()
-        {
-            var auth = Request.Headers["Authorization"];
-            var token = _jwtHelper.DecodeToken(auth);
+        //[Consumes("application/json")]
+        //[Produces("application/json", "text/plain")]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        //[HttpPost("test")]
+        //public IActionResult LoginTest()
+        //{
+        //    var auth = Request.Headers["Authorization"];
+        //    var token = _jwtHelper.DecodeToken(auth);
 
-            return Ok(token);
-        }
+        //    return Ok(token);
+        //}
 
         /// <summary>
         /// Make it UserName Suggest operations
