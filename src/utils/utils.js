@@ -25,14 +25,14 @@ export const moneyFormat = (money, moneyIcon) => {
 
 export const getChoicesText = (choiceValue) => {
     const textList = {
-      [EChooices.A]: 'A',
-      [EChooices.B]: 'B',
-      [EChooices.C]: 'C',
-      [EChooices.D]: 'D',
-      [EChooices.E]: 'E',
+        [EChooices.A]: 'A',
+        [EChooices.B]: 'B',
+        [EChooices.C]: 'C',
+        [EChooices.D]: 'D',
+        [EChooices.E]: 'E',
     };
     return textList[choiceValue];
-  };
+};
 
 export const responseJsonIgnore = (obj) => {
     try {
@@ -193,4 +193,18 @@ export function downloadFile({ data, fileName = "", fileExtension = "xlsx" }) {
 
 export const stringContainsNumber = (string) => {
     return /\d/.test(string);
+}
+export function createGuid() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+}
+export const generateCsrfToken = () => {
+    if (localStorage.getItem('csrftoken')) {
+        return localStorage.getItem('csrftoken')
+    }
+    const csrftoken = createGuid()
+    localStorage.setItem('csrftoken', csrftoken)
+    return csrftoken
 }

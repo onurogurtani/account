@@ -19,6 +19,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { ReCAPTCHAKeys } from '../../utils/keys';
 import fastLoginImg from '../../assets/images/login/fastLoginImg.png';
 import { mailAndTCValidator } from '../../utils/formRule';
+import { generateCsrfToken } from '../../utils/utils';
 
 const Login = ({ history }) => {
   const dispatch = useDispatch();
@@ -34,11 +35,6 @@ const Login = ({ history }) => {
 
   const onFinish = useCallback(
     async (values) => {
-      // const body = {
-      //   citizenId: values?.citizenId,
-      //   password: values?.password,
-      //   captchaKey: values?.captchaKey,
-      // };
       const data = {
         username: values?.username,
         password: values?.password,
@@ -48,7 +44,7 @@ const Login = ({ history }) => {
       const headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
         ...(values?.captchaKey && { captchaKey: values?.captchaKey }),
-        CSRFTOKEN: 'admin'
+        CSRFTOKEN: generateCsrfToken()
       };
       var body = [];
       for (var property in data) {
