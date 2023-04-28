@@ -54,7 +54,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                 if (getUser == null)
                     return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
 
-                if (request.IsViewMyData && (!request.IsOneMonth && !request.IsAlways && !request.IsOneMonth ))
+                if (request.IsViewMyData && (!request.IsFifteenMinutes && !request.IsAlways && !request.IsOneMonth ))
                 {
                     return new ErrorResult(YouMustChoose.PrepareRedisMessage());
                 }
