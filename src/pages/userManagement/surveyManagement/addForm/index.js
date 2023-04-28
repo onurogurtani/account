@@ -24,18 +24,18 @@ const AddSurvey = () => {
 
     const history = useHistory();
 
-    const loadParticipantGroups = async () => {
-        participantGroupsList?.length === 0 &&
-            dispatch(
-                getParticipantGroupsList({
-                    params: {
-                        'ParticipantGroupDetailSearch.PageSize': 100000000,
-                    },
-                }),
-            );
-    };
+    // const loadParticipantGroups = async () => {
+    //     participantGroupsList?.length === 0 &&
+    //         dispatch(
+    //             getParticipantGroupsList({
+    //                 params: {
+    //                     'ParticipantGroupDetailSearch.PageSize': 100000000,
+    //                 },
+    //             }),
+    //         );
+    // };
 
-    loadParticipantGroups();
+    // loadParticipantGroups();
 
     const handleBackButton = () => {
         history.push('/user-management/survey-management');

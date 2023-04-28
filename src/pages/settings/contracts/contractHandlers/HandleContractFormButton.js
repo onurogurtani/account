@@ -16,16 +16,11 @@ const HandleContractFormButton = ({ form, initialValues, contractTypes, contract
 
     const history = useHistory();
 
-    const filterArray = async (originalArray, filterArray) => {
-        let filteredArray = [];
-        originalArray.forEach((element) => {
-            if (filterArray.includes(element?.id)) {
-                filteredArray.push(element);
-            }
-        });
+    const transformArrToEntity = async (arr) => {
+        console.log('arr', arr);
         let idsArr = [];
-        filteredArray.forEach((element) => {
-            idsArr.push({ contractTypeId: element.id });
+        arr.forEach((element) => {
+            idsArr.push({ contractTypeId: element });
         });
         return idsArr;
     };
@@ -53,14 +48,9 @@ const HandleContractFormButton = ({ form, initialValues, contractTypes, contract
             const endHour = values?.endDate ? dayjs(values?.endDate)?.utc().format('HH:mm:ss') : undefined;
 
             let typesFromForm = values?.contractTypes;
-
-            let typeData = {
-                pageNumber: 1,
-                pageSize: 1000,
-            };
-            const res = await dispatch(getFilteredContractTypes(typeData));
-            const originalArr = await res?.payload.data.items;
-            const typeArr = await filterArray(originalArr, typesFromForm);
+            console.log('typesFromForm', typesFromForm);
+            const typeArr = await transformArrToEntity(typesFromForm);
+            console.log('typeArr', typeArr);
             const versionString = values?.version;
             const versionNumber = versionString ? Number(versionString?.replace(/\D/g, '')) : 1;
             let kindData = { contractKindDto: {} };
@@ -80,6 +70,7 @@ const HandleContractFormButton = ({ form, initialValues, contractTypes, contract
                     recordStatus: values?.recordStatus,
                 },
             };
+            console.log('data', data);
             if (initialValues) {
                 data.entity.id = initialValues?.id;
                 const action = await dispatch(updateContract(data));

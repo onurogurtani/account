@@ -41,6 +41,7 @@ import {
     formPublicationPlaces,
 } from '../../../../constants/surveys.js';
 import CustomParticipantSelectFormItems from '../../../../components/CustomParticipantSelectFormItems';
+import '../../../../styles/surveyManagement/surveyInfoForm.scss';
 
 const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
     const [serviceData, setServiceData] = useState({});
@@ -86,7 +87,7 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
             const startDate = dayjs(showFormObj?.startDate).utc().format('YYYY-MM-DD-HH-mm');
             const endDate = dayjs(showFormObj?.endDate).utc().format('YYYY-MM-DD-HH-mm');
             let groupIds = showFormObj?.participantGroup?.id?.split(',')?.map((item) => Number(item));
-            let typeIds = showFormObj?.participantType?.id?.split(',')?.map((item) => Number(item));
+            let typeIds = showFormObj?.participantType?.id?.split(',');
 
             let initialData = {
                 surveyName: showFormObj?.name,
@@ -103,9 +104,14 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
             if (showFormObj?.categoryOfForm?.name.toLowerCase().includes('envanter')) {
                 let newData = {
                     ...initialData,
-                    packages: showFormObj?.packages[0]?.package.name,
-                    classStage: showFormObj?.formClassrooms[0]?.classroom?.name,
                 };
+                if (showFormObj?.formClassrooms?.length > 0) {
+                    newData.classStage = showFormObj?.formClassrooms[0]?.classroom?.name;
+                }
+                if (showFormObj?.packages?.length > 0 > 0) {
+                    newData.packages = showFormObj?.packages[0]?.package.name;
+                }
+
                 form.setFieldsValue({ ...newData });
             } else {
                 form.setFieldsValue({ ...initialData });
@@ -302,10 +308,10 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
     return (
         <>
             <CustomCollapseCard cardTitle={<Text t="Genel Bilgiler" />}>
-                <div className={classes['addSurveyInfo-container']}>
+                <div>
                     <CustomForm
                         name="surveyInfo"
-                        className={classes.addSurveyForm}
+                        className="surveyInfoForm"
                         form={form}
                         autoComplete="off"
                         layout={'horizontal'}
@@ -313,7 +319,7 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                         <CustomFormItem
                             label={<Text t="Anket Adı" />}
                             name="surveyName"
-                            className={classes['ant-form-item']}
+                            className="ant-form-item"
                             rules={[
                                 { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
                                 { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
@@ -324,10 +330,10 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                         <CustomFormItem
                             label={<Text t="Durum" />}
                             name="publishStatus"
-                            className={classes['ant-form-item']}
+                            className="ant-form-item"
                             rules={[{ required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> }]}
                         >
-                            <CustomSelect onChange={showStock} placeholder={'Seçiniz'} className={classes.select}>
+                            <CustomSelect onChange={showStock} placeholder={'Seçiniz'}>
                                 {publishStatus.map(({ id, value }) => (
                                     <Option id={id} key={id} value={value}>
                                         <Text t={value} />
@@ -338,7 +344,7 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                         <CustomFormItem
                             label={<Text t="Açıklama" />}
                             name="description"
-                            className={classes['ant-form-item']}
+                            className="ant-form-item"
                             placeholder={'Açıklama  giriniz'}
                             rules={[
                                 { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
@@ -350,13 +356,13 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                         <CustomFormItem
                             label={<Text t="Kategori" />}
                             name="surveyCategory"
-                            className={classes['ant-form-item']}
+                            className="ant-form-item"
                             rules={[
                                 { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
                                 { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
                             ]}
                         >
-                            <CustomSelect onChange={showStock} placeholder={'Seçiniz'} className={classes.select}>
+                            <CustomSelect onChange={showStock} placeholder={'Seçiniz'}>
                                 {formCategories?.map((category, index) => (
                                     <Option id={category.id} key={category.id} value={category.name}>
                                         <Text t={category.name} />
@@ -369,12 +375,12 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                                 <CustomFormItem
                                     label={<Text t="Paketler" />}
                                     name="packages"
-                                    className={classes['ant-form-item']}
+                                    className="ant-form-item"
                                     rules={[
                                         { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
                                     ]}
                                 >
-                                    <CustomSelect type="number" placeholder={'Seçiniz'} className={classes.select}>
+                                    <CustomSelect type="number" placeholder={'Seçiniz'}>
                                         {formPackages?.map(({ id, name }) => (
                                             <Option id={id} key={id} value={name}>
                                                 <Text t={name} />
@@ -385,13 +391,13 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                                 <CustomFormItem
                                     label={<Text t="Sınıf Seviyesi" />}
                                     name="classStage"
-                                    className={classes['ant-form-item']}
+                                    className="ant-form-item"
                                     rules={[
                                         { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
                                         { whitespace: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
                                     ]}
                                 >
-                                    <CustomSelect placeholder={'Seçiniz'} className={classes.select}>
+                                    <CustomSelect placeholder={'Seçiniz'}>
                                         {allClassList?.map(({ id, name }) => (
                                             <Option id={id} key={id} value={name}>
                                                 <Text t={name} />
@@ -402,7 +408,7 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                             </>
                         )}
                         <CustomParticipantSelectFormItems
-                            className={classes['ant-form-item']}
+                            className="ant-form-item"
                             form={form}
                             required={true}
                             initialValues={showFormObj}
@@ -413,7 +419,7 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                                 <CustomFormItem
                                     label={<Text t="Başlangıç Tarihi" />}
                                     name="startDate"
-                                    className={classes['ant-form-item']}
+                                    className="ant-form-item"
                                     rules={[
                                         { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
 
@@ -438,7 +444,7 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                                 <CustomFormItem
                                     label={<Text t="Bitiş Tarihi" />}
                                     name="endDate"
-                                    className={classes['ant-form-item']}
+                                    className="ant-form-item"
                                     rules={[
                                         { required: true, message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." /> },
                                         {
@@ -461,7 +467,7 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                         <Row gutter={16}>
                             <Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} lg={{ span: 16 }}>
                                 <CustomFormItem
-                                    className={classes['ant-form-item']}
+                                    className="ant-form-item"
                                     label={<Text t="Anket Bitirme Koşulu" />}
                                     name="finishCondition"
                                     rules={[{ required: true, message: <Text t="Lütfen Seçim Yapınız" /> }]}
@@ -493,7 +499,7 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                             ]}
                             label="Yayınlanma Yeri"
                             name="formPublicationPlaces"
-                            className={classes['ant-form-item']}
+                            className="ant-form-item"
                         >
                             <CustomSelect
                                 placeholder="Seçiniz"
@@ -514,50 +520,48 @@ const SurveyInfo = ({ setStep, step, permitNext, setPermitNext }) => {
                                 })}
                             </CustomSelect>
                         </CustomFormItem>
-                        <CustomFormItem className={classes['footer-form-item']}>
-                            <div className={classes.buttonContainer}>
-                                <CustomButton className={classes['cancel-btn']} onClick={cancelHandler}>
-                                    İptal
+                        <div className="buttonContainer">
+                            <CustomButton className="cancel-btn" onClick={cancelHandler}>
+                                İptal
+                            </CustomButton>
+                            {(permitNext || showFormObj.id != undefined) && (
+                                <CustomButton
+                                    className="submit-btn"
+                                    onClick={() => {
+                                        onFinish('ileri');
+                                        setStep('2');
+                                    }}
+                                >
+                                    İleri
                                 </CustomButton>
-                                {(permitNext || showFormObj.id != undefined) && (
-                                    <CustomButton
-                                        className={classes['submit-btn']}
-                                        onClick={() => {
-                                            onFinish('ileri');
-                                            setStep('2');
-                                        }}
-                                    >
-                                        İleri
-                                    </CustomButton>
-                                )}{' '}
-                                {!permitNext && showFormObj.id == undefined && (
-                                    <CustomButton className={classes['submit-btn']} onClick={onFinish}>
-                                        Kaydet ve İlerle
-                                    </CustomButton>
-                                )}
-                                {showFormObj.id != undefined && showFormObj.publishStatus == 2 && (
-                                    <CustomButton
-                                        className={classes['draft-button']}
-                                        onClick={() => {
-                                            onFinish('taslak olarak kaydet');
-                                            // publishAndSaveHandler()
-                                        }}
-                                    >
-                                        Taslak Olarak Kaydet
-                                    </CustomButton>
-                                )}
-                                {(currentForm.id != undefined || showFormObj.id != undefined) && (
-                                    <CustomButton
-                                        className={classes['submit-btn']}
-                                        onClick={() => {
-                                            onFinish('kaydet ve yayınla');
-                                        }}
-                                    >
-                                        Kaydet ve Yayınla
-                                    </CustomButton>
-                                )}
-                            </div>
-                        </CustomFormItem>
+                            )}{' '}
+                            {!permitNext && showFormObj.id == undefined && (
+                                <CustomButton className="submit-btn" onClick={onFinish}>
+                                    Kaydet ve İlerle
+                                </CustomButton>
+                            )}
+                            {showFormObj.id != undefined && showFormObj.publishStatus == 2 && (
+                                <CustomButton
+                                    className="draft-button"
+                                    onClick={() => {
+                                        onFinish('taslak olarak kaydet');
+                                        // publishAndSaveHandler()
+                                    }}
+                                >
+                                    Taslak Olarak Kaydet
+                                </CustomButton>
+                            )}
+                            {(currentForm.id != undefined || showFormObj.id != undefined) && (
+                                <CustomButton
+                                    className="submit-btn"
+                                    onClick={() => {
+                                        onFinish('kaydet ve yayınla');
+                                    }}
+                                >
+                                    Kaydet ve Yayınla
+                                </CustomButton>
+                            )}
+                        </div>
                     </CustomForm>
                 </div>
             </CustomCollapseCard>

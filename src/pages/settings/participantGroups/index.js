@@ -28,6 +28,9 @@ import '../../../styles/settings/participantGroups.scss';
 import iconFilter from '../../../assets/icons/icon-filter.svg';
 import ParticipantGroupsFilter from './ParticipantGroupsFilter';
 import { participantTypes, EParticipantTypes } from '../../../constants/participants';
+import { capitalizeFirstLetter } from '../../../utils/utils';
+
+
 
 const ParticipantGroups = () => {
     const [showAddModal, setShowAddModal] = useState(false);
@@ -112,7 +115,7 @@ const ParticipantGroups = () => {
         {
             title: 'Katılımcı Tipi',
             dataIndex: 'userTypes',
-            key: 'userTypes',
+            key: 'userType',
             sorter: true,
 
             render: (text, record) => {
@@ -129,7 +132,7 @@ const ParticipantGroups = () => {
         {
             title: 'Dahil Olan Paketler',
             dataIndex: 'packageId',
-            key: 'packageId',
+            key: 'package',
             sorter: true,
 
             render: (text, record) => {
@@ -232,6 +235,9 @@ const ParticipantGroups = () => {
                                         params: {
                                             'ParticipantGroupDetailSearch.PageSize': pagination.pageSize,
                                             'ParticipantGroupDetailSearch.PageNumber': pagination.current,
+                                            'ParticipantGroupDetailSearch.OrderBy' :  sorter?.order
+                                            ? capitalizeFirstLetter(sorter?.columnKey) + (sorter?.order === 'ascend' ? 'ASC' : 'DESC')
+                                            : 'UpdateTimeDESC',
                                         },
                                     }),
                                 );
