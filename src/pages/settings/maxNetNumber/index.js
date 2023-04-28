@@ -25,13 +25,13 @@ import { getMaxNetCounts, getMaxNetCountsAdd, getMaxNetCountsUpdate } from '../.
 const MaxNetNumber = () => {
     const { educationYearList } = useSelector((state) => state.educationYears);
     const { allClassList } = useSelector((state) => state.classStages);
-     const sinavTurleri = {
+    const sinavTurleri = {
         tyt: 'TYT',
         ayt: 'AYT',
         lgs: 'LGS',
         yks: 'YKS',
-        diger: 'Diğer'
-      };
+        diger: 'Diğer',
+    };
     const { lessons } = useSelector((state) => state.lessons);
     const [step, setStep] = useState(1);
 
@@ -100,6 +100,22 @@ const MaxNetNumber = () => {
                 return <div>{text?.name}</div>;
             },
         },
+        
+        
+        {
+            title: 'Sınav Türü',
+            dataIndex: 'classroom',
+            key: 'classroom',
+            sorter: true,
+
+            render: (text, record) => {
+                return <div>{text?.name}</div>;
+            },
+        },
+
+
+
+
 
         {
             title: 'İŞLEMLER',
@@ -270,9 +286,8 @@ const MaxNetNumber = () => {
         });
         setFormNumberValue(newData);
     }, []);
-    console.log(allClassList)
+    console.log(lessons);
     return (
-       
         <CustomPageHeader>
             <CustomCollapseCard cardTitle={'Max Net Sayıları'}>
                 <div className="max-net-main">
@@ -318,17 +333,15 @@ const MaxNetNumber = () => {
                                             </CustomSelect>
                                         </CustomFormItem>
 
-
                                         <CustomFormItem name="sinavTurleriIds" label="Sınav Türü">
                                             <CustomSelect mode="multiple">
-                                            <select>
-  {Object.keys(sinavTurleri).map(key => (
-    <option value={key}>{sinavTurleri[key]}</option>
-  ))}
-</select>
+                                                <select>
+                                                    {Object.keys(sinavTurleri).map((key) => (
+                                                        <option value={key}>{sinavTurleri[key]}</option>
+                                                    ))}
+                                                </select>
                                             </CustomSelect>
                                         </CustomFormItem>
-
 
                                         <CustomFormItem name="isActive" label="Durum">
                                             <CustomSelect>
@@ -432,6 +445,31 @@ const MaxNetNumber = () => {
                                         ))}
                                     </CustomSelect>
                                 </CustomFormItem>
+
+
+
+                                <CustomFormItem name={'classroomId'} required label="Sınav Türü">
+                                    <CustomSelect
+                                        onChange={async (e) => {
+                                            const action = await dispatch(
+                                                getLessonsQuesiton([
+                                                    { field: 'classroomId', value: e, compareType: 0 },
+                                                ]),
+                                            );
+                                            if (getLessonsQuesiton.fulfilled.match(action)) {
+                                                inputCreate(action.payload.data.items);
+                                            }
+                                        }}
+                                    >
+                                       
+                                                    {Object.keys(sinavTurleri).map((key) => (
+                                                        <option value={key}>{sinavTurleri[key]}</option>
+                                                    ))}
+                                                
+                                    </CustomSelect>
+                                </CustomFormItem>
+                                
+
                                 {updateData.id && (
                                     <CustomFormItem name={'isActive'} label="Durumu">
                                         <CustomSelect>
