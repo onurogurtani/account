@@ -1,20 +1,9 @@
-import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import listPlugin from '@fullcalendar/list';
-import multiMonthPlugin from '@fullcalendar/multimonth';
 import FullCalendar from '@fullcalendar/react';
-import timeGridPlugin from '@fullcalendar/timegrid';
+import { DefaultToolbar, DefaultViewsConfig, ViewPlguins } from './constants';
 import { INITIAL_EVENTS } from './utils';
-import { ViewPlguins } from './constants';
 
-const Scheduler = ({ views, events, editable, }) => {
-    const renderEvent = (event) => {
-        console.log(event);
-        return <div>
-            <span>{event.title}</span>
-
-        </div>
-    }
+const Scheduler = ({ views, events, editable, initialView, ...props }) => {
 
     const handleSelect = (args) => {
         console.log("handleSelect", args);
@@ -25,69 +14,50 @@ const Scheduler = ({ views, events, editable, }) => {
         console.log("eventChange", args);
     }
 
-    const plugings = [];
+    const plugins = [];
+    const viewsConfig = { ...DefaultViewsConfig };
+    const toolbar = { ...DefaultToolbar };
     if (Array.isArray(views)) {
         views.forEach((view) => {
-            if (view && typeof view === "object") {
-                if (view.tpye && ViewPlguins[view.type]) {
-                    if (!plugings.find(x => x === ViewPlguins[view.type])) {
-                        plugings.push(ViewPlguins[view.type])
-                    }
+            if (ViewPlguins[view]) {
+                if (!plugins.find(x => x === ViewPlguins[view])) {
+                    plugins.push(ViewPlguins[view])
                 }
-                else {
-                    console.warn("Its not supported view =>", view);
-                }
+            }
+            else {
+                console.warn("Its not supported view =>", view);
             }
         });
+
+        toolbar.right = views.join(',');
     }
     if (editable) {
-        plugings.push(interactionPlugin);
+        plugins.push(interactionPlugin);
     }
 
-    return <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, multiMonthPlugin, listPlugin]}
-        headerToolbar={{
-            left: 'prev,next today',
-            center: 'title',
-            right: 'timeGridDay,timeGridWeek,dayGridMonth,multiMonthYear,listDay,listWeek,listMonth,listYear'
-        }}
 
-        initialView='timeGridWeek'
-        views={{
-            listDay: {
-                buttonText: 'list day'
-            },
-            listWeek: {
-                buttonText: 'list week'
-            },
-            listMonth: {
-                buttonText: 'list month'
-            },
-            listYear: {
-                buttonText: 'list year'
-            }
-        }}
+    return <FullCalendar
         locale={"tr"}
-        editable={true}
+        plugins={plugins}
+        initialView={initialView || views?.[0]?.type}
+        headerToolbar={toolbar}
+        views={viewsConfig}
+        editable={editable}
         selectable={true}
+        navLinks={true}
         selectMirror={true}
-        /// eventContent={renderEvent}
         dayMaxEvents={true}
         weekends={true}
+        eventOverlap={false}
         initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
         select={handleSelect}
         eventChange={eventChange}
-    //eventContent={renderEvent} // custom render function
-    // eventClick={this.handleEventClick}
-    /* you can update a remote database when these fire:
-    eventAdd={function(){}}
-    eventChange={function(){}}
-    eventRemove={function(){}}
-    */
+        {...props}
     />
 }
 
 export default Scheduler;
+export { EViewTypes } from "./constants";
 
 /*Event base model 
 {

@@ -1,10 +1,7 @@
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { useMediaQuery } from 'react-responsive';
 import styled from 'styled-components';
-import Scheduler from '../../components/Scheduler';
+import FullScheduler, { EViewTypes } from '../../components/Scheduler';
 import '../../styles/dashboard.scss';
-import FullScheduler from '../../components/Scheduler';
 
 const NameContent = styled.div`
     display: flex;
@@ -81,8 +78,16 @@ const Dashboard = () => {
 
     return (
         <>
-            <FullScheduler></FullScheduler>
-
+            <FullScheduler
+                editable={true}
+                initialView={EViewTypes.TimeGridWeek}
+                views={[
+                    EViewTypes.TimeGridDay,
+                    EViewTypes.TimeGridWeek,
+                    EViewTypes.DayGridMonth,
+                    EViewTypes.MultiMonthYear,
+                ]}
+            />
 
             <Line />
         </>

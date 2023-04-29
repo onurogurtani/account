@@ -25,4 +25,39 @@ const ViewPlguins = {
     [EViewTypes.ListYear]: listPlugin
 }
 
-export { ViewPlguins, EViewTypes };
+const DefaultViewsConfig = {
+    [EViewTypes.TimeGridDay]: {
+        buttonText: "Günlük",
+    },
+    [EViewTypes.TimeGridWeek]: {
+        buttonText: "Haftalık",
+    },
+    [EViewTypes.DayGridMonth]: {
+        buttonText: "Aylık",
+    },
+    [EViewTypes.MultiMonthYear]: {
+        buttonText: "Yıllık",
+    },
+
+    [EViewTypes.ListDay]: {
+        buttonText: "Günlük Liste",
+    },
+    [EViewTypes.ListWeek]: {
+        buttonText: "Haftalık Liste",
+    },
+    [EViewTypes.ListMonth]: {
+        buttonText: "Aylık Liste",
+    },
+    [EViewTypes.ListYear]: {
+        buttonText: "Yıllık Liste",
+    },
+
+}
+
+const DefaultToolbar = {
+    left: 'prev,next today',
+    center: 'title',
+    right: '',
+}
+export { ViewPlguins, EViewTypes, DefaultViewsConfig, DefaultToolbar };
+
