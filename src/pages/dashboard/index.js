@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import styled from 'styled-components';
 import FullScheduler, { EViewTypes } from '../../components/Scheduler';
 import '../../styles/dashboard.scss';
+import CalenderManagement from './CalendarManagement';
 
 const NameContent = styled.div`
     display: flex;
@@ -78,17 +79,7 @@ const Dashboard = () => {
 
     return (
         <>
-            <FullScheduler
-                editable={true}
-                initialView={EViewTypes.TimeGridWeek}
-                views={[
-                    EViewTypes.TimeGridDay,
-                    EViewTypes.TimeGridWeek,
-                    EViewTypes.DayGridMonth,
-                    EViewTypes.MultiMonthYear,
-                ]}
-            />
-
+            <span>Dashboard</span>
             <Line />
         </>
     );

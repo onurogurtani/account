@@ -1,12 +1,15 @@
 import interactionPlugin from '@fullcalendar/interaction';
 import FullCalendar from '@fullcalendar/react';
-import { DefaultToolbar, DefaultViewsConfig, ViewPlguins } from './constants';
-import { INITIAL_EVENTS } from './utils';
+import { ButtonTexts, DefaultToolbar, DefaultViewsConfig, ViewPlguins } from './constants';
 
-const Scheduler = ({ views, events, editable, initialView, ...props }) => {
+const Scheduler = ({ views, events = [], editable, initialView, onShowEventModal, ...props }) => {
 
     const handleSelect = (args) => {
-        console.log("handleSelect", args);
+        const { endStr, startStr } = args;
+        onShowEventModal?.({
+            start: startStr,
+            end: endStr,
+        });
     }
 
 
@@ -36,9 +39,12 @@ const Scheduler = ({ views, events, editable, initialView, ...props }) => {
     }
 
 
+
     return <FullCalendar
         locale={"tr"}
         plugins={plugins}
+        buttonText={ButtonTexts}
+        allDayText='Tüm Gün'
         initialView={initialView || views?.[0]?.type}
         headerToolbar={toolbar}
         views={viewsConfig}
@@ -49,7 +55,7 @@ const Scheduler = ({ views, events, editable, initialView, ...props }) => {
         dayMaxEvents={true}
         weekends={true}
         eventOverlap={false}
-        initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
+        initialEvents={events} // alternatively, use the `events` setting to fetch from a feed
         select={handleSelect}
         eventChange={eventChange}
         {...props}

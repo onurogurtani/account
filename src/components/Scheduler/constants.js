@@ -59,5 +59,8 @@ const DefaultToolbar = {
     center: 'title',
     right: '',
 }
-export { ViewPlguins, EViewTypes, DefaultViewsConfig, DefaultToolbar };
+const ButtonTexts = {
+    today: "Bugün"
+}
+export { ViewPlguins, EViewTypes, DefaultViewsConfig, DefaultToolbar, ButtonTexts };
 
