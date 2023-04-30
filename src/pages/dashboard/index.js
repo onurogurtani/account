@@ -1,9 +1,8 @@
-import styled from 'styled-components';
-import { useMediaQuery } from 'react-responsive';
-import { Text } from '../../components';
 import { useEffect } from 'react';
+import styled from 'styled-components';
+import FullScheduler, { EViewTypes } from '../../components/Scheduler';
 import '../../styles/dashboard.scss';
-import { useSelector } from 'react-redux';
+import CalenderManagement from './CalendarManagement';
 
 const NameContent = styled.div`
     display: flex;
@@ -71,8 +70,8 @@ const Line = styled.div`
 `;
 
 const Dashboard = () => {
-    const isMobil = useMediaQuery({ query: '(max-width: 767.98px)' });
-    const { currentUser } = useSelector((state) => state?.user);
+    // const isMobil = useMediaQuery({ query: '(max-width: 767.98px)' });
+    // const { currentUser } = useSelector((state) => state?.user);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -80,15 +79,7 @@ const Dashboard = () => {
 
     return (
         <>
-            <NameContent>
-                {!isMobil && (
-                    <span className={'current-user'}>
-                        <Text t="hello" /> {`${currentUser?.name} ${currentUser?.surName}, `}
-                        {/* <Text t="hello" /> {`${currentUser?.nameSurname}, `} */}
-                    </span>
-                )}
-            </NameContent>
-
+            <span>Dashboard</span>
             <Line />
         </>
     );
