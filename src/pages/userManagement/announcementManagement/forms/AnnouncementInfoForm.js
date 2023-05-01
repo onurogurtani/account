@@ -12,14 +12,13 @@ import {
     Option,
     Text,
 } from '../../../../components';
+import AdvancedQuillFormItem from '../../../../components/AdvancedQuillFormItem';
+import CustomParticipantSelectFormItems from '../../../../components/CustomParticipantSelectFormItems';
 import '../../../../styles/announcementManagement/addAnnouncementInfo.scss';
 import { dateValidator } from '../../../../utils/formRule';
 import AddAnnouncementFooter from '../addAnnouncement/AddAnnouncementFooter';
-import CustomQuillFormItem from '../../../../components/customQuill/CustomQuillFormItem';
 import EditAnnouncementFooter from '../editAnnouncement/EditAnnouncementFooter';
 import AnnouncementIcon from './AnnouncementIcon';
-import CustomParticipantSelectFormItems from '../../../../components/CustomParticipantSelectFormItems';
-// import { } from '../../../../constants/announcements';
 
 const announcementPublicationPlaces = [
     { id: 1, name: 'Anasayfa' },
@@ -48,7 +47,6 @@ const AnnouncementInfoForm = ({
 
     const [fileImage, setFileImage] = useState(null);
     const { announcementTypes } = useSelector((state) => state?.announcement);
-    console.log('announcementTypes', announcementTypes);
 
     useEffect(() => {
         if (initialValues) {
@@ -152,8 +150,7 @@ const AnnouncementInfoForm = ({
                 >
                     <CustomInput placeholder={'Başlık'} />
                 </CustomFormItem>
-
-                <CustomQuillFormItem
+                <AdvancedQuillFormItem
                     className="editor"
                     label={'İçerik'}
                     name={'content'}
