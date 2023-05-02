@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { CustomButton, CustomPageHeader, Text } from '../../../../components';
 import { getByFilterPagedAnnouncementTypes } from '../../../../store/slice/announcementSlice';
-import { getParticipantGroupsList } from '../../../../store/slice/eventsSlice';
 import AddAnnouncementInfo from './AddAnnouncementInfo';
 
 const AddAnnouncement = () => {

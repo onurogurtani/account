@@ -64,6 +64,7 @@ import { videoReportsConnectedSlice } from './slice/videoReportsConnectedSlice';
 import { teachersSlice } from './slice/teachersSlice';
 import { lessonAcquisitionsSlice } from './slice/lessonAcquisitionsSlice';
 import { lessonBracketsSlice } from './slice/lessonBracketsSlice';
+import { yokSyncVersionSlice } from './slice/yokSyncVersionSlice';
 import { sectionDescriptionsSlice } from './slice/sectionDescriptionsSlice';
 import { examTypesSlice } from './slice/examTypeSlice';
 
@@ -125,6 +126,7 @@ const reducers = combineReducers({
     jobSettings: jobSettingsSlice.reducer,
     videoReportsConnected: videoReportsConnectedSlice.reducer,
     teachers: teachersSlice.reducer,
+    yokSyncVersion: yokSyncVersionSlice.reducer,
     sectionDescriptions: sectionDescriptionsSlice.reducer,
     examTypesSlice: examTypesSlice.reducer,
 });

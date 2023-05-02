@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { CustomFormItem } from '../CustomForm';
-import CustomReactQuill from './CustomReactQuill';
+import { CustomFormItem } from './CustomForm';
+import AdvancedReactQuill from './AdvancedReactQuill';
 
-const CustomQuillFormItem = ({ label, name, setQuillValue, quillValue, form, placeholder, className }) => {
+const AdvancedQuillFormItem = ({ label, name, setQuillValue, quillValue, form, placeholder, className }) => {
     const [quillError, setquillError] = useState(false);
     const removeTags = async (text) => {
         const regex = /<(?!img)[^>]*>/g;
@@ -16,6 +16,7 @@ const CustomQuillFormItem = ({ label, name, setQuillValue, quillValue, form, pla
         return newVal;
     };
     const onQuillChange = async (value) => {
+        //!Aşağıdaki fonksiyon resim ekleme işlemlerinde BE servis kullanımı için yazıldı, ihtiyaç halinda kullanılabilir.
         let newStr = await removeTags(value);
 
         let data = {
@@ -48,9 +49,9 @@ const CustomQuillFormItem = ({ label, name, setQuillValue, quillValue, form, pla
                 },
             ]}
         >
-            <CustomReactQuill onChange={onQuillChange} quillValue={quillValue} setQuillValue={setQuillValue} />
+            <AdvancedReactQuill onChange={onQuillChange} quillValue={quillValue} placeholder={placeholder} />
         </CustomFormItem>
     );
 };
 
-export default CustomQuillFormItem;
+export default AdvancedQuillFormItem;
