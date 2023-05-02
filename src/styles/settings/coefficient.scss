@@ -1,0 +1,215 @@
+.coefficient-list-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 17px 24px 17px;
+    .add-btn {
+        width: 217px !important;
+        background: #00a483 !important;
+        font-weight: 500;
+        font-stretch: normal;
+        font-style: normal;
+        letter-spacing: normal;
+        text-align: center;
+        color: #fff;
+        border-radius: 6px;
+        line-height: 0.86;
+        padding: 9px 16px;
+        img {
+          margin-right: 10px;
+        }
+      }
+  }
+
+  .action-btns {
+    display: flex;
+    justify-content: center;
+
+    .detail-btn {
+      width: 105px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: UbuntuMedium, sans-serif;
+      font-size: 12px;
+      line-height: 12px;
+      border-radius: 4px;
+      box-shadow: none;
+      background-color: #3f4957;
+    }
+    .copy-btn {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: UbuntuMedium, sans-serif;
+      font-size: 12px;
+      line-height: 12px;
+      border-radius: 4px;
+      box-shadow: none;
+      background-color:#2D5F70;
+    }
+  }
+
+  .coefficient-form {
+    padding: 25px;
+    justify-content: center;
+    display: flex;
+  }
+
+  .coefficient-modal{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1050px !important;
+  }
+
+  .btn-group {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      justify-content: flex-end;
+      margin-top: 32px;
+    .save-btn {
+        width: 105px;
+        height: 36px;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-family: UbuntuMedium, sans-serif;
+        font-size: 14px;
+        line-height: 12px;
+        border-radius: 4px;
+        background-color:  #00a483;
+        box-shadow: none;
+      }
+      .cancel-btn {
+        width: 105px;
+        height: 36px;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-family: UbuntuMedium, sans-serif;
+        font-size: 14px;
+        line-height: 12px;
+        border-radius: 4px;
+        box-shadow: none;
+        background-color: #3f4957;
+        margin-right: 8px;
+      }
+  }
+
+  .form-container {
+    display: flex;
+    min-height: auto;
+  }
+
+  .form-content {
+    display:inline;
+    .delete-btn {
+      height: 48px;
+      width: 48px;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: UbuntuMedium, sans-serif;
+      font-size: 14px;
+      line-height: 12px;
+      border-radius: 4px;
+      box-shadow: none;
+      background-color: #162056;
+      margin-right: 8px;
+    }
+  }
+
+  .input-container {
+      width: 220px;
+      margin-right: 8px;
+  }
+
+  .input-label-container {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+  }
+
+  .warn-message {
+    color: red;
+    font-family: UbuntuMedium, sans-serif;
+    font-size: 12px;
+  }
+
+  .row-container {
+    flex-direction: row;
+    justify-content: space-between;
+    display: flex;
+  }
+
+  .row-content {
+      display: flex;
+      flex-direction: row;
+      margin-right: 32px;
+  }
+
+  .row-title {
+      display: flex;
+      background-color: #00a483;
+      height: 50px;
+      padding-left: 8px;
+      align-items: center;
+      border-radius: 4px;
+      font-family: UbuntuMedium, sans-serif;
+      margin-bottom: 16px;
+      color: white;
+      font-size: 16px;
+  }
+
+  .row-sub-title {
+    display: flex;
+    height: 50px;
+    padding-left: 8px;
+    align-items: center;
+    border-radius: 4px;
+    font-family: UbuntuMedium, sans-serif;
+    margin-bottom: 16px;
+    font-size: 16px;
+}
+
+  .drop-down {
+      width: 200px;
+      margin-right: 8px;
+  }
+ .row-content-item{
+     display: flex;
+     margin-right: 36px;
+     font-size: 15px;
+     font-family: UbuntuMedium, sans-serif;
+ }
+
+ .section-add-button {
+    width: 105px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-family: UbuntuMedium, sans-serif;
+    font-size: 14px;
+    line-height: 12px;
+    border-radius: 4px;
+    background-color: #162056;
+    margin-right: 8px;
+    margin-bottom: 16px;
+ }
+
+
+
+  
+
+ 
+
+
+
+ 

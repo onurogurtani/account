@@ -40,35 +40,38 @@ const JobForm = ({ form, jobData, sendValue }) => {
 
   const disabledMembershipStartDate = (startValue) => {
     const { membershipFinishDate } = form?.getFieldsValue(['membershipFinishDate']);
-    if (!startValue || !membershipFinishDate) {
-      return false;
-    }
-    return startValue?.startOf('day') > membershipFinishDate?.startOf('day');;
+    return startValue?.startOf('day') > membershipFinishDate?.startOf('day') || startValue < dayjs().startOf('day');
   };
 
   const disabledMembershipEndDate = (endValue) => {
     const { membershipStartDate } = form?.getFieldsValue(['membershipStartDate']);
-    if (!endValue || !membershipStartDate) {
-      return false;
-    }
-    return endValue?.startOf('day') < membershipStartDate?.startOf('day');
+    return endValue?.startOf('day') < membershipStartDate?.startOf('day') || endValue < dayjs().startOf('day');
   };
 
-  const disabledContracStartDate = (startValue) => {
+  const disabledContractStartDate = (startValue) => {
     const { contractFinishDate } = form?.getFieldsValue(['contractFinishDate']);
-    if (!startValue || !contractFinishDate) {
-      return false;
-    }
     return startValue?.startOf('day') > contractFinishDate?.startOf('day') || startValue < dayjs().startOf('day');
-
   };
 
-  const disabledContracEndDate = (endValue) => {
+  const disabledContractEndDate = (endValue) => {
     const { contractStartDate } = form?.getFieldsValue(['contractStartDate']);
-    if (!endValue || !contractStartDate) {
-      return false;
-    }
     return endValue?.startOf('day') < contractStartDate?.startOf('day') || endValue < dayjs().startOf('day');
+  };
+
+  const validateContractEndDate = async (_,value) => {
+    const { contractStartDate } = form?.getFieldsValue(['contractStartDate']);
+    if (!contractStartDate || dayjs(value).startOf('minute') > contractStartDate) {
+      return Promise.resolve();
+    }
+    return Promise.reject(new Error());
+  };
+
+  const validateMembershipEndDate  = async (_,value) => {
+    const { membershipStartDate } = form?.getFieldsValue(['membershipStartDate']);
+    if (!membershipStartDate || dayjs(value).startOf('minute') > membershipStartDate) {
+      return Promise.resolve();
+    }
+    return Promise.reject(new Error());
   };
 
   const validateMessages = { required: 'Lütfen Zorunlu Alanları Doldurunuz.' };
@@ -84,7 +87,6 @@ const JobForm = ({ form, jobData, sendValue }) => {
         form={form}
         validateMessages={validateMessages}
         onFinish={onFinish}
-        name="form"
       >
         <Col xs={{ span: 24 }} sm={{ span: 18 }} md={{ span: 16 }} lg={{ span: 16 }}>
           <CustomFormItem
@@ -107,7 +109,7 @@ const JobForm = ({ form, jobData, sendValue }) => {
               format={dateTimeFormat}
               className="form-filter-item"
               placeholder={'Tarih Seçiniz'}
-              disabledDate={disabledContracStartDate}
+              disabledDate={disabledContractStartDate}
               showTime={true}
             />
           </CustomFormItem>
@@ -128,13 +130,17 @@ const JobForm = ({ form, jobData, sendValue }) => {
                 validator: dateValidator,
                 message: <Text t="Girilen tarihleri kontrol ediniz" />,
               },
+              {
+                validator: validateContractEndDate,
+                message: 'Sözleşme Bitiş Tarihi Sözleşme Başlangıç Tarihinden Önce veya Aynı Seçilemez.',
+              },
             ]}
           >
             <CustomDatePicker
               format={dateTimeFormat}
               className="form-filter-item"
               placeholder={'Tarih Seçiniz'}
-              disabledDate={disabledContracEndDate}
+              disabledDate={disabledContractEndDate}
               showTime={true}
             />
           </CustomFormItem>
@@ -230,6 +236,10 @@ const JobForm = ({ form, jobData, sendValue }) => {
               {
                 validator: dateValidator,
                 message: <Text t="Girilen tarihleri kontrol ediniz" />,
+              },
+              {
+                validator: validateMembershipEndDate,
+                message: 'Üyelik Bitiş Tarihi Üyelik Başlangıç Tarihinden Önce veya Aynı Seçilemez.',
               },
             ]}
           >

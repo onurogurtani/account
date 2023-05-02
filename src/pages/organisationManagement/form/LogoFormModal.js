@@ -15,10 +15,9 @@ import modalClose from '../../../assets/icons/icon-close.svg';
 import React, { useCallback, useState } from 'react';
 import '../../../styles/myOrders/paymentModal.scss';
 import { Form, Upload, } from 'antd';
-import { addImage, setOrganizationImageId, updateImage } from '../../../store/slice/organisationsSlice';
+import { uploadImage, setOrganizationImageId, updateImage } from '../../../store/slice/organisationsSlice';
 import { InboxOutlined } from '@ant-design/icons';
 import '../../../styles/organisationManagement/logoFormModal.scss';
-
 
 const LogoFormModal = ({ modalVisible, handleModalVisible, organizationForm, isEdit, getImageDetail }) => {
     const [form] = Form.useForm();
@@ -34,32 +33,22 @@ const LogoFormModal = ({ modalVisible, handleModalVisible, organizationForm, isE
     }, [handleModalVisible, form]);
 
     const addFile = async (values) => {
-        const logoData = values?.logo?.fileList[0]?.thumbUrl;
-        const logoType = values?.logo?.fileList[0]?.type;
-
-        let blob = null;
-        if (typeof logoData === 'string' && typeof logoType === 'string') {
-            const binaryData = Buffer.from(logoData.split(',')[1], 'base64');
-            blob = new Blob([binaryData], { type: logoType });
-        }
-
+        const fileData = values?.logo?.fileList[0]?.originFileObj;
         const formData = new FormData();
+        formData.append('File', fileData);
+        formData.append('FileType', 9);
         formData.append("FileName", values?.fileName);
-        if (blob) {
-            formData.append("Image", blob, logoType);
-        }
-
+        const options = {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                authorization: `Bearer ${token}`,
+            },
+        };
         try {
-            const action = await dispatch(addImage({
+            const action = await dispatch(uploadImage({
                 data: formData,
-                options: {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        authorization: `Bearer ${token}`,
-                    },
-                },
+                options
             })).unwrap();
-
             return action;
         } catch (error) {
             console.error("Dosya eklenirken bir hata oluştu: ", error);
@@ -69,34 +58,24 @@ const LogoFormModal = ({ modalVisible, handleModalVisible, organizationForm, isE
 
     const updateFile = async (values) => {
         try {
-            const logoData = values?.logo?.fileList[0]?.thumbUrl;
-            const logoType = values?.logo?.fileList[0]?.type;
-
-            let blob = null;
-            if (typeof logoData === 'string' && typeof logoType === 'string') {
-                const binaryData = Buffer.from(logoData.split(',')[1], 'base64');
-                blob = new Blob([binaryData], { type: logoType });
-            }
-
+            const fileData = values?.logo?.fileList[0]?.originFileObj;
             const formData = new FormData();
             formData.append("Id", organisationImageId);
+            formData.append('File', fileData);
+            formData.append('FileType', 9);
             formData.append("FileName", values?.fileName);
-            if (blob) {
-                formData.append("Image", blob, logoType);
-            }
-
+            const options = {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    authorization: `Bearer ${token}`,
+                },
+            };
             const action = await dispatch(
                 updateImage({
                     data: formData,
-                    options: {
-                        headers: {
-                            'Content-Type': 'multipart/form-data',
-                            authorization: `Bearer ${token}`,
-                        },
-                    },
+                    options
                 }),
             ).unwrap();
-
             return action;
         } catch (error) {
             console.error("Dosya güncellenirken bir hata oluştu: ", error);
@@ -109,12 +88,12 @@ const LogoFormModal = ({ modalVisible, handleModalVisible, organizationForm, isE
             if (errorList.length > 0) {
                 return
             }
-            const action = isEdit ? await updateFile(values) : await addFile(values);
+            const action = (isEdit && organisationImageId !== 0) ? await updateFile(values) : await addFile(values);
             if (action?.data?.success) {
-                const imageId = isEdit ? organisationImageId : action?.data?.data
+                const imageId = (isEdit && organisationImageId !== 0) ? organisationImageId : action?.data?.data?.id
                 dispatch(setOrganizationImageId(imageId))
                 organizationForm.setFieldsValue({ organisationImageId: imageId });
-                if (isEdit) {
+                if (isEdit && organisationImageId !== 0) {
                     getImageDetail()
                 }
                 successDialog({
