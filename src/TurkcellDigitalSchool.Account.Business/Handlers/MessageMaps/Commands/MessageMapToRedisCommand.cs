@@ -31,7 +31,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
                 _redisService = redisService;
             }
 
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
             public async Task<IResult> Handle(MessageMapToRedisCommand request, CancellationToken cancellationToken)
             {

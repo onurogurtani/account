@@ -30,7 +30,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Parents.Queries
                 _parentRepository = parentRepository;
             }
 
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             /// <summary>

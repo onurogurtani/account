@@ -31,7 +31,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Commands
                 _packageTypeRepository = packageTypeRepository;
             }
 
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [SecuredOperation(Priority = 1)]

@@ -42,7 +42,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRan
             private static string PackageIsNotFound = Constants.Messages.PackageIsNotFound;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string TargetRangeIsAlreadyExist = Constants.Messages.TargetRangeIsAlreadyExist;
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [ValidationAspect(typeof(CreateStudentAnswerTargetRangeValidator), Priority = 2)]

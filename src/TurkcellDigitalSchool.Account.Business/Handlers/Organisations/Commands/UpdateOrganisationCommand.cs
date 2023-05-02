@@ -41,7 +41,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
             private static string SameNameAlreadyExist = Messages.SameNameAlreadyExist;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             public UpdateOrganisationCommandHandler(IOrganisationRepository organisationRepository, IOrganisationTypeRepository organisationTypeRepository, IMapper mapper, IPackageRoleRepository packageRoleRepository, IUserRepository userRepository, IMediator mediator)

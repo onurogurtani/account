@@ -46,7 +46,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
             private static string TryAgain = Messages.TryAgain;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string ExcelRecordIsNotFound = Messages.ExcelRecordIsNotFound;
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string Added = Messages.Added;
 
             /// <summary>
