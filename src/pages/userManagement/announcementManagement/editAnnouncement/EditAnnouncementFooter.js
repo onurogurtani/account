@@ -23,19 +23,6 @@ const EditAnnouncementFooter = ({ form, history, currentId, fileImage, initialVa
     const { announcementTypes, updateAnnouncementObject } = useSelector((state) => state?.announcement);
     const { participantGroupsList } = useSelector((state) => state?.events);
 
-    const loadParticipantGroups = useCallback(async () => {
-        participantGroupsList?.length === 0 &&
-            dispatch(
-                getParticipantGroupsList({
-                    params: {
-                        'ParticipantGroupDetailSearch.PageSize': 100000000,
-                    },
-                }),
-            );
-    }, [participantGroupsList, dispatch]);
-
-    loadParticipantGroups();
-
     const onCancel = () => {
         confirmDialog({
             title: <Text t="attention" />,

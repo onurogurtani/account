@@ -1,27 +1,25 @@
-import React, { useRef, useEffect, useCallback, useState } from 'react';
-import ReactQuill from 'react-quill';
+import { Form } from 'antd';
+import React, { useCallback, useRef, useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
+import { useDispatch } from 'react-redux';
 import {
     CustomButton,
     CustomForm,
     CustomFormItem,
     CustomInput,
     Text,
-    useText,
-    successDialog,
     errorDialog,
+    successDialog,
+    useText,
 } from '../../../../../components';
-import { reactQuillValidator } from '../../../../../utils/formRule';
-import { Form } from 'antd';
+import AdvancedQuillFormItem from '../../../../../components/AdvancedQuillFormItem';
+import { addNewQuestionToForm, deleteQuestion, getAllQuestionsOfForm } from '../../../../../store/slice/formsSlice';
 import '../../../../../styles/surveyManagement/surveyStyles.scss';
-import { useDispatch } from 'react-redux';
-import { getAllQuestionsOfForm, addNewQuestionToForm, deleteQuestion } from '../../../../../store/slice/formsSlice';
-import CustomQuillFormItem from '../../../../../components/customQuill/CustomQuillFormItem';
 
 const customInitialValues = {
-    headText: 'string',
-    text: 'string',
-    tags: 'string',
+    headText: '',
+    text: '',
+    tags: '',
     isActive: true,
     questionTypeId: 4,
     likertTypeId: 2,
@@ -123,7 +121,8 @@ const FillInTheBlankQuestion = ({
                     </CustomFormItem>
                 </div>
                 <div className="form-right-side">
-                    <CustomQuillFormItem
+                  
+                    <AdvancedQuillFormItem
                         className="editor"
                         label={<Text t="Soru Metni" />}
                         name={'text'}
@@ -132,27 +131,6 @@ const FillInTheBlankQuestion = ({
                         form={form}
                         placeholder={'Lütfen doldurunuz'}
                     />
-                    {/* <CustomFormItem
-                        label={<Text t="Soru Metni" />}
-                        name="text"
-                        rules={[
-                            {
-                                required: true,
-                                message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
-                            },
-                            {
-                                validator: reactQuillValidator,
-                                message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
-                            },
-                            {
-                                type: 'string',
-                                max: 2500,
-                                message: 'Duyurunuz En fazla 2500 Karakter İçerebilir.',
-                            },
-                        ]}
-                    >
-                        <ReactQuill ref={reactQuillRef} theme="snow" onChange={onQuestionChange} />
-                    </CustomFormItem> */}
                     <div className="blank-add-buttons">
                         <CustomButton
                             className="add-blank-btn add-blank"

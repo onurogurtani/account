@@ -140,10 +140,10 @@
         box-shadow: none;
         border: none;
     }
-}
-.quill {
-    height: 400px;
-    margin-bottom: 45px;
+    .ql-container.ql-snow {
+        height: 300px !important;
+        z-index: 10000;
+    }
 }
 .add-announcement-footer .ant-form-item-control-input-content {
     flex-wrap: wrap;

@@ -5,8 +5,12 @@ import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomForm, CustomFormItem, CustomModal } from '../../../../components';
 import fileServices from '../../../../services/file.services';
+import yokSyncVersionService from '../../../../services/yokSyncVersion.service';
+import { errorDialog } from '../../../../components';
 
-const UploadFileModal = ({ isVisible, setIsVisible, setSelectVal }) => {
+const UploadFileModal = ({ isVisible, setIsVisible, setSelectVal, setInformType }) => {
+    const [lgsFormData, setLgsFormData] = useState(null);
+    const [uploadOption, setUploadOption] = useState({});
     const [form] = Form.useForm();
     const cancelFileUpload = useRef(null);
     const [uploadedFile, setUploadedFile] = useState();
@@ -29,33 +33,33 @@ const UploadFileModal = ({ isVisible, setIsVisible, setSelectVal }) => {
         };
 
         const formData = new FormData();
-        formData.append('File', file);
-        formData.append('FileType', 4);
-        formData.append('FileName', file?.name);
-        formData.append('Description', file?.name);
+        formData.append('PdfFile', file);
 
-        try {
-            const res = await fileServices.uploadFile(formData, option);
-            onSuccess('Ok');
-            setUploadedFile({ id: res?.data?.data?.id, fileName: res?.data?.data?.fileName });
-        } catch (err) {
-            if (isCancel(err)) {
-                form.setFields([
-                    {
-                        name: 'pdf',
-                        errors: [],
-                    },
-                ]);
-                return;
-            }
-            form.setFields([
-                {
-                    name: 'pdf',
-                    errors: ['Dosya yüklenemedi yeniden deneyiniz'],
-                },
-            ]);
-            onError({ err });
-        }
+        setLgsFormData(formData);
+        setUploadOption(option);
+
+        // try {
+        //     const res = await fileServices.uploadFile(formData, option);
+        //     onSuccess('Ok');
+        //     setUploadedFile({ id: res?.data?.data?.id, fileName: res?.data?.data?.fileName });
+        // } catch (err) {
+        //     if (isCancel(err)) {
+        //         form.setFields([
+        //             {
+        //                 name: 'pdf',
+        //                 errors: [],
+        //             },
+        //         ]);
+        //         return;
+        //     }
+        //     form.setFields([
+        //         {
+        //             name: 'pdf',
+        //             errors: ['Dosya yüklenemedi yeniden deneyiniz'],
+        //         },
+        //     ]);
+        //     onError({ err });
+        // }
     };
     const cancelUpload = () => {
         if (cancelFileUpload.current) cancelFileUpload.current('User has canceled the file upload.');
@@ -79,6 +83,18 @@ const UploadFileModal = ({ isVisible, setIsVisible, setSelectVal }) => {
     const onFinish = async (files) => {
         const values = await form.validateFields();
         console.log('values', values);
+
+        try {
+            const res = await yokSyncVersionService.loadLgsDataChanges(lgsFormData, uploadOption);
+            setUploadedFile({ id: res?.data?.data?.id, fileName: res?.data?.data?.fileName });
+            setInformType(1);
+        } catch (err) {
+            errorDialog({
+                title: 'Hata',
+                message: err?.message,
+            });
+        }
+
         setIsVisible(false);
         setSelectVal('Versiyon Ekle');
     };
