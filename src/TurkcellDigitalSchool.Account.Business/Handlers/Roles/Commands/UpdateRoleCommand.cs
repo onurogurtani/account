@@ -44,7 +44,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string UserTypeCantChanged = Constants.Messages.UserTypeCantChanged;
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string RoleUpdated = Constants.Messages.RoleUpdated;
 
             [SecuredOperation(Priority = 1)]

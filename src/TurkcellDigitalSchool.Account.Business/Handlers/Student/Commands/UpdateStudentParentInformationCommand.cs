@@ -35,7 +35,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             }
 
 
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
             [ValidationAspect(typeof(UpdateStudentParentInformationValidator), Priority = 2)]
             public async Task<IResult> Handle(UpdateStudentParentInformationCommand request, CancellationToken cancellationToken)

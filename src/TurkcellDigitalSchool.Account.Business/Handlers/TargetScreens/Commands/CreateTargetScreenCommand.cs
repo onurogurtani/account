@@ -31,7 +31,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Commands
                 _targetScreenRepository = targetScreenRepository;
             }
 
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [SecuredOperation(Priority = 1)]

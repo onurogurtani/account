@@ -25,7 +25,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ServiceMessages.Comman
                 _mediator = mediator;
             }
 
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string UnableToProccess = Messages.UnableToProccess;

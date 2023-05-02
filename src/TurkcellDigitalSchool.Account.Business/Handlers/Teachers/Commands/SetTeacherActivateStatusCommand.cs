@@ -33,7 +33,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string UserIsNotTeacher = Constants.Messages.UserIsNotTeacher;
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [SecuredOperation(Priority = 1)]
