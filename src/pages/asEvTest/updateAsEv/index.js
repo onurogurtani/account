@@ -370,8 +370,7 @@ const UpdateAsEv = () => {
                                                                         className="changeSubjectSelect"
                                                                         onChange={handleSubject}
                                                                     >
-                                                                        {asEvDetail?.items[0]?.asEvDetail?.subjects
-                                                                            .length > 0 &&
+                                                                        {
                                                                             asEvDetail?.items[0]?.asEvDetail?.subjects.map(
                                                                                 (item) => {
                                                                                     return (
@@ -483,7 +482,6 @@ const UpdateAsEv = () => {
                                                                     {item?.lessonSubject}
                                                                 </CustomFormItem>
                                                                 <CustomFormItem label="Cevap">
-                                                                    {' '}
                                                                     {getChoicesText(item?.correctAnswer)}
                                                                 </CustomFormItem>
                                                                 <CustomFormItem label="Zorluk Seviyesi">
@@ -554,8 +552,7 @@ const UpdateAsEv = () => {
                                                                         className="changeSubjectSelect"
                                                                         onChange={handleSubject}
                                                                     >
-                                                                        {asEvDetail?.items[0]?.asEvDetail?.subjects
-                                                                            .length > 0 &&
+                                                                        {
                                                                             asEvDetail?.items[0]?.asEvDetail?.subjects.map(
                                                                                 (item) => {
                                                                                     return (
