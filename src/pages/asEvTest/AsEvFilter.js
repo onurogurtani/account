@@ -5,23 +5,29 @@ import iconSearchWhite from '../../assets/icons/icon-white-search.svg';
 import { CustomButton, CustomForm, CustomFormItem, CustomImage, CustomSelect, CustomTextInput, Option, Text,CustomInput } from '../../components';
 import { getFilterPagedAsEvs } from '../../store/slice/asEvSlice';
 import { getAllClassStages } from '../../store/slice/classStageSlice';
+import { getEducationYearList } from '../../store/slice/educationYearsSlice';
 import '../../styles/tableFilter.scss';
+
 
 const AsEvFilter = () => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
 
+    const { allClassList } = useSelector((state) => state?.classStages);
+    const { educationYearList} = useSelector((state) => state?.educationYears);
+    const { asEvList } = useSelector((state) => state?.asEv);
+
     useEffect(() => {
         form.resetFields();
         dispatch(getAllClassStages());
+        dispatch(getEducationYearList());
     }, [dispatch, form]);
 
-    const { allClassList } = useSelector((state) => state?.classStages);
-    const { asEvList } = useSelector((state) => state?.asEv);
 
     const handleFilter = async(values) => {
       await dispatch(getFilterPagedAsEvs(values))
     }
+
 
     return (
         <div className="table-filter">
@@ -131,6 +137,31 @@ const AsEvFilter = () => {
                                     return (
                                         <Option key={item?.lesson?.id} value={item?.lesson?.id}>
                                             {item?.lesson?.name}
+                                        </Option>
+                                    );
+                                })}
+                        </CustomSelect>
+                    </CustomFormItem>
+                    <CustomFormItem
+                        label={
+                            <div>
+                                <Text t="Eğitim Öğretim Yılı" />
+                            </div>
+                        }
+                        name="EducationYearId"
+                        className="filter-item"
+                    >
+                        <CustomSelect
+                            className="form-filter-item"
+                            placeholder={'Seçiniz'}
+                            style={{
+                                width: '100%',
+                            }}
+                        >
+                             {educationYearList?.items?.map((item) => {
+                                    return (
+                                        <Option key={item?.id} value={item?.id}>
+                                            {item?.startYear}  -  {item.endYear}
                                         </Option>
                                     );
                                 })}

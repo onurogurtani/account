@@ -28,7 +28,7 @@ const AsEvForm = ({ setStep, step }) => {
 
     const { allClassList } = useSelector((state) => state?.classStages);
     const { lessonsGetByClassroom } = useSelector((state) => state?.lessons);
-     const { educationYearList} = useSelector((state) => state?.educationYears);
+    const { educationYearList} = useSelector((state) => state?.educationYears);
     const { newAsEv } = useSelector((state) => state?.asEv);
 
     const { videos } = useSelector((state) => state?.videos);
