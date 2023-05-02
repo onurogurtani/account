@@ -20,15 +20,14 @@ const useUploadFile = () => {
     const [selectVal, setSelectVal] = useState('Versiyon Ekle');
     const [isVisible, setIsVisible] = useState(false);
     const [form] = Form.useForm();
+    const [previewedRecords, setpreviewedRecords] = useState([]);
     const cancelFileUpload = useRef(null);
     const [uploadedFile, setUploadedFile] = useState();
     const token = useSelector((state) => state?.auth?.token);
     const { versionDiffData } = useSelector((state) => state.yokSyncVersion);
-    console.log('first', versionDiffData);
     const dispatch = useDispatch();
 
     const loadTableData = async () => {
-        console.log('"hopp"', 'hopp');
         await dispatch(getVersionList());
     };
 
@@ -55,15 +54,15 @@ const useUploadFile = () => {
     const onSelectChange = async (value) => {
         await checkTable(value);
         setSelectVal(value);
-        console.log('"devcam"', 'devcam'); //todo kaldır bunu
+        console.log('value', value);
         switch (value) {
+            case 0:
+                updateLicenceVersion();
+                break;
             case 1:
                 updateAscVersion();
                 break;
             case 2:
-                updateLicenceVersion();
-                break;
-            case 3:
                 updateHighSchoolVersion();
                 break;
             default:
@@ -93,6 +92,8 @@ const useUploadFile = () => {
         if (syncYksLicencePrefs.fulfilled.match(action)) {
             setInformType(0);
         } else {
+            setInformType(undefined);
+
             errorDialog({
                 title: <Text t="error" />,
                 message: action?.payload?.message,
@@ -101,6 +102,46 @@ const useUploadFile = () => {
     };
     const updateHighSchoolVersion = () => {
         setIsVisible(true);
+    };
+
+    const getLicenceDiffData = async (data) => {
+        let res = await yokSyncVersionService.getYksLicenceDataChanges(data);
+        let changes = await res?.data;
+        return changes;
+    };
+    const getAscDiffData = async (data) => {
+        let res = await yokSyncVersionService.getYksAscDataChanges(data);
+        let changes = await res?.data;
+
+        return changes;
+    };
+    const getLgsDiffData = async (data) => {
+        let res = await yokSyncVersionService.getLgsDataChanges(data);
+        let changes = await res?.data;
+
+        return changes;
+    };
+    const getVersionDifData = async (record) => {
+        let data = {
+            versionId: record?.id,
+        };
+        let id = record?.yokType;
+        let tableData = [];
+
+        switch (id) {
+            case 0:
+                tableData = await getLicenceDiffData(data);
+                break;
+            case 1:
+                tableData = await getAscDiffData(data);
+                break;
+            case 2:
+                tableData = await getLgsDiffData(data);
+                break;
+            default:
+                break;
+        }
+        return tableData;
     };
 
     const onCancel = () => {};
@@ -124,6 +165,9 @@ const useUploadFile = () => {
         informType,
         setInformType,
         versionDiffData,
+        getVersionDifData,
+        setpreviewedRecords,
+        previewedRecords,
     };
 };
 

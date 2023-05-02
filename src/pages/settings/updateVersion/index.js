@@ -14,6 +14,9 @@ const UpdateVersionOne = () => {
         setInformType,
         informType,
         versionDiffData,
+        getVersionDifData,
+        setpreviewedRecords,
+        previewedRecords,
     } = useUploadFile();
 
     const sharedProps = {
@@ -25,6 +28,9 @@ const UpdateVersionOne = () => {
         setInformType,
         informType,
         versionDiffData,
+        getVersionDifData,
+        setpreviewedRecords,
+        previewedRecords,
     };
     return (
         <CustomPageWrapper

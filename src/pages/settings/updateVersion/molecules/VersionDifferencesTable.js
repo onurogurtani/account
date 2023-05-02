@@ -1,19 +1,18 @@
-import React, { useState, useContext, useEffect, useCallback, useMemo } from 'react';
-import { CustomButton, CustomTable, CustomPagination } from '../../../../components';
-import { UpSquareOutlined, DownSquareOutlined } from '@ant-design/icons';
-import styles from '../assets/versionDifferences.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import { data, pagedProperty } from '../assets/constants';
+import { DownSquareOutlined, UpSquareOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { Row, Col } from 'antd';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { CustomButton, CustomTable } from '../../../../components';
 import '../../../../styles/settings/contracts.scss';
-import { yokTypeTrEnum, yokChangesTrConfirmStatusEnum } from '../assets/constants';
-const VersionDifferencesTable = ({ versionDiffData }) => {
+import { yokChangesTrConfirmStatusEnum, yokTypeTrEnum } from '../assets/constants';
+import styles from '../assets/versionDifferences.module.scss';
+import SubTable from './SubTable';
+const VersionDifferencesTable = ({ versionDiffData, getVersionDifData, setpreviewedRecords, previewedRecords }) => {
+    console.log('previewd', previewedRecords);
     const dispatch = useDispatch();
-    // const { cart, isFetching } = useSelector((state) => state.cart);
 
     const [expandedRowKeys, setExpandedRowKeys] = useState([]);
-    console.log('expandedROWkEYS', expandedRowKeys);
+    //aşağıdaki fonksiyonu dğzenle
     const onExpand = async (expanded, record) => {
         if (expanded) {
             // Dispatch a backend request here to fetch the expanded data
@@ -32,6 +31,7 @@ const VersionDifferencesTable = ({ versionDiffData }) => {
         setExpandedRowKeys(
             expanded ? expandedRowKeys.filter((key) => key !== record.id) : [...expandedRowKeys, record.id],
         );
+        setpreviewedRecords(!previewedRecords.includes(record.id) && [...previewedRecords, record.id]);
     };
     const columns = [
         // CustomTable.EXPAND_COLUMN,
@@ -82,11 +82,15 @@ const VersionDifferencesTable = ({ versionDiffData }) => {
             render: (_, record) => {
                 return (
                     <div className={styles.actionButtonsContainer}>
-                        <CustomButton>Onay</CustomButton>
-                        <CustomButton>İptal Et</CustomButton>
+                        <CustomButton disabled={record.confirmStatus === 0 && !previewedRecords.includes(record?.id)}>
+                            Onay
+                        </CustomButton>
+                        <CustomButton disabled={record.confirmStatus === 0 && !previewedRecords.includes(record?.id)}>
+                            İptal Et
+                        </CustomButton>
                         <CustomButton className={styles.previewButton} onClick={() => toggleExpanded(record)}>
                             {' '}
-                            >Önizleme
+                            Önizleme
                         </CustomButton>
                     </div>
                 );
@@ -119,20 +123,13 @@ const VersionDifferencesTable = ({ versionDiffData }) => {
     return (
         <CustomTable
             columns={columns}
-            // expandable={{
-            //     expandedRowRender,
-            //     defaultExpandedRowKeys: ['0'],
-            // }}
-
+            rowKey="id"
             expandable={{
-                rowExpandable: (record) => true,
-                expandedRowRender: (record) => {
-                    return <p>{record.version}</p>;
-                },
-                defaultExpandedRowKeya: [58, 59],
-                expandIcon: ({ expanded, onExpand, record }) =>
-                    expanded ? (
+                expandedRowRender: (record) => <SubTable getVersionDifData={getVersionDifData} record={record} />,
+                expandIcon: ({ expanded, onExpand, record }) => {
+                    return expanded ? (
                         <UpSquareOutlined
+                            record={record}
                             style={{ fontSize: '32px' }}
                             onClick={(e) => {
                                 setExpandedRowKeys(expandedRowKeys.filter((key) => key !== record.id));
@@ -143,18 +140,17 @@ const VersionDifferencesTable = ({ versionDiffData }) => {
                         <DownSquareOutlined
                             style={{ fontSize: '32px' }}
                             onClick={(e) => {
-                                // dispatch(getQuotesById(record?.quoteId));
                                 setExpandedRowKeys([...expandedRowKeys, record.id]);
                                 return onExpand(expanded, record);
                             }}
                         />
-                    ),
+                    );
+                },
+                expandedRowKeys: expandedRowKeys,
             }}
             dataSource={versionDiffData}
             className={styles.mainVersionTable}
-            // footer={() => <TableFooter paginationProps={paginationProps} />}
             pagination={false}
-            rowKey={(record) => (record.id ? `${record?.id}` : `${record?.headText}`)}
             scroll={{ x: false }}
         />
     );
