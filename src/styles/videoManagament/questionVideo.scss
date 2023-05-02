@@ -1,74 +1,65 @@
 .question-video {
-  .add-btn {
-    margin-top: 10px;
-    background-color: #00a483;
-    border: none;
-    margin-left: 10px;
-  }
-  .upload-btn {
-    background: #0f733d !important;
-    color: #fff;
-    border: none;
-  }
-  .question-list {
-    margin-top: 25px;
-    .ant-list-item-meta {
-      .ant-list-item-meta-avatar {
-        span {
-          svg {
-            width: 32px;
-            height: 48px;
-          }
-        }
-      }
-      .ant-list-item-meta-content {
-        display: flex;
-        gap: 15px;
-        text-align: justify;
-        .ant-list-item-meta-title {
-          flex: 1;
-          display: flex;
-          padding-top: 7px;
-        }
-        .ant-list-item-meta-description {
-          flex: 1;
-          gap: 16px;
-          display: flex;
-          span {
+    .add-btn {
+        margin-top: 10px;
+        background-color: #00a483;
+        border: none;
+        margin-left: 10px;
+    }
+    .upload-btn {
+        background: #0f733d !important;
+        color: #fff;
+        border: none;
+    }
+    .question-list {
+        .ant-list-item {
+            justify-content: flex-start;
+            gap: 10px;
             svg {
-              width: 32px;
-              height: 48px;
+                width: 24px;
+                height: 24px;
             }
-          }
-          .question-answer {
-            display: flex;
-            padding-top: 7px;
-          }
+            .answerIcon {
+                svg {
+                    opacity: 0.5;
+                }
+            }
+            .bracketTime {
+                margin-left: 5px;
+                flex: 1;
+            }
+            .bracketHeader {
+                margin-left: 30px;
+                flex: 4;
+            }
+            .question {
+                flex: 8;
+            }
+            .answer {
+                flex: 8;
+                opacity: 0.5;
+            }
         }
-      }
+        .ant-list-item-action {
+            margin-left: auto;
+            .question-delete {
+                color: red;
+            }
+            .question-edit {
+                color: #70b186;
+            }
+        }
     }
-    .ant-list-item-action {
-      .question-delete {
-        color: red;
-        text-decoration: none;
-      }
-      .question-edit {
-        color: #70b186;
-        text-decoration: none;
-      }
+    .btn-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: 20px;
+        .next-btn {
+            background-color: #699a00;
+            border: none;
+        }
+        .back-btn {
+            background-color: gray;
+            border: none;
+        }
     }
-  }
-  .btn-group {
-    display: flex;
-    justify-content: flex-end;
-    gap: 20px;
-    .next-btn {
-      background-color: #699a00;
-      border: none;
-    }
-    .back-btn {
-      background-color: gray;
-      border: none;
-    }
-  }
 }

@@ -283,7 +283,7 @@ const LessonsSectionForm = ({ form }) => {
                     </div>
                     {videoBrackets.map((i, index) => (
                         <div key={index} className="video-mark">
-                            <CustomFormItem name={['videoBrackets', index, 'header']} style={{ flex: 2 }}>
+                            <CustomFormItem initialValue={i.header} name={['videoBrackets', index, 'header']} style={{ flex: 2 }}>
                                 <CustomInput disabled placeholder={i.header} />
                             </CustomFormItem>
 

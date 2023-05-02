@@ -1,5 +1,6 @@
 import {
   CheckCircleOutlined,
+  ClockCircleOutlined,
   FileExcelOutlined,
   InboxOutlined,
   PlusOutlined,
@@ -14,6 +15,7 @@ import {
   CustomForm,
   CustomFormItem,
   CustomModal,
+  CustomSelect,
   errorDialog,
   successDialog,
   Text,
@@ -25,6 +27,30 @@ import {
 } from '../../../../store/slice/videoSlice';
 import '../../../../styles/videoManagament/questionVideo.scss';
 import { reactQuillValidator } from '../../../../utils/formRule';
+
+const selectedBrackets = [
+  {
+    header: "deneme2",
+    bracketTime: "000:01",
+    lessonSubSubjectId: 79
+  },
+  {
+    header: "deneme4",
+    bracketTime: "000:02",
+    lessonSubSubjectId: 80
+  },
+  {
+    header: "deneme5",
+    bracketTime: "000:03",
+    lessonSubSubjectId: 81
+  },
+  {
+    header: "Lorem Ipsum is simply du",
+    bracketTime: "000:04",
+    lessonSubSubjectId: 74
+  }
+]
+
 
 const AddVideoQuestion = ({ sendValue }) => {
   const [open, setOpen] = useState(false);
@@ -202,6 +228,27 @@ const AddVideoQuestion = ({ sendValue }) => {
       message: 'Lütfen en az 1 adet soru ekleyiniz.',
     });
   };
+  const renderListAction = (item, index) => {
+    return <>
+      <CustomButton type="text" className="question-edit" onClick={() => handleEdit(item, index)}>
+        Düzenle
+      </CustomButton>
+      <CustomButton type="text" className="question-delete" onClick={() => handleDelete(item, index)}>
+        Sil
+      </CustomButton>
+    </>
+  }
+  const renderList = (item) => {
+    return <>
+      <ClockCircleOutlined />
+      <div className='bracketTime'>{selectedBrackets.find((i) => i.lessonSubSubjectId === item.title).bracketTime}</div>
+      <div className='bracketHeader'>{selectedBrackets.find((i) => i.lessonSubSubjectId === item.title).header} </div>
+      <QuestionCircleOutlined />
+      <div className='question' dangerouslySetInnerHTML={{ __html: item?.text }} />
+      <CheckCircleOutlined className='answerIcon' />
+      <div className="answer" dangerouslySetInnerHTML={{ __html: item?.answer }} />
+    </>
+  }
   return (
     <div className="question-video">
       <CustomButton icon={<FileExcelOutlined />} className="upload-btn" onClick={uploadExcel}>
@@ -225,7 +272,7 @@ const AddVideoQuestion = ({ sendValue }) => {
         cancelText="Vazgeç"
         onCancel={onCancelModal}
         bodyStyle={{ overflowY: 'auto' }}
-        //   width={600}
+      //   width={600}
       >
         <CustomForm form={form} layout="vertical" name="form" onFinish={onFinish}>
           {isExcel ? (
@@ -265,6 +312,18 @@ const AddVideoQuestion = ({ sendValue }) => {
             </CustomFormItem>
           ) : (
             <>
+              <CustomFormItem
+                rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
+                label="Başlık"
+                name="title"
+              >
+                <CustomSelect
+                  // onChange={onUnitChange} 
+                  fieldNames={{ label: 'header', value: 'lessonSubSubjectId' }}
+                  options={selectedBrackets}
+                  placeholder="Başlık" />
+              </CustomFormItem>
+
               <CustomFormItem
                 rules={[
                   {
@@ -316,31 +375,8 @@ const AddVideoQuestion = ({ sendValue }) => {
           header={<h5>Soru Listesi</h5>}
           dataSource={questionList}
           renderItem={(item, index) => (
-            <List.Item
-              actions={[
-                <>
-                  <a className="question-edit" onClick={() => handleEdit(item, index)}>
-                    Düzenle
-                  </a>{' '}
-                  <a className="question-delete" onClick={() => handleDelete(item, index)}>
-                    Sil
-                  </a>
-                </>,
-              ]}
-            >
-              <List.Item.Meta
-                avatar={<QuestionCircleOutlined />}
-                title={<div dangerouslySetInnerHTML={{ __html: item?.text }} />}
-                description={
-                  <>
-                    <CheckCircleOutlined />
-                    <div
-                      className="question-answer"
-                      dangerouslySetInnerHTML={{ __html: item?.answer }}
-                    />
-                  </>
-                }
-              />
+            <List.Item actions={[renderListAction(item, index)]}>
+              {renderList(item)}
             </List.Item>
           )}
         />

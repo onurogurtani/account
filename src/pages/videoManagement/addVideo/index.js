@@ -116,6 +116,7 @@ const AddVideo = () => {
           type="card"
           activeKey={activeKey}
           onTabClick={(newKey, e) => {
+            // dispatch(onChangeActiveKey(newKey))
             const isTriggeredByClick = e;
             if (isTriggeredByClick) return;
           }}
@@ -127,7 +128,9 @@ const AddVideo = () => {
             <AddDocument sendValue={documentValue} />
           </TabPane>
           <TabPane tab="Konu İle İlgili Tüm Sorular" key="2">
-            <AddVideoQuestion sendValue={questionValue} />
+            <AddVideoQuestion
+              sendValue={questionValue}
+              selectedBrackets={generalInformationData?.lessonSubSubjects} />
           </TabPane>
         </Tabs>
       </div>
