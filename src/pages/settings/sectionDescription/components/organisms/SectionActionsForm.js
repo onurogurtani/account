@@ -4,13 +4,11 @@ import {
     CustomForm,
     CustomFormItem,
     CustomInput,
-    CustomInputNumber,
     CustomSelect,
     Option,
     Text,
 } from '../../../../../components';
 import { examKinds } from '../../assets/constants';
-import { validateNumber } from '../../assets/utils';
 import ActiveRecordWarnInfo from '../atoms/ActiveRecordWarnInfo';
 
 const SectionActionsForm = ({ form, actionType, styles, onSelectChange, formListVisible, activeDescriptionErr }) => {
