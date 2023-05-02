@@ -88,19 +88,12 @@ const UpdateOrganisationIsActive = (data) => {
   });
 };
 
-const getImage = ({ id }) => {
-  return api({
-    url: `Account/OrganisationLogo/getbyid?Id=${id}`,
-    method: 'GET',
-  });
-};
-
-const addImage = (data, options) => {
-  return axios.post(`${process.env.PUBLIC_HOST_API}Account/OrganisationLogo/Add`, data, { ...options });
+const uploadImage = (data, options) => {
+  return axios.post(`${process.env.PUBLIC_HOST_API}File/Files`, data, { ...options });
 };
 
 const updateImage = (data, options) => {
-  return axios.put(`${process.env.PUBLIC_HOST_API}Account/OrganisationLogo/Update`, data, { ...options });
+  return axios.put(`${process.env.PUBLIC_HOST_API}File/Files`, data, { ...options });
 };
 
 const organisationsServices = {
@@ -115,8 +108,7 @@ const organisationsServices = {
   UpdateOrganisationStatus,
   deleteOrganization,
   UpdateOrganisationIsActive,
-  getImage,
-  addImage,
+  uploadImage,
   updateImage,
 };
 

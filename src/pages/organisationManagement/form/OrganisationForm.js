@@ -18,7 +18,8 @@ import CountySelector from '../../../components/CountySelector';
 import { segmentInformation } from '../../../constants/organisation';
 import { getOrganisationTypes } from '../../../store/slice/organisationTypesSlice';
 import { formMailRegex, formPhoneRegex } from '../../../utils/formRule';
-import { onChangeActiveStep, getImage } from '../../../store/slice/organisationsSlice';
+import { onChangeActiveStep } from '../../../store/slice/organisationsSlice';
+import { getBase64 } from '../../../store/slice/fileSlice';
 import '../../../styles/organisationManagement/organisationForm.scss';
 import LogoFormModal from './LogoFormModal';
 import { stringContainsNumber } from '../../../utils/utils';
@@ -32,9 +33,9 @@ const OrganisationForm = ({ form, organizationData, isEdit, sendValue, cityId })
   const [logoUrl, setLogoUrl] = useState('');
 
   const getImageDetail = async () => {
-    const response = await dispatch(getImage({ id: organisationImageId }));
-    const data = response.payload.data;
-    const imageUrl = `data:${data?.contentType};base64,${data?.image}`;
+    let response = await dispatch(getBase64({ id: organisationImageId }));
+    let data = response.payload.data;
+    const imageUrl = `data:${data?.contentType};base64,${data?.file}`;
     setLogoUrl(imageUrl);
   };
 

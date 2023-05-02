@@ -154,6 +154,13 @@ const SectionDescription = lazy(() =>
         default: Component,
     })),
 );
+
+const Coefficient = lazy(() =>
+    import('./coefficient').then(({ default: Component }) => ({
+        default: Component,
+    })),
+);
+
 const Settings = {
     Categories,
     Packages,
@@ -184,6 +191,7 @@ const Settings = {
     UpdateVersion,
     Messages,
     SectionDescription,
+    Coefficient
 };
 
 export default Settings;
