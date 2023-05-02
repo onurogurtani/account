@@ -12,6 +12,7 @@ import { getLessonBrackets } from '../store/slice/lessonBracketsSlice';
 const useAcquisitionTree = (isActive, loadingControl, educationYear) => {
     const dispatch = useDispatch();
     const { allClassList } = useSelector((state) => state?.classStages);
+    const [educationYearId, setEducationYearId] = useState();
     const [classroomId, setClassroomId] = useState();
     const [lessonId, setLessonId] = useState();
     const [unitId, setUnitId] = useState();
@@ -31,6 +32,19 @@ const useAcquisitionTree = (isActive, loadingControl, educationYear) => {
     useEffect(() => {
         !educationYear && dispatch(getAllClassStages(activeFilter));
     }, []);
+
+    useEffect(() => {
+        setClassroomId()
+        setLessonId();
+        setUnitId();
+        setLessonSubjectId();
+        setAcquisitionId()
+        if (!educationYearId) return false;
+        const getEducationYearList = async () => {
+            await dispatch(getAllClassStages(getListFilterParams('educationYearId', educationYearId).concat(activeFilter)));
+        };
+        getEducationYearList();
+    }, [educationYearId]);
 
     useEffect(() => {
         loadingControl && setIsLoading(true);
@@ -73,6 +87,8 @@ const useAcquisitionTree = (isActive, loadingControl, educationYear) => {
     }, [acquisitionId]);
 
     return {
+        educationYearId,
+        setEducationYearId,
         classroomId,
         setClassroomId,
         lessonId,

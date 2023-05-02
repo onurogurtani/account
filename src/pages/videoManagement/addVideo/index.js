@@ -80,8 +80,7 @@ const AddVideo = () => {
     if (addVideo.fulfilled.match(action)) {
       successDialog({
         title: <Text t="success" />,
-        message: 'Video Başarılı Şekilde Eklendi',
-        // message: action?.payload.message,
+        message: action?.payload?.message,
         onOk: async () => {
           dispatch(onChangeActiveKey('0'));
           history.push('/video-management/list');

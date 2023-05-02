@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { CustomFormItem, CustomInput, CustomMaskInput, CustomSelect, Option } from '../../../../components';
+import { Form } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { CustomFormItem, CustomInput, CustomMaskInput, CustomSelect, CustomTooltip, Option } from '../../../../components';
 import useAcquisitionTree from '../../../../hooks/useAcquisitionTree';
+import { clearClasses } from '../../../../store/slice/classStageSlice';
+import { getEducationYearList } from '../../../../store/slice/educationYearsSlice';
 import { videoTimeValidator } from '../../../../utils/formRule';
 
+//TODO: servis gelince kazanım değişkenleri form name vs gözden geçir
 const LessonsSectionForm = ({ form }) => {
+    const dispatch = useDispatch();
+
     const {
         allClassList,
+        setEducationYearId,
         classroomId,
         setClassroomId,
         lessonId,
@@ -15,38 +22,89 @@ const LessonsSectionForm = ({ form }) => {
         setUnitId,
         lessonSubjectId,
         setLessonSubjectId,
-    } = useAcquisitionTree(true);
+        setAcquisitionId
+    } = useAcquisitionTree(true, false, true);
 
     const { lessons } = useSelector((state) => state?.lessons);
-    const { lessonSubSubjects } = useSelector((state) => state?.lessonSubSubjects);
 
     const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
+    const { lessonAcquisitions } = useSelector((state) => state?.lessonAcquisitions);
+    const { lessonBrackets } = useSelector((state) => state?.lessonBrackets);
 
     const { lessonUnits } = useSelector((state) => state?.lessonUnits);
+    const { educationYearList } = useSelector((state) => state.educationYears);
 
     const [videoBrackets, setVideoBrackets] = useState([]);
+    const lessonAcquisitionIds = Form.useWatch('acquisitions', form) || [];
+    const lessonBracketIds = Form.useWatch('lessonSubSubjects', form) || [];
+
+    useEffect(() => {
+        dispatch(getEducationYearList());
+        dispatch(clearClasses());
+    }, []);
+
+    const onEducationYearChange = (value) => {
+        setEducationYearId(value)
+        form.resetFields(['classroomId', 'lessonId', 'lessonUnitId', 'lessonSubjectId', 'videoBrackets']);
+        form.setFieldsValue({
+            lessonSubSubjects: undefined,
+            acquisitions: undefined
+        })
+        setVideoBrackets([]);
+    };
+
     const onClassroomChange = (value) => {
         setClassroomId(value);
-        form.resetFields(['lessonId', 'lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects', 'videoBrackets']);
+        form.resetFields(['lessonId', 'lessonUnitId', 'lessonSubjectId', 'videoBrackets']);
+        form.setFieldsValue({
+            lessonSubSubjects: undefined,
+            acquisitions: undefined
+        })
         setVideoBrackets([]);
     };
 
     const onLessonChange = (value) => {
         setLessonId(value);
-        form.resetFields(['lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects', 'videoBrackets']);
+        form.resetFields(['lessonUnitId', 'lessonSubjectId', 'videoBrackets']);
+        form.setFieldsValue({
+            lessonSubSubjects: undefined,
+            acquisitions: undefined
+        })
         setVideoBrackets([]);
     };
 
     const onUnitChange = (value) => {
         setUnitId(value);
-        form.resetFields(['lessonSubjectId', 'lessonSubSubjects', 'videoBrackets']);
+        form.resetFields(['lessonSubjectId', 'videoBrackets']);
+        form.setFieldsValue({
+            lessonSubSubjects: undefined,
+            acquisitions: undefined
+        })
         setVideoBrackets([]);
     };
 
     const onLessonSubjectsChange = (value) => {
         setLessonSubjectId(value);
-        form.resetFields(['lessonSubSubjects', 'videoBrackets']);
+        form.resetFields(['videoBrackets']);
+        form.setFieldsValue({
+            lessonSubSubjects: undefined,
+            acquisitions: undefined
+        })
         setVideoBrackets([]);
+    };
+
+    const onAcquisitionChange = (value) => {
+        setAcquisitionId(value.at(-1));
+        let lessonSubSubjectIds
+        if (lessonBracketIds) {
+            lessonSubSubjectIds = lessonBrackets
+                .filter((item) => lessonBracketIds.includes(item.id))
+                .filter((item) => value.includes(item.lessonAcquisitionId)).map((i) => i.id)
+            onLessonSubSubjectsDeselect(null, { value: lessonSubSubjectIds })
+        }
+        form.setFieldsValue({
+            lessonSubSubjects: lessonSubSubjectIds,
+        })
     };
 
     const onLessonSubSubjectsSelect = (_, option) => {
@@ -57,7 +115,12 @@ const LessonsSectionForm = ({ form }) => {
     };
 
     const onLessonSubSubjectsDeselect = (_, option) => {
-        const filteredVideoBrackets = videoBrackets.filter((item) => item.lessonSubSubjectId !== option.value);
+        let filteredVideoBrackets
+        if (!Array.isArray(option.value)) {
+            filteredVideoBrackets = videoBrackets.filter((item) => item.lessonSubSubjectId !== option.value);
+        } else {
+            filteredVideoBrackets = videoBrackets.filter((item) => option.value.includes(item.lessonSubSubjectId));
+        }
         setVideoBrackets(filteredVideoBrackets);
         form.resetFields(['videoBrackets']);
         form.setFields(
@@ -82,6 +145,19 @@ const LessonsSectionForm = ({ form }) => {
 
     return (
         <>
+            <CustomFormItem label="Eğitim Öğretim Yılı" name="????">
+                <CustomSelect
+                    onChange={onEducationYearChange}
+                    placeholder="Eğitim Öğretim Yılı"
+                >
+                    {educationYearList?.items?.map(({ id, startYear, endYear }) => (
+                        <Option key={id} value={id}>
+                            {startYear} - {endYear}
+                        </Option>
+                    ))}
+                </CustomSelect>
+            </CustomFormItem>
+
             <CustomFormItem
                 rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
                 label="Sınıf Seviyesi"
@@ -89,7 +165,6 @@ const LessonsSectionForm = ({ form }) => {
             >
                 <CustomSelect onChange={onClassroomChange} placeholder="Sınıf Seviyesi">
                     {allClassList
-                        // ?.filter((item) => item.isActive)
                         ?.map((item) => {
                             return (
                                 <Option key={item?.id} value={item?.id}>
@@ -106,7 +181,6 @@ const LessonsSectionForm = ({ form }) => {
             >
                 <CustomSelect onChange={onLessonChange} placeholder="Ders">
                     {lessons
-                        // ?.filter((item) => item.isActive)
                         ?.filter((item) => item.classroomId === classroomId)
                         ?.map((item) => {
                             return (
@@ -151,9 +225,35 @@ const LessonsSectionForm = ({ form }) => {
                         })}
                 </CustomSelect>
             </CustomFormItem>
+
             <CustomFormItem
                 rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
-                label="Alt Başlık"
+                label="Kazanım"
+                name="acquisitions"
+            >
+                <CustomSelect
+                    onChange={onAcquisitionChange}
+                    placeholder="Kazanım"
+                    showArrow
+                    mode="multiple"
+                >
+                    {lessonAcquisitions
+                        ?.filter((item) => item.lessonSubjectId === lessonSubjectId)
+                        ?.map((item) => {
+                            return (
+                                <Option key={item?.id} value={item?.id}>
+                                    <CustomTooltip title={item?.name} placement="bottomRight">
+                                        {item?.name}
+                                    </CustomTooltip>
+                                </Option>
+                            );
+                        })}
+                </CustomSelect>
+            </CustomFormItem>
+
+            <CustomFormItem
+                rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
+                label="Ayraç"
                 name="lessonSubSubjects"
             >
                 <CustomSelect
@@ -161,10 +261,10 @@ const LessonsSectionForm = ({ form }) => {
                     onDeselect={onLessonSubSubjectsDeselect}
                     showArrow
                     mode="multiple"
-                    placeholder="Alt Başlık"
+                    placeholder="Ayraç"
                 >
-                    {lessonSubSubjects
-                        ?.filter((item) => item.lessonSubjectId === lessonSubjectId)
+                    {lessonBrackets
+                        ?.filter((item) => lessonAcquisitionIds.includes(item.lessonAcquisitionId))
                         ?.map((item) => {
                             return (
                                 <Option key={item?.id} value={item?.id}>
