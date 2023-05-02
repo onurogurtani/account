@@ -8,6 +8,10 @@ const getClassList = (data = null) => {
     });
 };
 
+
+
+
+
 const addClass = (data) => {
     return api({
         url: 'Education/Classrooms',
@@ -37,12 +41,16 @@ const getByIdClass = (data) => {
     });
 };
 
+
+
+
 const classStageServices = {
     getClassList,
     addClass,
     updateClass,
     deleteClass,
     getByIdClass,
+   
 };
 
 export default classStageServices;

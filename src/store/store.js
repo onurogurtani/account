@@ -65,6 +65,7 @@ import { teachersSlice } from './slice/teachersSlice';
 import { lessonAcquisitionsSlice } from './slice/lessonAcquisitionsSlice';
 import { lessonBracketsSlice } from './slice/lessonBracketsSlice';
 import { sectionDescriptionsSlice } from './slice/sectionDescriptionsSlice';
+import { examTypesSlice } from './slice/examTypeSlice';
 
 const reducers = combineReducers({
     auth: authSlice.reducer,
@@ -125,6 +126,7 @@ const reducers = combineReducers({
     videoReportsConnected: videoReportsConnectedSlice.reducer,
     teachers: teachersSlice.reducer,
     sectionDescriptions: sectionDescriptionsSlice.reducer,
+    examTypesSlice: examTypesSlice.reducer,
 });
 
 const persistConfig = {

@@ -23,8 +23,11 @@ import { ArrowRightOutlined, SearchOutlined } from '@ant-design/icons';
 import { getLessonsQuesiton, setLessons } from '../../../store/slice/lessonsSlice';
 import { getMaxNetCounts, getMaxNetCountsAdd, getMaxNetCountsUpdate } from '../../../store/slice/maxNetNumberSlice';
 const MaxNetNumber = () => {
+    
     const { educationYearList } = useSelector((state) => state.educationYears);
     const { allClassList } = useSelector((state) => state.classStages);
+    const { examTypesSlice } = useSelector((state) => state.examTypesSlice);
+    
     const sinavTurleri = {
         tyt: 'TYT',
         ayt: 'AYT',
@@ -141,6 +144,9 @@ const MaxNetNumber = () => {
             },
         },
     ];
+
+
+
     const sumbit = () => {
         if (updateData.id) {
             confirmDialog({
@@ -286,7 +292,9 @@ const MaxNetNumber = () => {
         });
         setFormNumberValue(newData);
     }, []);
-    console.log(lessons);
+  
+    console.log(examTypesSlice);
+    
     return (
         <CustomPageHeader>
             <CustomCollapseCard cardTitle={'Max Net Sayıları'}>
