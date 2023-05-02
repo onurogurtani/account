@@ -69,7 +69,7 @@ const AsEvTestPreview = () => {
                                     <div style={{ display: 'flex' }}>
                                        
                                         <CustomForm layout={"inline"}  form={form}>
-                                            <CustomFormItem key={item?.asEvQuestionId}  initialValue={item?.sequence} name="sequence">
+                                            <CustomFormItem key={item?.asEvQuestionId}  name={item?.asEvQuestionId} >
                                         <CustomInputNumber
                                            min={1}
                                             onChange={(value) => handleSequence(value,item?.asEvQuestionId)}

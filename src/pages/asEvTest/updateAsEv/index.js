@@ -1,4 +1,4 @@
-import { Tabs, Form, Rate, Card, Popconfirm,Alert } from 'antd';
+import { Tabs, Form, Rate, Card, Popconfirm, Alert } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -28,7 +28,7 @@ import ChangeQuestionModal from './ChangeQuestionModal';
 import { getLessonSubjects } from '../../../store/slice/lessonSubjectsSlice';
 import DifficultiesModal from '../addAsEv/DifficultiesModal';
 import AsEvInfo from '../showAsEv/AsEvInfo';
-import { getChoicesText } from '../../../utils/utils';
+import { getChoicesText, getListFilterParams } from '../../../utils/utils';
 
 const { TabPane } = Tabs;
 
@@ -118,12 +118,17 @@ const UpdateAsEv = () => {
     };
 
     const cancelQuestion = async (id) => {
-        await dispatch(cancelAsEvQuestion({ asEvId: asEvDetail?.items[0].asEvDetail?.id, questionOfExamId: id }));
+        await dispatch(cancelAsEvQuestion({ questionOfExamId: id }));
         await dispatch(getAsEvById({ id: currentAsEv?.id }));
     };
-    const changeQuestion = async (id) => {
+    const changeQuestion = async (id,difficultly,subject) => {
         setQuestionId(id);
-        //await dispatch(getLessonSubjects(getListFilterParams('lessonUnitId', asEvDetail?.items[0].asEvDetail?.id)));
+        setDifficultlyLevel(difficultly)
+        if (!(asEvDetail?.items[0].asEvDetail?.subjects.length > 0)) {
+            await dispatch(
+                getLessonSubjects(getListFilterParams('lessonUnitId', asEvDetail?.items[0].asEvDetail?.lessonUnit?.id)),
+            );
+        }
     };
 
     const giveUp = () => {
@@ -194,12 +199,12 @@ const UpdateAsEv = () => {
     };
 
     const handleSubject = (value) => {
-       setSelectSubject(value)
-    }
+        setSelectSubject(value);
+    };
 
     const handleDifficultLevel = (value) => {
-      setDifficultlyLevel(value)
-    }
+        setDifficultlyLevel(value);
+    };
 
     return (
         <>
@@ -291,18 +296,25 @@ const UpdateAsEv = () => {
                                                                 <CustomFormItem label="Konu">
                                                                     {item?.lessonSubject}
                                                                 </CustomFormItem>
-                                                                <CustomFormItem label="Cevap"> {getChoicesText(item?.correctAnswer) }</CustomFormItem>
+                                                                <CustomFormItem label="Cevap">
+                                                                    {getChoicesText(item?.correctAnswer)}
+                                                                </CustomFormItem>
                                                                 <CustomFormItem label="Zorluk Seviyesi">
                                                                     <Rate
                                                                         className="question-difficultly-rate"
                                                                         value={item?.difficulty}
                                                                     />
                                                                 </CustomFormItem>
-                                                                {item?.isAddedAsEv &&
-                                                                  <CustomFormItem>
-                                                                     <Alert style={{width:"200px"}} message="Soru Seçildi" type="success" showIcon />
-                                                              </CustomFormItem>
-                                                                }
+                                                                {item?.isAddedAsEv && (
+                                                                    <CustomFormItem>
+                                                                        <Alert
+                                                                            style={{ width: '200px' }}
+                                                                            message="Soru Seçildi"
+                                                                            type="success"
+                                                                            showIcon
+                                                                        />
+                                                                    </CustomFormItem>
+                                                                )}
                                                                 <CustomFormItem>
                                                                     {asEvDetail?.items[0].asEvDetail
                                                                         ?.isWorkPlanAttached && (
@@ -339,7 +351,7 @@ const UpdateAsEv = () => {
                                                                 <CustomFormItem>
                                                                     <CustomButton
                                                                         onClick={() =>
-                                                                            changeQuestion(item?.questionOfExamId)
+                                                                            changeQuestion(item?.questionOfExamId,item?.difficulty,item?.lessonSubject)
                                                                         }
                                                                         className="changeQuestionButton"
                                                                         type="primary"
@@ -358,8 +370,23 @@ const UpdateAsEv = () => {
                                                                         className="changeSubjectSelect"
                                                                         onChange={handleSubject}
                                                                     >
-                                                                        {asEvDetail?.items[0]?.asEvDetail?.subjects.map(
-                                                                            (item) => {
+                                                                        {
+                                                                            asEvDetail?.items[0]?.asEvDetail?.subjects.map(
+                                                                                (item) => {
+                                                                                    return (
+                                                                                        <Option
+                                                                                            key={item?.id}
+                                                                                            value={item?.id}
+                                                                                        >
+                                                                                            {item?.name}
+                                                                                        </Option>
+                                                                                    );
+                                                                                },
+                                                                            )}
+
+                                                                        {asEvDetail?.items[0]?.asEvDetail?.subjects
+                                                                            .length === 0 &&
+                                                                            lessonSubjects.map((item) => {
                                                                                 return (
                                                                                     <Option
                                                                                         key={item?.id}
@@ -368,8 +395,7 @@ const UpdateAsEv = () => {
                                                                                         {item?.name}
                                                                                     </Option>
                                                                                 );
-                                                                            },
-                                                                        )}
+                                                                            })}
                                                                     </CustomSelect>
                                                                 </CustomFormItem>
                                                                 <CustomFormItem
@@ -455,7 +481,9 @@ const UpdateAsEv = () => {
                                                                 <CustomFormItem label="Konu">
                                                                     {item?.lessonSubject}
                                                                 </CustomFormItem>
-                                                                <CustomFormItem label="Cevap"> {getChoicesText(item?.correctAnswer) }</CustomFormItem>
+                                                                <CustomFormItem label="Cevap">
+                                                                    {getChoicesText(item?.correctAnswer)}
+                                                                </CustomFormItem>
                                                                 <CustomFormItem label="Zorluk Seviyesi">
                                                                     <Rate
                                                                         className="question-difficultly-rate"
@@ -464,9 +492,14 @@ const UpdateAsEv = () => {
                                                                 </CustomFormItem>
 
                                                                 <CustomFormItem>
-                                                                     <Alert style={{width:"200px"}} message="Soru Seçildi" type="success" showIcon />
-                                                              </CustomFormItem>
-                                                              
+                                                                    <Alert
+                                                                        style={{ width: '200px' }}
+                                                                        message="Soru Seçildi"
+                                                                        type="success"
+                                                                        showIcon
+                                                                    />
+                                                                </CustomFormItem>
+
                                                                 <CustomFormItem>
                                                                     {asEvDetail?.items[0].asEvDetail
                                                                         ?.isWorkPlanAttached && (
@@ -501,7 +534,7 @@ const UpdateAsEv = () => {
                                                                 <CustomFormItem>
                                                                     <CustomButton
                                                                         onClick={() =>
-                                                                            changeQuestion(item?.questionOfExamId)
+                                                                            changeQuestion(item?.questionOfExamId,item?.difficulty,item?.lessonSubject)
                                                                         }
                                                                         className="changeQuestionButton"
                                                                         type="primary"
@@ -519,8 +552,23 @@ const UpdateAsEv = () => {
                                                                         className="changeSubjectSelect"
                                                                         onChange={handleSubject}
                                                                     >
-                                                                           {asEvDetail?.items[0]?.asEvDetail?.subjects.map(
-                                                                            (item) => {
+                                                                        {
+                                                                            asEvDetail?.items[0]?.asEvDetail?.subjects.map(
+                                                                                (item) => {
+                                                                                    return (
+                                                                                        <Option
+                                                                                            key={item?.id}
+                                                                                            value={item?.id}
+                                                                                        >
+                                                                                            {item?.name}
+                                                                                        </Option>
+                                                                                    );
+                                                                                },
+                                                                            )}
+
+                                                                        {asEvDetail?.items[0]?.asEvDetail?.subjects
+                                                                            .length === 0 &&
+                                                                            lessonSubjects.map((item) => {
                                                                                 return (
                                                                                     <Option
                                                                                         key={item?.id}
@@ -529,8 +577,7 @@ const UpdateAsEv = () => {
                                                                                         {item?.name}
                                                                                     </Option>
                                                                                 );
-                                                                            },
-                                                                        )}
+                                                                            })}
                                                                     </CustomSelect>
                                                                 </CustomFormItem>
                                                                 <CustomFormItem
@@ -615,7 +662,11 @@ const UpdateAsEv = () => {
                                     </CustomFormItem>
 
                                     <CustomFormItem style={{ marginRight: '10px' }}>
-                                        <CustomButton disabled={asEvDetail?.items[0]?.asEvDetail?.questionCount  <  2} onClick={previewTest} type="primary">
+                                        <CustomButton
+                                            disabled={asEvDetail?.items[0]?.asEvDetail?.questionCount < 2}
+                                            onClick={previewTest}
+                                            type="primary"
+                                        >
                                             Testi Ön İzle
                                         </CustomButton>
                                     </CustomFormItem>
