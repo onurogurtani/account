@@ -1,20 +1,19 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import ReactQuill from 'react-quill';
+import { Col, Form, Row, Select } from 'antd';
+import React, { useEffect, useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     CustomButton,
     CustomForm,
     CustomFormItem,
     CustomInput,
     Text,
-    successDialog,
     errorDialog,
+    successDialog,
 } from '../../../../../components';
-import { Form, Select, Space, Col, Row, Input } from 'antd';
+import AdvancedQuillFormItem from '../../../../../components/AdvancedQuillFormItem';
+import { addNewQuestionToForm, deleteQuestion, getAllQuestionsOfForm } from '../../../../../store/slice/formsSlice';
 import '../../../../../styles/surveyManagement/surveyStyles.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllQuestionsOfForm, addNewQuestionToForm, deleteQuestion } from '../../../../../store/slice/formsSlice';
-import CustomQuillFormItem from '../../../../../components/customQuill/CustomQuillFormItem';
 import EmojiRating from '../../addForm/questionComponents/EmojiRating';
 
 const initialValues = {
@@ -320,7 +319,7 @@ const LikertQuestion = ({
                     </Form.Item>
                 </div>
                 <div className="form-right-side">
-                    <CustomQuillFormItem
+                    <AdvancedQuillFormItem
                         className="editor"
                         label={<Text t="Soru Metni" />}
                         name={'text'}

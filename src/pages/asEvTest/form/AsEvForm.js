@@ -20,6 +20,7 @@ import { getUnits } from '../../../store/slice/lessonUnitsSlice';
 import '../../../styles/asEvTest/asEvForm.scss';
 import { getListFilterParams } from '../../../utils/utils';
 import { getByFilterPagedVideos } from '../../../store/slice/videoSlice';
+import { getEducationYearList } from '../../../store/slice/educationYearsSlice';
 
 const AsEvForm = ({ setStep, step }) => {
     const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const AsEvForm = ({ setStep, step }) => {
 
     const { allClassList } = useSelector((state) => state?.classStages);
     const { lessonsGetByClassroom } = useSelector((state) => state?.lessons);
+    const { educationYearList} = useSelector((state) => state?.educationYears);
     const { newAsEv } = useSelector((state) => state?.asEv);
 
     const { videos } = useSelector((state) => state?.videos);
@@ -35,11 +37,12 @@ const AsEvForm = ({ setStep, step }) => {
 
     const [formDisabled, setFormDisabled] = useState(false);
     const [classroomId, setClassroomId] = useState(null);
-    const [lessonId, setLessonId] = useState([]);
+    const [lessonId, setLessonId] = useState(null);
+    const [lessonUnitId,setLessonUnitId] = useState(null);
 
 
     useEffect(() => {
-        dispatch(getAllClassStages());
+        dispatch(getEducationYearList());
     }, [dispatch]);
 
     useEffect(() => {
@@ -63,7 +66,7 @@ const AsEvForm = ({ setStep, step }) => {
 
     const onLessonChange = (value) => {
         dispatch(getUnits(getListFilterParams('lessonId', value)));
-        setLessonId([value]);
+        setLessonId(value);
         form.resetFields(['lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects']);
     };
 
@@ -73,6 +76,7 @@ const AsEvForm = ({ setStep, step }) => {
             LessonUnitIds: [value],
             ClassroomId: classroomId,
         };
+        setLessonUnitId(value)
         dispatch(getLessonSubjects(getListFilterParams('lessonUnitId', value)));
         dispatch(getByFilterPagedVideos(filterData));
         form.resetFields(['lessonSubjectId', 'lessonSubSubjects']);
@@ -80,10 +84,19 @@ const AsEvForm = ({ setStep, step }) => {
 
     const onLessonSubjectsChange = (value) => {
         const data = [];
-        form.resetFields(['asEvLessonSubSubjects']);
         value?.forEach((item) => data.push({ field: 'lessonSubjectId', value: item, compareType: 0 }));
         dispatch(getLessonSubSubjects(data));
     };
+
+    const onEducationYearChange = (option,value) => {
+       dispatch(getAllClassStages([
+        {
+          field: "educationYearId",
+          value: option,
+          compareType: 0
+        }
+      ]));
+    }
 
     const submitForm = () => {
         form.submit()
@@ -122,6 +135,25 @@ const AsEvForm = ({ setStep, step }) => {
                         labelCol={{ flex: '240px' }}
                         labelAlign="left"
                     >
+                           <CustomFormItem
+                            rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
+                            label="Eğitim Öğretim Yılı"
+                            name="educationYearId"
+                        >
+                            <CustomSelect
+                                disabled={formDisabled}
+                                onChange={onEducationYearChange}
+                                placeholder="Eğitim Öğretim Yılı"
+                            >
+                                {educationYearList?.items?.map((item) => {
+                                    return (
+                                        <Option key={item?.id} value={item?.id}>
+                                            {item?.startYear}  -  {item.endYear}
+                                        </Option>
+                                    );
+                                })}
+                            </CustomSelect>
+                        </CustomFormItem>
                         <CustomFormItem
                             rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
                             label="Sınıf Seviyesi"
@@ -162,7 +194,7 @@ const AsEvForm = ({ setStep, step }) => {
                             name="lessonUnitId"
                         >
                             <CustomSelect disabled={formDisabled} onChange={onUnitChange} placeholder="Ünite">
-                                {lessonUnits?.map((item) => {
+                                {lessonUnits?.filter((item) => item.lessonId === lessonId)?.map((item) => {
                                     return (
                                         <Option key={item?.id} value={item?.id}>
                                             {item?.name}
@@ -179,7 +211,7 @@ const AsEvForm = ({ setStep, step }) => {
                                 showArrow
                                 mode="multiple"
                             >
-                                {lessonSubjects?.map((item) => {
+                                {lessonSubjects?.filter((item) => item.lessonUnitId === lessonUnitId)?.map((item) => {
                                     return (
                                         <Option key={item?.id} value={item?.id}>
                                             {item?.name}

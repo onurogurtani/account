@@ -67,14 +67,8 @@ const UseSectionHandlers = () => {
             onOk: async () => {
                 const action = await dispatch(updateSectionDescriptions(data));
                 if (updateSectionDescriptions.fulfilled.match(action)) {
-                    successDialog({
-                        title: <Text t="success" />,
-                        message: action?.payload?.message,
-                        onOk: async () => {
-                            await closeModalHandler();
-                            await loadData();
-                        },
-                    });
+                    await closeModalHandler();
+                    await loadData();
                 } else {
                     errorDialog({ title: <Text t="error" />, message: action?.payload?.message });
                 }
@@ -129,10 +123,18 @@ const UseSectionHandlers = () => {
         }
     };
     const closeModalHandler = async () => {
-        setInitialValueForModal({});
-        setActionType(null);
-        setModalVisible(false);
-        form.resetFields();
+        confirmDialog({
+            title: 'Dikkat',
+            message: 'İptal etmek istediğinize emin misiniz?',
+            okText: 'Evet',
+            cancelText: 'Hayır',
+            onOk: async () => {
+                setInitialValueForModal({});
+                setActionType(null);
+                setModalVisible(false);
+                form.resetFields();
+            },
+        });
     };
     const openNewSectionModalHandler = async () => {
         setformListVisible(false);

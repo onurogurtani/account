@@ -66,7 +66,7 @@ const useSystemMessages = (loadDidMount) => {
         try {
             const response = await api.post('Account/MessageMaps/downloadFile', {
                 messageMapDetailSearchDto: lastRequestPayload
-            });
+            }, { responseType: 'arraybuffer', });
             downloadFile({ data: response, fileName: "Hata ve Uyarı Mesajları" });
         } catch (error) {
             console.error(error);

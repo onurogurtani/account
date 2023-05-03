@@ -434,6 +434,11 @@ const App = () => {
                                                     Component={Settings?.SectionDescription}
                                                     authority="dashboard"
                                                 />
+                                                <PrivateRoute
+                                                    path={`${match?.path}/coefficient`}
+                                                    Component={Settings?.Coefficient}
+                                                    authority="dashboard"
+                                                />
                                                 <Route
                                                     component={() => (
                                                         <Redirect

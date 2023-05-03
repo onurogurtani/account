@@ -134,21 +134,10 @@ export const UpdateOrganisationIsActive = createAsyncThunk(
   },
 );
 
-export const getImage = createAsyncThunk(
-  'organisations/getImage',
-  async ({ id }, { rejectWithValue }) => {
-    try {
-      return await organisationsServices.getImage({ id });
-    } catch (error) {
-      return rejectWithValue(error?.data);
-    }
-  }
-);
-
-export const addImage = createAsyncThunk(
-  'organisations/addImage', async (data = {}, { dispatch, rejectWithValue }) => {
+export const uploadImage = createAsyncThunk(
+  'organisations/uploadImage', async (data = {}, { dispatch, rejectWithValue }) => {
   try {
-    const response = await organisationsServices.addImage(data.data, data.options);
+    const response = await organisationsServices.uploadImage(data.data, data.options);
     return response;
   } catch (error) {
     return rejectWithValue(error?.data);

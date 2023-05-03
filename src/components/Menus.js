@@ -493,6 +493,14 @@ const Menus = () => {
                         </span>
                     </MenuItemText>
                 </CustomItem>
+                <CustomItem key="/settings/coefficient">
+                    <MenuItemText>
+                        <CustomImage src={menuIcons} />
+                        <span>
+                            <Text t="Katsayı Tanımlama" />
+                        </span>
+                    </MenuItemText>
+                </CustomItem>
             </CustomSubMenu>
 
             <CustomSubMenu key="QuestionMenu" title="Soru Yönetimi" icon={<CustomImage src={menuIcons} />}>

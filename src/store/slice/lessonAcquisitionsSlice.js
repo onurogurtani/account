@@ -13,8 +13,12 @@ export const lessonAcquisitionsSlice = createSlice({
             state.lessonAcquisitions = [];
         },
         setStatusLessonAcquisitions: (state, action) => {
-            state.lessonAcquisitions = state.lessonAcquisitions.map((item) =>
-                item.id === action.payload.data ? { ...item, isActive: action.payload.status } : item,
+            state.lessonAcquisitions = state.lessonAcquisitions.map((item) => {
+                if ((Array.isArray(action.payload.data) && action.payload.data.includes(item.id)) || item.id === action.payload.data) {
+                    return { ...item, isActive: action.payload.status }
+                }
+                return item
+            }
             );
         },
     },
