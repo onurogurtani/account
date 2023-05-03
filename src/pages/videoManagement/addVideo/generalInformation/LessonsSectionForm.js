@@ -100,26 +100,26 @@ const LessonsSectionForm = ({ form }) => {
             lessonSubSubjectIds = lessonBrackets
                 .filter((item) => lessonBracketIds.includes(item.id))
                 .filter((item) => value.includes(item.lessonAcquisitionId)).map((i) => i.id)
-            onLessonSubSubjectsDeselect(null, { value: lessonSubSubjectIds })
+            onLessonAcquisitionsDeSelect(null, { value: lessonSubSubjectIds })
             form.setFieldsValue({
                 lessonBrackets: lessonSubSubjectIds,
             })
         }
     };
 
-    const onLessonSubSubjectsSelect = (_, option) => {
+    const onLessonAcquisitionsSelect = (_, option) => {
         setVideoBrackets((prev) => [
             ...prev,
-            { bracketTime: '', header: option.children, lessonSubSubjectId: option.value },
+            { bracketTime: '', header: option.children, lessonBracketId: option.value },
         ]);
     };
 
-    const onLessonSubSubjectsDeselect = (_, option) => {
+    const onLessonAcquisitionsDeSelect = (_, option) => {
         let filteredVideoBrackets
         if (!Array.isArray(option.value)) {
-            filteredVideoBrackets = videoBrackets.filter((item) => item.lessonSubSubjectId !== option.value);
+            filteredVideoBrackets = videoBrackets.filter((item) => item.lessonBracketId !== option.value);
         } else {
-            filteredVideoBrackets = videoBrackets.filter((item) => option.value.includes(item.lessonSubSubjectId));
+            filteredVideoBrackets = videoBrackets.filter((item) => option.value.includes(item.lessonBracketId));
         }
         setVideoBrackets(filteredVideoBrackets);
         form.resetFields(['videoBrackets']);
@@ -131,8 +131,14 @@ const LessonsSectionForm = ({ form }) => {
         );
         form.setFields(
             filteredVideoBrackets.map((item, index) => ({
-                name: ['videoBrackets', index, 'lessonSubSubjectId'],
-                value: item?.lessonSubSubjectId,
+                name: ['videoBrackets', index, 'lessonBracketId'],
+                value: item?.lessonBracketId,
+            })),
+        );
+        form.setFields(
+            filteredVideoBrackets.map((item, index) => ({
+                name: ['videoBrackets', index, 'header'],
+                value: item?.header,
             })),
         );
     };
@@ -257,8 +263,8 @@ const LessonsSectionForm = ({ form }) => {
                 name="lessonBrackets"
             >
                 <CustomSelect
-                    onSelect={onLessonSubSubjectsSelect}
-                    onDeselect={onLessonSubSubjectsDeselect}
+                    onSelect={onLessonAcquisitionsSelect}
+                    onDeselect={onLessonAcquisitionsDeSelect}
                     showArrow
                     mode="multiple"
                     placeholder="Ayraç"
@@ -276,12 +282,12 @@ const LessonsSectionForm = ({ form }) => {
             </CustomFormItem>
 
             {videoBrackets.length > 0 && (
-                <CustomFormItem className="requiredFieldLabelMark" label="Ayraç">
+                <CustomFormItem noStyle>
                     <div className="header-mark">
                         <div className="title-mark">Başlık</div>
                         <div className="time-mark">Dakika</div>
                     </div>
-                    {videoBrackets.map((i, index) => (
+                    {videoBrackets?.map((i, index) => (
                         <div key={index} className="video-mark">
                             <CustomFormItem initialValue={i.header} name={['videoBrackets', index, 'header']} style={{ flex: 2 }}>
                                 <CustomInput disabled placeholder={i.header} />
@@ -302,9 +308,9 @@ const LessonsSectionForm = ({ form }) => {
                             </CustomFormItem>
 
                             <CustomFormItem
-                                name={['videoBrackets', index, 'lessonSubSubjectId']}
+                                name={['videoBrackets', index, 'lessonBracketId']}
                                 style={{ display: 'none' }}
-                                initialValue={i.lessonSubSubjectId}
+                                initialValue={i.lessonBracketId}
                             >
                                 <CustomInput disabled />
                             </CustomFormItem>

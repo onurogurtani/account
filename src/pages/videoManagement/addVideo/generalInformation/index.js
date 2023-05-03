@@ -32,7 +32,6 @@ const AddGeneralInformation = ({ sendValue }) => {
       return;
     }
 
-    values.lessonSubSubjects = values.videoBrackets;
     values.keyWords = values.keyWords.join();
     values.isActive = true;
     values.beforeEducationSurvey = values?.survey === 'before' ? true : false;
@@ -102,7 +101,7 @@ const AddGeneralInformation = ({ sendValue }) => {
           <div className="right-form">
             <VideoSection
               form={form}
-              // setKalturaVideoName={setKalturaVideoName}
+            // setKalturaVideoName={setKalturaVideoName}
             />
             <IntroVideoSection form={form} introVideoFile={introVideoFile} setIntroVideoFile={setIntroVideoFile} />
             <SurveyAndKeywordSection form={form} />

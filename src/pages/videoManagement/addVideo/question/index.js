@@ -28,31 +28,7 @@ import {
 import '../../../../styles/videoManagament/questionVideo.scss';
 import { reactQuillValidator } from '../../../../utils/formRule';
 
-const selectedBrackets = [
-  {
-    header: "deneme2",
-    bracketTime: "000:01",
-    lessonSubSubjectId: 79
-  },
-  {
-    header: "deneme4",
-    bracketTime: "000:02",
-    lessonSubSubjectId: 80
-  },
-  {
-    header: "deneme5",
-    bracketTime: "000:03",
-    lessonSubSubjectId: 81
-  },
-  {
-    header: "Lorem Ipsum is simply du",
-    bracketTime: "000:04",
-    lessonSubSubjectId: 74
-  }
-]
-
-
-const AddVideoQuestion = ({ sendValue }) => {
+const AddVideoQuestion = ({ sendValue, selectedBrackets }) => {
   const [open, setOpen] = useState(false);
   const [questionList, setQuestionList] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState();
@@ -79,9 +55,16 @@ const AddVideoQuestion = ({ sendValue }) => {
     setOpen(true);
   };
 
+  useEffect(() => {
+    const selectedBracketIds = selectedBrackets.map((item) => item.lessonBracketId)
+    const questionListFilter = questionList.filter((item) => selectedBracketIds.includes(item.title))
+    setQuestionList(questionListFilter)
+  }, [selectedBrackets])
+
   const onOkModal = () => {
     form.submit();
   };
+
   const onFinish = async (values) => {
     console.log(values);
     if (isExcel) {
@@ -113,17 +96,6 @@ const AddVideoQuestion = ({ sendValue }) => {
     if (isEdit) {
       questionList[selectedQuestion.index] = values;
       setQuestionList(questionList);
-      // alternative
-      //   setQuestionList((list) =>
-      //     list.map((item, i) =>
-      //       item.key === selectedQuestion.key
-      //         ? {
-      //             ...item,
-      //             ...values,
-      //           }
-      //         : item,
-      //     ),
-      //   );
       setIsEdit(false);
       setSelectedQuestion();
     } else {
@@ -132,16 +104,14 @@ const AddVideoQuestion = ({ sendValue }) => {
     }
     setOpen(false);
   };
+
   const handleEdit = (item, index) => {
     isExcel && setIsExcel(false);
     setSelectedQuestion({ ...item, index });
     setOpen(true);
   };
 
-  // const handleDelete = (item) => {
-  //   console.log(item);
-  //   setQuestionList(questionList.filter((data) => data.key !== item.key));
-  // };
+
   const handleDelete = (item, index) => {
     setQuestionList([...questionList.slice(0, index), ...questionList.slice(index + 1)]);
   };
@@ -241,8 +211,8 @@ const AddVideoQuestion = ({ sendValue }) => {
   const renderList = (item) => {
     return <>
       <ClockCircleOutlined />
-      <div className='bracketTime'>{selectedBrackets.find((i) => i.lessonSubSubjectId === item.title).bracketTime}</div>
-      <div className='bracketHeader'>{selectedBrackets.find((i) => i.lessonSubSubjectId === item.title).header} </div>
+      <div className='bracketTime'>{selectedBrackets.find((i) => i?.lessonBracketId === item?.title)?.bracketTime}</div>
+      <div className='bracketHeader'>{selectedBrackets.find((i) => i?.lessonBracketId === item?.title)?.header} </div>
       <QuestionCircleOutlined />
       <div className='question' dangerouslySetInnerHTML={{ __html: item?.text }} />
       <CheckCircleOutlined className='answerIcon' />
@@ -319,7 +289,7 @@ const AddVideoQuestion = ({ sendValue }) => {
               >
                 <CustomSelect
                   // onChange={onUnitChange} 
-                  fieldNames={{ label: 'header', value: 'lessonSubSubjectId' }}
+                  fieldNames={{ label: 'header', value: 'lessonBracketId' }}
                   options={selectedBrackets}
                   placeholder="Başlık" />
               </CustomFormItem>
