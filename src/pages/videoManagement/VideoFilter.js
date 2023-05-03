@@ -14,7 +14,7 @@ import {
 } from '../../store/slice/videoSlice';
 import '../../styles/tableFilter.scss';
 import { getListFilterParams, removeFromArray, turkishToLower } from '../../utils/utils';
-// TODO: Servis bağlantıları tamamlanınca form nameleri kontrol et
+// TODO: Servis bağlantıları tamamlanınca EducationYearId  kontrol et
 const VideoFilter = () => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
@@ -51,9 +51,6 @@ const VideoFilter = () => {
             form.setFieldsValue(filterObject);
         }
     }, []);
-
-
-
 
     const onLessonDeselect = (value) => {
         onDeselectControl('Lesson', value);
@@ -207,7 +204,7 @@ const VideoFilter = () => {
                         </CustomSelect>
                     </CustomFormItem>
 
-                    <CustomFormItem label="Eğitim Öğretim Yılı" name="????">
+                    <CustomFormItem label="Eğitim Öğretim Yılı" name="EducationYearId">
                         <CustomSelect onChange={onEducationYearChange} placeholder="Eğitim Öğretim Yılı">
                             {educationYearList?.items?.map(({ id, startYear, endYear }) => (
                                 <Option key={id} value={id}>
