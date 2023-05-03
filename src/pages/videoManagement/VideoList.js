@@ -14,7 +14,7 @@ function useQuery() {
   const { search } = useLocation();
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
-// TODO: servis gelince ??? olan alanları kontrol et
+//TODO: servis gelince EducationYearASC desc kontrol et
 const VideoList = () => {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -131,10 +131,10 @@ const VideoList = () => {
     },
     {
       title: 'EĞİTİM ÖĞRETİM YILI',
-      dataIndex: '???',
-      key: '???',
+      dataIndex: 'educationYear',
+      key: 'educationYear',
       sorter: true,
-      sortOrder: sorterObject?.columnKey === '???' ? sorterObject?.order : null,
+      sortOrder: sorterObject?.columnKey === 'educationYear' ? sorterObject?.order : null,
       render: (text, record) => {
         return <div>{text?.startYear} - {text?.endYear} </div>;
       },
@@ -180,17 +180,17 @@ const VideoList = () => {
       },
     },
     {
-      title: 'Kazanım',
-      dataIndex: '???',
-      key: '???',
+      title: 'KAZANIM',
+      dataIndex: 'lessonAcquisitions',
+      key: 'lessonAcquisitions',
       sorter: true,
-      sortOrder: sorterObject?.columnKey === '???' ? sorterObject?.order : null,
+      sortOrder: sorterObject?.columnKey === 'lessonAcquisitions' ? sorterObject?.order : null,
       render: (_, record) => (
         <>
-          {record.lessonSubSubjects?.map((item, id) => {
+          {record.lessonAcquisitions?.map((item, id) => {
             return (
               <Tag className="m-1" color="gold" key={id}>
-                {item.lessonSubSubject.name}
+                {item.lessonAcquisition.name}
               </Tag>
             );
           })}
@@ -199,16 +199,16 @@ const VideoList = () => {
     },
     {
       title: 'AYRAÇ',
-      dataIndex: 'lessonSubSubjects',
-      key: 'lessonSubSubjects',
+      dataIndex: 'lessonBrackets',
+      key: 'lessonBrackets',
       sorter: true,
-      sortOrder: sorterObject?.columnKey === 'lessonSubSubjects' ? sorterObject?.order : null,
+      sortOrder: sorterObject?.columnKey === 'lessonBrackets' ? sorterObject?.order : null,
       render: (_, record) => (
         <>
-          {record.lessonSubSubjects?.map((item, id) => {
+          {record.lessonBrackets?.map((item, id) => {
             return (
               <Tag className="m-1" color="gold" key={id}>
-                {item.lessonSubSubject.name}
+                {item.lessonBracket.name}
               </Tag>
             );
           })}
@@ -220,10 +220,12 @@ const VideoList = () => {
   const sortFields = {
     kalturaVideoId: { ascend: 'KalturaVideoIdASC', descend: 'KalturaVideoIdDESC' },
     categoryOfVideo: { ascend: 'CategoryASC', descend: 'CategoryDESC' },
+    educationYear: { ascend: 'EducationYearASC', descend: 'EducationYearDESC' },
     lesson: { ascend: 'LessonASC', descend: 'LessonDESC' },
     lessonUnit: { ascend: 'LessonUnitASC', descend: 'LessonUnitDESC' },
     lessonSubject: { ascend: 'LessonSubjectASC', descend: 'LessonSubjectDESC' },
-    lessonSubSubjects: { ascend: 'LessonSubSubjectASC', descend: 'LessonSubSubjectDESC' },
+    lessonAcquisitions: { ascend: 'LessonAcquisitionASC', descend: 'LessonAcquisitionDESC' },
+    lessonBrackets: { ascend: 'LessonBracketASC', descend: 'LessonBracketDESC' },
     classroom: { ascend: 'ClassroomASC', descend: 'ClassroomDESC' },
   };
   return (
