@@ -5,6 +5,7 @@ import {
     setLessonAcquisitionStatus,
     setStatusLessonAcquisitions,
 } from '../../../store/slice/lessonAcquisitionsSlice';
+import { setStatusLessonBrackets } from '../../../store/slice/lessonBracketsSlice';
 import { setStatusLessons } from '../../../store/slice/lessonsSlice';
 import { setStatusLessonSubjects } from '../../../store/slice/lessonSubjectsSlice';
 import { setStatusUnits } from '../../../store/slice/lessonUnitsSlice';
@@ -16,6 +17,7 @@ const LessonAcquisition = ({ lessonAcquisition, open, setSelectedInsertKey, pare
     const [isEdit, setIsEdit] = useState(false);
     const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
     const { lessonUnits } = useSelector((state) => state?.lessonUnits);
+    const { lessonBrackets } = useSelector((state) => state?.lessonBrackets);
 
     const updateLessonAcquisition = async (value) => {
         const entity = {
@@ -34,7 +36,11 @@ const LessonAcquisition = ({ lessonAcquisition, open, setSelectedInsertKey, pare
         await dispatch(setLessonAcquisitionStatus({ id: lessonAcquisition.id, isActive: status })).unwrap();
         dispatch(setStatusLessonAcquisitions({ data: lessonAcquisition.id, status }));
 
-        if (!status) return false;
+        if (!status) {
+            const lessonBracketIds = lessonBrackets.filter((item) => item.lessonAcquisitionId === lessonAcquisition.id).map((i) => i.id);
+            dispatch(setStatusLessonBrackets({ data: lessonBracketIds, status }));
+            return false;
+        }
         dispatch(setStatusLessonSubjects({ data: lessonAcquisition.lessonSubjectId, status }));
         const lessonUnitId = lessonSubjects.find((item) => item.id === lessonAcquisition.lessonSubjectId).lessonUnitId;
         dispatch(setStatusUnits({ data: lessonUnitId, status }));
