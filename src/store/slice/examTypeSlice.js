@@ -4,7 +4,7 @@ import examTypeServices from '../../services/examType.services';
 
 export const getExamType = createAsyncThunk('getExamType', async (data, { dispatch, rejectWithValue }) => {
     try {
-      const response = await examTypeServices.getExamType(null,data);
+      const response = await examTypeServices.getExamType();
       console.log(response);
       return response;
     } catch (error) {
@@ -24,9 +24,7 @@ export const getExamType = createAsyncThunk('getExamType', async (data, { dispat
     name: 'examTypesSlice',
     initialState,
     reducers: {
-      clearClasses: (state, action) => {
-        state.allExamTypes = action.payload;
-      },
+     
      }
      
   ,
@@ -40,4 +38,3 @@ export const getExamType = createAsyncThunk('getExamType', async (data, { dispat
   });
  
 
-  export const clearClasses = examTypesSlice.actions;

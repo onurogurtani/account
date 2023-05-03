@@ -10,10 +10,10 @@ const getExamType = (data= null) => {
     });
   };
 
-const getExamTypeId = (data) => {
+const getExamTypeId = (examKindId) => {
     
     return api({
-        url: `/gateway/Exam/SectionDescriptions/getbyid?${data.id}`,
+        url: `/gateway/Exam/SectionDescriptions/getByExamKind?ExamKind=${examKindId}`,
         method: 'GET',
         
      
