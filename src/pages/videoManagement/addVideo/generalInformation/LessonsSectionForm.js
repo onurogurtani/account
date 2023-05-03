@@ -7,7 +7,7 @@ import { clearClasses } from '../../../../store/slice/classStageSlice';
 import { getEducationYearList } from '../../../../store/slice/educationYearsSlice';
 import { videoTimeValidator } from '../../../../utils/formRule';
 
-//TODO: servis gelince kazanım değişkenleri form name vs gözden geçir
+
 const LessonsSectionForm = ({ form }) => {
     const dispatch = useDispatch();
 
@@ -35,8 +35,8 @@ const LessonsSectionForm = ({ form }) => {
     const { educationYearList } = useSelector((state) => state.educationYears);
 
     const [videoBrackets, setVideoBrackets] = useState([]);
-    const lessonAcquisitionIds = Form.useWatch('acquisitions', form) || [];
-    const lessonBracketIds = Form.useWatch('lessonSubSubjects', form) || [];
+    const lessonAcquisitionIds = Form.useWatch('lessonAcquisition', form) || [];
+    const lessonBracketIds = Form.useWatch('lessonBrackets', form) || [];
 
     useEffect(() => {
         dispatch(getEducationYearList());
@@ -47,8 +47,8 @@ const LessonsSectionForm = ({ form }) => {
         setEducationYearId(value)
         form.resetFields(['classroomId', 'lessonId', 'lessonUnitId', 'lessonSubjectId', 'videoBrackets']);
         form.setFieldsValue({
-            lessonSubSubjects: undefined,
-            acquisitions: undefined
+            lessonBrackets: undefined,
+            lessonAcquisition: undefined
         })
         setVideoBrackets([]);
     };
@@ -57,8 +57,8 @@ const LessonsSectionForm = ({ form }) => {
         setClassroomId(value);
         form.resetFields(['lessonId', 'lessonUnitId', 'lessonSubjectId', 'videoBrackets']);
         form.setFieldsValue({
-            lessonSubSubjects: undefined,
-            acquisitions: undefined
+            lessonBrackets: undefined,
+            lessonAcquisition: undefined
         })
         setVideoBrackets([]);
     };
@@ -67,8 +67,8 @@ const LessonsSectionForm = ({ form }) => {
         setLessonId(value);
         form.resetFields(['lessonUnitId', 'lessonSubjectId', 'videoBrackets']);
         form.setFieldsValue({
-            lessonSubSubjects: undefined,
-            acquisitions: undefined
+            lessonBrackets: undefined,
+            lessonAcquisition: undefined
         })
         setVideoBrackets([]);
     };
@@ -77,8 +77,8 @@ const LessonsSectionForm = ({ form }) => {
         setUnitId(value);
         form.resetFields(['lessonSubjectId', 'videoBrackets']);
         form.setFieldsValue({
-            lessonSubSubjects: undefined,
-            acquisitions: undefined
+            lessonBrackets: undefined,
+            lessonAcquisition: undefined
         })
         setVideoBrackets([]);
     };
@@ -87,8 +87,8 @@ const LessonsSectionForm = ({ form }) => {
         setLessonSubjectId(value);
         form.resetFields(['videoBrackets']);
         form.setFieldsValue({
-            lessonSubSubjects: undefined,
-            acquisitions: undefined
+            lessonBrackets: undefined,
+            lessonAcquisition: undefined
         })
         setVideoBrackets([]);
     };
@@ -101,10 +101,10 @@ const LessonsSectionForm = ({ form }) => {
                 .filter((item) => lessonBracketIds.includes(item.id))
                 .filter((item) => value.includes(item.lessonAcquisitionId)).map((i) => i.id)
             onLessonSubSubjectsDeselect(null, { value: lessonSubSubjectIds })
+            form.setFieldsValue({
+                lessonBrackets: lessonSubSubjectIds,
+            })
         }
-        form.setFieldsValue({
-            lessonSubSubjects: lessonSubSubjectIds,
-        })
     };
 
     const onLessonSubSubjectsSelect = (_, option) => {
@@ -145,7 +145,7 @@ const LessonsSectionForm = ({ form }) => {
 
     return (
         <>
-            <CustomFormItem label="Eğitim Öğretim Yılı" name="????">
+            <CustomFormItem label="Eğitim Öğretim Yılı" name="educationYearId">
                 <CustomSelect
                     onChange={onEducationYearChange}
                     placeholder="Eğitim Öğretim Yılı"
@@ -229,7 +229,7 @@ const LessonsSectionForm = ({ form }) => {
             <CustomFormItem
                 rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
                 label="Kazanım"
-                name="acquisitions"
+                name="lessonAcquisition"
             >
                 <CustomSelect
                     onChange={onAcquisitionChange}
@@ -254,7 +254,7 @@ const LessonsSectionForm = ({ form }) => {
             <CustomFormItem
                 rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
                 label="Ayraç"
-                name="lessonSubSubjects"
+                name="lessonBrackets"
             >
                 <CustomSelect
                     onSelect={onLessonSubSubjectsSelect}
