@@ -14,7 +14,7 @@ import {
 } from '../../store/slice/videoSlice';
 import '../../styles/tableFilter.scss';
 import { getListFilterParams, removeFromArray, turkishToLower } from '../../utils/utils';
-// TODO: Servis bağlantıları tamamlanınca EducationYearId  kontrol et
+
 const VideoFilter = () => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();

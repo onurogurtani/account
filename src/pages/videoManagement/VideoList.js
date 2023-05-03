@@ -14,7 +14,7 @@ function useQuery() {
   const { search } = useLocation();
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
-//TODO: servis gelince EducationYearASC desc kontrol et
+
 const VideoList = () => {
   const history = useHistory();
   const dispatch = useDispatch();
