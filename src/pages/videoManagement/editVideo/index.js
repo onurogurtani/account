@@ -114,7 +114,6 @@ const EditVideo = () => {
     });
 
     const body = {
-      //TODO: entity de olabilir net değil
       video: {
         ...generalInformationData,
         videoFiles: documentData,
