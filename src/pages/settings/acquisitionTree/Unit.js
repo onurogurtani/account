@@ -1,6 +1,9 @@
 import React, { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { setStatusLessonAcquisitions } from '../../../store/slice/lessonAcquisitionsSlice';
+import { setStatusLessonBrackets } from '../../../store/slice/lessonBracketsSlice';
 import { setStatusLessons } from '../../../store/slice/lessonsSlice';
+import { setStatusLessonSubjects } from '../../../store/slice/lessonSubjectsSlice';
 import { editUnits, setStatusUnits, setUnitStatus } from '../../../store/slice/lessonUnitsSlice';
 import AcquisitionTreeCreateOrEdit from './AcquisitionTreeCreateOrEdit';
 import Toolbar from './Toolbar';
@@ -8,6 +11,9 @@ import Toolbar from './Toolbar';
 const Unit = ({ unit, open, setSelectedInsertKey, parentIsActive }) => {
     const dispatch = useDispatch();
     const [isEdit, setIsEdit] = useState(false);
+    const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
+    const { lessonAcquisitions } = useSelector((state) => state?.lessonAcquisitions);
+    const { lessonBrackets } = useSelector((state) => state?.lessonBrackets);
 
     const updateUnit = async (value) => {
         const entity = {
@@ -25,7 +31,15 @@ const Unit = ({ unit, open, setSelectedInsertKey, parentIsActive }) => {
         await dispatch(setUnitStatus({ id: unit.id, isActive: status })).unwrap();
         dispatch(setStatusUnits({ data: unit.id, status }));
 
-        if (!status) return false;
+        if (!status) {
+            const lessonSubjectIds = lessonSubjects.filter((item) => item.lessonUnitId === unit.id).map((i) => i.id);
+            dispatch(setStatusLessonSubjects({ data: lessonSubjectIds, status }));
+            const lessonAcquisitionIds = lessonAcquisitions.filter((item) => lessonSubjectIds.includes(item.lessonSubjectId)).map((i) => i.id)
+            dispatch(setStatusLessonAcquisitions({ data: lessonAcquisitionIds, status }));
+            const lessonBracketIds = lessonBrackets.filter((item) => lessonAcquisitionIds.includes(item.lessonAcquisitionId)).map((i) => i.id)
+            dispatch(setStatusLessonBrackets({ data: lessonBracketIds, status }));
+            return false;
+        }
         dispatch(setStatusLessons({ data: unit.lessonId, status }));
     };
     const toolbarProps = {

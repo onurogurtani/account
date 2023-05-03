@@ -17,8 +17,12 @@ export const lessonUnitsSlice = createSlice({
             state.lessonUnitsFilter = [];
         },
         setStatusUnits: (state, action) => {
-            state.lessonUnits = state.lessonUnits.map((item) =>
-                item.id === action.payload.data ? { ...item, isActive: action.payload.status } : item,
+            state.lessonUnits = state.lessonUnits.map((item) => {
+                if ((Array.isArray(action.payload.data) && action.payload.data.includes(item.id)) || item.id === action.payload.data) {
+                    return { ...item, isActive: action.payload.status }
+                }
+                return item
+            }
             );
         },
     },
