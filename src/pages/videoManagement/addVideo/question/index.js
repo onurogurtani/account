@@ -39,7 +39,6 @@ const AddVideoQuestion = ({ sendValue, selectedBrackets }) => {
 
   useEffect(() => {
     if (open) {
-      console.log('selectedQuestion', selectedQuestion);
       if (selectedQuestion) {
         form.setFieldsValue(selectedQuestion);
         setIsEdit(true);
@@ -56,8 +55,8 @@ const AddVideoQuestion = ({ sendValue, selectedBrackets }) => {
   };
 
   useEffect(() => {
-    const selectedBracketIds = selectedBrackets.map((item) => item.lessonBracketId)
-    const questionListFilter = questionList.filter((item) => selectedBracketIds.includes(item.title))
+    const selectedBracketIds = selectedBrackets?.map((item) => item?.lessonBracketId)
+    const questionListFilter = questionList?.filter((item) => selectedBracketIds?.includes(item?.title))
     setQuestionList(questionListFilter)
   }, [selectedBrackets])
 
@@ -66,20 +65,21 @@ const AddVideoQuestion = ({ sendValue, selectedBrackets }) => {
   };
 
   const onFinish = async (values) => {
-    console.log(values);
     if (isExcel) {
-      console.log(values);
       const fileData = values?.excelFile[0]?.originFileObj;
       const data = new FormData();
       data.append('FormFile', fileData);
+      selectedBrackets?.map((i) => data.append('LessonBracketIds', i?.lessonBracketId))
       const action = await dispatch(addVideoQuestionsExcel(data));
       if (addVideoQuestionsExcel.fulfilled.match(action)) {
-        const excelQuestions = action?.payload?.data.map((item) => ({
-          answer: item.answer,
-          text: item.text,
-        }));
-        console.log(excelQuestions);
-        setQuestionList((state) => [...state, ...excelQuestions]);
+        if (action?.payload?.data?.length) {
+          const excelQuestions = action?.payload?.data?.map((item) => ({
+            answer: item?.answer,
+            text: item?.text,
+            lessonBracketId: item?.title,
+          }));
+          setQuestionList((state) => [...state, ...excelQuestions]);
+        }
         successDialog({
           title: <Text t="success" />,
           message: action?.payload?.message,
@@ -100,7 +100,6 @@ const AddVideoQuestion = ({ sendValue, selectedBrackets }) => {
       setSelectedQuestion();
     } else {
       setQuestionList((state) => [...state, values]);
-      console.log(questionList);
     }
     setOpen(false);
   };
@@ -122,7 +121,6 @@ const AddVideoQuestion = ({ sendValue, selectedBrackets }) => {
   };
 
   const normFile = (e) => {
-    console.log('Upload event:', e);
     if (Array.isArray(e)) {
       return e;
     }
@@ -168,17 +166,12 @@ const AddVideoQuestion = ({ sendValue, selectedBrackets }) => {
   };
 
   const ondownloadExcel = async () => {
-    const action = await dispatch(downloadVideoQuestionsExcel());
-    if (downloadVideoQuestionsExcel.fulfilled.match(action)) {
-      const url = URL.createObjectURL(new Blob([action.payload]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `Soru Ekle Dosya Deseni ${Date.now()}.xlsx`);
-      document.body.appendChild(link);
-      link.click();
-      console.log(action);
+    const body = {
+      lessonBracketIds: selectedBrackets?.map((i) => i?.lessonBracketId)
     }
+    await dispatch(downloadVideoQuestionsExcel(body));
   };
+
   const uploadExcel = () => {
     setIsExcel(true);
     setOpen(true);
@@ -189,6 +182,7 @@ const AddVideoQuestion = ({ sendValue, selectedBrackets }) => {
       const questionValue = questionList?.map((item) => ({
         text: item.text,
         answer: item.answer,
+        lessonBracketId: item.title,
       }));
       sendValue(questionValue);
       return;

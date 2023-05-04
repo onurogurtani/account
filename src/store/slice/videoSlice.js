@@ -151,7 +151,7 @@ export const downloadVideoQuestionsExcel = createAsyncThunk(
   'videos/downloadVideoQuestionsExcel',
   async (data, { dispatch, rejectWithValue }) => {
     try {
-      const response = await videoServices.downloadVideoQuestionsExcel();
+      const response = await videoServices.downloadVideoQuestionsExcel(data);
       saveAs(response, `Soru Ekle Dosya Deseni ${Date.now()}.xlsx`);
       return response;
     } catch (error) {
