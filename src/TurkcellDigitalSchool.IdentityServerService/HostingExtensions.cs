@@ -28,8 +28,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
             var connectionString = builder.Configuration.GetConnectionString("DArchPostgreContext");
    
 
-            builder.Services.AddDbContext<AccountDbContext>();
-            //builder.Services.AddScoped<ProjectDbContext, PostgreDbContext>(); 
+            builder.Services.AddDbContext<AccountDbContext>();  
 
             builder.Services.AddScoped<ICustomUserSvc, CustomUserSvc>();
             builder.Services.AddScoped<IAppSettingRepository,AppSettingRepository>();

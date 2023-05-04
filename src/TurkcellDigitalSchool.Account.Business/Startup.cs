@@ -220,8 +220,7 @@ namespace TurkcellDigitalSchool.Account.Business
             ConfigureServices(services);
 
             services.AddDbContext<AccountDbContext>();
-            services.AddDbContext<AccountSubscribeDbContext>();
-            ///services.AddScoped<ProjectDbContext, PostgreDbContext>();
+            services.AddDbContext<AccountSubscribeDbContext>(); 
         }
 
 

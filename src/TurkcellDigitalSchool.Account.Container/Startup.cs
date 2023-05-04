@@ -11,7 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ServiceStack;
-using TurkcellDigitalSchool.Account.Business; 
+using TurkcellDigitalSchool.Account.Business;
+using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Common.Middleware;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
@@ -127,7 +128,7 @@ namespace TurkcellDigitalSchool.Account.Container
                         using (var scope = app.ApplicationServices.CreateScope())
                         {
                             var services = scope.ServiceProvider;
-                            var context = services.GetRequiredService<ProjectDbContext>();
+                            var context = services.GetRequiredService<AccountDbContext>();
                             context.Database.Migrate();
                         }
                         break;
