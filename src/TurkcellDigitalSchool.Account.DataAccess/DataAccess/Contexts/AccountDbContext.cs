@@ -26,10 +26,8 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
 
         #region Owner Entities
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<AppSetting> AppSettings { get; set; }
-        public DbSet<BranchMainField> BranchMainFields { get; set; }
-        public DbSet<City> Citys { get; set; }
+        public DbSet<AppSetting> AppSettings { get; set; } 
+        public DbSet<City> Citys { get; set; } 
         public DbSet<ContractKind> ContractKinds { get; set; }
         public DbSet<ContractType> ContractTypes { get; set; }
         public DbSet<Country> Countrys { get; set; }
@@ -37,6 +35,8 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         public DbSet<Document> Documents { get; set; }
         public DbSet<DocumentContractType> DocumentContractTypes { get; set; } 
         public DbSet<Education> Educations { get; set; }
+
+        public DbSet<ForgetPasswordFailCounter> ForgetPasswordFailCounters { get; set; }
         public DbSet<GraduationYear> GraduationYears { get; set; }
         public DbSet<ImageOfPackage> ImageOfPackages { get; set; }
         public DbSet<Institution> Institutions { get; set; }
@@ -64,6 +64,9 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         public DbSet<PackagePackageTypeEnum> PackagePackageTypeEnums { get; set; }
         public DbSet<PackagePublisher> PackagePublishers { get; set; }
         public DbSet<PackageRole> PackageRoles { get; set; }
+
+        public DbSet<PackageTestExam> PackageTestExams { get; set; }
+
         public DbSet<PackageTestExamPackage> PackageTestExamPackages { get; set; }
         public DbSet<PackageType> PackageTypes { get; set; } 
         public DbSet<PackageTypeTargetScreen> PackageTypeTargetScreens { get; set; }
@@ -72,29 +75,30 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         public DbSet<RoleClaim> RoleClaims { get; set; }
         public DbSet<School> Schools { get; set; }
         public DbSet<StudentAnswerTargetRange> StudentAnswerTargetRanges { get; set; }
-        public DbSet<TargetScreen> TargetScreens { get; set; }
-        public DbSet<UnverifiedUser> UnverifiedUsers { get; set; }
-        public DbSet<UserBasketPackage> UserBasketPackages { get; set; }
-        public DbSet<UserPackage> UserPackages { get; set; }
-        public DbSet<UserRole> UserRoles { get; set; }
-        public DbSet<UserSession> UserSessions { get; set; }
 
-        public DbSet<PackageTestExam> PackageTestExams { get; set; }
         public DbSet<StudentEducationInformation> StudentEducationInformations { get; set; }
         public DbSet<StudentParentInformation> StudentParentInformations { get; set; }
+
+        public DbSet<TargetScreen> TargetScreens { get; set; }
+        public DbSet<UnverifiedUser> UnverifiedUsers { get; set; } 
+        public DbSet<User> Users { get; set; }
+        public DbSet<UserBasketPackage> UserBasketPackages { get; set; }
         public DbSet<UserCommunicationPreferences> UserCommunicationPreferences { get; set; }
         public DbSet<UserContrat> UserContrats { get; set; }
+        public DbSet<UserPackage> UserPackages { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<UserSession> UserSessions { get; set; }  
         public DbSet<UserSupportTeamViewMyData> UserSupportTeamViewMyData { get; set; }
-        public DbSet<ForgetPasswordFailCounter> ForgetPasswordFailCounters { get; set; }
+    
         #endregion
 
 
         #region Readonly Entities 
+        public DbSet<BranchMainField> BranchMainFields { get; set; }
         public DbSet<Classroom> Classrooms { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<File> Files { get; set; }
-        public DbSet<Lesson> Lessons { get; set; }
-  
+        public DbSet<Lesson> Lessons { get; set; } 
         public DbSet<Publisher> Publishers { get; set; }
         public DbSet<TestExam> TestExams { get; set; }
         public DbSet<TestExamType> TestExamTypes { get; set; }
