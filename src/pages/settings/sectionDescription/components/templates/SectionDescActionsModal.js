@@ -18,8 +18,8 @@ const SectionDescActionsModal = (props) => {
         <CustomModal
             visible={modalVisible}
             title={modalTitleEnum[actionType]}
-            okText={'Kaydet'}
-            cancelText={'İptal'}
+            okText={actionType === 'update' ? 'Güncelle' : 'Kaydet'}
+            cancelText={'Vazgeç'}
             onCancel={closeModalHandler}
             onOk={onFinish}
             className={styles.actionsModal}

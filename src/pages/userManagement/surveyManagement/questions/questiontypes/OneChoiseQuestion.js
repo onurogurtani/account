@@ -1,21 +1,20 @@
-import React, { useState, useEffect, useCallback } from 'react';
-// import ReactQuill from 'react-quill';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Col, Form, Row } from 'antd';
+import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { useDispatch } from 'react-redux';
 import {
     CustomButton,
     CustomForm,
     CustomFormItem,
     CustomInput,
     Text,
-    successDialog,
     errorDialog,
+    successDialog,
 } from '../../../../../components';
-import { Form, Col, Row } from 'antd';
+import AdvancedQuillFormItem from '../../../../../components/AdvancedQuillFormItem';
+import { addNewQuestionToForm, deleteQuestion, getAllQuestionsOfForm } from '../../../../../store/slice/formsSlice';
 import '../../../../../styles/surveyManagement/surveyStyles.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllQuestionsOfForm, addNewQuestionToForm, deleteQuestion } from '../../../../../store/slice/formsSlice';
-import CustomQuillFormItem from '../../../../../components/customQuill/CustomQuillFormItem';
-import ReactQuill from 'react-quill';
 
 const alphabet = [
     'A',
@@ -175,7 +174,7 @@ const OneChoiseQuestion = ({
                     </div>
 
                     <div className="form-right-side">
-                        <CustomQuillFormItem
+                        <AdvancedQuillFormItem
                             className="editor"
                             label={<Text t="Soru Metni" />}
                             name={'text'}

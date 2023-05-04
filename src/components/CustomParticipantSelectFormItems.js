@@ -12,7 +12,6 @@ const CustomParticipantSelectFormItems = ({ form, className, required, initialVa
     const [groups, setGroups] = useState([]);
 
     const loadParticipantGroups = async (value) => {
-        console.log('value', value);
         let data = { pageSize: 1000 };
         if (value) {
             data.UserTypes = value;
@@ -55,8 +54,6 @@ const CustomParticipantSelectFormItems = ({ form, className, required, initialVa
                     mode="multiple"
                     placeholder="Seçiniz"
                     onChange={handleSelectChange}
-                    // onSelect={onParticipantGroupTypeSelect}
-                    // onDeselect={onParticipantGroupTypeDeSelect}
                     style={{ width: '100%' }}
                 >
                     {Object.keys(participantGroupTypes)?.map((item) => {

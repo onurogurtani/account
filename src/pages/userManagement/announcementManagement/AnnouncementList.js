@@ -33,7 +33,7 @@ const AnnouncementList = () => {
 
     const loadAnnouncemenets = async () => {
         let data = {
-            PageNumber: 10,
+            PageNumber: 1,
             PageSize: 10,
         };
         await dispatch(getByFilterPagedAnnouncements(data));

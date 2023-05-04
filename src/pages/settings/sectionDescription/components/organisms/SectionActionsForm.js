@@ -4,13 +4,11 @@ import {
     CustomForm,
     CustomFormItem,
     CustomInput,
-    CustomInputNumber,
     CustomSelect,
     Option,
     Text,
 } from '../../../../../components';
 import { examKinds } from '../../assets/constants';
-import { validateNumber } from '../../assets/utils';
 import ActiveRecordWarnInfo from '../atoms/ActiveRecordWarnInfo';
 
 const SectionActionsForm = ({ form, actionType, styles, onSelectChange, formListVisible, activeDescriptionErr }) => {
@@ -46,7 +44,7 @@ const SectionActionsForm = ({ form, actionType, styles, onSelectChange, formList
                             {fields.map(({ key, name, ...restField }, index) => {
                                 return (
                                     <Row gutter={16}>
-                                        <Col span={fields.length > 1 ? 17 : 19}>
+                                        <Col span={fields.length > 1 ? 21 : 23}>
                                             <Form.Item
                                                 {...restField}
                                                 key={key}
@@ -65,16 +63,6 @@ const SectionActionsForm = ({ form, actionType, styles, onSelectChange, formList
                                                     placeholder="Bölüm adı giriniz..."
                                                     className=""
                                                 />
-                                            </Form.Item>
-                                        </Col>
-                                        <Col span={fields.length > 1 ? 5 : 5} style={{}}>
-                                            <Form.Item
-                                                label={'Katsayı'}
-                                                validateTrigger={['onChange', 'onBlur']}
-                                                name={[index, 'coefficient']}
-                                                rules={[{ validator: validateNumber }]}
-                                            >
-                                                <CustomInputNumber step={0.1} min={0} max={100} />
                                             </Form.Item>
                                         </Col>
                                         <Col span={2}>

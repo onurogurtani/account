@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import ReactQuill from 'react-quill';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import {
     CustomButton,
     CustomForm,
@@ -7,16 +7,12 @@ import {
     CustomInput,
     Text,
     errorDialog,
-    useText,
     successDialog,
+    useText,
 } from '../../../../../components';
-import { reactQuillValidator } from '../../../../../utils/formRule';
-import { Form, Select } from 'antd';
+import AdvancedQuillFormItem from '../../../../../components/AdvancedQuillFormItem';
+import { addNewQuestionToForm, deleteQuestion, getAllQuestionsOfForm } from '../../../../../store/slice/formsSlice';
 import '../../../../../styles/surveyManagement/surveyStyles.scss';
-import classes from '../../../../../styles/surveyManagement/questionStyles.module.scss';
-import { useDispatch } from 'react-redux';
-import { getAllQuestionsOfForm, addNewQuestionToForm, deleteQuestion } from '../../../../../store/slice/formsSlice';
-import CustomQuillFormItem from '../../../../../components/customQuill/CustomQuillFormItem';
 const customInitialValues = {
     headText: undefined,
     text: undefined,
@@ -110,31 +106,8 @@ const OpenEndedQuestion = ({
                         />
                     </CustomFormItem>
                 </div>
-                {/* <div className="form-right-side">
-                    <CustomFormItem
-                        label={<Text t="Soru Metni" />}
-                        name="text"
-                        rules={[
-                            {
-                                required: true,
-                                message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
-                            },
-                            {
-                                validator: reactQuillValidator,
-                                message: <Text t="Lütfen Zorunlu Alanları Doldurunuz." />,
-                            },
-                            {
-                                type: 'string',
-                                max: 2500,
-                                message: 'Duyurunuz En fazla 2500 Karakter İçerebilir.',
-                            },
-                        ]}
-                    >
-                        <ReactQuill theme="snow" />
-                    </CustomFormItem>
-                </div> */}
                 <div className="form-right-side">
-                    <CustomQuillFormItem
+                    <AdvancedQuillFormItem
                         className="editor"
                         label={<Text t="Soru Metni" />}
                         name={'text'}
