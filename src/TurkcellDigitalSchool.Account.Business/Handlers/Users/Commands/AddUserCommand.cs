@@ -44,7 +44,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                 _configurationManager = configurationManager;
             }
 
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string Added = Messages.Added;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string UserInformations = Constants.Messages.UserInformations;

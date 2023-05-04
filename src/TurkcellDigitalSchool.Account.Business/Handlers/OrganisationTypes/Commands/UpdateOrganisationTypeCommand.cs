@@ -39,7 +39,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationTypes.Comm
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string CanNotChangeForRelationOrganisation = Constants.Messages.CanNotChangeForRelationOrganisation;
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [SecuredOperation] 

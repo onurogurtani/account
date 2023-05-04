@@ -39,8 +39,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRan
             private static string PackageIsNotFound = Constants.Messages.PackageIsNotFound;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string TargetRangeIsAlreadyExist = Constants.Messages.TargetRangeIsAlreadyExist;
-            [MessageConstAttr(MessageCodeType.Success)]
-            private static string SuccessfulOperation = Messages.SuccessfulOperation; 
+            [MessageConstAttr(MessageCodeType.Information)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
+
+            
             public async Task<IResult> Handle(CreateStudentAnswerTargetRangeCommand request, CancellationToken cancellationToken)
             {
                 var isExistPackage = _packageRepository.Query().Any(x => x.Id == request.PackageId && x.IsDeleted == IsDeletedEnum.NotDeleted);

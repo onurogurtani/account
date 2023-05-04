@@ -40,7 +40,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
             private static string SameNameAlreadyExist = Messages.SameNameAlreadyExist;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string RoleAdded = Constants.Messages.RoleAdded;
 
             [SecuredOperation] 

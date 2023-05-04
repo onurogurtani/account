@@ -30,7 +30,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationTypes.Comm
 
             [MessageConstAttr(MessageCodeType.Error)]
             private static string SameNameAlreadyExist = Messages.SameNameAlreadyExist;
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [SecuredOperation] 

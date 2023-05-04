@@ -28,7 +28,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
 
             [MessageConstAttr(MessageCodeType.Error)]
             private static string CheckMessage = Messages.CheckMessage;
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [LogAspect(typeof(FileLogger))]

@@ -35,7 +35,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Queries
 
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string Deleted = Messages.Deleted;
 
             [LogAspect(typeof(FileLogger))]

@@ -39,7 +39,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
 
             [MessageConstAttr(MessageCodeType.Error)]
             private static string CitizenIdAlreadyExist = Messages.CitizenIdAlreadyExist;
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string Added = Messages.Added;
 
             [SecuredOperation]

@@ -28,7 +28,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
 
             public DownloadTeacherExcelCommandHandler() { }
 
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [SecuredOperation]

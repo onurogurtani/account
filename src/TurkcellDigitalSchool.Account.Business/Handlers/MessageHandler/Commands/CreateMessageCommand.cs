@@ -34,7 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageHandler.Command
                 _mediator = mediator;
             }
 
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
             public async Task<IResult> Handle(CreateMessageCommand request, CancellationToken cancellationToken)

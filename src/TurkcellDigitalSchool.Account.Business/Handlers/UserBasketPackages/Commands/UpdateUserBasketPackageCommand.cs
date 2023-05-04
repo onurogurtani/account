@@ -36,7 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Com
 
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [SecuredOperation]

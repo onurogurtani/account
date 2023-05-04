@@ -36,7 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
             [MessageConstAttr(MessageCodeType.Error)]
             private static string FileTypeError = Messages.FileTypeError;
 
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string Added = Messages.Added;
             public async Task<IResult> Handle(CreateAvatarFileCommand request, CancellationToken cancellationToken)
             {

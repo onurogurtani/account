@@ -32,7 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
                 _mediator = mediator;
             }
 
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             public async Task<IDataResult<RolePassiveCheckResult>> Handle(PassiveCheckControlRoleQuery request, CancellationToken cancellationToken)

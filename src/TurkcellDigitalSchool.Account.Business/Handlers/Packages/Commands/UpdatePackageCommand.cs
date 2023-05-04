@@ -59,7 +59,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
             private static string RecordAlreadyExists = Messages.RecordAlreadyExists;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [SecuredOperation] 

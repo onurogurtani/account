@@ -26,7 +26,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ServiceMessages.Querie
 
             [MessageConstAttr(MessageCodeType.Error)]
             private static string UnableToProccess = Messages.UnableToProccess;
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             public async Task<IDataResult<List<ConstantMessageDtos>>> Handle(GetAppMessagesQuery request, CancellationToken cancellationToken)

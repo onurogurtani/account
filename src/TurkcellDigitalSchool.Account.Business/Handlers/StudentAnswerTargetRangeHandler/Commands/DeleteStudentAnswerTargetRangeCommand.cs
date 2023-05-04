@@ -31,7 +31,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRan
 
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
              
             public async Task<IResult> Handle(DeleteStudentAnswerTargetRangeCommand request, CancellationToken cancellationToken)

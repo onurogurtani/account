@@ -33,7 +33,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Que
                 _tokenHelper = tokenHelper;
             }
 
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [LogAspect(typeof(FileLogger))]

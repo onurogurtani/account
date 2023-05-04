@@ -1,8 +1,10 @@
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Handlers.MessageHandler.Commands;
@@ -13,6 +15,8 @@ using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Services.CustomMessgeHelperService.Model;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Entities.Concrete.MessageMap;
+using TurkcellDigitalSchool.Integration.IntegrationServices.EducationServices;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
 {
@@ -40,8 +44,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
                 _mediator = mediator;
             }
 
-            [MessageConstAttr(MessageCodeType.Success, "test")]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static readonly string SuccessfulOperation = Messages.SuccessfulOperation;
+            [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
             public async Task<IResult> Handle(CreateMessageMapCommand request, CancellationToken cancellationToken)
             {
@@ -83,7 +88,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
                         else
                         {
                             var messageMapItem = _mapper.Map<ConstantMessageDtos, MessageMap>(item);
-                            messageMapItem.Code = GenerateCode(itemMessageDetail.MessageKey, item.UsedClass);
+                            messageMapItem.Code = GenerateCodeAsync(itemMessageDetail.MessageKey, item.UsedClass).Result;
                             messageMapItem.Message = itemMessageDetail.Message;
                             messageMapItem.MessageKey = itemMessageDetail.MessageKey;
                             messageMapItem.MessageParameters = string.Join(" ", itemMessageDetail.MessageParameters);
@@ -96,9 +101,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
                 return new SuccessResult(Messages.SuccessfulOperation);
             }
 
-            private string GenerateCode(string messageKey, string usedClass)
+            private async Task<string> GenerateCodeAsync(string messageKey, string usedClass)
             {
-                var entity = _messageRepository.Get(w => w.MessageKey == messageKey && w.UsedClass == usedClass);
+                var entity = await _messageRepository.Query()
+                    .Where(w => w.MessageKey == messageKey && w.UsedClass == usedClass)
+                    .Include(x=>x.MessageType)
+                    .FirstOrDefaultAsync();
                 return entity.MessageType.Code + entity.MessageNumber.ToString().PadLeft(4, '0');
             }
         }

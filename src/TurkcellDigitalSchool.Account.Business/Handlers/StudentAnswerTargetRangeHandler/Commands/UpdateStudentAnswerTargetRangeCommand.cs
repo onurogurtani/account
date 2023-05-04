@@ -33,8 +33,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRan
 
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
-            [MessageConstAttr(MessageCodeType.Success)]
-            private static string SuccessfulOperation = Messages.SuccessfulOperation; 
+            [MessageConstAttr(MessageCodeType.Information)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
+
+            
             public async Task<IResult> Handle(UpdateStudentAnswerTargetRangeCommand request, CancellationToken cancellationToken)
             {
                 var getStudentAnswerTargetRange = _studentAnswerTargetRangeRepository.GetById(request.Id);

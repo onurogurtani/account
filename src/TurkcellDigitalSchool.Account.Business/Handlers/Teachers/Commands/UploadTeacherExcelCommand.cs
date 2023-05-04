@@ -41,7 +41,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
             private static string ExcelNumberOfColumnsNotValid = Constants.Messages.ExcelNumberOfColumnsNotValid;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string TryAgain = Messages.TryAgain;
-            [MessageConstAttr(MessageCodeType.Success)]
+            [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             /// <summary>
