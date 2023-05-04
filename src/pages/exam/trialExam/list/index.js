@@ -208,6 +208,15 @@ const TrialExamList = () => {
                 <CustomPageHeader>
                     <CustomCollapseCard cardTitle={'Deneme Sınavları'}>
                         <div className="test-exam-list-main">
+                            <CustomButton
+                                onClick={() => {
+                                    history.push('/exam/trial-exam');
+                                }}
+                                type="primary"
+                            >
+                                {' '}
+                                Yeni Ekle
+                            </CustomButton>
                             <div className=" filter">
                                 <div className=" filter-item">
                                     <CustomButton

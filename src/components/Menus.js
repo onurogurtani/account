@@ -565,6 +565,16 @@ const Menus = () => {
                     </MenuItemText>
                 </CustomItem>
             </CustomSubMenu>
+            <CustomSubMenu key="test" title="Tesler" icon={<CustomImage src={menuIcons} />}>
+                <CustomItem key="/exam/list">
+                    <MenuItemText>
+                        <CustomImage src={menuIcons} />
+                        <span>
+                            <Text t="Deneme Sınavı" />
+                        </span>
+                    </MenuItemText>
+                </CustomItem>
+            </CustomSubMenu>
             <CustomItem key="/teachers">
                 <MenuItemText>
                     <CustomImage src={menuIcons} />
