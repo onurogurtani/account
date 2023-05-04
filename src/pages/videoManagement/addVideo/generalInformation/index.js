@@ -18,7 +18,6 @@ const AddGeneralInformation = ({ sendValue }) => {
   const dispatch = useDispatch();
 
   const [introVideoFile, setIntroVideoFile] = useState();
-  // const [kalturaVideoName, setKalturaVideoName] = useState();
 
   const onFinish = (values) => {
     const introVideoObj = form.getFieldValue('introVideoObj');
@@ -31,20 +30,25 @@ const AddGeneralInformation = ({ sendValue }) => {
       ]);
       return;
     }
-
+    values.lessonAcquisitions = values.lessonAcquisitions.map((item) => ({
+      lessonAcquisitionId: item,
+    }));
+    values.lessonBrackets = values.videoBrackets.map((item) => ({
+      lessonBracketId: item?.lessonBracketId,
+      bracketTime: item?.bracketTime,
+    }));
     values.keyWords = values.keyWords.join();
     values.isActive = true;
     values.beforeEducationSurvey = values?.survey === 'before' ? true : false;
     values.afterEducationSurvey = values?.survey === 'after' ? true : false;
     delete values.survey;
-    console.log(values);
+
 
     if (introVideoFile) {
       values.introVideo = introVideoObj; //yeni intro video ekledi ise
     } else {
       values.introVideoId = introVideoObj.id; //İntro video kayıtlılardan seçti ise
     }
-    // values.kalturaVideoName = kalturaVideoName;
     const urlAndPdfAttach = form.getFieldValue('urlAndPdfAttach');
     if (urlAndPdfAttach) {
       let videoAttachments = [];
@@ -73,10 +77,8 @@ const AddGeneralInformation = ({ sendValue }) => {
         });
       });
       values.videoAttachments = videoAttachments;
-      console.log('videoAttachments', videoAttachments);
     }
 
-    console.log('urlAndPdfAttach', urlAndPdfAttach);
     sendValue(values);
     dispatch(onChangeActiveKey('1'));
   };
