@@ -22,13 +22,21 @@ import { getAllClassStages } from '../../../store/slice/classStageSlice';
 import { ArrowRightOutlined, SearchOutlined } from '@ant-design/icons';
 import { getLessonsQuesiton, setLessons } from '../../../store/slice/lessonsSlice';
 import { getMaxNetCounts, getMaxNetCountsAdd, getMaxNetCountsUpdate } from '../../../store/slice/maxNetNumberSlice';
-import { getExamType } from '../../../store/slice/examTypeSlice';
+import { getByFilterPagedMaxNetCounts, getExamType } from '../../../store/slice/examTypeSlice';
 const MaxNetNumber = () => {
     
     const { educationYearList } = useSelector((state) => state.educationYears);
     const { allClassList } = useSelector((state) => state.classStages);
     const { allExamTypes } = useSelector((state) => state.examTypesSlice);
     
+    const ExamKind = [
+        {id:1, name:"LGS"},
+        {id:2, name:"TYT"},
+        {id:3, name:"AYT"},
+        {id:4, name:"YKS"},
+        {id:5, name:"Diğer"}
+     
+     ]
 
     const { lessons } = useSelector((state) => state.lessons);
     const [step, setStep] = useState(1);
@@ -42,6 +50,7 @@ const MaxNetNumber = () => {
     const { maxNetNumberList } = useSelector((state) => state.maxNetNumber);
 
     const dispatch = useDispatch();
+
     useEffect(() => {
         dispatch(getEducationYearList({ params: { pageSize: '99999' } }));
         dispatch(
@@ -54,7 +63,9 @@ const MaxNetNumber = () => {
             ]),
         );
         dispatch(getExamType())
+        dispatch(getByFilterPagedMaxNetCounts())
     }, [dispatch]);
+
     const columns = [
         {
             title: 'No',
@@ -89,16 +100,16 @@ const MaxNetNumber = () => {
                 );
             },
         },
-        {
-            title: 'Sınıf Seviyesi',
-            dataIndex: 'classroom',
-            key: 'classroom',
-            sorter: true,
+        // {
+        //     title: 'Sınıf Seviyesi',
+        //     dataIndex: 'classroom',
+        //     key: 'classroom',
+        //     sorter: true,
 
-            render: (text, record) => {
-                return <div>{text?.name}</div>;
-            },
-        },
+        //     render: (text, record) => {
+        //         return <div>{text?.name}</div>;
+        //     },
+        // },
         
         
         {
@@ -165,11 +176,12 @@ const MaxNetNumber = () => {
             sumbitAddUpdate();
         }
     };
+
     const sumbitAddUpdate = useCallback(async () => {
         const newData = {
             educationYearId: formAdd.getFieldValue('educationYearId'),
             classroomId: formAdd.getFieldValue('classroomId'),
-            examTypeId: formAdd.getFieldValue('examTypeId'),
+            examKinds: formAdd.getFieldValue('examKinds'),
             isActive: true,
 
         };
@@ -216,9 +228,12 @@ const MaxNetNumber = () => {
             }
         }
     }, [dispatch, formAdd, formNumberValue, updateData.id]);
+
+
     useEffect(() => {
         dispatch(getMaxNetCounts());
     }, [dispatch]);
+
     const filterData = (pageData = null) => {
         const formData = form.getFieldValue();
         let data = {};
@@ -234,6 +249,8 @@ const MaxNetNumber = () => {
             };
         }
 
+        console.log(data);
+
         dispatch(getMaxNetCounts({ data: { maxNetCountDetailSearch: data } }));
     };
 
@@ -243,7 +260,7 @@ const MaxNetNumber = () => {
                 ...formAdd.getFieldValue(),
                 classroomId: updateData.classroomId,
                 educationYearId: updateData.educationYearId,
-                examTypeId: updateData.examTypeId,
+                examKinds: updateData.examKinds,
                 isActive: updateData.isActive,
             });
             if (updateData.maxNetCountLessons) {
@@ -285,6 +302,7 @@ const MaxNetNumber = () => {
         },
         [formAdd, formNumberValue],
     );
+
     const inputCreate = useCallback((data) => {
         const newData = {};
         data.forEach((item, index) => {
@@ -299,7 +317,7 @@ const MaxNetNumber = () => {
 
 
 
-   console.log(maxNetNumberList);
+   console.log(getByFilterPagedMaxNetCounts);
     
     return (
         <CustomPageHeader>
@@ -337,7 +355,7 @@ const MaxNetNumber = () => {
                                                 ))}
                                             </CustomSelect>
                                         </CustomFormItem>
-                                        <CustomFormItem name="classroomIds" label="Sınıf Seviyesi">
+                                        {/* <CustomFormItem name="classroomIds" label="Sınıf Seviyesi">
                                             <CustomSelect mode="multiple">
                                                 {allClassList?.map((item, index) => (
                                                     <Option value={item.id} key={item.index}>
@@ -345,14 +363,14 @@ const MaxNetNumber = () => {
                                                     </Option>
                                                 ))}
                                             </CustomSelect>
-                                        </CustomFormItem>
+                                        </CustomFormItem> */}
 
-                                        <CustomFormItem name="examTypeIds" label="Sınav Türü">
+                                        <CustomFormItem name="examKinds" label="Sınav Türü">
                                             <CustomSelect mode="multiple">
-                                            {allExamTypes?.map((item, index) => (
-                                                item.recordStatus === 1 ?  <Option value={item.id} key={item.index}>
-                                                { item.examKindName }
-                                            </Option>  : ""
+                                            {ExamKind?.map((item, index) => (
+                                               <Option value={item.id} key={index}>
+                                                { item.name }
+                                            </Option> 
                                                    
                                                 ))}
                                             </CustomSelect>
@@ -475,7 +493,14 @@ const MaxNetNumber = () => {
                                                 inputCreate(action.payload.data.items);
                                             }
                                         }}
+                                        
                                     >
+                                         {ExamKind?.map((item, index) => (
+                                            <Option value={item.id} key={item.index}>
+                                                {item.name}
+                                            </Option>
+                                        ))}
+                                        
                                     </CustomSelect>
                                 </CustomFormItem>
                                 

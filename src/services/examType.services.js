@@ -19,6 +19,15 @@ const getExamTypeId = (examKindId) => {
      
     });
 };
+const getByFilterPagedMaxNetCounts = (data) => {
+    
+    return api({
+        url: `Education/MaxNetCounts/GetByFilterPagedMaxNetCounts`,
+        method: 'POST',
+        data
+     
+    });
+};
 
 
 
@@ -26,7 +35,8 @@ const getExamTypeId = (examKindId) => {
 const examTypeServices = {
    
     getExamType,
-    getExamTypeId
+    getExamTypeId,
+    getByFilterPagedMaxNetCounts
 };
 
 export default examTypeServices;
