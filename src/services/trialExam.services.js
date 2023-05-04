@@ -15,6 +15,13 @@ const getTrialExamList = (data) => {
         data: data,
     });
 };
+const getTrialExamById = (params) => {
+    return api({
+        url: '/Exam/TestExams/getbyid',
+        method: 'get',
+        params: params,
+    });
+};
 const trialExamsUpdate = (data) => {
     return api({
         url: '/Exam/TestExams/Update',
@@ -22,11 +29,28 @@ const trialExamsUpdate = (data) => {
         data: data,
     });
 };
-
+const sectionDescriptions = (params) => {
+    return api({
+        url: '/Exam/SectionDescriptions/getbyExamKind',
+        method: 'GET',
+        params: params,
+    });
+};
+const fileUpload = (data, options) => {
+    return api({
+        url: '/File/Files',
+        method: 'POST',
+        data: data,
+        headers: { ...options },
+    });
+};
 const trialExamServices = {
     trialExamsAdd,
     getTrialExamList,
     trialExamsUpdate,
+    sectionDescriptions,
+    fileUpload,
+    getTrialExamById,
 };
 
 export default trialExamServices;

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { CustomModal, CustomSelect, Option } from '../../../components';
-import { useDispatch } from 'react-redux';
-import { getSectionDescriptions } from '../../../store/slice/sectionDescriptionsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSectionDescriptions } from '../../../store/slice/trialExamSlice';
 
 const SectionDescriptionsAdd = ({ open, onOkModal, onCancelModal, setValue }) => {
-    const [valueInfo, setValueInfo] = useState({ name: '', id: '' });
     const dispatch = useDispatch();
+    const { sectionDescriptions, trialExamFormData } = useSelector((state) => state.tiralExam);
     useEffect(() => {
-        dispatch(getSectionDescriptions());
-    }, [dispatch]);
+        dispatch(getSectionDescriptions({ params: { ExamKind: trialExamFormData.examType } }));
+    }, [dispatch, trialExamFormData.examType]);
     return (
         <CustomModal
             title="Bölüm Ekle"
@@ -19,8 +19,20 @@ const SectionDescriptionsAdd = ({ open, onOkModal, onCancelModal, setValue }) =>
             cancelText="Vazgeç"
         >
             <div className="section-select">
-                <CustomSelect style={{ widht: '200px' }}>
-                    <Option value={'dasdsa'}>dasda </Option>{' '}
+                <CustomSelect
+                    onChange={(e) => {
+                        setValue({
+                            id: e,
+                            name: sectionDescriptions?.sectionDescriptionChapters?.find((q) => q.id === e).name,
+                        });
+                    }}
+                    style={{ widht: '200px' }}
+                >
+                    {sectionDescriptions?.sectionDescriptionChapters?.map((item, index) => (
+                        <Option value={item.id} key={index}>
+                            {item.name}
+                        </Option>
+                    ))}
                 </CustomSelect>
             </div>
         </CustomModal>

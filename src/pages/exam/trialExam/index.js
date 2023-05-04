@@ -30,20 +30,22 @@ import { validation } from '../../../utils/utils';
 import AddQuestion from './AddQuestion';
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
+import { getEducationYearList } from '../../../store/slice/educationYearsSlice';
 
 const TrialExam = () => {
     const history = useHistory();
     const { TabPane } = Tabs;
-    const [activeKey, setActiveKey] = useState('1');
+    const [activeKey, setActiveKey] = useState('0');
     const dispatch = useDispatch();
     const [form] = Form.useForm();
     const dateStaticFormat = { showTime: { format: 'HH:mm' }, format: 'DD.MM.YYYY HH:mm' };
     const { trialTypeList } = useSelector((state) => state.trialType);
     const { allClassList } = useSelector((state) => state.classStages);
     const { trialExamFormData } = useSelector((state) => state?.tiralExam);
+    const { educationYearList } = useSelector((state) => state.educationYears);
     const [schoolLevel, setSchoolLevel] = useState('');
-    const IsAllowDownloadPdf = Form.useWatch('IsAllowDownloadPdf', form);
-    const [pdfFile, setPdfFile] = useState(null);
+    const isAllowDownloadPdf = Form.useWatch('isAllowDownloadPdf', form);
+    const [pdfFile, setPdfFile] = useState(undefined);
 
     /*  const { lessons } = useSelector((state) => state.lessons);
     const { lessonUnits } = useSelector((state) => state?.lessonUnits);
@@ -61,7 +63,8 @@ const TrialExam = () => {
             startDate: e?.startDate?.$d,
             transitionBetweenQuestions: e.transitionBetweenQuestions ? e.transitionBetweenQuestions : false,
             transitionBetweenSections: e.transitionBetweenSections ? e.transitionBetweenSections : false,
-            pdfFile: e.IsAllowDownloadPdf ? pdfFile : null,
+            isAllowDownloadPdf: e.isAllowDownloadPdf ? e.isAllowDownloadPdf : false,
+            pdfFile: e.isAllowDownloadPdf ? pdfFile : undefined,
         };
         dispatch(setTrialExamFormData(data));
         setActiveKey('1');
@@ -81,13 +84,14 @@ const TrialExam = () => {
                 testExamTypeId: trialExamFormData.testExamTypeId,
                 transitionBetweenQuestions: trialExamFormData.transitionBetweenQuestions,
                 transitionBetweenSections: trialExamFormData.transitionBetweenSections,
-                IsLiveTextExam: trialExamFormData.IsLiveTextExam,
-                IsAllowDownloadPdf: trialExamFormData.IsAllowDownloadPdf,
+                isLiveTestExam: trialExamFormData.isLiveTestExam,
+                isAllowDownloadPdf: trialExamFormData.isAllowDownloadPdf,
+                educationYearId: trialExamFormData.educationYearId,
             });
-            const school = allClassList.find((q) => q.id === trialExamFormData.classroomId).schoolLevel;
-            setSchoolLevel(school);
+            //  const school = allClassList.find((q) => q.id === trialExamFormData.classroomId).schoolLevel;
+            //    setSchoolLevel(school);
         }
-    }, [form, allClassList]);
+    }, [form]);
     const disabledEndDate = useCallback(
         (endValue) => {
             const { startDate } = form?.getFieldsValue(['startDate']);
@@ -126,16 +130,23 @@ const TrialExam = () => {
 
     useEffect(() => {
         dispatch(getTrialTypeList({ testExamTypeDetailSearch: { pageNumber: 1, pageSize: 200 } }));
+        dispatch(getEducationYearList());
     }, [dispatch]);
     useEffect(() => {
-        dispatch(getAllClassStages());
-    }, [dispatch]);
-
-    const trialExamActiveAndPassive = async () => {
+        if (trialExamFormData.id) {
+            dispatch(
+                getAllClassStages([
+                    { field: 'educationYearId', value: trialExamFormData.educationYearId, compareType: 0 },
+                    { field: 'isActive', value: true, compareType: 0 },
+                ]),
+            );
+        }
+    }, [dispatch, trialExamFormData.educationYearId, trialExamFormData.id]);
+    const trialExamActiveAndPassive = async (status) => {
         const aciton = await dispatch(
             getTrialExamUpdate({
                 data: {
-                    testExam: { ...trialExamFormData, recordStatus: 0 },
+                    testExam: { ...trialExamFormData, recordStatus: status },
                 },
             }),
         );
@@ -183,7 +194,7 @@ const TrialExam = () => {
 
                                         <CustomButton
                                             onClick={async () => {
-                                                trialExamActiveAndPassive();
+                                                trialExamActiveAndPassive(trialExamFormData.recordStatus === 1 ? 0 : 1);
                                             }}
                                         >
                                             {trialExamFormData.recordStatus === 1 ? 'Pasifleştir' : 'Aktifleştir'}
@@ -235,7 +246,11 @@ const TrialExam = () => {
                                             ))}
                                         </CustomSelect>
                                     </CustomFormItem>
-                                    <CustomFormItem name={'IsLiveTextExam'} label="Canlı Deneme">
+                                    <CustomFormItem
+                                        valuePropName="checked"
+                                        name={'isLiveTestExam'}
+                                        label="Canlı Deneme"
+                                    >
                                         <Switch />
                                     </CustomFormItem>
                                     <CustomFormItem
@@ -244,6 +259,35 @@ const TrialExam = () => {
                                         label="Sınav Adı"
                                     >
                                         <CustomInput />
+                                    </CustomFormItem>
+                                    <CustomFormItem
+                                        rules={[
+                                            {
+                                                required: trialExamFormData.id ? false : true,
+                                                message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                                            },
+                                        ]}
+                                        name={'educationYearId'}
+                                        label="Eğitim Öğretim Yılı"
+                                    >
+                                        <CustomSelect
+                                            onChange={(e) => {
+                                                dispatch(
+                                                    getAllClassStages([
+                                                        { field: 'educationYearId', value: e, compareType: 0 },
+                                                        { field: 'isActive', value: true, compareType: 0 },
+                                                    ]),
+                                                    form.resetFields(['classroomId']),
+                                                );
+                                            }}
+                                            disabled={trialExamFormData.id ? true : false}
+                                        >
+                                            {educationYearList?.items?.map((item, index) => (
+                                                <Option value={item.id} key={item.id}>
+                                                    {item.startYear + '-' + item.endYear}
+                                                </Option>
+                                            ))}
+                                        </CustomSelect>
                                     </CustomFormItem>
                                     <CustomFormItem
                                         rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
@@ -255,6 +299,7 @@ const TrialExam = () => {
                                             onChange={(e) => {
                                                 const school = allClassList.find((q) => q.id === e).schoolLevel;
                                                 setSchoolLevel(school);
+                                                form.setFieldValue('examType', 4);
                                             }}
                                         >
                                             {allClassList?.map((item, index) => (
@@ -289,6 +334,10 @@ const TrialExam = () => {
                                                 {
                                                     value: 3,
                                                     label: 'AYT',
+                                                },
+                                                {
+                                                    value: 5,
+                                                    label: 'Diğer',
                                                 },
                                             ]}
                                         ></CustomSelect>
@@ -536,27 +585,51 @@ const TrialExam = () => {
                                         </>
                                     )} */}
                                     <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-                                        <CustomFormItem valuePropName="checked" name={'IsAllowDownloadPdf'}>
+                                        <CustomFormItem valuePropName="checked" name={'isAllowDownloadPdf'}>
                                             <CustomCheckbox>
                                                 Sınavın PDF Dosyası Olarak İndirilmesine İzin Ver
                                             </CustomCheckbox>
                                         </CustomFormItem>
-                                        {IsAllowDownloadPdf && (
-                                            <CustomFormItem
-                                                rules={[
-                                                    { required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' },
-                                                ]}
-                                                name={'pdf'}
-                                            >
-                                                <input
-                                                    onChange={(e) => {
-                                                        setPdfFile(e.target.files[0]);
-                                                    }}
-                                                    type="file"
-                                                    accept=".pdf"
-                                                    className=" file-upload-input "
-                                                ></input>
-                                            </CustomFormItem>
+                                        {isAllowDownloadPdf && (
+                                            <>
+                                                {trialExamFormData.fileId ? (
+                                                    <div className=" pdf-view">
+                                                        <div className="pdf-file">Pdf Dosyası</div>
+                                                        <div
+                                                            onClick={() => {
+                                                                dispatch(
+                                                                    setTrialExamFormData({
+                                                                        ...trialExamFormData,
+                                                                        fileId: undefined,
+                                                                    }),
+                                                                );
+                                                            }}
+                                                            className="pdf-delete"
+                                                        >
+                                                            Kaldır
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <CustomFormItem
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                                message: 'Lütfen Zorunlu Alanları Doldurunuz.',
+                                                            },
+                                                        ]}
+                                                        name={'pdf'}
+                                                    >
+                                                        <input
+                                                            onChange={(e) => {
+                                                                setPdfFile(e.target.files[0]);
+                                                            }}
+                                                            type="file"
+                                                            accept=".pdf"
+                                                            className=" file-upload-input "
+                                                        ></input>
+                                                    </CustomFormItem>
+                                                )}
+                                            </>
                                         )}
                                     </div>
 

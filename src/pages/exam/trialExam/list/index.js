@@ -18,7 +18,7 @@ import { useHistory } from 'react-router-dom';
 import { Form, Row, Col } from 'antd';
 import '../../../../styles/exam/trialExamList.scss';
 import { getAllClassStages } from '../../../../store/slice/classStageSlice';
-import { getTrialExamList, setTrialExamFormData } from '../../../../store/slice/trialExamSlice';
+import { getTrialExamById, getTrialExamList, setTrialExamFormData } from '../../../../store/slice/trialExamSlice';
 import { RightOutlined, SearchOutlined } from '@ant-design/icons';
 const TrialExamList = () => {
     const [form] = Form.useForm();
@@ -45,13 +45,21 @@ const TrialExamList = () => {
                 testExamTypeId: record.testExamTypeId,
                 transitionBetweenQuestions: record.transitionBetweenQuestions,
                 transitionBetweenSections: record.transitionBetweenSections,
-                IsLiveTextExam: record.IsLiveTextExam,
-                IsAllowDownloadPdf: record.IsAllowDownloadPdf,
+                isLiveTestExam: record.isLiveTestExam,
+                isAllowDownloadPdf: record.isAllowDownloadPdf,
+                educationYearId: record.educationYearId,
+                fileId: record.isAllowDownloadPdf ? record.fileId : undefined,
             }),
         );
         history.push('/exam/trial-exam');
     };
 
+    const getDetail = async (id) => {
+        const action = await dispatch(getTrialExamById({ params: { id: id } }));
+        if (getTrialExamById.fulfilled.match(action)) {
+            getTrialExamDetail(action.payload.data);
+        }
+    };
     const columns = [
         {
             title: 'Sınav Adı',
@@ -71,7 +79,15 @@ const TrialExamList = () => {
             },
         },
         {
-            title: 'Sınıf Adı',
+            title: 'Eğitim Öğretim Yılı',
+            dataIndex: 'educationYear',
+            key: 'educationYear',
+            render: (item, record) => {
+                return <div>{item.startYear + '-' + item.endYear}</div>;
+            },
+        },
+        {
+            title: 'Sınıf',
             dataIndex: 'classroom',
             key: 'classroom',
             render: (item, record) => {
@@ -84,6 +100,14 @@ const TrialExamList = () => {
             key: 'examTypeName',
             render: (item, record) => {
                 return <div>{item}</div>;
+            },
+        },
+        {
+            title: 'Canlı Deneme',
+            dataIndex: 'isLiveTestExam',
+            key: 'isLiveTestExam',
+            render: (item, record) => {
+                return <div>{item ? 'Evet' : 'Hayır'}</div>;
             },
         },
         {
@@ -163,7 +187,7 @@ const TrialExamList = () => {
                 return (
                     <CustomButton
                         onClick={() => {
-                            getTrialExamDetail(record);
+                            getDetail(record.id);
                         }}
                     >
                         <RightOutlined />
