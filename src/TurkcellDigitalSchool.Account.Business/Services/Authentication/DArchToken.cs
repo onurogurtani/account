@@ -1,5 +1,5 @@
-﻿using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
+﻿using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Services.Authentication
 {

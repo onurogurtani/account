@@ -11,22 +11,19 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
-using TurkcellDigitalSchool.Entities.Concrete;
 using TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Queries;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using static TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Queries.GetOrganisationChangeRequestByIdQuery;
 using System.Linq.Expressions;
-using TurkcellDigitalSchool.Entities.Dtos.OrganisationDtos;
-using TurkcellDigitalSchool.Entities.Dtos.OrganisationChangeRequestDtos;
-using TurkcellDigitalSchool.Core.Utilities.File;
-using TurkcellDigitalSchool.File.DataAccess.Abstract;
-using TurkcellDigitalSchool.Core.Utilities.File.Model;
-using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Dtos.OrganisationChangeReqContentDtos;
-using TurkcellDigitalSchool.Account.Business.Handlers.OrganisationLogos.Commands;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
 using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.Request;
 using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.Response;
+using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.Response.Dto;
+using File = TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly.File;
+using OrganisationChangeReqContent = TurkcellDigitalSchool.Account.Domain.Concrete.OrganisationChangeReqContent;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChangeRequests.Queries
 {
@@ -34,7 +31,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
     public class GetOrganisationChangeRequestByIdQueryTest
     {
         private GetOrganisationChangeRequestByIdQuery _getOrganisationChangeRequestByIdQuery;
-        private GetOrganisationChangeRequestByIdQueryHandler _getOrganisationChangeRequestByIdQueryHandler;
+        private GetOrganisationChangeRequestByIdQuery.GetOrganisationChangeRequestByIdQueryHandler _getOrganisationChangeRequestByIdQueryHandler;
         private Mock<ICityRepository> _cityRepository;
         private Mock<ICountyRepository> _countyRepository;
         Mock<IFileServices> _fileService;
@@ -74,7 +71,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
             _mapper = new Mock<IMapper>();
 
             _getOrganisationChangeRequestByIdQuery = new GetOrganisationChangeRequestByIdQuery();
-            _getOrganisationChangeRequestByIdQueryHandler = new GetOrganisationChangeRequestByIdQueryHandler(_organisationInfoChangeRequestRepository.Object, _cityRepository.Object, _countyRepository.Object,
+            _getOrganisationChangeRequestByIdQueryHandler = new GetOrganisationChangeRequestByIdQuery.GetOrganisationChangeRequestByIdQueryHandler(_organisationInfoChangeRequestRepository.Object, _cityRepository.Object, _countyRepository.Object,
                _fileService.Object, _mapper.Object);
         }
 
@@ -93,21 +90,21 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Today,
                     RequestDate=DateTime.Today,OrganisationId=1,
                     Organisation= new Organisation{Id=1, CustomerManager="Zeynep"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Forwarded,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.BeingEvaluated,
+                    RequestState=OrganisationChangeRequestState.Forwarded,
+                    ResponseState=OrganisationChangeResponseState.BeingEvaluated,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Test",
                         },
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
 
@@ -119,14 +116,14 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Test",
                         },
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
 
@@ -168,7 +165,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
             _fileService.Setup(x => x.GetFileQuery(It.IsAny<GetFileIntegrationRequest>())).ReturnsAsync(new GetFileQueryIntegrationResponse()
             {
-                Data = new Entities.Dtos.FileDto()
+                Data = new Integration.IntegrationServices.FileServices.Model.Response.Dto.FileDto 
                 {
                     Id = 1,
                     FileName = "Test.jpg",
@@ -178,11 +175,11 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
             });
 
 
-            var logo = new List<Entities.Concrete.File> { 
-                new Entities.Concrete.File{
+            var logo = new List<File> { 
+                new  File{
                 Id = 214, FileName = "test", FilePath="/kg/test" } };
 
-            var organisationLogos = new List<Entities.Concrete.File> { new Entities.Concrete.File { Id = 214, FileName = "test", FilePath = "/kg/test" } };
+            var organisationLogos = new List<File> { new File { Id = 214, FileName = "test", FilePath = "/kg/test" } };
             
 
             _mapper.Setup(s => s.Map<GetOrganisationInfoChangeRequestDto>(pageTypes[0])).Returns(new GetOrganisationInfoChangeRequestDto {
@@ -190,7 +187,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
             new GetOrganisationChangeReqContentDto
             {
                 Id=1,
-                PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.Logo,
+                PropertyEnum=OrganisationChangePropertyEnum.Logo,
                 RequestId=1,
                 PropertyValue="214"
 
@@ -218,21 +215,21 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Today,
                     RequestDate=DateTime.Today,OrganisationId=1,
                     Organisation= new Organisation{Id=1, CustomerManager="Zeynep"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Forwarded,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.BeingEvaluated,
+                    RequestState=OrganisationChangeRequestState.Forwarded,
+                    ResponseState=OrganisationChangeResponseState.BeingEvaluated,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Test",
                         },
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
 

@@ -2,11 +2,11 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Utilities.File;
-using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Dtos;
-using TurkcellDigitalSchool.File.DataAccess.Abstract;
+using TurkcellDigitalSchool.Core.Utilities.Results; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Queries
 {

@@ -15,10 +15,9 @@ using static TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands.Del
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using TurkcellDigitalSchool.Core.Enums;
-using TurkcellDigitalSchool.Entities.Dtos.Admin;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
 using System.Linq;
 using MockQueryable.Moq;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Admins.Commands
 {

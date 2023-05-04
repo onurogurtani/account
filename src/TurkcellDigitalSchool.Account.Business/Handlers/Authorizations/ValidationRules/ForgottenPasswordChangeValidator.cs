@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands;
-using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Account.Business.Helpers;
+using TurkcellDigitalSchool.Account.DataAccess.Abstract; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.ValidationRules
 {

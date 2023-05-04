@@ -5,14 +5,13 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.Business.Handlers.OrganisationTypes.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
+using TurkcellDigitalSchool.Common.Helpers; 
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationTypes.Commands
 {
@@ -43,8 +42,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationTypes.Comm
             [MessageConstAttr(MessageCodeType.Success)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
-            [SecuredOperation(Priority = 1)]
-            [ValidationAspect(typeof(UpdateOrganisationTypeValidator), Priority = 2)]
+            [SecuredOperation] 
             public async Task<IResult> Handle(UpdateOrganisationTypeCommand request, CancellationToken cancellationToken)
             {
                 var organisationType = await _organisationTypeRepository.Query().AnyAsync(x => x.Id != request.OrganisationType.Id && x.Name.Trim().ToLower() == request.OrganisationType.Name.Trim().ToLower());

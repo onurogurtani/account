@@ -27,7 +27,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
             }
 
             [LogAspect(typeof(FileLogger))]
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             public async Task<IDataResult<List<SelectionItem>>> Handle(GetOrganisationManagerNamesQuery request, CancellationToken cancellationToken)
             {
                 var items = await _organisationRepository.Query().Select(x => new SelectionItem { Id = x.Id, Label = x.OrganisationManager }).Distinct().ToListAsync(cancellationToken: cancellationToken);

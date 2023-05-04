@@ -4,16 +4,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using TurkcellDigitalSchool.Account.Business.Handlers.OrganisationLogos.ValidationRules;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.File.Model;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Enums;
-using TurkcellDigitalSchool.File.DataAccess.Abstract;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationLogos.Commands
 {
@@ -37,8 +33,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationLogos.Comm
                 _pathHelper = pathHelper;
             }
 
-            [SecuredOperation(Priority = 1)]
-            [ValidationAspect(typeof(CreateOrganisationLogoValidator), Priority = 2)]
+            [SecuredOperation] 
             public async Task<Core.Utilities.Results.IResult> Handle(CreateOrganisationLogoCommand request, CancellationToken cancellationToken)
             {
                 string[] logoType = new string[] { "image/jpeg", "image/png" };

@@ -5,11 +5,10 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
+using TurkcellDigitalSchool.Common.Constants; 
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Commands
 {
@@ -28,8 +27,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Commands
                 _mapper = mapper;
             }
 
-            [SecuredOperation(Priority = 1)]
-            [ValidationAspect(typeof(UpdateContractKindValidator), Priority = 2)]
+            [SecuredOperation] 
             public async Task<IResult> Handle(UpdateContractKindCommand request, CancellationToken cancellationToken)
             {
 

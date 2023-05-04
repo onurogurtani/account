@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TurkcellDigitalSchool.Entities.Dtos.UserDtos;
+﻿using System.Threading.Tasks;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 
 namespace TurkcellDigitalSchool.Account.Business.Services.User
 {
@@ -16,7 +12,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         SettingsInfoDto GetByStudentSettingsInfoInformation(long userId);
         bool IsExistEmail(long userId, string email);
         bool IsExistUserName(long userId, string userName);
-        TurkcellDigitalSchool.Entities.Concrete.Core.User GetUserById(long userId);
+        Domain.Concrete.User GetUserById(long userId);
         string StudentEducationValidationRules(StudentEducationRequestDto studentEducationRequestDto);
         string StudentCommunicationPreferencesValidationRules(StudentCommunicationPreferencesDto studentCommunicationPreferencesDto);
         bool IsExistCity(long cityId);

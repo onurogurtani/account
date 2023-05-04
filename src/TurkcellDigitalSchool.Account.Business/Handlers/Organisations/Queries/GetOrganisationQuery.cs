@@ -6,6 +6,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
@@ -14,7 +15,6 @@ using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Dtos.OrganisationDtos;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
 {
@@ -46,7 +46,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [LogAspect(typeof(FileLogger))]
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             public virtual async Task<IDataResult<OrganisationDto>> Handle(GetOrganisationQuery request, CancellationToken cancellationToken)
             {
                 var query = _organisationRepository.Query()

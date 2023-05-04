@@ -3,11 +3,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Dtos;
+using RuleBuilderExtensions = TurkcellDigitalSchool.Account.Business.Helpers.RuleBuilderExtensions;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
 {

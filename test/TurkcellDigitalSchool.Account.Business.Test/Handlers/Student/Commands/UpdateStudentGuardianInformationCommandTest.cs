@@ -9,14 +9,13 @@ using System.Threading;
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
-using TurkcellDigitalSchool.Entities.Concrete;
-using TurkcellDigitalSchool.Entities.Enums.QuestionOfExamEnums;
 using static TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands.UpdateStudentParentInformationCommand;
 using System.Linq.Expressions;
 using TurkcellDigitalSchool.Common.Constants;
 using FluentAssertions;
 using System.Linq;
 using MockQueryable.Moq;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands

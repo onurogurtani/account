@@ -44,7 +44,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             [MessageConstAttr(MessageCodeType.Error)]
             private static string EnterDifferentEmail = Constants.Messages.EnterDifferentEmail;
 
-            [ValidationAspect(typeof(UpdateStudentEmailValidator), Priority = 2)]
+             
             public async Task<IResult> Handle(UpdateStudentEmailCommand request, CancellationToken cancellationToken)
             {
 

@@ -8,6 +8,7 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.ValidationR
 using TurkcellDigitalSchool.Account.Business.Helpers;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
@@ -19,8 +20,6 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.Entities.Concrete;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
@@ -41,8 +40,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 
             /// <summary>
             /// Will be reedited
-            /// </summary>
-            [ValidationAspect(typeof(RegisterUserValidator), Priority = 2)]
+            /// </summary> 
             [CacheRemoveAspect("Get")]
             [LogAspect(typeof(FileLogger))]
             [TransactionScopeAspectAsync]

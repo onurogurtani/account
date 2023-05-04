@@ -28,8 +28,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
                 _userRepository = userRepository;
             }
 
-            [SecuredOperation(Priority = 1)]
-            [ValidationAspect(typeof(SetStatusAdminValidator), Priority = 2)]
+            [SecuredOperation] 
             public async Task<IResult> Handle(SetStatusAdminCommand request, CancellationToken cancellationToken)
             {
                 var record = await _userRepository.GetAsync(x => x.Id == request.Id);

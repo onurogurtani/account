@@ -16,7 +16,6 @@ using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 {
@@ -46,9 +45,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             [MessageConstAttr(MessageCodeType.Error)]
             private static string UserNameAlreadyExist = Constants.Messages.UserNameAlreadyExist;
             [MessageConstAttr(MessageCodeType.Error,"Kullanıcı,İl,İlçe")]
-            private static string RecordsDoesNotExist = Constants.Messages.RecordsDoesNotExist;
-
-            [ValidationAspect(typeof(UpdateStudentPersonalInformationValidator), Priority = 2)]
+            private static string RecordsDoesNotExist = Constants.Messages.RecordsDoesNotExist; 
             public async Task<IResult> Handle(UpdateStudentPersonalInformationCommand request, CancellationToken cancellationToken)
             {
                 var getUser = _userService.GetUserById(request.UserId);

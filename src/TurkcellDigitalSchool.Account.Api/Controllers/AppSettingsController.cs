@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.Controllers;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete;
-using TurkcellDigitalSchool.Entities.Dtos;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
 {

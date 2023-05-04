@@ -11,8 +11,9 @@ using Moq;
 using NUnit.Framework;
 using TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
-using TurkcellDigitalSchool.Entities.Concrete;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Queries
 {
@@ -56,7 +57,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Que
         {
             _getByFilterPagedOrganisationsQuery = new GetByFilterPagedOrganisationsQuery
             {
-                OrganisationDetailSearch = new Entities.Dtos.OrganisationDtos.OrganisationDetailSearch()
+                OrganisationDetailSearch = new OrganisationDetailSearch()
             };
 
             var organisations = new List<Organisation>

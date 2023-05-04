@@ -5,7 +5,6 @@ using TurkcellDigitalSchool.Account.Business.Services.Authentication.Model;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete.Core; 
 
 namespace TurkcellDigitalSchool.Account.Business.Services.Authentication
 {

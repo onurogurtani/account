@@ -4,14 +4,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Dtos;
-using TurkcellDigitalSchool.Entities.Enums;
-using TurkcellDigitalSchool.File.DataAccess.Abstract;
-using File = TurkcellDigitalSchool.Entities.Concrete.File;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationLogos.Queries
 {
@@ -30,13 +30,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationLogos.Quer
                 _mapper = mapper;
             }
 
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             public async Task<IDataResult<PagedList<OrganisationLogosDto>>> Handle(GetOrganisationLogosQuery request, CancellationToken cancellationToken)
             {
                 var query = _fileRepository.Query().Where(x => x.FileType == FileType.OrganisationLogo);
 
                 var files = await _fileRepository.GetPagedListAsync(query, request.PaginationQuery);
-                var dtoList = _mapper.Map<List<Entities.Concrete.File>, List<OrganisationLogosDto>>(files.Items);
+                var dtoList = _mapper.Map<List<File>, List<OrganisationLogosDto>>(files.Items);
 
                 foreach (var item in dtoList)
                 {

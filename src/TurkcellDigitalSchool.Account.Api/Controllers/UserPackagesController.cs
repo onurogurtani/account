@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Controllers;
-using TurkcellDigitalSchool.Entities.Concrete;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
 {

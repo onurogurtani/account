@@ -35,8 +35,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Commands
             [MessageConstAttr(MessageCodeType.Success)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
-            [SecuredOperation(Priority = 1)]
-            [ValidationAspect(typeof(DeletePackageTypeValidator), Priority = 2)]
+            [SecuredOperation] 
             public async Task<IResult> Handle(DeletePackageTypeCommand request, CancellationToken cancellationToken)
             {
                 var getPackageType = await _packageTypeRepository.GetAsync(x => x.Id == request.Id);

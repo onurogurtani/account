@@ -3,17 +3,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Configuration;
-using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
-using TurkcellDigitalSchool.Core.Constants;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.Entities.Concrete.Core;  
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
@@ -36,8 +33,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             }
 
 
-            [LogAspect(typeof(FileLogger))]
-            [ValidationAspect(typeof(ForgottenPasswordTokenCheckValidator))]
+            [LogAspect(typeof(FileLogger))] 
             public async Task<IDataResult<UserSession>> Handle(ForgottenPasswordTokenCheckCommand request, CancellationToken cancellationToken)
             {
                 UserSession userSession = new();

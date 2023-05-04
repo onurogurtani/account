@@ -48,7 +48,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
             /// Nested dependent dropdownlist was created for city and county.
             /// The data was transferred into dropdownlist.
             /// </summary>
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             [CacheRemoveAspect("Get")]
             [LogAspect(typeof(FileLogger))]
             public async Task<IDataResult<ExcelResponse>> Handle(DownloadSchoolExcelCommand request, CancellationToken cancellationToken)

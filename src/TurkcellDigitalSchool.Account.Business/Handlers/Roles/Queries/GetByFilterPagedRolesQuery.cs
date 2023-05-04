@@ -6,12 +6,12 @@ using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Dtos.RoleDtos; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
 {
@@ -35,7 +35,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
             }
 
             [LogAspect(typeof(FileLogger))]
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             public virtual async Task<IDataResult<PagedList<GetRoleDto>>> Handle(GetByFilterPagedRolesQuery request, CancellationToken cancellationToken)
             {
                 var query = _roleRepository.Query()

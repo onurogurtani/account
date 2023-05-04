@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
@@ -13,7 +14,6 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.Entities.Dtos;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Queries
 {
@@ -37,7 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Que
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [LogAspect(typeof(FileLogger))]
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             public async Task<IDataResult<GetUserBasketPackagesResponseDto>> Handle(GetUserBasketPackagesQuery request, CancellationToken cancellationToken)
             {
                 var currentUserId = _tokenHelper.GetUserIdByCurrentToken();

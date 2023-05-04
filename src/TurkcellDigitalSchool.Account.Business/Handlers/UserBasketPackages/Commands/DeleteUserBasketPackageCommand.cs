@@ -38,8 +38,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Com
             [MessageConstAttr(MessageCodeType.Success)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
-            [SecuredOperation(Priority = 1)]
-            [ValidationAspect(typeof(DeleteUserBasketPackageValidator), Priority = 2)]
+            [SecuredOperation]
+             
             public async Task<IResult> Handle(DeleteUserBasketPackageCommand request, CancellationToken cancellationToken)
             {
                 var currentUserId = _tokenHelper.GetUserIdByCurrentToken();

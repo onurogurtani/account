@@ -5,8 +5,6 @@ using TurkcellDigitalSchool.Account.Business.Handlers.OrganisationLogos.Commands
 using TurkcellDigitalSchool.Account.Business.Handlers.OrganisationLogos.Queries;
 using TurkcellDigitalSchool.Common.Controllers;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete;
-using TurkcellDigitalSchool.Entities.Dtos;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
 {

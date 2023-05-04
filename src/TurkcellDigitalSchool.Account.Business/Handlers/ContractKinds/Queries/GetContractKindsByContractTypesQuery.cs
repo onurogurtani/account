@@ -35,7 +35,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
 
          
             [LogAspect(typeof(FileLogger))]
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             public async Task<IDataResult<List<SelectionItem>>> Handle(GetContractKindsByContractTypesQuery request, CancellationToken cancellationToken)
             {
                 var isThereRecord = _contractTypeRepository.Query().Any(u => request.Ids.Contains(u.Id));

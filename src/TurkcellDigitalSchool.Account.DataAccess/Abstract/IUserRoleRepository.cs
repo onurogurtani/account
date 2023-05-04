@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using TurkcellDigitalSchool.Core.DataAccess;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Core.DataAccess; 
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Abstract
 {

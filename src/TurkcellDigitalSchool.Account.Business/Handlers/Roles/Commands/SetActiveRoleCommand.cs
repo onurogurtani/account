@@ -32,7 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RoleIsAlreadyActive = Messages.RoleIsAlreadyActive;
 
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             [CacheRemoveAspect("Get")]
             public async Task<IResult> Handle(SetActiveRoleCommand request, CancellationToken cancellationToken)
             {

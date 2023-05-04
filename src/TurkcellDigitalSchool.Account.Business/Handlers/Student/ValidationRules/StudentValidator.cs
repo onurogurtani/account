@@ -1,18 +1,9 @@
 ﻿using FluentValidation;
-using FluentValidation.Validators;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
-using TurkcellDigitalSchool.Entities.Dtos.UserDtos;
-using TurkcellDigitalSchool.Entities.Enums;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.ValidationRules
 {

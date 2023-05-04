@@ -36,8 +36,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
             [MessageConstAttr(MessageCodeType.Success)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
-            [SecuredOperation(Priority = 1)]
-            [ValidationAspect(typeof(SetStatusUserValidator), Priority = 2)]
+            [SecuredOperation]
+             
             public async Task<IResult> Handle(SetStatusUserCommand request, CancellationToken cancellationToken)
             {
                 var record = await _userRepository.GetAsync(x => x.Id == request.Id);

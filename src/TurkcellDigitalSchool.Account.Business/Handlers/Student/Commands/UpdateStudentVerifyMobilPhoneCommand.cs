@@ -38,7 +38,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
 
-            [ValidationAspect(typeof(UpdateStudentVerifyMobilPhoneValidator), Priority = 2)]
+             
             public async Task<IResult> Handle(UpdateStudentVerifyMobilPhoneCommand request, CancellationToken cancellationToken)
             {
                 //TODO UserId Tokendan alınacaktır?

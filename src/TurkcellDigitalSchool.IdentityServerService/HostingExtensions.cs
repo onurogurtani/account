@@ -8,10 +8,10 @@ using System.Configuration;
 using System.Globalization;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
+using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
 using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
-using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt; 
 using TurkcellDigitalSchool.IdentityServerService.Pages.Admin.ApiScopes;
 using TurkcellDigitalSchool.IdentityServerService.Pages.Admin.Clients;
 using TurkcellDigitalSchool.IdentityServerService.Pages.Admin.IdentityScopes;
@@ -28,10 +28,8 @@ namespace TurkcellDigitalSchool.IdentityServerService
             var connectionString = builder.Configuration.GetConnectionString("DArchPostgreContext");
    
 
-            builder.Services.AddDbContext<PostgreDbContext>();
-            builder.Services.AddScoped<ProjectDbContext, PostgreDbContext>();
- 
-
+            builder.Services.AddDbContext<AccountDbContext>();
+            //builder.Services.AddScoped<ProjectDbContext, PostgreDbContext>(); 
 
             builder.Services.AddScoped<ICustomUserSvc, CustomUserSvc>();
             builder.Services.AddScoped<IAppSettingRepository,AppSettingRepository>();
@@ -106,9 +104,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
         }
 
         public static WebApplication ConfigurePipeline(this WebApplication app)
-        {
-            
-
+        { 
             app.UseRequestLocalization(new RequestLocalizationOptions
             {
                 DefaultRequestCulture = new RequestCulture("tr-TR"),

@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
+using TurkcellDigitalSchool.Core.DataAccess;
 using TurkcellDigitalSchool.Core.Entities;
-using TurkcellDigitalSchool.Entities.Enums;
+using TurkcellDigitalSchool.Core.Enums; 
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
     /// <summary>
     /// Kurum bilgileri
     /// </summary>
-    public class Organisation : EntityDefinition
+    public class Organisation : EntityDefinition, IPublishEntity
     {
         public long CrmId { get; set; }
         public string OrganisationManager { get; set; }

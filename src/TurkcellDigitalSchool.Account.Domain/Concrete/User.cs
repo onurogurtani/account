@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
+using TurkcellDigitalSchool.Core.DataAccess;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
-using TurkcellDigitalSchool.Entities.Enums;
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
-    public class User : UserDto
+    public class User : UserDto , IPublishEntity
     {
         /// <summary>
         /// This is required when encoding token. Not in db. The default is Person.

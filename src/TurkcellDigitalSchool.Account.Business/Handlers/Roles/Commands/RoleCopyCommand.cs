@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries;
 using TurkcellDigitalSchool.Account.Business.Handlers.Roles.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
@@ -13,7 +14,6 @@ using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
 {
@@ -43,8 +43,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
             [MessageConstAttr(MessageCodeType.Success)]
             private static string RoleAdded = Constants.Messages.RoleAdded;
 
-            [SecuredOperation(Priority = 1)]
-            [ValidationAspect(typeof(RoleCopyValidator), Priority = 2)]
+            [SecuredOperation] 
             public async Task<IResult> Handle(RoleCopyCommand request, CancellationToken cancellationToken)
             {
                 var role = await _roleRepository.Query().AnyAsync(x => x.Name.Trim().ToLower() == request.RoleName.Trim().ToLower());

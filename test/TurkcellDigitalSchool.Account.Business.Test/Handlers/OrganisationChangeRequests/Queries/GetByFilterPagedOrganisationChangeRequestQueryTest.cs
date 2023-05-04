@@ -11,16 +11,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
-using TurkcellDigitalSchool.Entities.Concrete;
-using TurkcellDigitalSchool.Entities.Dtos.ContractKindDtos;
 using TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Queries;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using static TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Queries.GetByFilterPagedOrganisationChangeRequestQuery;
-using TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Commands;
-using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
-using System.Linq.Expressions;
-using TurkcellDigitalSchool.Entities.Dtos;
-using TurkcellDigitalSchool.Entities.Enums;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Core.Enums;  
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChangeRequests.Queries
 {
@@ -28,7 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
     public class GetByFilterPagedOrganisationChangeRequestQueryTest
     {
         private GetByFilterPagedOrganisationChangeRequestQuery _getByFilterPagedOrganisationChangeRequestQuery;
-        private GetByFilterPagedOrganisationChangeRequestQueryHandler _getByFilterPagedOrganisationChangeRequestQueryHandler;
+        private GetByFilterPagedOrganisationChangeRequestQuery.GetByFilterPagedOrganisationChangeRequestQueryHandler _getByFilterPagedOrganisationChangeRequestQueryHandler;
 
         private Mock<IOrganisationInfoChangeRequestRepository> _organisationInfoChangeRequestRepository;
 
@@ -60,11 +54,11 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
             _mapper = new Mock<IMapper>();
 
             _getByFilterPagedOrganisationChangeRequestQuery = new GetByFilterPagedOrganisationChangeRequestQuery();
-            _getByFilterPagedOrganisationChangeRequestQueryHandler = new GetByFilterPagedOrganisationChangeRequestQueryHandler(_organisationInfoChangeRequestRepository.Object, _mapper.Object);
+            _getByFilterPagedOrganisationChangeRequestQueryHandler = new GetByFilterPagedOrganisationChangeRequestQuery.GetByFilterPagedOrganisationChangeRequestQueryHandler(_organisationInfoChangeRequestRepository.Object, _mapper.Object);
         }
 
         [Test]
-        [TestCase(1, Entities.Enums.OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
+        [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
         public async Task GetByFilterPagedOrganisationChangeRequestQuery_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
         {
             DateTime _startDate = DateTime.Parse(startDate);
@@ -95,21 +89,21 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Today,
                     RequestDate=DateTime.Today,OrganisationId=1,
                     Organisation= new Organisation{Id=1, CustomerManager="Zeynep"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Forwarded,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.BeingEvaluated,
+                    RequestState=OrganisationChangeRequestState.Forwarded,
+                    ResponseState=OrganisationChangeResponseState.BeingEvaluated,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Test",
                         },
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
 
@@ -123,14 +117,14 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Now,
                     RequestDate=DateTime.Now, OrganisationId=2,
                     Organisation= new Organisation{Id=2, CustomerManager="Ali"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Approved,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.Approved,
+                    RequestState=OrganisationChangeRequestState.Approved,
+                    ResponseState=OrganisationChangeResponseState.Approved,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=3,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Deneme",
 
                         },
@@ -138,7 +132,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                         {
                             Id=4,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
                     }
@@ -152,7 +146,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
         }
         
         [Test]
-        [TestCase(1, Entities.Enums.OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
+        [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
         public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByRequestDateASC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
         {
             DateTime _startDate = DateTime.Parse(startDate);
@@ -183,21 +177,21 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Today,
                     RequestDate=DateTime.Today,OrganisationId=1,
                     Organisation= new Organisation{Id=1, CustomerManager="Zeynep"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Forwarded,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.BeingEvaluated,
+                    RequestState=OrganisationChangeRequestState.Forwarded,
+                    ResponseState=OrganisationChangeResponseState.BeingEvaluated,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Test",
                         },
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
 
@@ -211,14 +205,14 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Now,
                     RequestDate=DateTime.Now, OrganisationId=2,
                     Organisation= new Organisation{Id=2, CustomerManager="Ali"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Approved,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.Approved,
+                    RequestState=OrganisationChangeRequestState.Approved,
+                    ResponseState=OrganisationChangeResponseState.Approved,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=3,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Deneme",
 
                         },
@@ -226,7 +220,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                         {
                             Id=4,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
                     }
@@ -240,7 +234,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
         }
 
         [Test]
-        [TestCase(1, Entities.Enums.OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
+        [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
         public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByRequestDateDESC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
         {
             DateTime _startDate = DateTime.Parse(startDate);
@@ -271,21 +265,21 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Today,
                     RequestDate=DateTime.Today,OrganisationId=1,
                     Organisation= new Organisation{Id=1, CustomerManager="Zeynep"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Forwarded,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.BeingEvaluated,
+                    RequestState=OrganisationChangeRequestState.Forwarded,
+                    ResponseState=OrganisationChangeResponseState.BeingEvaluated,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Test",
                         },
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
 
@@ -299,14 +293,14 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Now,
                     RequestDate=DateTime.Now, OrganisationId=2,
                     Organisation= new Organisation{Id=2, CustomerManager="Ali"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Approved,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.Approved,
+                    RequestState=OrganisationChangeRequestState.Approved,
+                    ResponseState=OrganisationChangeResponseState.Approved,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=3,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Deneme",
 
                         },
@@ -314,7 +308,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                         {
                             Id=4,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
                     }
@@ -328,7 +322,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
         }
         
         [Test]
-        [TestCase(1, Entities.Enums.OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
+        [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
         public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByRequestStateASC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
         {
             DateTime _startDate = DateTime.Parse(startDate);
@@ -359,21 +353,21 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Today,
                     RequestDate=DateTime.Today,OrganisationId=1,
                     Organisation= new Organisation{Id=1, CustomerManager="Zeynep"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Forwarded,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.BeingEvaluated,
+                    RequestState=OrganisationChangeRequestState.Forwarded,
+                    ResponseState=OrganisationChangeResponseState.BeingEvaluated,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Test",
                         },
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
 
@@ -387,14 +381,14 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Now,
                     RequestDate=DateTime.Now, OrganisationId=2,
                     Organisation= new Organisation{Id=2, CustomerManager="Ali"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Approved,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.Approved,
+                    RequestState=OrganisationChangeRequestState.Approved,
+                    ResponseState=OrganisationChangeResponseState.Approved,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=3,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Deneme",
 
                         },
@@ -402,7 +396,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                         {
                             Id=4,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
                     }
@@ -416,7 +410,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
         }
         
         [Test]
-        [TestCase(1, Entities.Enums.OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
+        [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
         public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByRequestStateDESC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
         {
             DateTime _startDate = DateTime.Parse(startDate);
@@ -447,21 +441,21 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Today,
                     RequestDate=DateTime.Today,OrganisationId=1,
                     Organisation= new Organisation{Id=1, CustomerManager="Zeynep"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Forwarded,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.BeingEvaluated,
+                    RequestState=OrganisationChangeRequestState.Forwarded,
+                    ResponseState=OrganisationChangeResponseState.BeingEvaluated,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Test",
                         },
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
 
@@ -475,14 +469,14 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Now,
                     RequestDate=DateTime.Now, OrganisationId=2,
                     Organisation= new Organisation{Id=2, CustomerManager="Ali"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Approved,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.Approved,
+                    RequestState=OrganisationChangeRequestState.Approved,
+                    ResponseState=OrganisationChangeResponseState.Approved,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=3,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Deneme",
 
                         },
@@ -490,7 +484,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                         {
                             Id=4,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
                     }
@@ -504,7 +498,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
         }
         
         [Test]
-        [TestCase(1, Entities.Enums.OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
+        [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
         public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByCustomerManagerASC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
         {
             DateTime _startDate = DateTime.Parse(startDate);
@@ -535,21 +529,21 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Today,
                     RequestDate=DateTime.Today,OrganisationId=1,
                     Organisation= new Organisation{Id=1, CustomerManager="Zeynep"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Forwarded,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.BeingEvaluated,
+                    RequestState=OrganisationChangeRequestState.Forwarded,
+                    ResponseState=OrganisationChangeResponseState.BeingEvaluated,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Test",
                         },
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
 
@@ -563,14 +557,14 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Now,
                     RequestDate=DateTime.Now, OrganisationId=2,
                     Organisation= new Organisation{Id=2, CustomerManager="Ali"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Approved,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.Approved,
+                    RequestState=OrganisationChangeRequestState.Approved,
+                    ResponseState=OrganisationChangeResponseState.Approved,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=3,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Deneme",
 
                         },
@@ -578,7 +572,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                         {
                             Id=4,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
                     }
@@ -592,7 +586,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
         }
         
         [Test]
-        [TestCase(1, Entities.Enums.OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
+        [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
         public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByCustomerManagerDESC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
         {
             DateTime _startDate = DateTime.Parse(startDate);
@@ -623,21 +617,21 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Today,
                     RequestDate=DateTime.Today,OrganisationId=1,
                     Organisation= new Organisation{Id=1, CustomerManager="Zeynep"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Forwarded,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.BeingEvaluated,
+                    RequestState=OrganisationChangeRequestState.Forwarded,
+                    ResponseState=OrganisationChangeResponseState.BeingEvaluated,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Test",
                         },
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
 
@@ -651,14 +645,14 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Now,
                     RequestDate=DateTime.Now, OrganisationId=2,
                     Organisation= new Organisation{Id=2, CustomerManager="Ali"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Approved,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.Approved,
+                    RequestState=OrganisationChangeRequestState.Approved,
+                    ResponseState=OrganisationChangeResponseState.Approved,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=3,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Deneme",
 
                         },
@@ -666,7 +660,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                         {
                             Id=4,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
                     }
@@ -680,7 +674,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
         }
         
         [Test]
-        [TestCase(1, Entities.Enums.OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
+        [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
         public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByInsertTimeASC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
         {
             DateTime _startDate = DateTime.Parse(startDate);
@@ -711,21 +705,21 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Today,
                     RequestDate=DateTime.Today,OrganisationId=1,
                     Organisation= new Organisation{Id=1, CustomerManager="Zeynep"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Forwarded,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.BeingEvaluated,
+                    RequestState=OrganisationChangeRequestState.Forwarded,
+                    ResponseState=OrganisationChangeResponseState.BeingEvaluated,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Test",
                         },
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
 
@@ -739,14 +733,14 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Now,
                     RequestDate=DateTime.Now, OrganisationId=2,
                     Organisation= new Organisation{Id=2, CustomerManager="Ali"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Approved,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.Approved,
+                    RequestState=OrganisationChangeRequestState.Approved,
+                    ResponseState=OrganisationChangeResponseState.Approved,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=3,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Deneme",
 
                         },
@@ -754,7 +748,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                         {
                             Id=4,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
                     }
@@ -768,7 +762,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
         }
         
         [Test]
-        [TestCase(1, Entities.Enums.OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
+        [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
         public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByInsertTimeDESC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
         {
             DateTime _startDate = DateTime.Parse(startDate);
@@ -799,21 +793,21 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Today,
                     RequestDate=DateTime.Today,OrganisationId=1,
                     Organisation= new Organisation{Id=1, CustomerManager="Zeynep"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Forwarded,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.BeingEvaluated,
+                    RequestState=OrganisationChangeRequestState.Forwarded,
+                    ResponseState=OrganisationChangeResponseState.BeingEvaluated,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Test",
                         },
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
 
@@ -827,14 +821,14 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Now,
                     RequestDate=DateTime.Now, OrganisationId=2,
                     Organisation= new Organisation{Id=2, CustomerManager="Ali"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Approved,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.Approved,
+                    RequestState=OrganisationChangeRequestState.Approved,
+                    ResponseState=OrganisationChangeResponseState.Approved,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=3,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Deneme",
 
                         },
@@ -842,7 +836,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                         {
                             Id=4,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
                     }
@@ -856,7 +850,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
         }
         
         [Test]
-        [TestCase(1, Entities.Enums.OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
+        [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
         public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByUpdateTimeASC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
         {
             DateTime _startDate = DateTime.Parse(startDate);
@@ -887,21 +881,21 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Today,
                     RequestDate=DateTime.Today,OrganisationId=1,
                     Organisation= new Organisation{Id=1, CustomerManager="Zeynep"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Forwarded,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.BeingEvaluated,
+                    RequestState=OrganisationChangeRequestState.Forwarded,
+                    ResponseState=OrganisationChangeResponseState.BeingEvaluated,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Test",
                         },
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
 
@@ -915,14 +909,14 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Now,
                     RequestDate=DateTime.Now, OrganisationId=2,
                     Organisation= new Organisation{Id=2, CustomerManager="Ali"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Approved,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.Approved,
+                    RequestState=OrganisationChangeRequestState.Approved,
+                    ResponseState=OrganisationChangeResponseState.Approved,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=3,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Deneme",
 
                         },
@@ -930,7 +924,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                         {
                             Id=4,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
                     }
@@ -944,7 +938,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
         }
         
         [Test]
-        [TestCase(1, Entities.Enums.OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
+        [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
         public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByUpdateTimeDESC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
         {
             DateTime _startDate = DateTime.Parse(startDate);
@@ -975,21 +969,21 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Today,
                     RequestDate=DateTime.Today,OrganisationId=1,
                     Organisation= new Organisation{Id=1, CustomerManager="Zeynep"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Forwarded,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.BeingEvaluated,
+                    RequestState=OrganisationChangeRequestState.Forwarded,
+                    ResponseState=OrganisationChangeResponseState.BeingEvaluated,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Test",
                         },
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
 
@@ -1003,14 +997,14 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Now,
                     RequestDate=DateTime.Now, OrganisationId=2,
                     Organisation= new Organisation{Id=2, CustomerManager="Ali"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Approved,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.Approved,
+                    RequestState=OrganisationChangeRequestState.Approved,
+                    ResponseState=OrganisationChangeResponseState.Approved,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=3,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Deneme",
 
                         },
@@ -1018,7 +1012,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                         {
                             Id=4,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
                     }
@@ -1032,7 +1026,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
         }
         
         [Test]
-        [TestCase(1, Entities.Enums.OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
+        [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
         public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByIdASC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
         {
             DateTime _startDate = DateTime.Parse(startDate);
@@ -1063,21 +1057,21 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Today,
                     RequestDate=DateTime.Today,OrganisationId=1,
                     Organisation= new Organisation{Id=1, CustomerManager="Zeynep"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Forwarded,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.BeingEvaluated,
+                    RequestState=OrganisationChangeRequestState.Forwarded,
+                    ResponseState=OrganisationChangeResponseState.BeingEvaluated,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Test",
                         },
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
 
@@ -1091,14 +1085,14 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Now,
                     RequestDate=DateTime.Now, OrganisationId=2,
                     Organisation= new Organisation{Id=2, CustomerManager="Ali"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Approved,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.Approved,
+                    RequestState=OrganisationChangeRequestState.Approved,
+                    ResponseState=OrganisationChangeResponseState.Approved,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=3,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Deneme",
 
                         },
@@ -1106,7 +1100,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                         {
                             Id=4,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
                     }
@@ -1120,7 +1114,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
         }
         
         [Test]
-        [TestCase(1, Entities.Enums.OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
+        [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
         public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByIdDESC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
         {
             DateTime _startDate = DateTime.Parse(startDate);
@@ -1151,21 +1145,21 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Today,
                     RequestDate=DateTime.Today,OrganisationId=1,
                     Organisation= new Organisation{Id=1, CustomerManager="Zeynep"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Forwarded,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.BeingEvaluated,
+                    RequestState=OrganisationChangeRequestState.Forwarded,
+                    ResponseState=OrganisationChangeResponseState.BeingEvaluated,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Test",
                         },
                         new OrganisationChangeReqContent
                         {
                             Id=1,
                             RequestId=1,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
 
@@ -1179,14 +1173,14 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     UpdateTime= DateTime.Now,
                     RequestDate=DateTime.Now, OrganisationId=2,
                     Organisation= new Organisation{Id=2, CustomerManager="Ali"},
-                    RequestState=Entities.Enums.OrganisationChangeRequestState.Approved,
-                    ResponseState=Entities.Enums.OrganisationChangeResponseState.Approved,
+                    RequestState=OrganisationChangeRequestState.Approved,
+                    ResponseState=OrganisationChangeResponseState.Approved,
                     OrganisationChangeReqContents =  new List<OrganisationChangeReqContent>{
                         new OrganisationChangeReqContent
                         {
                             Id=3,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationName,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationName,
                             PropertyValue="Deneme",
 
                         },
@@ -1194,7 +1188,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                         {
                             Id=4,
                             RequestId=2,
-                            PropertyEnum=Entities.Enums.OrganisationChangePropertyEnum.OrganisationAddress,
+                            PropertyEnum=OrganisationChangePropertyEnum.OrganisationAddress,
                             PropertyValue="Test Adres",
                         }
                     }

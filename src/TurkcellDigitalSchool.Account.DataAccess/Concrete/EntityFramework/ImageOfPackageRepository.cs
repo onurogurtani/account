@@ -1,13 +1,13 @@
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Entities.Concrete;
+using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Core.DataAccess.EntityFramework; 
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 {
-    public class ImageOfPackageRepository : EfEntityRepositoryBase<ImageOfPackage, ProjectDbContext>, IImageOfPackageRepository
+    public class ImageOfPackageRepository : EfEntityRepositoryBase<ImageOfPackage, AccountDbContext>, IImageOfPackageRepository
     {
-        public ImageOfPackageRepository(ProjectDbContext context) : base(context)
+        public ImageOfPackageRepository(AccountDbContext context) : base(context)
         {
         }
     }

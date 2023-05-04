@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Schools.Queries;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Controllers;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
-using TurkcellDigitalSchool.Entities.Concrete;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
 {

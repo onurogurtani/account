@@ -2,13 +2,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Utilities.File;
-using TurkcellDigitalSchool.Core.Utilities.File.Model;
-using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Enums; 
-using System.Linq;
 using System;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands

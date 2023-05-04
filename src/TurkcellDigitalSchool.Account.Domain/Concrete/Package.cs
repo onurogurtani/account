@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using TurkcellDigitalSchool.Core.DataAccess;
 using TurkcellDigitalSchool.Core.Entities;
-using TurkcellDigitalSchool.Entities.Concrete;
-using TurkcellDigitalSchool.Entities.Enums;
-using PackageTestExam = TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly.PackageTestExam;
+using TurkcellDigitalSchool.Core.Enums; 
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
-    public class Package : EntityDefault
+    public class Package : EntityDefault, IPublishEntity
     {
         public bool HasCoachService { get; set; }
         public bool HasTryingTest { get; set; }

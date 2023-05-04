@@ -4,18 +4,18 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;
-using TurkcellDigitalSchool.Core.Utilities.IoC;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
+using TurkcellDigitalSchool.Core.Utilities.IoC; 
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 {
-    public class UserSessionRepository : EfEntityRepositoryBase<UserSession, ProjectDbContext>, IUserSessionRepository
+    public class UserSessionRepository : EfEntityRepositoryBase<UserSession, AccountDbContext>, IUserSessionRepository
     {
         private readonly RedisService _redisService;
-        public UserSessionRepository(ProjectDbContext context) : base(context)
+        public UserSessionRepository(AccountDbContext context) : base(context)
         {
             _redisService = ServiceTool.ServiceProvider.GetService<RedisService>(); // Test projesinde UserSessionRepository new()'lenerek çağırıldığı için Constructor yerine burada çağrıldı
         }

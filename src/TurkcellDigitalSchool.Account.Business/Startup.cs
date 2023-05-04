@@ -1,4 +1,5 @@
 using System;
+using System.Configuration;
 using System.Reflection;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -6,7 +7,6 @@ using Autofac;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -14,8 +14,12 @@ using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.LdapLoginService;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.TurkcellFastLoginService;
 using TurkcellDigitalSchool.Account.Business.Services.User;
+using TurkcellDigitalSchool.Account.Business.SubServices.RegisterServices;
+using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Common.DependencyResolvers;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors;
+using TurkcellDigitalSchool.Core.Configure;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Microsoft;
 using TurkcellDigitalSchool.Core.DependencyResolvers;
@@ -27,7 +31,6 @@ using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Core.Utilities.MessageBrokers.RabbitMq;
 using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Integration.Helper;
 using TurkcellDigitalSchool.Integration.Type;
 
@@ -73,15 +76,17 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddSingleton<ICacheManager, MemoryCacheManager>();
             services.AddScoped<IPathHelper, PathHelper>();
             services.AddScoped<ILdapLoginService, LdapLoginService>();
-            services.AddScoped<ITurkcellFastLoginService, TurkcellFastLoginService>(); 
+            services.AddScoped<ITurkcellFastLoginService, TurkcellFastLoginService>();
             services.AddScoped<IKpsService, KpsService>();
             services.AddScoped<IUserService, UserService>();
             services.AddAutoMapper(typeof(Common.ConfigurationManager));
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddMediatR(typeof(BusinessStartup).GetTypeInfo().Assembly);
 
             services.AddTransient<ICustomMessgeHelperService, CustomMessgeHelperService>();
-
+            services.AddSubServices();
             services.AddMsIntegrationServicesWithName(Configuration, MsType.Education);
             services.AddMsIntegrationServicesWithName(Configuration, MsType.Event);
             services.AddMsIntegrationServicesWithName(Configuration, MsType.Exam);
@@ -98,8 +103,25 @@ namespace TurkcellDigitalSchool.Account.Business
                 }
                 return null;
             };
-
+            var capConfig = Configuration.GetSection("CapConfig").Get<CapConfig>();
+            services.AddCap(options =>
+            {
+                options.UsePostgreSql(Configuration.GetConnectionString("DArchPostgreContext"));
+                options.UseRabbitMQ(rabbitMqOptions =>
+                {
+                    rabbitMqOptions.ConnectionFactoryOptions = connectionFactory =>
+                    {
+                        connectionFactory.Ssl.Enabled = capConfig.SslEnable; ;
+                        connectionFactory.HostName = capConfig.HostName;
+                        connectionFactory.UserName = capConfig.UserName;
+                        connectionFactory.Password = capConfig.Password;
+                        connectionFactory.Port = capConfig.Port;
+                    };
+                });
+                options.UseDashboard(otp => { otp.PathMatch = "/MyCap"; });
+            });
         }
+
 
         /// <summary>
         /// This method gets called by the Local
@@ -118,11 +140,11 @@ namespace TurkcellDigitalSchool.Account.Business
         {
             ConfigureServices(services);
 
-            services.AddDbContext<PostgreDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DArchPostgreContext")));
-            services.AddScoped<ProjectDbContext, PostgreDbContext>();
+            services.AddDbContext<AccountDbContext>();
+            services.AddDbContext<AccountSubscribeDbContext>();
             services.AddConsulConfig(Configuration);
         }
- 
+
 
 
         /// <summary>
@@ -197,8 +219,9 @@ namespace TurkcellDigitalSchool.Account.Business
         {
             ConfigureServices(services);
 
-            services.AddDbContext<PostgreDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DArchPostgreContext")));
-            services.AddScoped<ProjectDbContext, PostgreDbContext>();
+            services.AddDbContext<AccountDbContext>();
+            services.AddDbContext<AccountSubscribeDbContext>();
+            ///services.AddScoped<ProjectDbContext, PostgreDbContext>();
         }
 
 

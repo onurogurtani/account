@@ -13,10 +13,11 @@ using static TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands.Up
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
-using TurkcellDigitalSchool.Entities.Concrete;
 using FluentAssertions;
 using TurkcellDigitalSchool.Account.Business.Services.User;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
+using TurkcellDigitalSchool.Core.Enums;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
 {
@@ -76,7 +77,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
                     CountyId = 1,
                     DiplomaGrade = 1,
                     SchoolId = 1,
-                    ExamType = Entities.Enums.ExamType.LGS,
+                    ExamType = ExamType.LGS,
                 }
             };
             _studentEducationInformationRepository.Setup(x => x.CreateAndSave(It.IsAny<StudentEducationInformation>(), It.IsAny<int?>(), It.IsAny<bool>()));
@@ -98,7 +99,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
                     CountyId = 1,
                     DiplomaGrade = 1,
                     SchoolId = 1,
-                    ExamType = Entities.Enums.ExamType.LGS,
+                    ExamType = ExamType.LGS,
                 }
             };
 

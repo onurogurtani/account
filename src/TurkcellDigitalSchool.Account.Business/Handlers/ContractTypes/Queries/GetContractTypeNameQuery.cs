@@ -32,7 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Queries
 
             [CacheRemoveAspect("Get")]
             [LogAspect(typeof(FileLogger))]
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             public async Task<IDataResult<List<string>>> Handle(GetContractTypeNamesQuery request, CancellationToken cancellationToken)
             {
                 var contractTypeNames = await _contractTypeRepository.Query().Select(x => x.Name).ToListAsync();

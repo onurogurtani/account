@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
@@ -16,8 +18,6 @@ using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Excel;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete;
-using TurkcellDigitalSchool.Entities.Dtos;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
 {
@@ -56,7 +56,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
             /// Id information obtain from the relevant tables for the city, county, institution and institution type fields.
             /// Added record to school table.
             /// </summary>
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             [CacheRemoveAspect("Get")]
             [LogAspect(typeof(FileLogger))]
             public async Task<IDataResult<List<School>>> Handle(UploadSchoolExcelCommand request, CancellationToken cancellationToken)

@@ -37,8 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             }
 
 
-            [LogAspect(typeof(FileLogger))]
-            [ValidationAspect(typeof(OldPasswordToNewPasswordCommandValidator))]
+            [LogAspect(typeof(FileLogger))] 
             public async Task<IDataResult<TokenIntegraitonResponse>> Handle(OldPasswordToNewPasswordCommand request, CancellationToken cancellationToken)
             {
                 if (request.NewPass != request.NewPassAgain)

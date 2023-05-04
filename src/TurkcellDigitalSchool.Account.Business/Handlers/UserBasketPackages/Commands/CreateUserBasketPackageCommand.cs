@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
@@ -12,7 +13,6 @@ using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.Entities.Concrete;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Commands
 {
@@ -38,8 +38,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Com
             [MessageConstAttr(MessageCodeType.Success)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
-            [SecuredOperation(Priority = 1)]
-            [ValidationAspect(typeof(CreateUserBasketPackageValidator), Priority = 2)]
+            [SecuredOperation]
+             
             public async Task<IResult> Handle(CreateUserBasketPackageCommand request, CancellationToken cancellationToken)
             {
 

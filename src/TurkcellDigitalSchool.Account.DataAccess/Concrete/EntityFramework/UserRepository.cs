@@ -4,16 +4,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
-using TurkcellDigitalSchool.Entities.Enums;
+using TurkcellDigitalSchool.Core.Enums;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 {
-    public class UserRepository : EfEntityRepositoryBase<User, ProjectDbContext>, IUserRepository
+    public class UserRepository : EfEntityRepositoryBase<User, AccountDbContext>, IUserRepository
     {
-        public UserRepository(ProjectDbContext context)
+        public UserRepository(AccountDbContext context)
             : base(context)
         {
         }

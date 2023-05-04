@@ -2,12 +2,12 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Utilities.File;
-using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Dtos;
-using TurkcellDigitalSchool.File.DataAccess.Abstract;
+using TurkcellDigitalSchool.Core.Utilities.Results; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationLogos.Queries
 {
@@ -25,7 +25,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationLogos.Quer
                 _fileRepository = fileRepository;
             }
 
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             public async Task<IDataResult<OrganisationLogoDto>> Handle(GetOrganisationLogoQuery request, CancellationToken cancellationToken)
             {
                 var record = await _fileRepository.GetAsync(x => x.Id == request.Id);

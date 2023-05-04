@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Handlers.MessageTypes.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
@@ -58,7 +59,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageHandler.Command
                         {
                             var messageType = _messageTypeRepository.GetAsync(w=>w.Code == ((MessageCodeType)itemMessageDetail.MessageCodeType).DescriptionAttr().ToString()).Result;
 
-                            var messageEntity = new Entities.Concrete.Message
+                            var messageEntity = new  Message
                             {
                                 UsedClass = item.UsedClass,
                                 MessageKey = itemMessageDetail.MessageKey,

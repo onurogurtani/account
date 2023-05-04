@@ -12,13 +12,13 @@ using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
 using TurkcellDigitalSchool.Account.Business.Handlers.OrganisationLogos.Commands;
+using TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Abstract;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.File.Model;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
-using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.File.DataAccess.Abstract;
+using TurkcellDigitalSchool.Core.Utilities.Results; 
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationLogos.Commands
 {
@@ -146,19 +146,19 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationLogos
                 Image = file
             };
 
-            var logo = new Entities.Concrete.File { Id = _updateOrganisationLogoCommand.Id, FileName = _updateOrganisationLogoCommand.FileName };
+            var logo = new Domain.Concrete.ReadOnly.File() { Id = _updateOrganisationLogoCommand.Id, FileName = _updateOrganisationLogoCommand.FileName };
 
-            var organisationLogos = new List<Entities.Concrete.File> { new Entities.Concrete.File { Id = 1, FileName = "test" } };
+            var organisationLogos = new List<Domain.Concrete.ReadOnly.File> { new Domain.Concrete.ReadOnly.File { Id = 1, FileName = "test" } };
 
             _fileRepository.Setup(x => x.Query()).Returns(organisationLogos.AsQueryable().BuildMock());
-            _fileRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<Entities.Concrete.File, bool>>>())).ReturnsAsync(logo);
+            _fileRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<Domain.Concrete.ReadOnly.File, bool>>>())).ReturnsAsync(logo);
 
             _pathHelper.Setup(x => x.GetPath(It.IsAny<string>())).Returns("OrganisationLogo");
 
             var saveFileReturn = new DataResult<string>("test", true);
             _fileService.Setup(x => x.SaveFile(It.IsAny<SaveFileRequest>())).ReturnsAsync(saveFileReturn);
 
-            _fileRepository.Setup(x => x.Add(It.IsAny<Entities.Concrete.File>())).Returns(new Entities.Concrete.File());
+            // bu ms den file repoya kayýt elenemez !!!  _fileRepository.Setup(x => x.Add(It.IsAny<Domain.Concrete.ReadOnly.File>())).Returns(new Domain.Concrete.ReadOnly.File());
 
             var result = await _updateOrganisationLogoCommandHandler.Handle(_updateOrganisationLogoCommand, CancellationToken.None);
             result.Success.Should().BeTrue();
@@ -194,7 +194,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationLogos
             var saveFileReturn = new DataResult<string>("test", false);
             _fileService.Setup(x => x.SaveFile(It.IsAny<SaveFileRequest>())).ReturnsAsync(saveFileReturn);
 
-            _fileRepository.Setup(x => x.Add(It.IsAny<Entities.Concrete.File>())).Returns(new Entities.Concrete.File());
+            // todo:File msden kayýt eklenemez bu msden  _fileRepository.Setup(x => x.Add(It.IsAny<Domain.Concrete.ReadOnly.File>())).Returns(new Domain.Concrete.ReadOnly.File());
 
             var result = await _updateOrganisationLogoCommandHandler.Handle(_updateOrganisationLogoCommand, CancellationToken.None);
             result.Success.Should().BeFalse();

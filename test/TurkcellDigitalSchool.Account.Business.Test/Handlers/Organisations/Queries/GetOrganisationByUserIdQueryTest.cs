@@ -11,9 +11,9 @@ using Moq;
 using NUnit.Framework;
 using TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.Entities.Concrete;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Queries
 {
@@ -69,7 +69,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Que
                     UpdateTime= DateTime.Now,
                     UserId=1,
                     OrganisationId=1,
-                    User= new Entities.Concrete.Core.User{ Id=1, },
+                    User= new User{ Id=1, },
                     Organisation= new Organisation{ Id=1}
                 }
 
@@ -95,7 +95,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Que
                     UpdateTime= DateTime.Now,
                     UserId=2,
                     OrganisationId=1,
-                    User= new Entities.Concrete.Core.User{ Id=2, },
+                    User= new  User{ Id=2, },
                     Organisation= new Organisation{ Id=1}
                 }
 

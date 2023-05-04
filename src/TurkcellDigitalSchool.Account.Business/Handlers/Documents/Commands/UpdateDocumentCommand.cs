@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
 {
@@ -27,7 +27,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
                 _documentContractTypeRepository = documentContractTypeRepository;
             }
 
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
  
             public async Task<IResult> Handle(UpdateDocumentCommand request, CancellationToken cancellationToken)
             {

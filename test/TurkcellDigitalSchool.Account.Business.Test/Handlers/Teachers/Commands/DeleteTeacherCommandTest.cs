@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Flurl.Http.Content;
+﻿using FluentAssertions; 
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using MockQueryable.Moq;
@@ -13,10 +12,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
-using TurkcellDigitalSchool.Entities.Concrete;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
 using static TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands.DeleteTeacherCommand;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Commands

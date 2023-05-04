@@ -43,8 +43,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 _mediator = mediator;
             }
 
-            [LogAspect(typeof(FileLogger))]
-            [ValidationAspect(typeof(ForgotPasswordSendLinkChangePasswordCommandValidator), Priority = 2)]
+            [LogAspect(typeof(FileLogger))] 
             public async Task<IDataResult<TokenIntegraitonResponse>> Handle(ForgotPasswordSendLinkChangePasswordCommand request, CancellationToken cancellationToken)
             {
                 if (request.NewPass != request.NewPassAgain)

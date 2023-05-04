@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using TurkcellDigitalMessageMap.Account.Business.Handlers.MessageMaps.Queries;
 using TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands;
-using TurkcellDigitalSchool.Common.Controllers;
-using TurkcellDigitalSchool.Entities.Concrete.MessageMap;
+using TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Queries;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Common.Controllers; 
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
 {

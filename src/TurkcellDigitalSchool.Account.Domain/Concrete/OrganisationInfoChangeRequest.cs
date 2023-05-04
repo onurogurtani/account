@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TurkcellDigitalSchool.Core.Entities;
-using TurkcellDigitalSchool.Entities.Enums;
+using TurkcellDigitalSchool.Core.Enums; 
 
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete

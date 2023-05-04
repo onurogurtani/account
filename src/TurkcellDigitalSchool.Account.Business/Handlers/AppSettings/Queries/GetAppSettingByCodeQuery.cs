@@ -2,9 +2,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
 { 
@@ -23,7 +23,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
                 _appSettingRepository = appSettingRepository;
             }
 
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             public async Task<IDataResult<AppSetting>> Handle(GetAppSettingByCodeQuery request, CancellationToken cancellationToken)
             {
                 var data = await _appSettingRepository.GetAppSettingValue(request.Code, request.CustomerId, request.VouId);

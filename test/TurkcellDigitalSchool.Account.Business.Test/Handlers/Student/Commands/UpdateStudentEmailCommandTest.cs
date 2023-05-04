@@ -17,6 +17,7 @@ using static TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands.Up
 using FluentAssertions;
 using static TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands.UpdateStudentPersonalInformationCommand;
 using FluentAssertions.Common;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
@@ -75,8 +76,8 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
                 Email = "yusuf.daskin@turkcell.com.tr"
             };
 
-            _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns(new Entities.Concrete.Core.User { Id = 1, AvatarId = 1 });
-            _userRepository.Setup(x => x.UpdateAndSave(It.IsAny<Entities.Concrete.Core.User>(), It.IsAny<int>(), It.IsAny<bool>()));
+            _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns(new  User { Id = 1, AvatarId = 1 });
+            _userRepository.Setup(x => x.UpdateAndSave(It.IsAny<User>(), It.IsAny<int>(), It.IsAny<bool>()));
             var result = await _updateStudentEmailCommandHandler.Handle(_updateStudentEmailCommand, new CancellationToken());
             result.Success.Should().BeTrue();
         }
@@ -90,7 +91,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
                 Email = "yusuf.daskin@turkcell.com.tr"
             };
 
-            _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns((Entities.Concrete.Core.User)null);
+            _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns((User)null);
             var result = await _updateStudentEmailCommandHandler.Handle(_updateStudentEmailCommand, new CancellationToken());
             result.Success.Should().BeFalse();
         }
@@ -104,7 +105,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
                 Email = "yusuf.daskin@turkcell.com.tr"
             };
 
-            var userInfo = new Entities.Concrete.Core.User
+            var userInfo = new  User
             {
                 Id = 1,
                 Email = "yusuf.daskin@turkcell.com.tr"
@@ -124,7 +125,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
                 UserId = 1,
                 Email = "yusuf.daskin@turkcell.com.tr"
             };
-            _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns(new Entities.Concrete.Core.User { Id = 1, AvatarId = 1 });
+            _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns(new  User { Id = 1, AvatarId = 1 });
             _userService.Setup(w => w.IsExistEmail(It.IsAny<long>(), It.IsAny<string>())).Returns(true);
             var result = await _updateStudentEmailCommandHandler.Handle(_updateStudentEmailCommand, new CancellationToken());
             result.Success.Should().BeFalse();

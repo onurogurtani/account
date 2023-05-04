@@ -12,7 +12,6 @@ using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Dtos.UserDtos;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 {

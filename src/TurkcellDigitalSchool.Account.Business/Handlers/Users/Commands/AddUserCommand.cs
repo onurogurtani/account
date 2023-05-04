@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.Business.Handlers.Users.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
@@ -14,7 +15,6 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Utilities.Toolkit;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 {
@@ -49,8 +49,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
             [MessageConstAttr(MessageCodeType.Information)]
             private static string UserInformations = Constants.Messages.UserInformations;
 
-            [SecuredOperation(Priority = 1)]
-            [ValidationAspect(typeof(AddUserValidator), Priority = 2)]
+            [SecuredOperation]
+             
             public async Task<IDataResult<SelectionItem>> Handle(AddUserCommand request, CancellationToken cancellationToken)
             {
                 int randomPassword = RandomPassword.RandomNumberGenerator();

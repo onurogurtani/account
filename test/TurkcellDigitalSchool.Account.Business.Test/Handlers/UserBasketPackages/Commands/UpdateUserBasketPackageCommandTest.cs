@@ -12,9 +12,9 @@ using Moq;
 using NUnit.Framework;
 using TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.Entities.Concrete;
 using static TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Commands.UpdateUserBasketPackageCommand;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.UserBasketPackages.Commands

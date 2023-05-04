@@ -5,11 +5,11 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Commands
 {
@@ -28,8 +28,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Commands
                 _mapper = mapper;
             }
 
-            [SecuredOperation(Priority = 1)]
-            [ValidationAspect(typeof(UpdateContractTypeValidator), Priority = 2)]
+            [SecuredOperation] 
             public async Task<IResult> Handle(UpdateContractTypeCommand request, CancellationToken cancellationToken)
             {
                 var contractType = await _contractTypeRepository.Query().AnyAsync(x => x.Id != request.ContractType.Id && x.Name.Trim().ToLower() == request.ContractType.Name.Trim().ToLower());

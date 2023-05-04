@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using DotNetCore.CAP;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
@@ -8,10 +9,10 @@ using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
 {
-    public sealed class AccountDbContext : ProjectDbContext
+    public  class AccountDbContext : ProjectDbContext
     {
-        public AccountDbContext(ITokenHelper tokenHelper, IConfiguration configuration) : base(tokenHelper,
-            configuration)
+        public AccountDbContext(ITokenHelper tokenHelper, IConfiguration configuration, ICapPublisher capPublisher) : base(tokenHelper,
+            configuration, capPublisher)
         {
 
         }
@@ -20,6 +21,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         {
             var asssebly = Assembly.GetExecutingAssembly();
             modelBuilder.ApplyConfigurationsFromAssembly(asssebly);
+            
         }
 
         #region Owner Entities
@@ -77,6 +79,13 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserSession> UserSessions { get; set; }
 
+        public DbSet<PackageTestExam> PackageTestExams { get; set; }
+        public DbSet<StudentEducationInformation> StudentEducationInformations { get; set; }
+        public DbSet<StudentParentInformation> StudentParentInformations { get; set; }
+        public DbSet<UserCommunicationPreferences> UserCommunicationPreferences { get; set; }
+        public DbSet<UserContrat> UserContrats { get; set; }
+        public DbSet<UserSupportTeamViewMyData> UserSupportTeamViewMyData { get; set; }
+        public DbSet<ForgetPasswordFailCounter> ForgetPasswordFailCounters { get; set; }
         #endregion
 
 
@@ -85,7 +94,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         public DbSet<Event> Events { get; set; }
         public DbSet<File> Files { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
-        public DbSet<PackageTestExam> PackageTestExams { get; set; }
+  
         public DbSet<Publisher> Publishers { get; set; }
         public DbSet<TestExam> TestExams { get; set; }
         public DbSet<TestExamType> TestExamTypes { get; set; }

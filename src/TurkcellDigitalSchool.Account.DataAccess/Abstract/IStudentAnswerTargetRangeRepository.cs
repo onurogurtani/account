@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TurkcellDigitalSchool.Core.DataAccess;
-using TurkcellDigitalSchool.Entities.Concrete.Student;
-using TurkcellDigitalSchool.Entities.Dtos.StudentAnswerTargetRangeDtos;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Core.DataAccess;  
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Abstract
 {

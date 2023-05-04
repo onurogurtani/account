@@ -1,18 +1,17 @@
-using AutoMapper;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete.MessageMap;
-using TurkcellDigitalSchool.Entities.Dtos.MessageDtos;
 
-namespace TurkcellDigitalMessageMap.Account.Business.Handlers.MessageMaps.Queries
+namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Queries
 {
     public class GetMessageMapsQuery : IRequest<IDataResult<PagedList<MessageMapDto>>>
     {

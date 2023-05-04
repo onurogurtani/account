@@ -60,7 +60,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Validati
             RuleFor(x => x.Organisation.VirtualTrainingRoomQuota).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Sanal Eðitim Salonu Kotasý" }));
             RuleFor(x => x.Organisation.VirtualMeetingRoomQuota).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Sanal Toplantý Salonu Kotasý" }));
             RuleFor(x => x.Organisation.OrganisationStatusInfo).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Kurum Durumu" })).IsInEnum().WithMessage(IsInEnumValue);
-            RuleFor(x => x.Organisation.ReasonForStatus).Must(x => x.TrimStart() != "" && x.TrimEnd() != "").NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Durum Nedeni" })).Length(10, 500).WithMessage(NumberMustBeCharacterLength.PrepareRedisMessage(messageParameters: new object[] { "10", "500" })).When(x => x.Organisation.OrganisationStatusInfo == Entities.Enums.OrganisationStatusInfo.Cancel || x.Organisation.OrganisationStatusInfo == Entities.Enums.OrganisationStatusInfo.Suspend);
+            RuleFor(x => x.Organisation.ReasonForStatus).Must(x => x.TrimStart() != "" && x.TrimEnd() != "").NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Durum Nedeni" })).Length(10, 500).WithMessage(NumberMustBeCharacterLength.PrepareRedisMessage(messageParameters: new object[] { "10", "500" })).When(x => x.Organisation.OrganisationStatusInfo == OrganisationStatusInfo.Cancel || x.Organisation.OrganisationStatusInfo == OrganisationStatusInfo.Suspend);
         }
     }
 
@@ -116,7 +116,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Validati
             RuleFor(x => x.Organisation.VirtualTrainingRoomQuota).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Sanal Eðitim Salonu Kotasý" }));
             RuleFor(x => x.Organisation.VirtualMeetingRoomQuota).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Sanal Toplantý Salonu Kotasý" }));
             RuleFor(x => x.Organisation.OrganisationStatusInfo).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Kurum Durumu" })).IsInEnum().WithMessage(IsInEnumValue);
-            RuleFor(x => x.Organisation.ReasonForStatus).Must(x => x.TrimStart() != "" && x.TrimEnd() != "").NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Durum Nedeni" })).Length(10, 500).WithMessage(NumberMustBeCharacterLength.PrepareRedisMessage(messageParameters: new object[] { "10", "500" })).When(x => x.Organisation.OrganisationStatusInfo == Entities.Enums.OrganisationStatusInfo.Cancel || x.Organisation.OrganisationStatusInfo == Entities.Enums.OrganisationStatusInfo.Suspend);
+            RuleFor(x => x.Organisation.ReasonForStatus).Must(x => x.TrimStart() != "" && x.TrimEnd() != "").NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Durum Nedeni" })).Length(10, 500).WithMessage(NumberMustBeCharacterLength.PrepareRedisMessage(messageParameters: new object[] { "10", "500" })).When(x => x.Organisation.OrganisationStatusInfo == OrganisationStatusInfo.Cancel || x.Organisation.OrganisationStatusInfo == OrganisationStatusInfo.Suspend);
         }
     }
 
@@ -132,7 +132,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Validati
         public UpdateOrganisationStatusValidator()
         {
             RuleFor(x => x.OrganisationStatusInfo).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Kurum Durumu" })).IsInEnum().WithMessage(IsInEnumValue);
-            RuleFor(x => x.ReasonForStatus).Must(x => x.TrimStart() != "" && x.TrimEnd() != "").NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Durum Nedeni" })).Length(10, 500).WithMessage(NumberMustBeCharacterLength.PrepareRedisMessage(messageParameters: new object[] { "10", "500" })).When(x => x.OrganisationStatusInfo == Entities.Enums.OrganisationStatusInfo.Cancel || x.OrganisationStatusInfo == Entities.Enums.OrganisationStatusInfo.Suspend);
+            RuleFor(x => x.ReasonForStatus).Must(x => x.TrimStart() != "" && x.TrimEnd() != "").NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Durum Nedeni" })).Length(10, 500).WithMessage(NumberMustBeCharacterLength.PrepareRedisMessage(messageParameters: new object[] { "10", "500" })).When(x => x.OrganisationStatusInfo == OrganisationStatusInfo.Cancel || x.OrganisationStatusInfo == OrganisationStatusInfo.Suspend);
         }
     }
 }

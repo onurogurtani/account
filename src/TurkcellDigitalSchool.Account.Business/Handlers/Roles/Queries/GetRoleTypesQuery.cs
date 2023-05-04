@@ -21,7 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
         public class GetRoleTypesQueryHandler : IRequestHandler<GetRoleTypesQuery, IDataResult<List<SelectionItem>>>
         {
             [LogAspect(typeof(FileLogger))]
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             public async Task<IDataResult<List<SelectionItem>>> Handle(GetRoleTypesQuery request, CancellationToken cancellationToken)
             {
                 var items = ((UserType[])Enum.GetValues(typeof(UserType)))

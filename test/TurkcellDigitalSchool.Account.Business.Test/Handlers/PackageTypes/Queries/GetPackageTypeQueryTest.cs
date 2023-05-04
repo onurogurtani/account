@@ -13,8 +13,8 @@ using Moq;
 using NUnit.Framework;
 using TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Queries;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
-using TurkcellDigitalSchool.Entities.Concrete;
 using static TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Queries.GetPackageTypeQuery;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.PackageTypes.Queries

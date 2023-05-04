@@ -2,16 +2,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRangeHandler.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete.Student;
-using TurkcellDigitalSchool.Entities.Enums;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRangeHandler.Commands
 {
@@ -43,9 +40,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRan
             [MessageConstAttr(MessageCodeType.Error)]
             private static string TargetRangeIsAlreadyExist = Constants.Messages.TargetRangeIsAlreadyExist;
             [MessageConstAttr(MessageCodeType.Success)]
-            private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-            [ValidationAspect(typeof(CreateStudentAnswerTargetRangeValidator), Priority = 2)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation; 
             public async Task<IResult> Handle(CreateStudentAnswerTargetRangeCommand request, CancellationToken cancellationToken)
             {
                 var isExistPackage = _packageRepository.Query().Any(x => x.Id == request.PackageId && x.IsDeleted == IsDeletedEnum.NotDeleted);

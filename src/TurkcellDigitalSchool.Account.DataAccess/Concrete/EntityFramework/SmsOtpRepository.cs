@@ -1,14 +1,14 @@
 ﻿using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;
-using TurkcellDigitalSchool.Core.Entities;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
+using TurkcellDigitalSchool.Core.Entities; 
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 {
-    public class SmsOtpRepository : EfEntityRepositoryBase<IEntityDefault, ProjectDbContext>, ISmsOtpRepository
+    public class SmsOtpRepository : EfEntityRepositoryBase<IEntityDefault, AccountDbContext>, ISmsOtpRepository
     {
-        public SmsOtpRepository(ProjectDbContext context)
+        public SmsOtpRepository(AccountDbContext context)
             : base(context)
         {
         }

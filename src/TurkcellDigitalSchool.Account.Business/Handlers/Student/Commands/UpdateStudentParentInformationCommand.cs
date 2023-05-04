@@ -8,13 +8,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 {
@@ -37,7 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 
             [MessageConstAttr(MessageCodeType.Success)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-            [ValidationAspect(typeof(UpdateStudentParentInformationValidator), Priority = 2)]
+             
             public async Task<IResult> Handle(UpdateStudentParentInformationCommand request, CancellationToken cancellationToken)
             {
                 //TODO UserId Tokendan alınacaktır?

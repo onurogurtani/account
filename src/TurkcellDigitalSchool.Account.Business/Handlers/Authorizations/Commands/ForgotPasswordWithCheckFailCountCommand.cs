@@ -10,6 +10,7 @@ using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
@@ -19,8 +20,6 @@ using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
-using TurkcellDigitalSchool.Entities.Concrete;
-using TurkcellDigitalSchool.Entities.Concrete.Core; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
@@ -60,8 +59,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             /// If there is an e-mail address, a token is created and sent to the password reset link to the e-mail address.
             /// </summary>
 
-            [LogAspect(typeof(FileLogger))]
-            [ValidationAspect(typeof(ForgotPasswordWithCheckFailCountCommandValidator), Priority = 2)]
+            [LogAspect(typeof(FileLogger))] 
             public async Task<IResult> Handle(ForgotPasswordWithCheckFailCountCommand request, CancellationToken cancellationToken)
             {
 

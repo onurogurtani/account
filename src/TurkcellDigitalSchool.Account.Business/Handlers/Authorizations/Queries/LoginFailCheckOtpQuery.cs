@@ -9,9 +9,7 @@ using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
-using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
-using TurkcellDigitalSchool.Entities.Enums;
+using TurkcellDigitalSchool.Core.Utilities.Results; 
 using static TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries.LoginFailCheckOtpQuery;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries

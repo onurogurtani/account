@@ -6,6 +6,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
@@ -15,8 +16,6 @@ using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Dtos;
-using TurkcellDigitalSchool.Entities.Dtos.PackageDtos;
 using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
@@ -50,7 +49,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
 
             [LogAspect(typeof(FileLogger))]
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             public async Task<IDataResult<GetPackageForUserResponseDto>> Handle(GetPackageForUserQuery request, CancellationToken cancellationToken)
             {
                 var package = await _packageRepository.Query().Where(q => q.Id == request.Id && q.IsActive)

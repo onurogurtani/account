@@ -4,16 +4,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;
-using TurkcellDigitalSchool.Core.Utilities.IoC;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Entities.Concrete;
+using TurkcellDigitalSchool.Core.Utilities.IoC; 
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 {
-    public class AppSettingRepository : EfEntityRepositoryBase<AppSetting, ProjectDbContext>, IAppSettingRepository
+    public class AppSettingRepository : EfEntityRepositoryBase<AppSetting, AccountDbContext>, IAppSettingRepository
     {
-        public AppSettingRepository(ProjectDbContext context) : base(context)
+        public AppSettingRepository(AccountDbContext context) : base(context)
         {
         }
 

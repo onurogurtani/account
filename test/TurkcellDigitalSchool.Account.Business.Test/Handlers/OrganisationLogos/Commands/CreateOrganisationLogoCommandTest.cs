@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Http;
 using Moq;
 using NUnit.Framework;
 using TurkcellDigitalSchool.Account.Business.Handlers.OrganisationLogos.Commands;
+using TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Abstract;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.File.Model;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
-using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.File.DataAccess.Abstract;
+using TurkcellDigitalSchool.Core.Utilities.Results; 
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationLogos.Commands
 {
@@ -148,7 +148,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationLogos
             var saveFileReturn = new DataResult<string>("test", true);
             _fileService.Setup(x => x.SaveFile(It.IsAny<SaveFileRequest>())).ReturnsAsync(saveFileReturn);
 
-            _fileRepository.Setup(x => x.Add(It.IsAny<Entities.Concrete.File>())).Returns(new Entities.Concrete.File());
+            /// repoya ekleme yapýlamaz !!!! _fileRepository.Setup(x => x.Add(It.IsAny<Entities.Concrete.File>())).Returns(new Entities.Concrete.File());
 
             var result = await _createOrganisationLogoCommandHandler.Handle(_createOrganisationLogoCommand, CancellationToken.None);
             result.Success.Should().BeTrue();

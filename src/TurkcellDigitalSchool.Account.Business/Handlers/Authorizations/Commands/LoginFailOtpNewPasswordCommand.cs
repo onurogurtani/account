@@ -7,13 +7,13 @@ using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries;
 using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
 using TurkcellDigitalSchool.Integration.IntegrationServices.IdentityServerServices.Model.Response;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
@@ -43,8 +43,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             }
 
 
-            [LogAspect(typeof(FileLogger))]
-            [ValidationAspect(typeof(LoginFailOtpNewPasswordCommandValidator))]
+            [LogAspect(typeof(FileLogger))]  
             public async Task<IDataResult<TokenIntegraitonResponse>> Handle(LoginFailOtpNewPasswordCommand request, CancellationToken cancellationToken)
             {
                 if (request.NewPass != request.NewPassAgain)

@@ -13,10 +13,10 @@ using static TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands.Up
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
-using TurkcellDigitalSchool.Entities.Concrete;
 using TurkcellDigitalSchool.Account.Business.Services.User;
 using FluentAssertions;
 using System.Linq.Expressions;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
@@ -76,9 +76,9 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
                 UserName = "yadaskinn@gmail.com"
 
             };
-            _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns(new Entities.Concrete.Core.User { Id = 1, AvatarId = 1 });
+            _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns(new  User { Id = 1, AvatarId = 1 });
             _userService.Setup(w => w.IsExistUserName(It.IsAny<long>(), It.IsAny<string>())).Returns(false);
-            _userRepository.Setup(x => x.CreateAndSave(It.IsAny<Entities.Concrete.Core.User>(), It.IsAny<int>(), It.IsAny<bool>()));
+            _userRepository.Setup(x => x.CreateAndSave(It.IsAny< User>(), It.IsAny<int>(), It.IsAny<bool>()));
             var result = await _updateStudentPersonalInformationCommandHandler.Handle(_updateStudentPersonalInformationCommand, new CancellationToken());
             result.Success.Should().BeTrue();
         }
@@ -95,7 +95,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
                 ResidenceCountyId = 1,
                 UserName = "yadaskinn@gmail.com"
             };
-            _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns((Entities.Concrete.Core.User)null);
+            _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns((User)null);
             var result = await _updateStudentPersonalInformationCommandHandler.Handle(_updateStudentPersonalInformationCommand, new CancellationToken());
             result.Success.Should().BeFalse();
         }
@@ -112,7 +112,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
                 ResidenceCountyId = 1,
                 UserName = "yadaskinn@gmail.com"
             };
-            _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns(new Entities.Concrete.Core.User { Id = 1, AvatarId = 1 });
+            _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns(new User { Id = 1, AvatarId = 1 });
             _userService.Setup(w => w.IsExistUserName(It.IsAny<long>(), It.IsAny<string>())).Returns(true);
             var result = await _updateStudentPersonalInformationCommandHandler.Handle(_updateStudentPersonalInformationCommand, new CancellationToken());
             result.Success.Should().BeFalse();

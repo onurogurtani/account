@@ -3,19 +3,17 @@ using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Validation;
 using IdentityModel; 
 using Microsoft.IdentityModel.Tokens; 
-using TurkcellDigitalSchool.Account.DataAccess.Abstract; 
+using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
 using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
 using TurkcellDigitalSchool.Core.Utilities.Toolkit;
-using TurkcellDigitalSchool.Entities.Concrete;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
 using TurkcellDigitalSchool.IdentityServerService.Constants;
 using TurkcellDigitalSchool.IdentityServerService.Services.Contract;
-using TurkcellDigitalSchool.IdentityServerService.Services.Model;
-using UserSession = TurkcellDigitalSchool.Entities.Concrete.Core.UserSession;
+using TurkcellDigitalSchool.IdentityServerService.Services.Model; 
 
 namespace TurkcellDigitalSchool.IdentityServerService.Services
 {
@@ -204,7 +202,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             }
 
             var ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
-            var session = new UserSession()
+            var session = new Account.Domain.Concrete.UserSession()
             {
                 UserId = user.Id,
                 NotBefore = 1,

@@ -1,13 +1,13 @@
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Entities.Concrete;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 {
-    public class DocumentRepository : EfEntityRepositoryBase<Document, ProjectDbContext>, IDocumentRepository
+    public class DocumentRepository : EfEntityRepositoryBase<Document, AccountDbContext>, IDocumentRepository
     {
-        public DocumentRepository(ProjectDbContext context) : base(context)
+        public DocumentRepository(AccountDbContext context) : base(context)
         {
         }
     }

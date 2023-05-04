@@ -10,17 +10,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
-using System.Threading.Tasks;
-using TurkcellDigitalSchool.Common.Constants;
+using System.Threading.Tasks; 
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.Entities.Concrete;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
-using TurkcellDigitalSchool.Entities.Dtos.Admin;
 using TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using static TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands.CreateAdminCommand;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Account.Domain.Dtos; 
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Admins.Commands
 {
@@ -28,7 +25,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Admins.Commands
     public class CreateAdminCommandTest
     {
         private CreateAdminCommand _createAdminCommand;
-        private CreateAdminCommandHandler _createAdminCommandHandler;
+        private CreateAdminCommand.CreateAdminCommandHandler _createAdminCommandHandler;
 
 
         private Mock<IUserRepository> _userRepository;
@@ -70,7 +67,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Admins.Commands
             _userRoleRepository = new Mock<IUserRoleRepository>();
 
             _createAdminCommand = new CreateAdminCommand();
-            _createAdminCommandHandler = new CreateAdminCommandHandler(_userRoleRepository.Object, _userRepository.Object, _tokenHelper.Object, _mapper.Object );
+            _createAdminCommandHandler = new CreateAdminCommand.CreateAdminCommandHandler(_userRoleRepository.Object, _userRepository.Object, _tokenHelper.Object, _mapper.Object );
         }
 
         [Test]
@@ -78,7 +75,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Admins.Commands
         {
             _createAdminCommand = new()
             {
-                Admin = new Entities.Dtos.Admin.CreateUpdateAdminDto
+                Admin = new CreateUpdateAdminDto
                 {
                     Id = 0,
                     Name = "Test",
@@ -111,7 +108,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Admins.Commands
         {
             _createAdminCommand = new()
             {
-                Admin = new Entities.Dtos.Admin.CreateUpdateAdminDto
+                Admin = new CreateUpdateAdminDto
                 {
                     Id = 0,
                     Name = "Test",

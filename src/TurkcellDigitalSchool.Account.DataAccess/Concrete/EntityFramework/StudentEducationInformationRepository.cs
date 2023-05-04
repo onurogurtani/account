@@ -4,15 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;
 using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Entities.Concrete;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 {
-    public class StudentEducationInformationRepository : EfEntityRepositoryBase<StudentEducationInformation, ProjectDbContext>, IStudentEducationInformationRepository
+    public class StudentEducationInformationRepository : EfEntityRepositoryBase<StudentEducationInformation, AccountDbContext>, IStudentEducationInformationRepository
     {
-        public StudentEducationInformationRepository(ProjectDbContext context) : base(context)
+        public StudentEducationInformationRepository(AccountDbContext context) : base(context)
         {
 
         }

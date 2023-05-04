@@ -40,7 +40,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RoleandTransferRoleCantBeTheSame = Messages.RoleandTransferRoleCantBeTheSame;
 
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             [CacheRemoveAspect("Get")]
             [TransactionScopeAspectAsync]
             public async Task<IResult> Handle(SetPassiveRoleCommand request, CancellationToken cancellationToken)

@@ -25,8 +25,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        [ValidationAspect(typeof(LoginUserValidator), Priority = 1)]
+        /// <returns></returns> 
         [LogAspect(typeof(FileLogger))]
         public async Task<IDataResult<LoginUserResult>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {

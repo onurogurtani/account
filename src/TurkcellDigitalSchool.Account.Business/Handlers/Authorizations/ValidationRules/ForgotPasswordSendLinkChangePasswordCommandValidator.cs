@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands;
-using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Account.Business.Helpers;
+using TurkcellDigitalSchool.Account.DataAccess.Abstract; 
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.ValidationRules

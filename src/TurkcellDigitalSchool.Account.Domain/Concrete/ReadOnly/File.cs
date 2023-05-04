@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using TurkcellDigitalSchool.Core.Entities;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract;
-using TurkcellDigitalSchool.Entities.Enums;
+using TurkcellDigitalSchool.Core.Enums;
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly
 {

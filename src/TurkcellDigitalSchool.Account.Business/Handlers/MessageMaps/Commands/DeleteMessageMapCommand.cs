@@ -1,7 +1,7 @@
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Handlers;
-using TurkcellDigitalSchool.Core.Utilities.Requests;
-using TurkcellDigitalSchool.Entities.Concrete.MessageMap;
+using TurkcellDigitalSchool.Core.Utilities.Requests; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
 {

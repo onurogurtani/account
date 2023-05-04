@@ -5,11 +5,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Dtos; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 {
@@ -29,7 +29,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                 _mediator = mediator;
             }
 
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             [LogAspect(typeof(FileLogger))]
             public async Task<IDataResult<IEnumerable<UserMailDto>>> Handle(GetUserMailsQuery request, CancellationToken cancellationToken)
             {

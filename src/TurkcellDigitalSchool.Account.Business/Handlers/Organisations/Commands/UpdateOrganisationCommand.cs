@@ -9,6 +9,8 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Organisations.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
@@ -17,8 +19,6 @@ using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete;
-using TurkcellDigitalSchool.Entities.Dtos.Admin;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
 {
@@ -54,8 +54,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                 _mediator = mediator;
             }
 
-            [SecuredOperation(Priority = 1)]
-            [ValidationAspect(typeof(UpdateOrganisationValidator), Priority = 2)]
+            [SecuredOperation]  
             [TransactionScopeAspectAsync]
             public async Task<IResult> Handle(UpdateOrganisationCommand request, CancellationToken cancellationToken)
             {

@@ -26,8 +26,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
                 _userRepository = userRepository;
             }
 
-            [SecuredOperation(Priority = 1)]
-            [ValidationAspect(typeof(DeleteAdminValidator), Priority = 2)]
+            [SecuredOperation]
+             
             public async Task<IResult> Handle(DeleteAdminCommand request, CancellationToken cancellationToken)
             {
                 var getAdmin = await _userRepository.GetAsync(x => x.Id == request.Id);

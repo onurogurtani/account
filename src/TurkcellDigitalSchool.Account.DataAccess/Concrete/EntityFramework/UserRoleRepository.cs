@@ -2,15 +2,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
+using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;  
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 {
-    public class UserRoleRepository : EfEntityRepositoryBase<UserRole, ProjectDbContext>, IUserRoleRepository
+    public class UserRoleRepository : EfEntityRepositoryBase<UserRole, AccountDbContext>, IUserRoleRepository
     {
-        public UserRoleRepository(ProjectDbContext context) : base(context)
+        public UserRoleRepository(AccountDbContext context) : base(context)
         {
         }
 

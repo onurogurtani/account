@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.Controllers;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
 {
@@ -47,7 +48,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// UserType => Student = 10,  Parent = 20,Teacher = 30,Coach = 40,  Admin = 100,OrganisationAdmin = 110,InstitutionAdminAssistant = 111, FranchiseAdmin = 120 </return>
         /// <response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Entities.Dtos.UserDtos.CurrentUserDto))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CurrentUserDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getCurrentUser")]
         public async Task<IActionResult> GetCurrentUser(CancellationToken cancellationToken)

@@ -35,8 +35,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Commands
             [MessageConstAttr(MessageCodeType.Success)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
-            [SecuredOperation(Priority = 1)]
-            [ValidationAspect(typeof(DeleteTargetScreenValidator), Priority = 2)]
+            [SecuredOperation]
+             
             public async Task<IResult> Handle(DeleteTargetScreenCommand request, CancellationToken cancellationToken)
             {
                 var getTargetScreen = await _targetScreenRepository.GetAsync(x => x.Id == request.Id);

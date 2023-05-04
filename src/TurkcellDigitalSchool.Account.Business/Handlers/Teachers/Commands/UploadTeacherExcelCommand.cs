@@ -50,7 +50,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
             /// If there is no data, an error message is given.
             /// Added record to user table.
             /// </summary> 
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             [CacheRemoveAspect("Get")]
             [LogAspect(typeof(FileLogger))]
             public async Task<IDataResult<ExcelResponse>> Handle(UploadTeacherExcelCommand request, CancellationToken cancellationToken)

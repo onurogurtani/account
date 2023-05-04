@@ -5,18 +5,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.Business.Constants;
-using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.Core.Utilities.Toolkit;
-using TurkcellDigitalSchool.Entities.Concrete.Core; 
+using TurkcellDigitalSchool.Core.Utilities.Toolkit; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
@@ -47,8 +45,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             }
 
 
-            [LogAspect(typeof(FileLogger))]
-            [ValidationAspect(typeof(ReSendOtpSmsValidator))]
+            [LogAspect(typeof(FileLogger))] 
             public async Task<IDataResult<AccessToken>> Handle(ReSendOtpSmsQuery request, CancellationToken cancellationToken)
             {
                 MobileLogin mobileLogin = await _mobileLoginRepository.GetAsync(w => w.Id == request.MobileLoginId);

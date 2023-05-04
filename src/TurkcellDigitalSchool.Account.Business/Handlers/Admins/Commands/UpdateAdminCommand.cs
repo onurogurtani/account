@@ -2,16 +2,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
-using TurkcellDigitalSchool.Account.Business.Handlers.Admins.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
-using TurkcellDigitalSchool.Entities.Dtos.Admin; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
 {
@@ -37,8 +35,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
                 _tokenHelper = tokenHelper;
             }
 
-            [SecuredOperation(Priority = 1)]
-            [ValidationAspect(typeof(CreateAdminValidator), Priority = 2)]
+            [SecuredOperation] 
             public async Task<IResult> Handle(UpdateAdminCommand request, CancellationToken cancellationToken)
             {
                 long currentuserId = _tokenHelper.GetUserIdByCurrentToken();

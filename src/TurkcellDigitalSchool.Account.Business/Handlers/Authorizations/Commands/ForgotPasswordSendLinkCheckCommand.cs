@@ -31,8 +31,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 _loginFailForgetPassSendLinkRepository = loginFailForgetPassSendLinkRepository; 
             }
 
-            [LogAspect(typeof(FileLogger))]
-            [ValidationAspect(typeof(ForgotPasswordSendLinkChangePasswordCommandValidator), Priority = 2)]
+            [LogAspect(typeof(FileLogger))] 
             public async Task<IResult> Handle(ForgotPasswordSendLinkCheckCommand request, CancellationToken cancellationToken)
             { 
                 var userId = Convert.ToInt64(Base64UrlEncoder.Decode(request.XId));

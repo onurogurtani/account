@@ -1,4 +1,4 @@
-﻿using TurkcellDigitalSchool.Entities.Concrete.Core;
+﻿using TurkcellDigitalSchool.Core.Enums;
 
 namespace TurkcellDigitalSchool.Account.Business.Services.Authentication
 {

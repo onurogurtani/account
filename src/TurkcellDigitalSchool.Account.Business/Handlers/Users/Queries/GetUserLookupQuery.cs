@@ -24,7 +24,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
             {
                 _userRepository = userRepository;
             }
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             [CacheAspect(10)]
             [LogAspect(typeof(FileLogger))]
             public async Task<IDataResult<IEnumerable<SelectionItem>>> Handle(GetUserLookupQuery request, CancellationToken cancellationToken)

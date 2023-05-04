@@ -1,18 +1,15 @@
 ﻿using ClosedXML.Excel;
 using MediatR;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete.MessageMap;
-using TurkcellDigitalSchool.Entities.Dtos;
-using TurkcellDigitalSchool.Entities.Dtos.MessageDtos;
-using TurkcellDigitalSchool.Entities.Enums;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Utilities.Results;  
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
 {

@@ -1,6 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 using TurkcellDigitalSchool.Core.Entities;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
@@ -12,5 +12,6 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public long PackageId { get; set; }
         [JsonIgnore]
         public virtual Package Package { get; set; }
+        public DateTime PurchaseDate { get; set; }
     }
-}
+} 

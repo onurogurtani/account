@@ -10,8 +10,5 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\..\TurkcellDigitalSchool.General\src\TurkcellDigitalSchool.DbAccess\TurkcellDigitalSchool.DbAccess.csproj" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Dtos\" />
-	</ItemGroup>
 
 </Project>

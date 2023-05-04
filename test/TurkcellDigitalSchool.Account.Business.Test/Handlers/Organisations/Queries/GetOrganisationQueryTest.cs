@@ -13,9 +13,10 @@ using Moq;
 using NUnit.Framework;
 using TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
-using TurkcellDigitalSchool.Entities.Concrete;
-using TurkcellDigitalSchool.Entities.Dtos.OrganisationDtos; 
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Queries
 {
@@ -80,7 +81,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Que
                 new OrganisationDto
                 {
                     Id = 1,
-                    SegmentType = Entities.Enums.SegmentType.PA,
+                    SegmentType = SegmentType.PA,
                     CityId = 1,
                     CountyId = 1
                 };

@@ -21,7 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
         public class GetAdminTypesQueryHandler : IRequestHandler<GetAdminTypesQuery, IDataResult<List<SelectionItem>>>
         {
             [LogAspect(typeof(FileLogger))]
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             public async Task<IDataResult<List<SelectionItem>>> Handle(GetAdminTypesQuery request, CancellationToken cancellationToken)
             {
                 var adminTypes = AdminTypeConst.ADMIN_TYPES;

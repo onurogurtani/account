@@ -13,11 +13,11 @@ using static TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands.Up
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
-using TurkcellDigitalSchool.Entities.Concrete;
 using static TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands.UpdateStudentPersonalInformationCommand;
 using TurkcellDigitalSchool.Account.Business.Services.User;
 using static TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands.UpdateStudentVerifyMobilPhoneCommand;
 using FluentAssertions;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
@@ -75,8 +75,8 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
                 UserId = 1,
             };
 
-            _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns(new Entities.Concrete.Core.User { Id = 1, AvatarId = 1 });
-            _userRepository.Setup(x => x.UpdateAndSave(It.IsAny<Entities.Concrete.Core.User>(), It.IsAny<int>(), It.IsAny<bool>()));
+            _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns(new User { Id = 1, AvatarId = 1 });
+            _userRepository.Setup(x => x.UpdateAndSave(It.IsAny<User>(), It.IsAny<int>(), It.IsAny<bool>()));
             var result = await _updateStudentVerifyMobilPhoneCommandHandler.Handle(_updateStudentVerifyMobilPhoneCommand, new CancellationToken());
             result.Success.Should().BeTrue();
         }
@@ -89,7 +89,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
                 UserId = 1,
             };
 
-            _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns((Entities.Concrete.Core.User)null);
+            _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns((User)null);
             var result = await _updateStudentVerifyMobilPhoneCommandHandler.Handle(_updateStudentVerifyMobilPhoneCommand, new CancellationToken());
             result.Success.Should().BeFalse();
         }

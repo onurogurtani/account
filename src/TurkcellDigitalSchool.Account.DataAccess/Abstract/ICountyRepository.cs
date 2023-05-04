@@ -1,5 +1,5 @@
-using TurkcellDigitalSchool.Core.DataAccess;
-using TurkcellDigitalSchool.Entities.Concrete;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Core.DataAccess; 
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Abstract
 {

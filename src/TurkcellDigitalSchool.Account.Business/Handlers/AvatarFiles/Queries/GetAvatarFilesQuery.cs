@@ -4,15 +4,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
-using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Dtos;
-using TurkcellDigitalSchool.Entities.Enums;
-using TurkcellDigitalSchool.File.DataAccess.Abstract;
+using TurkcellDigitalSchool.Core.Utilities.Results; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Queries
 {
@@ -32,13 +33,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Queries
             }
 
             [LogAspect(typeof(FileLogger))]
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             public async Task<IDataResult<PagedList<AvatarFilesDto>>> Handle(GetAvatarFilesQuery request, CancellationToken cancellationToken)
             {
                 var query = _fileRepository.Query().Where(x => x.FileType == FileType.Avatar);
 
                 var files = await _fileRepository.GetPagedListAsync(query, request.PaginationQuery);
-                var dtoList = _mapper.Map<List<TurkcellDigitalSchool.Entities.Concrete.File>, List<AvatarFilesDto>>(files.Items);
+                var dtoList = _mapper.Map<List<File>, List<AvatarFilesDto>>(files.Items);
 
                 foreach (var item in dtoList)
                 {

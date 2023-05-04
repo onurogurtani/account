@@ -12,12 +12,13 @@ using Moq;
 using NUnit.Framework;
 using TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Concrete;
-using TurkcellDigitalSchool.Entities.Dtos;
-using TurkcellDigitalSchool.Entities.Dtos.PackageDtos;
 using static TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries.GetPackagesForUserQuery;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
@@ -81,7 +82,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
                     Id = 1,
                     IsActive=true,
                     Name = "Test",
-                    PackageKind=Entities.Enums.PackageKind.Personal,
+                    PackageKind=PackageKind.Personal,
                     PackageLessons = new List<PackageLesson> {
                         new PackageLesson {
                             Id = 1,
@@ -94,18 +95,14 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
                                     Id=1,
                                     IsActive=true
                                 },
-                                Order=1,
-                                InsertTime=DateTime.Now,
-                                InsertUserId=1,
-                                UpdateTime=DateTime.Now,
-                                UpdateUserId=1,
+                                Order=1 
 
                             },
                             LessonId=1,
                             Package=new Package {
                                 Id = 1,
                                 IsActive=true,
-                                PackageKind=Entities.Enums.PackageKind.Personal,
+                                PackageKind=PackageKind.Personal,
                                 PackageLessons = new List<PackageLesson> {
                                                 new PackageLesson {
                                                         Id = 1
@@ -124,9 +121,9 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
                         new ImageOfPackage {
                             Id = 1,
                             FileId=1,
-                            File = new Entities.Concrete.File {
+                            File = new  File {
                                 Id = 1,
-                                FileType=Entities.Enums.FileType.PackageImage
+                                FileType=FileType.PackageImage
                             } } },
                 },
 

@@ -32,7 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [LogAspect(typeof(FileLogger))]
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             public virtual async Task<IResult> Handle(CheckIsValidWordsQuery request, CancellationToken cancellationToken)
             {
                 bool check2 = false;

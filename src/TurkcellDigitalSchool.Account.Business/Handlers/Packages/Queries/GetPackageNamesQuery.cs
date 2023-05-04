@@ -28,7 +28,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
             }
              
             [LogAspect(typeof(FileLogger))]
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             public async Task<IDataResult<List<string>>> Handle(GetPackageNamesQuery request, CancellationToken cancellationToken)
             {
                 var packageNames = await _packageRepository.Query().Select(x => x.Name).ToListAsync();

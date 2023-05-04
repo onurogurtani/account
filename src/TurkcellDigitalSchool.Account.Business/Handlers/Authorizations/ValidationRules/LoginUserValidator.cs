@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.Model;
-using TurkcellDigitalSchool.Entities.Concrete.Core;
+using TurkcellDigitalSchool.Core.Enums; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.ValidationRules
 {

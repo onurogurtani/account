@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Entities.Concrete.Student;
-using TurkcellDigitalSchool.Entities.Dtos.StudentAnswerTargetRangeDtos;
-using TurkcellDigitalSchool.Entities.Enums;
+using TurkcellDigitalSchool.Core.Enums;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 {
 
-    public class StudentAnswerTargetRangeRepository : EfEntityRepositoryBase<StudentAnswerTargetRange, ProjectDbContext>, IStudentAnswerTargetRangeRepository
+    public class StudentAnswerTargetRangeRepository : EfEntityRepositoryBase<StudentAnswerTargetRange, AccountDbContext>, IStudentAnswerTargetRangeRepository
     {
-        public StudentAnswerTargetRangeRepository(ProjectDbContext context) : base(context)
+        public StudentAnswerTargetRangeRepository(AccountDbContext context) : base(context)
         {
 
         }

@@ -633,21 +633,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
-        /// <summary>
-        /// Yeni Eklenen Handler Yetkilerin Admine atamasını yapar.
-        /// </summary>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [Consumes("application/json")]
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpGet("NewPermissionsAssignToAdmin")]
-        public async Task<IActionResult> NewPermissionsAssignToAdmin(CancellationToken cancellationToken)
-        {
-            var result = await Mediator.Send(new PermissionsAssignToAdminCommand(), cancellationToken);
-            return Ok(result);
-        }
+ 
 
 
         /// <summary>

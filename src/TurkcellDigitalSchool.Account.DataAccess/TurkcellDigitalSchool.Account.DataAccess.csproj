@@ -10,7 +10,7 @@
 	<ItemGroup>
 	  <PackageReference Include="AutoMapper" />
 	  <PackageReference Include="Microsoft.ApplicationInsights" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" >
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
 	    <PrivateAssets>all</PrivateAssets>
 	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
@@ -20,9 +20,6 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\..\TurkcellDigitalSchool.General\src\TurkcellDigitalSchool.DbAccess\TurkcellDigitalSchool.DbAccess.csproj" />
 	  <ProjectReference Include="..\TurkcellDigitalSchool.Account.Domain\TurkcellDigitalSchool.Account.Domain.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Concrete\EntityFramework\ReadOnly\" />
 	</ItemGroup>
 
 </Project>

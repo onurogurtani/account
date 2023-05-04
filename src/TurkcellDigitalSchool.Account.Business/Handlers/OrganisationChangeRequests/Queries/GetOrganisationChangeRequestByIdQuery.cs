@@ -7,15 +7,13 @@ using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
-using TurkcellDigitalSchool.Core.Entities;
-using TurkcellDigitalSchool.Core.Utilities.File;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Dtos.OrganisationChangeRequestDtos;
-using TurkcellDigitalSchool.File.DataAccess.Abstract;
 using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
 using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.Request;
 
@@ -44,7 +42,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
             }
 
             [LogAspect(typeof(FileLogger))]
-            [SecuredOperation(Priority = 1)]
+            [SecuredOperation]
             public virtual async Task<IDataResult<GetOrganisationInfoChangeRequestDto>> Handle(GetOrganisationChangeRequestByIdQuery request, CancellationToken cancellationToken)
             {
                 var query = _organisationInfoChangeRequestRepository.Query()
@@ -64,13 +62,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                 var getCounty = await _countyRepository.GetAsync(x => x.Id == organisationInfoDto.Organisation.CountyId);
                 organisationInfoDto.CountyName = getCounty.Name;
 
-                var logo = organisationInfoDto.OrganisationChangeReqContents.FirstOrDefault(w => w.PropertyEnum == Entities.Enums.OrganisationChangePropertyEnum.Logo).PropertyValue;
+                var logo = organisationInfoDto.OrganisationChangeReqContents.FirstOrDefault(w => w.PropertyEnum == OrganisationChangePropertyEnum.Logo).PropertyValue;
                 var fileResult = _fileService.GetFileQuery(new GetFileIntegrationRequest { Id = Convert.ToInt32(logo) }).Result.Data;
 
                 if (fileResult != null)
                 {
                     string decodedString = Encoding.UTF8.GetString(fileResult.File);
-                    organisationInfoDto.OrganisationChangeReqContents.FirstOrDefault(x => x.PropertyEnum == Entities.Enums.OrganisationChangePropertyEnum.Logo).PropertyValue = decodedString;
+                    organisationInfoDto.OrganisationChangeReqContents.FirstOrDefault(x => x.PropertyEnum == OrganisationChangePropertyEnum.Logo).PropertyValue = decodedString;
                 }
 
                 return new SuccessDataResult<GetOrganisationInfoChangeRequestDto>(organisationInfoDto, Messages.SuccessfulOperation);

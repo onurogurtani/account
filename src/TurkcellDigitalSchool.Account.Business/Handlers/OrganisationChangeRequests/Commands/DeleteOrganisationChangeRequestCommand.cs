@@ -7,6 +7,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
@@ -31,8 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                 _mapper = mapper;
             }
 
-            [SecuredOperation(Priority = 1)]
-            [ValidationAspect(typeof(UpdateOrganisationChangeRequestValidator), Priority = 2)]
+            [SecuredOperation] 
             public async Task<IResult> Handle(DeleteOrganisationChangeRequestCommand request, CancellationToken cancellationToken)
             {
 
@@ -40,7 +40,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                 if (entity == null)
                     return new ErrorResult(Messages.RecordDoesNotExist);
 
-                if (entity.RequestState != Entities.Enums.OrganisationChangeRequestState.Forwarded)
+                if (entity.RequestState != OrganisationChangeRequestState.Forwarded)
                     return new ErrorResult(Common.Constants.Messages.ErrorInDeletingProcess);
 
               //Analiz netleþmedi.
