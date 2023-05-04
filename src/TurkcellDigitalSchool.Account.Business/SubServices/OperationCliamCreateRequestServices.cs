@@ -13,7 +13,7 @@ namespace TurkcellDigitalSchool.Account.Business.SubServices
     public class OperationCliamCreateRequestServices : BaseSubServices<AccountSubscribeDbContext>
     {
         private readonly IOperationClaimRepository _operationClaimRepository;
-        protected OperationCliamCreateRequestServices(AccountSubscribeDbContext context, IOperationClaimRepository operationClaimRepository) : base(context)
+        public OperationCliamCreateRequestServices(AccountSubscribeDbContext context, IOperationClaimRepository operationClaimRepository) : base(context)
         {
             _operationClaimRepository = operationClaimRepository;
         }
