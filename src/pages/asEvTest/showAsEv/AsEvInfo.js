@@ -20,6 +20,9 @@ const AsEvInfo = ({ showData }) => {
             {asEvDetail?.items && (
                 <ul className="info-list">
                     <li>
+                        <Text t="Eğitim Öğretim Yılı" /> : <span>{asEvDetail?.items[0]?.asEvDetail?.educationYear?.name}</span>
+                    </li>
+                    <li>
                         <Text t="Sınıf Seviyesi" /> : <span>{asEvDetail?.items[0]?.asEvDetail?.classroom?.name}</span>
                     </li>
                     <li>

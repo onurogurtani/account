@@ -208,3 +208,5 @@ export const generateCsrfToken = () => {
     localStorage.setItem('csrftoken', csrftoken)
     return csrftoken
 }
+
+export const replaceCommaWithDot = (value) => value.replace(',', '.');

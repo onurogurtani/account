@@ -1,31 +1,64 @@
 import { Form } from 'antd';
-import React, { useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import iconSearchWhite from '../../assets/icons/icon-white-search.svg';
-import { CustomButton, CustomForm, CustomFormItem, CustomImage, CustomSelect, CustomTextInput, Option, Text,CustomInput } from '../../components';
+import {
+    CustomButton,
+    CustomForm,
+    CustomFormItem,
+    CustomImage,
+    CustomSelect,
+    CustomTextInput,
+    Option,
+    Text,
+    CustomInput,
+} from '../../components';
 import { getFilterPagedAsEvs } from '../../store/slice/asEvSlice';
 import { getAllClassStages } from '../../store/slice/classStageSlice';
+import { getEducationYearList } from '../../store/slice/educationYearsSlice';
 import '../../styles/tableFilter.scss';
 
 const AsEvFilter = () => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
 
+    const { allClassList } = useSelector((state) => state?.classStages);
+    const { educationYearList } = useSelector((state) => state?.educationYears);
+    const { asEvList } = useSelector((state) => state?.asEv);
+
     useEffect(() => {
         form.resetFields();
         dispatch(getAllClassStages());
+        dispatch(getEducationYearList());
     }, [dispatch, form]);
 
-    const { allClassList } = useSelector((state) => state?.classStages);
-    const { asEvList } = useSelector((state) => state?.asEv);
+    const handleFilter = async (values) => {
+        await dispatch(getFilterPagedAsEvs(values));
+    };
 
-    const handleFilter = async(values) => {
-      await dispatch(getFilterPagedAsEvs(values))
-    }
+    const removeDuplicateLessons = (asEvList) => {
+        const uniq = {};
+        const lessonArr = [];
+        asEvList.map((item) => {
+            lessonArr.push(item?.lesson);
+        });
+        var arrFiltered = lessonArr.filter((obj) => !uniq[obj.id] && (uniq[obj.id] = true));
+        return arrFiltered;
+    };
 
+    console.log(removeDuplicateLessons(asEvList))
+
+    
     return (
         <div className="table-filter">
-            <CustomForm onFinish={handleFilter} className="filter-form" name="filterForm" autoComplete="off" layout={'vertical'} form={form}>
+            <CustomForm
+                onFinish={handleFilter}
+                className="filter-form"
+                name="filterForm"
+                autoComplete="off"
+                layout={'vertical'}
+                form={form}
+            >
                 <div className="form-item">
                     <CustomFormItem
                         label={
@@ -42,10 +75,7 @@ const AsEvFilter = () => {
                             style={{
                                 width: '100%',
                             }}
-                           
-                        >
-                          
-                        </CustomInput>
+                        ></CustomInput>
                     </CustomFormItem>
                     <CustomFormItem
                         label={
@@ -62,7 +92,6 @@ const AsEvFilter = () => {
                             style={{
                                 width: '100%',
                             }}
-                          
                         ></CustomTextInput>
                     </CustomFormItem>
                     <CustomFormItem
@@ -81,13 +110,13 @@ const AsEvFilter = () => {
                                 width: '100%',
                             }}
                         >
-                             {allClassList?.map((item) => {
-                                    return (
-                                        <Option key={item?.id} value={item?.id}>
-                                            {item?.name}
-                                        </Option>
-                                    );
-                                })}
+                            {allClassList?.map((item) => {
+                                return (
+                                    <Option key={item?.id} value={item?.id}>
+                                        {item?.name}
+                                    </Option>
+                                );
+                            })}
                         </CustomSelect>
                     </CustomFormItem>
                     <CustomFormItem
@@ -106,8 +135,8 @@ const AsEvFilter = () => {
                                 width: '100%',
                             }}
                         >
-                          <Option key={true}>Evet</Option>
-                          <Option key={false}>Hayır</Option>
+                            <Option key={true}>Evet</Option>
+                            <Option key={false}>Hayır</Option>
                         </CustomSelect>
                     </CustomFormItem>
 
@@ -127,13 +156,38 @@ const AsEvFilter = () => {
                                 width: '100%',
                             }}
                         >
-                              {asEvList?.map((item) => {
-                                    return (
-                                        <Option key={item?.lesson?.id} value={item?.lesson?.id}>
-                                            {item?.lesson?.name}
-                                        </Option>
-                                    );
-                                })}
+                            {removeDuplicateLessons(asEvList)?.map((item) => {
+                                return (
+                                    <Option key={item?.id} value={item?.id}>
+                                        {item?.name}
+                                    </Option>
+                                );
+                            })}
+                        </CustomSelect>
+                    </CustomFormItem>
+                    <CustomFormItem
+                        label={
+                            <div>
+                                <Text t="Eğitim Öğretim Yılı" />
+                            </div>
+                        }
+                        name="EducationYearId"
+                        className="filter-item"
+                    >
+                        <CustomSelect
+                            className="form-filter-item"
+                            placeholder={'Seçiniz'}
+                            style={{
+                                width: '100%',
+                            }}
+                        >
+                            {educationYearList?.items?.map((item) => {
+                                return (
+                                    <Option key={item?.id} value={item?.id}>
+                                        {item?.startYear} - {item.endYear}
+                                    </Option>
+                                );
+                            })}
                         </CustomSelect>
                     </CustomFormItem>
                 </div>
