@@ -100,16 +100,16 @@ const MaxNetNumber = () => {
                 );
             },
         },
-        // {
-        //     title: 'Sınıf Seviyesi',
-        //     dataIndex: 'classroom',
-        //     key: 'classroom',
-        //     sorter: true,
+        {
+            title: 'Sınıf Seviyesi',
+            dataIndex: 'classroom',
+            key: 'classroom',
+            sorter: true,
 
-        //     render: (text, record) => {
-        //         return <div>{text?.name}</div>;
-        //     },
-        // },
+            render: (text, record) => {
+                return <div>{text?.name}</div>;
+            },
+        },
         
         
         {
@@ -355,7 +355,7 @@ const MaxNetNumber = () => {
                                                 ))}
                                             </CustomSelect>
                                         </CustomFormItem>
-                                        {/* <CustomFormItem name="classroomIds" label="Sınıf Seviyesi">
+                                        <CustomFormItem name="classroomIds" label="Sınıf Seviyesi">
                                             <CustomSelect mode="multiple">
                                                 {allClassList?.map((item, index) => (
                                                     <Option value={item.id} key={item.index}>
@@ -363,7 +363,7 @@ const MaxNetNumber = () => {
                                                     </Option>
                                                 ))}
                                             </CustomSelect>
-                                        </CustomFormItem> */}
+                                        </CustomFormItem>
 
                                         <CustomFormItem name="examKinds" label="Sınav Türü">
                                             <CustomSelect mode="multiple">
@@ -485,7 +485,7 @@ const MaxNetNumber = () => {
                                     <CustomSelect
                                         onChange={async (e) => {
                                             const action = await dispatch(
-                                                getLessonsQuesiton([
+                                                getExamType([
                                                     { field: 'examTypeId', value: e, compareType: 0 },
                                                 ]),
                                             );
