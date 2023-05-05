@@ -1,5 +1,6 @@
 import { CheckCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { List } from 'antd';
+import { sanitize } from 'dompurify';
 import React from 'react';
 import { useSelector } from 'react-redux';
 
@@ -16,14 +17,14 @@ const ShowVideoQuestion = () => {
             <List.Item.Meta
               avatar={<QuestionCircleOutlined />}
               title={
-                <div className="question-text" dangerouslySetInnerHTML={{ __html: item?.text }} />
+                <div className="question-text" dangerouslySetInnerHTML={{ __html: sanitize(item?.text) }} />
               }
               description={
                 <>
                   <CheckCircleOutlined />
                   <div
                     className="question-answer"
-                    dangerouslySetInnerHTML={{ __html: item?.answer }}
+                    dangerouslySetInnerHTML={{ __html: sanitize(item?.answer) }}
                   />
                 </>
               }

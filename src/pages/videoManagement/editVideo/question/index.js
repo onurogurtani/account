@@ -7,6 +7,7 @@ import {
   QuestionCircleOutlined,
 } from '@ant-design/icons';
 import { Form, List, Upload } from 'antd';
+import { sanitize } from 'dompurify';
 import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import { useDispatch, useSelector } from 'react-redux';
@@ -218,9 +219,9 @@ const EditVideoQuestion = ({ sendValue, selectedBrackets }) => {
       <div className='bracketTime'>{selectedBrackets.find((i) => i?.lessonBracketId === item?.lessonBracketId)?.bracketTime}</div>
       <div className='bracketHeader'>{selectedBrackets.find((i) => i?.lessonBracketId === item?.lessonBracketId)?.header} </div>
       <QuestionCircleOutlined />
-      <div className='question' dangerouslySetInnerHTML={{ __html: item?.text }} />
+      <div className='question' dangerouslySetInnerHTML={{ __html: sanitize(item?.text) }} />
       <CheckCircleOutlined className='answerIcon' />
-      <div className="answer" dangerouslySetInnerHTML={{ __html: item?.answer }} />
+      <div className="answer" dangerouslySetInnerHTML={{ __html: sanitize(item?.answer) }} />
     </>
   }
 

@@ -25,6 +25,7 @@ import emoji4 from '../../../../../assets/images/emoji/emoji4.png';
 import emoji5 from '../../../../../assets/images/emoji/emoji5.png';
 import EmojiRating from './EmojiRating';
 import StarRating from './StarRating';
+import { sanitize } from 'dompurify';
 const OnlyQuestion = ({ index, questionKnowledge, groupKnowledge }) => {
   const [radioValue, setRadioValue] = useState('');
   const onChange = (e) => {
@@ -42,7 +43,7 @@ const OnlyQuestion = ({ index, questionKnowledge, groupKnowledge }) => {
                 <h6>{`${index + 1}.Soru`}</h6>
                 <div
                   className={classes.questionText}
-                  dangerouslySetInnerHTML={{ __html: questionKnowledge.text }}
+                  dangerouslySetInnerHTML={{ __html: sanitize(questionKnowledge.text) }}
                 />
               </div>
             </div>
@@ -57,7 +58,7 @@ const OnlyQuestion = ({ index, questionKnowledge, groupKnowledge }) => {
             <div className={classes.singleQuestion}>
               <div>
                 <h6>{`${index + 1}.Soru`}</h6>
-                <p dangerouslySetInnerHTML={{ __html: questionKnowledge.text }} />
+                <p dangerouslySetInnerHTML={{ __html: sanitize(questionKnowledge.text) }} />
               </div>
             </div>
             <h6>Cevaplar</h6>
@@ -65,7 +66,7 @@ const OnlyQuestion = ({ index, questionKnowledge, groupKnowledge }) => {
               <Radio.Group onChange={onChange} value={radioValue}>
                 {questionKnowledge.choices.map((choice, index) => (
                   <CustomRadio key={index} className={classes.answer} value={index}>
-                    <p dangerouslySetInnerHTML={{ __html: choice.text }} />
+                    <p dangerouslySetInnerHTML={{ __html: sanitize(choice.text) }} />
                   </CustomRadio>
                 ))}
               </Radio.Group>
@@ -77,14 +78,14 @@ const OnlyQuestion = ({ index, questionKnowledge, groupKnowledge }) => {
             <div className={classes.singleQuestion}>
               <div>
                 <h6>{`${index + 1}.Soru`}</h6>
-                <p dangerouslySetInnerHTML={{ __html: questionKnowledge.text }} />
+                <p dangerouslySetInnerHTML={{ __html: sanitize(questionKnowledge.text) }} />
               </div>
             </div>
             <h6>Cevaplar</h6>
             <div className={classes.questionAnswers}>
               {questionKnowledge.choices.map((choice, index) => (
                 <CustomCheckbox key={index} className={classes.answer}>
-                  <div dangerouslySetInnerHTML={{ __html: choice.text }}></div>
+                  <div dangerouslySetInnerHTML={{ __html: sanitize(choice.text) }}></div>
                 </CustomCheckbox>
               ))}
             </div>
@@ -96,7 +97,7 @@ const OnlyQuestion = ({ index, questionKnowledge, groupKnowledge }) => {
             <div className={classes.singleQuestion}>
               <div>
                 <h5>{`${index + 1}.Soru`}</h5>
-                <h6 dangerouslySetInnerHTML={{ __html: questionKnowledge.text }}></h6>
+                <h6 dangerouslySetInnerHTML={{ __html: sanitize(questionKnowledge.text) }}></h6>
               </div>
             </div>
           </div>
@@ -107,7 +108,7 @@ const OnlyQuestion = ({ index, questionKnowledge, groupKnowledge }) => {
               <div className={classes.singleQuestionContainer}>
                 <div>
                   <h6>{`${index + 1}.Soru`}</h6>
-                  <div dangerouslySetInnerHTML={{ __html: questionKnowledge.text }}></div>
+                  <div dangerouslySetInnerHTML={{ __html: sanitize(questionKnowledge.text) }}></div>
                 </div>
                 <EmojiRating />
               </div>
@@ -115,7 +116,7 @@ const OnlyQuestion = ({ index, questionKnowledge, groupKnowledge }) => {
               <div className={classes.singleQuestionContainer}>
                 <div>
                   <h6>{`${index + 1}.Soru`}</h6>
-                  <div dangerouslySetInnerHTML={{ __html: questionKnowledge.text }}></div>
+                  <div dangerouslySetInnerHTML={{ __html: sanitize(questionKnowledge.text) }}></div>
                 </div>
                 <StarRating />
               </div>
@@ -124,7 +125,7 @@ const OnlyQuestion = ({ index, questionKnowledge, groupKnowledge }) => {
                 <div className={classes.singleQuestion}>
                   <div>
                     <h6>{`${index + 1}.Soru`}</h6>
-                    <p dangerouslySetInnerHTML={{ __html: questionKnowledge.text }} />
+                    <p dangerouslySetInnerHTML={{ __html: sanitize(questionKnowledge.text) }} />
                   </div>
                 </div>
                 <h6>Cevaplar</h6>
