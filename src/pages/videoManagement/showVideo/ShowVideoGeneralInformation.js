@@ -35,6 +35,9 @@ const ShowVideoGeneralInformation = () => {
           Video Kategorisi: <span>{currentVideo?.categoryOfVideo?.name}</span>
         </li>
         <li>
+          Eğitim Öğretim Yılı: <span>{currentVideo?.educationYear?.startYear} - {currentVideo?.educationYear?.endYear}</span>
+        </li>
+        <li>
           Sınıf Seviyesi: <span>{currentVideo?.classroom?.name}</span>
         </li>
         <li>
