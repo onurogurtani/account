@@ -151,7 +151,7 @@ const LessonsSectionForm = ({ form }) => {
 
     return (
         <>
-            <CustomFormItem label="Eğitim Öğretim Yılı" name="educationYearId">
+            <CustomFormItem rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]} label="Eğitim Öğretim Yılı" name="educationYearId">
                 <CustomSelect
                     onChange={onEducationYearChange}
                     placeholder="Eğitim Öğretim Yılı"
