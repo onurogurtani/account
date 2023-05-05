@@ -193,6 +193,7 @@ const AddVideoQuestion = ({ sendValue, selectedBrackets }) => {
       message: 'Lütfen en az 1 adet soru ekleyiniz.',
     });
   };
+
   const renderListAction = (item, index) => {
     return <>
       <CustomButton type="text" className="question-edit" onClick={() => handleEdit(item, index)}>
@@ -203,6 +204,7 @@ const AddVideoQuestion = ({ sendValue, selectedBrackets }) => {
       </CustomButton>
     </>
   }
+
   const renderList = (item) => {
     return <>
       <ClockCircleOutlined />

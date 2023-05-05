@@ -1,137 +1,120 @@
 .show-video {
-  .header {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-bottom: 15px;
-    button {
-      border: none;
-    }
-    .edit-btn {
-      background-color: #d5b803;
-    }
-  }
-  .footer {
-    font-family: UbuntuRegular, sans-serif;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    list-style: none;
-    color: #3485fd;
-    font-size: 14px;
-    span {
-      color: #6b7789;
-    }
-    padding-left: 0;
-  }
-  .list {
-    padding: 16px 45px 0 45px;
-    font-family: UbuntuRegular, sans-serif;
-    > li {
-      // height: 22px;
-      margin: 0 0 20px 0;
-      font-weight: bold;
-      letter-spacing: normal;
-      color: #050505;
-      list-style: none;
-      font-size: 16px;
-
-      > span {
-        color: #6b7789;
-      }
-    }
-    > li:last-child {
-      margin-bottom: 0;
-    }
-    .content-text {
-      word-wrap: break-word;
-      li {
-        list-style: disc;
-        margin-left: 20px;
-      }
-    }
-  }
-
-  .document-list {
-    margin-top: 25px;
-    padding: 10px 45px;
-    .ant-list-item {
-      .ant-list-item-meta {
-        .ant-list-item-meta-avatar {
-          span {
-            svg {
-              width: 46px;
-              height: 55px;
-            }
-          }
-        }
-        .ant-list-item-meta-content {
-          .ant-list-item-meta-title {
-            font-size: 16px;
-          }
-          .ant-list-item-meta-description {
-            .description {
-              font-size: 16px;
-            }
-          }
-        }
-      }
-      .ant-list-item-action {
-        li {
-          display: flex;
-          align-items: center;
-        }
-      }
-    }
-  }
-  .question-list {
-    margin-top: 25px;
-    padding: 10px 45px;
-    .ant-list-item-meta {
-      .ant-list-item-meta-avatar {
-        span {
-          svg {
-            width: 32px;
-            height: 48px;
-          }
-        }
-      }
-      .ant-list-item-meta-content {
+    .header {
         display: flex;
-        gap: 15px;
-        text-align: justify;
-        .ant-list-item-meta-title {
-          flex: 1;
-          display: flex;
-          .question-text {
-            display: flex;
-            padding-top: 10px;
-            word-break: break-word;
-            p {
-              margin-bottom: 0;
-            }
-          }
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 15px;
+        button {
+            border: none;
         }
-        .ant-list-item-meta-description {
-          flex: 1;
-          gap: 16px;
-          display: flex;
-          span {
-            svg {
-              width: 32px;
-              height: 48px;
-            }
-          }
-          .question-answer {
-            display: flex;
-            padding-top: 10px;
-            word-break: break-word;
-            p {
-              margin-bottom: 0;
-            }
-          }
+        .edit-btn {
+            background-color: #d5b803;
         }
-      }
     }
-  }
+    .footer {
+        font-family: UbuntuRegular, sans-serif;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        list-style: none;
+        color: #3485fd;
+        font-size: 14px;
+        span {
+            color: #6b7789;
+        }
+        padding-left: 0;
+    }
+    .list {
+        padding: 16px 45px 0 45px;
+        font-family: UbuntuRegular, sans-serif;
+        > li {
+            // height: 22px;
+            margin: 0 0 20px 0;
+            font-weight: bold;
+            letter-spacing: normal;
+            color: #050505;
+            list-style: none;
+            font-size: 16px;
+
+            > span {
+                color: #6b7789;
+            }
+        }
+        > li:last-child {
+            margin-bottom: 0;
+        }
+        .content-text {
+            word-wrap: break-word;
+            li {
+                list-style: disc;
+                margin-left: 20px;
+            }
+        }
+    }
+
+    .document-list {
+        margin-top: 25px;
+        padding: 10px 45px;
+        .ant-list-item {
+            .ant-list-item-meta {
+                .ant-list-item-meta-avatar {
+                    span {
+                        svg {
+                            width: 46px;
+                            height: 55px;
+                        }
+                    }
+                }
+                .ant-list-item-meta-content {
+                    .ant-list-item-meta-title {
+                        font-size: 16px;
+                    }
+                    .ant-list-item-meta-description {
+                        .description {
+                            font-size: 16px;
+                        }
+                    }
+                }
+            }
+            .ant-list-item-action {
+                li {
+                    display: flex;
+                    align-items: center;
+                }
+            }
+        }
+    }
+    .question-list {
+        margin-top: 25px;
+        padding: 10px 45px;
+        .ant-list-item {
+            justify-content: flex-start;
+            gap: 10px;
+            align-items: unset;
+            svg {
+                width: 24px;
+                height: 24px;
+            }
+            .answerIcon {
+                svg {
+                    opacity: 0.5;
+                }
+            }
+            .bracketTime {
+                margin-left: 5px;
+                flex: 1;
+            }
+            .bracketHeader {
+                margin-left: 30px;
+                flex: 4;
+            }
+            .question {
+                flex: 8;
+            }
+            .answer {
+                flex: 8;
+                opacity: 0.5;
+            }
+        }
+    }
 }
