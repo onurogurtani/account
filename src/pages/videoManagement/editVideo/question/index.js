@@ -1,5 +1,6 @@
 import {
   CheckCircleOutlined,
+  ClockCircleOutlined,
   FileExcelOutlined,
   InboxOutlined,
   PlusOutlined,
@@ -14,6 +15,7 @@ import {
   CustomForm,
   CustomFormItem,
   CustomModal,
+  CustomSelect,
   errorDialog,
   successDialog,
   Text,
@@ -26,20 +28,25 @@ import {
 import '../../../../styles/videoManagament/questionVideo.scss';
 import { reactQuillValidator } from '../../../../utils/formRule';
 
-const EditVideoQuestion = ({ sendValue }) => {
+const EditVideoQuestion = ({ sendValue, selectedBrackets }) => {
   const [open, setOpen] = useState(false);
-  const [questionList, setQuestionList] = useState([]);
+  const { currentVideo } = useSelector((state) => state?.videos);
+  const [questionList, setQuestionList] = useState(currentVideo?.videoQuestions);
   const [selectedQuestion, setSelectedQuestion] = useState();
   const [isEdit, setIsEdit] = useState(false);
   const [isExcel, setIsExcel] = useState(false);
   const [errorList, setErrorList] = useState([]);
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const { currentVideo } = useSelector((state) => state?.videos);
+
 
   useEffect(() => {
-    setQuestionList(currentVideo?.videoQuestions);
-  }, [currentVideo]);
+    if (questionList.length) {
+      const selectedBracketIds = selectedBrackets?.map((item) => item?.lessonBracketId)
+      const questionListFilter = questionList?.filter((item) => selectedBracketIds?.includes(item?.lessonBracketId))
+      setQuestionList(questionListFilter)
+    }
+  }, [selectedBrackets])
 
   useEffect(() => {
     if (open) {
@@ -60,20 +67,26 @@ const EditVideoQuestion = ({ sendValue }) => {
   const onOkModal = () => {
     form.submit();
   };
+
+
+
   const onFinish = async (values) => {
     if (isExcel) {
       console.log(values);
       const fileData = values?.excelFile[0]?.originFileObj;
       const data = new FormData();
       data.append('FormFile', fileData);
+      selectedBrackets?.map((i) => data.append('LessonBracketIds', i?.lessonBracketId))
       const action = await dispatch(addVideoQuestionsExcel(data));
       if (addVideoQuestionsExcel.fulfilled.match(action)) {
-        const excelQuestions = action?.payload?.data.map((item) => ({
-          answer: item.answer,
-          text: item.text,
-        }));
-        console.log(excelQuestions);
-        setQuestionList((state) => [...state, ...excelQuestions]);
+        if (action?.payload?.data?.length) {
+          const excelQuestions = action?.payload?.data?.map((item) => ({
+            answer: item?.answer,
+            text: item?.text,
+            lessonBracketId: item?.lessonBracketId,
+          }));
+          setQuestionList((state) => [...state, ...excelQuestions]);
+        }
         successDialog({
           title: <Text t="success" />,
           message: action?.payload?.message,
@@ -90,17 +103,6 @@ const EditVideoQuestion = ({ sendValue }) => {
     if (isEdit) {
       questionList[selectedQuestion.index] = values;
       setQuestionList(questionList);
-      // alternative
-      //   setQuestionList((list) =>
-      //     list.map((item, i) =>
-      //       item.key === selectedQuestion.key
-      //         ? {
-      //             ...item,
-      //             ...values,
-      //           }
-      //         : item,
-      //     ),
-      //   );
       setIsEdit(false);
       setSelectedQuestion();
     } else {
@@ -115,10 +117,7 @@ const EditVideoQuestion = ({ sendValue }) => {
     setOpen(true);
   };
 
-  // const handleDelete = (item) => {
-  //   console.log(item);
-  //   setQuestionList(questionList.filter((data) => data.key !== item.key));
-  // };
+
   const handleDelete = (item, index) => {
     setQuestionList([...questionList.slice(0, index), ...questionList.slice(index + 1)]);
   };
@@ -175,7 +174,10 @@ const EditVideoQuestion = ({ sendValue }) => {
   };
 
   const ondownloadExcel = async () => {
-    await dispatch(downloadVideoQuestionsExcel());
+    const body = {
+      lessonBracketIds: selectedBrackets?.map((i) => i?.lessonBracketId)
+    }
+    await dispatch(downloadVideoQuestionsExcel(body));
   };
 
   const uploadExcel = () => {
@@ -188,6 +190,7 @@ const EditVideoQuestion = ({ sendValue }) => {
       const questionValue = questionList?.map((item) => ({
         text: item.text,
         answer: item.answer,
+        lessonBracketId: item.lessonBracketId,
       }));
       sendValue(questionValue);
       return;
@@ -197,13 +200,36 @@ const EditVideoQuestion = ({ sendValue }) => {
       message: 'Lütfen en az 1 adet soru ekleyiniz.',
     });
   };
+
+  const renderListAction = (item, index) => {
+    return <>
+      <CustomButton type="text" className="question-edit" onClick={() => handleEdit(item, index)}>
+        Düzenle
+      </CustomButton>
+      <CustomButton type="text" className="question-delete" onClick={() => handleDelete(item, index)}>
+        Sil
+      </CustomButton>
+    </>
+  }
+
+  const renderList = (item) => {
+    return <>
+      <ClockCircleOutlined />
+      <div className='bracketTime'>{selectedBrackets.find((i) => i?.lessonBracketId === item?.lessonBracketId)?.bracketTime}</div>
+      <div className='bracketHeader'>{selectedBrackets.find((i) => i?.lessonBracketId === item?.lessonBracketId)?.header} </div>
+      <QuestionCircleOutlined />
+      <div className='question' dangerouslySetInnerHTML={{ __html: item?.text }} />
+      <CheckCircleOutlined className='answerIcon' />
+      <div className="answer" dangerouslySetInnerHTML={{ __html: item?.answer }} />
+    </>
+  }
+
   return (
     <div className="question-video">
       <CustomButton icon={<FileExcelOutlined />} className="upload-btn" onClick={uploadExcel}>
         Excel ile Ekle
       </CustomButton>
       <CustomButton
-        // style={{ marginRight: 'auto' }}
         type="primary"
         className="add-btn"
         icon={<PlusOutlined />}
@@ -220,7 +246,6 @@ const EditVideoQuestion = ({ sendValue }) => {
         cancelText="Vazgeç"
         onCancel={onCancelModal}
         bodyStyle={{ overflowY: 'auto' }}
-        //   width={600}
       >
         <CustomForm form={form} layout="vertical" name="form" onFinish={onFinish}>
           {isExcel ? (
@@ -260,6 +285,17 @@ const EditVideoQuestion = ({ sendValue }) => {
             </CustomFormItem>
           ) : (
             <>
+              <CustomFormItem
+                rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
+                label="Başlık"
+                name="lessonBracketId"
+              >
+                <CustomSelect
+                  fieldNames={{ label: 'header', value: 'lessonBracketId' }}
+                  options={selectedBrackets}
+                  placeholder="Başlık" />
+              </CustomFormItem>
+
               <CustomFormItem
                 rules={[
                   {
@@ -311,31 +347,8 @@ const EditVideoQuestion = ({ sendValue }) => {
           header={<h5>Soru Listesi</h5>}
           dataSource={questionList}
           renderItem={(item, index) => (
-            <List.Item
-              actions={[
-                <>
-                  <a className="question-edit" onClick={() => handleEdit(item, index)}>
-                    Düzenle
-                  </a>{' '}
-                  <a className="question-delete" onClick={() => handleDelete(item, index)}>
-                    Sil
-                  </a>
-                </>,
-              ]}
-            >
-              <List.Item.Meta
-                avatar={<QuestionCircleOutlined />}
-                title={<div dangerouslySetInnerHTML={{ __html: item?.text }} />}
-                description={
-                  <>
-                    <CheckCircleOutlined />
-                    <div
-                      className="question-answer"
-                      dangerouslySetInnerHTML={{ __html: item?.answer }}
-                    />
-                  </>
-                }
-              />
+            <List.Item actions={[renderListAction(item, index)]}>
+              {renderList(item)}
             </List.Item>
           )}
         />

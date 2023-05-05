@@ -56,7 +56,7 @@ const AddVideoQuestion = ({ sendValue, selectedBrackets }) => {
 
   useEffect(() => {
     const selectedBracketIds = selectedBrackets?.map((item) => item?.lessonBracketId)
-    const questionListFilter = questionList?.filter((item) => selectedBracketIds?.includes(item?.title))
+    const questionListFilter = questionList?.filter((item) => selectedBracketIds?.includes(item?.lessonBracketId))
     setQuestionList(questionListFilter)
   }, [selectedBrackets])
 
@@ -76,7 +76,7 @@ const AddVideoQuestion = ({ sendValue, selectedBrackets }) => {
           const excelQuestions = action?.payload?.data?.map((item) => ({
             answer: item?.answer,
             text: item?.text,
-            lessonBracketId: item?.title,
+            lessonBracketId: item?.lessonBracketId,
           }));
           setQuestionList((state) => [...state, ...excelQuestions]);
         }
@@ -182,7 +182,7 @@ const AddVideoQuestion = ({ sendValue, selectedBrackets }) => {
       const questionValue = questionList?.map((item) => ({
         text: item.text,
         answer: item.answer,
-        lessonBracketId: item.title,
+        lessonBracketId: item.lessonBracketId,
       }));
       sendValue(questionValue);
       return;
@@ -205,8 +205,8 @@ const AddVideoQuestion = ({ sendValue, selectedBrackets }) => {
   const renderList = (item) => {
     return <>
       <ClockCircleOutlined />
-      <div className='bracketTime'>{selectedBrackets.find((i) => i?.lessonBracketId === item?.title)?.bracketTime}</div>
-      <div className='bracketHeader'>{selectedBrackets.find((i) => i?.lessonBracketId === item?.title)?.header} </div>
+      <div className='bracketTime'>{selectedBrackets.find((i) => i?.lessonBracketId === item?.lessonBracketId)?.bracketTime}</div>
+      <div className='bracketHeader'>{selectedBrackets.find((i) => i?.lessonBracketId === item?.lessonBracketId)?.header} </div>
       <QuestionCircleOutlined />
       <div className='question' dangerouslySetInnerHTML={{ __html: item?.text }} />
       <CheckCircleOutlined className='answerIcon' />
@@ -219,7 +219,6 @@ const AddVideoQuestion = ({ sendValue, selectedBrackets }) => {
         Excel ile Ekle
       </CustomButton>
       <CustomButton
-        // style={{ marginRight: 'auto' }}
         type="primary"
         className="add-btn"
         icon={<PlusOutlined />}
@@ -236,7 +235,6 @@ const AddVideoQuestion = ({ sendValue, selectedBrackets }) => {
         cancelText="Vazgeç"
         onCancel={onCancelModal}
         bodyStyle={{ overflowY: 'auto' }}
-      //   width={600}
       >
         <CustomForm form={form} layout="vertical" name="form" onFinish={onFinish}>
           {isExcel ? (
@@ -279,10 +277,9 @@ const AddVideoQuestion = ({ sendValue, selectedBrackets }) => {
               <CustomFormItem
                 rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
                 label="Başlık"
-                name="title"
+                name="lessonBracketId"
               >
                 <CustomSelect
-                  // onChange={onUnitChange} 
                   fieldNames={{ label: 'header', value: 'lessonBracketId' }}
                   options={selectedBrackets}
                   placeholder="Başlık" />
