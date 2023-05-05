@@ -6,7 +6,7 @@ namespace TurkcellDigitalSchool.Account.Business.SubServices.RegisterServices
     {
         public static void AddSubServices(this IServiceCollection services)
         {
-            services.AddTransient<OperationCliamCreateRequestServices>();
+             services.AddTransient<OperationCliamCreateRequestServices>();
             services.AddTransient<BranchMainFieldEntitySubServices>();
             services.AddTransient<ClassroomEntitySubServices>();
             services.AddTransient<EventEntitySubServices>();

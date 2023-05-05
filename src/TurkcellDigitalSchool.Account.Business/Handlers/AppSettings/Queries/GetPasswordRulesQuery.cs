@@ -2,13 +2,12 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using TurkcellDigitalSchool.Account.Business.Helpers;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Account.Domain.Dtos; 
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
-using TurkcellDigitalSchool.Core.Utilities.Results;
-using RuleBuilderExtensions = TurkcellDigitalSchool.Account.Business.Helpers.RuleBuilderExtensions;
+using TurkcellDigitalSchool.Core.Utilities.Results; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
 {

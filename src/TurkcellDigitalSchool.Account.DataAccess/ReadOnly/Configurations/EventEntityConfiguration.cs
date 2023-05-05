@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly; 
+using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
+using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Configurations
 {
-    public class EventEntityConfiguration : IEntityTypeConfiguration<Event>
+    public class EventEntityConfiguration : BaseConfigurationBase<Event>
     {
         public void Configure(EntityTypeBuilder<Event> builder)
         {

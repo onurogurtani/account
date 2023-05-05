@@ -21,5 +21,8 @@
 	  <ProjectReference Include="..\..\..\..\TurkcellDigitalSchool.General\src\TurkcellDigitalSchool.DbAccess\TurkcellDigitalSchool.DbAccess.csproj" />
 	  <ProjectReference Include="..\TurkcellDigitalSchool.Account.Domain\TurkcellDigitalSchool.Account.Domain.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="DataAccess\Migrations\Postgre\" />
+	</ItemGroup>
 
 </Project>

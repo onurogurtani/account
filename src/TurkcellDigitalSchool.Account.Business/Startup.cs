@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.LdapLoginService;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.TurkcellFastLoginService;
@@ -106,7 +107,16 @@ namespace TurkcellDigitalSchool.Account.Business
             var capConfig = Configuration.GetSection("CapConfig").Get<CapConfig>();
             services.AddCap(options =>
             {
-                options.UsePostgreSql(Configuration.GetConnectionString("DArchPostgreContext"));
+                var pcName = Environment.MachineName;
+                if (pcName == "DESKTOP-7D0D7UB")
+                {
+                    options.UsePostgreSql(Configuration.GetConnectionString("DArchPostgreLocalContext"));
+                }
+                else
+                {
+                    options.UsePostgreSql(Configuration.GetConnectionString("DArchPostgreContext"));
+                }
+              
                 options.UseRabbitMQ(rabbitMqOptions =>
                 {
                     rabbitMqOptions.ConnectionFactoryOptions = connectionFactory =>

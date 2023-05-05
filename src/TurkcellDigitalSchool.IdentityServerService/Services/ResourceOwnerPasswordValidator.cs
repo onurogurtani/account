@@ -1,19 +1,22 @@
 ﻿using System.Security.Claims;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Validation;
-using IdentityModel; 
-using Microsoft.IdentityModel.Tokens; 
+using IdentityModel;
+using Microsoft.IdentityModel.Tokens;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
+using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
+using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
+using TurkcellDigitalSchool.Core.Services.Session;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
 using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
 using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 using TurkcellDigitalSchool.IdentityServerService.Constants;
 using TurkcellDigitalSchool.IdentityServerService.Services.Contract;
-using TurkcellDigitalSchool.IdentityServerService.Services.Model; 
+using TurkcellDigitalSchool.IdentityServerService.Services.Model;
 
 namespace TurkcellDigitalSchool.IdentityServerService.Services
 {
@@ -30,12 +33,13 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
         private readonly IConfiguration _configuration;
         private readonly ILoginFailForgetPassSendLinkRepository _loginFailForgetPassSendLinkRepository;
         private readonly IAppSettingRepository _appSettingRepository;
+        private readonly RedisService _redisService;
         private readonly string _environment;
 
         public ResourceOwnerPasswordValidator(ICustomUserSvc customUserSvc, IHttpContextAccessor httpContextAccessor,
             IUserSessionRepository userSessionRepository, IMobileLoginRepository mobileLoginRepository, ISmsOtpRepository smsOtpRepository,
             ILoginFailCounterRepository loginFailCounterRepository, ICaptchaManager captchaManager, IMailService mailService,
-            IConfiguration configuration, ILoginFailForgetPassSendLinkRepository loginFailForgetPassSendLinkRepository, IAppSettingRepository appSettingRepository)
+            IConfiguration configuration, ILoginFailForgetPassSendLinkRepository loginFailForgetPassSendLinkRepository, IAppSettingRepository appSettingRepository, RedisService redisService)
         {
             _customUserSvc = customUserSvc;
             _httpContextAccessor = httpContextAccessor;
@@ -49,6 +53,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             _loginFailForgetPassSendLinkRepository = loginFailForgetPassSendLinkRepository;
             _environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             _appSettingRepository = appSettingRepository;
+            _redisService = redisService;
         }
 
         private const string CapthcaShowRequestText = "IsCapthcaShow";
@@ -112,7 +117,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
                 if (isOldPass)
                 {
-                    var guid= await _customUserSvc.GenerateUserOldPassChange(user.Id);
+                    var guid = await _customUserSvc.GenerateUserOldPassChange(user.Id);
                     var responseObject = new Dictionary<string, object>
                     {
                         { IsPasswordOldResponseText, isOldPass },
@@ -122,7 +127,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                     context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
                         Messages.passwordIsOldMessage, responseObject);
                     return;
-                } 
+                }
                 await LoginSuccessProcess(context, errorCount, csrf_token, user);
                 return;
             }
@@ -224,6 +229,23 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             await _userSessionRepository.SaveChangesAsync();
             var hasPackage = (await _customUserSvc.UserHasPackage(user.Id)).ToString();
 
+
+            var sessionInfo = await _redisService.GetAsync<UserSessionInfo>(CachingConstants.UserSession, user.Id.ToString());
+            if (sessionInfo == null)
+            {
+                sessionInfo = new UserSessionInfo();
+            }
+
+            if (addedSession.SessionType == SessionType.Mobile)
+            {
+                sessionInfo.SessionIdMobil = addedSession.Id;
+            }
+            else if (addedSession.SessionType == SessionType.Web)
+            {
+                sessionInfo.SessionIdWeb = addedSession.Id;
+            }
+
+            await _redisService.SetAsync(CachingConstants.UserSession, user.Id.ToString(), sessionInfo);
 
             context.Result = new GrantValidationResult(user.Id.ToString(), OidcConstants.AuthenticationMethods.Password,
             new List<Claim>

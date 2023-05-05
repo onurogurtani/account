@@ -22,7 +22,6 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
 
 namespace TurkcellDigitalSchool.Account.Container
 {

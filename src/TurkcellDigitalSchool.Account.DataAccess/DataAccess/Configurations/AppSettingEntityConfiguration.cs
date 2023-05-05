@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata.Builders; 
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract; 
+using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations
 {
@@ -10,7 +10,10 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations
         public override void Configure(EntityTypeBuilder<AppSetting> builder)
         {
             base.Configure(builder);
-            builder.Property(x => x.Value).IsRequired(); 
+            builder.Property(x => x.Value).IsRequired();
+
+            var tableName = builder.GetType().GetGenericArguments()[0].Name;
+            builder.ToTable(tableName);
         }
     }
 }

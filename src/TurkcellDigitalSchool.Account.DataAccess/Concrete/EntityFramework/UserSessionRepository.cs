@@ -6,18 +6,21 @@ using Microsoft.Extensions.DependencyInjection;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;
-using TurkcellDigitalSchool.Core.Utilities.IoC; 
+using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Services.Session;
+using TurkcellDigitalSchool.Core.Utilities.IoC;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 {
     public class UserSessionRepository : EfEntityRepositoryBase<UserSession, AccountDbContext>, IUserSessionRepository
     {
         private readonly RedisService _redisService;
-        public UserSessionRepository(AccountDbContext context) : base(context)
+        public UserSessionRepository(AccountDbContext context, RedisService redisService) : base(context)
         {
-            _redisService = ServiceTool.ServiceProvider.GetService<RedisService>(); // Test projesinde UserSessionRepository new()'lenerek çağırıldığı için Constructor yerine burada çağrıldı
+            _redisService = redisService;
         }
 
         public UserSession GetByToken()
@@ -99,6 +102,21 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
             if (userSession != null) { return; }
             userSession.EndTime = DateTime.Now;
             await Context.SaveChangesAsync();
+            var sessionInfo = await _redisService.GetAsync<UserSessionInfo>(CachingConstants.UserSession, userSession.UserId.ToString());
+            if (sessionInfo == null)
+            {
+                sessionInfo = new UserSessionInfo();
+            }
+
+            if (userSession.SessionType == SessionType.Mobile)
+            {
+                sessionInfo.SessionIdMobil = 0;
+            }
+            else if (userSession.SessionType == SessionType.Web)
+            {
+                sessionInfo.SessionIdWeb = 0;
+            }
+            await _redisService.SetAsync(CachingConstants.UserSession, userSession.UserId.ToString(), sessionInfo);
         }
 
     }

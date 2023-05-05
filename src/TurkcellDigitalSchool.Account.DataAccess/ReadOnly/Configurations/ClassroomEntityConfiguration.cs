@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly; 
+using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
+using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Configurations
 {
-    public class ClassroomEntityConfiguration : IEntityTypeConfiguration<Classroom>
+    public class ClassroomEntityConfiguration : BaseConfigurationBase<Classroom>
     {
         public void Configure(EntityTypeBuilder<Classroom> builder)
         {

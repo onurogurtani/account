@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DotNetCore.CAP;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Core.SubServiceConst;
 using TurkcellDigitalSchool.Core.SubServices;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Core.SubServiceConst;
 
 namespace TurkcellDigitalSchool.Account.Business.SubServices
 {
@@ -20,8 +21,8 @@ namespace TurkcellDigitalSchool.Account.Business.SubServices
 
         [CapSubscribe(SubServiceConst.OPERATION_CLAIM_CREATE_REQUEST)]
         public async Task CreateOperationClaim(List<string> claims)
-        {
-            if (claims.Any())
+        { 
+            if (!claims.Any())
             {
                 return;
             } 
