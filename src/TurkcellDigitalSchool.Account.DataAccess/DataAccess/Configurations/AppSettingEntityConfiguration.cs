@@ -10,9 +10,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations
         public override void Configure(EntityTypeBuilder<AppSetting> builder)
         {
             base.Configure(builder);
-            builder.Property(x => x.Value).IsRequired();
-
-            builder.ToTable("AppSetting", "public");
+            builder.Property(x => x.Value).IsRequired(); 
         }
     }
 }
