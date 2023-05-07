@@ -96,14 +96,7 @@ const TeacherForm = () => {
         >
             <div className="teacher-form-body">
                 <div className="one-line">
-                    <CustomFormItem
-                        rules={[
-                            { required: true },
-                            { validator: tcknValidator, message: 'Lütfen geçerli T.C. kimlik numarası giriniz.' },
-                        ]}
-                        label="TC Kimlik Numarası"
-                        name="citizenId"
-                    >
+                    <CustomFormItem rules={[{ required: true }]} label="TC Kimlik Numarası" name="citizenId">
                         <CustomMaskInput maskPlaceholder={null} mask={'99999999999'}>
                             <CustomInput placeholder="TC Kimlik Numarası" />
                         </CustomMaskInput>

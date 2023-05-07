@@ -7,8 +7,8 @@ const Preview = () => {
     const [selectSection, setSelectSection] = useState(null);
     const [sortData, setSortData] = useState([]);
     useEffect(() => {
-        const examLength = trialExamFormData?.sections?.find((q) => q.name === selectSection)?.sectionQuestionOfExams
-            .length;
+        const examLength = trialExamFormData?.sections?.find((q) => q.sectionDescriptionChapterId === selectSection)
+            ?.sectionQuestionOfExams.length;
         const newData = [];
         for (let index = 0; index < examLength; index++) {
             newData.push({ value: index + 1, label: index + 1 });
@@ -21,12 +21,12 @@ const Preview = () => {
                 {trialExamFormData.sections.map((item, index) => (
                     <div>
                         <CustomButton
-                            className={item.name === selectSection && 'section-active'}
+                            className={item.sectionDescriptionChapterId === selectSection && 'section-active'}
                             onClick={() => {
-                                setSelectSection(item.name);
+                                setSelectSection(item.sectionDescriptionChapterId);
                             }}
                         >
-                            {item.name}
+                            {item.sectionDescriptionChapterName}
                         </CustomButton>
                     </div>
                 ))}
@@ -45,7 +45,7 @@ const Preview = () => {
             <div>
                 <div className="view-quesiton-add">
                     {trialExamFormData?.sections
-                        ?.find((q) => q.name === selectSection)
+                        ?.find((q) => q.sectionDescriptionChapterId === selectSection)
                         ?.sectionQuestionOfExams.map((item, index) => (
                             <div id={selectSection + index} className="view-quesiton-add-main ">
                                 <div>{index + 1}</div>
@@ -56,8 +56,8 @@ const Preview = () => {
                                 </div>
                             </div>
                         ))}
-                    {trialExamFormData?.sections?.find((q) => q.name === selectSection)?.sectionQuestionOfExams
-                        ?.length === 0 && 'Soru Eklenmedi!'}
+                    {trialExamFormData?.sections?.find((q) => q.sectionDescriptionChapterId === selectSection)
+                        ?.sectionQuestionOfExams?.length === 0 && 'Soru Eklenmedi!'}
                 </div>
             </div>
         </div>
