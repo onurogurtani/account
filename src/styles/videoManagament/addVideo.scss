@@ -1,151 +1,153 @@
 .addVideo-wrapper {
-  p {
-    margin: 0;
-  }
-
-  .ant-tabs-tab {
-    cursor: no-drop;
-  }
-
-  .ant-tabs-tab-active {
-    .ant-tabs-tab-btn {
-      color: #1890ff;
+    p {
+        margin: 0;
     }
-  }
 
-  .ant-tabs-card .ant-tabs-content {
-    margin-top: -16px;
-    .ant-tabs-tabpane {
-      padding: 16px 32px;
-      background: #fff;
+    .ant-tabs-tab {
+        cursor: no-drop;
     }
-  }
 
-  .ant-tabs-card {
-    .ant-tabs-nav::before {
-      display: none;
-    }
-  }
-  .general-information-add-form {
-    column-gap: 24px;
-    width: 100%;
-    padding-right: 12px;
-    .general-information-add-form-content {
-      display: flex;
-      gap: 25px;
-      .left-form {
-        flex: 1;
-      }
-      .right-form {
-        flex: 1;
-      }
-    }
-    .ant-form-item {
-      .ant-form-item-control-input {
-        .add-btn {
-          background-color: #00a483;
-          border: none;
+    .ant-tabs-tab-active {
+        .ant-tabs-tab-btn {
+            color: #1890ff;
         }
-      }
-      .ant-form-item-label {
-        label {
-          margin-top: 7px;
-        }
-      }
-    }
-    .ant-form-item.requiredFieldLabelMark {
-      .ant-form-item-label {
-        label:after {
-          display: inline-block;
-          margin-left: 4px;
-          color: #f72717;
-          font-size: 13px;
-          font-family: SimSun, sans-serif;
-          line-height: 1;
-          content: '*';
-          font-weight: bold;
-        }
-      }
-    }
-    .url-pdf-attach {
-      .ant-form-item-control-input-content {
-        .ant-tag {
-          cursor: pointer;
-          margin-bottom: 5px;
-          .anticon {
-            vertical-align: 1px;
-          }
-        }
-      }
     }
 
-    .header-mark {
-      font-size: 16px;
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      font-weight: 500;
-      padding-right: 20px;
-      padding-top: 7px;
-      .title-mark {
-        flex: 2;
-      }
-      .time-mark {
-        flex: 1;
-      }
-      .title-mark:after,
-      .time-mark:after {
-        display: inline-block;
-        margin-left: 4px;
-        color: #f72717;
-        font-size: 13px;
-        font-family: SimSun, sans-serif;
-        line-height: 1;
-        content: '*';
-        font-weight: bold;
-      }
+    .ant-tabs-card .ant-tabs-content {
+        margin-top: -16px;
+        .ant-tabs-tabpane {
+            padding: 16px 32px;
+            background: #fff;
+        }
     }
-    .video-mark {
-      display: flex;
-      align-items: baseline;
-      gap: 15px;
-      justify-content: space-between;
+
+    .ant-tabs-card {
+        .ant-tabs-nav::before {
+            display: none;
+        }
     }
-  }
-  .general-information-add-form-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 20px;
-    .next-btn {
-      background-color: #699a00;
-      border: none;
+    .general-information-add-form {
+        column-gap: 24px;
+        width: 100%;
+        padding-right: 12px;
+        .general-information-add-form-content {
+            display: flex;
+            gap: 25px;
+            .left-form {
+                flex: 1;
+            }
+            .right-form {
+                flex: 1;
+            }
+        }
+        .ant-form-item {
+            .ant-form-item-control-input {
+                .add-btn {
+                    background-color: #00a483;
+                    border: none;
+                }
+            }
+            .ant-form-item-label {
+                label {
+                    margin-top: 7px;
+                }
+            }
+        }
+        .ant-form-item.requiredFieldLabelMark {
+            .ant-form-item-label {
+                label:after {
+                    display: inline-block;
+                    margin-left: 4px;
+                    color: #f72717;
+                    font-size: 13px;
+                    font-family: SimSun, sans-serif;
+                    line-height: 1;
+                    content: '*';
+                    font-weight: bold;
+                }
+            }
+        }
+        .url-pdf-attach {
+            .ant-form-item-control-input-content {
+                .ant-tag {
+                    cursor: pointer;
+                    margin-bottom: 5px;
+                    .anticon {
+                        vertical-align: 1px;
+                    }
+                }
+            }
+        }
+
+        .header-mark {
+            margin-left: 168px;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 500;
+            padding-right: 20px;
+            padding-top: 7px;
+            .title-mark {
+                flex: 2;
+            }
+            .time-mark {
+                flex: 1;
+            }
+            .title-mark:after,
+            .time-mark:after {
+                display: inline-block;
+                margin-left: 4px;
+                color: #f72717;
+                font-size: 13px;
+                font-family: SimSun, sans-serif;
+                line-height: 1;
+                content: '*';
+                font-weight: bold;
+            }
+        }
+        .video-mark {
+            margin-left: 168px;
+            display: flex;
+            align-items: baseline;
+            gap: 15px;
+            justify-content: space-between;
+        }
     }
-    .back-btn {
-      background-color: gray;
-      border: none;
+    .general-information-add-form-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 20px;
+        .next-btn {
+            background-color: #699a00;
+            border: none;
+        }
+        .back-btn {
+            background-color: gray;
+            border: none;
+        }
     }
-  }
-  .ant-upload-list-item-card-actions-btn {
-    opacity: 100;
-  }
+    .ant-upload-list-item-card-actions-btn {
+        opacity: 100;
+    }
 }
 .intro-video-modal,
 .url-and-pdf-modal {
-  .intro-video-list {
-    .ant-list-item-meta {
-      align-items: center;
+    .intro-video-list {
+        .ant-list-item-meta {
+            align-items: center;
+        }
     }
-  }
-  .add-intro-video-collapse {
-    .ant-collapse-content {
-      padding: 20px;
+    .add-intro-video-collapse {
+        .ant-collapse-content {
+            padding: 20px;
+        }
     }
-  }
-  .ant-upload-list-item-card-actions-btn {
-    opacity: 100;
-    z-index: 100;
-    .anticon-delete {
-      color: red;
+    .ant-upload-list-item-card-actions-btn {
+        opacity: 100;
+        z-index: 100;
+        .anticon-delete {
+            color: red;
+        }
     }
-  }
 }

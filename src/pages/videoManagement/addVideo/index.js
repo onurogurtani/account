@@ -80,8 +80,7 @@ const AddVideo = () => {
     if (addVideo.fulfilled.match(action)) {
       successDialog({
         title: <Text t="success" />,
-        message: 'Video Başarılı Şekilde Eklendi',
-        // message: action?.payload.message,
+        message: action?.payload?.message,
         onOk: async () => {
           dispatch(onChangeActiveKey('0'));
           history.push('/video-management/list');
@@ -96,7 +95,6 @@ const AddVideo = () => {
   };
 
   const generalInformationValue = (value) => {
-    console.log(value);
     setGeneralInformationData(value);
   };
 
@@ -117,6 +115,7 @@ const AddVideo = () => {
           type="card"
           activeKey={activeKey}
           onTabClick={(newKey, e) => {
+            dispatch(onChangeActiveKey(newKey))
             const isTriggeredByClick = e;
             if (isTriggeredByClick) return;
           }}
@@ -128,7 +127,9 @@ const AddVideo = () => {
             <AddDocument sendValue={documentValue} />
           </TabPane>
           <TabPane tab="Konu İle İlgili Tüm Sorular" key="2">
-            <AddVideoQuestion sendValue={questionValue} />
+            <AddVideoQuestion
+              sendValue={questionValue}
+              selectedBrackets={generalInformationData?.videoBrackets} />
           </TabPane>
         </Tabs>
       </div>

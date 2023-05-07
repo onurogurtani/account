@@ -5,6 +5,7 @@ import { CustomButton } from '../../../components';
 import { DownloadOutlined } from '@ant-design/icons';
 import { downloadFile } from '../../../store/slice/fileSlice';
 import VideoWatchModal from '../../../components/videoPlayer/VideoWatchModal';
+import { sanitize } from 'dompurify';
 
 const ShowVideoGeneralInformation = () => {
   const dispatch = useDispatch();
@@ -15,10 +16,10 @@ const ShowVideoGeneralInformation = () => {
   };
   const marks = {};
 
-  currentVideo?.lessonSubSubjects.map((item) => {
+  currentVideo?.lessonBrackets.map((item) => {
     const bracket = item.bracketTime?.replace(':', '.') * 100;
     marks[bracket] = (
-      <Tooltip title={item.lessonSubSubject?.name}>
+      <Tooltip title={item.lessonBracket?.name}>
         <span className="ant-slider-dot"></span>
       </Tooltip>
     );
@@ -34,6 +35,9 @@ const ShowVideoGeneralInformation = () => {
           Video Kategorisi: <span>{currentVideo?.categoryOfVideo?.name}</span>
         </li>
         <li>
+          Eğitim Öğretim Yılı: <span>{currentVideo?.educationYear?.startYear} - {currentVideo?.educationYear?.endYear}</span>
+        </li>
+        <li>
           Sınıf Seviyesi: <span>{currentVideo?.classroom?.name}</span>
         </li>
         <li>
@@ -46,19 +50,31 @@ const ShowVideoGeneralInformation = () => {
           Konu: <span>{currentVideo?.lessonSubject?.name}</span>
         </li>
         <li>
-          Alt Başlık:{' '}
+          Kazanımlar:
           <span>
-            {currentVideo?.lessonSubSubjects?.map((item, id) => {
+            {currentVideo?.lessonAcquisitions?.map((item, id) => {
               return (
                 <Tag className="m-1" color="gold" key={id}>
-                  {item.lessonSubSubject.name}
+                  {item.lessonAcquisition.name}
+                </Tag>
+              );
+            })}
+          </span>
+        </li>
+        <li>
+          Ayraçlar:{' '}
+          <span>
+            {currentVideo?.lessonBrackets?.map((item, id) => {
+              return (
+                <Tag className="m-1" color="magenta" key={id}>
+                  {item?.bracketTime} {'=>'} {item?.lessonBracket?.name}
                 </Tag>
               );
             })}
           </span>
         </li>
         <li style={{ height: 'auto' }}>
-          Video Metni: <div className="content-text" dangerouslySetInnerHTML={{ __html: currentVideo?.text }}></div>
+          Video Metni: <div className="content-text" dangerouslySetInnerHTML={{ __html: sanitize(currentVideo?.text) }}></div>
         </li>
         <li>
           Video:{' '}
@@ -75,26 +91,15 @@ const ShowVideoGeneralInformation = () => {
             kalturaVideoId={currentVideo?.introVideo?.kalturaIntroVideoId}
           />
         </li>
-        <li>
-          Ayraçlar:{' '}
-          <span>
-            {currentVideo?.lessonSubSubjects?.map((item, id) => {
-              return (
-                <Tag className="m-1" color="magenta" key={id}>
-                  {item?.bracketTime} {'=>'} {item?.lessonSubSubject?.name}
-                </Tag>
-              );
-            })}
-          </span>
-        </li>
+
         <li>
           Anket:{' '}
           <span>
             {currentVideo?.afterEducationSurvey
               ? 'Eğitim Sonunda'
               : currentVideo?.beforeEducationSurvey
-              ? 'Eğitim Başında'
-              : 'Yok'}
+                ? 'Eğitim Başında'
+                : 'Yok'}
           </span>
         </li>
 
@@ -138,29 +143,29 @@ const ShowVideoGeneralInformation = () => {
           <span>
             {!!currentVideo?.videoAttachmentsResponse.length
               ? currentVideo?.videoAttachmentsResponse?.map((item, id) => {
-                  return (
-                    <Tag className="m-1" color="geekblue" key={id}>
-                      {item?.url ? (
-                        <>
-                          {item?.time + ' => '}
-                          <a href={item?.url} target="_blank" rel="noreferrer">
-                            {item?.url}
-                          </a>
-                        </>
-                      ) : (
-                        <>
-                          {item?.time + ' => ' + item?.file?.fileName}
-                          <CustomButton
-                            onClick={() => download(item?.file)}
-                            icon={<DownloadOutlined style={{ fontSize: '13px', height: '13' }} />}
-                            type="link"
-                            height="15"
-                          ></CustomButton>
-                        </>
-                      )}
-                    </Tag>
-                  );
-                })
+                return (
+                  <Tag className="m-1" color="geekblue" key={id}>
+                    {item?.url ? (
+                      <>
+                        {item?.time + ' => '}
+                        <a href={item?.url} target="_blank" rel="noreferrer">
+                          {item?.url}
+                        </a>
+                      </>
+                    ) : (
+                      <>
+                        {item?.time + ' => ' + item?.file?.fileName}
+                        <CustomButton
+                          onClick={() => download(item?.file)}
+                          icon={<DownloadOutlined style={{ fontSize: '13px', height: '13' }} />}
+                          type="link"
+                          height="15"
+                        ></CustomButton>
+                      </>
+                    )}
+                  </Tag>
+                );
+              })
               : 'Yok'}
           </span>
         </li>

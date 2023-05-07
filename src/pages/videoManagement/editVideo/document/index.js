@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { onChangeActiveKey } from '../../../../store/slice/videoSlice';
 import { reactQuillValidator } from '../../../../utils/formRule';
 import fileServices from '../../../../services/file.services';
+import { sanitize } from 'dompurify';
 
 const EditDocument = ({ sendValue }) => {
   const [open, setOpen] = useState(false);
@@ -177,7 +178,7 @@ const EditDocument = ({ sendValue }) => {
         onCancel={onCancelModal}
         okButtonProps={{ disabled: isDisable }}
         bodyStyle={{ overflowY: 'auto' }}
-        //   width={600}
+      //   width={600}
       >
         <CustomForm
           form={form}
@@ -281,7 +282,7 @@ const EditDocument = ({ sendValue }) => {
               <List.Item.Meta
                 avatar={<FileOutlined />}
                 title={item.fileName}
-                description={<div dangerouslySetInnerHTML={{ __html: item?.description }} />}
+                description={<div dangerouslySetInnerHTML={{ __html: sanitize(item?.description) }} />}
               />
             </List.Item>
           )}
