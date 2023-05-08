@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { sanitize } from 'dompurify';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomCollapseCard, Text } from '../../../../components';
@@ -52,7 +53,7 @@ const ShowAnnouncementCard = ({ showData }) => {
                     <Text t="İçerik" /> :
                     <div
                         className="announcement-content-text"
-                        dangerouslySetInnerHTML={{ __html: showData?.content }}
+                        dangerouslySetInnerHTML={{ __html: sanitize(showData?.content) }}
                     ></div>
                 </li>
                 <li>

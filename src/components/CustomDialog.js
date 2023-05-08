@@ -6,6 +6,7 @@ import modalSuccess from '../assets/icons/icon-modal-success.svg';
 import modalWarning from '../assets/icons/icon-modal-warning.svg';
 import '../styles/components/dialog.scss';
 import Text from './Text';
+import { sanitize } from 'dompurify';
 
 let customModal = Modal;
 
@@ -46,7 +47,7 @@ const Content = ({ message, htmlContent }) => {
   }
   return (
     <div className={'dialog-content'}>
-      <div className="message" dangerouslySetInnerHTML={{ __html: message }} />
+      <div className="message" dangerouslySetInnerHTML={{ __html: sanitize(message) }} />
     </div>
   );
 };

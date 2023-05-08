@@ -34,12 +34,17 @@ const EditGeneralInformation = ({ sendValue }) => {
       return;
     }
 
-    values.lessonSubSubjects = values.videoBrackets;
+    values.lessonAcquisitions = values.lessonAcquisitions.map((item) => ({
+      lessonAcquisitionId: item,
+    }));
+    values.lessonBrackets = values.videoBrackets.map((item) => ({
+      lessonBracketId: item?.lessonBracketId,
+      bracketTime: item?.bracketTime,
+    }));
     values.keyWords = values.keyWords.join();
     values.beforeEducationSurvey = values?.survey === 'before' ? true : false;
     values.afterEducationSurvey = values?.survey === 'after' ? true : false;
     delete values.survey;
-    console.log(values);
 
     if (introVideoFile) {
       values.introVideo = introVideoObj; //yeni intro video ekledi ise
@@ -75,10 +80,8 @@ const EditGeneralInformation = ({ sendValue }) => {
         });
       });
       values.videoAttachments = videoAttachments;
-      console.log('videoAttachments', videoAttachments);
     }
 
-    console.log('urlAndPdfAttach', urlAndPdfAttach);
     sendValue(values);
     dispatch(onChangeActiveKey('1'));
   };

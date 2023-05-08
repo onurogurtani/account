@@ -1,5 +1,6 @@
 import { DownloadOutlined, FileOutlined } from '@ant-design/icons';
 import { List } from 'antd';
+import { sanitize } from 'dompurify';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CustomButton } from '../../../components';
@@ -27,7 +28,7 @@ const ShowVideoDocument = () => {
               description={
                 <div
                   className="description"
-                  dangerouslySetInnerHTML={{ __html: item?.file?.description }}
+                  dangerouslySetInnerHTML={{ __html: sanitize(item?.file?.description) }}
                 />
               }
             />

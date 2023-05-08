@@ -1,10 +1,23 @@
-import { CheckCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, ClockCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { List } from 'antd';
+import { sanitize } from 'dompurify';
 import React from 'react';
 import { useSelector } from 'react-redux';
 
 const ShowVideoQuestion = () => {
   const { currentVideo } = useSelector((state) => state?.videos);
+
+  const renderList = (item) => {
+    return <>
+      <ClockCircleOutlined />
+      <div className='bracketTime'>{item?.lessonBracket?.bracketTime}</div>
+      <div className='bracketHeader'>{item?.lessonBracket?.code} - {item?.lessonBracket?.name} </div>
+      <QuestionCircleOutlined />
+      <div className='question' dangerouslySetInnerHTML={{ __html: sanitize(item?.text) }} />
+      <CheckCircleOutlined className='answerIcon' />
+      <div className="answer" dangerouslySetInnerHTML={{ __html: sanitize(item?.answer) }} />
+    </>
+  }
 
   return (
     <div className="question-list">
@@ -13,21 +26,7 @@ const ShowVideoQuestion = () => {
         dataSource={currentVideo?.videoQuestions}
         renderItem={(item, index) => (
           <List.Item>
-            <List.Item.Meta
-              avatar={<QuestionCircleOutlined />}
-              title={
-                <div className="question-text" dangerouslySetInnerHTML={{ __html: item?.text }} />
-              }
-              description={
-                <>
-                  <CheckCircleOutlined />
-                  <div
-                    className="question-answer"
-                    dangerouslySetInnerHTML={{ __html: item?.answer }}
-                  />
-                </>
-              }
-            />
+            {renderList(item)}
           </List.Item>
         )}
       />

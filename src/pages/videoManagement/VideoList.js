@@ -130,6 +130,16 @@ const VideoList = () => {
       },
     },
     {
+      title: 'EĞİTİM ÖĞRETİM YILI',
+      dataIndex: 'educationYear',
+      key: 'educationYear',
+      sorter: true,
+      sortOrder: sorterObject?.columnKey === 'educationYear' ? sorterObject?.order : null,
+      render: (text, record) => {
+        return <div>{text?.startYear} - {text?.endYear} </div>;
+      },
+    },
+    {
       title: 'SINIF SEVİYESİ',
       dataIndex: 'classroom',
       key: 'classroom',
@@ -170,17 +180,35 @@ const VideoList = () => {
       },
     },
     {
-      title: 'ALT BAŞLIK',
-      dataIndex: 'lessonSubSubjects',
-      key: 'lessonSubSubjects',
+      title: 'KAZANIM',
+      dataIndex: 'lessonAcquisitions',
+      key: 'lessonAcquisitions',
       sorter: true,
-      sortOrder: sorterObject?.columnKey === 'lessonSubSubjects' ? sorterObject?.order : null,
+      sortOrder: sorterObject?.columnKey === 'lessonAcquisitions' ? sorterObject?.order : null,
       render: (_, record) => (
         <>
-          {record.lessonSubSubjects?.map((item, id) => {
+          {record.lessonAcquisitions?.map((item, id) => {
             return (
               <Tag className="m-1" color="gold" key={id}>
-                {item.lessonSubSubject.name}
+                {item.lessonAcquisition.name}
+              </Tag>
+            );
+          })}
+        </>
+      ),
+    },
+    {
+      title: 'AYRAÇ',
+      dataIndex: 'lessonBrackets',
+      key: 'lessonBrackets',
+      sorter: true,
+      sortOrder: sorterObject?.columnKey === 'lessonBrackets' ? sorterObject?.order : null,
+      render: (_, record) => (
+        <>
+          {record.lessonBrackets?.map((item, id) => {
+            return (
+              <Tag className="m-1" color="gold" key={id}>
+                {item.lessonBracket.name}
               </Tag>
             );
           })}
@@ -192,10 +220,12 @@ const VideoList = () => {
   const sortFields = {
     kalturaVideoId: { ascend: 'KalturaVideoIdASC', descend: 'KalturaVideoIdDESC' },
     categoryOfVideo: { ascend: 'CategoryASC', descend: 'CategoryDESC' },
+    educationYear: { ascend: 'EducationYearASC', descend: 'EducationYearDESC' },
     lesson: { ascend: 'LessonASC', descend: 'LessonDESC' },
     lessonUnit: { ascend: 'LessonUnitASC', descend: 'LessonUnitDESC' },
     lessonSubject: { ascend: 'LessonSubjectASC', descend: 'LessonSubjectDESC' },
-    lessonSubSubjects: { ascend: 'LessonSubSubjectASC', descend: 'LessonSubSubjectDESC' },
+    lessonAcquisitions: { ascend: 'LessonAcquisitionASC', descend: 'LessonAcquisitionDESC' },
+    lessonBrackets: { ascend: 'LessonBracketASC', descend: 'LessonBracketDESC' },
     classroom: { ascend: 'ClassroomASC', descend: 'ClassroomDESC' },
   };
   return (

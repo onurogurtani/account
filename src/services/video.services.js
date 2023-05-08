@@ -32,10 +32,11 @@ const addVideoQuestionsExcel = (data) => {
     });
 };
 
-const downloadVideoQuestionsExcel = () => {
+const downloadVideoQuestionsExcel = (data) => {
     return api({
         url: `Education/Videos/downloadVideoQuestionExcel`,
-        method: 'GET',
+        method: 'POST',
+        data,
         responseType: 'blob',
     });
 };

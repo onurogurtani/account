@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { sanitize } from 'dompurify';
 import React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
@@ -74,7 +75,7 @@ const ShowContracts = () => {
                         <Text t="İçerik" /> :
                         <div
                             className="contract-content-text"
-                            dangerouslySetInnerHTML={{ __html: showData?.content }}
+                            dangerouslySetInnerHTML={{ __html: sanitize(showData?.content) }}
                         ></div>
                     </li>
                     <li>

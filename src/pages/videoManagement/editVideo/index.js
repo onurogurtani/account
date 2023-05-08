@@ -114,7 +114,6 @@ const EditVideo = () => {
     });
 
     const body = {
-      //TODO: entity de olabilir net değil
       video: {
         ...generalInformationData,
         videoFiles: documentData,
@@ -129,7 +128,7 @@ const EditVideo = () => {
     } else {
       errorDialog({
         title: <Text t="error" />,
-        message: action?.payload.message,
+        message: action?.payload?.message,
       });
     }
   };
@@ -167,7 +166,10 @@ const EditVideo = () => {
             <EditDocument sendValue={documentValue} />
           </TabPane>
           <TabPane tab="Konu İle İlgili Tüm Sorular" key="2">
-            <EditVideoQuestion sendValue={questionValue} />
+            <EditVideoQuestion
+              sendValue={questionValue}
+              selectedBrackets={generalInformationData?.videoBrackets}
+            />
           </TabPane>
         </Tabs>
       </div>

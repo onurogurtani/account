@@ -47,7 +47,7 @@
         padding: 20px;
         border: 1px solid gray;
         .ant-form-item-label {
-            width: 110px;
+            width: 200px;
         }
         .filter-button {
             display: flex;
@@ -64,11 +64,13 @@
     }
     .add-icon {
         font-size: 30px;
+
         cursor: pointer;
     }
     .question-image {
         width: 100%;
         height: 150px;
+        position: relative;
         object-fit: contain;
     }
     .footer-question {
@@ -78,6 +80,16 @@
     }
     .question-image-main {
         position: relative;
+        span {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            top: 0;
+            left: 0;
+        }
     }
     .pagination-right {
         display: flex;
@@ -171,4 +183,35 @@
     z-index: 1;
     font-size: 40px;
     color: red;
+}
+
+.section-select {
+    .ant-select {
+        width: 100%;
+    }
+}
+
+.pdf-view {
+    display: flex;
+    gap: 20px;
+    .pdf-file {
+        color: blue;
+        cursor: pointer;
+    }
+    .pdf-delete {
+        color: red;
+        cursor: pointer;
+    }
+}
+
+.modal-filter-button {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    gap: 10px;
+}
+.change-image-view {
+    width: 100%;
+    height: 250px;
+    border: 1px solid;
 }

@@ -18,6 +18,7 @@
     "bootstrap": "^5.1.2",
     "chart.js": "^3.6.0",
     "dayjs": "^1.10.7",
+    "dompurify": "^3.0.2",
     "file-saver": "^2.0.5",
     "html-to-image": "^1.11.11",
     "js-file-download": "^0.4.12",

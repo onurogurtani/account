@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { CustomFormItem, CustomInput, CustomMaskInput, CustomSelect, Option } from '../../../../components';
+import { Form } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { CustomFormItem, CustomInput, CustomMaskInput, CustomSelect, CustomTooltip, Option } from '../../../../components';
 import useAcquisitionTree from '../../../../hooks/useAcquisitionTree';
+import { clearClasses } from '../../../../store/slice/classStageSlice';
+import { getEducationYearList } from '../../../../store/slice/educationYearsSlice';
 import { videoTimeValidator } from '../../../../utils/formRule';
 
+
 const LessonsSectionForm = ({ form }) => {
+    const dispatch = useDispatch();
+
     const {
         allClassList,
+        setEducationYearId,
         classroomId,
         setClassroomId,
         lessonId,
@@ -15,49 +22,105 @@ const LessonsSectionForm = ({ form }) => {
         setUnitId,
         lessonSubjectId,
         setLessonSubjectId,
-    } = useAcquisitionTree(true);
+        setAcquisitionId
+    } = useAcquisitionTree(true, false, true);
 
     const { lessons } = useSelector((state) => state?.lessons);
-    const { lessonSubSubjects } = useSelector((state) => state?.lessonSubSubjects);
 
     const { lessonSubjects } = useSelector((state) => state?.lessonSubjects);
+    const { lessonAcquisitions } = useSelector((state) => state?.lessonAcquisitions);
+    const { lessonBrackets } = useSelector((state) => state?.lessonBrackets);
 
     const { lessonUnits } = useSelector((state) => state?.lessonUnits);
+    const { educationYearList } = useSelector((state) => state.educationYears);
 
     const [videoBrackets, setVideoBrackets] = useState([]);
+    const lessonAcquisitionIds = Form.useWatch('lessonAcquisitions', form) || [];
+    const lessonBracketIds = Form.useWatch('lessonBrackets', form) || [];
+
+    useEffect(() => {
+        dispatch(getEducationYearList());
+        dispatch(clearClasses());
+    }, []);
+
+    const onEducationYearChange = (value) => {
+        setEducationYearId(value)
+        form.resetFields(['classroomId', 'lessonId', 'lessonUnitId', 'lessonSubjectId', 'videoBrackets']);
+        form.setFieldsValue({
+            lessonBrackets: undefined,
+            lessonAcquisitions: undefined
+        })
+        setVideoBrackets([]);
+    };
+
     const onClassroomChange = (value) => {
         setClassroomId(value);
-        form.resetFields(['lessonId', 'lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects', 'videoBrackets']);
+        form.resetFields(['lessonId', 'lessonUnitId', 'lessonSubjectId', 'videoBrackets']);
+        form.setFieldsValue({
+            lessonBrackets: undefined,
+            lessonAcquisitions: undefined
+        })
         setVideoBrackets([]);
     };
 
     const onLessonChange = (value) => {
         setLessonId(value);
-        form.resetFields(['lessonUnitId', 'lessonSubjectId', 'lessonSubSubjects', 'videoBrackets']);
+        form.resetFields(['lessonUnitId', 'lessonSubjectId', 'videoBrackets']);
+        form.setFieldsValue({
+            lessonBrackets: undefined,
+            lessonAcquisitions: undefined
+        })
         setVideoBrackets([]);
     };
 
     const onUnitChange = (value) => {
         setUnitId(value);
-        form.resetFields(['lessonSubjectId', 'lessonSubSubjects', 'videoBrackets']);
+        form.resetFields(['lessonSubjectId', 'videoBrackets']);
+        form.setFieldsValue({
+            lessonBrackets: undefined,
+            lessonAcquisitions: undefined
+        })
         setVideoBrackets([]);
     };
 
     const onLessonSubjectsChange = (value) => {
         setLessonSubjectId(value);
-        form.resetFields(['lessonSubSubjects', 'videoBrackets']);
+        form.resetFields(['videoBrackets']);
+        form.setFieldsValue({
+            lessonBrackets: undefined,
+            lessonAcquisitions: undefined
+        })
         setVideoBrackets([]);
     };
 
-    const onLessonSubSubjectsSelect = (_, option) => {
+    const onAcquisitionChange = (value) => {
+        setAcquisitionId(value.at(-1));
+        let lessonSubSubjectIds
+        if (lessonBracketIds) {
+            lessonSubSubjectIds = lessonBrackets
+                .filter((item) => lessonBracketIds.includes(item.id))
+                .filter((item) => value.includes(item.lessonAcquisitionId)).map((i) => i.id)
+            onLessonAcquisitionsDeSelect(null, { value: lessonSubSubjectIds })
+            form.setFieldsValue({
+                lessonBrackets: lessonSubSubjectIds,
+            })
+        }
+    };
+
+    const onLessonAcquisitionsSelect = (_, option) => {
         setVideoBrackets((prev) => [
             ...prev,
-            { bracketTime: '', header: option.children, lessonSubSubjectId: option.value },
+            { bracketTime: '', header: option.children, lessonBracketId: option.value },
         ]);
     };
 
-    const onLessonSubSubjectsDeselect = (_, option) => {
-        const filteredVideoBrackets = videoBrackets.filter((item) => item.lessonSubSubjectId !== option.value);
+    const onLessonAcquisitionsDeSelect = (_, option) => {
+        let filteredVideoBrackets
+        if (!Array.isArray(option.value)) {
+            filteredVideoBrackets = videoBrackets.filter((item) => item.lessonBracketId !== option.value);
+        } else {
+            filteredVideoBrackets = videoBrackets.filter((item) => option.value.includes(item.lessonBracketId));
+        }
         setVideoBrackets(filteredVideoBrackets);
         form.resetFields(['videoBrackets']);
         form.setFields(
@@ -68,8 +131,14 @@ const LessonsSectionForm = ({ form }) => {
         );
         form.setFields(
             filteredVideoBrackets.map((item, index) => ({
-                name: ['videoBrackets', index, 'lessonSubSubjectId'],
-                value: item?.lessonSubSubjectId,
+                name: ['videoBrackets', index, 'lessonBracketId'],
+                value: item?.lessonBracketId,
+            })),
+        );
+        form.setFields(
+            filteredVideoBrackets.map((item, index) => ({
+                name: ['videoBrackets', index, 'header'],
+                value: item?.header,
             })),
         );
     };
@@ -82,6 +151,19 @@ const LessonsSectionForm = ({ form }) => {
 
     return (
         <>
+            <CustomFormItem rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]} label="Eğitim Öğretim Yılı" name="educationYearId">
+                <CustomSelect
+                    onChange={onEducationYearChange}
+                    placeholder="Eğitim Öğretim Yılı"
+                >
+                    {educationYearList?.items?.map(({ id, startYear, endYear }) => (
+                        <Option key={id} value={id}>
+                            {startYear} - {endYear}
+                        </Option>
+                    ))}
+                </CustomSelect>
+            </CustomFormItem>
+
             <CustomFormItem
                 rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
                 label="Sınıf Seviyesi"
@@ -89,7 +171,6 @@ const LessonsSectionForm = ({ form }) => {
             >
                 <CustomSelect onChange={onClassroomChange} placeholder="Sınıf Seviyesi">
                     {allClassList
-                        // ?.filter((item) => item.isActive)
                         ?.map((item) => {
                             return (
                                 <Option key={item?.id} value={item?.id}>
@@ -106,7 +187,6 @@ const LessonsSectionForm = ({ form }) => {
             >
                 <CustomSelect onChange={onLessonChange} placeholder="Ders">
                     {lessons
-                        // ?.filter((item) => item.isActive)
                         ?.filter((item) => item.classroomId === classroomId)
                         ?.map((item) => {
                             return (
@@ -151,20 +231,46 @@ const LessonsSectionForm = ({ form }) => {
                         })}
                 </CustomSelect>
             </CustomFormItem>
+
             <CustomFormItem
                 rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
-                label="Alt Başlık"
-                name="lessonSubSubjects"
+                label="Kazanım"
+                name="lessonAcquisitions"
             >
                 <CustomSelect
-                    onSelect={onLessonSubSubjectsSelect}
-                    onDeselect={onLessonSubSubjectsDeselect}
+                    onChange={onAcquisitionChange}
+                    placeholder="Kazanım"
                     showArrow
                     mode="multiple"
-                    placeholder="Alt Başlık"
                 >
-                    {lessonSubSubjects
+                    {lessonAcquisitions
                         ?.filter((item) => item.lessonSubjectId === lessonSubjectId)
+                        ?.map((item) => {
+                            return (
+                                <Option key={item?.id} value={item?.id}>
+                                    <CustomTooltip title={item?.name} placement="bottomRight">
+                                        {item?.name}
+                                    </CustomTooltip>
+                                </Option>
+                            );
+                        })}
+                </CustomSelect>
+            </CustomFormItem>
+
+            <CustomFormItem
+                rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
+                label="Ayraç"
+                name="lessonBrackets"
+            >
+                <CustomSelect
+                    onSelect={onLessonAcquisitionsSelect}
+                    onDeselect={onLessonAcquisitionsDeSelect}
+                    showArrow
+                    mode="multiple"
+                    placeholder="Ayraç"
+                >
+                    {lessonBrackets
+                        ?.filter((item) => lessonAcquisitionIds.includes(item.lessonAcquisitionId))
                         ?.map((item) => {
                             return (
                                 <Option key={item?.id} value={item?.id}>
@@ -176,14 +282,14 @@ const LessonsSectionForm = ({ form }) => {
             </CustomFormItem>
 
             {videoBrackets.length > 0 && (
-                <CustomFormItem className="requiredFieldLabelMark" label="Ayraç">
+                <CustomFormItem noStyle>
                     <div className="header-mark">
                         <div className="title-mark">Başlık</div>
                         <div className="time-mark">Dakika</div>
                     </div>
-                    {videoBrackets.map((i, index) => (
+                    {videoBrackets?.map((i, index) => (
                         <div key={index} className="video-mark">
-                            <CustomFormItem name={['videoBrackets', index, 'header']} style={{ flex: 2 }}>
+                            <CustomFormItem initialValue={i.header} name={['videoBrackets', index, 'header']} style={{ flex: 2 }}>
                                 <CustomInput disabled placeholder={i.header} />
                             </CustomFormItem>
 
@@ -202,9 +308,9 @@ const LessonsSectionForm = ({ form }) => {
                             </CustomFormItem>
 
                             <CustomFormItem
-                                name={['videoBrackets', index, 'lessonSubSubjectId']}
+                                name={['videoBrackets', index, 'lessonBracketId']}
                                 style={{ display: 'none' }}
-                                initialValue={i.lessonSubSubjectId}
+                                initialValue={i.lessonBracketId}
                             >
                                 <CustomInput disabled />
                             </CustomFormItem>

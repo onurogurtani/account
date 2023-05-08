@@ -66,4 +66,4 @@ export const classStageSlice = createSlice({
     });
   },
 });
-export const clearClasses = classStageSlice.actions;
+export const { clearClasses } = classStageSlice.actions;

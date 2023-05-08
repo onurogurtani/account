@@ -1,11 +1,13 @@
 import {
   CheckCircleOutlined,
+  ClockCircleOutlined,
   FileExcelOutlined,
   InboxOutlined,
   PlusOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons';
 import { Form, List, Upload } from 'antd';
+import { sanitize } from 'dompurify';
 import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import { useDispatch } from 'react-redux';
@@ -14,6 +16,7 @@ import {
   CustomForm,
   CustomFormItem,
   CustomModal,
+  CustomSelect,
   errorDialog,
   successDialog,
   Text,
@@ -26,7 +29,7 @@ import {
 import '../../../../styles/videoManagament/questionVideo.scss';
 import { reactQuillValidator } from '../../../../utils/formRule';
 
-const AddVideoQuestion = ({ sendValue }) => {
+const AddVideoQuestion = ({ sendValue, selectedBrackets }) => {
   const [open, setOpen] = useState(false);
   const [questionList, setQuestionList] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState();
@@ -37,7 +40,6 @@ const AddVideoQuestion = ({ sendValue }) => {
 
   useEffect(() => {
     if (open) {
-      console.log('selectedQuestion', selectedQuestion);
       if (selectedQuestion) {
         form.setFieldsValue(selectedQuestion);
         setIsEdit(true);
@@ -53,24 +55,32 @@ const AddVideoQuestion = ({ sendValue }) => {
     setOpen(true);
   };
 
+  useEffect(() => {
+    const selectedBracketIds = selectedBrackets?.map((item) => item?.lessonBracketId)
+    const questionListFilter = questionList?.filter((item) => selectedBracketIds?.includes(item?.lessonBracketId))
+    setQuestionList(questionListFilter)
+  }, [selectedBrackets])
+
   const onOkModal = () => {
     form.submit();
   };
+
   const onFinish = async (values) => {
-    console.log(values);
     if (isExcel) {
-      console.log(values);
       const fileData = values?.excelFile[0]?.originFileObj;
       const data = new FormData();
       data.append('FormFile', fileData);
+      selectedBrackets?.map((i) => data.append('LessonBracketIds', i?.lessonBracketId))
       const action = await dispatch(addVideoQuestionsExcel(data));
       if (addVideoQuestionsExcel.fulfilled.match(action)) {
-        const excelQuestions = action?.payload?.data.map((item) => ({
-          answer: item.answer,
-          text: item.text,
-        }));
-        console.log(excelQuestions);
-        setQuestionList((state) => [...state, ...excelQuestions]);
+        if (action?.payload?.data?.length) {
+          const excelQuestions = action?.payload?.data?.map((item) => ({
+            answer: item?.answer,
+            text: item?.text,
+            lessonBracketId: item?.lessonBracketId,
+          }));
+          setQuestionList((state) => [...state, ...excelQuestions]);
+        }
         successDialog({
           title: <Text t="success" />,
           message: action?.payload?.message,
@@ -87,35 +97,21 @@ const AddVideoQuestion = ({ sendValue }) => {
     if (isEdit) {
       questionList[selectedQuestion.index] = values;
       setQuestionList(questionList);
-      // alternative
-      //   setQuestionList((list) =>
-      //     list.map((item, i) =>
-      //       item.key === selectedQuestion.key
-      //         ? {
-      //             ...item,
-      //             ...values,
-      //           }
-      //         : item,
-      //     ),
-      //   );
       setIsEdit(false);
       setSelectedQuestion();
     } else {
       setQuestionList((state) => [...state, values]);
-      console.log(questionList);
     }
     setOpen(false);
   };
+
   const handleEdit = (item, index) => {
     isExcel && setIsExcel(false);
     setSelectedQuestion({ ...item, index });
     setOpen(true);
   };
 
-  // const handleDelete = (item) => {
-  //   console.log(item);
-  //   setQuestionList(questionList.filter((data) => data.key !== item.key));
-  // };
+
   const handleDelete = (item, index) => {
     setQuestionList([...questionList.slice(0, index), ...questionList.slice(index + 1)]);
   };
@@ -126,7 +122,6 @@ const AddVideoQuestion = ({ sendValue }) => {
   };
 
   const normFile = (e) => {
-    console.log('Upload event:', e);
     if (Array.isArray(e)) {
       return e;
     }
@@ -172,17 +167,12 @@ const AddVideoQuestion = ({ sendValue }) => {
   };
 
   const ondownloadExcel = async () => {
-    const action = await dispatch(downloadVideoQuestionsExcel());
-    if (downloadVideoQuestionsExcel.fulfilled.match(action)) {
-      const url = URL.createObjectURL(new Blob([action.payload]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `Soru Ekle Dosya Deseni ${Date.now()}.xlsx`);
-      document.body.appendChild(link);
-      link.click();
-      console.log(action);
+    const body = {
+      lessonBracketIds: selectedBrackets?.map((i) => i?.lessonBracketId)
     }
+    await dispatch(downloadVideoQuestionsExcel(body));
   };
+
   const uploadExcel = () => {
     setIsExcel(true);
     setOpen(true);
@@ -193,6 +183,7 @@ const AddVideoQuestion = ({ sendValue }) => {
       const questionValue = questionList?.map((item) => ({
         text: item.text,
         answer: item.answer,
+        lessonBracketId: item.lessonBracketId,
       }));
       sendValue(questionValue);
       return;
@@ -202,13 +193,35 @@ const AddVideoQuestion = ({ sendValue }) => {
       message: 'Lütfen en az 1 adet soru ekleyiniz.',
     });
   };
+
+  const renderListAction = (item, index) => {
+    return <>
+      <CustomButton type="text" className="question-edit" onClick={() => handleEdit(item, index)}>
+        Düzenle
+      </CustomButton>
+      <CustomButton type="text" className="question-delete" onClick={() => handleDelete(item, index)}>
+        Sil
+      </CustomButton>
+    </>
+  }
+
+  const renderList = (item) => {
+    return <>
+      <ClockCircleOutlined />
+      <div className='bracketTime'>{selectedBrackets.find((i) => i?.lessonBracketId === item?.lessonBracketId)?.bracketTime}</div>
+      <div className='bracketHeader'>{selectedBrackets.find((i) => i?.lessonBracketId === item?.lessonBracketId)?.header} </div>
+      <QuestionCircleOutlined />
+      <div className='question' dangerouslySetInnerHTML={{ __html: sanitize(item?.text) }} />
+      <CheckCircleOutlined className='answerIcon' />
+      <div className="answer" dangerouslySetInnerHTML={{ __html: sanitize(item?.answer) }} />
+    </>
+  }
   return (
     <div className="question-video">
       <CustomButton icon={<FileExcelOutlined />} className="upload-btn" onClick={uploadExcel}>
         Excel ile Ekle
       </CustomButton>
       <CustomButton
-        // style={{ marginRight: 'auto' }}
         type="primary"
         className="add-btn"
         icon={<PlusOutlined />}
@@ -225,7 +238,6 @@ const AddVideoQuestion = ({ sendValue }) => {
         cancelText="Vazgeç"
         onCancel={onCancelModal}
         bodyStyle={{ overflowY: 'auto' }}
-        //   width={600}
       >
         <CustomForm form={form} layout="vertical" name="form" onFinish={onFinish}>
           {isExcel ? (
@@ -265,6 +277,17 @@ const AddVideoQuestion = ({ sendValue }) => {
             </CustomFormItem>
           ) : (
             <>
+              <CustomFormItem
+                rules={[{ required: true, message: 'Lütfen Zorunlu Alanları Doldurunuz.' }]}
+                label="Başlık"
+                name="lessonBracketId"
+              >
+                <CustomSelect
+                  fieldNames={{ label: 'header', value: 'lessonBracketId' }}
+                  options={selectedBrackets}
+                  placeholder="Başlık" />
+              </CustomFormItem>
+
               <CustomFormItem
                 rules={[
                   {
@@ -316,31 +339,8 @@ const AddVideoQuestion = ({ sendValue }) => {
           header={<h5>Soru Listesi</h5>}
           dataSource={questionList}
           renderItem={(item, index) => (
-            <List.Item
-              actions={[
-                <>
-                  <a className="question-edit" onClick={() => handleEdit(item, index)}>
-                    Düzenle
-                  </a>{' '}
-                  <a className="question-delete" onClick={() => handleDelete(item, index)}>
-                    Sil
-                  </a>
-                </>,
-              ]}
-            >
-              <List.Item.Meta
-                avatar={<QuestionCircleOutlined />}
-                title={<div dangerouslySetInnerHTML={{ __html: item?.text }} />}
-                description={
-                  <>
-                    <CheckCircleOutlined />
-                    <div
-                      className="question-answer"
-                      dangerouslySetInnerHTML={{ __html: item?.answer }}
-                    />
-                  </>
-                }
-              />
+            <List.Item actions={[renderListAction(item, index)]}>
+              {renderList(item)}
             </List.Item>
           )}
         />
