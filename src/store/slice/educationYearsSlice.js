@@ -11,6 +11,19 @@ export const getEducationYearList = createAsyncThunk(
     }
   },
 );
+
+export const getActiveEducationYear = createAsyncThunk(
+  'getActiveEducationYear',
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await educationYearsServices.getActiveEducationYear();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error?.data);
+    }
+  },
+);
+
 export const getEducationYearAdd = createAsyncThunk(
   'getEducationYearAdd',
   async (data, { dispatch, rejectWithValue }) => {
@@ -69,6 +82,9 @@ export const educationYearsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getEducationYearList.fulfilled, (state, action) => {
+      state.educationYearList = action.payload.data;
+    });
+    builder.addCase(getActiveEducationYear.fulfilled, (state, action) => {
       state.educationYearList = action.payload.data;
     });
     builder.addCase(getEducationYearAdd.fulfilled, (state, action) => {

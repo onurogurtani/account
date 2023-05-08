@@ -32,11 +32,20 @@ const getEducationYearDelete = (data) => {
     });
 };
 
+const getActiveEducationYear = (data = null) => {
+    return api({
+        url: `Education/EducationYears/getActiveEducationYear`,
+        method: 'POST',
+        data,
+    });
+};
+
 const EducationYearsServices = {
     getEducationYearList,
     getEducationYearAdd,
     getEducationYearUpdate,
     getEducationYearDelete,
+    getActiveEducationYear
 };
 
 export default EducationYearsServices;
