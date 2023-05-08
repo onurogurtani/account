@@ -106,17 +106,8 @@ namespace TurkcellDigitalSchool.Account.Business
             };
             var capConfig = Configuration.GetSection("CapConfig").Get<CapConfig>();
             services.AddCap(options =>
-            {
-                var pcName = Environment.MachineName;
-                if (pcName == "DESKTOP-7D0D7UB")
-                {
-                    options.UsePostgreSql(Configuration.GetConnectionString("DArchPostgreLocalContext"));
-                }
-                else
-                {
-                    options.UsePostgreSql(Configuration.GetConnectionString("DArchPostgreContext"));
-                }
-              
+            { 
+                options.UsePostgreSql(Configuration.GetConnectionString("DArchPostgreContext"));
                 options.UseRabbitMQ(rabbitMqOptions =>
                 {
                     rabbitMqOptions.ConnectionFactoryOptions = connectionFactory =>

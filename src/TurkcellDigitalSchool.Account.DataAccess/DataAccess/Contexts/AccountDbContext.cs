@@ -4,12 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
+using TurkcellDigitalSchool.Core.DataAccess;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
 {
-    public  class AccountDbContext : ProjectDbContext
+    public  class AccountDbContext : ProjectDbContext , IMsContext
     {
         public AccountDbContext(ITokenHelper tokenHelper, IConfiguration configuration, ICapPublisher capPublisher) : base(tokenHelper,
             configuration, capPublisher)

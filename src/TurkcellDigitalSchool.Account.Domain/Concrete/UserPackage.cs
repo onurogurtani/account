@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Text.Json.Serialization;
+using TurkcellDigitalSchool.Core.DataAccess;
 using TurkcellDigitalSchool.Core.Entities;
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
-    public class UserPackage : EntityDefault
+    public class UserPackage : EntityDefault,IPublishEntity
     {
         public long UserId { get; set; }
         [JsonIgnore]
