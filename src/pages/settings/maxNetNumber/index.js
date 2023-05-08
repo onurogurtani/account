@@ -22,12 +22,11 @@ import { getAllClassStages } from '../../../store/slice/classStageSlice';
 import { ArrowRightOutlined, SearchOutlined } from '@ant-design/icons';
 import { getLessonsQuesiton, setLessons } from '../../../store/slice/lessonsSlice';
 import { getMaxNetCounts, getMaxNetCountsAdd, getMaxNetCountsUpdate } from '../../../store/slice/maxNetNumberSlice';
-import { getByFilterPagedMaxNetCounts, getExamType } from '../../../store/slice/examTypeSlice';
+import { getByFilterPagedMaxNetCounts, getExamType, getExamTypeQuesiton } from '../../../store/slice/examTypeSlice';
 const MaxNetNumber = () => {
     
     const { educationYearList } = useSelector((state) => state.educationYears);
     const { allClassList } = useSelector((state) => state.classStages);
-    const { allExamTypes } = useSelector((state) => state.examTypesSlice);
     
     const ExamKind = [
         {id:1, name:"LGS"},
@@ -38,8 +37,11 @@ const MaxNetNumber = () => {
      
      ]
 
-    const { lessons } = useSelector((state) => state.lessons);
-    const [step, setStep] = useState(1);
+     const { lessons } = useSelector((state) => state.lessons);
+    const { examTypeQuestions } = useSelector((state) => state.examTypesSlice);
+
+    console.log(examTypeQuestions);
+     const [step, setStep] = useState(1);
 
     const [searchShow, setSearchShow] = useState(false);
     const [updateData, setUpdateData] = useState({});
@@ -180,14 +182,16 @@ const MaxNetNumber = () => {
     const sumbitAddUpdate = useCallback(async () => {
         const newData = {
             educationYearId: formAdd.getFieldValue('educationYearId'),
-            classroomId: formAdd.getFieldValue('classroomId'),
-            examKinds: formAdd.getFieldValue('examKinds'),
+            //classroomId: formAdd.getFieldValue('classroomId'),
+            examKind: formAdd.getFieldValue('examKind'),
             isActive: true,
 
         };
+
+        console.log(newData);
         const maxNetCountLessons = [];
         Object.keys(formNumberValue).forEach((item, index) => {
-            maxNetCountLessons.push({ lessonId: parseInt(item), maxNetCountValue: formNumberValue[`${item}`] });
+            maxNetCountLessons.push({ sectionDescriptionChapterId: parseInt(item), maxNetCountValue: formNumberValue[`${item}`] });
         });
         newData.maxNetCountLessons = maxNetCountLessons;
         if (updateData.id) {
@@ -255,26 +259,32 @@ const MaxNetNumber = () => {
     };
 
     useEffect(() => {
+       
         if (updateData.id) {
             formAdd.setFieldsValue({
                 ...formAdd.getFieldValue(),
-                classroomId: updateData.classroomId,
+                //classroomId: updateData.classroomId,
                 educationYearId: updateData.educationYearId,
-                examKinds: updateData.examKinds,
+                examKind: updateData.examKind,
                 isActive: updateData.isActive,
             });
             if (updateData.maxNetCountLessons) {
+                console.log(updateData);
                 const newData = {};
                 updateData.maxNetCountLessons.forEach((item, index) => {
-                    newData[`${parseInt(item.lessonId)}`] = parseInt(item.maxNetCountValue);
+                    console.log(item);
+                    newData[`${parseInt(item.sectionDescriptionChapterId)}`] = parseInt(item.maxNetCountValue);
                 });
+                console.log(newData);
+                console.log(formAdd.getFieldValue());
                 setFormNumberValue(newData);
                 formAdd.setFieldsValue({
                     ...formAdd.getFieldValue(),
                     ...newData,
                 });
+                console.log(formAdd.getFieldValue())
             }
-            dispatch(getLessonsQuesiton([{ field: 'classroomId', value: updateData.classroomId, compareType: 0 }]));
+            //dispatch(getLessonsQuesiton([{ field: 'classroomId', value: updateData.classroomId, compareType: 0 }]));
         }
     }, [dispatch, formAdd, updateData]);
 
@@ -299,6 +309,7 @@ const MaxNetNumber = () => {
                     ...newData,
                 });
             }
+            console.log(formAdd.getFieldValue());
         },
         [formAdd, formNumberValue],
     );
@@ -309,6 +320,7 @@ const MaxNetNumber = () => {
             newData[`${parseInt(item.id)}`] = '';
         });
         setFormNumberValue(newData);
+        console.log(newData);
     }, []);
   
 
@@ -365,7 +377,7 @@ const MaxNetNumber = () => {
                                             </CustomSelect>
                                         </CustomFormItem>
 
-                                        <CustomFormItem name="examKinds" label="Sınav Türü">
+                                        <CustomFormItem name="examKind" label="Sınav Türü">
                                             <CustomSelect mode="multiple">
                                             {ExamKind?.map((item, index) => (
                                                <Option value={item.id} key={index}>
@@ -458,7 +470,7 @@ const MaxNetNumber = () => {
                                         ))}
                                     </CustomSelect>
                                 </CustomFormItem>
-                                <CustomFormItem name={'classroomId'} required label="Sınıf Seviyesi">
+                                {/* <CustomFormItem name={'classroomId'} required label="Sınıf Seviyesi">
                                     <CustomSelect
                                         onChange={async (e) => {
                                             const action = await dispatch(
@@ -478,19 +490,19 @@ const MaxNetNumber = () => {
                                         ))}
                                     </CustomSelect>
                                 </CustomFormItem>
+ */}
 
 
-
-                                <CustomFormItem name={'examTypeId'} required label="Sınav Türü">
+                                <CustomFormItem name={'examKind'} required label="Sınav Türü">
                                     <CustomSelect
                                         onChange={async (e) => {
+                                           
                                             const action = await dispatch(
-                                                getExamType([
-                                                    { field: 'examTypeId', value: e, compareType: 0 },
-                                                ]),
+                                                getExamTypeQuesiton(e),
                                             );
-                                            if (getLessonsQuesiton.fulfilled.match(action)) {
-                                                inputCreate(action.payload.data.items);
+                                            if (getExamTypeQuesiton.fulfilled.match(action)) {
+                                                inputCreate(action.payload.data.sectionDescriptionChapters );
+                                                   
                                             }
                                         }}
                                         
@@ -515,7 +527,7 @@ const MaxNetNumber = () => {
                                 )}
 
                                 <div>
-                                    {lessons.map((item, index) => (
+                                    {/* {lessons.map((item, index) => (
                                         <div key={index} className=" add-lessons-item">
                                             <div className=" lesson-name">{item.name}</div>
                                             <CustomFormItem name={item.id} required label="Max Net Sayısı">
@@ -526,7 +538,24 @@ const MaxNetNumber = () => {
                                                 />
                                             </CustomFormItem>
                                         </div>
-                                    ))}
+                                    ))} */}
+
+                                     {examTypeQuestions.map((item, index) => (
+                                        <div key={index} className=" add-lessons-item">
+                                            <div className=" lesson-name">{item.name}</div>
+                                            <CustomFormItem name={item.id} required label="Max Net Sayısı">
+                                                <CustomInput
+                                                    onChange={(e) => {
+                                                        number(e, item);
+                                                    }}
+                                                />
+                                            </CustomFormItem>
+                                        </div>
+                                    ))} 
+
+
+
+
                                 </div>
                             </CustomForm>
                             <div className=" bottom-add">

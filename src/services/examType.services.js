@@ -10,10 +10,10 @@ const getExamType = (data= null) => {
     });
   };
 
-const getExamTypeId = (examKindId) => {
+const getbyExamKind = (examKindId) => {
     
     return api({
-        url: `/gateway/Exam/SectionDescriptions/getByExamKind?ExamKind=${examKindId}`,
+        url: `Exam/SectionDescriptions/getByExamKind?ExamKind=${examKindId}`,
         method: 'GET',
         
      
@@ -35,7 +35,7 @@ const getByFilterPagedMaxNetCounts = (data) => {
 const examTypeServices = {
    
     getExamType,
-    getExamTypeId,
+    getbyExamKind,
     getByFilterPagedMaxNetCounts
 };
 

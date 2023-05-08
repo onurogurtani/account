@@ -21,10 +21,20 @@ const getMaxNetCountsUpdate = (data = null) => {
         data,
     });
 };
+
+const getMaxNetById = (data = null) => {
+    return api({
+        url: 'Education/MaxNetCounts/getbyid?Id='+data,
+        method: 'GET',
+        data,
+    });
+};
+
 const maxNetNumberServices = {
     getMaxNetCounts,
     getMaxNetCountsAdd,
     getMaxNetCountsUpdate,
+    getMaxNetById
 };
 
 export default maxNetNumberServices;

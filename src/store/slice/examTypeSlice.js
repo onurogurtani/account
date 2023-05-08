@@ -24,9 +24,22 @@ export const getByFilterPagedMaxNetCounts = createAsyncThunk(
     },
 );
 
+export const getExamTypeQuesiton = createAsyncThunk(
+    'getExamTypeQuesiton',
+    async (body, { dispatch, getState, rejectWithValue }) => {
+        console.log(body);
+        try {
+            return await examTypeServices.getbyExamKind(body);
+        } catch (error) {
+            return rejectWithValue(error?.data);
+        }
+    },
+);
+
 const initialState = {
     allExamTypes: [],
     filterExamType:[],
+    examTypeQuestions:[]
 
 };
 
@@ -42,6 +55,9 @@ export const examTypesSlice = createSlice({
 
         builder.addCase(getByFilterPagedMaxNetCounts.fulfilled, (state, action) => {
             state.filterExamType = action?.payload?.data;
+        });
+        builder.addCase(getExamTypeQuesiton.fulfilled, (state, action) => {
+            state.examTypeQuestions = action?.payload?.data?.sectionDescriptionChapters;
         });
     },
    
