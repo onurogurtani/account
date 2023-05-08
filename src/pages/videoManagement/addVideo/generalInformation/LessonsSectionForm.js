@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CustomFormItem, CustomInput, CustomMaskInput, CustomSelect, CustomTooltip, Option } from '../../../../components';
 import useAcquisitionTree from '../../../../hooks/useAcquisitionTree';
 import { clearClasses } from '../../../../store/slice/classStageSlice';
-import { getEducationYearList } from '../../../../store/slice/educationYearsSlice';
+import { getActiveEducationYear } from '../../../../store/slice/educationYearsSlice';
 import { videoTimeValidator } from '../../../../utils/formRule';
 
 
@@ -39,7 +39,7 @@ const LessonsSectionForm = ({ form }) => {
     const lessonBracketIds = Form.useWatch('lessonBrackets', form) || [];
 
     useEffect(() => {
-        dispatch(getEducationYearList());
+        dispatch(getActiveEducationYear());
         dispatch(clearClasses());
     }, []);
 
