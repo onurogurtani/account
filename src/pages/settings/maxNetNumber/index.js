@@ -102,16 +102,16 @@ const MaxNetNumber = () => {
                 );
             },
         },
-        {
-            title: 'Sınıf Seviyesi',
-            dataIndex: 'classroom',
-            key: 'classroom',
-            sorter: true,
+        // {
+        //     title: 'Sınıf Seviyesi',
+        //     dataIndex: 'classroom',
+        //     key: 'classroom',
+        //     sorter: true,
 
-            render: (text, record) => {
-                return <div>{text?.name}</div>;
-            },
-        },
+        //     render: (text, record) => {
+        //         return <div>{text?.name}</div>;
+        //     },
+        // },
         
         
         {
@@ -158,6 +158,7 @@ const MaxNetNumber = () => {
 
 
     const sumbit = () => {
+       
         if (updateData.id) {
             confirmDialog({
                 title: 'Uyarı',
@@ -325,11 +326,6 @@ const MaxNetNumber = () => {
   
 
 
-
-
-
-
-   console.log(getByFilterPagedMaxNetCounts);
     
     return (
         <CustomPageHeader>
@@ -367,7 +363,7 @@ const MaxNetNumber = () => {
                                                 ))}
                                             </CustomSelect>
                                         </CustomFormItem>
-                                        <CustomFormItem name="classroomIds" label="Sınıf Seviyesi">
+                                        {/* <CustomFormItem name="classroomIds" label="Sınıf Seviyesi">
                                             <CustomSelect mode="multiple">
                                                 {allClassList?.map((item, index) => (
                                                     <Option value={item.id} key={item.index}>
@@ -375,7 +371,7 @@ const MaxNetNumber = () => {
                                                     </Option>
                                                 ))}
                                             </CustomSelect>
-                                        </CustomFormItem>
+                                        </CustomFormItem> */}
 
                                         <CustomFormItem name="examKind" label="Sınav Türü">
                                             <CustomSelect mode="multiple">
