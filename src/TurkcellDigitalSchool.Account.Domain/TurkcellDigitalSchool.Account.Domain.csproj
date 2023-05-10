@@ -6,7 +6,9 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <PackageReference Include="Microsoft.ApplicationInsights" />
-	  <PackageReference Include="TurkcellDigitalSchool.DbAccess" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\..\TurkcellDigitalSchool.General\src\TurkcellDigitalSchool.DbAccess\TurkcellDigitalSchool.DbAccess.csproj" />
 	</ItemGroup>
 
 </Project>

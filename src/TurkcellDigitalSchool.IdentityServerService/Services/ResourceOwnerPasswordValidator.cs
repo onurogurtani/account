@@ -10,6 +10,7 @@ using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
+using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Services.Session;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
 using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
@@ -33,13 +34,13 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
         private readonly IConfiguration _configuration;
         private readonly ILoginFailForgetPassSendLinkRepository _loginFailForgetPassSendLinkRepository;
         private readonly IAppSettingRepository _appSettingRepository;
-        private readonly RedisService _redisService;
+        private readonly SessionRedisSvc _sessionRedisSvc;
         private readonly string _environment;
 
         public ResourceOwnerPasswordValidator(ICustomUserSvc customUserSvc, IHttpContextAccessor httpContextAccessor,
             IUserSessionRepository userSessionRepository, IMobileLoginRepository mobileLoginRepository, ISmsOtpRepository smsOtpRepository,
             ILoginFailCounterRepository loginFailCounterRepository, ICaptchaManager captchaManager, IMailService mailService,
-            IConfiguration configuration, ILoginFailForgetPassSendLinkRepository loginFailForgetPassSendLinkRepository, IAppSettingRepository appSettingRepository, RedisService redisService)
+            IConfiguration configuration, ILoginFailForgetPassSendLinkRepository loginFailForgetPassSendLinkRepository, IAppSettingRepository appSettingRepository, SessionRedisSvc sessionRedisSvc)
         {
             _customUserSvc = customUserSvc;
             _httpContextAccessor = httpContextAccessor;
@@ -53,7 +54,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             _loginFailForgetPassSendLinkRepository = loginFailForgetPassSendLinkRepository;
             _environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             _appSettingRepository = appSettingRepository;
-            _redisService = redisService;
+            _sessionRedisSvc = sessionRedisSvc ;
         }
 
         private const string CapthcaShowRequestText = "IsCapthcaShow";
@@ -230,7 +231,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             var hasPackage = (await _customUserSvc.UserHasPackage(user.Id)).ToString();
 
 
-            var sessionInfo = await _redisService.GetAsync<UserSessionInfo>(CachingConstants.UserSession, user.Id.ToString());
+
+            var sessionInfo = await  _sessionRedisSvc.GetAsync<UserSessionInfo>(user.Id.ToString());
             if (sessionInfo == null)
             {
                 sessionInfo = new UserSessionInfo();
@@ -245,7 +247,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 sessionInfo.SessionIdWeb = addedSession.Id;
             }
 
-            await _redisService.SetAsync(CachingConstants.UserSession, user.Id.ToString(), sessionInfo);
+            await _sessionRedisSvc.SetAsync(user.Id.ToString(), sessionInfo);
 
             context.Result = new GrantValidationResult(user.Id.ToString(), OidcConstants.AuthenticationMethods.Password,
             new List<Claim>

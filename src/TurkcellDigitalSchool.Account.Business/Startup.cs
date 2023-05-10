@@ -1,5 +1,4 @@
 using System;
-using System.Configuration;
 using System.Reflection;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -9,8 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Hosting; 
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.LdapLoginService;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.TurkcellFastLoginService;
@@ -25,6 +23,8 @@ using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Microsoft;
 using TurkcellDigitalSchool.Core.DependencyResolvers;
 using TurkcellDigitalSchool.Core.Extensions;
+using TurkcellDigitalSchool.Core.Redis;
+using TurkcellDigitalSchool.Core.Redis.Contract;
 using TurkcellDigitalSchool.Core.Services.CustomMessgeHelperService;
 using TurkcellDigitalSchool.Core.Services.KpsService;
 using TurkcellDigitalSchool.Core.Utilities.ElasticSearch;
@@ -33,7 +33,7 @@ using TurkcellDigitalSchool.Core.Utilities.MessageBrokers.RabbitMq;
 using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.Integration.Helper;
-using TurkcellDigitalSchool.Integration.Type;
+using TurkcellDigitalSchool.Integration.Type; 
 
 namespace TurkcellDigitalSchool.Account.Business
 {
@@ -85,6 +85,11 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddMediatR(typeof(BusinessStartup).GetTypeInfo().Assembly);
+
+
+            services.Configure<RedisConfig>(Configuration.GetSection("RedisConfig")); 
+            services.AddSingleton<IRedisConnectionFactory, RedisConnectionFactory>(); 
+            services.AddSingleton<SessionRedisSvc>();
 
             services.AddTransient<ICustomMessgeHelperService, CustomMessgeHelperService>();
             services.AddSubServices();

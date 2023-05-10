@@ -1,25 +1,20 @@
-using AutoMapper;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
-using TurkcellDigitalSchool.Core.Utilities.Results;
 
-namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers.Commands
+namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
 {
     public class CreateAdminRoleCommand : IRequest<long>
-    {
-
-
+    { 
         [MessageClassAttr("Rol Ekleme")]
         public class CreateAdminRoleCommandHandler : IRequestHandler<CreateAdminRoleCommand, long>
         {

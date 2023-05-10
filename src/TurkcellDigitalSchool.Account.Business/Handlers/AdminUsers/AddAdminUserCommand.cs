@@ -1,8 +1,7 @@
-﻿using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands;
+using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common;
@@ -15,7 +14,7 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 
-namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers.Commands
+namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
 {
     /// <summary>
     /// Add User

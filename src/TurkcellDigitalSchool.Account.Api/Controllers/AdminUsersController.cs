@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers.Commands;
+using TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers;
 using TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
@@ -30,6 +30,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [AllowAnonymous]
         [HttpPost("add")]
         public async Task<IActionResult> Add([FromBody] AddAdminUserCommand command, CancellationToken cancellationToken)
         {

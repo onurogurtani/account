@@ -60,9 +60,9 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: true),
+                    name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     code = table.Column<string>(type: "text", nullable: true),
-                    isactive = table.Column<bool>(type: "boolean", nullable: false),
+                    isactive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     isdeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -144,9 +144,9 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: true),
-                    description = table.Column<string>(type: "text", nullable: true),
-                    isactive = table.Column<bool>(type: "boolean", nullable: false),
+                    name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    isactive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     ispublised = table.Column<bool>(type: "boolean", nullable: false),
                     isdraft = table.Column<bool>(type: "boolean", nullable: false),
                     formid = table.Column<long>(type: "bigint", nullable: true),
@@ -170,10 +170,10 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     filetype = table.Column<int>(type: "integer", nullable: false),
-                    filename = table.Column<string>(type: "text", nullable: true),
-                    filepath = table.Column<string>(type: "text", nullable: true),
-                    contenttype = table.Column<string>(type: "text", nullable: true),
-                    description = table.Column<string>(type: "text", nullable: true),
+                    filename = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
+                    filepath = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
+                    contenttype = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    description = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
                     isdeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -555,9 +555,9 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: true),
-                    description = table.Column<string>(type: "text", nullable: true),
-                    isactive = table.Column<bool>(type: "boolean", nullable: false),
+                    name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    isactive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
                     isdeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -686,9 +686,9 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: true),
+                    name = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true),
                     order = table.Column<int>(type: "integer", nullable: false),
-                    isactive = table.Column<bool>(type: "boolean", nullable: false),
+                    isactive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     classroomid = table.Column<long>(type: "bigint", nullable: false),
                     isdeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
@@ -1193,10 +1193,10 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     recordstatus = table.Column<int>(type: "integer", nullable: false),
-                    name = table.Column<string>(type: "text", nullable: true),
+                    name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     code = table.Column<string>(type: "text", nullable: true),
                     testexamtypeid = table.Column<long>(type: "bigint", nullable: false),
-                    islivetestexam = table.Column<bool>(type: "boolean", nullable: false),
+                    islivetestexam = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     keywords = table.Column<string>(type: "text", nullable: true),
                     classroomid = table.Column<long>(type: "bigint", nullable: false),
                     difficulty = table.Column<int>(type: "integer", nullable: false),
@@ -1205,9 +1205,9 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     finishdate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     testexamstatus = table.Column<int>(type: "integer", nullable: false),
                     examtype = table.Column<int>(type: "integer", nullable: true),
-                    transitionbetweenquestions = table.Column<bool>(type: "boolean", nullable: false),
-                    transitionbetweensections = table.Column<bool>(type: "boolean", nullable: false),
-                    isallowdownloadpdf = table.Column<bool>(type: "boolean", nullable: false),
+                    transitionbetweenquestions = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    transitionbetweensections = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    isallowdownloadpdf = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
                     isdeleted = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>

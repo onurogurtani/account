@@ -9,17 +9,17 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace TurkcellDigitalSchool.IdentityServerService.Migrations
+namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 {
     [DbContext(typeof(ConfigurationDbContext))]
-    [Migration("20230318183620_initialConfigurationDbContext")]
+    [Migration("20230510200400_initialConfigurationDbContext")]
     partial class initialConfigurationDbContext
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.15")
+                .HasAnnotation("ProductVersion", "6.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -28,52 +28,66 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AllowedAccessTokenSigningAlgorithms")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("allowedaccesstokensigningalgorithms");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("created");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("description");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("displayname");
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("enabled");
 
                     b.Property<DateTime?>("LastAccessed")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("lastaccessed");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
 
                     b.Property<bool>("NonEditable")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("noneditable");
 
                     b.Property<bool>("RequireResourceIndicator")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("requireresourceindicator");
 
                     b.Property<bool>("ShowInDiscoveryDocument")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("showindiscoverydocument");
 
                     b.Property<DateTime?>("Updated")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("updated");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_apiresources");
 
                     b.HasIndex("Name")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_apiresources_name");
 
                     b.ToTable("ApiResources", (string)null);
                 });
@@ -82,22 +96,27 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ApiResourceId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("apiresourceid");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("type");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_apiresourceclaims");
 
                     b.HasIndex("ApiResourceId", "Type")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_apiresourceclaims_apiresourceid_type");
 
                     b.ToTable("ApiResourceClaims", (string)null);
                 });
@@ -106,27 +125,33 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ApiResourceId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("apiresourceid");
 
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("key");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("value");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_apiresourceproperties");
 
                     b.HasIndex("ApiResourceId", "Key")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_apiresourceproperties_apiresourceid_key");
 
                     b.ToTable("ApiResourceProperties", (string)null);
                 });
@@ -135,22 +160,27 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ApiResourceId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("apiresourceid");
 
                     b.Property<string>("Scope")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("scope");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_apiresourcescopes");
 
                     b.HasIndex("ApiResourceId", "Scope")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_apiresourcescopes_apiresourceid_scope");
 
                     b.ToTable("ApiResourceScopes", (string)null);
                 });
@@ -159,36 +189,45 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ApiResourceId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("apiresourceid");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("created");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("description");
 
                     b.Property<DateTime?>("Expiration")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("expiration");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("type");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(4000)
-                        .HasColumnType("character varying(4000)");
+                        .HasColumnType("character varying(4000)")
+                        .HasColumnName("value");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_apiresourcesecrets");
 
-                    b.HasIndex("ApiResourceId");
+                    b.HasIndex("ApiResourceId")
+                        .HasDatabaseName("ix_apiresourcesecrets_apiresourceid");
 
                     b.ToTable("ApiResourceSecrets", (string)null);
                 });
@@ -197,51 +236,65 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("created");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("description");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("displayname");
 
                     b.Property<bool>("Emphasize")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("emphasize");
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("enabled");
 
                     b.Property<DateTime?>("LastAccessed")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("lastaccessed");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
 
                     b.Property<bool>("NonEditable")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("noneditable");
 
                     b.Property<bool>("Required")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("required");
 
                     b.Property<bool>("ShowInDiscoveryDocument")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("showindiscoverydocument");
 
                     b.Property<DateTime?>("Updated")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("updated");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_apiscopes");
 
                     b.HasIndex("Name")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_apiscopes_name");
 
                     b.ToTable("ApiScopes", (string)null);
                 });
@@ -250,22 +303,27 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ScopeId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("scopeid");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("type");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_apiscopeclaims");
 
                     b.HasIndex("ScopeId", "Type")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_apiscopeclaims_scopeid_type");
 
                     b.ToTable("ApiScopeClaims", (string)null);
                 });
@@ -274,27 +332,33 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("key");
 
                     b.Property<int>("ScopeId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("scopeid");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("value");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_apiscopeproperties");
 
                     b.HasIndex("ScopeId", "Key")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_apiscopeproperties_scopeid_key");
 
                     b.ToTable("ApiScopeProperties", (string)null);
                 });
@@ -303,166 +367,215 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AbsoluteRefreshTokenLifetime")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("absoluterefreshtokenlifetime");
 
                     b.Property<int>("AccessTokenLifetime")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("accesstokenlifetime");
 
                     b.Property<int>("AccessTokenType")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("accesstokentype");
 
                     b.Property<bool>("AllowAccessTokensViaBrowser")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("allowaccesstokensviabrowser");
 
                     b.Property<bool>("AllowOfflineAccess")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("allowofflineaccess");
 
                     b.Property<bool>("AllowPlainTextPkce")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("allowplaintextpkce");
 
                     b.Property<bool>("AllowRememberConsent")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("allowrememberconsent");
 
                     b.Property<string>("AllowedIdentityTokenSigningAlgorithms")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("allowedidentitytokensigningalgorithms");
 
                     b.Property<bool>("AlwaysIncludeUserClaimsInIdToken")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("alwaysincludeuserclaimsinidtoken");
 
                     b.Property<bool>("AlwaysSendClientClaims")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("alwayssendclientclaims");
 
                     b.Property<int>("AuthorizationCodeLifetime")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("authorizationcodelifetime");
 
                     b.Property<bool>("BackChannelLogoutSessionRequired")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("backchannellogoutsessionrequired");
 
                     b.Property<string>("BackChannelLogoutUri")
                         .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("backchannellogouturi");
 
                     b.Property<int?>("CibaLifetime")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("cibalifetime");
 
                     b.Property<string>("ClientClaimsPrefix")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("clientclaimsprefix");
 
                     b.Property<string>("ClientId")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("clientid");
 
                     b.Property<string>("ClientName")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("clientname");
 
                     b.Property<string>("ClientUri")
                         .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("clienturi");
 
                     b.Property<int?>("ConsentLifetime")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("consentlifetime");
 
                     b.Property<bool?>("CoordinateLifetimeWithUserSession")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("coordinatelifetimewithusersession");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("created");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("description");
 
                     b.Property<int>("DeviceCodeLifetime")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("devicecodelifetime");
 
                     b.Property<bool>("EnableLocalLogin")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("enablelocallogin");
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("enabled");
 
                     b.Property<bool>("FrontChannelLogoutSessionRequired")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("frontchannellogoutsessionrequired");
 
                     b.Property<string>("FrontChannelLogoutUri")
                         .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("frontchannellogouturi");
 
                     b.Property<int>("IdentityTokenLifetime")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("identitytokenlifetime");
 
                     b.Property<bool>("IncludeJwtId")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("includejwtid");
 
                     b.Property<DateTime?>("LastAccessed")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("lastaccessed");
 
                     b.Property<string>("LogoUri")
                         .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("logouri");
 
                     b.Property<bool>("NonEditable")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("noneditable");
 
                     b.Property<string>("PairWiseSubjectSalt")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("pairwisesubjectsalt");
 
                     b.Property<int?>("PollingInterval")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("pollinginterval");
 
                     b.Property<string>("ProtocolType")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("protocoltype");
 
                     b.Property<int>("RefreshTokenExpiration")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("refreshtokenexpiration");
 
                     b.Property<int>("RefreshTokenUsage")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("refreshtokenusage");
 
                     b.Property<bool>("RequireClientSecret")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("requireclientsecret");
 
                     b.Property<bool>("RequireConsent")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("requireconsent");
 
                     b.Property<bool>("RequirePkce")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("requirepkce");
 
                     b.Property<bool>("RequireRequestObject")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("requirerequestobject");
 
                     b.Property<int>("SlidingRefreshTokenLifetime")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("slidingrefreshtokenlifetime");
 
                     b.Property<bool>("UpdateAccessTokenClaimsOnRefresh")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("updateaccesstokenclaimsonrefresh");
 
                     b.Property<DateTime?>("Updated")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("updated");
 
                     b.Property<string>("UserCodeType")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("usercodetype");
 
                     b.Property<int?>("UserSsoLifetime")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("userssolifetime");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_clients");
 
                     b.HasIndex("ClientId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_clients_clientid");
 
                     b.ToTable("Clients", (string)null);
                 });
@@ -471,27 +584,33 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClientId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("clientid");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("type");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("value");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_clientclaims");
 
                     b.HasIndex("ClientId", "Type", "Value")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_clientclaims_clientid_type_value");
 
                     b.ToTable("ClientClaims", (string)null);
                 });
@@ -500,22 +619,27 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClientId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("clientid");
 
                     b.Property<string>("Origin")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
+                        .HasColumnType("character varying(150)")
+                        .HasColumnName("origin");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_clientcorsorigins");
 
                     b.HasIndex("ClientId", "Origin")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_clientcorsorigins_clientid_origin");
 
                     b.ToTable("ClientCorsOrigins", (string)null);
                 });
@@ -524,22 +648,27 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClientId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("clientid");
 
                     b.Property<string>("GrantType")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("granttype");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_clientgranttypes");
 
                     b.HasIndex("ClientId", "GrantType")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_clientgranttypes_clientid_granttype");
 
                     b.ToTable("ClientGrantTypes", (string)null);
                 });
@@ -548,22 +677,27 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClientId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("clientid");
 
                     b.Property<string>("Provider")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("provider");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_clientidprestrictions");
 
                     b.HasIndex("ClientId", "Provider")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_clientidprestrictions_clientid_provider");
 
                     b.ToTable("ClientIdPRestrictions", (string)null);
                 });
@@ -572,22 +706,27 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClientId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("clientid");
 
                     b.Property<string>("PostLogoutRedirectUri")
                         .IsRequired()
                         .HasMaxLength(400)
-                        .HasColumnType("character varying(400)");
+                        .HasColumnType("character varying(400)")
+                        .HasColumnName("postlogoutredirecturi");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_clientpostlogoutredirecturis");
 
                     b.HasIndex("ClientId", "PostLogoutRedirectUri")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_clientpostlogoutredirecturis_clientid_postlogoutredirecturi");
 
                     b.ToTable("ClientPostLogoutRedirectUris", (string)null);
                 });
@@ -596,27 +735,33 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClientId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("clientid");
 
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("key");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("value");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_clientproperties");
 
                     b.HasIndex("ClientId", "Key")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_clientproperties_clientid_key");
 
                     b.ToTable("ClientProperties", (string)null);
                 });
@@ -625,22 +770,27 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClientId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("clientid");
 
                     b.Property<string>("RedirectUri")
                         .IsRequired()
                         .HasMaxLength(400)
-                        .HasColumnType("character varying(400)");
+                        .HasColumnType("character varying(400)")
+                        .HasColumnName("redirecturi");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_clientredirecturis");
 
                     b.HasIndex("ClientId", "RedirectUri")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_clientredirecturis_clientid_redirecturi");
 
                     b.ToTable("ClientRedirectUris", (string)null);
                 });
@@ -649,22 +799,27 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClientId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("clientid");
 
                     b.Property<string>("Scope")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("scope");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_clientscopes");
 
                     b.HasIndex("ClientId", "Scope")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_clientscopes_clientid_scope");
 
                     b.ToTable("ClientScopes", (string)null);
                 });
@@ -673,36 +828,45 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClientId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("clientid");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("created");
 
                     b.Property<string>("Description")
                         .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("description");
 
                     b.Property<DateTime?>("Expiration")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("expiration");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("type");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(4000)
-                        .HasColumnType("character varying(4000)");
+                        .HasColumnType("character varying(4000)")
+                        .HasColumnName("value");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_clientsecrets");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex("ClientId")
+                        .HasDatabaseName("ix_clientsecrets_clientid");
 
                     b.ToTable("ClientSecrets", (string)null);
                 });
@@ -711,46 +875,58 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("created");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("displayname");
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("enabled");
 
                     b.Property<DateTime?>("LastAccessed")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("lastaccessed");
 
                     b.Property<bool>("NonEditable")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("noneditable");
 
                     b.Property<string>("Properties")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("properties");
 
                     b.Property<string>("Scheme")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("scheme");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("type");
 
                     b.Property<DateTime?>("Updated")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("updated");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_identityproviders");
 
                     b.HasIndex("Scheme")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_identityproviders_scheme");
 
                     b.ToTable("IdentityProviders", (string)null);
                 });
@@ -759,48 +935,61 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("created");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("description");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("displayname");
 
                     b.Property<bool>("Emphasize")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("emphasize");
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("enabled");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
 
                     b.Property<bool>("NonEditable")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("noneditable");
 
                     b.Property<bool>("Required")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("required");
 
                     b.Property<bool>("ShowInDiscoveryDocument")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("showindiscoverydocument");
 
                     b.Property<DateTime?>("Updated")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("updated");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_identityresources");
 
                     b.HasIndex("Name")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_identityresources_name");
 
                     b.ToTable("IdentityResources", (string)null);
                 });
@@ -809,22 +998,27 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("IdentityResourceId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("identityresourceid");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("type");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_identityresourceclaims");
 
                     b.HasIndex("IdentityResourceId", "Type")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_identityresourceclaims_identityresourceid_type");
 
                     b.ToTable("IdentityResourceClaims", (string)null);
                 });
@@ -833,27 +1027,33 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("IdentityResourceId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("identityresourceid");
 
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("key");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("value");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_identityresourceproperties");
 
                     b.HasIndex("IdentityResourceId", "Key")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_identityresourceproperties_identityresourceid_key");
 
                     b.ToTable("IdentityResourceProperties", (string)null);
                 });
@@ -864,7 +1064,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                         .WithMany("UserClaims")
                         .HasForeignKey("ApiResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_apiresourceclaims_apiresources_apiresourceid");
 
                     b.Navigation("ApiResource");
                 });
@@ -875,7 +1076,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                         .WithMany("Properties")
                         .HasForeignKey("ApiResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_apiresourceproperties_apiresources_apiresourceid");
 
                     b.Navigation("ApiResource");
                 });
@@ -886,7 +1088,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                         .WithMany("Scopes")
                         .HasForeignKey("ApiResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_apiresourcescopes_apiresources_apiresourceid");
 
                     b.Navigation("ApiResource");
                 });
@@ -897,7 +1100,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                         .WithMany("Secrets")
                         .HasForeignKey("ApiResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_apiresourcesecrets_apiresources_apiresourceid");
 
                     b.Navigation("ApiResource");
                 });
@@ -908,7 +1112,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                         .WithMany("UserClaims")
                         .HasForeignKey("ScopeId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_apiscopeclaims_apiscopes_scopeid");
 
                     b.Navigation("Scope");
                 });
@@ -919,7 +1124,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                         .WithMany("Properties")
                         .HasForeignKey("ScopeId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_apiscopeproperties_apiscopes_scopeid");
 
                     b.Navigation("Scope");
                 });
@@ -930,7 +1136,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                         .WithMany("Claims")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_clientclaims_clients_clientid");
 
                     b.Navigation("Client");
                 });
@@ -941,7 +1148,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                         .WithMany("AllowedCorsOrigins")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_clientcorsorigins_clients_clientid");
 
                     b.Navigation("Client");
                 });
@@ -952,7 +1160,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                         .WithMany("AllowedGrantTypes")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_clientgranttypes_clients_clientid");
 
                     b.Navigation("Client");
                 });
@@ -963,7 +1172,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                         .WithMany("IdentityProviderRestrictions")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_clientidprestrictions_clients_clientid");
 
                     b.Navigation("Client");
                 });
@@ -974,7 +1184,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                         .WithMany("PostLogoutRedirectUris")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_clientpostlogoutredirecturis_clients_clientid");
 
                     b.Navigation("Client");
                 });
@@ -985,7 +1196,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                         .WithMany("Properties")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_clientproperties_clients_clientid");
 
                     b.Navigation("Client");
                 });
@@ -996,7 +1208,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                         .WithMany("RedirectUris")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_clientredirecturis_clients_clientid");
 
                     b.Navigation("Client");
                 });
@@ -1007,7 +1220,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                         .WithMany("AllowedScopes")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_clientscopes_clients_clientid");
 
                     b.Navigation("Client");
                 });
@@ -1018,7 +1232,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                         .WithMany("ClientSecrets")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_clientsecrets_clients_clientid");
 
                     b.Navigation("Client");
                 });
@@ -1029,7 +1244,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                         .WithMany("UserClaims")
                         .HasForeignKey("IdentityResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_identityresourceclaims_identityresources_identityresourceid");
 
                     b.Navigation("IdentityResource");
                 });
@@ -1040,7 +1256,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                         .WithMany("Properties")
                         .HasForeignKey("IdentityResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_identityresourceproperties_identityresources_identityresour~");
 
                     b.Navigation("IdentityResource");
                 });

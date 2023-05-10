@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
@@ -10,17 +9,17 @@ using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Services.Session;
-using TurkcellDigitalSchool.Core.Utilities.IoC;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 {
     public class UserSessionRepository : EfEntityRepositoryBase<UserSession, AccountDbContext>, IUserSessionRepository
     {
-        private readonly RedisService _redisService;
-        public UserSessionRepository(AccountDbContext context, RedisService redisService) : base(context)
+        private readonly SessionRedisSvc _sessinRedisSvc;
+        public UserSessionRepository(AccountDbContext context, SessionRedisSvc sessinRedisSvc) : base(context)
         {
-            _redisService = redisService;
+            _sessinRedisSvc = sessinRedisSvc;
         }
 
         public UserSession GetByToken()
@@ -70,28 +69,9 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
                 user.LastMobileSessionTime = entity.StartTime;
             }
             Context.SaveChanges();
-            // todo: Redis tarafında bu işlem için bir gerek yok ilerde ortaya çıkan bişey olursa kontrol edilecek. Orkun Kozan
-            #region Update On Redis
-            //if (_redisService.Connect())
-            //{
-            //    var targetRedisDatabase = _redisService.GetDb(CachingConstants.UserPropertiesDb);
 
-            //    var targetUserId = _entity?.UserId ?? entity.UserId;
-            //    try
-            //    {
-            //        targetRedisDatabase.HashSet("nbf" + entity.SessionType.ToString(), targetUserId, entity.NotBefore);
-            //    }
-            //    catch (Exception)
-            //    {
-            //        // Redis server'daki hatalardan dolayı sorun oldu. Hata durumundaki işleyiş yapılacak. 
-            //    }
-            //}
-            //else
-            //{
-            //    throw new RedisConnectionException(ConnectionFailureType.UnableToConnect, "Redis sunucusuna bağlanılamıyor..");
-            //}
 
-            #endregion Update On Redis 
+
 
             return entity;
         }
@@ -102,7 +82,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
             if (userSession != null) { return; }
             userSession.EndTime = DateTime.Now;
             await Context.SaveChangesAsync();
-            var sessionInfo = await _redisService.GetAsync<UserSessionInfo>(CachingConstants.UserSession, userSession.UserId.ToString());
+            var sessionInfo = await _sessinRedisSvc.GetAsync<UserSessionInfo>(userSession.UserId.ToString());
             if (sessionInfo == null)
             {
                 sessionInfo = new UserSessionInfo();
@@ -116,7 +96,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
             {
                 sessionInfo.SessionIdWeb = 0;
             }
-            await _redisService.SetAsync(CachingConstants.UserSession, userSession.UserId.ToString(), sessionInfo);
+            await _sessinRedisSvc.SetAsync(userSession.UserId.ToString(), sessionInfo);
         }
 
     }

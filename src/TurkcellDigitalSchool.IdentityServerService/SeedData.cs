@@ -11,11 +11,13 @@ namespace TurkcellDigitalSchool.IdentityServerService
         {
             using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
+                //Add-Migration initialPersistedGrantDbContext -context PersistedGrantDbContext
+                //Update-Database -context PersistedGrantDbContext
+
                 // Migration  aşağıdaki scriptler ile yapıldı
-                //Add - Migration initialConfigurationDbContext - context ConfigurationDbContext
-                //Update - Database - context ConfigurationDbContext
-                //Add - Migration initialPersistedGrantDbContext - context PersistedGrantDbContext
-                //Update - Database - context PersistedGrantDbContext
+                //Add-Migration initialConfigurationDbContext -context ConfigurationDbContext
+                //Update-Database -context ConfigurationDbContext
+
 
                 if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "DEVTURKCELL")
                 {

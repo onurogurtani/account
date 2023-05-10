@@ -30,8 +30,6 @@
     <PackageReference Include="System.ServiceModel.Http" />
     <PackageReference Include="System.ServiceModel.NetTcp" />
     <PackageReference Include="System.ServiceModel.Security" />
-    <PackageReference Include="TurkcellDigitalSchool.Common" />
-    <PackageReference Include="TurkcellDigitalSchool.Integration" />
   </ItemGroup>
   
   <ItemGroup>
@@ -39,6 +37,8 @@
   </ItemGroup>
   
   <ItemGroup> 
+    <ProjectReference Include="..\..\..\..\TurkcellDigitalSchool.General\src\TurkcellDigitalSchool.Integration\TurkcellDigitalSchool.Integration.csproj" /> 
+    <ProjectReference Include="..\..\..\..\TurkcellDigitalSchool.Infrastructure\src\TurkcellDigitalSchool.Common\TurkcellDigitalSchool.Common.csproj" /> 
     <ProjectReference Include="..\TurkcellDigitalSchool.Account.DataAccess\TurkcellDigitalSchool.Account.DataAccess.csproj" />
   </ItemGroup>
   
