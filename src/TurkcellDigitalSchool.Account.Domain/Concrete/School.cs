@@ -1,8 +1,9 @@
-﻿using TurkcellDigitalSchool.Core.Entities;
+﻿using TurkcellDigitalSchool.Core.DataAccess;
+using TurkcellDigitalSchool.Core.Entities;
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
-    public class School : EntityDefinition
+    public class School : EntityDefinition, IPublishEntity
     {
         public long? InstitutionId { get; set; }
         public Institution Institution { get; set; }

@@ -1,8 +1,9 @@
-﻿using TurkcellDigitalSchool.Core.Entities;
+﻿using TurkcellDigitalSchool.Core.DataAccess;
+using TurkcellDigitalSchool.Core.Entities;
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
-    public class City : EntityDefinition
+    public class City : EntityDefinition, IPublishEntity
     {
     }
 }
