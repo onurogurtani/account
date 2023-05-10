@@ -42,6 +42,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
                     .Include(x => x.RoleClaims)
                     .AsQueryable();
 
+                if (request.RoleDetailSearch.UserTypes?.Length > 0)
+                    query = query.Where(x => request.RoleDetailSearch.UserTypes.Contains(x.UserType));
+
                 if (request.RoleDetailSearch.RoleIds?.Length > 0)
                     query = query.Where(x => request.RoleDetailSearch.RoleIds.Contains(x.Id));
 
