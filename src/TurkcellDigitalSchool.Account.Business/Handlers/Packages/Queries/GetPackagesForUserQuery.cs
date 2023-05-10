@@ -1,17 +1,17 @@
+using AutoMapper;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -37,7 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
                 _mapper = mapper;
                 _fileService = fileService;
             }
-             
+
             [LogAspect(typeof(FileLogger))]
             [SecuredOperation]
             public async Task<IDataResult<PagedList<GetPackagesForUserResponseDto>>> Handle(GetPackagesForUserQuery request, CancellationToken cancellationToken)
