@@ -7,8 +7,9 @@ namespace TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Configurations
 {
     public class ClassroomEntityConfiguration : BaseConfigurationBase<Classroom>
     {
-        public void Configure(EntityTypeBuilder<Classroom> builder)
+        public override void Configure(EntityTypeBuilder<Classroom> builder)
         {
+            base.Configure(builder);
             builder.HasKey(x => x.Id); 
             builder.Property(x => x.Name).HasMaxLength(100);
             builder.Property(x => x.IsActive).HasDefaultValue(false).IsRequired();

@@ -7,8 +7,9 @@ namespace TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Configurations
 {
     public class FileEntityConfiguration : BaseConfigurationBase<File>
     {
-        public   void Configure(EntityTypeBuilder<File> builder)
+        public  override void Configure(EntityTypeBuilder<File> builder)
         {
+            base.Configure(builder);
             builder.HasKey(x => x.Id);
             builder.Property(x => x.FileType);
             builder.Property(x => x.FileName).HasMaxLength(250);

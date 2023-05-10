@@ -7,8 +7,9 @@ namespace TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Configurations
 {
     public class TestExamEntityConfiguration : BaseConfigurationBase<TestExam>
     {
-        public  void Configure(EntityTypeBuilder<TestExam> builder)
+        public override void Configure(EntityTypeBuilder<TestExam> builder)
         {
+            base.Configure(builder);
             builder.HasKey(x => x.Id);
             builder.Property(x => x.TestExamTypeId);
             builder.Property(x => x.IsLiveTestExam).HasDefaultValue(false).IsRequired();
