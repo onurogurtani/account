@@ -8,8 +8,10 @@
 		<Compile Remove="Concrete\EntityFramework\ContextExtensions.cs" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Folder Include="DataAccess\Migrations\Postgre\" />
+	</ItemGroup>
+	<ItemGroup>
 	  <PackageReference Include="AutoMapper" />
-	  <PackageReference Include="Microsoft.ApplicationInsights" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
 	    <PrivateAssets>all</PrivateAssets>
 	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -18,11 +20,7 @@
 	  <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\..\TurkcellDigitalSchool.General\src\TurkcellDigitalSchool.DbAccess\TurkcellDigitalSchool.DbAccess.csproj" />
 	  <ProjectReference Include="..\TurkcellDigitalSchool.Account.Domain\TurkcellDigitalSchool.Account.Domain.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="DataAccess\Migrations\Postgre\" />
 	</ItemGroup>
 
 </Project>

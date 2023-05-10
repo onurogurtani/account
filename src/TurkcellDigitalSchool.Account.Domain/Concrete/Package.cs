@@ -6,7 +6,7 @@ using TurkcellDigitalSchool.Core.Enums;
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
-    public class Package : EntityDefault, IPublishEntity
+    public class Package : EntityDefault  , IPublishEntity
     {
         public bool HasCoachService { get; set; }
         public bool HasTryingTest { get; set; }
