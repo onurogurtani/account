@@ -107,7 +107,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
                 var items = await query.OrderByDescending(x => x.UpdateTime ?? DateTime.MinValue).Select(s => new AdminDto
                 {
                     UserType = s.UserType,
-                    CitizenId = s.CitizenId,
+                    CitizenId = s.CitizenId??0,
                     Email = s.Email,
                     Id = s.Id,
                     MobilePhones = s.MobilePhones,

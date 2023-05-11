@@ -25,7 +25,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public string SurName { get; set; }
         public string UserName { get; set; }
         public long Avatar { get; set; } // TODO File olark yapılacak.
-        public long CitizenId { get; set; }
+        public long? CitizenId { get; set; }
         public string PlaceOfBirth { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string Email { get; set; }

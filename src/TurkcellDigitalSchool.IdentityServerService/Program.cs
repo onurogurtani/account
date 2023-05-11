@@ -23,12 +23,7 @@ try
             //listenOptions.Protocols = HttpProtocols.Http3;
         });
     });
-
-
-
-
-
-
+     
     //var environmentName = builder.Environment.EnvironmentName;
 
     builder.Host.UseSerilog((ctx, lc) => lc

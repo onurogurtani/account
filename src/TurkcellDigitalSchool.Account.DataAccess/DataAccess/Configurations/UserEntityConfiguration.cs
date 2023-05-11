@@ -8,12 +8,11 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(x => x.Id);
-            //builder.Property(x => x.CitizenId).IsRequired();
+            builder.HasKey(x => x.Id); 
             builder.Property(x => x.Name).HasMaxLength(100);
             builder.Property(x => x.SurName).HasMaxLength(100);
             builder.Property(x => x.NameSurname).HasMaxLength(100);
-            builder.Property(x => x.Email).HasMaxLength(50);
+            builder.Property(x => x.Email).HasMaxLength(50).IsRequired(false);
             builder.Property(x => x.EmailVerify).HasDefaultValue(false).IsRequired();
             builder.Property(x => x.Status).IsRequired();
             builder.Property(x => x.BirthDate);

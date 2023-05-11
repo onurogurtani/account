@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Diagnostics.CodeAnalysis;
+using AutoMapper;
 using System.Linq;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
@@ -8,6 +9,7 @@ using TurkcellDigitalSchool.Core.Services.CustomMessgeHelperService.Model;
 
 namespace TurkcellDigitalSchool.Account.Business.Helpers
 {
+    [ExcludeFromCodeCoverage]
     public class AutoMapperHelper : Profile
     {
         public AutoMapperHelper()

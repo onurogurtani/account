@@ -80,7 +80,7 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddScoped<ITurkcellFastLoginService, TurkcellFastLoginService>();
             services.AddScoped<IKpsService, KpsService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddAutoMapper(typeof(Common.ConfigurationManager));
+            services.AddAutoMapper( Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));

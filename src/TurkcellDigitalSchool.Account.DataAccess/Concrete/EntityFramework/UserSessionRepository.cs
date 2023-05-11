@@ -5,26 +5,27 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Services.Session;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 {
     public class UserSessionRepository : EfEntityRepositoryBase<UserSession, AccountDbContext>, IUserSessionRepository
     {
         private readonly SessionRedisSvc _sessinRedisSvc;
-        public UserSessionRepository(AccountDbContext context, SessionRedisSvc sessinRedisSvc) : base(context)
+        private readonly ITokenHelper _tokenHelper;
+        public UserSessionRepository(AccountDbContext context, SessionRedisSvc sessinRedisSvc, ITokenHelper tokenHelper) : base(context)
         {
             _sessinRedisSvc = sessinRedisSvc;
+            _tokenHelper = tokenHelper;
         }
 
         public UserSession GetByToken()
         {
-            var userSession = Get(w => w.UserId == TokenHelper.GetUserIdByCurrentToken() && w.SessionType == TokenHelper.GetSessionTypeByCurrentToken());
+            var userSession = Get(w => w.UserId == _tokenHelper.GetUserIdByCurrentToken() && w.SessionType == _tokenHelper.GetSessionTypeByCurrentToken());
             Context.Entry<UserSession>(userSession).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
             return userSession;
         }
