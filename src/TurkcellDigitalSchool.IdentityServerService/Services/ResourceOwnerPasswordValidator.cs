@@ -247,7 +247,16 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 sessionInfo.SessionIdWeb = addedSession.Id;
             }
 
-            await _sessionRedisSvc.SetAsync(user.Id.ToString(), sessionInfo);
+            try
+            {
+                await _sessionRedisSvc.SetAsync(user.Id.ToString(), sessionInfo);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        
 
             context.Result = new GrantValidationResult(user.Id.ToString(), OidcConstants.AuthenticationMethods.Password,
             new List<Claim>
