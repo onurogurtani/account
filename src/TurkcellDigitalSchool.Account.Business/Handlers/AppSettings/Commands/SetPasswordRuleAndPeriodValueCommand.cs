@@ -4,14 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Entities.Enums;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Commands
 {

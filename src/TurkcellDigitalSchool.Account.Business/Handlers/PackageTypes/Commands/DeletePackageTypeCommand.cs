@@ -1,12 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;

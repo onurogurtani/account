@@ -3,8 +3,7 @@ using AutoMapper;
 using System.Linq;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
-using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Core.Entities.Dtos;
+using TurkcellDigitalSchool.Account.Domain.Dtos; 
 using TurkcellDigitalSchool.Core.Services.CustomMessgeHelperService.Model;
 
 namespace TurkcellDigitalSchool.Account.Business.Helpers

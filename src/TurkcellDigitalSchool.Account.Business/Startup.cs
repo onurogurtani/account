@@ -100,15 +100,15 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddMsIntegrationServicesWithName(Configuration, MsType.Reporting);
             services.AddMsIntegrationServicesWithName(Configuration, MsType.IdentityServer);
 
-            ValidatorOptions.Global.DisplayNameResolver = (type, memberInfo, expression) =>
-            {
-                if (memberInfo != null)
-                {
-                    return memberInfo.GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>()
-                   ?.GetName();
-                }
-                return null;
-            };
+            //ValidatorOptions.Global.DisplayNameResolver = (type, memberInfo, expression) =>
+            //{
+            //    if (memberInfo != null)
+            //    {
+            //        return memberInfo.GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>()
+            //       ?.GetName();
+            //    }
+            //    return null;
+            //};
             var capConfig = Configuration.GetSection("CapConfig").Get<CapConfig>();
             services.AddCap(options =>
             { 

@@ -1,11 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.ValidationRules;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.Model;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 

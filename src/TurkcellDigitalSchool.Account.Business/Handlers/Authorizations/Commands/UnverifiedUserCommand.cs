@@ -1,29 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using DocumentFormat.OpenXml.Spreadsheet;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.ValidationRules;
 using TurkcellDigitalSchool.Account.Business.Helpers;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Transaction;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Validation;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing; 
 using TurkcellDigitalSchool.Core.Utilities.Toolkit;
-using TurkcellDigitalSchool.Entities.Enums;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {

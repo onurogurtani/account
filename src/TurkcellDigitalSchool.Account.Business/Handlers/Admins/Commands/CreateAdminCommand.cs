@@ -38,7 +38,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
                 _tokenHelper = tokenHelper;
             }
 
-            [SecuredOperation] 
+          //  [SecuredOperation] 
             public async Task<IResult> Handle(CreateAdminCommand request, CancellationToken cancellationToken)
             {
                 long currentuserId = _tokenHelper.GetUserIdByCurrentToken();

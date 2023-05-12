@@ -9,12 +9,11 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
-using TurkcellDigitalSchool.Core.Entities.Dtos;
+using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers; 
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
-using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Utilities.Results; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 {
