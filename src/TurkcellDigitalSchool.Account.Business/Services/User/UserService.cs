@@ -344,5 +344,25 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 await _userSupportTeamViewMyDataRepository.CreateAndSaveAsync(newRecord);
             }
         }
+
+        public PackageInfoDto GetUserPackageList(long userId)
+        {
+            var getPackage = _userPackageRepository.Query()
+                .Include(w => w.Package.ImageOfPackages).ThenInclude(w => w.File)
+                .FirstOrDefault(w => w.UserId == userId);
+
+            if (getPackage == null)
+            {
+                return new PackageInfoDto { };
+            }
+            return new PackageInfoDto
+            {
+                Id = getPackage.Id,
+                File = getPackage.Package.ImageOfPackages.First().File,//TODO file dosya ve base64 işlemleri daha sonra test edilecek.
+                PackageName = getPackage.Package.Name,
+                PurchaseDate = getPackage.PurchaseDate,
+                Package = getPackage.Package
+            };
+        }
     }
 }
