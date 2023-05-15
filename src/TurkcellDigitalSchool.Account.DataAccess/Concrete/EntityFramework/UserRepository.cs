@@ -171,5 +171,14 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
             var loginFailCounter = await Context.Users.FirstOrDefaultAsync(w => w.Id == userId);
             return (loginFailCounter?.FailOtpCount ?? 0);
         }
+
+        public async Task<bool> IsPackageBuyer(long userId)
+        {
+            var isPackageBuyer = await Context.UserPackages.AnyAsync(w => w.UserId == userId);
+            return isPackageBuyer;
+        }
+
     }
+
+
 }
