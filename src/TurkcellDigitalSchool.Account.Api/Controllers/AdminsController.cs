@@ -40,9 +40,6 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
-
-
-
         ///<summary>
         ///Get Admin User with Groups
         ///</summary>
