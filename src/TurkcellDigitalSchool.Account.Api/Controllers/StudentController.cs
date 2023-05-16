@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
@@ -79,7 +80,45 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
-       
+
+
+        /// <summary>
+        /// Get Student Parents information
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>ParentInfoDto</returns>
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<List<ParentInfoDto>>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpGet("GetStudentParentsInformation")]
+        public async Task<IActionResult> GetStudentParentsInformation([FromQuery] GetStudentParentsInformationQuery request, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(request, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        /// <summary>
+        /// Get Students By Parent CitizenId
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>ParentInfoDto</returns>
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<List<ParentInfoDto>>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpGet("GetStudentsByParentCitizenId")]
+        public async Task<IActionResult> GetStudentsByParentCitizenId([FromQuery] GetStudentsByParentCitizenIdQuery request, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(request, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
 
         /// <summary>
         /// Get Student Education information

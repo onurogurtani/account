@@ -22,5 +22,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Abstract
         public Task<int> IncFailLoginOtpCount(long userId);
 
         public Task<int> GetFailLoginOtpCount(long userId);
+
+        public Task<bool> IsPackageBuyer(long userId);
     }
 }
