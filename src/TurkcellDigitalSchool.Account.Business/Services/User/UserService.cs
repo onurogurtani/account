@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DocumentFormat.OpenXml.EMMA;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,9 @@ using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Utilities.File;
+using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
+using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.Request;
 
 namespace TurkcellDigitalSchool.Account.Business.Services.User
 {
@@ -26,8 +30,8 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         private readonly IUserContratRepository _userContratRepository;
         private readonly IUserCommunicationPreferencesRepository _userCommunicationPreferencesRepository;
         private readonly IUserSupportTeamViewMyDataRepository _userSupportTeamViewMyDataRepository;
-
-        public UserService(IUserRepository userRepository, IStudentEducationInformationRepository studentEducationInformationRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, IGraduationYearRepository graduationYearRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository, IUserContratRepository userContratRepository, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository)
+        private readonly IFileService _fileService;
+        public UserService(IUserRepository userRepository, IStudentEducationInformationRepository studentEducationInformationRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, IGraduationYearRepository graduationYearRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository, IUserContratRepository userContratRepository, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository, IFileService fileService)
         {
             _userRepository = userRepository;
             _studentEducationInformationRepository = studentEducationInformationRepository;
@@ -40,6 +44,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             _userContratRepository = userContratRepository;
             _userCommunicationPreferencesRepository = userCommunicationPreferencesRepository;
             _userSupportTeamViewMyDataRepository = userSupportTeamViewMyDataRepository;
+            _fileService = fileService;
         }
         public PersonalInfoDto GetByStudentPersonalInformation(long userId)
         {
@@ -112,22 +117,31 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 IsGraduate = getEducation.ExamType == ExamType.LGS ? null : getEducation.IsGraduate
             };
         }
-        public ParentInfoDto GetByStudentParentInfoInformation(long userId)
+        public List<ParentInfoDto> GetByStudentParentInfoInformation(long userId)
         {
-            var getParent = _studentParentInformationRepository.Query().FirstOrDefault(w => w.UserId == userId);
-            if (getParent == null)
+            var getParentList = _studentParentInformationRepository.Query().Where(w => w.UserId == userId).ToList();
+            if (getParentList.Count() == 0)
             {
-                return new ParentInfoDto { };
+                return new List<ParentInfoDto> { };
             }
-            return new ParentInfoDto
+
+            var resultParentList = new List<ParentInfoDto>();
+
+            foreach (var parent in getParentList)
             {
-                Id = getParent.Id,
-                CitizenId = getParent.CitizenId,
-                Name = getParent.Name,
-                SurName = getParent.SurName,
-                Email = getParent.Email,
-                MobilPhones = getParent.MobilPhones
-            };
+                resultParentList.Add(new ParentInfoDto
+                {
+                    Id = parent.Id,
+                    CitizenId = parent.CitizenId,
+                    Name = parent.Name,
+                    SurName = parent.SurName,
+                    Email = parent.Email,
+                    MobilPhones = parent.MobilPhones
+                });
+            }
+
+            return resultParentList;
+
         }
         public bool IsExistEmail(long userId, string Email)
         {
@@ -231,24 +245,34 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         {
             return _countyRepository.Query().Any(w => w.CityId == cityId && w.Id == countyId);
         }
-        public PackageInfoDto GetByStudentPackageInformation(long userId)
+        public List<PackageInfoDto> GetByStudentPackageInformation(long userId)
         {
-            var getPackage = _userPackageRepository.Query()
+            var getPackageList = _userPackageRepository.Query()
                 .Include(w => w.Package.ImageOfPackages).ThenInclude(w => w.File)
-                .FirstOrDefault(w => w.UserId == userId);
+                .Where(w => w.UserId == userId).ToList();
 
-            if (getPackage == null)
+            if (getPackageList.Count() == 0)
             {
-                return new PackageInfoDto { };
+                return new List<PackageInfoDto> { };
             }
-            return new PackageInfoDto
+
+            var resultPackageList = new List<PackageInfoDto>();
+
+            foreach (var package in getPackageList)
             {
-                Id = getPackage.Id,
-                File = getPackage.Package.ImageOfPackages.First().File,//TODO file dosya ve base64 işlemleri daha sonra test edilecek.
-                PackageName = getPackage.Package.Name,
-                PurchaseDate = getPackage.PurchaseDate,
-                Package = getPackage.Package
-            };
+                resultPackageList.Add(new PackageInfoDto
+                {
+                    Id = package.Id,
+                    File = package.Package.ImageOfPackages.First().File,//TODO file dosya ve base64 işlemleri daha sonra test edilecek.
+                    PackageName = package.Package.Name,
+                    PurchaseDate = package.PurchaseDate,
+                    PackageContent = package.Package.Content,
+                    FileBase64 = _fileService.GetFile(package.Package.ImageOfPackages.First().File.FilePath).GetAwaiter().GetResult().Data
+                });
+            }
+
+            return resultPackageList;
+
         }
         public SettingsInfoDto GetByStudentSettingsInfoInformation(long userId)
         {
@@ -345,24 +369,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             }
         }
 
-        public PackageInfoDto GetUserPackageList(long userId)
-        {
-            var getPackage = _userPackageRepository.Query()
-                .Include(w => w.Package.ImageOfPackages).ThenInclude(w => w.File)
-                .FirstOrDefault(w => w.UserId == userId);
 
-            if (getPackage == null)
-            {
-                return new PackageInfoDto { };
-            }
-            return new PackageInfoDto
-            {
-                Id = getPackage.Id,
-                File = getPackage.Package.ImageOfPackages.First().File,//TODO file dosya ve base64 işlemleri daha sonra test edilecek.
-                PackageName = getPackage.Package.Name,
-                PurchaseDate = getPackage.PurchaseDate,
-                Package = getPackage.Package
-            };
-        }
     }
 }

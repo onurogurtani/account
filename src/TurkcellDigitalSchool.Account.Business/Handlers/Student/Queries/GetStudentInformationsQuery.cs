@@ -34,7 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
                 await _userService.SetDefaultSettingValues((long)request.UserId);
 
                 var education = _userService.GetByStudentEducationInformation((int)request.UserId);
-                var package = _userService.GetByStudentPackageInformation((int)request.UserId);
+                var packages = _userService.GetByStudentPackageInformation((int)request.UserId);
                 var parent = _userService.GetByStudentParentInfoInformation((int)request.UserId);
                 var personal = _userService.GetByStudentPersonalInformation((int)request.UserId);
                 var settings = _userService.GetByStudentSettingsInfoInformation((long)request.UserId);
@@ -42,8 +42,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
                 var studentInfoResult = new StudentInfoDto
                 {
                     Education = education,
-                    Package = package,
-                    Parent = parent,
+                    Packages = packages,
+                    Parents = parent,
                     Personal = personal,
                     Settings = settings
                 };

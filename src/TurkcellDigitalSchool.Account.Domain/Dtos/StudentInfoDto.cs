@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
-using TurkcellDigitalSchool.Core.Enums; 
+using TurkcellDigitalSchool.Core.Enums;
 
 namespace TurkcellDigitalSchool.Account.Domain.Dtos
 {
@@ -10,8 +10,8 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
     {
         public PersonalInfoDto Personal { get; set; }
         public EducationInfoDto Education { get; set; }
-        public ParentInfoDto Parent { get; set; }
-        public PackageInfoDto Package { get; set; }
+        public List<ParentInfoDto> Parents { get; set; }
+        public List<PackageInfoDto> Packages { get; set; }
         public SettingsInfoDto Settings { get; set; }
 
 
@@ -74,8 +74,9 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public long Id { get; set; }
         public string PackageName { get; set; }
         public File File { get; set; }
+        public byte[] FileBase64 { get; set; } // TODO CDN entegrasyonuna karar verildiğinde filepath kullanılacak.
         public DateTime PurchaseDate { get; set; }
-        public Package Package { get; set; } //TODO gösterilecek paket detayı oluştuğunda Package burası dto dönüştürülecek.
+        public string PackageContent { get; set; }
 
 
     }
