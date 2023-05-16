@@ -4,12 +4,11 @@ using TurkcellDigitalSchool.DbAccess.DataAccess.Abstract;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations
 {
-    public class AppSettingEntityConfiguration : EntityDefinitionConfigurationBase<AppSetting>
+    public class UserPackageEntityConfiguration : EntityDefaultConfigurationBase<UserPackage>
     {
-        public override void Configure(EntityTypeBuilder<AppSetting> builder)
+        public override void Configure(EntityTypeBuilder<UserPackage> builder)
         {
-            base.Configure(builder);
-            builder.Property(x => x.Value).IsRequired(); 
+            base.Configure(builder); 
         }
     }
 }
