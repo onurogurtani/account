@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using TurkcellDigitalSchool.Core.Entities;
 using TurkcellDigitalSchool.Core.Enums;
 
@@ -14,10 +15,14 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly
         public string Name { get; set; }
         public string Code { get; set; }
         public long TestExamTypeId { get; set; }
+
+        [JsonIgnore]
         public TestExamType TestExamType { get; set; }
         public bool IsLiveTestExam { get; set; }
         public string KeyWords { get; set; }
         public long ClassroomId { get; set; }
+
+        [JsonIgnore]
         public  Classroom Classroom { get; set; }
         public int Difficulty { get; set; }
         public int TestExamTime { get; set; }
@@ -27,7 +32,9 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly
         public ExamType? ExamType { get; set; }
         public bool TransitionBetweenQuestions { get; set; }
         public bool TransitionBetweenSections { get; set; }
-        public bool IsAllowDownloadPdf { get; set; } 
+        public bool IsAllowDownloadPdf { get; set; }
+
+        [JsonIgnore]
         public ICollection<PackageTestExam> PackageTestExams { get; set; }
         public long Id { get; set; }
         public bool IsDeleted { get; set; }

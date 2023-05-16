@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 using System.Linq;
+using TurkcellDigitalSchool.Account.Business.SubServices;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
 using TurkcellDigitalSchool.Account.Domain.Dtos; 
@@ -139,6 +140,7 @@ namespace TurkcellDigitalSchool.Account.Business.Helpers
             CreateMap<Domain.Concrete.OrganisationChangeReqContent, GetOrganisationChangeReqContentDto>().ReverseMap();
 
             CreateMap<ConstantMessageDtos, MessageMap>().ReverseMap();
+            CreateMap<LessonDto, Lesson>().ReverseMap();
 
         }
     }

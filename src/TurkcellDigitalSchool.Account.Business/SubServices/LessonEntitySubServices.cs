@@ -1,21 +1,25 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
 using DotNetCore.CAP;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
+using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly; 
 using TurkcellDigitalSchool.Core.SubServices;
 
 namespace TurkcellDigitalSchool.Account.Business.SubServices
 {
     public class LessonEntitySubServices : BaseCrudSubServices<AccountSubscribeDbContext, Lesson>
     {
-        public LessonEntitySubServices(AccountSubscribeDbContext context) : base(context)
+        private readonly IMapper _mapper;
+        public LessonEntitySubServices(AccountSubscribeDbContext context,IMapper mapper) : base(context)
         {
+            _mapper = mapper;
         }
 
         [CapSubscribe("TurkcellDigitalSchool.Education.Domain.Concrete.Lesson_Added")]
-        public override async Task Added(Lesson entity)
+        public override async Task Added(Lesson data)
         {
-            await base.Added(entity);
+           // var entity = _mapper.Map<Lesson>(data);
+            await base.Added(data);
         }
 
         [CapSubscribe("TurkcellDigitalSchool.Education.Domain.Concrete.Lesson_Modified")]
@@ -26,8 +30,8 @@ namespace TurkcellDigitalSchool.Account.Business.SubServices
 
         [CapSubscribe("TurkcellDigitalSchool.Education.Domain.Concrete.Lesson_Deleted")]
         public override async Task Deleted(Lesson entity)
-        {
+        { 
             await base.Deleted(entity);
         }
-    }
+    } 
 }
