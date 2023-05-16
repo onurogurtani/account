@@ -139,8 +139,7 @@ namespace TurkcellDigitalSchool.Account.Business.Helpers
             CreateMap<Domain.Concrete.OrganisationChangeReqContent, UpdateOrganisationChangeReqContentDto>().ReverseMap();
             CreateMap<Domain.Concrete.OrganisationChangeReqContent, GetOrganisationChangeReqContentDto>().ReverseMap();
 
-            CreateMap<ConstantMessageDtos, MessageMap>().ReverseMap();
-            CreateMap<LessonDto, Lesson>().ReverseMap();
+            CreateMap<ConstantMessageDtos, MessageMap>().ReverseMap(); 
 
         }
     }
