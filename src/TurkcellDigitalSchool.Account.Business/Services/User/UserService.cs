@@ -368,7 +368,35 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 await _userSupportTeamViewMyDataRepository.CreateAndSaveAsync(newRecord);
             }
         }
-
-
+        public List<ParentInfoDto> GetStudentsByParentCitizenId(string citizenId)
+        {
+            var getParents = _studentParentInformationRepository.Query().Where(w => w.CitizenId == citizenId)
+                .Select(s => new ParentInfoDto
+                {
+                    Id = s.Id,
+                    CitizenId = s.CitizenId,
+                    Name = s.Name,
+                    SurName = s.SurName,
+                    Email = s.Email,
+                    MobilPhones = s.MobilPhones
+                })
+                .ToList();
+            return getParents;
+        }
+        public List<ParentInfoDto> GetByStudentParentsInformation(long userId)
+        {
+            var getParents = _studentParentInformationRepository.Query().Where(w => w.UserId == userId)
+                .Select(s => new ParentInfoDto
+                {
+                    Id = s.Id,
+                    CitizenId = s.CitizenId,
+                    Name = s.Name,
+                    SurName = s.SurName,
+                    Email = s.Email,
+                    MobilPhones = s.MobilPhones
+                })
+                .ToList();
+            return getParents;
+        }
     }
 }
