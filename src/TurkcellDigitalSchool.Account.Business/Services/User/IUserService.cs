@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 
 namespace TurkcellDigitalSchool.Account.Business.Services.User
