@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.LdapLoginService;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.TurkcellFastLoginService;
+using TurkcellDigitalSchool.Account.Business.Services.Otp;
 using TurkcellDigitalSchool.Account.Business.Services.User;
 using TurkcellDigitalSchool.Account.Business.SubServices.RegisterServices;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
@@ -80,6 +81,7 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddScoped<ITurkcellFastLoginService, TurkcellFastLoginService>();
             services.AddScoped<IKpsService, KpsService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IOtpService, OtpService>();
             services.AddAutoMapper( Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));

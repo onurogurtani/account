@@ -90,7 +90,9 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserSession> UserSessions { get; set; }  
         public DbSet<UserSupportTeamViewMyData> UserSupportTeamViewMyData { get; set; }
-    
+        public DbSet<OneTimePassword> OneTimePasswords { get; set; }
+
+
         #endregion
 
 
