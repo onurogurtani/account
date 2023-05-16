@@ -118,7 +118,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
-       
+
         [Consumes("application/json")]
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result))]
@@ -138,7 +138,22 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPost("edit")]
+        [HttpPost("GetUserDtoById")]
+        public async Task<IActionResult> GetUserDtoById([FromBody] GetUserDtoQuery getUserDtoQuery, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(getUserDtoQuery, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPut("edit")]
         public async Task<IActionResult> Edit([FromBody] UpdateUserMemberCommand command, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(command, cancellationToken);

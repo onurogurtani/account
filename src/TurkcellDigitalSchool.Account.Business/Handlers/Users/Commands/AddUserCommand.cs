@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
@@ -23,10 +24,18 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
     {
         public UserType UserTypeId { get; set; }
         public long CitizenId { get; set; }
+        public string BirthPlace { get; set; }
+        public DateTime BirthDate { get; set; }
         public string Name { get; set; }
         public string SurName { get; set; }
         public string Email { get; set; }
         public string MobilePhones { get; set; }
+        public string UserName { get; set; }
+        public long? ResidenceCityId { get; set; }
+        public long? ResidenceCountyId { get; set; }
+        public bool ContactBySMS { get; set; }
+        public bool ContactByMail { get; set; }
+        public bool ContactByCall { get; set; }
 
         [MessageClassAttr("Kullanıcı Ekleme")]
         public class AddUserCommandHandler : IRequestHandler<AddUserCommand, IDataResult<SelectionItem>>
@@ -67,7 +76,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                     PasswordSalt = passwordSalt,
                     UserType = request.UserTypeId,
                     Status = true,
-                    RegisterStatus = RegisterStatus.Registered
+                    RegisterStatus = RegisterStatus.Registered,
+                    BirthDate = request.BirthDate,
+                    BirthPlace = request.BirthPlace,
+                    ResidenceCityId = request.ResidenceCityId,
+                    ResidenceCountyId = request.ResidenceCountyId,
+                    UserName = request.UserName,
+                    ContactBySMS = request.ContactBySMS,
+                    ContactByMail = request.ContactByMail,
+                    ContactByCall = request.ContactByCall
                 };
 
                 _userRepository.Add(user);
@@ -78,6 +95,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 
                 return new SuccessDataResult<SelectionItem>(new SelectionItem { Label = messageContent }, Added.PrepareRedisMessage());
             }
+
         }
     }
 }

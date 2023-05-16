@@ -34,6 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
         public bool ContactBySMS { get; set; }
         public bool ContactByMail { get; set; }
         public bool ContactByCall { get; set; }
+        public bool IsPackageBuyer { get; set; }
 
         [MessageClassAttr("Üye Düzenle")]
         public class UpdateUserMemberCommandHandler : IRequestHandler<UpdateUserMemberCommand, IResult>
