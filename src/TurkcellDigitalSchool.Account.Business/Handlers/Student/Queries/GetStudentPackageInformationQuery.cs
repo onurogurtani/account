@@ -15,10 +15,10 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
 {
-    public class GetStudentPackageInformationQuery : IRequest<IDataResult<PackageInfoDto>>
+    public class GetStudentPackageInformationQuery : IRequest<IDataResult<List<PackageInfoDto>>>
     {
         public long? UserId { get; set; }
-        public class GetStudentPackageInformationQueryHandler : IRequestHandler<GetStudentPackageInformationQuery, IDataResult<PackageInfoDto>>
+        public class GetStudentPackageInformationQueryHandler : IRequestHandler<GetStudentPackageInformationQuery, IDataResult<List<PackageInfoDto>>>
         {
             private readonly IUserService _userService;
 
@@ -30,13 +30,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
 
-            public virtual async Task<IDataResult<PackageInfoDto>> Handle(GetStudentPackageInformationQuery request, CancellationToken cancellationToken)
+            public virtual async Task<IDataResult<List<PackageInfoDto>>> Handle(GetStudentPackageInformationQuery request, CancellationToken cancellationToken)
             {
                 if (request.UserId == null)
                 {
-                    return new ErrorDataResult<PackageInfoDto>(RecordIsNotFound.PrepareRedisMessage());
+                    return new ErrorDataResult<List<PackageInfoDto>>(RecordIsNotFound.PrepareRedisMessage());
                 }
-                return new SuccessDataResult<PackageInfoDto>(_userService.GetByStudentPackageInformation((int)request.UserId));
+                return new SuccessDataResult<List<PackageInfoDto>>(_userService.GetByStudentPackageInformation((int)request.UserId));
             }
 
         }

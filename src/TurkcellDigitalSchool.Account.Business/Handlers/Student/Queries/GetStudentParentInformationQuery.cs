@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Services.User;
@@ -11,10 +12,10 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
 {
-    public class GetStudentParentInformationQuery : IRequest<IDataResult<ParentInfoDto>>
+    public class GetStudentParentInformationQuery : IRequest<IDataResult<List<ParentInfoDto>>>
     {
         public long? UserId { get; set; }
-        public class GetStudentParentInformationQueryHandler : IRequestHandler<GetStudentParentInformationQuery, IDataResult<ParentInfoDto>>
+        public class GetStudentParentInformationQueryHandler : IRequestHandler<GetStudentParentInformationQuery, IDataResult<List<ParentInfoDto>>>
         {
             private readonly IUserService _userService;
 
@@ -26,13 +27,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
 
-            public virtual async Task<IDataResult<ParentInfoDto>> Handle(GetStudentParentInformationQuery request, CancellationToken cancellationToken)
+            public virtual async Task<IDataResult<List<ParentInfoDto>>> Handle(GetStudentParentInformationQuery request, CancellationToken cancellationToken)
             {
                 if (request.UserId == null)
                 {
-                    return new ErrorDataResult<ParentInfoDto>(RecordIsNotFound.PrepareRedisMessage());
+                    return new ErrorDataResult<List<ParentInfoDto>>(RecordIsNotFound.PrepareRedisMessage());
                 }
-                return new SuccessDataResult<ParentInfoDto>(_userService.GetByStudentParentInfoInformation((int)request.UserId));
+                return new SuccessDataResult<List<ParentInfoDto>>(_userService.GetByStudentParentInfoInformation((int)request.UserId));
             }
 
         }
