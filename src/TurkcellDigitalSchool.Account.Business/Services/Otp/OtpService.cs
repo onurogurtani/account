@@ -23,12 +23,17 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
             _oneTimePasswordRepository = oneTimePasswordRepository;
             _configurationManager = configurationManager;
         }
-        public int GenerateOtp(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId)
+        public DataResult<int> GenerateOtp(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId)
         {
-            var existOtpCodes = _oneTimePasswordRepository.Query().Where(w => w.OtpStatusId == OtpStatus.NotUsed && w.UserId == UserId && w.ChannelTypeId == ChanellTypeId && w.ServiceId == ServiceId).ToList();
-            existOtpCodes.ForEach(w => w.OtpStatusId = OtpStatus.Cancelled);
-            _oneTimePasswordRepository.UpdateAndSave(existOtpCodes);
+            UpdateOldNotUsedOtpCode(UserId, ChanellTypeId, ServiceId);
 
+            var existOtpCodes = _oneTimePasswordRepository.Query().Any(w => w.OtpStatusId == OtpStatus.NotUsed && w.UserId == UserId && w.ChannelTypeId == ChanellTypeId && w.ServiceId == ServiceId && w.ExpiryDate < DateTime.UtcNow);
+
+            if (existOtpCodes)
+            {
+                return new DataResult<int>(0, false, "Yeni kod oluşturmak için 90 sn dolmalıdır.");
+                
+            }
 
             int otp = RandomPassword.RandomNumberGenerator();
             if (_configurationManager.Mode != ApplicationMode.PROD)
@@ -40,14 +45,15 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
                 UserId = UserId,
                 ChannelTypeId = ChanellTypeId,
                 ServiceId = ServiceId,
-                SendDate = DateTime.Now,
-                OtpStatusId = OtpStatus.NotUsed
+                SendDate = DateTime.UtcNow,
+                OtpStatusId = OtpStatus.NotUsed,
+                ExpiryDate = DateTime.UtcNow.AddSeconds(90)// TODO 90 saniye içinde doldurulması gerekli.
+
             };
             _oneTimePasswordRepository.CreateAndSave(newRecord);
 
-            return otp;
+            return new DataResult<int>(otp, true,"Başarılı");
         }
-
         public Result VerifyOtp(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId, int Code)
         {
             var getOtp = _oneTimePasswordRepository.Query().FirstOrDefault(w => w.OtpStatusId == OtpStatus.NotUsed && w.UserId == UserId && w.ChannelTypeId == ChanellTypeId && w.ServiceId == ServiceId);
@@ -69,5 +75,12 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
             _oneTimePasswordRepository.UpdateAndSave(getOtp);
             return new Result(true, "Başarılı.");
         }
+        private void UpdateOldNotUsedOtpCode(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId)
+        {
+            var existOtpCodes = _oneTimePasswordRepository.Query().Where(w => w.OtpStatusId == OtpStatus.NotUsed && w.UserId == UserId && w.ChannelTypeId == ChanellTypeId && w.ServiceId == ServiceId && w.ExpiryDate < DateTime.UtcNow).ToList();
+            existOtpCodes.ForEach(w => w.OtpStatusId = OtpStatus.Cancelled);
+            _oneTimePasswordRepository.UpdateAndSave(existOtpCodes);
+        }
+
     }
 }

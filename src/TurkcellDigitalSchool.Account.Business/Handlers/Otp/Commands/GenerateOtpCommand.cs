@@ -30,8 +30,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Otp.Commands
             {
                 var userId = _tokenHelper.GetUserIdByCurrentToken();
                 var otpCode = _otpService.GenerateOtp(userId, request.ChanellTypeId, request.ServiceId);
-                //todo burası prod öncesi düzeltilecektir.
-                return new SuccessDataResult<int>(otpCode,"Başarılı");
+                //todo burası prod öncesi düzeltilecektir.(sms, bip vs.) clinet da cevap dönmeyecektir.
+                return new SuccessDataResult<int>(otpCode.Data,otpCode.Message);
             }
 
         }

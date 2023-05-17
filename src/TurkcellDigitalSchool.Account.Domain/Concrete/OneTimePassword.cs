@@ -16,6 +16,9 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public int Code { get; set; }
         public OtpStatus OtpStatusId { get; set; }
         public DateTime SendDate { get; set; }
+
+        public DateTime ExpiryDate { get; set; }
+
         public DateTime ProcessDate { get; set; }
     }
 }
