@@ -5,15 +5,16 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers; 
+using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
-using TurkcellDigitalSchool.Core.Utilities.Results; 
+using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 {
@@ -28,18 +29,38 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
         {
             private readonly IMapper _mapper;
             private readonly IUserRepository _userRepository;
+            private readonly AccountDbContext _accountDbContext;
 
-            public GetByFilterPagedUsersQueryHandler(IUserRepository userRepository, IMapper mapper)
+            public GetByFilterPagedUsersQueryHandler(IUserRepository userRepository, IMapper mapper, AccountDbContext accountDbContext)
             {
                 _userRepository = userRepository;
                 _mapper = mapper;
+                _accountDbContext = accountDbContext;
             }
 
             [LogAspect(typeof(FileLogger))]
             [SecuredOperation]
             public virtual async Task<IDataResult<PagedList<UserDto>>> Handle(GetByFilterPagedUsersQuery request, CancellationToken cancellationToken)
             {
-                var query = _userRepository.Query().Where(
+                var query = (from u in _accountDbContext.Users
+                             join p in _accountDbContext.UserPackages on u.Id equals p.UserId into users
+                             from pj in users.DefaultIfEmpty()
+                             select new UserDto
+                             {
+                                 CitizenId = u.CitizenId,
+                                 Email = u.Email,
+                                 Id = u.Id,
+                                 Name = u.Name,
+                                 MobilePhones = u.MobilePhones,
+                                 Status = u.Status,
+                                 SurName = u.SurName,
+                                 UserType = u.UserType,
+                                 ViewMyData = u.ViewMyData,
+                                 IsPackageBuyer = pj.Id > 0,
+                                 RegisterStatus = u.RegisterStatus,
+                                 InsertTime = u.InsertTime,
+                                 UpdateTime = u.UpdateTime
+                             }).Where(
                     x => x.UserType != UserType.Admin && x.UserType != UserType.OrganisationAdmin
                     && x.UserType != UserType.FranchiseAdmin && x.RegisterStatus == RegisterStatus.Registered)
                     .AsQueryable();
@@ -104,9 +125,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 
                 query = query.OrderByDescending(x => x.UpdateTime == null ? x.InsertTime : x.UpdateTime);
 
-                var items = _mapper.Map<List<User>, List<UserDto>>(query.ToList());
+                var items = query.ToList();
 
-                PagedList<UserDto> pagedDtoList = items.AsQueryable().ToPagedList(new PaginationQuery { PageNumber = request.UserDetailSearch.PageNumber, PageSize = request.UserDetailSearch.PageSize});
+                PagedList<UserDto> pagedDtoList = items.AsQueryable().ToPagedList(new PaginationQuery { PageNumber = request.UserDetailSearch.PageNumber, PageSize = request.UserDetailSearch.PageSize });
                 return new SuccessDataResult<PagedList<UserDto>>(pagedDtoList);
             }
         }

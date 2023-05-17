@@ -36,5 +36,20 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             }
             return BadRequest(result);
         }
+
+        ///<response code="200"></response>
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<long>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpGet("getUserPackageListQuery")]
+        public async Task<IActionResult> GetUserPackageListQuery([FromQuery] GetUserPackageListQuery query, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(query, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
     }
 }
