@@ -5,6 +5,7 @@ using System.Threading;
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
 using TurkcellDigitalSchool.Common.Controllers;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.Model;
+using TurkcellDigitalSchool.Account.Business.Handlers.Otp.Commands;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
 {
@@ -20,8 +21,22 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPost("VerifyOtp")]
-        public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpCommand request, CancellationToken cancellationToken)
+        [HttpPost("Verify")]
+        public async Task<IActionResult> Verify([FromBody] VerifyOtpCommand request, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(request, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("Generate")]
+        public async Task<IActionResult> Generate([FromBody] GenerateOtpCommand request, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(request, cancellationToken);
             if (result.Success)

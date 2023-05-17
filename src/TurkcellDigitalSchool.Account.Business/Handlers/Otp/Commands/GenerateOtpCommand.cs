@@ -29,9 +29,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Otp.Commands
             public async Task<IResult> Handle(GenerateOtpCommand request, CancellationToken cancellationToken)
             {
                 var userId = _tokenHelper.GetUserIdByCurrentToken();
-                _otpService.GenerateOtp(userId, request.ChanellTypeId, request.ServiceId);
-               
-                return new SuccessResult("");
+                var otpCode = _otpService.GenerateOtp(userId, request.ChanellTypeId, request.ServiceId);
+                //todo burası prod öncesi düzeltilecektir.
+                return new SuccessDataResult<int>(otpCode,"Başarılı");
             }
 
         }
