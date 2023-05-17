@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
             if (existOtpCodes)
             {
                 return new DataResult<int>(0, false, "Yeni kod oluşturmak için 90 sn dolmalıdır.");
-                
+
             }
 
             int otp = RandomPassword.RandomNumberGenerator();
@@ -52,7 +53,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
             };
             _oneTimePasswordRepository.CreateAndSave(newRecord);
 
-            return new DataResult<int>(otp, true,"Başarılı");
+            return new DataResult<int>(otp, true, "Başarılı");
         }
         public Result VerifyOtp(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId, int Code)
         {
@@ -66,9 +67,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
             {
                 return new Result(false, "Kod yanlıştır.");
             }
-
-            // DijitalDershaneWebUI
-
             getOtp.ProcessDate = DateTime.Now;
             getOtp.OtpStatusId = OtpStatus.Used;
 
