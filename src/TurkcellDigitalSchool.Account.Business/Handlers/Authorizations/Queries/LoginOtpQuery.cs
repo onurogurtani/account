@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Services.SMS.Turkcell;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt; 
 
@@ -110,7 +112,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 
                     if (_configurationManager.Mode != ApplicationMode.LOCAL && _configurationManager.Mode != ApplicationMode.DEV && _configurationManager.Mode != ApplicationMode.STB)
                     {
-                        await _smsOtpRepository.ExecUpdateSpForSms(user.MobilePhones, user.Id, mobileLogin.Code.ToString());
+                        // Eski boş servis
+                        // await _smsOtpRepository.ExecUpdateSpForSms(user.MobilePhones, user.Id, mobileLogin.Code.ToString());
+                        await _smsOtpRepository.SendSms(user.MobilePhones, $"DIJITAL DERSHANE SIFRENIZ: {mobileLogin.Code.ToString()}");
+                        
                     } 
                     return new SuccessDataResult<DArchToken>(accessToken, Messages.SuccessfulLogin); 
                 }

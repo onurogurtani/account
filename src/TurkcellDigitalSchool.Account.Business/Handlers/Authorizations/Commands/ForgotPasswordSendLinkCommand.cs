@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
@@ -97,8 +98,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 }
                 else if (request.SendingType == SendType.MobilPhone)
                 {
-                    await _smsOtpRepository.ExecInsertSpForSms(user.MobilePhones, user.Id, guid);
-
+                    // Eski boş servis
+                 // await _smsOtpRepository.ExecInsertSpForSms(user.MobilePhones, user.Id, guid);
+                    await  _smsOtpRepository.SendSms(user.MobilePhones, content);
                     messsgePach = user.MobilePhones.MaskPhoneNumber() + " mobil hattına";
                 } 
                 return new SuccessResult(string.Format(Messages.PasswordChangeLinkSended, messsgePach));

@@ -100,7 +100,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 
                     if (_configurationManager.Mode != ApplicationMode.LOCAL && _configurationManager.Mode != ApplicationMode.STB && _configurationManager.Mode != ApplicationMode.DEV)
                     {
-                        await _smsOtpRepository.ExecUpdateSpForSms(user.MobilePhones, user.Id, mobileLogin.Code.ToString());
+                        // Eski boş servis
+                        // await _smsOtpRepository.ExecUpdateSpForSms(user.MobilePhones, user.Id, mobileLogin.Code.ToString());
+                        await _smsOtpRepository.SendSms(user.MobilePhones, $"DIJITAL DERSHANE SIFRENIZ: {mobileLogin.Code.ToString()}");
                     }
 
                     user.RegisterStatus = RegisterStatus.Registered;

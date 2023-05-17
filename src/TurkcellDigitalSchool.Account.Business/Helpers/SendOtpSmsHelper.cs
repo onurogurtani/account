@@ -52,7 +52,9 @@ namespace TurkcellDigitalSchool.Account.Business.Helpers
 
             if (_configurationManager.Mode != ApplicationMode.LOCAL && _configurationManager.Mode != ApplicationMode.DEV && _configurationManager.Mode != ApplicationMode.STB)
             {
-                await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
+                // Eski boş servis
+                // await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
+                await _smsOtpRepository.SendSms(cellPhone, $"DIJITAL DERSHANE SIFRENIZ: {otp}");
             }
 
             date = DateTime.Now;

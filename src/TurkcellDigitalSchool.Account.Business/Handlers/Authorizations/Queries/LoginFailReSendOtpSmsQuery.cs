@@ -106,7 +106,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 
                     if (_environment == ApplicationMode.PROD.ToString())
                     {
-                        await _smsOtpRepository.ExecInsertSpForSms(user.MobilePhones, user.Id, otp.ToString());
+
+                        // Eski boş servis
+                        // await _smsOtpRepository.ExecInsertSpForSms(user.MobilePhones, user.Id, otp.ToString());
+                        await _smsOtpRepository.SendSms(user.MobilePhones, $"DIJITAL DERSHANE SIFRENIZ: {otp}");
                     }
 
                     mobileLogin.LastSendDate = DateTime.Now;

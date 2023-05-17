@@ -55,7 +55,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             /// If there is an e-mail address, a token is created and sent to the password reset link to the e-mail address.
             /// </summary>
 
-            [LogAspect(typeof(FileLogger))] 
+            [LogAspect(typeof(FileLogger))]
             public async Task<IResult> Handle(ForgotPasswordWithCheckFailCountCommand request, CancellationToken cancellationToken)
             {
 
@@ -72,10 +72,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 var result = true;
                 var message = "";
 
-                if (errorCount>=5)
-                { 
+                if (errorCount >= 5)
+                {
                     if (string.IsNullOrEmpty(request.CaptchaKey))
-                    { 
+                    {
                         result = false;
                         message = Messages.InvalidCaptchaKey;
                     }
@@ -93,7 +93,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 User user = null;
                 if (result)
                 {
-                    user = await _userRepository.GetAsync(expression); 
+                    user = await _userRepository.GetAsync(expression);
 
                     if (user == null)
                     {
@@ -114,7 +114,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     }
                 }
 
-               
+
 
                 if (!result)
                 {
@@ -157,12 +157,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 }
                 else
                 {
-                    await _smsOtpRepository.ExecInsertSpForSms(user.MobilePhones, user.Id, guid);
+                    // Eski boş servis
+                    // await _smsOtpRepository.ExecInsertSpForSms(user.MobilePhones, user.Id, guid);
+                    await _smsOtpRepository.SendSms(user.MobilePhones, content);
                     messsgePach = user.MobilePhones.MaskPhoneNumber() + " mobil hattına";
                 }
                 return new SuccessResult(string.Format(Messages.PasswordChangeLinkSended, messsgePach));
             }
-             
+
             public class ForgotPasswordWithCheckFailCountCommandResponse
             {
                 public bool IsCaptchaShow { get; set; }
