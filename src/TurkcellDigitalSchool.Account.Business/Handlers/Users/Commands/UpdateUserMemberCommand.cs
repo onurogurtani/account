@@ -34,6 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
         public bool ContactBySMS { get; set; }
         public bool ContactByMail { get; set; }
         public bool ContactByCall { get; set; }
+        public bool IsPackageBuyer { get; set; }
 
         [MessageClassAttr("Üye Düzenle")]
         public class UpdateUserMemberCommandHandler : IRequestHandler<UpdateUserMemberCommand, IResult>
@@ -63,7 +64,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                 record.SurName = request.SurName;
                 record.Email = request.Email;
                 record.MobilePhones = request.MobilePhones;
-                if(await _userRepository.IsPackageBuyer(record.Id))
+                if (await _userRepository.IsPackageBuyer(record.Id))
                 {
                     record.CitizenId = request.CitizenId;
                     record.BirthDate = request.BirthDate;
