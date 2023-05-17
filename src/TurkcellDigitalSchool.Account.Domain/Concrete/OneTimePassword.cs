@@ -19,6 +19,6 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
 
         public DateTime ExpiryDate { get; set; }
 
-        public DateTime ProcessDate { get; set; }
+        public DateTime? ProcessDate { get; set; }
     }
 }

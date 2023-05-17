@@ -27,7 +27,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
         {
             UpdateOldNotUsedOtpCode(UserId, ChanellTypeId, ServiceId);
 
-            var existOtpCodes = _oneTimePasswordRepository.Query().Any(w => w.OtpStatusId == OtpStatus.NotUsed && w.UserId == UserId && w.ChannelTypeId == ChanellTypeId && w.ServiceId == ServiceId && w.ExpiryDate < DateTime.UtcNow);
+            var existOtpCodes = _oneTimePasswordRepository.Query().Any(w => w.OtpStatusId == OtpStatus.NotUsed && w.UserId == UserId && w.ChannelTypeId == ChanellTypeId && w.ServiceId == ServiceId && w.ExpiryDate < DateTime.Now);
 
             if (existOtpCodes)
             {
@@ -45,9 +45,9 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
                 UserId = UserId,
                 ChannelTypeId = ChanellTypeId,
                 ServiceId = ServiceId,
-                SendDate = DateTime.UtcNow,
+                SendDate = DateTime.Now,
                 OtpStatusId = OtpStatus.NotUsed,
-                ExpiryDate = DateTime.UtcNow.AddSeconds(90)// TODO 90 saniye içinde doldurulması gerekli.
+                ExpiryDate = DateTime.Now.AddSeconds(90)// TODO 90 saniye içinde doldurulması gerekli.
 
             };
             _oneTimePasswordRepository.CreateAndSave(newRecord);
@@ -77,7 +77,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
         }
         private void UpdateOldNotUsedOtpCode(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId)
         {
-            var existOtpCodes = _oneTimePasswordRepository.Query().Where(w => w.OtpStatusId == OtpStatus.NotUsed && w.UserId == UserId && w.ChannelTypeId == ChanellTypeId && w.ServiceId == ServiceId && w.ExpiryDate < DateTime.UtcNow).ToList();
+            var existOtpCodes = _oneTimePasswordRepository.Query().Where(w => w.OtpStatusId == OtpStatus.NotUsed && w.UserId == UserId && w.ChannelTypeId == ChanellTypeId && w.ServiceId == ServiceId && w.ExpiryDate < DateTime.Now).ToList();
             existOtpCodes.ForEach(w => w.OtpStatusId = OtpStatus.Cancelled);
             _oneTimePasswordRepository.UpdateAndSave(existOtpCodes);
         }
