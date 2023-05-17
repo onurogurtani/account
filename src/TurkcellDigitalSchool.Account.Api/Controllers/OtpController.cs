@@ -22,7 +22,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("Verify")]
-        public async Task<IActionResult> Verify([FromBody] VerifyOtpCommand request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Verify([FromBody] Business.Handlers.Otp.Commands.VerifyOtpCommand request, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(request, cancellationToken);
             if (result.Success)
