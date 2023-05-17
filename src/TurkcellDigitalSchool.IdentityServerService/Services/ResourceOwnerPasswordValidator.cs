@@ -309,7 +309,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             {
                 // Eski boş servis
                 //  await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
-                await _smsOtpRepository.SendSms(cellPhone, $"DIJITAL DERSHANE SIFRENIZ: {otp}")
+                await _smsOtpRepository.SendSms(cellPhone, $"DIJITAL DERSHANE SIFRENIZ: {otp}");
             }
 
             date = DateTime.Now;
