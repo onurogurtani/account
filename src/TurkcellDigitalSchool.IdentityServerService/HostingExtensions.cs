@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Serilog;
 using System.Configuration;
 using System.Globalization;
+using System.Text.Json.Serialization;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
@@ -73,6 +74,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
                     };
                 });
                 options.UseDashboard(otp => { otp.PathMatch = "/MyCap"; });
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             });
 
 
