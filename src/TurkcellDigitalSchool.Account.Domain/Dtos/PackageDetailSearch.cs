@@ -13,6 +13,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public long[] PackageTypeEnumIds { get; set; } = new long[0];
         public long[] PublisherIds { get; set; } = new long[0];
 
+        public long[] EducationYearIds { get; set; } = new long[0];
         public long[] ClassroomIds { get; set; } = new long[0];
         public long[] LessonIds { get; set; } = new long[0];
         public bool? IsActive { get; set; }
