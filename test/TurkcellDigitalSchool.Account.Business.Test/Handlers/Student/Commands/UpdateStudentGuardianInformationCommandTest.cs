@@ -24,6 +24,8 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
     public class UpdateStudentParentInformationCommandTest
     {
         Mock<IStudentParentInformationRepository> _studentParentInformationRepository;
+        Mock<IUserRepository> _userRepository;
+
 
         UpdateStudentParentInformationCommand _updateStudentParentInformationCommand;
         UpdateStudentParentInformationCommandHandler _updateStudentParentInformationCommandHandler;
@@ -40,9 +42,11 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
         public void Setup()
         {
             _studentParentInformationRepository = new Mock<IStudentParentInformationRepository>();
+            _userRepository = new Mock<IUserRepository>();
+
 
             _updateStudentParentInformationCommand = new UpdateStudentParentInformationCommand();
-            _updateStudentParentInformationCommandHandler = new UpdateStudentParentInformationCommandHandler(_studentParentInformationRepository.Object);
+            _updateStudentParentInformationCommandHandler = new UpdateStudentParentInformationCommandHandler(_studentParentInformationRepository.Object, _userRepository.Object);
 
             _mediator = new Mock<IMediator>();
             _serviceProvider = new Mock<IServiceProvider>();
@@ -68,12 +72,11 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
 
             _updateStudentParentInformationCommand = new()
             {
-                UserId = 1,
-                CitizenId = "52265263252",
+                CitizenId = 52265263252,
                 Email = "yadaskin@gmail.com",
                 Name = "Yusuf",
                 SurName = "Daşkın",
-                MobilPhones = "05332100700"
+                MobilePhones = "05332100700"
             };
             _studentParentInformationRepository.Setup(x => x.CreateAndSave(It.IsAny<StudentParentInformation>(), It.IsAny<int?>(), It.IsAny<bool>()));
 
@@ -87,12 +90,11 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
             // TODO Unittest generic mesaj yapısından ötürü çalışmıyor. tekrar test edielcek.
             _updateStudentParentInformationCommand = new()
             {
-                UserId = 1,
-                CitizenId = "52265263252",
+                CitizenId = 52265263252,
                 Email = "yadaskin@gmail.com",
                 Name = "Yusuf",
                 SurName = "Daşkın",
-                MobilPhones = "05332100700"
+                MobilePhones = "05332100700"
             };
 
 
