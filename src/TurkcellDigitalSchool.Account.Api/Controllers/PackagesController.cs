@@ -21,7 +21,6 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     [ApiController]
     public class PackagesController : BaseApiController
     {
-
         ///<summary>
         ///Get Packages For User with relation data 
         ///</summary>
@@ -33,7 +32,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [HttpPost("getPackagesForUser")]
         public async Task<IActionResult> GetPackagesForUser([FromBody] PaginationQuery pagination, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetPackagesForUserQuery { Pagination=pagination}, cancellationToken);
+            var result = await Mediator.Send(new GetPackagesForUserQuery { Pagination = pagination }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -53,7 +52,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [HttpGet("getbyidforuser")]
         public async Task<IActionResult> GetPackageForUser(long id, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetPackageForUserQuery { Id=id}, cancellationToken);
+            var result = await Mediator.Send(new GetPackageForUserQuery { Id = id }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -80,11 +79,10 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
-
         ///<summary>
         ///Get Filtered Paged Packages with relation data 
         ///</summary>
-        ///<remarks>OrderBy default "UpdateTimeDESC" also can be "IsActiveASC","IsActiveDESC","NameASC","NameDESC","PackageKindASC","PackageKindDESC","SummaryASC","SummaryDESC","ContentASC","ContentDESC","PackageTypeASC","PackageTypeDESC","MaxNetCountASC","MaxNetCountDESC","ClassroomDESC","ClassroomASC","LessonDESC","LessonASC","PackageFieldTypeASC","PackageFieldTypeDESC","RoleDESC","RoleASC","StartDateASC","StartDateDESC","FinishDateASC","FinishDateDESC","HasCoachServiceASC","HasCoachServiceDESC","HasTryingTestASC","HasTryingTestDESC","TryingTestQuestionCountASC","TryingTestQuestionCountDESC","HasMotivationEventASC","HasMotivationEventDESC","IdASC","IdDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC"  </remarks>
+        ///<remarks>OrderBy default "UpdateTimeDESC" also can be "IsActiveASC","IsActiveDESC","NameASC","NameDESC","PackageKindASC","PackageKindDESC","SummaryASC","SummaryDESC","ContentASC","ContentDESC","PackageTypeASC","PackageTypeDESC","MaxNetCountASC","MaxNetCountDESC","EducationYearASC","EducationYearDESC","ClassroomDESC","ClassroomASC","LessonDESC","LessonASC","PackageFieldTypeASC","PackageFieldTypeDESC","RoleDESC","RoleASC","StartDateASC","StartDateDESC","FinishDateASC","FinishDateDESC","HasCoachServiceASC","HasCoachServiceDESC","HasTryingTestASC","HasTryingTestDESC","TryingTestQuestionCountASC","TryingTestQuestionCountDESC","HasMotivationEventASC","HasMotivationEventDESC","IdASC","IdDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC"  </remarks>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PagedList<Package>>))]
@@ -92,7 +90,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [HttpPost("GetByFilterPagedPackages")]
         public async Task<IActionResult> GetByFilterPagedPackages([FromQuery] GetByFilterPagedPackagesQuery query, CancellationToken cancellationToken)
         {
-           var result = await Mediator.Send(query, cancellationToken);
+            var result = await Mediator.Send(query, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -120,7 +118,6 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
-
         ///<summary>
         ///It brings the details according to its id.
         ///</summary>
@@ -140,9 +137,6 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             }
             return BadRequest(result);
         }
-
-
-
 
         /// <summary>
         /// Add TEntity.
@@ -205,8 +199,5 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
 
             return BadRequest(result);
         }
-
-
-
     }
 }

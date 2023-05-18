@@ -13,6 +13,7 @@ using NUnit.Framework;
 using TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using static TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands.UpdatePackageCommand;
 
@@ -44,6 +45,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
         Mock<IHeaderDictionary> _headerDictionary;
         Mock<HttpRequest> _httpContext;
         Mock<IMediator> _mediator;
+        Mock<RedisService> _redisService;
 
         [SetUp]
         public void Setup()
@@ -69,15 +71,18 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
 
             _mediator = new Mock<IMediator>();
             _serviceProvider = new Mock<IServiceProvider>();
-            _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
-            ServiceTool.ServiceProvider = _serviceProvider.Object;
             _httpContextAccessor = new Mock<IHttpContextAccessor>();
             _httpContext = new Mock<HttpRequest>();
             _headerDictionary = new Mock<IHeaderDictionary>();
+            _redisService = new Mock<RedisService>();
+
+            _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
+            ServiceTool.ServiceProvider = _serviceProvider.Object;
             _headerDictionary.Setup(x => x["Referer"]).Returns("");
             _httpContext.Setup(x => x.Headers).Returns(_headerDictionary.Object);
             _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpContext.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
+            _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
         }
 
         [Test]
@@ -103,6 +108,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
                     UpdateTime = DateTime.Now,
                     Summary = "Test",
                     Content = "Test",
+                    EducationYearId = 1,
                 },
             };
 
@@ -124,6 +130,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
                     UpdateTime= DateTime.Now,
                     Summary= "Deneme",
                     Content= "Deneme",
+                    EducationYearId = 1,
                 },
             };
 
@@ -157,6 +164,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
                     UpdateTime = DateTime.Now,
                     Summary = "Test",
                     Content = "Test",
+                    EducationYearId = 1,
                 },
             };
 
@@ -194,6 +202,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
                     UpdateTime = DateTime.Now,
                     Summary = "Test",
                     Content = "Test",
+                    EducationYearId = 1,
                 },
             };
 
