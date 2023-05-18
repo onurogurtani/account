@@ -16,6 +16,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Otp.Commands
     {
         public ChannelType ChanellTypeId { get; set; }
         public OtpServices ServiceId { get; set; }
+        public OTPExpiryDate OTPExpiryDate { get; set; }
 
         public class GenerateOtpCommandHandler : IRequestHandler<GenerateOtpCommand, IResult>
         {
@@ -29,7 +30,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Otp.Commands
             public async Task<IResult> Handle(GenerateOtpCommand request, CancellationToken cancellationToken)
             {
                 var userId = _tokenHelper.GetUserIdByCurrentToken();
-                var otpCode = _otpService.GenerateOtp(userId, request.ChanellTypeId, request.ServiceId);
+                var otpCode = _otpService.GenerateOtp(userId, request.ChanellTypeId, request.ServiceId,request.OTPExpiryDate);
                 //todo burası prod öncesi düzeltilecektir.(sms, bip vs.) clinet da cevap dönmeyecektir.
                 return new SuccessDataResult<int>(otpCode.Data,otpCode.Message);
             }
