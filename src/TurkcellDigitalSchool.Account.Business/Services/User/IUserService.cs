@@ -20,7 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         bool IsExistCity(long cityId);
         bool IsExistCounty(long cityId, long countyId);
         Task SetDefaultSettingValues(long UserId);
-        List<ParentInfoDto> GetStudentsByParentCitizenId(string citizenId);
+        List<ParentInfoDto> GetStudentsByParentCitizenId(long? citizenId);
         List<ParentInfoDto> GetByStudentParentsInformation(long userId);
     }
 }

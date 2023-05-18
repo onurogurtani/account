@@ -35,28 +35,29 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             public async Task<IResult> Handle(UpdateStudentParentInformationCommand request, CancellationToken cancellationToken)
             {
                 //TODO UserId Tokendan alınacaktır?
-                var existStudentParentInfo = _studentParentInformationRepository.Query().FirstOrDefault(w => w.UserId == request.UserId);
-                if (existStudentParentInfo == null)
-                {
-                    var newRecord = new StudentParentInformation
-                    {
-                        UserId = request.UserId,
-                        Name = request.Name,
-                        SurName = request.SurName,
-                        CitizenId = request.CitizenId,
-                        Email = request.Email,
-                        MobilPhones = request.MobilPhones,
-                    };
-                    await _studentParentInformationRepository.CreateAndSaveAsync(newRecord);
-                    return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
-                }
-                existStudentParentInfo.UserId = request.UserId;
-                existStudentParentInfo.Name = request.Name;
-                existStudentParentInfo.SurName = request.SurName;
-                existStudentParentInfo.CitizenId = request.CitizenId;
-                existStudentParentInfo.Email = request.Email;
-                existStudentParentInfo.MobilPhones = request.MobilPhones;
-                await _studentParentInformationRepository.UpdateAndSaveAsync(existStudentParentInfo);
+                //var existStudentParentInfo = _studentParentInformationRepository.Query().FirstOrDefault(w => w.UserId == request.UserId);
+                //if (existStudentParentInfo == null)
+                //{
+                //    var newRecord = new StudentParentInformation
+                //    {
+                //        UserId = request.UserId,
+                //        Name = request.Name,
+                //        SurName = request.SurName,
+                //        CitizenId = request.CitizenId,
+                //        Email = request.Email,
+                //        MobilPhones = request.MobilPhones,
+                //    };
+                //    await _studentParentInformationRepository.CreateAndSaveAsync(newRecord);
+                //    return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
+                //}
+                //existStudentParentInfo.UserId = request.UserId;
+                //existStudentParentInfo.Name = request.Name;
+                //existStudentParentInfo.SurName = request.SurName;
+                //existStudentParentInfo.CitizenId = request.CitizenId;
+                //existStudentParentInfo.Email = request.Email;
+                //existStudentParentInfo.MobilPhones = request.MobilPhones;
+                //await _studentParentInformationRepository.UpdateAndSaveAsync(existStudentParentInfo);
+
                 return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }
         }

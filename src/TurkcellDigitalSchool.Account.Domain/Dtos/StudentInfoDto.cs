@@ -62,9 +62,10 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
     public class ParentInfoDto
     {
         public long Id { get; set; }
+        public long ParentId { get; set; }
         public string Name { get; set; }
         public string SurName { get; set; }
-        public string CitizenId { get; set; }
+        public long? CitizenId { get; set; }
         public string Email { get; set; }
         public string MobilPhones { get; set; }
 
