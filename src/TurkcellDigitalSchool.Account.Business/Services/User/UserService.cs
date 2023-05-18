@@ -119,28 +119,20 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         }
         public List<ParentInfoDto> GetByStudentParentInfoInformation(long userId)
         {
-            var getParentList = _studentParentInformationRepository.Query().Where(w => w.UserId == userId).ToList();
-            if (getParentList.Count() == 0)
-            {
-                return new List<ParentInfoDto> { };
-            }
-
-            var resultParentList = new List<ParentInfoDto>();
-
-            foreach (var parent in getParentList)
-            {
-                resultParentList.Add(new ParentInfoDto
+            return _studentParentInformationRepository.Query()
+                .Include(w => w.Parent)
+                .Where(w => w.UserId == userId)
+                .Select(parent => new ParentInfoDto
                 {
                     Id = parent.Id,
-                    CitizenId = parent.CitizenId,
-                    Name = parent.Name,
-                    SurName = parent.SurName,
-                    Email = parent.Email,
-                    MobilPhones = parent.MobilPhones
-                });
-            }
-
-            return resultParentList;
+                    ParentId = parent.Parent.Id,
+                    CitizenId = parent.Parent.CitizenId,
+                    Name = parent.Parent.Name,
+                    SurName = parent.Parent.SurName,
+                    Email = parent.Parent.Email,
+                    MobilPhones = parent.Parent.MobilePhones
+                })
+                .ToList();
 
         }
         public bool IsExistEmail(long userId, string Email)
@@ -398,32 +390,33 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 await _userSupportTeamViewMyDataRepository.CreateAndSaveAsync(newRecord);
             }
         }
-        public List<ParentInfoDto> GetStudentsByParentCitizenId(string citizenId)
+        public List<ParentInfoDto> GetStudentsByParentCitizenId(long? citizenId)
         {
-            var getParents = _studentParentInformationRepository.Query().Where(w => w.CitizenId == citizenId)
+            var getParents = _studentParentInformationRepository.Query().Include(w => w.Parent)
+                .Where(w => w.Parent.CitizenId == citizenId)
                 .Select(s => new ParentInfoDto
                 {
                     Id = s.Id,
-                    CitizenId = s.CitizenId,
-                    Name = s.Name,
-                    SurName = s.SurName,
-                    Email = s.Email,
-                    MobilPhones = s.MobilPhones
+                    CitizenId = s.Parent.CitizenId,
+                    Name = s.Parent.Name,
+                    SurName = s.Parent.SurName,
+                    Email = s.Parent.Email,
+                    MobilPhones = s.Parent.MobilePhones
                 })
                 .ToList();
             return getParents;
         }
         public List<ParentInfoDto> GetByStudentParentsInformation(long userId)
         {
-            var getParents = _studentParentInformationRepository.Query().Where(w => w.UserId == userId)
+            var getParents = _studentParentInformationRepository.Query().Include(w => w.Parent).Where(w => w.UserId == userId)
                 .Select(s => new ParentInfoDto
                 {
                     Id = s.Id,
-                    CitizenId = s.CitizenId,
-                    Name = s.Name,
-                    SurName = s.SurName,
-                    Email = s.Email,
-                    MobilPhones = s.MobilPhones
+                    CitizenId = s.Parent.CitizenId,
+                    Name = s.Parent.Name,
+                    SurName = s.Parent.SurName,
+                    Email = s.Parent.Email,
+                    MobilPhones = s.Parent.MobilePhones
                 })
                 .ToList();
             return getParents;

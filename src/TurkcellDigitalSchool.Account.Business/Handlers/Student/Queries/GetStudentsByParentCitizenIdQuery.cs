@@ -14,7 +14,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
 {
     public class GetStudentsByParentCitizenIdQuery : IRequest<IDataResult<List<ParentInfoDto>>>
     {
-        public string CitizenId { get; set; }
+        public long? CitizenId { get; set; }
         public class GetStudentsByParentCitizenIdQueryHandler : IRequestHandler<GetStudentsByParentCitizenIdQuery, IDataResult<List<ParentInfoDto>>>
         {
             private readonly IUserService _userService;
@@ -29,7 +29,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
 
             public virtual async Task<IDataResult<List<ParentInfoDto>>> Handle(GetStudentsByParentCitizenIdQuery request, CancellationToken cancellationToken)
             {
-                if (request.CitizenId == "")
+                if (request.CitizenId == null)
                 {
                     return new ErrorDataResult<List<ParentInfoDto>>(RecordIsNotFound.PrepareRedisMessage());
                 }
