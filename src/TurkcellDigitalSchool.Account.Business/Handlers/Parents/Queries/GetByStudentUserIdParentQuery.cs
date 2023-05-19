@@ -6,8 +6,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Transaction;
+using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging; 
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
@@ -36,8 +35,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Parents.Queries
             /// <summary>
             /// Parent information query with student user Id
             /// </summary>
-            [LogAspect(typeof(FileLogger))]
-            [TransactionScopeAspectAsync]
+            [LogAspect(typeof(FileLogger))] 
             public async Task<IDataResult<Parent>> Handle(GetByStudentUserIdParentQuery request, CancellationToken cancellationToken)
             {
                 var parent = await _parentRepository.GetAsync(x => x.UserId == request.StudentUserId);

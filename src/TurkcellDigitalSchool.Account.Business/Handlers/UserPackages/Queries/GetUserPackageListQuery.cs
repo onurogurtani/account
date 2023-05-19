@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
-using ServiceStack;
-using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Transaction;
+using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging; 
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
@@ -32,12 +23,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
             public GetUserPackageListQueryHandler(IConfiguration configuration, ITokenHelper tokenHelper)
             {
                 _tokenHelper = tokenHelper;
-                _configuration = configuration;
-
+                _configuration = configuration; 
             }
 
-            [LogAspect(typeof(FileLogger))]
-            [TransactionScopeAspectAsync]
+            [LogAspect(typeof(FileLogger))] 
             public async Task<IDataResult<List<long>>> Handle(GetUserPackageListQuery request, CancellationToken cancellationToken)
             {
                 var userId = _tokenHelper.GetUserIdByCurrentToken();

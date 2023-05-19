@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using DotNetCore.CAP;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.ValidationRules;
 using TurkcellDigitalSchool.Account.Business.Helpers;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
@@ -12,15 +12,17 @@ using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Transaction; 
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
+    [TransactionScope]
     public class RegisterUserCommand : IRequest<IDataResult<AccessToken>>
     {
         public UserType UserTypeId { get; set; }
@@ -35,19 +37,20 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
         {
             private readonly IUserRepository _userRepository;
             private readonly ISendOtpSmsHelper _sendOtpSmsHelper;
+            private readonly ICapPublisher _capPublisher;
 
-            public RegisterUserCommandHandler(IUserRepository userRepository, ISendOtpSmsHelper sendOtpSmsHelper)
+            public RegisterUserCommandHandler(IUserRepository userRepository, ISendOtpSmsHelper sendOtpSmsHelper, ICapPublisher capPublisher)
             {
                 _userRepository = userRepository;
                 _sendOtpSmsHelper = sendOtpSmsHelper;
+                _capPublisher = capPublisher;
             }
 
             /// <summary>
             /// Will be reedited
             /// </summary> 
             [CacheRemoveAspect("Get")]
-            [LogAspect(typeof(FileLogger))]
-            [TransactionScopeAspectAsync]
+            [LogAspect(typeof(FileLogger))] 
             public async Task<IDataResult<AccessToken>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
             {
                 HashingHelper.CreatePasswordHash(request.Password, out var passwordSalt, out var passwordHash);
@@ -78,6 +81,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 
                 _userRepository.Add(user);
                 await _userRepository.SaveChangesAsync();
+
+                await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Added),
+                    user, cancellationToken: cancellationToken);
 
                 MobileLogin mobileLogin;
 

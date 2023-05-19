@@ -14,6 +14,7 @@ using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.LdapLoginService;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.TurkcellFastLoginService;
 using TurkcellDigitalSchool.Account.Business.Services.Otp;
+using TurkcellDigitalSchool.Account.Business.Services.TransactionManager;
 using TurkcellDigitalSchool.Account.Business.Services.User;
 using TurkcellDigitalSchool.Account.Business.SubServices.RegisterServices;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
@@ -29,6 +30,7 @@ using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Redis.Contract;
 using TurkcellDigitalSchool.Core.Services.CustomMessgeHelperService;
 using TurkcellDigitalSchool.Core.Services.KpsService;
+using TurkcellDigitalSchool.Core.TransactionManager;
 using TurkcellDigitalSchool.Core.Utilities.ElasticSearch;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Core.Utilities.MessageBrokers.RabbitMq;
@@ -83,10 +85,12 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddScoped<IKpsService, KpsService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOtpService, OtpService>();
+            services.AddScoped<ITransactionManager, AccountDbTransactionManagerSvc>();
             services.AddAutoMapper( Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
             services.AddMediatR(typeof(BusinessStartup).GetTypeInfo().Assembly);
 
 
@@ -103,15 +107,7 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddMsIntegrationServicesWithName(Configuration, MsType.Reporting);
             services.AddMsIntegrationServicesWithName(Configuration, MsType.IdentityServer);
 
-            //ValidatorOptions.Global.DisplayNameResolver = (type, memberInfo, expression) =>
-            //{
-            //    if (memberInfo != null)
-            //    {
-            //        return memberInfo.GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>()
-            //       ?.GetName();
-            //    }
-            //    return null;
-            //};
+          
             var capConfig = Configuration.GetSection("CapConfig").Get<CapConfig>();
             services.AddCap(options =>
             {

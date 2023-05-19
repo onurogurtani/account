@@ -6,12 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using ServiceStack;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Transaction;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
@@ -42,8 +39,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
                 _UserPackageRepository = UserPackageRepository;
             }
 
-            [LogAspect(typeof(FileLogger))]
-            [TransactionScopeAspectAsync]
+            [LogAspect(typeof(FileLogger))] 
             public async Task<IDataResult<List<UserPackageDto>>> Handle(GetUserPackagesByUserIdQuery request, CancellationToken cancellationToken)
             {
                 var userPackageList = _UserPackageRepository

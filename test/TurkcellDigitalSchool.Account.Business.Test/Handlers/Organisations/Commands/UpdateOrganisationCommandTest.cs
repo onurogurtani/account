@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using DotNetCore.CAP;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -41,13 +42,13 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
         Mock<HttpRequest> _httpContext;
         Mock<IMediator> _mediator;
         Mock<IMapper> _mapper;
-
+        private Mock<ICapPublisher> _capPublisher;
 
         [SetUp]
         public void Setup()
         {
             _mapper = new Mock<IMapper>();
-
+            _capPublisher = new Mock<ICapPublisher>();
             _organisationRepository = new Mock<IOrganisationRepository>();
             _organisationTypeRepository = new Mock<IOrganisationTypeRepository>();
             _mediator = new Mock<IMediator>();
@@ -55,7 +56,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
             _userRepository = new Mock<IUserRepository>();
 
             _UpdateOrganisationCommand = new UpdateOrganisationCommand();
-            _UpdateOrganisationCommandHandler = new(_organisationRepository.Object, _organisationTypeRepository.Object, _mapper.Object, _packageRoleRepository.Object, _userRepository.Object, _mediator.Object);
+            _UpdateOrganisationCommandHandler = new(_organisationRepository.Object, _organisationTypeRepository.Object, _mapper.Object, _packageRoleRepository.Object, _userRepository.Object, _mediator.Object, _capPublisher.Object);
 
 
             _serviceProvider = new Mock<IServiceProvider>();
