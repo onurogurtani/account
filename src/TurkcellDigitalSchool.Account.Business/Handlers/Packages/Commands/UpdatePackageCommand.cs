@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Newtonsoft.Json;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
@@ -123,8 +124,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 entity.HasMotivationEvent = request.Package.HasMotivationEvent;
                 entity.PackageKind = request.Package.PackageKind;
                 entity.PackageLessons = request.Package.PackageLessons;
-                entity.ImageOfPackages = request.Package.ImageOfPackages;
-                entity.PackagePublishers = request.Package.PackagePublishers;
+                
+
+
+
+
+
+              
                 entity.PackageDocuments = request.Package.PackageDocuments;
                 entity.PackageContractTypes = request.Package.PackageContractTypes;
                 entity.PackageFieldTypes = request.Package.PackageFieldTypes;
@@ -136,9 +142,28 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 entity.PackageTestExams = request.Package.PackageTestExams;
                 entity.EducationYearId = request.Package.EducationYearId;
 
-
-                var record = _packageRepository.Update(entity);
+               
+                
+                var record = _packageRepository.Update(entity); 
                 await _packageRepository.SaveChangesAsync();
+
+
+                await _imageOfPackageRepository.AddRangeAsync(request.Package.ImageOfPackages.Select(s => new ImageOfPackage
+                {
+                    FileId = s.FileId,
+                    PackageId = record.Id
+                }).ToList());
+                await  _imageOfPackageRepository.SaveChangesAsync();
+
+
+                await  _packagePublisherRepository.AddRangeAsync(request.Package.PackagePublishers.Select(s =>
+                    new PackagePublisher
+                    {
+                        PackageId = record.Id,
+                        PublisherId = s.PublisherId
+                    }));
+                await _packagePublisherRepository.SaveChangesAsync();
+
 
                 return new SuccessDataResult<Package>(record, SuccessfulOperation.PrepareRedisMessage());
             }
