@@ -14,7 +14,8 @@ using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Queries;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Core.Enums;  
+using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChangeRequests.Queries
 {
@@ -26,32 +27,34 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
         private Mock<IOrganisationInfoChangeRequestRepository> _organisationInfoChangeRequestRepository;
 
-        Mock<IMapper> _mapper;
-
-        Mock<IServiceProvider> _serviceProvider;
-        Mock<IHttpContextAccessor> _httpContextAccessor;
         Mock<IHeaderDictionary> _headerDictionary;
-        Mock<HttpRequest> _httpContext;
+        Mock<HttpRequest> _httpRequest;
+        Mock<IHttpContextAccessor> _httpContextAccessor;
+        Mock<IServiceProvider> _serviceProvider;
         Mock<IMediator> _mediator;
+        Mock<IMapper> _mapper;
+        Mock<RedisService> _redisService;
 
         [SetUp]
         public void Setup()
         {
             _mediator = new Mock<IMediator>();
             _serviceProvider = new Mock<IServiceProvider>();
+            _httpContextAccessor = new Mock<IHttpContextAccessor>();
+            _httpRequest = new Mock<HttpRequest>();
+            _headerDictionary = new Mock<IHeaderDictionary>();
+            _mapper = new Mock<IMapper>();
+            _redisService = new Mock<RedisService>();
+
             _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
             ServiceTool.ServiceProvider = _serviceProvider.Object;
-            _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpContext = new Mock<HttpRequest>();
-            _headerDictionary = new Mock<IHeaderDictionary>();
             _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpContext.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpContext.Object);
+            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
+            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
+            _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
 
             _organisationInfoChangeRequestRepository = new Mock<IOrganisationInfoChangeRequestRepository>();
-
-            _mapper = new Mock<IMapper>();
 
             _getByFilterPagedOrganisationChangeRequestQuery = new GetByFilterPagedOrganisationChangeRequestQuery();
             _getByFilterPagedOrganisationChangeRequestQueryHandler = new GetByFilterPagedOrganisationChangeRequestQuery.GetByFilterPagedOrganisationChangeRequestQueryHandler(_organisationInfoChangeRequestRepository.Object, _mapper.Object);
@@ -59,7 +62,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
         [Test]
         [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
-        public async Task GetByFilterPagedOrganisationChangeRequestQuery_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
+        public async Task GetByFilterPagedOrganisationChangeRequestQuery_Success(long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate)
         {
             DateTime _startDate = DateTime.Parse(startDate);
             DateTime _finishDate = DateTime.Parse(finishDate);
@@ -74,7 +77,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     Id = id,
                     FinishDate = _finishDate,
                     StartDate = _startDate,
-                    RecordStatus =recordStatus
+                    RecordStatus = recordStatus
 
                 }
             };
@@ -144,10 +147,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
             result.Success.Should().BeTrue();
         }
-        
+
         [Test]
         [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
-        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByRequestDateASC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
+        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByRequestDateASC_Success(long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate)
         {
             DateTime _startDate = DateTime.Parse(startDate);
             DateTime _finishDate = DateTime.Parse(finishDate);
@@ -162,7 +165,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     Id = id,
                     FinishDate = _finishDate,
                     StartDate = _startDate,
-                    RecordStatus =recordStatus
+                    RecordStatus = recordStatus
 
                 }
             };
@@ -235,7 +238,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
         [Test]
         [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
-        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByRequestDateDESC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
+        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByRequestDateDESC_Success(long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate)
         {
             DateTime _startDate = DateTime.Parse(startDate);
             DateTime _finishDate = DateTime.Parse(finishDate);
@@ -250,7 +253,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     Id = id,
                     FinishDate = _finishDate,
                     StartDate = _startDate,
-                    RecordStatus =recordStatus
+                    RecordStatus = recordStatus
 
                 }
             };
@@ -320,10 +323,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
             result.Success.Should().BeTrue();
         }
-        
+
         [Test]
         [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
-        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByRequestStateASC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
+        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByRequestStateASC_Success(long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate)
         {
             DateTime _startDate = DateTime.Parse(startDate);
             DateTime _finishDate = DateTime.Parse(finishDate);
@@ -338,7 +341,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     Id = id,
                     FinishDate = _finishDate,
                     StartDate = _startDate,
-                    RecordStatus =recordStatus
+                    RecordStatus = recordStatus
 
                 }
             };
@@ -408,10 +411,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
             result.Success.Should().BeTrue();
         }
-        
+
         [Test]
         [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
-        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByRequestStateDESC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
+        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByRequestStateDESC_Success(long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate)
         {
             DateTime _startDate = DateTime.Parse(startDate);
             DateTime _finishDate = DateTime.Parse(finishDate);
@@ -426,7 +429,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     Id = id,
                     FinishDate = _finishDate,
                     StartDate = _startDate,
-                    RecordStatus =recordStatus
+                    RecordStatus = recordStatus
 
                 }
             };
@@ -496,10 +499,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
             result.Success.Should().BeTrue();
         }
-        
+
         [Test]
         [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
-        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByCustomerManagerASC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
+        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByCustomerManagerASC_Success(long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate)
         {
             DateTime _startDate = DateTime.Parse(startDate);
             DateTime _finishDate = DateTime.Parse(finishDate);
@@ -514,7 +517,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     Id = id,
                     FinishDate = _finishDate,
                     StartDate = _startDate,
-                    RecordStatus =recordStatus
+                    RecordStatus = recordStatus
 
                 }
             };
@@ -584,10 +587,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
             result.Success.Should().BeTrue();
         }
-        
+
         [Test]
         [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
-        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByCustomerManagerDESC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
+        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByCustomerManagerDESC_Success(long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate)
         {
             DateTime _startDate = DateTime.Parse(startDate);
             DateTime _finishDate = DateTime.Parse(finishDate);
@@ -602,7 +605,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     Id = id,
                     FinishDate = _finishDate,
                     StartDate = _startDate,
-                    RecordStatus =recordStatus
+                    RecordStatus = recordStatus
 
                 }
             };
@@ -672,10 +675,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
             result.Success.Should().BeTrue();
         }
-        
+
         [Test]
         [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
-        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByInsertTimeASC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
+        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByInsertTimeASC_Success(long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate)
         {
             DateTime _startDate = DateTime.Parse(startDate);
             DateTime _finishDate = DateTime.Parse(finishDate);
@@ -690,7 +693,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     Id = id,
                     FinishDate = _finishDate,
                     StartDate = _startDate,
-                    RecordStatus =recordStatus
+                    RecordStatus = recordStatus
 
                 }
             };
@@ -760,10 +763,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
             result.Success.Should().BeTrue();
         }
-        
+
         [Test]
         [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
-        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByInsertTimeDESC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
+        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByInsertTimeDESC_Success(long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate)
         {
             DateTime _startDate = DateTime.Parse(startDate);
             DateTime _finishDate = DateTime.Parse(finishDate);
@@ -778,7 +781,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     Id = id,
                     FinishDate = _finishDate,
                     StartDate = _startDate,
-                    RecordStatus =recordStatus
+                    RecordStatus = recordStatus
 
                 }
             };
@@ -848,10 +851,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
             result.Success.Should().BeTrue();
         }
-        
+
         [Test]
         [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
-        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByUpdateTimeASC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
+        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByUpdateTimeASC_Success(long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate)
         {
             DateTime _startDate = DateTime.Parse(startDate);
             DateTime _finishDate = DateTime.Parse(finishDate);
@@ -866,7 +869,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     Id = id,
                     FinishDate = _finishDate,
                     StartDate = _startDate,
-                    RecordStatus =recordStatus
+                    RecordStatus = recordStatus
 
                 }
             };
@@ -936,10 +939,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
             result.Success.Should().BeTrue();
         }
-        
+
         [Test]
         [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
-        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByUpdateTimeDESC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
+        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByUpdateTimeDESC_Success(long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate)
         {
             DateTime _startDate = DateTime.Parse(startDate);
             DateTime _finishDate = DateTime.Parse(finishDate);
@@ -954,7 +957,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     Id = id,
                     FinishDate = _finishDate,
                     StartDate = _startDate,
-                    RecordStatus =recordStatus
+                    RecordStatus = recordStatus
 
                 }
             };
@@ -1024,10 +1027,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
             result.Success.Should().BeTrue();
         }
-        
+
         [Test]
         [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
-        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByIdASC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
+        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByIdASC_Success(long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate)
         {
             DateTime _startDate = DateTime.Parse(startDate);
             DateTime _finishDate = DateTime.Parse(finishDate);
@@ -1042,7 +1045,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     Id = id,
                     FinishDate = _finishDate,
                     StartDate = _startDate,
-                    RecordStatus =recordStatus
+                    RecordStatus = recordStatus
 
                 }
             };
@@ -1112,10 +1115,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
             result.Success.Should().BeTrue();
         }
-        
+
         [Test]
         [TestCase(1, OrganisationChangeRequestState.Forwarded, "01/02/2023", "02/03/2023")]
-        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByIdDESC_Success( long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate )
+        public async Task GetByFilterPagedOrganisationChangeRequestQuery_OrderByIdDESC_Success(long id, OrganisationChangeRequestState recordStatus, string startDate, string finishDate)
         {
             DateTime _startDate = DateTime.Parse(startDate);
             DateTime _finishDate = DateTime.Parse(finishDate);
@@ -1130,7 +1133,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                     Id = id,
                     FinishDate = _finishDate,
                     StartDate = _startDate,
-                    RecordStatus =recordStatus
+                    RecordStatus = recordStatus
 
                 }
             };
@@ -1200,7 +1203,5 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
             result.Success.Should().BeTrue();
         }
-
-
     }
 }

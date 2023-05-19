@@ -7,7 +7,6 @@ using NUnit.Framework;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
@@ -18,48 +17,48 @@ using TurkcellDigitalSchool.Core.Enums;
 using System.Linq;
 using MockQueryable.Moq;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Admins.Commands
 {
     [TestFixture]
     public class DeleteAdminCommandTest
     {
-
-        private Mock<IUserRepository> _userRepository;
-
         private DeleteAdminCommand _deleteAdminCommand;
         private DeleteAdminCommandHandler _deleteAdminCommandHandler;
-        
-		Mock<IMediator> _mediator;        
-        Mock<IMapper> _mapper;
+
+        private Mock<IUserRepository> _userRepository;
 
         Mock<IHeaderDictionary> _headerDictionary;
         Mock<HttpRequest> _httpRequest;
         Mock<IHttpContextAccessor> _httpContextAccessor;
         Mock<IServiceProvider> _serviceProvider;
+        Mock<IMediator> _mediator;
+        Mock<IMapper> _mapper;
+        Mock<RedisService> _redisService;
 
         [SetUp]
         public void Setup()
         {
+            _mediator = new Mock<IMediator>();
+            _serviceProvider = new Mock<IServiceProvider>();
+            _httpContextAccessor = new Mock<IHttpContextAccessor>();
+            _httpRequest = new Mock<HttpRequest>();
+            _headerDictionary = new Mock<IHeaderDictionary>();
+            _mapper = new Mock<IMapper>();
+            _redisService = new Mock<RedisService>();
+
+            _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
+            ServiceTool.ServiceProvider = _serviceProvider.Object;
+            _headerDictionary.Setup(x => x["Referer"]).Returns("");
+            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
+            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
+            _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
+            _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
 
             _userRepository = new Mock<IUserRepository>();
             _deleteAdminCommand = new DeleteAdminCommand();
             _deleteAdminCommandHandler = new DeleteAdminCommandHandler(_userRepository.Object);
-            _mediator = new Mock<IMediator>();
-            _mapper = new Mock<IMapper>();
-            
-            _headerDictionary = new Mock<IHeaderDictionary>();
-            _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpRequest = new Mock<HttpRequest>();
-            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            
-            _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
-            
-            _serviceProvider = new Mock<IServiceProvider>();
-            _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
-            _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
-            ServiceTool.ServiceProvider = _serviceProvider.Object;
         }
 
         [Test]
@@ -82,8 +81,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Admins.Commands
         [Test]
         public async Task DeleteAdminCommand_Not_Success()
         {
-
-             var result = await _deleteAdminCommandHandler.Handle(_deleteAdminCommand, CancellationToken.None);
+            var result = await _deleteAdminCommandHandler.Handle(_deleteAdminCommand, CancellationToken.None);
             result.Success.Should().BeFalse();
         }
     }

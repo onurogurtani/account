@@ -35,11 +35,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
         private Mock<IFileService> _fileService;
         private Mock<IFileServices> _fileIntegrationService;
 
-
-        Mock<IServiceProvider> _serviceProvider;
-        Mock<IHttpContextAccessor> _httpContextAccessor;
         Mock<IHeaderDictionary> _headerDictionary;
-        Mock<HttpRequest> _httpContext;
+        Mock<HttpRequest> _httpRequest;
+        Mock<IHttpContextAccessor> _httpContextAccessor;
+        Mock<IServiceProvider> _serviceProvider;
         Mock<IMediator> _mediator;
         Mock<IMapper> _mapper;
         Mock<RedisService> _redisService;
@@ -47,31 +46,29 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
         [SetUp]
         public void Setup()
         {
-
-            _packageRepository = new Mock<IPackageRepository>();
-            _fileService = new Mock<IFileService>();
-            _fileIntegrationService = new Mock<IFileServices>();
-
-            _mapper = new Mock<IMapper>();
-
-         //   IPackageRepository packageRepository, IMapper mapper, IFileService fileService, IFileServices fileServiceIntegration
-            _getPackageForUserQuery = new GetPackageForUserQuery();
-            _getPackageForUserQueryHandler = new GetPackageForUserQueryHandler(_packageRepository.Object ,_mapper.Object, _fileService.Object, _fileIntegrationService.Object);
-
             _mediator = new Mock<IMediator>();
             _serviceProvider = new Mock<IServiceProvider>();
             _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpContext = new Mock<HttpRequest>();
+            _httpRequest = new Mock<HttpRequest>();
             _headerDictionary = new Mock<IHeaderDictionary>();
+            _mapper = new Mock<IMapper>();
             _redisService = new Mock<RedisService>();
 
             _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
             ServiceTool.ServiceProvider = _serviceProvider.Object;
             _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpContext.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpContext.Object);
+            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
+            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
+
+            _packageRepository = new Mock<IPackageRepository>();
+            _fileService = new Mock<IFileService>();
+            _fileIntegrationService = new Mock<IFileServices>();
+
+            //   IPackageRepository packageRepository, IMapper mapper, IFileService fileService, IFileServices fileServiceIntegration
+            _getPackageForUserQuery = new GetPackageForUserQuery();
+            _getPackageForUserQueryHandler = new GetPackageForUserQueryHandler(_packageRepository.Object, _mapper.Object, _fileService.Object, _fileIntegrationService.Object);
         }
 
         [Test]
@@ -79,7 +76,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
         {
             _getPackageForUserQuery.Id = 1;
 
-           
+
             var pageTypes = new List<Package>
             {
                 new Package
@@ -100,7 +97,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
                                     Id=1,
                                     IsActive=true
                                 },
-                                Order=1 
+                                Order=1
 
                             },
                             LessonId=1,
@@ -141,8 +138,8 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             }
 
 
-            var saveFileReturn =  new DataResult<byte[]>(sevenThousandItems, true);
-            _fileService.Setup(x => x.GetFile(It.IsAny<string>())).ReturnsAsync(()=> saveFileReturn);
+            var saveFileReturn = new DataResult<byte[]>(sevenThousandItems, true);
+            _fileService.Setup(x => x.GetFile(It.IsAny<string>())).ReturnsAsync(() => saveFileReturn);
 
             _packageRepository.Setup(x => x.Query()).Returns(pageTypes.AsQueryable().BuildMock());
 
@@ -165,7 +162,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
                         }
 
                   },
-    
+
                   Lessons = new List<string> { "ABC" }
 
               });
@@ -194,9 +191,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             var result = await _getPackageForUserQueryHandler.Handle(_getPackageForUserQuery, CancellationToken.None);
 
-
             result.Success.Should().BeFalse();
         }
-
     }
 }

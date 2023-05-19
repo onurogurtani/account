@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -23,43 +24,43 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
 
     public class DeletePackageCommandTest
     {
-        Mock<IPackageRepository> _packageRepository;
-
         private DeletePackageCommand _deletePackageCommand;
         private DeletePackageCommandHandler _deletePackageCommandHandler;
 
-        Mock<IServiceProvider> _serviceProvider;
-        Mock<IHttpContextAccessor> _httpContextAccessor;
-        Mock<IHeaderDictionary> _headerDictionary;
-        Mock<HttpRequest> _httpContext;
-        Mock<IMediator> _mediator;
-        Mock<RedisService> _redisService;
+        Mock<IPackageRepository> _packageRepository;
 
+        Mock<IHeaderDictionary> _headerDictionary;
+        Mock<HttpRequest> _httpRequest;
+        Mock<IHttpContextAccessor> _httpContextAccessor;
+        Mock<IServiceProvider> _serviceProvider;
+        Mock<IMediator> _mediator;
+        Mock<IMapper> _mapper;
+        Mock<RedisService> _redisService;
 
         [SetUp]
         public void Setup()
         {
-            _packageRepository = new Mock<IPackageRepository>();
-
-            _deletePackageCommand = new DeletePackageCommand();
-            _deletePackageCommandHandler = new(_packageRepository.Object);
-
             _mediator = new Mock<IMediator>();
             _serviceProvider = new Mock<IServiceProvider>();
             _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpContext = new Mock<HttpRequest>();
+            _httpRequest = new Mock<HttpRequest>();
             _headerDictionary = new Mock<IHeaderDictionary>();
+            _mapper = new Mock<IMapper>();
             _redisService = new Mock<RedisService>();
 
             _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
             ServiceTool.ServiceProvider = _serviceProvider.Object;
             _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpContext.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpContext.Object);
+            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
+            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
-        }
 
+            _packageRepository = new Mock<IPackageRepository>();
+
+            _deletePackageCommand = new DeletePackageCommand();
+            _deletePackageCommandHandler = new(_packageRepository.Object);
+        }
 
         [Test]
 
@@ -96,9 +97,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
             var result = await _deletePackageCommandHandler.Handle(_deletePackageCommand, new CancellationToken());
 
             result.Success.Should().BeTrue();
-
         }
-
 
         [Test]
         public async Task DeletePackageCommand_EntityNull_Error()
@@ -117,9 +116,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
             var result = await _deletePackageCommandHandler.Handle(_deletePackageCommand, new CancellationToken());
 
             result.Success.Should().BeFalse();
-
         }
-
     }
 }
 

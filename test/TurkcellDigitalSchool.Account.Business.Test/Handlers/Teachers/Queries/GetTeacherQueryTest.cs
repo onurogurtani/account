@@ -13,9 +13,9 @@ using NUnit.Framework;
 using TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
-using TurkcellDigitalSchool.Entities.Enums;
 using static TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries.GetTeacherQuery;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Queries
@@ -27,13 +27,14 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Queries
         private GetTeacherQueryHandler _getTeacherQueryHandler;
 
         private Mock<IUserRepository> _userRepository;
-        private Mock<IMapper> _mapper;
 
-        Mock<IServiceProvider> _serviceProvider;
-        Mock<IHttpContextAccessor> _httpContextAccessor;
         Mock<IHeaderDictionary> _headerDictionary;
-        Mock<HttpRequest> _httpContext;
+        Mock<HttpRequest> _httpRequest;
+        Mock<IHttpContextAccessor> _httpContextAccessor;
+        Mock<IServiceProvider> _serviceProvider;
         Mock<IMediator> _mediator;
+        Mock<IMapper> _mapper;
+        Mock<RedisService> _redisService;
 
         List<User> _fakeUsers;
 
@@ -42,18 +43,21 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Queries
         {
             _mediator = new Mock<IMediator>();
             _serviceProvider = new Mock<IServiceProvider>();
+            _httpContextAccessor = new Mock<IHttpContextAccessor>();
+            _httpRequest = new Mock<HttpRequest>();
+            _headerDictionary = new Mock<IHeaderDictionary>();
+            _mapper = new Mock<IMapper>();
+            _redisService = new Mock<RedisService>();
+
             _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
             ServiceTool.ServiceProvider = _serviceProvider.Object;
-            _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpContext = new Mock<HttpRequest>();
-            _headerDictionary = new Mock<IHeaderDictionary>();
             _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpContext.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpContext.Object);
+            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
+            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
+            _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
 
             _userRepository = new Mock<IUserRepository>();
-            _mapper = new Mock<IMapper>();
 
             _getTeacherQuery = new GetTeacherQuery();
             _getTeacherQueryHandler = new GetTeacherQueryHandler(_userRepository.Object, _mapper.Object);
@@ -68,13 +72,13 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Queries
                     ResidenceCountyId = 1, ResidenceCityId = 1,
                     RemindLater = true,
                     RelatedIdentity = "UnitTest",
-                    RegisterStatus = Core.Enums.RegisterStatus.Registered,
+                    RegisterStatus = RegisterStatus.Registered,
                     AddingType = UserAddingType.Default,
                     Address = "Adres",
                     CitizenId = 12345676787,
                     Email = "email@hotmail.com",
                     MobilePhones = "5554443322",
-                    UserType = Core.Enums.UserType.Teacher,
+                    UserType = UserType.Teacher,
                     IsDeleted = false
                 }
             };
@@ -93,8 +97,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Queries
 
             result.Success.Should().BeTrue();
         }
-
     }
-
 }
 
