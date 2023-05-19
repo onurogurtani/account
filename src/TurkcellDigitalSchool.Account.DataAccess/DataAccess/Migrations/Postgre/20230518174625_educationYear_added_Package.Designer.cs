@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
@@ -11,9 +12,10 @@ using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
 {
     [DbContext(typeof(AccountDbContext))]
-    partial class AccountDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230518174625_educationYear_added_Package")]
+    partial class educationYear_added_Package
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1698,7 +1700,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasColumnType("text")
                         .HasColumnName("content");
 
-                    b.Property<long>("EducationYearId")
+                    b.Property<long?>("EducationYearId")
                         .HasColumnType("bigint")
                         .HasColumnName("educationyearid");
 
@@ -4266,8 +4268,6 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     b.HasOne("TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly.EducationYear", "EducationYear")
                         .WithMany()
                         .HasForeignKey("EducationYearId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("fk_package_educationyears_educationyearid");
 
                     b.Navigation("EducationYear");

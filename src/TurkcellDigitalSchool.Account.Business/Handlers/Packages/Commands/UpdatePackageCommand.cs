@@ -62,7 +62,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
-            [SecuredOperation] 
+            [SecuredOperation]
             public async Task<IResult> Handle(UpdatePackageCommand request, CancellationToken cancellationToken)
             {
                 var isExist = _packageRepository.Query().Any(x => x.Id != request.Package.Id && x.Name.Trim().ToLower() == request.Package.Name.Trim().ToLower() && x.IsActive);
@@ -134,6 +134,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 entity.CoachServicePackages = request.Package.CoachServicePackages;
                 entity.PackageEvents = request.Package.PackageEvents;
                 entity.PackageTestExams = request.Package.PackageTestExams;
+                entity.EducationYearId = request.Package.EducationYearId;
 
 
                 var record = _packageRepository.Update(entity);

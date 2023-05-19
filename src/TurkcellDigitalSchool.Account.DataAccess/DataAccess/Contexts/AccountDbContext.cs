@@ -10,7 +10,7 @@ using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
 {
-    public  class AccountDbContext : ProjectDbContext , IMsContext
+    public class AccountDbContext : ProjectDbContext, IMsContext
     {
         public AccountDbContext(ITokenHelper tokenHelper, IConfiguration configuration, ICapPublisher capPublisher) : base(tokenHelper,
             configuration, capPublisher)
@@ -22,19 +22,19 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         {
             var asssebly = Assembly.GetExecutingAssembly();
             modelBuilder.ApplyConfigurationsFromAssembly(asssebly);
-            
+
         }
 
         #region Owner Entities
 
-        public DbSet<AppSetting> AppSettings { get; set; } 
-        public DbSet<City> Citys { get; set; } 
+        public DbSet<AppSetting> AppSettings { get; set; }
+        public DbSet<City> Citys { get; set; }
         public DbSet<ContractKind> ContractKinds { get; set; }
         public DbSet<ContractType> ContractTypes { get; set; }
         public DbSet<Country> Countrys { get; set; }
         public DbSet<County> Countys { get; set; }
         public DbSet<Document> Documents { get; set; }
-        public DbSet<DocumentContractType> DocumentContractTypes { get; set; } 
+        public DbSet<DocumentContractType> DocumentContractTypes { get; set; }
         public DbSet<Education> Educations { get; set; }
 
         public DbSet<ForgetPasswordFailCounter> ForgetPasswordFailCounters { get; set; }
@@ -43,14 +43,14 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         public DbSet<Institution> Institutions { get; set; }
         public DbSet<InstitutionType> InstitutionTypes { get; set; }
         public DbSet<LoginFailCounter> LoginFailCounters { get; set; }
-        public DbSet<LoginFailForgetPassSendLink> LoginFailForgetPassSendLinks { get; set; } 
+        public DbSet<LoginFailForgetPassSendLink> LoginFailForgetPassSendLinks { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<MessageMap> MessageMaps { get; set; }
         public DbSet<MessageType> MessageTypes { get; set; }
         public DbSet<MobileLogin> MobileLogins { get; set; }
         public DbSet<OperationClaim> OperationClaims { get; set; }
         public DbSet<Organisation> Organisations { get; set; }
-        public DbSet<OrganisationChangeReqContent> OrganisationChangeReqContents { get; set; } 
+        public DbSet<OrganisationChangeReqContent> OrganisationChangeReqContents { get; set; }
         public DbSet<OrganisationInfoChangeRequest> OrganisationInfoChangeRequests { get; set; }
         public DbSet<OrganisationType> OrganisationTypes { get; set; }
         public DbSet<OrganisationUser> OrganisationUsers { get; set; }
@@ -69,7 +69,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         public DbSet<PackageTestExam> PackageTestExams { get; set; }
 
         public DbSet<PackageTestExamPackage> PackageTestExamPackages { get; set; }
-        public DbSet<PackageType> PackageTypes { get; set; } 
+        public DbSet<PackageType> PackageTypes { get; set; }
         public DbSet<PackageTypeTargetScreen> PackageTypeTargetScreens { get; set; }
         public DbSet<Parent> Parents { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -81,14 +81,14 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         public DbSet<StudentParentInformation> StudentParentInformations { get; set; }
 
         public DbSet<TargetScreen> TargetScreens { get; set; }
-        public DbSet<UnverifiedUser> UnverifiedUsers { get; set; } 
+        public DbSet<UnverifiedUser> UnverifiedUsers { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserBasketPackage> UserBasketPackages { get; set; }
         public DbSet<UserCommunicationPreferences> UserCommunicationPreferences { get; set; }
         public DbSet<UserContrat> UserContrats { get; set; }
         public DbSet<UserPackage> UserPackages { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
-        public DbSet<UserSession> UserSessions { get; set; }  
+        public DbSet<UserSession> UserSessions { get; set; }
         public DbSet<UserSupportTeamViewMyData> UserSupportTeamViewMyData { get; set; }
         public DbSet<OneTimePassword> OneTimePasswords { get; set; }
 
@@ -99,9 +99,10 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         #region Readonly Entities 
         public DbSet<BranchMainField> BranchMainFields { get; set; }
         public DbSet<Classroom> Classrooms { get; set; }
+        public DbSet<EducationYear> EducationYears { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<File> Files { get; set; }
-        public DbSet<Lesson> Lessons { get; set; } 
+        public DbSet<Lesson> Lessons { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
         public DbSet<TestExam> TestExams { get; set; }
         public DbSet<TestExamType> TestExamTypes { get; set; }

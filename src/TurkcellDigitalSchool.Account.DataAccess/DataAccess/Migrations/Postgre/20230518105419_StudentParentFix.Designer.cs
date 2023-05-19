@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
@@ -11,9 +12,10 @@ using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
 {
     [DbContext(typeof(AccountDbContext))]
-    partial class AccountDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230518105419_StudentParentFix")]
+    partial class StudentParentFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1698,10 +1700,6 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasColumnType("text")
                         .HasColumnName("content");
 
-                    b.Property<long>("EducationYearId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("educationyearid");
-
                     b.Property<DateTime>("FinishDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("finishdate");
@@ -1764,9 +1762,6 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
 
                     b.HasKey("Id")
                         .HasName("pk_package");
-
-                    b.HasIndex("EducationYearId")
-                        .HasDatabaseName("ix_package_educationyearid");
 
                     b.ToTable("package", (string)null);
                 });
@@ -2581,41 +2576,6 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasName("pk_classroom");
 
                     b.ToTable("classroom", (string)null);
-                });
-
-            modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly.EducationYear", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("enddate");
-
-                    b.Property<int>("EndYear")
-                        .HasColumnType("integer")
-                        .HasColumnName("endyear");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("isdeleted");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("startdate");
-
-                    b.Property<int>("StartYear")
-                        .HasColumnType("integer")
-                        .HasColumnName("startyear");
-
-                    b.HasKey("Id")
-                        .HasName("pk_educationyear");
-
-                    b.ToTable("educationyear", (string)null);
                 });
 
             modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly.Event", b =>
@@ -4259,18 +4219,6 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     b.Navigation("Organisation");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.Package", b =>
-                {
-                    b.HasOne("TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly.EducationYear", "EducationYear")
-                        .WithMany()
-                        .HasForeignKey("EducationYearId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_package_educationyears_educationyearid");
-
-                    b.Navigation("EducationYear");
                 });
 
             modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.PackageCoachServicePackage", b =>

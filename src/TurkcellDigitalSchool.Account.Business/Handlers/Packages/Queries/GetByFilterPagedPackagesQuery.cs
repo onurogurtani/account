@@ -17,7 +17,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     ///<summary>
     ///Get Filtered Paged Packages with relation data 
     ///</summary>
-    ///<remarks>OrderBy default "UpdateTimeDESC" also can be "IsActiveASC","IsActiveDESC","NameASC","NameDESC","PackageKindASC","PackageKindDESC","SummaryASC","SummaryDESC","ContentASC","ContentDESC","PackageTypeASC","PackageTypeDESC","MaxNetCountASC","MaxNetCountDESC","ClassroomDESC","ClassroomASC","LessonDESC","LessonASC","PackageFieldTypeASC","PackageFieldTypeDESC","RoleDESC","RoleASC","StartDateASC","StartDateDESC","FinishDateASC","FinishDateDESC","HasCoachServiceASC","HasCoachServiceDESC","HasTryingTestASC","HasTryingTestDESC","TryingTestQuestionCountASC","TryingTestQuestionCountDESC","HasMotivationEventASC","HasMotivationEventDESC","IdASC","IdDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC"  </remarks>
+    ///<remarks>OrderBy default "UpdateTimeDESC" also can be "IsActiveASC","IsActiveDESC","NameASC","NameDESC","PackageKindASC","PackageKindDESC","SummaryASC","SummaryDESC","ContentASC","ContentDESC","PackageTypeASC","PackageTypeDESC","MaxNetCountASC","MaxNetCountDESC","EducationYearASC","EducationYearDESC","ClassroomDESC","ClassroomASC","LessonDESC","LessonASC","PackageFieldTypeASC","PackageFieldTypeDESC","RoleDESC","RoleASC","StartDateASC","StartDateDESC","FinishDateASC","FinishDateDESC","HasCoachServiceASC","HasCoachServiceDESC","HasTryingTestASC","HasTryingTestDESC","TryingTestQuestionCountASC","TryingTestQuestionCountDESC","HasMotivationEventASC","HasMotivationEventDESC","IdASC","IdDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC"  </remarks>
     public class GetByFilterPagedPackagesQuery : IRequest<IDataResult<PagedList<Package>>>
     {
         public PackageDetailSearch PackageDetailSearch { get; set; } = new PackageDetailSearch();
@@ -36,7 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
             public virtual async Task<IDataResult<PagedList<Package>>> Handle(GetByFilterPagedPackagesQuery request, CancellationToken cancellationToken)
             {
                 var query = _packageRepository.Query()
-                    .Include(x => x.ImageOfPackages).ThenInclude(x => x.File)  
+                    .Include(x => x.ImageOfPackages).ThenInclude(x => x.File)
                     .Include(x => x.PackageLessons).ThenInclude(x => x.Lesson).ThenInclude(x => x.Classroom)
                     .Include(x => x.PackageRoles).ThenInclude(x => x.Role)
                     .Include(x => x.PackageDocuments).ThenInclude(x => x.Document)
@@ -49,6 +49,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
                     .Include(x => x.MotivationActivityPackages)
                     .Include(x => x.PackageEvents)
                     .Include(x => x.PackageTestExams)
+                    .Include(x => x.EducationYear)
                     .AsQueryable();
 
 
@@ -68,6 +69,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
 
                 if (request.PackageDetailSearch.PackageKind > 0)
                     query = query.Where(x => x.PackageKind == request.PackageDetailSearch.PackageKind);
+
+                if (request.PackageDetailSearch.EducationYearIds?.Length > 0)
+                    query = query.Where(x => request.PackageDetailSearch.EducationYearIds.Contains(x.EducationYearId));
 
                 if (request.PackageDetailSearch.ClassroomIds?.Length > 0)
                     query = query.Where(x => x.PackageLessons.Any(q => request.PackageDetailSearch.ClassroomIds.Contains(q.Lesson.ClassroomId)));
@@ -113,6 +117,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
                     "ContentDESC" => query.OrderByDescending(x => x.Content),
                     "PackageTypeASC" => query.OrderBy(x => x.PackagePackageTypeEnums),
                     "PackageTypeDESC" => query.OrderByDescending(x => x.PackagePackageTypeEnums),
+                    "EducationYearASC" => query.OrderBy(x => x.EducationYear.StartYear),
+                    "EducationYearDESC" => query.OrderByDescending(x => x.EducationYear.StartYear),
                     "ClassroomDESC" => query.OrderByDescending(x => x.PackageLessons.First().Lesson.Classroom.Name),
                     "ClassroomASC" => query.OrderBy(x => x.PackageLessons.First().Lesson.Classroom.Name),
                     "LessonDESC" => query.OrderByDescending(x => x.PackageLessons.First().Lesson.Name),

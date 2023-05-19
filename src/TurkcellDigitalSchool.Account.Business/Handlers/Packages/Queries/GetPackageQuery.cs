@@ -57,6 +57,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
                     .Include(x => x.MotivationActivityPackages)
                     .Include(x => x.PackageEvents)
                     .Include(x => x.PackageTestExams)
+                    .Include(x => x.EducationYear)
                     .AsQueryable();
 
                 var record = await query.FirstOrDefaultAsync(x => x.Id == request.Id);
