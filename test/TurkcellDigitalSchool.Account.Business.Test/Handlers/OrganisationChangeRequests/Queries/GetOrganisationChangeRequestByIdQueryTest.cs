@@ -24,6 +24,7 @@ using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.R
 using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.Response.Dto;
 using File = TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly.File;
 using OrganisationChangeReqContent = TurkcellDigitalSchool.Account.Domain.Concrete.OrganisationChangeReqContent;
+using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChangeRequests.Queries
 {
@@ -39,28 +40,32 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
         private Mock<IOrganisationInfoChangeRequestRepository> _organisationInfoChangeRequestRepository;
         private Mock<IOrganisationChangeReqContentRepository> _organisationChangeReqContentRepository;
 
-        Mock<IMapper> _mapper;
-
-        Mock<IServiceProvider> _serviceProvider;
-        Mock<IHttpContextAccessor> _httpContextAccessor;
         Mock<IHeaderDictionary> _headerDictionary;
-        Mock<HttpRequest> _httpContext;
+        Mock<HttpRequest> _httpRequest;
+        Mock<IHttpContextAccessor> _httpContextAccessor;
+        Mock<IServiceProvider> _serviceProvider;
         Mock<IMediator> _mediator;
+        Mock<IMapper> _mapper;
+        Mock<RedisService> _redisService;
 
         [SetUp]
         public void Setup()
         {
             _mediator = new Mock<IMediator>();
             _serviceProvider = new Mock<IServiceProvider>();
+            _httpContextAccessor = new Mock<IHttpContextAccessor>();
+            _httpRequest = new Mock<HttpRequest>();
+            _headerDictionary = new Mock<IHeaderDictionary>();
+            _mapper = new Mock<IMapper>();
+            _redisService = new Mock<RedisService>();
+
             _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
             ServiceTool.ServiceProvider = _serviceProvider.Object;
-            _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpContext = new Mock<HttpRequest>();
-            _headerDictionary = new Mock<IHeaderDictionary>();
             _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpContext.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpContext.Object);
+            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
+            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
+            _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
 
             _organisationInfoChangeRequestRepository = new Mock<IOrganisationInfoChangeRequestRepository>();
             _organisationChangeReqContentRepository = new Mock<IOrganisationChangeReqContentRepository>();
@@ -68,7 +73,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
             _countyRepository = new Mock<ICountyRepository>();
             _cityRepository = new Mock<ICityRepository>();
             _fileService = new Mock<IFileServices>();
-            _mapper = new Mock<IMapper>();
 
             _getOrganisationChangeRequestByIdQuery = new GetOrganisationChangeRequestByIdQuery();
             _getOrganisationChangeRequestByIdQueryHandler = new GetOrganisationChangeRequestByIdQuery.GetOrganisationChangeRequestByIdQueryHandler(_organisationInfoChangeRequestRepository.Object, _cityRepository.Object, _countyRepository.Object,
@@ -165,7 +169,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
             _fileService.Setup(x => x.GetFileQuery(It.IsAny<GetFileIntegrationRequest>())).ReturnsAsync(new GetFileQueryIntegrationResponse()
             {
-                Data = new Integration.IntegrationServices.FileServices.Model.Response.Dto.FileDto 
+                Data = new Integration.IntegrationServices.FileServices.Model.Response.Dto.FileDto
                 {
                     Id = 1,
                     FileName = "Test.jpg",
@@ -175,15 +179,16 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
             });
 
 
-            var logo = new List<File> { 
+            var logo = new List<File> {
                 new  File{
                 Id = 214, FileName = "test", FilePath="/kg/test" } };
 
             var organisationLogos = new List<File> { new File { Id = 214, FileName = "test", FilePath = "/kg/test" } };
-            
 
-            _mapper.Setup(s => s.Map<GetOrganisationInfoChangeRequestDto>(pageTypes[0])).Returns(new GetOrganisationInfoChangeRequestDto {
-                OrganisationChangeReqContents= new List<GetOrganisationChangeReqContentDto> { 
+
+            _mapper.Setup(s => s.Map<GetOrganisationInfoChangeRequestDto>(pageTypes[0])).Returns(new GetOrganisationInfoChangeRequestDto
+            {
+                OrganisationChangeReqContents = new List<GetOrganisationChangeReqContentDto> {
             new GetOrganisationChangeReqContentDto
             {
                 Id=1,
@@ -192,8 +197,9 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
                 PropertyValue="214"
 
             }
-            
-            } });
+
+            }
+            });
 
             var result = await _getOrganisationChangeRequestByIdQueryHandler.Handle(_getOrganisationChangeRequestByIdQuery, CancellationToken.None);
 
@@ -241,9 +247,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
             var result = await _getOrganisationChangeRequestByIdQueryHandler.Handle(_getOrganisationChangeRequestByIdQuery, CancellationToken.None);
 
-
             result.Success.Should().BeFalse();
         }
-
     }
 }

@@ -10,14 +10,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Account.Domain.Dtos; 
+using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Admins.Commands
 {
@@ -27,47 +28,43 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Admins.Commands
         private CreateAdminCommand _createAdminCommand;
         private CreateAdminCommand.CreateAdminCommandHandler _createAdminCommandHandler;
 
-
         private Mock<IUserRepository> _userRepository;
         private Mock<IUserRoleRepository> _userRoleRepository;
-
         private Mock<ITokenHelper> _tokenHelper;
-
-
-        Mock<IMediator> _mediator;        
-        Mock<IMapper> _mapper;
 
         Mock<IHeaderDictionary> _headerDictionary;
         Mock<HttpRequest> _httpRequest;
         Mock<IHttpContextAccessor> _httpContextAccessor;
         Mock<IServiceProvider> _serviceProvider;
+        Mock<IMediator> _mediator;
+        Mock<IMapper> _mapper;
+        Mock<RedisService> _redisService;
 
         [SetUp]
         public void Setup()
         {
-          
             _mediator = new Mock<IMediator>();
-            _mapper = new Mock<IMapper>();
-            
-            _headerDictionary = new Mock<IHeaderDictionary>();
-            _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpRequest = new Mock<HttpRequest>();
-            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            
-            _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
-            
             _serviceProvider = new Mock<IServiceProvider>();
-            _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
+            _httpContextAccessor = new Mock<IHttpContextAccessor>();
+            _httpRequest = new Mock<HttpRequest>();
+            _headerDictionary = new Mock<IHeaderDictionary>();
+            _mapper = new Mock<IMapper>();
+            _redisService = new Mock<RedisService>();
+
             _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
             ServiceTool.ServiceProvider = _serviceProvider.Object;
+            _headerDictionary.Setup(x => x["Referer"]).Returns("");
+            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
+            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
+            _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
+            _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
 
             _tokenHelper = new Mock<ITokenHelper>();
             _userRepository = new Mock<IUserRepository>();
             _userRoleRepository = new Mock<IUserRoleRepository>();
 
             _createAdminCommand = new CreateAdminCommand();
-            _createAdminCommandHandler = new CreateAdminCommand.CreateAdminCommandHandler(_userRoleRepository.Object, _userRepository.Object, _tokenHelper.Object, _mapper.Object );
+            _createAdminCommandHandler = new CreateAdminCommand.CreateAdminCommandHandler(_userRoleRepository.Object, _userRepository.Object, _tokenHelper.Object, _mapper.Object);
         }
 
         [Test]
@@ -81,7 +78,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Admins.Commands
                     Name = "Test",
                     CitizenId = "11111111111",
                     Email = "test@test.com",
-                    MobilePhones = "1111111111" ,
+                    MobilePhones = "1111111111",
                     RoleIds = new List<long>(),
 
                 }
@@ -99,8 +96,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Admins.Commands
             var result = await _createAdminCommandHandler.Handle(_createAdminCommand, CancellationToken.None);
 
             result.Success.Should().BeTrue();
-
-
         }
 
         [Test]

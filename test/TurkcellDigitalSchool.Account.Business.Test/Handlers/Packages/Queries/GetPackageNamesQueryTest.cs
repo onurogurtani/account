@@ -27,11 +27,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
         private Mock<IPackageRepository> _packageRepository;
 
-
-        Mock<IServiceProvider> _serviceProvider;
-        Mock<IHttpContextAccessor> _httpContextAccessor;
         Mock<IHeaderDictionary> _headerDictionary;
-        Mock<HttpRequest> _httpContext;
+        Mock<HttpRequest> _httpRequest;
+        Mock<IHttpContextAccessor> _httpContextAccessor;
+        Mock<IServiceProvider> _serviceProvider;
         Mock<IMediator> _mediator;
         Mock<IMapper> _mapper;
         Mock<RedisService> _redisService;
@@ -39,27 +38,26 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
         [SetUp]
         public void Setup()
         {
-            _packageRepository = new Mock<IPackageRepository>();
-
-            _mapper = new Mock<IMapper>();
-
-            _getPackageNamesQuery = new GetPackageNamesQuery();
-            _getPackageNamesQueryHandler = new GetPackageNamesQueryHandler( _packageRepository.Object);
-
             _mediator = new Mock<IMediator>();
             _serviceProvider = new Mock<IServiceProvider>();
             _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpContext = new Mock<HttpRequest>();
+            _httpRequest = new Mock<HttpRequest>();
             _headerDictionary = new Mock<IHeaderDictionary>();
+            _mapper = new Mock<IMapper>();
             _redisService = new Mock<RedisService>();
 
             _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
             ServiceTool.ServiceProvider = _serviceProvider.Object;
             _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpContext.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpContext.Object);
+            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
+            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
+
+            _packageRepository = new Mock<IPackageRepository>();
+
+            _getPackageNamesQuery = new GetPackageNamesQuery();
+            _getPackageNamesQueryHandler = new GetPackageNamesQueryHandler(_packageRepository.Object);
         }
 
         [Test]
@@ -76,13 +74,11 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
                 },
 
             };
-
             _packageRepository.Setup(x => x.Query()).Returns(pageTypes.AsQueryable().BuildMock());
 
             var result = await _getPackageNamesQueryHandler.Handle(_getPackageNamesQuery, CancellationToken.None);
 
             result.Success.Should().BeTrue();
         }
-       
     }
 }

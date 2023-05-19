@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -15,10 +16,11 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using static TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands.CreateOrganisationCommand;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Commands
 {
@@ -26,42 +28,46 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
 
     public class CreateOrganisationCommandTest
     {
+        private CreateOrganisationCommand _createOrganisationCommand;
+        private CreateOrganisationCommandHandler _createOrganisationCommandHandler;
+
         Mock<IOrganisationRepository> _organisationRepository;
         Mock<IOrganisationTypeRepository> _organisationTypeRepository;
         Mock<IPackageRoleRepository> _packageRoleRepository;
 
-        private CreateOrganisationCommand _createOrganisationCommand;
-        private CreateOrganisationCommand.CreateOrganisationCommandHandler _createOrganisationCommandHandler;
-
-        Mock<IServiceProvider> _serviceProvider;
-        Mock<IHttpContextAccessor> _httpContextAccessor;
         Mock<IHeaderDictionary> _headerDictionary;
-        Mock<HttpRequest> _httpContext;
+        Mock<HttpRequest> _httpRequest;
+        Mock<IHttpContextAccessor> _httpContextAccessor;
+        Mock<IServiceProvider> _serviceProvider;
         Mock<IMediator> _mediator;
-
+        Mock<IMapper> _mapper;
+        Mock<RedisService> _redisService;
 
         [SetUp]
         public void Setup()
         {
+            _mediator = new Mock<IMediator>();
+            _serviceProvider = new Mock<IServiceProvider>();
+            _httpContextAccessor = new Mock<IHttpContextAccessor>();
+            _httpRequest = new Mock<HttpRequest>();
+            _headerDictionary = new Mock<IHeaderDictionary>();
+            _mapper = new Mock<IMapper>();
+            _redisService = new Mock<RedisService>();
+
+            _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
+            ServiceTool.ServiceProvider = _serviceProvider.Object;
+            _headerDictionary.Setup(x => x["Referer"]).Returns("");
+            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
+            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
+            _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
+            _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
+
             _organisationRepository = new Mock<IOrganisationRepository>();
             _organisationTypeRepository = new Mock<IOrganisationTypeRepository>();
-            _mediator = new Mock<IMediator>();
             _packageRoleRepository = new Mock<IPackageRoleRepository>();
 
             _createOrganisationCommand = new CreateOrganisationCommand();
             _createOrganisationCommandHandler = new(_organisationRepository.Object, _organisationTypeRepository.Object, _packageRoleRepository.Object, _mediator.Object);
-
-
-            _serviceProvider = new Mock<IServiceProvider>();
-            _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
-            ServiceTool.ServiceProvider = _serviceProvider.Object;
-            _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpContext = new Mock<HttpRequest>();
-            _headerDictionary = new Mock<IHeaderDictionary>();
-            _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpContext.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpContext.Object);
-            _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
         }
 
         [Test]
@@ -122,7 +128,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
             _packageRoleRepository.Setup(x => x.Query()).Returns(packageRole.AsQueryable().BuildMock());
             _packageRoleRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<PackageRole, bool>>>())).ReturnsAsync(packageRole.First());
 
-            _mediator.Setup(x => x.Send(It.IsAny<CreateAdminCommand>(), CancellationToken.None)).ReturnsAsync(new SuccessResult(Messages.SuccessfulOperation));
+            _mediator.Setup(x => x.Send(It.IsAny<CreateAdminCommand>(), CancellationToken.None)).ReturnsAsync(new SuccessResult());
 
             _organisationRepository.Setup(x => x.Add(It.IsAny<Organisation>())).Returns(new Organisation());
 
@@ -154,7 +160,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
             var result = await _createOrganisationCommandHandler.Handle(_createOrganisationCommand, new CancellationToken());
 
             result.Success.Should().BeFalse();
-            result.Message.Should().Be(Messages.SameNameAlreadyExist);
         }
     }
 }

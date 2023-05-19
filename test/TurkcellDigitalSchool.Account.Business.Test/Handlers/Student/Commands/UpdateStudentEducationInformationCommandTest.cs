@@ -6,7 +6,6 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using static TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands.UpdateStudentEducationInformationCommand;
@@ -18,50 +17,51 @@ using TurkcellDigitalSchool.Account.Business.Services.User;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.Enums;
+using AutoMapper;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
 {
     [TestFixture]
     public class UpdateStudentEducationInformationCommandTest
     {
-        Mock<IStudentEducationInformationRepository> _studentEducationInformationRepository;
-        Mock<IUserService> _userService;
-
         UpdateStudentEducationInformationCommand _updateStudentEducationInformationCommand;
         UpdateStudentEducationInformationCommandHandler _updateStudentEducationInformationCommandHandler;
 
-        Mock<IServiceProvider> _serviceProvider;
-        Mock<IHttpContextAccessor> _httpContextAccessor;
-        Mock<IHeaderDictionary> _headerDictionary;
-        Mock<HttpRequest> _httpContext;
-        Mock<IMediator> _mediator;
+        Mock<IStudentEducationInformationRepository> _studentEducationInformationRepository;
+        Mock<IUserService> _userService;
 
+        Mock<IHeaderDictionary> _headerDictionary;
+        Mock<HttpRequest> _httpRequest;
+        Mock<IHttpContextAccessor> _httpContextAccessor;
+        Mock<IServiceProvider> _serviceProvider;
+        Mock<IMediator> _mediator;
+        Mock<IMapper> _mapper;
         Mock<RedisService> _redisService;
 
         [SetUp]
         public void Setup()
         {
-            _studentEducationInformationRepository = new Mock<IStudentEducationInformationRepository>();
-            _userService = new Mock<IUserService>();
-
-            _updateStudentEducationInformationCommand = new UpdateStudentEducationInformationCommand();
-            _updateStudentEducationInformationCommandHandler = new UpdateStudentEducationInformationCommandHandler(_studentEducationInformationRepository.Object, _userService.Object);
-
             _mediator = new Mock<IMediator>();
             _serviceProvider = new Mock<IServiceProvider>();
             _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpContext = new Mock<HttpRequest>();
+            _httpRequest = new Mock<HttpRequest>();
             _headerDictionary = new Mock<IHeaderDictionary>();
+            _mapper = new Mock<IMapper>();
             _redisService = new Mock<RedisService>();
 
             _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
             ServiceTool.ServiceProvider = _serviceProvider.Object;
             _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpContext.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpContext.Object);
+            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
+            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
 
+            _studentEducationInformationRepository = new Mock<IStudentEducationInformationRepository>();
+            _userService = new Mock<IUserService>();
+
+            _updateStudentEducationInformationCommand = new UpdateStudentEducationInformationCommand();
+            _updateStudentEducationInformationCommandHandler = new UpdateStudentEducationInformationCommandHandler(_studentEducationInformationRepository.Object, _userService.Object);
         }
 
         [Test]
