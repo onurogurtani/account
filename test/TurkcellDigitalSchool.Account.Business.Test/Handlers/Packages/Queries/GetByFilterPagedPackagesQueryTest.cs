@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
+using ServiceStack.Web;
 using TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
@@ -29,11 +30,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
         private Mock<IPackageRepository> _packageRepository;
 
-
-        Mock<IServiceProvider> _serviceProvider;
-        Mock<IHttpContextAccessor> _httpContextAccessor;
         Mock<IHeaderDictionary> _headerDictionary;
-        Mock<HttpRequest> _httpContext;
+        Mock<HttpRequest> _httpRequest;
+        Mock<IHttpContextAccessor> _httpContextAccessor;
+        Mock<IServiceProvider> _serviceProvider;
         Mock<IMediator> _mediator;
         Mock<IMapper> _mapper;
         Mock<RedisService> _redisService;
@@ -41,27 +41,26 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
         [SetUp]
         public void Setup()
         {
-            _packageRepository = new Mock<IPackageRepository>();
-
-            _mapper = new Mock<IMapper>();
-
-            _getByFilterPagedPackagesQuery = new GetByFilterPagedPackagesQuery();
-            _getByFilterPagedPackagesQueryHandler = new GetByFilterPagedPackagesQueryHandler(_packageRepository.Object);
-
             _mediator = new Mock<IMediator>();
             _serviceProvider = new Mock<IServiceProvider>();
             _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpContext = new Mock<HttpRequest>();
+            _httpRequest = new Mock<HttpRequest>();
             _headerDictionary = new Mock<IHeaderDictionary>();
+            _mapper = new Mock<IMapper>();
             _redisService = new Mock<RedisService>();
 
             _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
             ServiceTool.ServiceProvider = _serviceProvider.Object;
             _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpContext.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpContext.Object);
+            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
+            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
+
+            _packageRepository = new Mock<IPackageRepository>();
+
+            _getByFilterPagedPackagesQuery = new GetByFilterPagedPackagesQuery();
+            _getByFilterPagedPackagesQueryHandler = new GetByFilterPagedPackagesQueryHandler(_packageRepository.Object);
         }
 
 
@@ -186,8 +185,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             result.Success.Should().BeTrue();
         }
 
-
-
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
         public async Task GetByFilterPagedPackagesQueryByIsActiveASC_Success(long[] fieldTypeIds, long[] publisherIds, long[] packageTypeEnumIds, string name, PackageKind packageKind, long[] classroomIds,
@@ -308,7 +305,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
 
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
@@ -431,8 +427,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             result.Success.Should().BeTrue();
         }
 
-
-
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
         public async Task GetByFilterPagedPackagesQueryByNameASC_Success(long[] fieldTypeIds, long[] publisherIds, long[] packageTypeEnumIds, string name, PackageKind packageKind, long[] classroomIds,
@@ -553,7 +547,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
 
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
@@ -676,7 +669,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             result.Success.Should().BeTrue();
         }
 
-
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
         public async Task GetByFilterPagedPackagesQueryByPackageKindASC_Success(long[] fieldTypeIds, long[] publisherIds, long[] packageTypeEnumIds, string name, PackageKind packageKind, long[] classroomIds,
@@ -797,7 +789,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
 
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
@@ -920,8 +911,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             result.Success.Should().BeTrue();
         }
 
-
-
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
         public async Task GetByFilterPagedPackagesQueryBySummaryASC_Success(long[] fieldTypeIds, long[] publisherIds, long[] packageTypeEnumIds, string name, PackageKind packageKind, long[] classroomIds,
@@ -1042,7 +1031,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
 
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
@@ -1165,8 +1153,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             result.Success.Should().BeTrue();
         }
 
-
-
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
         public async Task GetByFilterPagedPackagesQueryContentASC_Success(long[] fieldTypeIds, long[] publisherIds, long[] packageTypeEnumIds, string name, PackageKind packageKind, long[] classroomIds,
@@ -1287,7 +1273,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
 
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
@@ -1410,7 +1395,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             result.Success.Should().BeTrue();
         }
 
-
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
         public async Task GetByFilterPagedPackagesQueryByPackageTypeASC_Success(long[] fieldTypeIds, long[] publisherIds, long[] packageTypeEnumIds, string name, PackageKind packageKind, long[] classroomIds,
@@ -1531,7 +1515,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
 
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
@@ -1654,8 +1637,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             result.Success.Should().BeTrue();
         }
 
-
-
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
         public async Task GetByFilterPagedPackagesQueryByClassroomDESC_Success(long[] fieldTypeIds, long[] publisherIds, long[] packageTypeEnumIds, string name, PackageKind packageKind, long[] classroomIds,
@@ -1776,7 +1757,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
 
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
@@ -1899,8 +1879,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             result.Success.Should().BeTrue();
         }
 
-
-
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
         public async Task GetByFilterPagedPackagesQueryByLessonDESC_Success(long[] fieldTypeIds, long[] publisherIds, long[] packageTypeEnumIds, string name, PackageKind packageKind, long[] classroomIds,
@@ -2021,7 +1999,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
 
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
@@ -2144,8 +2121,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             result.Success.Should().BeTrue();
         }
 
-
-
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
         public async Task GetByFilterPagedPackagesQueryPackageFieldTypeASC_Success(long[] fieldTypeIds, long[] publisherIds, long[] packageTypeEnumIds, string name, PackageKind packageKind, long[] classroomIds,
@@ -2266,7 +2241,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
 
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
@@ -2389,7 +2363,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             result.Success.Should().BeTrue();
         }
 
-
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
         public async Task GetByFilterPagedPackagesQueryByRoleDESC_Success(long[] fieldTypeIds, long[] publisherIds, long[] packageTypeEnumIds, string name, PackageKind packageKind, long[] classroomIds,
@@ -2510,7 +2483,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
 
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
@@ -2633,8 +2605,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             result.Success.Should().BeTrue();
         }
 
-
-
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
         public async Task GetByFilterPagedPackagesQueryByStartDateASC_Success(long[] fieldTypeIds, long[] publisherIds, long[] packageTypeEnumIds, string name, PackageKind packageKind, long[] classroomIds,
@@ -2755,7 +2725,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
 
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
@@ -2878,8 +2847,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             result.Success.Should().BeTrue();
         }
 
-
-
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
         public async Task GetByFilterPagedPackagesQueryByFinishDateASC_Success(long[] fieldTypeIds, long[] publisherIds, long[] packageTypeEnumIds, string name, PackageKind packageKind, long[] classroomIds,
@@ -3000,7 +2967,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
 
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
@@ -3123,7 +3089,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             result.Success.Should().BeTrue();
         }
 
-
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
         public async Task GetByFilterPagedPackagesQueryByHasCoachServiceASC_Success(long[] fieldTypeIds, long[] publisherIds, long[] packageTypeEnumIds, string name, PackageKind packageKind, long[] classroomIds,
@@ -3244,7 +3209,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
 
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
@@ -3367,7 +3331,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             result.Success.Should().BeTrue();
         }
 
-
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
         public async Task GetByFilterPagedPackagesQueryByHasTryingTestASC_Success(long[] fieldTypeIds, long[] publisherIds, long[] packageTypeEnumIds, string name, PackageKind packageKind, long[] classroomIds,
@@ -3488,7 +3451,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
 
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
@@ -3611,7 +3573,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             result.Success.Should().BeTrue();
         }
 
-
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
         public async Task GetByFilterPagedPackagesQueryByTryingTestQuestionCountASC_Success(long[] fieldTypeIds, long[] publisherIds, long[] packageTypeEnumIds, string name, PackageKind packageKind, long[] classroomIds,
@@ -3732,7 +3693,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
 
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
@@ -3855,8 +3815,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             result.Success.Should().BeTrue();
         }
 
-
-
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
         public async Task GetByFilterPagedPackagesQueryByHasMotivationEventASC_Success(long[] fieldTypeIds, long[] publisherIds, long[] packageTypeEnumIds, string name, PackageKind packageKind, long[] classroomIds,
@@ -3977,7 +3935,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
 
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
@@ -4100,7 +4057,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             result.Success.Should().BeTrue();
         }
 
-
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
         public async Task GetByFilterPagedPackagesQueryByIdASC_Success(long[] fieldTypeIds, long[] publisherIds, long[] packageTypeEnumIds, string name, PackageKind packageKind, long[] classroomIds,
@@ -4221,7 +4177,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
 
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
@@ -4344,8 +4299,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             result.Success.Should().BeTrue();
         }
 
-
-
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
         public async Task GetByFilterPagedPackagesQueryByInsertTimeASC_Success(long[] fieldTypeIds, long[] publisherIds, long[] packageTypeEnumIds, string name, PackageKind packageKind, long[] classroomIds,
@@ -4466,7 +4419,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
 
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
@@ -4589,9 +4541,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             result.Success.Should().BeTrue();
         }
 
-
-
-
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
         public async Task GetByFilterPagedPackagesQueryByUpdateTimeASC_Success(long[] fieldTypeIds, long[] publisherIds, long[] packageTypeEnumIds, string name, PackageKind packageKind, long[] classroomIds,
@@ -4712,7 +4661,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
 
         [Test]
         [TestCase(new long[] { 1, 2 }, new long[] { 1, 2 }, new long[] { 1, 2 }, "", PackageKind.Personal, new long[] { 1, 2 }, new long[] { 1, 2 }, true, new long[] { 1, 2 }, false, false, true, 1, "01/02/2024")]
@@ -5086,9 +5034,5 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
             result.Success.Should().BeTrue();
         }
-
-
-
-
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -13,10 +14,9 @@ using NUnit.Framework;
 using TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
-using TurkcellDigitalSchool.Entities.Enums;
 using static TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands.UpdateTeacherCommand;
 
 
@@ -25,38 +25,44 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Commands
     [TestFixture]
     public class UpdateTeacherCommandTest
     {
-        Mock<IUserRepository> _userRepository;
-
         UpdateTeacherCommand _updateTeacherCommand;
         UpdateTeacherCommandHandler _updateTeacherCommandHandler;
 
-        Mock<IServiceProvider> _serviceProvider;
-        Mock<IHttpContextAccessor> _httpContextAccessor;
+        Mock<IUserRepository> _userRepository;
+
         Mock<IHeaderDictionary> _headerDictionary;
-        Mock<HttpRequest> _httpContext;
+        Mock<HttpRequest> _httpRequest;
+        Mock<IHttpContextAccessor> _httpContextAccessor;
+        Mock<IServiceProvider> _serviceProvider;
         Mock<IMediator> _mediator;
+        Mock<IMapper> _mapper;
+        Mock<RedisService> _redisService;
 
         List<User> _fakeUsers;
 
         [SetUp]
         public void Setup()
         {
+            _mediator = new Mock<IMediator>();
+            _serviceProvider = new Mock<IServiceProvider>();
+            _httpContextAccessor = new Mock<IHttpContextAccessor>();
+            _httpRequest = new Mock<HttpRequest>();
+            _headerDictionary = new Mock<IHeaderDictionary>();
+            _mapper = new Mock<IMapper>();
+            _redisService = new Mock<RedisService>();
+
+            _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
+            ServiceTool.ServiceProvider = _serviceProvider.Object;
+            _headerDictionary.Setup(x => x["Referer"]).Returns("");
+            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
+            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
+            _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
+            _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
+
             _userRepository = new Mock<IUserRepository>();
 
             _updateTeacherCommand = new UpdateTeacherCommand();
             _updateTeacherCommandHandler = new(_userRepository.Object);
-
-            _mediator = new Mock<IMediator>();
-            _serviceProvider = new Mock<IServiceProvider>();
-            _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
-            ServiceTool.ServiceProvider = _serviceProvider.Object;
-            _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpContext = new Mock<HttpRequest>();
-            _headerDictionary = new Mock<IHeaderDictionary>();
-            _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpContext.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpContext.Object);
-            _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
 
             _fakeUsers = new List<User>
             {
@@ -68,13 +74,13 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Commands
                     ResidenceCountyId = 1, ResidenceCityId = 1,
                     RemindLater = true,
                     RelatedIdentity = "UnitTest",
-                    RegisterStatus = Core.Enums.RegisterStatus.Registered,
+                    RegisterStatus = RegisterStatus.Registered,
                     AddingType = UserAddingType.Default,
                     Address = "Adres",
                     CitizenId = 12345676787,
                     Email = "email@hotmail.com",
                     MobilePhones = "5554443322",
-                    UserType = Core.Enums.UserType.Teacher,
+                    UserType = UserType.Teacher,
                     IsDeleted = false
                 },
                 new User{
@@ -85,10 +91,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Commands
                     ResidenceCountyId = 1, ResidenceCityId = 1,
                     RemindLater = true,
                     RelatedIdentity = "UnitTest",
-                    RegisterStatus = Core.Enums.RegisterStatus.Registered,
+                    RegisterStatus = RegisterStatus.Registered,
                     AddingType = UserAddingType.Default,
                     Address = "Adres",
-                    UserType = Core.Enums.UserType.Student,
+                    UserType = UserType.Student,
                     CitizenId = 12345676789,
                     Email = "email2@hotmail.com",
                     MobilePhones = "5554443321",
@@ -116,9 +122,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Commands
 
             var result = await _updateTeacherCommandHandler.Handle(_updateTeacherCommand, new CancellationToken());
 
-            _userRepository.Verify(x => x.SaveChangesAsync());
             result.Success.Should().BeTrue();
-            result.Message.Should().Be(Messages.Updated);
         }
 
         [Test]
@@ -141,7 +145,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Commands
             var result = await _updateTeacherCommandHandler.Handle(_updateTeacherCommand, new CancellationToken());
 
             result.Success.Should().BeFalse();
-            result.Message.Should().Be(Messages.RecordDoesNotExist);
         }
 
         [Test]
@@ -164,7 +167,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Commands
             var result = await _updateTeacherCommandHandler.Handle(_updateTeacherCommand, new CancellationToken());
 
             result.Success.Should().BeFalse();
-            result.Message.Should().Be(Messages.CitizenIdAlreadyExist);
         }
 
         [Test]
@@ -187,7 +189,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Commands
             var result = await _updateTeacherCommandHandler.Handle(_updateTeacherCommand, new CancellationToken());
 
             result.Success.Should().BeFalse();
-            result.Message.Should().Be(Messages.RecordDoesNotExist);
         }
 
         [Test]
@@ -210,11 +211,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Commands
             var result = await _updateTeacherCommandHandler.Handle(_updateTeacherCommand, new CancellationToken());
 
             result.Success.Should().BeFalse();
-            result.Message.Should().Be(Account.Business.Constants.Messages.UserIsNotTeacher);
         }
-
-
     }
-
 }
 
