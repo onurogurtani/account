@@ -111,6 +111,24 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
                     Summary = "Test",
                     Content = "Test",
                     EducationYearId = 1,
+                    ImageOfPackages = new List<ImageOfPackage>
+                    {
+                        new ImageOfPackage
+                        {
+                            Id = 1,
+                            PackageId = 1,
+                            FileId = 1,
+                        },
+                    },
+                    PackagePublishers = new List<PackagePublisher>
+                    {
+                        new PackagePublisher
+                        {
+                            Id = 1,
+                            PackageId = 1,
+                            PublisherId = 1,
+                        },
+                    },
                 },
             };
 
@@ -133,6 +151,24 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
                     Summary= "Deneme",
                     Content= "Deneme",
                     EducationYearId = 1,
+                    ImageOfPackages = new List<ImageOfPackage>
+                    {
+                        new ImageOfPackage
+                        {
+                            Id = 1,
+                            PackageId = 1,
+                            FileId = 1,
+                        },
+                    },
+                    PackagePublishers = new List<PackagePublisher>
+                    {
+                        new PackagePublisher
+                        {
+                            Id = 1,
+                            PackageId = 1,
+                            PublisherId = 1,
+                        },
+                    },
                 },
             };
 
