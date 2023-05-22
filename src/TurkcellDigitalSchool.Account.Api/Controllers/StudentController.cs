@@ -238,24 +238,6 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
-        /// <summary>
-        /// student mobile phone verification
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPut("UpdateStudentVerifyMobilPhone")]
-        public async Task<IActionResult> UpdateStudentVerifyMobilPhone([FromBody] UpdateStudentVerifyMobilPhoneCommand request, CancellationToken cancellationToken)
-        {
-            var result = await Mediator.Send(request, cancellationToken);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
 
         /// <summary>
         /// Get Student Parents information
