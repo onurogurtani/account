@@ -42,4 +42,9 @@
     <ProjectReference Include="..\TurkcellDigitalSchool.Account.DataAccess\TurkcellDigitalSchool.Account.DataAccess.csproj" />
   </ItemGroup>
   
+  <ItemGroup>
+    <Folder Include="Handlers\Otp\ValidationRules\" />
+    <Folder Include="Handlers\Otp\Queries\" />
+  </ItemGroup>
+  
 </Project>

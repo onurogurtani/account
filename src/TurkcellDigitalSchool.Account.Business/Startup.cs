@@ -2,16 +2,19 @@ using System;
 using System.Reflection;
 using System.Security.Claims;
 using System.Security.Principal;
+using System.Text.Json.Serialization;
 using Autofac;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting; 
+using Microsoft.Extensions.Hosting;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.LdapLoginService;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.TurkcellFastLoginService;
+using TurkcellDigitalSchool.Account.Business.Services.Otp;
+using TurkcellDigitalSchool.Account.Business.Services.TransactionManager;
 using TurkcellDigitalSchool.Account.Business.Services.User;
 using TurkcellDigitalSchool.Account.Business.SubServices.RegisterServices;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
@@ -27,13 +30,14 @@ using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Redis.Contract;
 using TurkcellDigitalSchool.Core.Services.CustomMessgeHelperService;
 using TurkcellDigitalSchool.Core.Services.KpsService;
+using TurkcellDigitalSchool.Core.TransactionManager;
 using TurkcellDigitalSchool.Core.Utilities.ElasticSearch;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Core.Utilities.MessageBrokers.RabbitMq;
 using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.Integration.Helper;
-using TurkcellDigitalSchool.Integration.Type; 
+using TurkcellDigitalSchool.Integration.Type;
 
 namespace TurkcellDigitalSchool.Account.Business
 {
@@ -80,15 +84,18 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddScoped<ITurkcellFastLoginService, TurkcellFastLoginService>();
             services.AddScoped<IKpsService, KpsService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IOtpService, OtpService>();
+            services.AddScoped<ITransactionManager, AccountDbTransactionManagerSvc>();
             services.AddAutoMapper( Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
             services.AddMediatR(typeof(BusinessStartup).GetTypeInfo().Assembly);
 
 
-            services.Configure<RedisConfig>(Configuration.GetSection("RedisConfig")); 
-            services.AddSingleton<IRedisConnectionFactory, RedisConnectionFactory>(); 
+            services.Configure<RedisConfig>(Configuration.GetSection("RedisConfig"));
+            services.AddSingleton<IRedisConnectionFactory, RedisConnectionFactory>();
             services.AddSingleton<SessionRedisSvc>();
 
             services.AddTransient<ICustomMessgeHelperService, CustomMessgeHelperService>();
@@ -100,18 +107,10 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddMsIntegrationServicesWithName(Configuration, MsType.Reporting);
             services.AddMsIntegrationServicesWithName(Configuration, MsType.IdentityServer);
 
-            //ValidatorOptions.Global.DisplayNameResolver = (type, memberInfo, expression) =>
-            //{
-            //    if (memberInfo != null)
-            //    {
-            //        return memberInfo.GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>()
-            //       ?.GetName();
-            //    }
-            //    return null;
-            //};
+          
             var capConfig = Configuration.GetSection("CapConfig").Get<CapConfig>();
             services.AddCap(options =>
-            { 
+            {
                 options.UsePostgreSql(Configuration.GetConnectionString("DArchPostgreContext"));
                 options.UseRabbitMQ(rabbitMqOptions =>
                 {
@@ -125,6 +124,7 @@ namespace TurkcellDigitalSchool.Account.Business
                     };
                 });
                 options.UseDashboard(otp => { otp.PathMatch = "/MyCap"; });
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             });
         }
 
@@ -226,7 +226,7 @@ namespace TurkcellDigitalSchool.Account.Business
             ConfigureServices(services);
 
             services.AddDbContext<AccountDbContext>();
-            services.AddDbContext<AccountSubscribeDbContext>(); 
+            services.AddDbContext<AccountSubscribeDbContext>();
         }
 
 

@@ -7,13 +7,14 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Transaction;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
 {
+    [TransactionScope]
     public class SetPassiveRoleCommand : IRequest<IResult>
     {
         public long RoleId { get; set; }
@@ -41,8 +42,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
             private static string RoleandTransferRoleCantBeTheSame = Messages.RoleandTransferRoleCantBeTheSame;
 
             [SecuredOperation]
-            [CacheRemoveAspect("Get")]
-            [TransactionScopeAspectAsync]
+            [CacheRemoveAspect("Get")] 
             public async Task<IResult> Handle(SetPassiveRoleCommand request, CancellationToken cancellationToken)
             {
                 if ((request.TransferRoleId ?? 0) == 0)

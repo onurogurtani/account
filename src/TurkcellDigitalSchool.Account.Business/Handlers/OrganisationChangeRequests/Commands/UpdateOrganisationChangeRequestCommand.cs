@@ -13,8 +13,8 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Transaction;
+using TurkcellDigitalSchool.Common.Constants; 
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt; 
@@ -22,6 +22,7 @@ using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Commands
 {
+    [TransactionScope]
     public class UpdateOrganisationChangeRequestCommand : IRequest<Core.Utilities.Results.IResult>
     {
         public string? ContentType { get; set; }
@@ -51,9 +52,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                 _mediator = mediator;
             }
             
-            [SecuredOperation] 
-            [TransactionScopeAspectAsync]
-
+            [SecuredOperation]   
             public async Task<Core.Utilities.Results.IResult> Handle(UpdateOrganisationChangeRequestCommand request, CancellationToken cancellationToken)
             {
 

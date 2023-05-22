@@ -5,10 +5,16 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
-using TurkcellDigitalSchool.Core.Utilities.File;
 using IResult = TurkcellDigitalSchool.Core.Utilities.Results.IResult;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
+using System.IO;
+using System.Text;
+using Refit;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
 {
@@ -18,19 +24,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
         public string FileName { get; set; }
 
         [MessageClassAttr("Avatar Dosya Oluþtur")]
-        public class CreateFrameFileCommandHandler : IRequestHandler<CreateAvatarFileCommand,IResult>
+        public class CreateFrameFileCommandHandler : IRequestHandler<CreateAvatarFileCommand, IResult>
         {
-            //private readonly IFileRepository _fileRepository;
-            private readonly IFileService _fileService;
-            private readonly IPathHelper _pathHelper;
+            private readonly IFileServices _fileServices;
 
-            private readonly string _filePath = "avatar";
-
-            public CreateFrameFileCommandHandler( IFileService fileService, IPathHelper pathHelper)
+            public CreateFrameFileCommandHandler(IFileServices fileServices)
             {
-                //_fileRepository = fileRepository;
-                _fileService = fileService;
-                _pathHelper = pathHelper;
+                _fileServices = fileServices;
             }
 
             [MessageConstAttr(MessageCodeType.Error)]
@@ -40,9 +40,21 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
             private static string Added = Messages.Added;
             public async Task<IResult> Handle(CreateAvatarFileCommand request, CancellationToken cancellationToken)
             {
-                //todo:#MS_DUZENLEMESI   
-                // Bu entity için düzenleme burada yapýlamaz 
-                throw new Exception("Yazýlýmsal düzenleme yapýlmasý");
+
+                using (var ms = new MemoryStream())
+                {
+                    ms.Position = 0;
+                    request.Image.CopyTo(ms);
+                    var bytePartFile = new ByteArrayPart(ms.ToArray(), request.Image.FileName, request.Image.ContentType);
+                    var resulImageSolution = await _fileServices.CreateFileCommand(
+                        bytePartFile,
+                        FileType.Avatar.GetHashCode(),
+                        request.FileName, "");
+                }
+
+                return new SuccessResult(Messages.Added.PrepareRedisMessage());
+
+                //throw new Exception("Yazýlýmsal düzenleme yapýlmasý");
 
                 //string[] avatarType = new string[] { "image/jpeg", "image/png" };
 

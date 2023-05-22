@@ -52,7 +52,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.ValidationRule
 
             //TODO mobil telefon OTP yapılınca validasyonu yapılacak.
 
-   
+
             //RuleFor(x => x.ResidenceCityId).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
             //RuleFor(x => x.ResidenceCountyId).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
         }
@@ -65,13 +65,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.ValidationRule
         private static string RequiredField = Messages.RequiredField;
         public UpdateStudentParentInformationValidator()
         {
-            RuleFor(x => x.UserId).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
             RuleFor(x => x.Name).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
             RuleFor(x => x.SurName).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
-            RuleFor(x => x.CitizenId).NotEmpty().Must(w => w.Length != 11).WithMessage(RequiredField.PrepareRedisMessage());
+            RuleFor(x => x.CitizenId).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
             RuleFor(x => x.Email).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
-            RuleFor(x => x.MobilPhones).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
-            RuleFor(x => x.MobilPhones).PhoneNumberAlphacharCheck();
+            RuleFor(x => x.MobilePhones).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
+            RuleFor(x => x.MobilePhones).PhoneNumberAlphacharCheck();
         }
     }
 

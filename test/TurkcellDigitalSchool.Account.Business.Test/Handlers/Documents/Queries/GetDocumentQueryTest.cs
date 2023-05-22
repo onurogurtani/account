@@ -15,6 +15,7 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Documents.Queries
@@ -28,33 +29,35 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Documents.Queries
         private Mock<IDocumentRepository> _documentRepository;
         private Mock<IUserRepository> _userRepository;
 
-        Mock<IMapper> _mapper;
-
-        Mock<IServiceProvider> _serviceProvider;
-        Mock<IHttpContextAccessor> _httpContextAccessor;
         Mock<IHeaderDictionary> _headerDictionary;
-        Mock<HttpRequest> _httpContext;
+        Mock<HttpRequest> _httpRequest;
+        Mock<IHttpContextAccessor> _httpContextAccessor;
+        Mock<IServiceProvider> _serviceProvider;
         Mock<IMediator> _mediator;
+        Mock<IMapper> _mapper;
+        Mock<RedisService> _redisService;
 
         [SetUp]
         public void Setup()
         {
             _mediator = new Mock<IMediator>();
             _serviceProvider = new Mock<IServiceProvider>();
+            _httpContextAccessor = new Mock<IHttpContextAccessor>();
+            _httpRequest = new Mock<HttpRequest>();
+            _headerDictionary = new Mock<IHeaderDictionary>();
+            _mapper = new Mock<IMapper>();
+            _redisService = new Mock<RedisService>();
+
             _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
             ServiceTool.ServiceProvider = _serviceProvider.Object;
-            _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpContext = new Mock<HttpRequest>();
-            _headerDictionary = new Mock<IHeaderDictionary>();
             _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpContext.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpContext.Object);
+            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
+            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
+            _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
 
             _documentRepository = new Mock<IDocumentRepository>();
             _userRepository = new Mock<IUserRepository>();
-
-            _mapper = new Mock<IMapper>();
 
             _getDocumentQuery = new GetDocumentQuery();
             _getDocumentQueryHandler = new GetDocumentQuery.GetDocumentQueryHandler(_userRepository.Object, _documentRepository.Object, _mapper.Object);
@@ -88,8 +91,9 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Documents.Queries
             _documentRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<Document, bool>>>())).ReturnsAsync(documents.FirstOrDefault());
 
             _mapper.Setup(s => s.Map<DocumentDto>(It.IsAny<Document>())).Returns(
-                new DocumentDto() {
-                   Id = 1,
+                new DocumentDto()
+                {
+                    Id = 1,
                     ClientRequiredApproval = true,
                     ContractKindId = 1,
                     RequiredApproval = true,
@@ -102,12 +106,13 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Documents.Queries
                     UpdateTime = DateTime.Now,
                     UpdateUserId = 1,
                     InsertUserId = 1
-                
-            });
+
+                });
             var result = await _getDocumentQueryHandler.Handle(_getDocumentQuery, CancellationToken.None);
 
             result.Success.Should().BeTrue();
         }
+
         [Test]
         public async Task GetDocumentsQuery_GetById_Null_Error()
         {
@@ -126,6 +131,5 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Documents.Queries
 
             result.Success.Should().BeFalse();
         }
-
     }
 }

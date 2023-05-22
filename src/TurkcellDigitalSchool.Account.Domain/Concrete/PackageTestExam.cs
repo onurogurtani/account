@@ -10,7 +10,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
     /// </summary>
     public class PackageTestExam : EntityDefault
     {
-        public long TestExamId { get; set; }
+        public long TestExamId { get; set; } 
         public TestExam TestExam { get; set; }
         public long PackageId { get; set; }
         [JsonIgnore]

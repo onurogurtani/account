@@ -1,24 +1,29 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using DotNetCore.CAP;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common;
 using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Transaction;
+using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging; 
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
+
+    [TransactionScope]
     public class RegisterOtpQuery : IRequest<IDataResult<AccessToken>>, ITokenRequest
     {
         public long MobileLoginId { get; set; }
@@ -35,8 +40,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             private readonly ISmsOtpRepository _smsOtpRepository;
             private readonly IUserSessionRepository _userSessionRepository;
             private readonly IHttpContextAccessor _httpContextAccessor;
-
-            public RegisterOtpQueryHandler(IUserRepository userRepository, ITokenHelper tokenHelper, ICacheManager cacheManager, IMobileLoginRepository mobileLoginRepository, ISmsOtpRepository smsOtpRepository, ConfigurationManager configurationManager, IUserSessionRepository userSessionRepository, IHttpContextAccessor httpContextAccessor)
+            private readonly ICapPublisher _capPublisher;
+            public RegisterOtpQueryHandler(IUserRepository userRepository, ITokenHelper tokenHelper, ICacheManager cacheManager, IMobileLoginRepository mobileLoginRepository, ISmsOtpRepository smsOtpRepository, ConfigurationManager configurationManager, IUserSessionRepository userSessionRepository, IHttpContextAccessor httpContextAccessor, ICapPublisher capPublisher)
             {
                 _userRepository = userRepository;
                 _tokenHelper = tokenHelper;
@@ -46,9 +51,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 _configurationManager = configurationManager;
                 _userSessionRepository = userSessionRepository;
                 _httpContextAccessor = httpContextAccessor;
+                _capPublisher = capPublisher;
             }
 
-            [TransactionScopeAspectAsync]
+          
             [LogAspect(typeof(FileLogger))]
             public async Task<IDataResult<AccessToken>> Handle(RegisterOtpQuery request, CancellationToken cancellationToken)
             {
@@ -109,6 +115,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                     user.Status = true;
                     _userRepository.Update(user);
                     await _userRepository.SaveChangesAsync();
+
+                    await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Added),
+                        user, cancellationToken: cancellationToken);
+
 
                     return new SuccessDataResult<DArchToken>(accessToken, Messages.SuccessfulLogin);
                 }

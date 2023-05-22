@@ -119,28 +119,20 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         }
         public List<ParentInfoDto> GetByStudentParentInfoInformation(long userId)
         {
-            var getParentList = _studentParentInformationRepository.Query().Where(w => w.UserId == userId).ToList();
-            if (getParentList.Count() == 0)
-            {
-                return new List<ParentInfoDto> { };
-            }
-
-            var resultParentList = new List<ParentInfoDto>();
-
-            foreach (var parent in getParentList)
-            {
-                resultParentList.Add(new ParentInfoDto
+            return _studentParentInformationRepository.Query()
+                .Include(w => w.Parent)
+                .Where(w => w.UserId == userId)
+                .Select(parent => new ParentInfoDto
                 {
                     Id = parent.Id,
-                    CitizenId = parent.CitizenId,
-                    Name = parent.Name,
-                    SurName = parent.SurName,
-                    Email = parent.Email,
-                    MobilPhones = parent.MobilPhones
-                });
-            }
-
-            return resultParentList;
+                    ParentId = parent.Parent.Id,
+                    CitizenId = parent.Parent.CitizenId,
+                    Name = parent.Parent.Name,
+                    SurName = parent.Parent.SurName,
+                    Email = parent.Parent.Email,
+                    MobilPhones = parent.Parent.MobilePhones
+                })
+                .ToList();
 
         }
         public bool IsExistEmail(long userId, string Email)
@@ -274,6 +266,36 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             return resultPackageList;
 
         }
+        public List<PackageInfoDto> GetByParentPackageInformation(long userId)
+        {
+            var getPackageList = _userPackageRepository.Query()
+                .Include(w => w.Package.ImageOfPackages).ThenInclude(w => w.File)
+                .Where(w => w.UserId == userId).ToList();
+
+            if (getPackageList.Count() == 0)
+            {
+                return new List<PackageInfoDto> { };
+            }
+
+            var resultPackageList = new List<PackageInfoDto>();
+
+            foreach (var package in getPackageList)
+            {
+                resultPackageList.Add(new PackageInfoDto
+                {
+                    Id = package.Id,
+                    File = package.Package.ImageOfPackages.First().File,//TODO file dosya ve base64 işlemleri daha sonra test edilecek.
+                    PackageName = package.Package.Name,
+                    PurchaseDate = package.PurchaseDate,
+                    PackageContent = package.Package.Content,
+                    FileBase64 = _fileService.GetFile(package.Package.ImageOfPackages.First().File.FilePath).GetAwaiter().GetResult().Data
+                });
+            }
+
+            return resultPackageList;
+
+        }
+
         public SettingsInfoDto GetByStudentSettingsInfoInformation(long userId)
         {
             var getUserContractList = _userContratRepository.Query()
@@ -368,7 +390,36 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 await _userSupportTeamViewMyDataRepository.CreateAndSaveAsync(newRecord);
             }
         }
-
-
+        public List<ParentInfoDto> GetStudentsByParentCitizenId(long? citizenId)
+        {
+            var getParents = _studentParentInformationRepository.Query().Include(w => w.Parent)
+                .Where(w => w.Parent.CitizenId == citizenId)
+                .Select(s => new ParentInfoDto
+                {
+                    Id = s.Id,
+                    CitizenId = s.Parent.CitizenId,
+                    Name = s.Parent.Name,
+                    SurName = s.Parent.SurName,
+                    Email = s.Parent.Email,
+                    MobilPhones = s.Parent.MobilePhones
+                })
+                .ToList();
+            return getParents;
+        }
+        public List<ParentInfoDto> GetByStudentParentsInformation(long userId)
+        {
+            var getParents = _studentParentInformationRepository.Query().Include(w => w.Parent).Where(w => w.UserId == userId)
+                .Select(s => new ParentInfoDto
+                {
+                    Id = s.Id,
+                    CitizenId = s.Parent.CitizenId,
+                    Name = s.Parent.Name,
+                    SurName = s.Parent.SurName,
+                    Email = s.Parent.Email,
+                    MobilPhones = s.Parent.MobilePhones
+                })
+                .ToList();
+            return getParents;
+        }
     }
 }

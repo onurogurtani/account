@@ -15,59 +15,58 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
+using static TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries.GetOrganisationQuery;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Queries
 {
     public class GetOrganisationQueryTest
     {
-
-
         private GetOrganisationQuery _getOrganisationQuery;
-        private GetOrganisationQuery.GetOrganisationQueryHandler _getOrganisationQueryHandler;
+        private GetOrganisationQueryHandler _getOrganisationQueryHandler;
 
         private Mock<IOrganisationRepository> _organisationRepository;
         private Mock<IUserRepository> _userRepository;
         private Mock<ICityRepository> _cityRepository;
         private Mock<ICountyRepository> _countyRepository;
-        private Mock<IMapper> _mapper;
 
-
-
-        Mock<IServiceProvider> _serviceProvider;
-        Mock<IHttpContextAccessor> _httpContextAccessor;
         Mock<IHeaderDictionary> _headerDictionary;
-        Mock<HttpRequest> _httpContext;
+        Mock<HttpRequest> _httpRequest;
+        Mock<IHttpContextAccessor> _httpContextAccessor;
+        Mock<IServiceProvider> _serviceProvider;
         Mock<IMediator> _mediator;
+        Mock<IMapper> _mapper;
+        Mock<RedisService> _redisService;
 
         [SetUp]
         public void Setup()
         {
             _mediator = new Mock<IMediator>();
             _serviceProvider = new Mock<IServiceProvider>();
+            _httpContextAccessor = new Mock<IHttpContextAccessor>();
+            _httpRequest = new Mock<HttpRequest>();
+            _headerDictionary = new Mock<IHeaderDictionary>();
+            _mapper = new Mock<IMapper>();
+            _redisService = new Mock<RedisService>();
+
             _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
             ServiceTool.ServiceProvider = _serviceProvider.Object;
-            _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpContext = new Mock<HttpRequest>();
-            _headerDictionary = new Mock<IHeaderDictionary>();
             _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpContext.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpContext.Object);
+            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
+            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
+            _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
 
             _organisationRepository = new Mock<IOrganisationRepository>();
             _userRepository = new Mock<IUserRepository>();
             _countyRepository = new Mock<ICountyRepository>();
             _cityRepository = new Mock<ICityRepository>();
-            _mapper = new Mock<IMapper>();
 
-            _getOrganisationQuery = new GetOrganisationQuery();
-
-             
-            _getOrganisationQueryHandler = new GetOrganisationQuery.GetOrganisationQueryHandler(_organisationRepository.Object, _userRepository.Object, _cityRepository.Object, _countyRepository.Object, _mapper.Object);
+            _getOrganisationQuery = new GetOrganisationQuery();  
+            _getOrganisationQueryHandler = new GetOrganisationQueryHandler(_organisationRepository.Object, _userRepository.Object, _cityRepository.Object, _countyRepository.Object, _mapper.Object);
         }
-
 
         [Test]
         public async Task GetOrganisationQuery_Success()

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
 using TurkcellDigitalSchool.Core.DataAccess;
 using TurkcellDigitalSchool.Core.Entities;
-using TurkcellDigitalSchool.Core.Enums; 
+using TurkcellDigitalSchool.Core.Enums;
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
-    public class Package : EntityDefault  , IPublishEntity
+    public class Package : EntityDefault, IPublishEntity
     {
         public bool HasCoachService { get; set; }
         public bool HasTryingTest { get; set; }
@@ -14,6 +15,8 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public bool HasMotivationEvent { get; set; }
         public PackageKind PackageKind { get; set; }
 
+        public long EducationYearId { get; set; }
+        public EducationYear EducationYear { get; set; }
         public string Name { get; set; }
         public string Summary { get; set; }
         public string Content { get; set; }

@@ -1133,6 +1133,73 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     b.ToTable("mobilelogins", (string)null);
                 });
 
+            modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.OneTimePassword", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<int>("ChannelTypeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("channeltypeid");
+
+                    b.Property<int>("Code")
+                        .HasColumnType("integer")
+                        .HasColumnName("code");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expirydate");
+
+                    b.Property<DateTime>("InsertTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("inserttime");
+
+                    b.Property<long?>("InsertUserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("insertuserid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("isdeleted");
+
+                    b.Property<int>("OtpStatusId")
+                        .HasColumnType("integer")
+                        .HasColumnName("otpstatusid");
+
+                    b.Property<DateTime?>("ProcessDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("processdate");
+
+                    b.Property<DateTime>("SendDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("senddate");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("integer")
+                        .HasColumnName("serviceid");
+
+                    b.Property<DateTime?>("UpdateTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updatetime");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("updateuserid");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("userid");
+
+                    b.HasKey("Id")
+                        .HasName("pk_onetimepasswords");
+
+                    b.ToTable("onetimepasswords", (string)null);
+                });
+
             modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.OperationClaim", b =>
                 {
                     b.Property<long>("Id")
@@ -1631,6 +1698,10 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasColumnType("text")
                         .HasColumnName("content");
 
+                    b.Property<long>("EducationYearId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("educationyearid");
+
                     b.Property<DateTime>("FinishDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("finishdate");
@@ -1693,6 +1764,9 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
 
                     b.HasKey("Id")
                         .HasName("pk_package");
+
+                    b.HasIndex("EducationYearId")
+                        .HasDatabaseName("ix_package_educationyearid");
 
                     b.ToTable("package", (string)null);
                 });
@@ -2509,6 +2583,41 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     b.ToTable("classroom", (string)null);
                 });
 
+            modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly.EducationYear", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("enddate");
+
+                    b.Property<int>("EndYear")
+                        .HasColumnType("integer")
+                        .HasColumnName("endyear");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("isdeleted");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("startdate");
+
+                    b.Property<int>("StartYear")
+                        .HasColumnType("integer")
+                        .HasColumnName("startyear");
+
+                    b.HasKey("Id")
+                        .HasName("pk_educationyear");
+
+                    b.ToTable("educationyear", (string)null);
+                });
+
             modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly.Event", b =>
                 {
                     b.Property<long>("Id")
@@ -3183,14 +3292,6 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("CitizenId")
-                        .HasColumnType("text")
-                        .HasColumnName("citizenid");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text")
-                        .HasColumnName("email");
-
                     b.Property<DateTime>("InsertTime")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("inserttime");
@@ -3203,17 +3304,9 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasColumnType("boolean")
                         .HasColumnName("isdeleted");
 
-                    b.Property<string>("MobilPhones")
-                        .HasColumnType("text")
-                        .HasColumnName("mobilphones");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<string>("SurName")
-                        .HasColumnType("text")
-                        .HasColumnName("surname");
+                    b.Property<long>("ParentId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("parentid");
 
                     b.Property<DateTime?>("UpdateTime")
                         .HasColumnType("timestamp with time zone")
@@ -3229,6 +3322,9 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
 
                     b.HasKey("Id")
                         .HasName("pk_studentparentinformation");
+
+                    b.HasIndex("ParentId")
+                        .HasDatabaseName("ix_studentparentinformation_parentid");
 
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_studentparentinformation_userid");
@@ -4165,6 +4261,18 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.Package", b =>
+                {
+                    b.HasOne("TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly.EducationYear", "EducationYear")
+                        .WithMany()
+                        .HasForeignKey("EducationYearId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_package_educationyears_educationyearid");
+
+                    b.Navigation("EducationYear");
+                });
+
             modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.PackageCoachServicePackage", b =>
                 {
                     b.HasOne("TurkcellDigitalSchool.Account.Domain.Concrete.Package", "Package")
@@ -4553,12 +4661,21 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
 
             modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.StudentParentInformation", b =>
                 {
+                    b.HasOne("TurkcellDigitalSchool.Account.Domain.Concrete.User", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_studentparentinformation_users_parentid");
+
                     b.HasOne("TurkcellDigitalSchool.Account.Domain.Concrete.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_studentparentinformation_users_userid");
+
+                    b.Navigation("Parent");
 
                     b.Navigation("User");
                 });

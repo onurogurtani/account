@@ -17,48 +17,51 @@ using System.Linq;
 using MockQueryable.Moq;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
+using AutoMapper;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
 {
     [TestFixture]
     public class UpdateStudentParentInformationCommandTest
     {
-        Mock<IStudentParentInformationRepository> _studentParentInformationRepository;
-
         UpdateStudentParentInformationCommand _updateStudentParentInformationCommand;
         UpdateStudentParentInformationCommandHandler _updateStudentParentInformationCommandHandler;
 
-        Mock<IServiceProvider> _serviceProvider;
-        Mock<IHttpContextAccessor> _httpContextAccessor;
-        Mock<IHeaderDictionary> _headerDictionary;
-        Mock<HttpRequest> _httpContext;
-        Mock<IMediator> _mediator;
-        Mock<RedisService> _redisService;
+        Mock<IStudentParentInformationRepository> _studentParentInformationRepository;
+        Mock<IUserRepository> _userRepository;
 
+        Mock<IHeaderDictionary> _headerDictionary;
+        Mock<HttpRequest> _httpRequest;
+        Mock<IHttpContextAccessor> _httpContextAccessor;
+        Mock<IServiceProvider> _serviceProvider;
+        Mock<IMediator> _mediator;
+        Mock<IMapper> _mapper;
+        Mock<RedisService> _redisService;
 
         [SetUp]
         public void Setup()
         {
-            _studentParentInformationRepository = new Mock<IStudentParentInformationRepository>();
-
-            _updateStudentParentInformationCommand = new UpdateStudentParentInformationCommand();
-            _updateStudentParentInformationCommandHandler = new UpdateStudentParentInformationCommandHandler(_studentParentInformationRepository.Object);
-
             _mediator = new Mock<IMediator>();
             _serviceProvider = new Mock<IServiceProvider>();
             _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpContext = new Mock<HttpRequest>();
+            _httpRequest = new Mock<HttpRequest>();
             _headerDictionary = new Mock<IHeaderDictionary>();
+            _mapper = new Mock<IMapper>();
             _redisService = new Mock<RedisService>();
 
             _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
             ServiceTool.ServiceProvider = _serviceProvider.Object;
             _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpContext.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpContext.Object);
+            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
+            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
             _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
 
+            _studentParentInformationRepository = new Mock<IStudentParentInformationRepository>();
+            _userRepository = new Mock<IUserRepository>();
+
+            _updateStudentParentInformationCommand = new UpdateStudentParentInformationCommand();
+            _updateStudentParentInformationCommandHandler = new UpdateStudentParentInformationCommandHandler(_studentParentInformationRepository.Object, _userRepository.Object);
         }
 
         [Test]
@@ -68,12 +71,11 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
 
             _updateStudentParentInformationCommand = new()
             {
-                UserId = 1,
-                CitizenId = "52265263252",
+                CitizenId = 52265263252,
                 Email = "yadaskin@gmail.com",
                 Name = "Yusuf",
                 SurName = "Daşkın",
-                MobilPhones = "05332100700"
+                MobilePhones = "05332100700"
             };
             _studentParentInformationRepository.Setup(x => x.CreateAndSave(It.IsAny<StudentParentInformation>(), It.IsAny<int?>(), It.IsAny<bool>()));
 
@@ -87,12 +89,11 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
             // TODO Unittest generic mesaj yapısından ötürü çalışmıyor. tekrar test edielcek.
             _updateStudentParentInformationCommand = new()
             {
-                UserId = 1,
-                CitizenId = "52265263252",
+                CitizenId = 52265263252,
                 Email = "yadaskin@gmail.com",
                 Name = "Yusuf",
                 SurName = "Daşkın",
-                MobilPhones = "05332100700"
+                MobilePhones = "05332100700"
             };
 
 
@@ -111,7 +112,5 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
             var result = await _updateStudentParentInformationCommandHandler.Handle(_updateStudentParentInformationCommand, new CancellationToken());
             result.Success.Should().BeTrue();
         }
-
     }
-
 }

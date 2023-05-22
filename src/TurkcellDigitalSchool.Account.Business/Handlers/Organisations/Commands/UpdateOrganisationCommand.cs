@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using DotNetCore.CAP;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands;
@@ -12,13 +13,15 @@ using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Transaction;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
 {
+    [TransactionScope]
     public class UpdateOrganisationCommand : IRequest<IResult>
     {
         public Organisation Organisation { get; set; }
@@ -32,7 +35,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
             private readonly IPackageRoleRepository _packageRoleRepository;
             private readonly IUserRepository _userRepository;
             private readonly IMediator _mediator;
-
+            private readonly ICapPublisher _capPublisher;
 
             [MessageConstAttr(MessageCodeType.Error)]
             private static string SameNameAlreadyExist = Messages.SameNameAlreadyExist;
@@ -41,7 +44,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
-            public UpdateOrganisationCommandHandler(IOrganisationRepository organisationRepository, IOrganisationTypeRepository organisationTypeRepository, IMapper mapper, IPackageRoleRepository packageRoleRepository, IUserRepository userRepository, IMediator mediator)
+            public UpdateOrganisationCommandHandler(IOrganisationRepository organisationRepository, IOrganisationTypeRepository organisationTypeRepository, IMapper mapper, IPackageRoleRepository packageRoleRepository, IUserRepository userRepository, IMediator mediator, ICapPublisher capPublisher)
             {
                 _organisationRepository = organisationRepository;
                 _organisationTypeRepository = organisationTypeRepository;
@@ -49,10 +52,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                 _packageRoleRepository = packageRoleRepository;
                 _userRepository = userRepository;
                 _mediator = mediator;
+                _capPublisher = capPublisher;
             }
 
-            [SecuredOperation]  
-            [TransactionScopeAspectAsync]
+            [SecuredOperation]   
             public async Task<IResult> Handle(UpdateOrganisationCommand request, CancellationToken cancellationToken)
             {
                 var organisation = await _organisationRepository.Query().AnyAsync(x => x.Id != request.Organisation.Id && x.Name.Trim().ToLower() == request.Organisation.Name.Trim().ToLower() && x.CrmId == request.Organisation.CrmId);
@@ -99,6 +102,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                 _mapper.Map(request.Organisation, entity);
                 var record = _organisationRepository.Update(entity);
                 await _organisationRepository.SaveChangesAsync();
+                await _capPublisher.PublishAsync(entity.GeneratePublishName(EntityState.Modified),
+                    entity, cancellationToken: cancellationToken);
                 return new SuccessDataResult<Organisation>(record, SuccessfulOperation.PrepareRedisMessage());
             }
         }
