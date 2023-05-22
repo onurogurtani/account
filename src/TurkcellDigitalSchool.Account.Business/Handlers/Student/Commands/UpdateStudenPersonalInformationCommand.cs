@@ -36,14 +36,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string UserNameAlreadyExist = Constants.Messages.UserNameAlreadyExist;
-            [MessageConstAttr(MessageCodeType.Error,"Kullanıcı,İl,İlçe")]
-            private static string RecordsDoesNotExist = Constants.Messages.RecordsDoesNotExist; 
+            [MessageConstAttr(MessageCodeType.Error, "Kullanıcı,İl,İlçe")]
+            private static string RecordsDoesNotExist = Constants.Messages.RecordsDoesNotExist;
             public async Task<IResult> Handle(UpdateStudentPersonalInformationCommand request, CancellationToken cancellationToken)
             {
                 var getUser = _userService.GetUserById(request.UserId);
 
                 if (getUser == null)
-                    return new ErrorResult(string.Format(RecordsDoesNotExist.PrepareRedisMessage(),"Kullanıcı"));
+                    return new ErrorResult(string.Format(RecordsDoesNotExist.PrepareRedisMessage(), "Kullanıcı"));
 
                 if (request.ResidenceCityId != null && !_userService.IsExistCity((long)request.ResidenceCityId))
                     return new ErrorResult(string.Format(RecordsDoesNotExist.PrepareRedisMessage(), "İl"));
@@ -59,6 +59,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                 getUser.UserName = request.UserName;
                 getUser.AvatarId = request.AvatarId;
                 getUser.MobilePhones = request.MobilPhone;
+                getUser.MobilePhonesVerify = (getUser.MobilePhones == request.MobilPhone) ? true : false;
                 getUser.ResidenceCityId = request.ResidenceCityId;
                 getUser.ResidenceCountyId = request.ResidenceCountyId;
                 await _userRepository.UpdateAndSaveAsync(getUser);
