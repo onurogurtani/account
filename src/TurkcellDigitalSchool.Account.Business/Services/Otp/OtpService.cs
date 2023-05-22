@@ -18,11 +18,14 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
     public class OtpService : IOtpService
     {
         private readonly IOneTimePasswordRepository _oneTimePasswordRepository;
+        private readonly IUserRepository _userRepository;
+
         private readonly ConfigurationManager _configurationManager;
-        public OtpService(IOneTimePasswordRepository oneTimePasswordRepository, ConfigurationManager configurationManager)
+        public OtpService(IOneTimePasswordRepository oneTimePasswordRepository, ConfigurationManager configurationManager, IUserRepository userRepository)
         {
             _oneTimePasswordRepository = oneTimePasswordRepository;
             _configurationManager = configurationManager;
+            _userRepository = userRepository;
         }
         public DataResult<int> GenerateOtp(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId, OTPExpiryDate oTPExpiryDate)
         {
@@ -71,6 +74,14 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
             getOtp.OtpStatusId = OtpStatus.Used;
 
             _oneTimePasswordRepository.UpdateAndSave(getOtp);
+
+
+            if (ServiceId == OtpServices.StudentProfile)
+            {
+                UpdateVerifyPhone(UserId);
+            }
+
+
             return new Result(true, "Başarılı.");
         }
         private void UpdateOldNotUsedOtpCode(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId)
@@ -80,5 +91,14 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
             _oneTimePasswordRepository.UpdateAndSave(existOtpCodes);
         }
 
+        private void UpdateVerifyPhone(long userId)
+        {
+            var getUserInfo = _userRepository.Get(w => w.Id == userId);
+            if (getUserInfo != null)
+            {
+                getUserInfo.MobilePhonesVerify = true;
+                _userRepository.UpdateAndSave(getUserInfo);
+            }
+        }
     }
 }
