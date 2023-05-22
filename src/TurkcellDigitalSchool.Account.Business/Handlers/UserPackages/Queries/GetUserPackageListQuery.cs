@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging; 
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
@@ -12,10 +13,9 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
 {
-    public class GetUserPackageListQuery : IRequest<IDataResult<List<long>>>
+    public class GetUserPackageListQuery : IRequest<IDataResult<List<GetUserTestExamPackageDto>>>
     {
-        public long UserId { get; set; }
-        public class GetUserPackageListQueryHandler : IRequestHandler<GetUserPackageListQuery, IDataResult<List<long>>>
+        public class GetUserPackageListQueryHandler : IRequestHandler<GetUserPackageListQuery, IDataResult<List<GetUserTestExamPackageDto>>>
         {
             private readonly IConfiguration _configuration;
             private readonly ITokenHelper _tokenHelper;
@@ -27,7 +27,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
             }
 
             [LogAspect(typeof(FileLogger))] 
-            public async Task<IDataResult<List<long>>> Handle(GetUserPackageListQuery request, CancellationToken cancellationToken)
+            public async Task<IDataResult<List<GetUserTestExamPackageDto>>> Handle(GetUserPackageListQuery request, CancellationToken cancellationToken)
             {
                 var userId = _tokenHelper.GetUserIdByCurrentToken();
 
@@ -44,9 +44,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
                 + " union all  select pt.testexampackageid packageid , pt.packageid parentid from  public.packagetestexampackage pt"
                 + " union all  select ptm.motivationactivitypackageid packageid , ptm.packageid parentid from  public.packagemotivationactivitypackage ptm"
                 + " union all  select ptc.coachservicepackageid packageid   , ptc.packageid parentid from  public.packagecoachservicepackages ptc ) stt"
-                + " inner join cte c on c.packageid = stt.parentid ) select* from cte join public.packagepackagetypeenum tt on tt.packageid = cte.packageid";
+                + " inner join cte c on c.packageid = stt.parentid ) select cte.*, tt.* ,p2.testexamid from cte join public.packagepackagetypeenum tt on tt.packageid = cte.packageid"
+                + " join public.packagetestexam p2 on p2.packageid = cte.packageid";
 
-                var userPackageList = new List<long>();
+                var userPackageList = new List<GetUserTestExamPackageDto>();
 
                 await using (NpgsqlCommand cmd = new NpgsqlCommand(CommandText, connection))
                 {
@@ -55,12 +56,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
                     await using (NpgsqlDataReader reader = await cmd.ExecuteReaderAsync())
                         while (await reader.ReadAsync())
                         {
-                            var a = (long)reader["packageid"];
+                            var a= new GetUserTestExamPackageDto();
+                            a.Id = (long)reader["packageid"];
+                            a.TestExamId = (long)reader["testexamid"];
                             userPackageList.Add(a);
                         }
                 }
 
-                return new SuccessDataResult<List<long>>(userPackageList, Messages.SuccessfulOperation);
+                return new SuccessDataResult<List<GetUserTestExamPackageDto>>(userPackageList, Messages.SuccessfulOperation);
             }
 
         }
