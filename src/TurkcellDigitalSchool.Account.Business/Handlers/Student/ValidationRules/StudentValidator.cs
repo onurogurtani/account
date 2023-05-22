@@ -7,17 +7,6 @@ using TurkcellDigitalSchool.Core.Enums;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.ValidationRules
 {
-    [MessageClassAttr("Öğrenci Profilim Kişisel Telefon Doğrulama Validasyonu")]
-    public class UpdateStudentVerifyMobilPhoneValidator : AbstractValidator<UpdateStudentVerifyMobilPhoneCommand>
-    {
-        [MessageConstAttr(MessageCodeType.Error)]
-        private static string RequiredField = Messages.RequiredField;
-        public UpdateStudentVerifyMobilPhoneValidator()
-        {
-            RuleFor(x => x.UserId).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
-        }
-    }
-
 
     [MessageClassAttr("Öğrenci Profilim Kişisel Bilgilerim Email Güncelleme Validasyonu")]
     public class UpdateStudentEmailValidator : AbstractValidator<UpdateStudentEmailCommand>
