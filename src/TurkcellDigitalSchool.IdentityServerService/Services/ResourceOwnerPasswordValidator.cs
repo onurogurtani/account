@@ -54,7 +54,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             _loginFailForgetPassSendLinkRepository = loginFailForgetPassSendLinkRepository;
             _environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             _appSettingRepository = appSettingRepository;
-            _sessionRedisSvc = sessionRedisSvc ;
+            _sessionRedisSvc = sessionRedisSvc;
         }
 
         private const string CapthcaShowRequestText = "IsCapthcaShow";
@@ -232,7 +232,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
 
 
-            var sessionInfo = await  _sessionRedisSvc.GetAsync<UserSessionInfo>(user.Id.ToString());
+            var sessionInfo = await _sessionRedisSvc.GetAsync<UserSessionInfo>(user.Id.ToString());
             if (sessionInfo == null)
             {
                 sessionInfo = new UserSessionInfo();
@@ -256,7 +256,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 Console.WriteLine(e);
                 throw;
             }
-        
+
 
             context.Result = new GrantValidationResult(user.Id.ToString(), OidcConstants.AuthenticationMethods.Password,
             new List<Claim>
@@ -305,10 +305,9 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             if (_environment == ApplicationMode.DEV.ToString() || _environment == ApplicationMode.DEVTURKCELL.ToString())
                 otp = 123456;
 
-            if (_environment == ApplicationMode.PROD.ToString())
-            {
-                await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
-            }
+
+            await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
+
 
             date = DateTime.Now;
 

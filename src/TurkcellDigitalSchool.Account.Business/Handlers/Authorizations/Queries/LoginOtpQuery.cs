@@ -15,7 +15,7 @@ using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Core.Utilities.Security.Jwt; 
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
@@ -91,7 +91,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                         StartTime = DateTime.Now,
                         IpAdress = ip
                     });
-                     
+
                     var accessToken = _tokenHelper.CreateToken<DArchToken>(new TokenDto
                     {
                         User = user,
@@ -108,11 +108,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                     _mobileLoginRepository.Update(mobileLogin);
                     await _mobileLoginRepository.SaveChangesAsync();
 
-                    if (_configurationManager.Mode != ApplicationMode.LOCAL && _configurationManager.Mode != ApplicationMode.DEV && _configurationManager.Mode != ApplicationMode.STB)
-                    {
-                        await _smsOtpRepository.ExecUpdateSpForSms(user.MobilePhones, user.Id, mobileLogin.Code.ToString());
-                    } 
-                    return new SuccessDataResult<DArchToken>(accessToken, Messages.SuccessfulLogin); 
+
+                    await _smsOtpRepository.ExecUpdateSpForSms(user.MobilePhones, user.Id, mobileLogin.Code.ToString());
+
+                    return new SuccessDataResult<DArchToken>(accessToken, Messages.SuccessfulLogin);
                 }
                 catch (Exception e)
                 {

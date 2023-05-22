@@ -61,7 +61,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
             public async Task<IDataResult<SelectionItem>> Handle(AddUserCommand request, CancellationToken cancellationToken)
             {
                 int randomPassword = RandomPassword.RandomNumberGenerator();
-                if (_configurationManager.Mode == ApplicationMode.DEV || _configurationManager.Mode == ApplicationMode.STB)
+                if (_configurationManager.Mode == ApplicationMode.DEV  )
                     randomPassword = 123456;
                 HashingHelper.CreatePasswordHash(randomPassword.ToString(), out var passwordSalt, out var passwordHash);
 

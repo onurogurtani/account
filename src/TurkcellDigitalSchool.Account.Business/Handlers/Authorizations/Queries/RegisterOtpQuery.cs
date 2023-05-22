@@ -104,7 +104,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                     _mobileLoginRepository.Update(mobileLogin);
                     await _mobileLoginRepository.SaveChangesAsync();
 
-                    if (_configurationManager.Mode != ApplicationMode.LOCAL && _configurationManager.Mode != ApplicationMode.STB && _configurationManager.Mode != ApplicationMode.DEV)
+                    if ( _configurationManager.Mode != ApplicationMode.DEV)
                     {
                         await _smsOtpRepository.ExecUpdateSpForSms(user.MobilePhones, user.Id, mobileLogin.Code.ToString());
                     }

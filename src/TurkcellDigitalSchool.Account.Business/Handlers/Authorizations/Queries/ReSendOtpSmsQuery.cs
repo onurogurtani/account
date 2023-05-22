@@ -14,7 +14,7 @@ using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.Core.Utilities.Toolkit; 
+using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
@@ -45,7 +45,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             }
 
 
-            [LogAspect(typeof(FileLogger))] 
+            [LogAspect(typeof(FileLogger))]
             public async Task<IDataResult<AccessToken>> Handle(ReSendOtpSmsQuery request, CancellationToken cancellationToken)
             {
                 MobileLogin mobileLogin = await _mobileLoginRepository.GetAsync(w => w.Id == request.MobileLoginId);
@@ -100,23 +100,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                         throw new Exception(Messages.UnableToProccess);
                     }
                     int otp = RandomPassword.RandomNumberGenerator();
-                    if (_configurationManager.Mode == ApplicationMode.STB)
-                        otp = 123456;
 
-                    try
-                    {
-                        if (_configurationManager.Mode != ApplicationMode.LOCAL && _configurationManager.Mode != ApplicationMode.STB && _configurationManager.Mode != ApplicationMode.DEV)
-                        {
-                            await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        if (_configurationManager.Mode == ApplicationMode.PROD)
-                        {
-                            throw ex;
-                        }
-                    }
+
+
+
+                    await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
+
+
 
                     mobileLogin.LastSendDate = DateTime.Now;
                     mobileLogin.ReSendCount++;

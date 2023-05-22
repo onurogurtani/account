@@ -17,7 +17,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.Core.Utilities.Toolkit; 
+using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
@@ -49,7 +49,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             [LogAspect(typeof(FileLogger))]
             public async Task<IDataResult<AccessToken>> Handle(LoginUserQuery request, CancellationToken cancellationToken)
             {
-                if (!(_configurationManager.Mode != ApplicationMode.PROD && request.CaptchaKey == "kg"))
+                if (!(_configurationManager.Mode == ApplicationMode.DEV && request.CaptchaKey == "kg"))
                 {
                     if (!_captchaManager.Validate(request.CaptchaKey))
                     {
@@ -59,17 +59,17 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 User user = null;
                 if (request.CitizenId != 0)
                 {
-                    user = await _userRepository.GetAsync(u => u.CitizenId == request.CitizenId  && u.Status);
+                    user = await _userRepository.GetAsync(u => u.CitizenId == request.CitizenId && u.Status);
                 }
                 else
                 {
-                    user = await _userRepository.GetAsync(u =>  u.Email == request.Email && u.Status);
+                    user = await _userRepository.GetAsync(u => u.Email == request.Email && u.Status);
                 }
 
                 if (user == null)
                 {
                     return new ErrorDataResult<AccessToken>(Messages.PassError);
-                } 
+                }
 
                 if (!HashingHelper.VerifyPasswordHash(request.Password, user.PasswordSalt, user.PasswordHash))
                 {
@@ -85,8 +85,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                         Console.WriteLine(e);
                         throw;
                     }
-                  
-                    
+
+
                 }
 
                 if ((user.FailLoginCount ?? 0) > 0)
@@ -140,10 +140,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 if (_configurationManager.Mode == ApplicationMode.DEV)
                     otp = 123456;
 
-                if (_configurationManager.Mode != ApplicationMode.LOCAL && _configurationManager.Mode != ApplicationMode.DEV && _configurationManager.Mode != ApplicationMode.STB)
-                {
-                    await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
-                }
+
+                await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
+
 
                 date = DateTime.Now;
 

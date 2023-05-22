@@ -118,8 +118,7 @@ namespace TurkcellDigitalSchool.Account.Container
             var configurationManager = app.ApplicationServices.GetService<Common.ConfigurationManager>();
             switch (configurationManager.Mode)
             {
-                case ApplicationMode.LOCAL:
-                    break;
+               
                 case ApplicationMode.DEV:
                     break;
                 case ApplicationMode.DEVTURKCELL:
@@ -132,15 +131,6 @@ namespace TurkcellDigitalSchool.Account.Container
                         }
                         break;
                     }
-                case ApplicationMode.STB:
-                    //app.UseConsul(Configuration);
-                    break;
-                case ApplicationMode.PRP:
-                    app.UseConsul(Configuration);
-                    break;
-                case ApplicationMode.PROD:
-                    app.UseConsul(Configuration);
-                    break;
             }
 
             app.UseDeveloperExceptionPage();
