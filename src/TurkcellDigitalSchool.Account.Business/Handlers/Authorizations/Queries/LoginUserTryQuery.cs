@@ -44,12 +44,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 
             [LogAspect(typeof(FileLogger))]
             public async Task<string> Handle(LoginUserTryQuery request, CancellationToken cancellationToken)
-            {
-                if (_configurationManager.Mode == ApplicationMode.PROD)
-                {
-                    return "Geçersiz İşlem";
-                }
-
+            { 
                 var user = await _userRepository
                     .GetAsync(u => u.Status
                                 && (request.UserId > 0 ? u.Id == request.UserId : u.UserName == request.UserName));

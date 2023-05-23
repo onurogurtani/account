@@ -117,10 +117,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 }
 
                 int otp = RandomPassword.RandomNumberGenerator();
-                if (_configurationManager.Mode == ApplicationMode.PRP)
-                    otp = 123456;
+ 
 
-                if (_configurationManager.Mode != ApplicationMode.LOCAL && _configurationManager.Mode != ApplicationMode.DEV && _configurationManager.Mode != ApplicationMode.STB)
+                if (_configurationManager.Mode != ApplicationMode.DEV)
                 {
                     await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
                 }

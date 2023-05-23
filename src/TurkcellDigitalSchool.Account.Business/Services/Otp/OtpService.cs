@@ -39,8 +39,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
             }
 
             int otp = RandomPassword.RandomNumberGenerator();
-            if (_configurationManager.Mode != ApplicationMode.PROD)
-                otp = 123456;
+           
 
             var newRecord = new OneTimePassword
             {

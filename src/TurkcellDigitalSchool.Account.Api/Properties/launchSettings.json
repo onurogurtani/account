@@ -20,37 +20,7 @@
       "sslPort": 0
     }
   },
-  "profiles": {
-    "TurkcellDigitalSchool.Api.STB": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "STB"
-      },
-      "applicationUrl": "http://localhost:6021",
-      "dotnetRunMessages": true
-    },
-    "TurkcellDigitalSchool.Api.LOCAL": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "LOCAL"
-      },
-      "applicationUrl": "http://localhost:6021",
-      "dotnetRunMessages": true
-    },
-    "TurkcellDigitalSchool.Api.PRP": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "PRP"
-      },
-      "applicationUrl": "http://localhost:6021",
-      "dotnetRunMessages": true
-    },
+  "profiles": { 
     "TurkcellDigitalSchool.Api.DEV": {
       "commandName": "Project",
       "launchBrowser": true,
@@ -70,25 +40,6 @@
       },
       "applicationUrl": "http://localhost:6021",
       "dotnetRunMessages": true
-    },
-    "TurkcellDigitalSchool.Api.PROD": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "PROD"
-      },
-      "applicationUrl": "http://localhost:6021",
-      "dotnetRunMessages": true
-    },
-    "IIS_DEV": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:60021;http://localhost:6021"
     }
   }
 }

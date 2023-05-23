@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR; 
+using MediatR;
 using Microsoft.IdentityModel.Tokens;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
@@ -20,7 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
     {
         public long MobileLoginId { get; set; }
         public string XId { get; set; }
-         
+
         public class LoginFailReSendOtpSmsQueryHandler : IRequestHandler<LoginFailReSendOtpSmsQuery, IDataResult<LoginFailReSendOtpSmsQueryResponse>>
         {
             private readonly IUserRepository _userRepository;
@@ -36,7 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             }
 
 
-            [LogAspect(typeof(FileLogger))] 
+            [LogAspect(typeof(FileLogger))]
             public async Task<IDataResult<LoginFailReSendOtpSmsQueryResponse>> Handle(LoginFailReSendOtpSmsQuery request, CancellationToken cancellationToken)
             {
 
@@ -56,10 +56,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                     }
                 }
                 catch (Exception)
-                { 
+                {
                     return new ErrorDataResult<LoginFailReSendOtpSmsQueryResponse>(Messages.XIdIsNotCorrenctFormat);
                 }
-                  
+
                 var query = _userRepository.Query().Where(u => u.Id == mobileLogin.UserId);
 
                 var user = query.FirstOrDefault();
@@ -104,15 +104,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                     if (_environment == ApplicationMode.DEV.ToString() || _environment == ApplicationMode.DEVTURKCELL.ToString())
                         otp = 123456;
 
-                    if (_environment == ApplicationMode.PROD.ToString())
-                    {
-                        await _smsOtpRepository.ExecInsertSpForSms(user.MobilePhones, user.Id, otp.ToString());
-                    }
+
+                    await _smsOtpRepository.ExecInsertSpForSms(user.MobilePhones, user.Id, otp.ToString());
+
 
                     mobileLogin.LastSendDate = DateTime.Now;
                     mobileLogin.ReSendCount++;
                     mobileLogin.Code = otp;
-                    mobileLogin.CellPhone = user.MobilePhones; 
+                    mobileLogin.CellPhone = user.MobilePhones;
 
                     _mobileLoginRepository.Update(mobileLogin);
                     await _mobileLoginRepository.SaveChangesAsync();
