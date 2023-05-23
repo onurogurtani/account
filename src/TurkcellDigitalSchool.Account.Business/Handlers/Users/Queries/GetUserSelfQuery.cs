@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
@@ -15,6 +16,8 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 {
     [ExcludeFromCodeCoverage]
+    [PerformanceScope]
+    [LogScope]
     public class GetUserSelfQuery : IRequest<IDataResult<CurrentUserDto>>
     {
         public class GetUserSelfQueryHandler : IRequestHandler<GetUserSelfQuery, IDataResult<CurrentUserDto>>
@@ -30,7 +33,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                 _tokenHelper = tokenHelper;
             }
 
-            [LogAspect(typeof(FileLogger))]
+          //  [LogAspect(typeof(FileLogger))]
             public async Task<IDataResult<CurrentUserDto>> Handle(GetUserSelfQuery request, CancellationToken cancellationToken)
             {
                 long userId = _tokenHelper.GetUserIdByCurrentToken();

@@ -4,6 +4,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace TurkcellDigitalSchool.Account.Api
 {
@@ -19,21 +20,33 @@ namespace TurkcellDigitalSchool.Account.Api
         public static void Main(string[] args)
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            CreateHostBuilder(args).Build().Run();
-
+            CreateHostBuilder(args).Build().Run(); 
         }
+
         /// <summary>
         ///
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-                Host.CreateDefaultBuilder(args)
-                    .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                    .ConfigureWebHostDefaults(webBuilder =>
-                    {
-                        webBuilder
+            Host.CreateDefaultBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder
                         .UseStartup<Startup>()
+                        .ConfigureLogging(builder =>
+                        {
+                            builder.ClearProviders();
+                        })
+                        .UseSerilog((hostingContext, loggerConfiguration) =>
+                        {
+                            loggerConfiguration
+                                .ReadFrom.Configuration(hostingContext.Configuration)
+                                .Enrich.FromLogContext()
+                                .Enrich.WithMachineName()
+                                .Enrich.WithThreadId();
+                        })
                         .ConfigureKestrel((context, options) =>
                         {
                             options.AddServerHeader = false;
@@ -43,13 +56,6 @@ namespace TurkcellDigitalSchool.Account.Api
                                 //listenOptions.Protocols = HttpProtocols.Http3;
                             });
                         });
-                    })
-        .ConfigureLogging(logging =>
-        {
-            logging.ClearProviders();
-            logging.SetMinimumLevel(LogLevel.Trace);
-        });
-
-
+                });
     }
 }

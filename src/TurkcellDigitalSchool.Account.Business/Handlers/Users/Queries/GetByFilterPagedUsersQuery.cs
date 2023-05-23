@@ -10,6 +10,7 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
@@ -21,6 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
     ///<summary>
     ///Get Filtered Paged Users
     /// </summary>
+    [LogScope]
     public class GetByFilterPagedUsersQuery : IRequest<IDataResult<PagedList<UserDto>>>
     {
         public UserDetailSearch UserDetailSearch { get; set; } = new UserDetailSearch();
@@ -38,7 +40,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                 _accountDbContext = accountDbContext;
             }
 
-            [LogAspect(typeof(FileLogger))]
+           
             [SecuredOperation]
             public virtual async Task<IDataResult<PagedList<UserDto>>> Handle(GetByFilterPagedUsersQuery request, CancellationToken cancellationToken)
             {
