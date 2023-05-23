@@ -6,14 +6,14 @@ using Microsoft.IdentityModel.Tokens;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Integration.IntegrationServices.IdentityServerServices.Model.Response;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
+    [LogScope]
     public class OldPasswordToNewPasswordCommand : IRequest<IDataResult<TokenIntegraitonResponse>>
     {
         public string XId { get; set; }
@@ -33,9 +33,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 _userRepository = userRepository;
                 _mediator = mediator;
             }
-
-
-            [LogAspect(typeof(FileLogger))] 
+             
             public async Task<IDataResult<TokenIntegraitonResponse>> Handle(OldPasswordToNewPasswordCommand request, CancellationToken cancellationToken)
             {
                 if (request.NewPass != request.NewPassAgain)

@@ -7,13 +7,12 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
 {
-   
+    [LogScope]
     public class GetContractKindQuery : IRequest<IDataResult<ContractKind>>
     {
         public long Id { get; set; }
@@ -26,9 +25,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
             {
                 _contractKindRepository = contractKindRepository;
             }
-
-     
-            [LogAspect(typeof(FileLogger))]
+             
             [SecuredOperation]
             public virtual async Task<IDataResult<ContractKind>> Handle(GetContractKindQuery request, CancellationToken cancellationToken)
             {

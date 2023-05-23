@@ -10,8 +10,7 @@ using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.File;
@@ -24,6 +23,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     ///Get Packages For User Detail Page
     ///</summary>
     ///<br />   PageNumber can be  entered manually </remarks>
+
+    [LogScope]
     public class GetPackageForUserQuery : IRequest<IDataResult<GetPackageForUserResponseDto>>
     {
         public long Id { get; set; }
@@ -47,8 +48,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
 
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
-
-            [LogAspect(typeof(FileLogger))]
+             
             [SecuredOperation]
             public async Task<IDataResult<GetPackageForUserResponseDto>> Handle(GetPackageForUserQuery request, CancellationToken cancellationToken)
             {

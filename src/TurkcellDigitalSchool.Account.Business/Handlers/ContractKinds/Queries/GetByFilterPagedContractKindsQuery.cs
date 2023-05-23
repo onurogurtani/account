@@ -9,8 +9,7 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results; 
 
@@ -20,6 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
     ///Get Filtered Paged ContractKind with relation data 
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "NameASC","NameDESC","RecordStatusASC","RecordStatusDESC","DescriptionASC","DescriptionDESC","IdASC","IdDESC","ContractTypeNameASC","ContractTypeNameDESC"</remarks>
+    [LogScope]
     public class GetByFilterPagedContractKindsQuery : IRequest<IDataResult<PagedList<ContractKind>>>
     {
         public ContractKindDto ContractKindDto { get; set; } = new ContractKindDto();
@@ -32,8 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
                 _contractKindRepository = contractKindRepository;
             }
 
-            [CacheRemoveAspect("Get")]
-            [LogAspect(typeof(FileLogger))]
+            [CacheRemoveAspect("Get")] 
             [SecuredOperation]
             public virtual async Task<IDataResult<PagedList<ContractKind>>> Handle(GetByFilterPagedContractKindsQuery request, CancellationToken cancellationToken)
             {

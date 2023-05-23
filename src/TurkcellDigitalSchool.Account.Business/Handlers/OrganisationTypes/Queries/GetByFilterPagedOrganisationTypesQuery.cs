@@ -10,6 +10,7 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -20,6 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationTypes.Quer
     ///Get Filtered Paged OrganisationTypes with  IsSingularOrPluralChangeable property
     ///</summary>
     ///<remarks></remarks>
+    [LogScope]
     public class GetByFilterPagedOrganisationTypesQuery : IRequest<IDataResult<PagedList<OrganisationTypeDto>>>
     {
         public PaginationQuery PaginationQuery { get; set; } = new PaginationQuery();
@@ -35,8 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationTypes.Quer
                 _organisationRepository = organisationRepository;
                 _mapper = mapper;
             }
-
-            [LogAspect(typeof(FileLogger))]
+             
             [SecuredOperation]
             public virtual async Task<IDataResult<PagedList<OrganisationTypeDto>>> Handle(GetByFilterPagedOrganisationTypesQuery request, CancellationToken cancellationToken)
             {

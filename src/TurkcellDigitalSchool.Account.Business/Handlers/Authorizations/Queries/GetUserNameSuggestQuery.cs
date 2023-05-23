@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
+    [LogScope]
     public class GetUserNameSuggestQuery : IRequest<IDataResult<List<SelectionItem>>>
     {
         public string UserName { get; set; }
@@ -29,8 +29,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             /// <summary>
             /// Username Suggestion
             /// If a similar nickname is chosen while creating a nickname, different nickname suggestions are offered by the system.
-            /// </summary>
-            [LogAspect(typeof(FileLogger))]
+            /// </summary> 
             public async Task<IDataResult<List<SelectionItem>>> Handle(GetUserNameSuggestQuery request, CancellationToken cancellationToken)
             {
                 var isThereRecord = await _userRepository.GetAsync(w => w.UserName == request.UserName && w.RegisterStatus == RegisterStatus.Registered);

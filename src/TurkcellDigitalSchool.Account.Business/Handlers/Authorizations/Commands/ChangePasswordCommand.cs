@@ -9,14 +9,14 @@ using TurkcellDigitalSchool.Account.Business.Services.Authentication;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Validation;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
+    [LogScope]
     public class ChangePasswordCommand : IRequest<IResult>
     {
         public long CitizenId { get; set; }
@@ -35,7 +35,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             }
 
             [CacheRemoveAspect("Get")]
-            [LogAspect(typeof(FileLogger))]
+            
             public async Task<IResult> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
             {
                 var result = await _mediator.Send(new CitizenIdPasswordCheckCommand { CitizenId = request.CitizenId, CurrentPassword = request.CurrentPassword }, cancellationToken);

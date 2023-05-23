@@ -10,10 +10,8 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common;
 using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging; 
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
@@ -24,6 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
 
     [TransactionScope]
+    [LogScope]
     public class RegisterOtpQuery : IRequest<IDataResult<AccessToken>>, ITokenRequest
     {
         public long MobileLoginId { get; set; }
@@ -52,10 +51,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 _userSessionRepository = userSessionRepository;
                 _httpContextAccessor = httpContextAccessor;
                 _capPublisher = capPublisher;
-            }
-
-          
-            [LogAspect(typeof(FileLogger))]
+            } 
             public async Task<IDataResult<AccessToken>> Handle(RegisterOtpQuery request, CancellationToken cancellationToken)
             {
                 try

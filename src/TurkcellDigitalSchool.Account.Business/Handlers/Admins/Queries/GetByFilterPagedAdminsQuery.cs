@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,8 +8,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -21,6 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
     ///<summary>
     ///Get Filtered Paged Admins  with Roles
     /// </summary>
+    [LogScope]
     public class GetByFilterPagedAdminsQuery : IRequest<IDataResult<PagedList<AdminDto>>>
     {
         public AdminDetailSearch AdminDetailSearch { get; set; } = new AdminDetailSearch();
@@ -37,8 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
                 _organisationUserRepository = organisationUserRepository;
                 _tokenHelper = tokenHelper;
             }
-
-            [LogAspect(typeof(FileLogger))]
+             
             [SecuredOperation]
             public virtual async Task<IDataResult<PagedList<AdminDto>>> Handle(GetByFilterPagedAdminsQuery request, CancellationToken cancellationToken)
             {

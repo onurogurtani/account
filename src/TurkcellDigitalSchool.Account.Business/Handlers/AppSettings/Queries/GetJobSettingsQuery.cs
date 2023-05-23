@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
 {
+
+    [LogScope]
     public class GetJobSettingsQuery : IRequest<IDataResult<IEnumerable<AppSetting>>>
     {
         public class GetJobSettingsQueryHandler : IRequestHandler<GetJobSettingsQuery, IDataResult<IEnumerable<AppSetting>>>
@@ -23,9 +24,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
             {
                 _appSettingRepository = appSettingRepository;
             }
-
-
-            [LogAspect(typeof(FileLogger))]
+             
             public async Task<IDataResult<IEnumerable<AppSetting>>> Handle(GetJobSettingsQuery request, CancellationToken cancellationToken)
             {
                 var jobs = Enum.GetValues(typeof(JobType)).Cast<JobType>().Select(v => v.ToString()).ToList();

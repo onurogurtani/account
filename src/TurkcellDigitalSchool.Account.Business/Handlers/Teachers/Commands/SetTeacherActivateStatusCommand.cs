@@ -7,6 +7,7 @@ using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
@@ -14,6 +15,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
 {
+    [LogScope]
     public class SetTeacherActivateStatusCommand : IRequest<IResult>
     {
         public long Id { get; set; }
@@ -37,7 +39,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [SecuredOperation]
-            [LogAspect(typeof(FileLogger))]
+          
             public async Task<IResult> Handle(SetTeacherActivateStatusCommand request, CancellationToken cancellationToken)
             {
                 var teacher = await _userRepository.GetAsync(x => x.Id == request.Id);

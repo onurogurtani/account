@@ -7,8 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -18,6 +17,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
     /// <summary>
     /// Contract Kind By Contract Types
     /// </summary>
+
+    [LogScope]
     public class GetContractKindsByContractTypesQuery : IRequest<IDataResult<List<SelectionItem>>>
     {
         public long[] Ids { get; set; }
@@ -33,8 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
                 _contractTypeRepository = contractTypeRepository;
             }
 
-         
-            [LogAspect(typeof(FileLogger))]
+          
             [SecuredOperation]
             public async Task<IDataResult<List<SelectionItem>>> Handle(GetContractKindsByContractTypesQuery request, CancellationToken cancellationToken)
             {

@@ -6,13 +6,15 @@ using Microsoft.Extensions.Configuration;
 using Npgsql;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging; 
+using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
 {
+    [LogScope]
     public class GetUserPackageListQuery : IRequest<IDataResult<List<GetUserTestExamPackageDto>>>
     {
         public class GetUserPackageListQueryHandler : IRequestHandler<GetUserPackageListQuery, IDataResult<List<GetUserTestExamPackageDto>>>
@@ -26,7 +28,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
                 _configuration = configuration; 
             }
 
-            [LogAspect(typeof(FileLogger))] 
+          
             public async Task<IDataResult<List<GetUserTestExamPackageDto>>> Handle(GetUserPackageListQuery request, CancellationToken cancellationToken)
             {
                 var userId = _tokenHelper.GetUserIdByCurrentToken();

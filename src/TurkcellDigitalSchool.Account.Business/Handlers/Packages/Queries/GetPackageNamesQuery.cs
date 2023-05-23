@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Common.BusinessAspects; 
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute; 
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
@@ -15,6 +14,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     /// <summary>
     /// Get Names that using in Packages
     /// </summary>
+    [LogScope]
     public class GetPackageNamesQuery : IRequest<IDataResult<List<string>>>
     {
         public class GetPackageNamesQueryHandler : IRequestHandler<GetPackageNamesQuery, IDataResult<List<string>>>
@@ -25,9 +25,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
 
             {
                 _packageRepository = packageRepository;
-            }
-             
-            [LogAspect(typeof(FileLogger))]
+            } 
+
             [SecuredOperation]
             public async Task<IDataResult<List<string>>> Handle(GetPackageNamesQuery request, CancellationToken cancellationToken)
             {

@@ -8,9 +8,8 @@ using TurkcellDigitalSchool.Account.Business.Services.Authentication;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.TurkcellFastLoginService;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -18,6 +17,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
+    [LogScope]
     public class LoginUserByTurkcellFastLoginQuery : IRequest<IDataResult<AccessToken>>, ITokenRequest
     {
         public string AuthenticationCode { get; set; }
@@ -41,9 +41,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 _cacheManager = cacheManager;
                 _httpContextAccessor = httpContextAccessor;
             }
-
-
-            [LogAspect(typeof(FileLogger))]
+             
             public async Task<IDataResult<AccessToken>> Handle(LoginUserByTurkcellFastLoginQuery request, CancellationToken cancellationToken)
             {
                 try

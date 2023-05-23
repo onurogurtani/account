@@ -5,15 +5,15 @@ using MediatR;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.LdapLoginService;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
+    [LogScope]
     public class LoginUserByLdapQuery : IRequest<IDataResult<AccessToken>>
     {
         public string UserName { get; set; }
@@ -44,9 +44,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 _configurationManager = configurationManager;
                 _captchaManager = captchaManager;
             }
-
-
-            [LogAspect(typeof(FileLogger))]
+             
             public async Task<IDataResult<AccessToken>> Handle(LoginUserByLdapQuery request, CancellationToken cancellationToken)
             {
                 // Daha sonra yapılacak

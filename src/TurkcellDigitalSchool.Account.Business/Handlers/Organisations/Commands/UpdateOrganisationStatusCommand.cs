@@ -5,14 +5,14 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
 {
+    [LogScope]
     public class UpdateOrganisationStatusCommand : IRequest<IResult>
     {
         public long Id { get; set; }
@@ -32,8 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
-            [SecuredOperation] 
-            [LogAspect(typeof(FileLogger))]
+            [SecuredOperation]  
             public async Task<IResult> Handle(UpdateOrganisationStatusCommand request, CancellationToken cancellationToken)
             {
                 var organisation = await _organisationRepository.GetAsync(x => x.Id == request.Id);

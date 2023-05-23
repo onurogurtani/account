@@ -5,15 +5,15 @@ using MediatR;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results; 
 using static TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries.LoginFailCheckOtpQuery;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
+    [LogScope]
     public class LoginFailCheckOtpQuery : IRequest<IDataResult<LoginFailCheckOtpResponse>>
     {
         public long MobileLoginId { get; set; }
@@ -33,7 +33,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 _mediator = mediator;
             }
 
-            [LogAspect(typeof(FileLogger))]
+        
             public async Task<IDataResult<LoginFailCheckOtpResponse>> Handle(LoginFailCheckOtpQuery request, CancellationToken cancellationToken)
             {
                 var mobileLogin = await _mobileLoginRepository.GetAsync(m =>

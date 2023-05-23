@@ -7,14 +7,14 @@ using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Utilities.Results; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 {
     [ExcludeFromCodeCoverage]
+    [LogScope]
     public class GetUserLookupQuery : IRequest<IDataResult<IEnumerable<SelectionItem>>>
     {
         public class GetUserLookupQueryHandler : IRequestHandler<GetUserLookupQuery, IDataResult<IEnumerable<SelectionItem>>>
@@ -25,8 +25,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                 _userRepository = userRepository;
             }
             [SecuredOperation]
-            [CacheAspect(10)]
-            [LogAspect(typeof(FileLogger))]
+            [CacheAspect(10)] 
             public async Task<IDataResult<IEnumerable<SelectionItem>>> Handle(GetUserLookupQuery request, CancellationToken cancellationToken)
             {
                 var list = await _userRepository.GetListAsync(x => x.Status);

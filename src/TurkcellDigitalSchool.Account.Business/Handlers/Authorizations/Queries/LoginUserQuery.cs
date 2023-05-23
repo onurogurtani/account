@@ -4,14 +4,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Refit;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common;
 using TurkcellDigitalSchool.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
@@ -21,6 +19,7 @@ using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
+    [LogScope]
     public class LoginUserQuery : IRequest<IDataResult<AccessToken>>
     {
         public long CitizenId { get; set; }
@@ -44,9 +43,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 _configurationManager = configurationManager;
                 _captchaManager = captchaManager;
             }
-
-
-            [LogAspect(typeof(FileLogger))]
+             
             public async Task<IDataResult<AccessToken>> Handle(LoginUserQuery request, CancellationToken cancellationToken)
             {
                 if (!(_configurationManager.Mode == ApplicationMode.DEV && request.CaptchaKey == "kg"))

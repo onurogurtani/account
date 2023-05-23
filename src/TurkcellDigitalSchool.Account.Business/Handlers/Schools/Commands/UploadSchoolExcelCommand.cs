@@ -13,6 +13,7 @@ using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
@@ -22,6 +23,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
 {
 
+    [LogScope]
     public class UploadSchoolExcelCommand : IRequest<IDataResult<List<School>>>
     {
         public IFormFile FormFile { get; set; }
@@ -58,7 +60,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
             /// </summary>
             [SecuredOperation]
             [CacheRemoveAspect("Get")]
-            [LogAspect(typeof(FileLogger))]
+           
             public async Task<IDataResult<List<School>>> Handle(UploadSchoolExcelCommand request, CancellationToken cancellationToken)
             {
                 List<School> schoolList = new();

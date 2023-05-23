@@ -23,6 +23,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
     [TransactionScope]
+    [LogScope]
     public class RegisterUserCommand : IRequest<IDataResult<AccessToken>>
     {
         public UserType UserTypeId { get; set; }
@@ -50,7 +51,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             /// Will be reedited
             /// </summary> 
             [CacheRemoveAspect("Get")]
-            [LogAspect(typeof(FileLogger))] 
+          
             public async Task<IDataResult<AccessToken>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
             {
                 HashingHelper.CreatePasswordHash(request.Password, out var passwordSalt, out var passwordHash);

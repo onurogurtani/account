@@ -7,13 +7,15 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Queries
-{ 
+{
+    [LogScope]
     public class GetSchoolListQuery : IRequest<IDataResult<PagedList<School>>>
     {
         public PaginationQuery PaginationQuery { get; set; }
@@ -43,7 +45,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Queries
             /// Get By Filtered Paged Schools with relation data 
             /// RecordStatus, InstitutionId, CityId, CountyId
             /// </summary> 
-            [LogAspect(typeof(FileLogger))]
+            
             [SecuredOperation]
             public async Task<IDataResult<PagedList<School>>> Handle(GetSchoolListQuery request, CancellationToken cancellationToken)
             {

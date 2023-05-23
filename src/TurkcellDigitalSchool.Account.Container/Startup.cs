@@ -16,7 +16,6 @@ using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Common.Middleware;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
@@ -77,8 +76,7 @@ namespace TurkcellDigitalSchool.Account.Container
                 c.IncludeXmlComments(Path.ChangeExtension(Assembly.GetEntryAssembly().Location, ".xml"));
             });
 
-            services.AddTransient<FileLogger>();
-            services.AddTransient<MsSqlLogger>();
+          
             services.AddSingleton<RedisService>();
 
             base.ConfigureServices(services);

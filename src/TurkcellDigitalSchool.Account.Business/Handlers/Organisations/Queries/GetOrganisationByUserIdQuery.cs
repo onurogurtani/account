@@ -9,8 +9,7 @@ using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -18,6 +17,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
 {
+    [LogScope]
     public class GetOrganisationByUserIdQuery : IRequest<IDataResult<OrganisationUsersDto>>
     {
         [MessageClassAttr("Kullanýcý Kurumlarýný Görüntüleme")]
@@ -36,8 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-            [LogAspect(typeof(FileLogger))]
+             
             [SecuredOperation]
             public virtual async Task<IDataResult<OrganisationUsersDto>> Handle(GetOrganisationByUserIdQuery request, CancellationToken cancellationToken)
             {

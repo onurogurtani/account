@@ -8,8 +8,7 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
@@ -19,6 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
     ///Get Filtered Paged Organisation with relation data 
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be ""CrmIdASC","CrmIdDESC","OrganisationTypeNameASC","OrganisationTypeNameDESC",NameASC","NameDESC","OrganisationManagerASC","OrganisationManagerDESC","PackageNameASC","PackageNameDESC","LicenceNumberASC","LicenceNumberDESC","DomainNameASC","DomainNameDESC","CustomerNumberASC","CustomerNumberDESC","OrganisationStatusInfoASC","OrganisationStatusInfoDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC","IdASC","IdDESC" </remarks>
+    [LogScope]
     public class GetByFilterPagedOrganisationsQuery : IRequest<IDataResult<PagedList<Organisation>>>
     {
         public OrganisationDetailSearch OrganisationDetailSearch { get; set; } = new OrganisationDetailSearch();
@@ -32,8 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
                 _organisationRepository = organisationRepository;
             }
 
-            [CacheRemoveAspect("Get")]
-            [LogAspect(typeof(FileLogger))]
+            [CacheRemoveAspect("Get")] 
             [SecuredOperation]
             public virtual async Task<IDataResult<PagedList<Organisation>>> Handle(GetByFilterPagedOrganisationsQuery request, CancellationToken cancellationToken)
             {

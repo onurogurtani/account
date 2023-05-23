@@ -94,6 +94,7 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
+
             services.AddMediatR(typeof(BusinessStartup).GetTypeInfo().Assembly);
 
 

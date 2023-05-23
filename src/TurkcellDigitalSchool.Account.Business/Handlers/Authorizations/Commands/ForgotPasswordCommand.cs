@@ -10,8 +10,7 @@ using TurkcellDigitalSchool.Account.Business.Services.Authentication;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
@@ -22,6 +21,7 @@ using IResult = TurkcellDigitalSchool.Core.Utilities.Results.IResult;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
+    [LogScope]
     public class ForgotPasswordCommand : IRequest<IResult>
     {
         public string Email { get; set; }
@@ -56,8 +56,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             /// Email address is checked.
             /// If there is an e-mail address, a token is created and sent to the password reset link to the e-mail address.
             /// </summary>
-            [CacheRemoveAspect("Get")]
-            [LogAspect(typeof(FileLogger))]
+            [CacheRemoveAspect("Get")] 
             public async Task<IResult> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
             {
                 if (request.CaptchaKey != null)
