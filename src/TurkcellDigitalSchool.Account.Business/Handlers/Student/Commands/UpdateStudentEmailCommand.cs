@@ -27,7 +27,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                 _userService = userService;
             }
 
-
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
             [MessageConstAttr(MessageCodeType.Error)]
@@ -36,13 +35,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string EnterDifferentEmail = Constants.Messages.EnterDifferentEmail;
-
-             
             public async Task<IResult> Handle(UpdateStudentEmailCommand request, CancellationToken cancellationToken)
             {
-
-                //TODO Generic OPT servisi yazılacak. ek efor istenecek.
-
                 var getUser = _userService.GetUserById(request.UserId);
 
                 if (getUser == null)
@@ -53,7 +47,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                     return new ErrorResult(EmailAlreadyExist.PrepareRedisMessage());
 
                 getUser.Email = request.Email;
-                getUser.EmailVerify = true;
+                getUser.EmailVerify = (getUser.Email == request.Email) ? true : false;
                 await _userRepository.UpdateAndSaveAsync(getUser);
 
                 return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());

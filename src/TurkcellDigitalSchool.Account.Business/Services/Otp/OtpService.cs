@@ -29,13 +29,12 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
         }
         public DataResult<int> GenerateOtp(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId, OTPExpiryDate oTPExpiryDate)
         {
-            // UpdateOldNotUsedOtpCode(UserId, ChanellTypeId, ServiceId);
 
             var existOtpCodes = _oneTimePasswordRepository.Query().Any(w => w.OtpStatusId == OtpStatus.NotUsed && w.UserId == UserId && w.ChannelTypeId == ChanellTypeId && w.ServiceId == ServiceId && w.ExpiryDate > DateTime.Now);
 
             if (existOtpCodes)
             {
-                return new DataResult<int>(0, false, "Yeni kod oluşturmak için 90 sn dolmalıdır.");
+                return new DataResult<int>(0, false, $"Yeni kod oluşturmak için {oTPExpiryDate} sn dolmalıdır.");
 
             }
 
@@ -55,6 +54,11 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
 
             };
             _oneTimePasswordRepository.CreateAndSave(newRecord);
+
+
+            //TODO Sms ve mail gönderimi için code fix yapıalcak.
+
+
 
             return new DataResult<int>(otp, true, "Başarılı");
         }
@@ -76,11 +80,14 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
             _oneTimePasswordRepository.UpdateAndSave(getOtp);
 
 
-            if (ServiceId == OtpServices.StudentProfile)
+            if (ServiceId == OtpServices.Sms_StudentProfilePhoneVerify)
             {
                 UpdateVerifyPhone(UserId);
             }
-
+            if (ServiceId == OtpServices.Mail_StudentProfileMailVerify)
+            {
+                UpdateVerifyMail(UserId);
+            }
 
             return new Result(true, "Başarılı.");
         }
@@ -90,13 +97,21 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
             existOtpCodes.ForEach(w => w.OtpStatusId = OtpStatus.Cancelled);
             _oneTimePasswordRepository.UpdateAndSave(existOtpCodes);
         }
-
         private void UpdateVerifyPhone(long userId)
         {
             var getUserInfo = _userRepository.Get(w => w.Id == userId);
             if (getUserInfo != null)
             {
                 getUserInfo.MobilePhonesVerify = true;
+                _userRepository.UpdateAndSave(getUserInfo);
+            }
+        }
+        private void UpdateVerifyMail(long userId)
+        {
+            var getUserInfo = _userRepository.Get(w => w.Id == userId);
+            if (getUserInfo != null)
+            {
+                getUserInfo.EmailVerify = true;
                 _userRepository.UpdateAndSave(getUserInfo);
             }
         }
