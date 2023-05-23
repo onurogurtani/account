@@ -277,5 +277,24 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
+        /// <summary>
+        /// Get Students By Parent Id
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>ParentInfoDto</returns>
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<List<ParentInfoDto>>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpGet("GetStudentsByParentId")]
+        public async Task<IActionResult> GetStudentsByParentId([FromQuery] GetStudentsByParentIdQuery request, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(request, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
     }
 }

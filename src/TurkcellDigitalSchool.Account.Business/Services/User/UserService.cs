@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.Constants;
@@ -421,5 +422,25 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 .ToList();
             return getParents;
         }
+
+        public List<ParentInfoDto> GetStudentsByParentId(long? parentId)
+        {
+            var getParents = _studentParentInformationRepository.Query()
+                .Where(w => w.ParentId == parentId)
+                .Select(s => new ParentInfoDto
+                {
+                    Id = s.Id,
+                    CitizenId = s.Parent.CitizenId,
+                    Name = s.Parent.Name,
+                    SurName = s.Parent.SurName,
+                    Email = s.Parent.Email,
+                    MobilPhones = s.Parent.MobilePhones
+                })
+                .ToList();
+            return getParents;
+        }
+
     }
+
+
 }
