@@ -21,11 +21,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
         {
 
             private readonly IFileServices _fileService;
-            //  private readonly IFileRepository _repository;
 
             public DeleteAvatarFileCommandHandler(IFileServices fileService)
             {
-                //  _repository = repository;
                 _fileService = fileService;
             }
             [MessageConstAttr(MessageCodeType.Information)]
@@ -35,25 +33,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
             {
 
                 var resulImageSolution = _fileService.DeleteFileCommand(new GetFileIntegrationRequest { Id = request.Id }).Result;
-                return new SuccessResult(resulImageSolution.PrepareRedisMessage());
+                return new SuccessResult(Deleted.PrepareRedisMessage());
 
-
-                //todo:#MS_DUZENLEMESI   
-                // Bu entity için düzenleme burada yapýlamaz 
-                throw new Exception("Yazýlýmsal düzenleme yapýlmasý");
-
-                //var fileRecord = await _repository.GetAsync(w => w.Id == request.Id);
-                //if (fileRecord == null)
-                //    return new ErrorResult(Messages.RecordIsNotFound);
-                //var deleteFileResult = _fileService.DeleteFile(fileRecord.FilePath);
-                //if (!deleteFileResult.Success)
-                //{
-                //    return deleteFileResult;
-                //}
-                //var entityToDelete = _repository.Get(p => p.Id == request.Id);
-                //_repository.Delete(entityToDelete);
-                //await _repository.SaveChangesAsync();
-                //return new SuccessResult(Messages.Deleted);
             }
         }
     }
