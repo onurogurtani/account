@@ -22,5 +22,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         Task SetDefaultSettingValues(long UserId);
         List<ParentInfoDto> GetStudentsByParentCitizenId(long? citizenId);
         List<ParentInfoDto> GetByStudentParentsInformation(long userId);
+        List<ParentInfoDto> GetStudentsByParentId(long? parentId);
     }
 }
