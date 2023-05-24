@@ -461,15 +461,16 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         public List<ParentInfoDto> GetStudentsByParentId(long? parentId)
         {
             var getParents = _studentParentInformationRepository.Query()
+                .Include(x => x.User)
                 .Where(w => w.ParentId == parentId)
                 .Select(s => new ParentInfoDto
                 {
-                    Id = s.Id,
-                    CitizenId = s.Parent.CitizenId,
-                    Name = s.Parent.Name,
-                    SurName = s.Parent.SurName,
-                    Email = s.Parent.Email,
-                    MobilPhones = s.Parent.MobilePhones
+                    Id = s.UserId,
+                    CitizenId = s.User.CitizenId,
+                    Name = s.User.Name,
+                    SurName = s.User.SurName,
+                    Email = s.User.Email,
+                    MobilPhones = s.User.MobilePhones
                 })
                 .ToList();
             return getParents;
