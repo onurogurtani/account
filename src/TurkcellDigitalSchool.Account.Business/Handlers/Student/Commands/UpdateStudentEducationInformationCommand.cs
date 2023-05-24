@@ -6,6 +6,7 @@ using TurkcellDigitalSchool.Account.Business.Services.User;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Account.Domain.Enums.Institution;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
@@ -33,7 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
 
-             
+
             public async Task<IResult> Handle(UpdateStudentEducationInformationCommand request, CancellationToken cancellationToken)
             {
                 //TODO UserId Tokendan alınacaktır?
@@ -54,11 +55,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                     {
                         UserId = request.StudentEducationRequest.UserId,
                         ExamType = request.StudentEducationRequest.ExamType,
-                        CityId = request.StudentEducationRequest.CityId,
-                        CountyId = request.StudentEducationRequest.CountyId,
+                        CityId = request.StudentEducationRequest.InstitutionId != (int)InstitutionEnum.AcikOgretimKurumlari ? request.StudentEducationRequest.CityId : null,
+                        CountyId = request.StudentEducationRequest.InstitutionId != (int)InstitutionEnum.AcikOgretimKurumlari ? request.StudentEducationRequest.CountyId : null,
                         InstitutionId = request.StudentEducationRequest.InstitutionId,
                         SchoolId = request.StudentEducationRequest.SchoolId,
-                        ClassroomId = request.StudentEducationRequest.ExamType == ExamType.LGS ? request.StudentEducationRequest.ClassroomId : null,
+                        ClassroomId = request.StudentEducationRequest.ClassroomId,
                         GraduationYearId = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.GraduationYearId,
                         DiplomaGrade = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.DiplomaGrade,
                         YKSStatement = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.YKSExperienceInformation,
@@ -73,22 +74,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                 }
 
                 existStudentEducationInfo.ExamType = request.StudentEducationRequest.ExamType;
-                existStudentEducationInfo.CityId = request.StudentEducationRequest.CityId;
-                existStudentEducationInfo.CountyId = request.StudentEducationRequest.CountyId;
+                existStudentEducationInfo.CityId = request.StudentEducationRequest.InstitutionId != (int)InstitutionEnum.AcikOgretimKurumlari ? request.StudentEducationRequest.CityId : null;
+                existStudentEducationInfo.CountyId = request.StudentEducationRequest.InstitutionId != (int)InstitutionEnum.AcikOgretimKurumlari ? request.StudentEducationRequest.CountyId : null;
+
                 existStudentEducationInfo.InstitutionId = request.StudentEducationRequest.InstitutionId;
                 existStudentEducationInfo.SchoolId = request.StudentEducationRequest.SchoolId;
-
-                existStudentEducationInfo.ClassroomId = request.StudentEducationRequest.ExamType == ExamType.LGS ? request.StudentEducationRequest.ClassroomId : null;
-
-
-               //mezuniyet devam ediyorsa => sınıf bilgisi vardır.
-                 
-
-               // öğrenim durumu devam ediyorsa=> sınıfı vardır.
-               // öğrenim durumu devam => mezuniyet yılı ve diploma notu null olsun.
-               // sınıf 9 ise alan ve puan türü zorunlu değil.
-
-
+                existStudentEducationInfo.ClassroomId = request.StudentEducationRequest.ClassroomId;
                 existStudentEducationInfo.GraduationYearId = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.GraduationYearId;
                 existStudentEducationInfo.DiplomaGrade = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.DiplomaGrade;
                 existStudentEducationInfo.YKSStatement = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.YKSExperienceInformation;
