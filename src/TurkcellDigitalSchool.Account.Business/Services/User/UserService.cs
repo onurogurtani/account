@@ -109,8 +109,8 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             {
                 Id = getEducation.Id,
                 ExamType = getEducation.ExamType,
-                City = new UserInformationDefinationDto { Id = getEducation.CityId, Name = getEducation.City?.Name },
-                County = new UserInformationDefinationDto { Id = getEducation.County.Id, Name = getEducation.County.Name },
+                City = getEducation.City != null ? new UserInformationDefinationDto { Id = getEducation.CityId, Name = getEducation.City?.Name } : null,
+                County = getEducation.County != null ? new UserInformationDefinationDto { Id = getEducation.County.Id, Name = getEducation.County.Name } : null,
                 Institution = new UserInformationDefinationDto { Id = getEducation.Institution.Id, Name = getEducation.Institution.Name },
                 School = new UserInformationDefinationDto { Id = getEducation.School.Id, Name = getEducation.School.Name },
                 Classroom = getEducation.Classroom != null ? new UserInformationDefinationDto { Id = getEducation.Classroom.Id, Name = getEducation.Classroom?.Name } : null,
@@ -355,7 +355,8 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                     {
                         Id = userContract.Document.Id,
                         Content = userContract.Document.Content,
-                        Name = userContract.Document.ContractKind.Name
+                        Name = userContract.Document.ContractKind.Name,
+                        RequiredApproval=userContract.Document.RequiredApproval
                     }
                 });
             }
