@@ -92,7 +92,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
                 if (request.AdminDetailSearch.OrganisationIds.Length > 0)
                     query = query.Where(x => x.OrganisationUsers.Any(s => request.AdminDetailSearch.OrganisationIds.Contains((long)s.OrganisationId)));
 
-                var items = await query.OrderByDescending(x => x.UpdateTime ?? DateTime.MinValue).Select(s => new AdminDto
+                var items = await query.OrderByDescending(x => x.UpdateTime == null ? x.InsertTime : x.UpdateTime).Select(s => new AdminDto
                 {
                     UserType = s.UserType,
                     CitizenId = s.CitizenId??0,
@@ -113,7 +113,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
                 }).ToListAsync();
 
                 items = items.Skip((request.AdminDetailSearch.PageNumber - 1) * request.AdminDetailSearch.PageSize).Take(request.AdminDetailSearch.PageSize).ToList();
-                var pagedList = new PagedList<AdminDto>(items, items.Count, request.AdminDetailSearch.PageNumber, request.AdminDetailSearch.PageSize);
+                var pagedList = new PagedList<AdminDto>(items, query.Count(), request.AdminDetailSearch.PageNumber, request.AdminDetailSearch.PageSize);
 
                 return new SuccessDataResult<PagedList<AdminDto>>(pagedList);
             }
