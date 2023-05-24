@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 
 namespace TurkcellDigitalSchool.Account.Domain.Dtos
@@ -7,5 +8,6 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
     {
         public List<long> ContractTypeIds { get; set; }
         public string OrderBy { get; set; }
+        public bool IsActive { get; set; }
     }
 }

@@ -10,6 +10,7 @@ using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results; 
 
@@ -40,6 +41,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
 
                 if (request.ContractKindDto.ContractTypeIds != null)
                     query = query.Where(q => request.ContractKindDto.ContractTypeIds.Contains(q.ContractTypeId));
+
+                if (request.ContractKindDto.IsActive == true)
+                    query = query.Where(w=>w.RecordStatus == RecordStatus.Active);
 
                 query = request.ContractKindDto.OrderBy switch
                 {
