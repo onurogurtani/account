@@ -355,7 +355,8 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                     {
                         Id = userContract.Document.Id,
                         Content = userContract.Document.Content,
-                        Name = userContract.Document.ContractKind.Name
+                        Name = userContract.Document.ContractKind.Name,
+                        RequiredApproval=userContract.Document.RequiredApproval
                     }
                 });
             }
