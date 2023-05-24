@@ -79,6 +79,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
 
                 user.PasswordHash = passwordHash;
                 user.PasswordSalt = passwordSalt;
+                user.RegisterStatus = RegisterStatus.Registered;
 
                 var record = _userRepository.Add(user);
                 await _userRepository.SaveChangesAsync();
