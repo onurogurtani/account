@@ -72,8 +72,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.ValidationRule
         {
             RuleFor(x => x.StudentEducationRequest.UserId).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
             RuleFor(x => x.StudentEducationRequest.ExamType).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
-            RuleFor(x => x.StudentEducationRequest.CityId).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
-            RuleFor(x => x.StudentEducationRequest.CountyId).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
+            //RuleFor(x => x.StudentEducationRequest.CityId).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
+            //RuleFor(x => x.StudentEducationRequest.CountyId).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
             RuleFor(x => x.StudentEducationRequest.InstitutionId).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
             RuleFor(x => x.StudentEducationRequest.SchoolId).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
 

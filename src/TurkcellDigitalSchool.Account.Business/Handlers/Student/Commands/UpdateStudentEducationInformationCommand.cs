@@ -77,7 +77,18 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                 existStudentEducationInfo.CountyId = request.StudentEducationRequest.CountyId;
                 existStudentEducationInfo.InstitutionId = request.StudentEducationRequest.InstitutionId;
                 existStudentEducationInfo.SchoolId = request.StudentEducationRequest.SchoolId;
+
                 existStudentEducationInfo.ClassroomId = request.StudentEducationRequest.ExamType == ExamType.LGS ? request.StudentEducationRequest.ClassroomId : null;
+
+
+               //mezuniyet devam ediyorsa => sınıf bilgisi vardır.
+                 
+
+               // öğrenim durumu devam ediyorsa=> sınıfı vardır.
+               // öğrenim durumu devam => mezuniyet yılı ve diploma notu null olsun.
+               // sınıf 9 ise alan ve puan türü zorunlu değil.
+
+
                 existStudentEducationInfo.GraduationYearId = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.GraduationYearId;
                 existStudentEducationInfo.DiplomaGrade = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.DiplomaGrade;
                 existStudentEducationInfo.YKSStatement = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.YKSExperienceInformation;
