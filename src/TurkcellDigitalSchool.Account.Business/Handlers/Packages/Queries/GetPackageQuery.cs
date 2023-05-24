@@ -9,6 +9,7 @@ using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
@@ -19,6 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     /// <summary>
     /// Get Package
     /// </summary>
+    [LogScope]
     public class GetPackageQuery : IRequest<IDataResult<Package>>
     {
         public long Id { get; set; }
@@ -38,8 +40,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-            [LogAspect(typeof(FileLogger))]
+             
             [SecuredOperation]
             public virtual async Task<IDataResult<Package>> Handle(GetPackageQuery request, CancellationToken cancellationToken)
             {

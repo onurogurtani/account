@@ -7,14 +7,14 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
 {
     [ExcludeFromCodeCoverage]
+    [LogScope]
     public class GetOrganisationManagerNamesQuery : IRequest<IDataResult<List<SelectionItem>>>
     {
         public class GetOrganisationManagerNamesQueryHandler : IRequestHandler<GetOrganisationManagerNamesQuery, IDataResult<List<SelectionItem>>>
@@ -24,9 +24,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
             public GetOrganisationManagerNamesQueryHandler(IOrganisationRepository organisationRepository)
             {
                 _organisationRepository = organisationRepository;
-            }
+            } 
 
-            [LogAspect(typeof(FileLogger))]
             [SecuredOperation]
             public async Task<IDataResult<List<SelectionItem>>> Handle(GetOrganisationManagerNamesQuery request, CancellationToken cancellationToken)
             {

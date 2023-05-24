@@ -3,12 +3,12 @@ using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.Model;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
+    [LogScope]
     public class LoginUserHandler : IRequestHandler<LoginUserCommand, IDataResult<LoginUserResult>>
     {
         private readonly IAuthenticationCoordinator _coordinator;
@@ -24,7 +24,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns> 
-        [LogAspect(typeof(FileLogger))]
+     
         public async Task<IDataResult<LoginUserResult>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
             var provider = _coordinator.SelectProvider(request.Provider);

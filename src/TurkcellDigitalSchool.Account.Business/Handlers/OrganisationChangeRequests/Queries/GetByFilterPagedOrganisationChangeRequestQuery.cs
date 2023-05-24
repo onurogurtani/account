@@ -8,8 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results; 
 
@@ -19,6 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
     ///Get Filtered Paged Role with relation data 
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be ""RequestDateASC" ,"RequestDateDESC",  "RequestStateASC","RequestStateDESC", "ResponseStateASC" , "ResponseStateDESC", "CustomerManagerASC", "CustomerManagerDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC","IdASC","IdDESC" </remarks>
+    [LogScope]
     public class GetByFilterPagedOrganisationChangeRequestQuery : IRequest<IDataResult<PagedList<GetOrganisationInfoChangeRequestDto>>>
     {
         public OrganisationChangeRequestDetailSearch OrganisationChangeRequestDetailSearch { get; set; } = new OrganisationChangeRequestDetailSearch();
@@ -33,8 +33,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                 _organisationInfoChangeRequestRepository = organisationInfoChangeRequestRepository;
                 _mapper = mapper;
             }
-
-            [LogAspect(typeof(FileLogger))]
+             
             [SecuredOperation]
             public virtual async Task<IDataResult<PagedList<GetOrganisationInfoChangeRequestDto>>> Handle(GetByFilterPagedOrganisationChangeRequestQuery request, CancellationToken cancellationToken)
             {

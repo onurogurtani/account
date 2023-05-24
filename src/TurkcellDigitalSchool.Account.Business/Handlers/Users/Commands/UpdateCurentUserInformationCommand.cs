@@ -19,6 +19,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 {
     [TransactionScope]
+    [LogScope]
     public class UpdateCurentUserInformationCommand : IRequest<IResult>
     {
         public string NameSurname { get; set; }
@@ -52,7 +53,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
             /// <summary>
             /// Update Curent User Information
             /// </summary>
-            [LogAspect(typeof(FileLogger))]
+            
             public async Task<IResult> Handle(UpdateCurentUserInformationCommand request, CancellationToken cancellationToken)
             {
                 long userId = _tokenHelper.GetUserIdByCurrentToken();

@@ -88,9 +88,13 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddScoped<ITransactionManager, AccountDbTransactionManagerSvc>();
             services.AddAutoMapper( Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LogBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
+
             services.AddMediatR(typeof(BusinessStartup).GetTypeInfo().Assembly);
 
 

@@ -5,15 +5,15 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
+    [LogScope]
     public class ForgottenPasswordTokenCheckCommand : IRequest<IDataResult<UserSession>>
     {
         public string Token { get; set; }
@@ -33,7 +33,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             }
 
 
-            [LogAspect(typeof(FileLogger))] 
+        
             public async Task<IDataResult<UserSession>> Handle(ForgottenPasswordTokenCheckCommand request, CancellationToken cancellationToken)
             {
                 UserSession userSession = new();

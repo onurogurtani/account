@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.Business.Helpers;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Account.Domain.Dtos; 
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
 {
+    [LogScope]
     public class GetPasswordRulesQuery : IRequest<IDataResult<List<GetPasswordRulesQueryResultDto>>>
     { 
         public class GetPasswordRulesQueryHandler : IRequestHandler<GetPasswordRulesQuery, IDataResult<List<GetPasswordRulesQueryResultDto>>>
@@ -22,10 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
             {
                 _appSettingRepository = appSettingRepository;
                 _mediator = mediator;
-            }
-
-
-            [LogAspect(typeof(FileLogger))]
+            } 
             public async Task<IDataResult<List<GetPasswordRulesQueryResultDto>>> Handle(GetPasswordRulesQuery request, CancellationToken cancellationToken)
             {
                 var appSetting = await _appSettingRepository.GetAsync(p => p.Code == "PassRule");

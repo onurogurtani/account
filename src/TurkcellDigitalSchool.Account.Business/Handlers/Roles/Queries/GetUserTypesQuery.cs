@@ -8,6 +8,7 @@ using MediatR;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
@@ -16,11 +17,12 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
 {
     [ExcludeFromCodeCoverage]
+    [LogScope]
     public class GetUserTypesQuery : IRequest<IDataResult<List<SelectionItem>>>
     {
         public class GetUserTypesQueryHandler : IRequestHandler<GetUserTypesQuery, IDataResult<List<SelectionItem>>>
         {
-            [LogAspect(typeof(FileLogger))]
+          
             [SecuredOperation]
             public async Task<IDataResult<List<SelectionItem>>> Handle(GetUserTypesQuery request, CancellationToken cancellationToken)
             {

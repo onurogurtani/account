@@ -6,13 +6,13 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
+    [LogScope]
     public class VerifyUserCommand : IRequest<IResult>
     {
         public int Id { get; set; }
@@ -31,8 +31,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             /// <summary>
             /// Will be reedited
             /// </summary> 
-            [CacheRemoveAspect("Get")]
-            [LogAspect(typeof(FileLogger))] 
+            [CacheRemoveAspect("Get")] 
             public async Task<IResult> Handle(VerifyUserCommand request, CancellationToken cancellationToken)
             { 
                 var unverifiedUser = _unverifiedUserRepository.Get(x=>x.Id == request.Id);

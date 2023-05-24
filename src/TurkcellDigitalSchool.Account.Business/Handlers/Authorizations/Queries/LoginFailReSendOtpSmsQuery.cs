@@ -7,8 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -16,6 +15,7 @@ using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
+    [LogScope]
     public class LoginFailReSendOtpSmsQuery : IRequest<IDataResult<LoginFailReSendOtpSmsQuery.LoginFailReSendOtpSmsQueryResponse>>
     {
         public long MobileLoginId { get; set; }
@@ -34,9 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 _smsOtpRepository = smsOtpRepository;
                 _environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             }
-
-
-            [LogAspect(typeof(FileLogger))]
+             
             public async Task<IDataResult<LoginFailReSendOtpSmsQueryResponse>> Handle(LoginFailReSendOtpSmsQuery request, CancellationToken cancellationToken)
             {
 

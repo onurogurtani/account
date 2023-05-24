@@ -9,8 +9,7 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results; 
 
@@ -21,6 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Queries
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "NameASC","NameDESC","RecordStatusASC","RecordStatusDESC","DescriptionASC","DescriptionDESC","IdASC","IdDESC"</remarks>
     [ExcludeFromCodeCoverage]
+    [LogScope]
     public class GetByFilterPagedContractTypesQuery : IRequest<IDataResult<PagedList<ContractType>>>
     {
         public ContractTypeDto ContractTypeDto { get; set; } = new ContractTypeDto();
@@ -33,8 +33,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Queries
                 _contractTypeRepository = contractTypeRepository;
             }
 
-            [CacheRemoveAspect("Get")]
-            [LogAspect(typeof(FileLogger))]
+            [CacheRemoveAspect("Get")] 
             [SecuredOperation]
             public virtual async Task<IDataResult<PagedList<ContractType>>> Handle(GetByFilterPagedContractTypesQuery request, CancellationToken cancellationToken)
             {

@@ -9,6 +9,7 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results; 
@@ -21,6 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Queries
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "IsActiveASC","IsActiveDESC","NameASC","NameDESC","PageNameASC","PageNameDESC","IdASC","IdDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC" 
     ///<br />   PageNumber can be  entered manually </remarks>
     [ExcludeFromCodeCoverage]
+    [LogScope]
     public class GetByFilterPagedTargetScreensQuery : IRequest<IDataResult<PagedList<TargetScreen>>>
     {
         public TargetScreenDetailSearch TargetScreenDetailSearch { get; set; } = new TargetScreenDetailSearch();
@@ -35,7 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Queries
                 _packageRepository = packageRepository;
             }
              
-            [LogAspect(typeof(FileLogger))]
+          
             [SecuredOperation]
             public virtual async Task<IDataResult<PagedList<TargetScreen>>> Handle(GetByFilterPagedTargetScreensQuery request, CancellationToken cancellationToken)
             {

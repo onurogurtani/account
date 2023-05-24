@@ -8,6 +8,7 @@ using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
@@ -17,6 +18,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
+    [LogScope]
     public class ForgotPasswordSendLinkCommand : IRequest<IResult>
     {
         public long UserId { get; set; }
@@ -47,7 +49,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             /// If there is an e-mail address, a token is created and sent to the password reset link to the e-mail address.
             /// </summary>
 
-            [LogAspect(typeof(FileLogger))]
+          
             public async Task<IResult> Handle(ForgotPasswordSendLinkCommand request, CancellationToken cancellationToken)
             {
                 var user = await _userRepository.GetAsync(w => w.Id == request.UserId);

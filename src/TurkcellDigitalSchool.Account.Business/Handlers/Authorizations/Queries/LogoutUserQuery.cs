@@ -1,18 +1,15 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using IResult = TurkcellDigitalSchool.Core.Utilities.Results.IResult;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
+    [LogScope]
     public class LogoutUserQuery : IRequest<IResult>
     {
         public class LogoutUserQueryHandler : IRequestHandler<LogoutUserQuery, IResult>
@@ -23,9 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             {
                 _tokenHelper = tokenHelper;
                 _userSession = userSession;
-            }
-
-            [LogAspect(typeof(FileLogger))]
+            } 
             public async Task<IResult> Handle(LogoutUserQuery request, CancellationToken cancellationToken)
             {
                 var userId = await Task.FromResult(_tokenHelper.GetUserIdByCurrentToken());

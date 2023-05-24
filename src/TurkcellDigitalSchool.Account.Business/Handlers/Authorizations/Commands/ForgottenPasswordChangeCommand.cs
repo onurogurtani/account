@@ -5,13 +5,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.Business.Constants;
-using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common;
 using TurkcellDigitalSchool.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging; 
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
@@ -20,6 +18,7 @@ using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
+    [LogScope]
     public class ForgottenPasswordChangeCommand : IRequest<IDataResult<AccessToken>>
     {
 
@@ -52,7 +51,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             /// A verification code is sent to the phone for the sms verification page.
             /// </summary>
            
-            [LogAspect(typeof(FileLogger))]
+         
             public async Task<IDataResult<AccessToken>> Handle(ForgottenPasswordChangeCommand request, CancellationToken cancellationToken)
             {
                 var userSessionRepository = _mediator.Send(new ForgottenPasswordTokenCheckCommand { Token = request.Token }, cancellationToken).Result.Data;

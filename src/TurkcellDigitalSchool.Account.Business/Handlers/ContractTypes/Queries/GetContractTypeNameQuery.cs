@@ -8,8 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Queries
@@ -18,6 +17,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Queries
     /// Get Names that using in contractTypes
     /// </summary>
     [ExcludeFromCodeCoverage]
+    [LogScope]
     public class GetContractTypeNamesQuery : IRequest<IDataResult<List<string>>>
     {
         public class GetContractTypeNamesQueryHandler : IRequestHandler<GetContractTypeNamesQuery, IDataResult<List<string>>>
@@ -30,8 +30,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Queries
                 _contractTypeRepository = contractTypeRepository;
             }
 
-            [CacheRemoveAspect("Get")]
-            [LogAspect(typeof(FileLogger))]
+            [CacheRemoveAspect("Get")] 
             [SecuredOperation]
             public async Task<IDataResult<List<string>>> Handle(GetContractTypeNamesQuery request, CancellationToken cancellationToken)
             {

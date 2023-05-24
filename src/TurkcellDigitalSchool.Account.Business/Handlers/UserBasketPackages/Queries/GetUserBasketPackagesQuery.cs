@@ -8,6 +8,7 @@ using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
@@ -17,6 +18,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Queries
 {
+    [LogScope]
     public class GetUserBasketPackagesQuery : IRequest<IDataResult<GetUserBasketPackagesResponseDto>>
     {
         public PaginationQuery Pagination { get; set; }
@@ -36,7 +38,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Que
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
-            [LogAspect(typeof(FileLogger))]
+            
             [SecuredOperation]
             public async Task<IDataResult<GetUserBasketPackagesResponseDto>> Handle(GetUserBasketPackagesQuery request, CancellationToken cancellationToken)
             {

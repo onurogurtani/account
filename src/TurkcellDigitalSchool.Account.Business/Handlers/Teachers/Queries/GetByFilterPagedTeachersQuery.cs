@@ -8,8 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -20,6 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
     ///Get Filtered Paged Users/Teachers with relation data 
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "NameASC","NameDESC","SurNameASC","SurNameDESC" </remarks>
+    [LogScope]
     public class GetByFilterPagedTeachersQuery : IRequest<IDataResult<PagedList<GetTeachersResponseDto>>>
     {
         public PaginationQuery Pagination { get; set; } = new();
@@ -39,7 +39,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
                 _mapper = mapper;
             }
 
-            [LogAspect(typeof(FileLogger))]
+            
             [SecuredOperation]
             public virtual async Task<IDataResult<PagedList<GetTeachersResponseDto>>> Handle(GetByFilterPagedTeachersQuery request, CancellationToken cancellationToken)
             {

@@ -8,8 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
@@ -19,6 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
     ///Get Filtered Paged Role with relation data 
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "NameASC","NameDESC","RecordStatusASC","RecordStatusDESC","IsOrganisationViewASC","IsOrganisationViewDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC","IdASC","IdDESC" </remarks>
+    [LogScope]
     public class GetByFilterPagedRolesQuery : IRequest<IDataResult<PagedList<GetRoleDto>>>
     {
         public RoleDetailSearch RoleDetailSearch { get; set; } = new RoleDetailSearch();
@@ -34,7 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
                 _mapper = mapper;
             }
 
-            [LogAspect(typeof(FileLogger))]
+            
             [SecuredOperation]
             public virtual async Task<IDataResult<PagedList<GetRoleDto>>> Handle(GetByFilterPagedRolesQuery request, CancellationToken cancellationToken)
             {

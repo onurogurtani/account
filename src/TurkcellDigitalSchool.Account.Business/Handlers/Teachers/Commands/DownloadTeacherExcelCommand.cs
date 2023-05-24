@@ -9,6 +9,7 @@ using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
@@ -20,6 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
     /// <summary>
     /// Download User/Teacher
     /// </summary>
+    [LogScope]
     public class DownloadTeacherExcelCommand : IRequest<IDataResult<ExcelResponse>>
     {
         [MessageClassAttr("Öðretmen Excel Tablosu Ýndirme")]
@@ -33,7 +35,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
 
             [SecuredOperation]
             [CacheRemoveAspect("Get")]
-            [LogAspect(typeof(FileLogger))]
+           
             public async Task<IDataResult<ExcelResponse>> Handle(DownloadTeacherExcelCommand request, CancellationToken cancellationToken)
             {
                 byte[] workbookBytes;

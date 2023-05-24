@@ -9,6 +9,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
@@ -18,6 +19,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
+    [LogScope]
     public class BehalfOfLoginQuery : IRequest<IDataResult<DArchToken>>, ITokenRequest
     {
         public long UserId { get; set; }
@@ -45,8 +47,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             /// When the user says the support team can see my data, the administrator can log into the user account.
             /// It is taken from the ViewMyData field in the user table.
             /// If true, the token is created.
-            /// </summary>
-            [LogAspect(typeof(FileLogger))]
+            /// </summary> 
             [SecuredOperation]
             public async Task<IDataResult<DArchToken>> Handle(BehalfOfLoginQuery request, CancellationToken cancellationToken)
             {

@@ -7,13 +7,13 @@ using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 {
     [ExcludeFromCodeCoverage]
+    [LogScope]
     public class GetUserMailsQuery : IRequest<IDataResult<IEnumerable<UserMailDto>>>
     {
         public int UserId { get; set; }
@@ -29,8 +29,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                 _mediator = mediator;
             }
 
-            [SecuredOperation]
-            [LogAspect(typeof(FileLogger))]
+            [SecuredOperation] 
             public async Task<IDataResult<IEnumerable<UserMailDto>>> Handle(GetUserMailsQuery request, CancellationToken cancellationToken)
             {
                 List<UserMailDto> emailList = _userRepository.Query()

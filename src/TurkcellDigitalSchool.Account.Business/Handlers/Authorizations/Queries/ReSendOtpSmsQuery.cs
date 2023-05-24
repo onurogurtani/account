@@ -8,9 +8,8 @@ using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
@@ -18,6 +17,7 @@ using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
+    [LogScope]
     public class ReSendOtpSmsQuery : IRequest<IDataResult<AccessToken>>
     {
         public long MobileLoginId { get; set; }
@@ -43,9 +43,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 _smsOtpRepository = smsOtpRepository;
                 _configurationManager = configurationManager;
             }
-
-
-            [LogAspect(typeof(FileLogger))]
+             
             public async Task<IDataResult<AccessToken>> Handle(ReSendOtpSmsQuery request, CancellationToken cancellationToken)
             {
                 MobileLogin mobileLogin = await _mobileLoginRepository.GetAsync(w => w.Id == request.MobileLoginId);

@@ -5,8 +5,7 @@ using MediatR;
 using TurkcellDigitalSchool.Account.Business.Constants; 
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results; 
 using TurkcellDigitalSchool.Integration.IntegrationServices.IdentityServerServices;
 using TurkcellDigitalSchool.Integration.IntegrationServices.IdentityServerServices.Model.Request;
@@ -14,6 +13,7 @@ using TurkcellDigitalSchool.Integration.IntegrationServices.IdentityServerServic
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
+    [LogScope]
     public class GetTokenQuery : IRequest<IDataResult<TokenIntegraitonResponse>>   
     {
         public string ClientId { get; set; }
@@ -37,7 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             /// It is taken from the ViewMyData field in the user table.
             /// If true, the token is created.
             /// </summary>
-            [LogAspect(typeof(FileLogger))]
+            
             [SecuredOperation]
             public async Task<IDataResult<TokenIntegraitonResponse>> Handle(GetTokenQuery request, CancellationToken cancellationToken)
             {

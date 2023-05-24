@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
@@ -27,6 +28,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
         public bool IsActive { get; set; }
 
     }
+    [LogScope]
     public class GetUserPackagesByUserIdQuery : IRequest<IDataResult<List<UserPackageDto>>>
     {
         public long UserId { get; set; }
@@ -37,9 +39,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
             public GetUserPackagesByUserIdQueryHandler(IUserPackageRepository UserPackageRepository)
             {
                 _UserPackageRepository = UserPackageRepository;
-            }
-
-            [LogAspect(typeof(FileLogger))] 
+            } 
             public async Task<IDataResult<List<UserPackageDto>>> Handle(GetUserPackagesByUserIdQuery request, CancellationToken cancellationToken)
             {
                 var userPackageList = _UserPackageRepository

@@ -8,9 +8,8 @@ using Microsoft.IdentityModel.Tokens;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
@@ -19,6 +18,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
+    [LogScope]
     public class ForgotPasswordWithCheckFailCountCommand : IRequest<IResult>
     {
         public string SendingAdress { get; set; }
@@ -54,8 +54,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             /// Email address is checked.
             /// If there is an e-mail address, a token is created and sent to the password reset link to the e-mail address.
             /// </summary>
-
-            [LogAspect(typeof(FileLogger))] 
+             
             public async Task<IResult> Handle(ForgotPasswordWithCheckFailCountCommand request, CancellationToken cancellationToken)
             {
 

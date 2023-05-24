@@ -8,8 +8,7 @@ using TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
@@ -17,6 +16,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Queries
 {
+    [LogScope]
     public class GetAvatarFilesQuery : IRequest<IDataResult<PagedList<AvatarFilesDto>>>
     {
         public PaginationQuery PaginationQuery { get; set; }
@@ -32,7 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Queries
                 _mapper = mapper;
             }
 
-            [LogAspect(typeof(FileLogger))]
+           
             [SecuredOperation]
             public async Task<IDataResult<PagedList<AvatarFilesDto>>> Handle(GetAvatarFilesQuery request, CancellationToken cancellationToken)
             {

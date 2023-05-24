@@ -8,8 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -20,6 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
     ///Get Filtered Paged Documents with relation data 
     ///</summary>
     ///<remarks>OrderBy default "IdDESC" also can be "RecordStatusASC","RecordStatusDESC","ContractKindASC","ContractKindDESC","ContractTypeASC","ContractTypeDESC","ContentASC","ContentDESC","VersionASC","VersionDESC","ValidStartDateASC","ValidStartDateDESC","ValidEndDateASC","ValidEndDateDESC","IdASC","IdDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC"  </remarks>
+    [LogScope]
     public class GetByFilterPagedDocumentsQuery : IRequest<IDataResult<PagedList<DocumentDto>>>
     {
         public DocumentDetailSearch DocumentDetailSearch { get; set; } = new DocumentDetailSearch();
@@ -36,8 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
                 _mapper = mapper;
                 _userRepository = userRepository;
             } 
-
-            [LogAspect(typeof(FileLogger))]
+             
             [SecuredOperation]
             public virtual async Task<IDataResult<PagedList<DocumentDto>>> Handle(GetByFilterPagedDocumentsQuery request, CancellationToken cancellationToken)
             {

@@ -10,8 +10,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
@@ -19,6 +18,7 @@ using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.R
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Queries
 {
+    [LogScope]
     public class GetOrganisationChangeRequestByIdQuery : IRequest<IDataResult<GetOrganisationInfoChangeRequestDto>>
     {
         public long Id { get; set; }
@@ -40,8 +40,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                 _fileService = fileService;
                 _mapper = mapper;
             }
-
-            [LogAspect(typeof(FileLogger))]
+             
             [SecuredOperation]
             public virtual async Task<IDataResult<GetOrganisationInfoChangeRequestDto>> Handle(GetOrganisationChangeRequestByIdQuery request, CancellationToken cancellationToken)
             {

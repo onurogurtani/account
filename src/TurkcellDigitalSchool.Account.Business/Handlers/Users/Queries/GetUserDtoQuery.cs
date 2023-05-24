@@ -1,19 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
-using TurkcellDigitalSchool.Core.Enums;
-using TurkcellDigitalSchool.Core.Extensions;
-using TurkcellDigitalSchool.Core.Utilities.Paging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
@@ -21,6 +15,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
     ///<summary>
     ///Get Filtered Paged Users
     /// </summary>
+
+    [LogScope]
     public class GetUserDtoQuery : IRequest<IDataResult<UserDto>>
     {
         public long Id { get; set; }
@@ -34,7 +30,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                 _accountDbContext = accountDbContext;
             }
 
-            [LogAspect(typeof(FileLogger))]
+           
             [SecuredOperation]
             public virtual async Task<IDataResult<UserDto>> Handle(GetUserDtoQuery request, CancellationToken cancellationToken)
             {

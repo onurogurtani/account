@@ -7,15 +7,15 @@ using TurkcellDigitalSchool.Account.Business.Services.Authentication;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
+    [LogScope]
     public class LoginUserTryQuery : IRequest<string>, ITokenRequest
     {
         public string UserName { get; set; }
@@ -42,7 +42,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             }
 
 
-            [LogAspect(typeof(FileLogger))]
+        
             public async Task<string> Handle(LoginUserTryQuery request, CancellationToken cancellationToken)
             { 
                 var user = await _userRepository

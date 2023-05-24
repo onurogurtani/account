@@ -9,8 +9,7 @@ using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
@@ -18,6 +17,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
     /// <summary>
     /// Get DocumentDto
     /// </summary>
+    [LogScope]
     public class GetDocumentQuery : IRequest<IDataResult<DocumentDto>>
     {
         public long Id { get; set; }
@@ -37,8 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
             }
 
 
-            [CacheRemoveAspect("Get")]
-            [LogAspect(typeof(FileLogger))]
+            [CacheRemoveAspect("Get")] 
             [SecuredOperation]
             public virtual async Task<IDataResult<DocumentDto>> Handle(GetDocumentQuery request, CancellationToken cancellationToken)
             {

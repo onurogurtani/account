@@ -7,8 +7,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
@@ -17,6 +16,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
     /// Get New Versiyon No
     /// </summary>
     [ExcludeFromCodeCoverage]
+    [LogScope]
     public class GetNewVersionQuery : IRequest<IDataResult<DocumentVersionDto>>
     {
         public long ContractKindId { get; set; }
@@ -29,9 +29,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
             {
                 _documentRepository = documentRepository;
             }
-
-
-            [LogAspect(typeof(FileLogger))]
+             
             [SecuredOperation]
             public virtual async Task<IDataResult<DocumentVersionDto>> Handle(GetNewVersionQuery request, CancellationToken cancellationToken)
             {

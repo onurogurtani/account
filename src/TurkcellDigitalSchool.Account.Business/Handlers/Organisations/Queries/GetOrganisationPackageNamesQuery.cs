@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -15,6 +16,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
 {
     [ExcludeFromCodeCoverage]
+    [LogScope]
     public class GetOrganisationPackageNamesQuery : IRequest<IDataResult<List<SelectionItem>>>
     {
         public class GetOrganisationPackageNamesQueryHandler : IRequestHandler<GetOrganisationPackageNamesQuery, IDataResult<List<SelectionItem>>>
@@ -24,9 +26,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
             public GetOrganisationPackageNamesQueryHandler(IOrganisationRepository organisationRepository)
             {
                 _organisationRepository = organisationRepository;
-            }
+            } 
 
-            [LogAspect(typeof(FileLogger))]
             [SecuredOperation]
             public async Task<IDataResult<List<SelectionItem>>> Handle(GetOrganisationPackageNamesQuery request, CancellationToken cancellationToken)
             {

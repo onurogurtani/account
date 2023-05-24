@@ -9,8 +9,7 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -19,6 +18,7 @@ using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
+    [LogScope]
     public class UnverifiedUserCommand : IRequest<IDataResult<UnverifiedUserDto>>
     {
         public UserType UserTypeId { get; set; }
@@ -46,8 +46,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             /// <summary>
             /// Will be reedited
             /// </summary> 
-            [CacheRemoveAspect("Get")]
-            [LogAspect(typeof(FileLogger))] 
+            [CacheRemoveAspect("Get")] 
             public async Task<IDataResult<UnverifiedUserDto>> Handle(UnverifiedUserCommand request, CancellationToken cancellationToken)
             {
                 HashingHelper.CreatePasswordHash(request.Password, out var passwordSalt, out var passwordHash);

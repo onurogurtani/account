@@ -8,9 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.BusinessAspects; 
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
@@ -21,6 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     ///<summary>
     ///Get Packages For User list Page
     ///<br />  PageNumber can be  entered manually </remarks>
+    [LogScope]
     public class GetPackagesForUserQuery : IRequest<IDataResult<PagedList<GetPackagesForUserResponseDto>>>
     {
         public PaginationQuery Pagination { get; set; }
@@ -38,7 +38,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
                 _fileService = fileService;
             }
 
-            [LogAspect(typeof(FileLogger))]
+             
             [SecuredOperation]
             public async Task<IDataResult<PagedList<GetPackagesForUserResponseDto>>> Handle(GetPackagesForUserQuery request, CancellationToken cancellationToken)
             {
