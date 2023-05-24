@@ -8,7 +8,9 @@ namespace TurkcellDigitalSchool.Account.Domain.Enums.OTP
 {
     public enum OtpServices
     {
-        Login=1,
-        StudentProfile=2
+        Sms_Login=1,
+        Sms_StudentProfilePhoneVerify=2,
+        Mail_StudentProfileMailVerify = 3
+
     }
 }

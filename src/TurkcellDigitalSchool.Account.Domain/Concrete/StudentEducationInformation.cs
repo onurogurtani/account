@@ -8,8 +8,8 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
     {
         public long UserId { get; set; }
         public ExamType ExamType { get; set; }
-        public long CityId { get; set; }
-        public long CountyId { get; set; }
+        public long? CityId { get; set; }
+        public long? CountyId { get; set; }
         public long InstitutionId { get; set; }
         public long SchoolId { get; set; }
         public long? ClassroomId { get; set; }

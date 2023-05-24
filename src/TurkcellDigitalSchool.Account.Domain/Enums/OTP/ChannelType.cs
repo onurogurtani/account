@@ -9,6 +9,8 @@ namespace TurkcellDigitalSchool.Account.Domain.Enums.OTP
     public enum ChannelType
     {
         SMS=1,
-        BipSms=2
+        BipSms=2,
+        Mail = 3,
+
     }
 }
