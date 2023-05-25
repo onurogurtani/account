@@ -47,11 +47,15 @@ namespace TurkcellDigitalSchool.Account.Business.Helpers
             }
 
             int otp = RandomPassword.RandomNumberGenerator();
-            
 
-            if (  _configurationManager.Mode != ApplicationMode.DEV )
-            {
-                await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
+
+            if (_configurationManager.Mode != ApplicationMode.DEV)
+            {             
+                // Eski boş SMS kodu
+                //  await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
+                // SMS servisi
+                await _smsOtpRepository.Send(cellPhone, $"Şifreniz: {otp.ToString()}");
+                
             }
 
             date = DateTime.Now;

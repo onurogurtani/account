@@ -102,8 +102,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                     if (_environment == ApplicationMode.DEV.ToString() || _environment == ApplicationMode.DEVTURKCELL.ToString())
                         otp = 123456;
 
-
-                    await _smsOtpRepository.ExecInsertSpForSms(user.MobilePhones, user.Id, otp.ToString());
+                    // Eski boş SMS kodu
+                    //   await _smsOtpRepository.ExecInsertSpForSms(user.MobilePhones, user.Id, otp.ToString());
+                    // SMS servisi
+                    await _smsOtpRepository.Send(user.MobilePhones, $"Şifreniz: {otp.ToString()}");
+                   
 
 
                     mobileLogin.LastSendDate = DateTime.Now;

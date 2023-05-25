@@ -102,7 +102,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 
                     if ( _configurationManager.Mode != ApplicationMode.DEV)
                     {
-                        await _smsOtpRepository.ExecUpdateSpForSms(user.MobilePhones, user.Id, mobileLogin.Code.ToString());
+                        // Eski boş SMS kodu
+                        // await _smsOtpRepository.ExecUpdateSpForSms(user.MobilePhones, user.Id, mobileLogin.Code.ToString());
+                        // SMS servisi
+                        await _smsOtpRepository.Send(user.MobilePhones, $"Şifreniz: {mobileLogin.Code.ToString()}");
                     }
 
                     user.RegisterStatus = RegisterStatus.Registered;

@@ -99,7 +99,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 }
                 else if (request.SendingType == SendType.MobilPhone)
                 {
-                    await _smsOtpRepository.ExecInsertSpForSms(user.MobilePhones, user.Id, guid);
+                    // Eski boş SMS kodu
+                    // await _smsOtpRepository.ExecInsertSpForSms(user.MobilePhones, user.Id, guid);
+                    // SMS servisi
+                    await _smsOtpRepository.Send(user.MobilePhones, content);
+                    
 
                     messsgePach = user.MobilePhones.MaskPhoneNumber() + " mobil hattına";
                 } 
