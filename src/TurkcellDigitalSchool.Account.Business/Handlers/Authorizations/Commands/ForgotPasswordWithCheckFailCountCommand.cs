@@ -155,8 +155,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     messsgePach = user.Email.MaskEMail() + " e-posta adresine";
                 }
                 else
-                {
-                    await _smsOtpRepository.ExecInsertSpForSms(user.MobilePhones, user.Id, guid);
+                {   // Eski boş SMS kodu
+                    // await _smsOtpRepository.ExecInsertSpForSms(user.MobilePhones, user.Id, guid);
+                    // SMS servisi
+                    await _smsOtpRepository.Send(user.MobilePhones, content);
+
                     messsgePach = user.MobilePhones.MaskPhoneNumber() + " mobil hattına";
                 }
                 return new SuccessResult(string.Format(Messages.PasswordChangeLinkSended, messsgePach));

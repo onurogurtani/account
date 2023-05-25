@@ -106,8 +106,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                     _mobileLoginRepository.Update(mobileLogin);
                     await _mobileLoginRepository.SaveChangesAsync();
 
-
-                    await _smsOtpRepository.ExecUpdateSpForSms(user.MobilePhones, user.Id, mobileLogin.Code.ToString());
+                    // Eski boş SMS kodu
+                    // await _smsOtpRepository.ExecUpdateSpForSms(user.MobilePhones, user.Id, mobileLogin.Code.ToString());
+                    // SMS servisi
+                    await _smsOtpRepository.Send(user.MobilePhones, $"Şifreniz: {mobileLogin.Code.ToString()}");
 
                     return new SuccessDataResult<DArchToken>(accessToken, Messages.SuccessfulLogin);
                 }

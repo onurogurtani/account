@@ -305,8 +305,11 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             if (_environment == ApplicationMode.DEV.ToString() || _environment == ApplicationMode.DEVTURKCELL.ToString())
                 otp = 123456;
 
-
-            await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
+            // Eski boş SMS kodu
+            //  await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
+            // SMS servisi
+            await _smsOtpRepository.Send(cellPhone, $"Şifreniz: {otp.ToString()}");
+            
 
 
             date = DateTime.Now;

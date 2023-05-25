@@ -100,9 +100,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                     int otp = RandomPassword.RandomNumberGenerator();
 
 
+                    // Eski boş SMS kodu
+                    //  await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
+                    // SMS servisi
+                    await _smsOtpRepository.Send(cellPhone, $"Şifreniz: {otp.ToString()}");
 
-
-                    await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
+                    
 
 
 
