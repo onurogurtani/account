@@ -23,7 +23,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
     public class AddUserCommand : IRequest<IDataResult<SelectionItem>>
     {
         public UserType UserTypeId { get; set; }
-        public long CitizenId { get; set; }
+        public long? CitizenId { get; set; }
         public string BirthPlace { get; set; }
         public DateTime BirthDate { get; set; }
         public string Name { get; set; }
