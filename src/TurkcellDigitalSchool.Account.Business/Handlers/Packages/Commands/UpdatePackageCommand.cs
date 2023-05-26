@@ -98,9 +98,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
 
                 var packageDocuments = await _packageDocumentRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageDocumentRepository.DeleteRange(packageDocuments);
-
-          
-
+                 
                 var packageContractTypes = await _packageContractTypeRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageContractTypeRepository.DeleteRange(packageContractTypes);
 
@@ -170,7 +168,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
 
 
          
-                await _capPublisher.PublishAsync(record.GeneratePublishName(EntityState.Deleted), cancellationToken);
+                await _capPublisher.PublishAsync(record.GeneratePublishName(EntityState.Modified), cancellationToken);
 
 
                 var imageOfPackageAddList = request.Package.ImageOfPackages.Select(s => new ImageOfPackage
