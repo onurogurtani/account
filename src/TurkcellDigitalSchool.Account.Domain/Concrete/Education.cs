@@ -6,7 +6,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
     {
         public long UserId { get; set; }
         public string GraduationStatus { get; set; }
-        public string GraduationYear { get; set; }
+        public int? GraduationYear { get; set; }
         public string DiplomaGrade { get; set; }
         public string YKSExperienceInformation { get; set; }
         public string Institution { get; set; }

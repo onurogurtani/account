@@ -38,7 +38,6 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         public DbSet<Education> Educations { get; set; }
 
         public DbSet<ForgetPasswordFailCounter> ForgetPasswordFailCounters { get; set; }
-        public DbSet<GraduationYear> GraduationYears { get; set; }
         public DbSet<ImageOfPackage> ImageOfPackages { get; set; }
         public DbSet<Institution> Institutions { get; set; }
         public DbSet<InstitutionType> InstitutionTypes { get; set; }

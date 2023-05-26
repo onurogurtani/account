@@ -44,7 +44,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public UserInformationDefinationDto Institution { get; set; }
         public UserInformationDefinationDto School { get; set; }
         public UserInformationDefinationDto Classroom { get; set; }
-        public UserInformationDefinationDto GraduationYear { get; set; }
+        public int? GraduationYear { get; set; }
         public double? DiplomaGrade { get; set; }
         public YKSStatementEnum? YKSExperienceInformation { get; set; }
         public FieldType? FieldType { get; set; }

@@ -1,4 +1,4 @@
-﻿using TurkcellDigitalSchool.Core.Enums; 
+﻿using TurkcellDigitalSchool.Core.Enums;
 
 namespace TurkcellDigitalSchool.Account.Domain.Dtos
 {
@@ -11,7 +11,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public long InstitutionId { get; set; }
         public long SchoolId { get; set; }
         public long? ClassroomId { get; set; }
-        public long? GraduationYearId { get; set; }
+        public int? GraduationYear { get; set; }
         public double? DiplomaGrade { get; set; }
         public YKSStatementEnum? YKSExperienceInformation { get; set; }
         public FieldType? FieldType { get; set; }

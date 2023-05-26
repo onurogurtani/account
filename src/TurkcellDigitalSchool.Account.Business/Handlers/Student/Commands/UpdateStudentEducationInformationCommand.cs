@@ -60,7 +60,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                         InstitutionId = request.StudentEducationRequest.InstitutionId,
                         SchoolId = request.StudentEducationRequest.SchoolId,
                         ClassroomId = request.StudentEducationRequest.ClassroomId,
-                        GraduationYearId = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.GraduationYearId,
+                        //GraduationYear = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.GraduationYear,
                         DiplomaGrade = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.DiplomaGrade,
                         YKSStatement = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.YKSExperienceInformation,
                         FieldType = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.FieldType,
@@ -80,7 +80,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                 existStudentEducationInfo.InstitutionId = request.StudentEducationRequest.InstitutionId;
                 existStudentEducationInfo.SchoolId = request.StudentEducationRequest.SchoolId;
                 existStudentEducationInfo.ClassroomId = request.StudentEducationRequest.ClassroomId;
-                existStudentEducationInfo.GraduationYearId = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.GraduationYearId;
+                existStudentEducationInfo.GraduationYear = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.GraduationYear;
                 existStudentEducationInfo.DiplomaGrade = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.DiplomaGrade;
                 existStudentEducationInfo.YKSStatement = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.YKSExperienceInformation;
                 existStudentEducationInfo.FieldType = request.StudentEducationRequest.ExamType == ExamType.LGS ? null : request.StudentEducationRequest.FieldType;

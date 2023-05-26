@@ -14,7 +14,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public long SchoolId { get; set; }
         public long? ClassroomId { get; set; }
         public bool? IsGraduate { get; set; }
-        public long? GraduationYearId { get; set; }
+        public int? GraduationYear { get; set; }
         public double? DiplomaGrade { get; set; }
         public YKSStatementEnum? YKSStatement { get; set; }
         public FieldType? FieldType { get; set; }
@@ -26,6 +26,5 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public County County { get; set; }
         public User User { get; set; }
         public Institution Institution { get; set; }
-        public GraduationYear GraduationYear { get; set; }
     }
 }
