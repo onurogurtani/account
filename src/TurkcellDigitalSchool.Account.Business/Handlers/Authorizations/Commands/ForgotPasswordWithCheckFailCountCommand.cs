@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -158,7 +159,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 {   // Eski boş SMS kodu
                     // await _smsOtpRepository.ExecInsertSpForSms(user.MobilePhones, user.Id, guid);
                     // SMS servisi
-                    await _smsOtpRepository.Send(user.MobilePhones, content);
+                    await _smsOtpRepository.Send(user.MobilePhones, HttpUtility.HtmlEncode("Şifrenizi yenilemek için \"" + link + "\" tıklayınız. "));
 
                     messsgePach = user.MobilePhones.MaskPhoneNumber() + " mobil hattına";
                 }
