@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -148,6 +149,16 @@ namespace TurkcellDigitalSchool.Account.Container
             app.UseStaticFiles();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        }
+
+
+
+        public static void RunHangFireJobs()
+        {
+            RecurringJob.AddOrUpdate<HangfireJobSender>(" ProfileMissingInformation_Notification_Routine",
+                job => job.Send(new ProfileMissingInformationCommand()), Cron.DayInterval(3));
+
+
         }
     }
 }
