@@ -1,15 +1,18 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DotNetCore.CAP;
 using MediatR;
-using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
@@ -17,6 +20,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
     /// <summary>
     /// Update Package
     /// </summary>
+
+    [TransactionScope]
     public class UpdatePackageCommand : IRequest<IResult>
     {
         public Package Package { get; set; }
@@ -37,9 +42,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
             private readonly IPackageTestExamPackageRepository _packageTestExamPackageRepository;
             private readonly IPackageTestExamRepository _packageTestExamRepository;
             private readonly IPackageEventRepository _packageEventRepository;
-
+            private readonly ICapPublisher _capPublisher;
             public UpdatePackageCommandHandler(
-                IPackageCoachServicePackageRepository packageCoachServicePackageRepository, IPackageEventRepository packageEventRepository, IPackageMotivationActivityPackageRepository packageMotivationActivityPackageRepository, IPackageTestExamPackageRepository packageTestExamPackageRepository, IPackagePackageTypeEnumRepository packagePackageTypeEnumRepository, IPackageFieldTypeRepository packageFieldTypeRepository, IPackageRepository packageRepository, IImageOfPackageRepository imageOfPackageRepository, IPackageLessonRepository packageLessonRepository, IPackagePublisherRepository packagePublisherRepository, IPackageDocumentRepository packageDocumentRepository, IPackageContractTypeRepository packageContractTypeRepository, IPackageTestExamRepository packageTestExamRepository)
+                IPackageCoachServicePackageRepository packageCoachServicePackageRepository, IPackageEventRepository packageEventRepository, IPackageMotivationActivityPackageRepository packageMotivationActivityPackageRepository, IPackageTestExamPackageRepository packageTestExamPackageRepository, IPackagePackageTypeEnumRepository packagePackageTypeEnumRepository, IPackageFieldTypeRepository packageFieldTypeRepository, IPackageRepository packageRepository, IImageOfPackageRepository imageOfPackageRepository, IPackageLessonRepository packageLessonRepository, IPackagePublisherRepository packagePublisherRepository, IPackageDocumentRepository packageDocumentRepository, IPackageContractTypeRepository packageContractTypeRepository, IPackageTestExamRepository packageTestExamRepository, ICapPublisher capPublisher)
             {
                 _packageRepository = packageRepository;
                 _imageOfPackageRepository = imageOfPackageRepository;
@@ -54,6 +59,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 _packageFieldTypeRepository = packageFieldTypeRepository;
                 _packageEventRepository = packageEventRepository;
                 _packageTestExamRepository = packageTestExamRepository;
+                _capPublisher = capPublisher;
             }
 
             [MessageConstAttr(MessageCodeType.Error)]
@@ -77,35 +83,56 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 var imageOfPackages = await _imageOfPackageRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _imageOfPackageRepository.DeleteRange(imageOfPackages);
 
+     
                 var packageLessons = await _packageLessonRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageLessonRepository.DeleteRange(packageLessons);
+                
+                foreach (var item  in packageLessons)
+                {
+                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Deleted),cancellationToken);
+                } 
 
                 var packagePublishers = await _packagePublisherRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packagePublisherRepository.DeleteRange(packagePublishers);
+                 
 
                 var packageDocuments = await _packageDocumentRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageDocumentRepository.DeleteRange(packageDocuments);
 
+          
+
                 var packageContractTypes = await _packageContractTypeRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageContractTypeRepository.DeleteRange(packageContractTypes);
 
+     
                 var packagePackageTypeEnums = await _packagePackageTypeEnumRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packagePackageTypeEnumRepository.DeleteRange(packagePackageTypeEnums);
 
+     
                 var packageFieldTypes = await _packageFieldTypeRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageFieldTypeRepository.DeleteRange(packageFieldTypes);
 
                 var packageCoachServicePackages = await _packageCoachServicePackageRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageCoachServicePackageRepository.DeleteRange(packageCoachServicePackages);
 
+        
+
                 var packageMotivationActivityPackages = await _packageMotivationActivityPackageRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageMotivationActivityPackageRepository.DeleteRange(packageMotivationActivityPackages);
 
+        
                 var packageTestExamPackages = await _packageTestExamPackageRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageTestExamPackageRepository.DeleteRange(packageTestExamPackages);
 
+   
                 var packageTestExams = await _packageTestExamRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageTestExamRepository.DeleteRange(packageTestExams);
+
+                foreach (var item in packageTestExams)
+                {
+                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Deleted), cancellationToken);
+                }
+
 
                 var packageEvents = await _packageEventRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageEventRepository.DeleteRange(packageEvents);
@@ -124,13 +151,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 entity.HasMotivationEvent = request.Package.HasMotivationEvent;
                 entity.PackageKind = request.Package.PackageKind;
                 entity.PackageLessons = request.Package.PackageLessons;
-                
-
-
-
-
-
-              
+                 
                 entity.PackageDocuments = request.Package.PackageDocuments;
                 entity.PackageContractTypes = request.Package.PackageContractTypes;
                 entity.PackageFieldTypes = request.Package.PackageFieldTypes;
@@ -148,22 +169,29 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 await _packageRepository.SaveChangesAsync();
 
 
-                await _imageOfPackageRepository.AddRangeAsync(request.Package.ImageOfPackages.Select(s => new ImageOfPackage
+         
+                await _capPublisher.PublishAsync(record.GeneratePublishName(EntityState.Deleted), cancellationToken);
+
+
+                var imageOfPackageAddList = request.Package.ImageOfPackages.Select(s => new ImageOfPackage
                 {
                     FileId = s.FileId,
                     PackageId = record.Id
-                }).ToList());
+                }).ToList();
+
+                await _imageOfPackageRepository.AddRangeAsync(imageOfPackageAddList);
                 await  _imageOfPackageRepository.SaveChangesAsync();
 
 
-                await  _packagePublisherRepository.AddRangeAsync(request.Package.PackagePublishers.Select(s =>
+                var packagePublishersAddList = request.Package.PackagePublishers.Select(s =>
                     new PackagePublisher
                     {
                         PackageId = record.Id,
                         PublisherId = s.PublisherId
-                    }));
-                await _packagePublisherRepository.SaveChangesAsync();
+                    });
 
+                await _packagePublisherRepository.AddRangeAsync(packagePublishersAddList);
+                await _packagePublisherRepository.SaveChangesAsync(); 
 
                 return new SuccessDataResult<Package>(record, SuccessfulOperation.PrepareRedisMessage());
             }
