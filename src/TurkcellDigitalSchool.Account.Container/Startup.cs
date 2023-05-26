@@ -13,6 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ServiceStack;
 using TurkcellDigitalSchool.Account.Business;
+using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
+using TurkcellDigitalSchool.Account.Business.Jobs;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts; 
 using TurkcellDigitalSchool.Common.Middleware;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
@@ -21,6 +23,7 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
+using TurkcellDigitalSchool.Exam.Business.Handlers.TestExams.Commands;
 
 namespace TurkcellDigitalSchool.Account.Container
 {
@@ -155,9 +158,11 @@ namespace TurkcellDigitalSchool.Account.Container
 
         public static void RunHangFireJobs()
         {
-            RecurringJob.AddOrUpdate<HangfireJobSender>(" ProfileMissingInformation_Notification_Routine",
-                job => job.Send(new ProfileMissingInformationCommand()), Cron.DayInterval(3));
+            RecurringJob.AddOrUpdate<HangfireJobSender>(" LongTimeNotLogin_Notification_Routine",
+                job => job.Send(new LongTimeNotLoginNotificationCommand()), Cron.DayInterval(10));
 
+            RecurringJob.AddOrUpdate<HangfireJobSender>("BirthDayn_Notification_Routine",
+            job => job.Send(new BirthDayNotificationCommand()), Cron.DayInterval(1));
 
         }
     }
