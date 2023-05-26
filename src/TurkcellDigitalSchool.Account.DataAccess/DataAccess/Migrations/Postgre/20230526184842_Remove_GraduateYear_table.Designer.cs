@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
@@ -11,9 +12,10 @@ using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
 {
     [DbContext(typeof(AccountDbContext))]
-    partial class AccountDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230526184842_Remove_GraduateYear_table")]
+    partial class Remove_GraduateYear_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -485,10 +487,6 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     b.Property<string>("GraduationStatus")
                         .HasColumnType("text")
                         .HasColumnName("graduationstatus");
-
-                    b.Property<int?>("GraduationYear")
-                        .HasColumnType("integer")
-                        .HasColumnName("graduationyear");
 
                     b.Property<DateTime>("InsertTime")
                         .HasColumnType("timestamp with time zone")
@@ -3163,10 +3161,6 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     b.Property<int?>("FieldType")
                         .HasColumnType("integer")
                         .HasColumnName("fieldtype");
-
-                    b.Property<int?>("GraduationYear")
-                        .HasColumnType("integer")
-                        .HasColumnName("graduationyear");
 
                     b.Property<DateTime>("InsertTime")
                         .HasColumnType("timestamp with time zone")

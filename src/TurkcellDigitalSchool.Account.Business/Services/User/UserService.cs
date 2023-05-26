@@ -1,11 +1,9 @@
-﻿using DocumentFormat.OpenXml.EMMA;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
@@ -16,8 +14,6 @@ using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.File;
-using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
-using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.Request;
 
 namespace TurkcellDigitalSchool.Account.Business.Services.User
 {
@@ -29,21 +25,19 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         private readonly IUserPackageRepository _userPackageRepository;
         private readonly ICityRepository _cityRepository;
         private readonly ICountyRepository _countyRepository;
-        private readonly IGraduationYearRepository _graduationYearRepository;
         private readonly ISchoolRepository _schoolRepository;
         private readonly IUserContratRepository _userContratRepository;
         private readonly IUserCommunicationPreferencesRepository _userCommunicationPreferencesRepository;
         private readonly IUserSupportTeamViewMyDataRepository _userSupportTeamViewMyDataRepository;
         private readonly IFileService _fileService;
         private readonly IClassroomRepository _classroomRepository;
-        public UserService(IUserRepository userRepository, IStudentEducationInformationRepository studentEducationInformationRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, IGraduationYearRepository graduationYearRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository, IUserContratRepository userContratRepository, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository, IFileService fileService, IClassroomRepository classroomRepository)
+        public UserService(IUserRepository userRepository, IStudentEducationInformationRepository studentEducationInformationRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository, IUserContratRepository userContratRepository, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository, IFileService fileService, IClassroomRepository classroomRepository)
         {
             _userRepository = userRepository;
             _studentEducationInformationRepository = studentEducationInformationRepository;
             _studentParentInformationRepository = studentParentInformationRepository;
             _cityRepository = cityRepository;
             _countyRepository = countyRepository;
-            _graduationYearRepository = graduationYearRepository;
             _schoolRepository = schoolRepository;
             _userPackageRepository = userPackageRepository;
             _userContratRepository = userContratRepository;
@@ -98,7 +92,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 .Include(w => w.School)
                 .Include(w => w.User)
                 .Include(w => w.Institution)
-                .Include(w => w.GraduationYear)
                 .Where(w => w.UserId == userId)
                 .FirstOrDefault();
             if (getEducation == null)
@@ -114,7 +107,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 Institution = new UserInformationDefinationDto { Id = getEducation.Institution.Id, Name = getEducation.Institution.Name },
                 School = new UserInformationDefinationDto { Id = getEducation.School.Id, Name = getEducation.School.Name },
                 Classroom = getEducation.Classroom != null ? new UserInformationDefinationDto { Id = getEducation.Classroom.Id, Name = getEducation.Classroom?.Name } : null,
-                GraduationYear = getEducation.ExamType == ExamType.LGS ? null : new UserInformationDefinationDto { Id = getEducation.GraduationYear?.Id, Name = getEducation.GraduationYear?.Name },
+                GraduationYear = getEducation.ExamType == ExamType.LGS ? null : getEducation.GraduationYear.Value,
                 DiplomaGrade = getEducation.ExamType == ExamType.LGS ? null : getEducation.DiplomaGrade,
                 YKSExperienceInformation = getEducation.ExamType == ExamType.LGS ? null : getEducation.YKSStatement,
                 FieldType = getEducation.ExamType == ExamType.LGS ? null : getEducation.FieldType,
@@ -236,7 +229,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
 
                 if (studentEducationRequestDto.IsGraduate == true)
                 {
-                    if (studentEducationRequestDto.GraduationYearId == null || !_graduationYearRepository.Query().Any(w => w.Id == studentEducationRequestDto.GraduationYearId))
+                    //if (studentEducationRequestDto.GraduationYear == null)
                     {
                         return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Mezuniyet Yılı");
                     }
@@ -356,7 +349,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                         Id = userContract.Document.Id,
                         Content = userContract.Document.Content,
                         Name = userContract.Document.ContractKind.Name,
-                        RequiredApproval=userContract.Document.RequiredApproval
+                        RequiredApproval = userContract.Document.RequiredApproval
                     }
                 });
             }
