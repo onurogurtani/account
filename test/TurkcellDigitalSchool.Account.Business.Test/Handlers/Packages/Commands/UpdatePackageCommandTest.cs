@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using DotNetCore.CAP;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -48,6 +49,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
         Mock<IMediator> _mediator;
         Mock<IMapper> _mapper;
         Mock<RedisService> _redisService;
+        Mock<ICapPublisher> _capPublisher;
 
         [SetUp]
         public void Setup()
@@ -81,11 +83,12 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
             _packageTestExamPackageRepository = new Mock<IPackageTestExamPackageRepository>();
             _packageTestExamRepository = new Mock<IPackageTestExamRepository>();
             _packageEventRepository = new Mock<IPackageEventRepository>();
+            _capPublisher = new Mock<ICapPublisher>();
 
             _updatePackageCommand = new UpdatePackageCommand();
             _updatePackageCommandHandler = new(_packageCoachServicePackageRepository.Object, _packageEventRepository.Object, _packageMotivationActivityPackageRepository.Object,
                 _packageTestExamPackageRepository.Object, _packagePackageTypeEnumRepository.Object, _packageFieldTypeRepository.Object, _packageRepository.Object, _imageOfPackageRepository.Object,
-                _packageLessonRepository.Object, _packagePublisherRepository.Object, _packageDocumentRepository.Object, _packageContractTypeRepository.Object, _packageTestExamRepository.Object);
+                _packageLessonRepository.Object, _packagePublisherRepository.Object, _packageDocumentRepository.Object, _packageContractTypeRepository.Object, _packageTestExamRepository.Object, _capPublisher.Object);
         }
 
         [Test]
