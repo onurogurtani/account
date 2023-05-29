@@ -1,21 +1,13 @@
 ﻿using DotNetCore.CAP;
-using Microsoft.AspNetCore.Http;
-using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Enums.OTP;
 using TurkcellDigitalSchool.Common;
-using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.SubServiceConst;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 
 namespace TurkcellDigitalSchool.Account.Business.Services.Otp
