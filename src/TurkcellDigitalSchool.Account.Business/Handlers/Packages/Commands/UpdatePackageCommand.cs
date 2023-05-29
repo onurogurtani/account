@@ -29,6 +29,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
         [MessageClassAttr("Paket Güncelleme")]
         public class UpdatePackageCommandHandler : IRequestHandler<UpdatePackageCommand, IResult>
         {
+            private readonly IPackageRoleRepository _packageRoleRepository;
             private readonly IImageOfPackageRepository _imageOfPackageRepository;
             private readonly IPackageRepository _packageRepository;
             private readonly IPackageLessonRepository _packageLessonRepository;
@@ -44,7 +45,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
             private readonly IPackageEventRepository _packageEventRepository;
             private readonly ICapPublisher _capPublisher;
             public UpdatePackageCommandHandler(
-                IPackageCoachServicePackageRepository packageCoachServicePackageRepository, IPackageEventRepository packageEventRepository, IPackageMotivationActivityPackageRepository packageMotivationActivityPackageRepository, IPackageTestExamPackageRepository packageTestExamPackageRepository, IPackagePackageTypeEnumRepository packagePackageTypeEnumRepository, IPackageFieldTypeRepository packageFieldTypeRepository, IPackageRepository packageRepository, IImageOfPackageRepository imageOfPackageRepository, IPackageLessonRepository packageLessonRepository, IPackagePublisherRepository packagePublisherRepository, IPackageDocumentRepository packageDocumentRepository, IPackageContractTypeRepository packageContractTypeRepository, IPackageTestExamRepository packageTestExamRepository, ICapPublisher capPublisher)
+                IPackageCoachServicePackageRepository packageCoachServicePackageRepository, IPackageEventRepository packageEventRepository, IPackageMotivationActivityPackageRepository packageMotivationActivityPackageRepository, IPackageTestExamPackageRepository packageTestExamPackageRepository, IPackagePackageTypeEnumRepository packagePackageTypeEnumRepository, IPackageFieldTypeRepository packageFieldTypeRepository, IPackageRepository packageRepository, IImageOfPackageRepository imageOfPackageRepository, IPackageLessonRepository packageLessonRepository, IPackagePublisherRepository packagePublisherRepository, IPackageDocumentRepository packageDocumentRepository, IPackageContractTypeRepository packageContractTypeRepository, IPackageTestExamRepository packageTestExamRepository, ICapPublisher capPublisher, IPackageRoleRepository packageRoleRepository)
             {
                 _packageRepository = packageRepository;
                 _imageOfPackageRepository = imageOfPackageRepository;
@@ -60,6 +61,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 _packageEventRepository = packageEventRepository;
                 _packageTestExamRepository = packageTestExamRepository;
                 _capPublisher = capPublisher;
+                _packageRoleRepository = packageRoleRepository;
             }
 
             [MessageConstAttr(MessageCodeType.Error)]
@@ -121,6 +123,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
         
                 var packageTestExamPackages = await _packageTestExamPackageRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageTestExamPackageRepository.DeleteRange(packageTestExamPackages);
+                
+                var packageRoles = await _packageRoleRepository.GetListAsync(x => x.PackageId == request.Package.Id);
+                _packageRoleRepository.DeleteRange(packageRoles);
 
    
                 var packageTestExams = await _packageTestExamRepository.GetListAsync(x => x.PackageId == request.Package.Id);
@@ -160,6 +165,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 entity.PackageEvents = request.Package.PackageEvents;
                 entity.PackageTestExams = request.Package.PackageTestExams;
                 entity.EducationYearId = request.Package.EducationYearId;
+                entity.PackageRoles = request.Package.PackageRoles;
 
                
                 
