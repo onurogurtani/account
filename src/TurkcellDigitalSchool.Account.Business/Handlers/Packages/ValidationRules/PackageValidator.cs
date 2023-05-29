@@ -88,13 +88,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.ValidationRul
             When(x => x.Package.HasMotivationEvent, () =>
                 {
                     // motivation seçili
-                    When(x => x.Package.PackagePackageTypeEnums.Any(s => s.PackageTypeEnum == PackageTypeEnum.MotivationEvent), () =>
+                    When(x => x.Package.PackagePackageTypeEnums.Any(s => s.PackageTypeEnum == PackageTypeEnum.MotivationEvent || s.PackageTypeEnum == PackageTypeEnum.Demo), () =>
                     {
                         RuleFor(x => x.Package.PackageEvents).NotEmpty().WithMessage(ShouldChooseMotivationEvent.PrepareRedisMessage());
                     });
 
                     // motivation seçili deðil
-                    When(x => x.Package.PackagePackageTypeEnums.All(s => s.PackageTypeEnum != PackageTypeEnum.MotivationEvent), () =>
+                    When(x => x.Package.PackagePackageTypeEnums.All(s => s.PackageTypeEnum != PackageTypeEnum.MotivationEvent || s.PackageTypeEnum != PackageTypeEnum.Demo), () =>
                     {
                         RuleFor(x => x.Package).Must(x =>
                         (x.PackageEvents?.Count == 0 && x.MotivationActivityPackages?.Count == 0) ||
@@ -120,13 +120,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.ValidationRul
             When(x => x.Package.HasTryingTest, () =>
                 {
                     // test exams seçili
-                    When(x => x.Package.PackagePackageTypeEnums.Any(s => s.PackageTypeEnum == PackageTypeEnum.TestExam), () =>
+                    When(x => x.Package.PackagePackageTypeEnums.Any(s => s.PackageTypeEnum == PackageTypeEnum.TestExam || s.PackageTypeEnum == PackageTypeEnum.Demo), () =>
                     {
                         RuleFor(x => x.Package.PackageTestExams).NotEmpty().WithMessage(ShouldChooseTestExam.PrepareRedisMessage());
                     });
 
                     // test exams  seçili deðil
-                    When(x => x.Package.PackagePackageTypeEnums.All(s => s.PackageTypeEnum != PackageTypeEnum.TestExam), () =>
+                    When(x => x.Package.PackagePackageTypeEnums.All(s => s.PackageTypeEnum != PackageTypeEnum.TestExam || s.PackageTypeEnum != PackageTypeEnum.Demo), () =>
                     {
                         RuleFor(x => x.Package).Must(x =>
                         (x.PackageTestExams?.Count == 0 && x.TestExamPackages?.Count == 0) ||
@@ -222,13 +222,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.ValidationRul
             When(x => x.Package.HasMotivationEvent, () =>
                 {
                     // motivation seçili
-                    When(x => x.Package.PackagePackageTypeEnums.Any(s => s.PackageTypeEnum == PackageTypeEnum.MotivationEvent), () =>
+                    When(x => x.Package.PackagePackageTypeEnums.Any(s => s.PackageTypeEnum == PackageTypeEnum.MotivationEvent || s.PackageTypeEnum == PackageTypeEnum.Demo), () =>
                     {
                         RuleFor(x => x.Package.PackageEvents).NotEmpty().WithMessage(ShouldChooseMotivationEvent.PrepareRedisMessage());
                     });
 
                     // motivation seçili deðil
-                    When(x => x.Package.PackagePackageTypeEnums.All(s => s.PackageTypeEnum != PackageTypeEnum.MotivationEvent), () =>
+                    When(x => x.Package.PackagePackageTypeEnums.All(s => s.PackageTypeEnum != PackageTypeEnum.MotivationEvent || s.PackageTypeEnum != PackageTypeEnum.Demo), () =>
                     {
                         RuleFor(x => x.Package).Must(x =>
                         (x.PackageEvents?.Count == 0 && x.MotivationActivityPackages?.Count == 0) ||
@@ -254,13 +254,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.ValidationRul
             When(x => x.Package.HasTryingTest, () =>
                 {
                     // test exams seçili
-                    When(x => x.Package.PackagePackageTypeEnums.Any(s => s.PackageTypeEnum == PackageTypeEnum.TestExam), () =>
+                    When(x => x.Package.PackagePackageTypeEnums.Any(s => s.PackageTypeEnum == PackageTypeEnum.TestExam || s.PackageTypeEnum == PackageTypeEnum.Demo), () =>
                     {
                         RuleFor(x => x.Package.PackageTestExams).NotEmpty().WithMessage(ShouldChooseTestExam.PrepareRedisMessage());
                     });
 
                     // test exams  seçili deðil
-                    When(x => x.Package.PackagePackageTypeEnums.All(s => s.PackageTypeEnum != PackageTypeEnum.TestExam), () =>
+                    When(x => x.Package.PackagePackageTypeEnums.All(s => s.PackageTypeEnum != PackageTypeEnum.TestExam || s.PackageTypeEnum != PackageTypeEnum.Demo), () =>
                     {
                         RuleFor(x => x.Package).Must(x =>
                         (x.PackageTestExams?.Count == 0 && x.TestExamPackages?.Count == 0) ||
