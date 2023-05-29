@@ -107,7 +107,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 Institution = new UserInformationDefinationDto { Id = getEducation.Institution.Id, Name = getEducation.Institution.Name },
                 School = new UserInformationDefinationDto { Id = getEducation.School.Id, Name = getEducation.School.Name },
                 Classroom = getEducation.Classroom != null ? new UserInformationDefinationDto { Id = getEducation.Classroom.Id, Name = getEducation.Classroom?.Name } : null,
-                GraduationYear = getEducation.ExamType == ExamType.LGS ? null : getEducation.GraduationYear.Value,
+                GraduationYear = getEducation.ExamType == ExamType.LGS ? null : getEducation.GraduationYear,
                 DiplomaGrade = getEducation.ExamType == ExamType.LGS ? null : getEducation.DiplomaGrade,
                 YKSExperienceInformation = getEducation.ExamType == ExamType.LGS ? null : getEducation.YKSStatement,
                 FieldType = getEducation.ExamType == ExamType.LGS ? null : getEducation.FieldType,
