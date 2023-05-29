@@ -49,15 +49,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     return new ErrorDataResult<User>(Messages.CurrentPassError);
                 }
 
-                try
-                {
-                    ValidationTool.Validate((IValidator)Activator.CreateInstance(typeof(UserChangePasswordValidator)), request);
-                }
-                catch (ValidationException)
-                {
-                    return new ErrorDataResult<User>(Messages.InvalidPass);
-                }
-
                 HashingHelper.CreatePasswordHash(request.NewPassword, out var passwordSalt, out var passwordHash);
 
                 user.PasswordHash = passwordHash;

@@ -1,19 +1,21 @@
 ﻿using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using TurkcellDigitalSchool.Account.Business.Services.Otp;
 using TurkcellDigitalSchool.Account.Business.Services.User;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.Domain.Enums.OTP;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 {
     public class UpdateStudentEmailCommand : IRequest<IResult>
     {
-        public long UserId { get; set; }
         public string Email { get; set; }
 
         [MessageClassAttr("Öğrenci Profil Email Bilgisi Ekleme/Güncelleme")]
@@ -21,10 +23,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
         {
             private readonly IUserRepository _userRepository;
             private readonly IUserService _userService;
-            public UpdateStudentEmailCommandHandler(IUserRepository userRepository, IUserService userService)
+            private readonly ITokenHelper _tokenHelper;
+            private readonly IOtpService _otpService;
+
+            public UpdateStudentEmailCommandHandler(IUserRepository userRepository, IUserService userService, ITokenHelper tokenHelper, IOtpService otpService)
             {
                 _userRepository = userRepository;
                 _userService = userService;
+                _tokenHelper = tokenHelper;
+                _otpService = otpService;
             }
 
             [MessageConstAttr(MessageCodeType.Information)]
@@ -37,18 +44,21 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             private static string EnterDifferentEmail = Constants.Messages.EnterDifferentEmail;
             public async Task<IResult> Handle(UpdateStudentEmailCommand request, CancellationToken cancellationToken)
             {
-                var getUser = _userService.GetUserById(request.UserId);
+                var userId = _tokenHelper.GetUserIdByCurrentToken();
+                var getUser = _userService.GetUserById(userId);
 
                 if (getUser == null)
                     return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
                 if (getUser.Email == request.Email)
                     return new ErrorResult(EnterDifferentEmail.PrepareRedisMessage());
-                if (_userService.IsExistEmail(request.UserId, request.Email))
+                if (_userService.IsExistEmail(userId, request.Email))
                     return new ErrorResult(EmailAlreadyExist.PrepareRedisMessage());
 
                 getUser.Email = request.Email;
-                getUser.EmailVerify = (getUser.Email == request.Email) ? true : false;
+                getUser.EmailVerify = false;
                 await _userRepository.UpdateAndSaveAsync(getUser);
+
+                _otpService.GenerateOtp(userId, ChannelType.Mail, OtpServices.Mail_StudentProfileMailVerify, OTPExpiryDate.NinetySeconds);
 
                 return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }

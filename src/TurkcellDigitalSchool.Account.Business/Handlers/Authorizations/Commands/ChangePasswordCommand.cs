@@ -44,14 +44,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     return new ErrorDataResult<DArchToken>(Messages.PassError);
                 }
 
-                try
-                {
-                    ValidationTool.Validate((IValidator)Activator.CreateInstance(typeof(ChangePasswordValidator)), request);
-                }
-                catch (Exception)
-                {
-                    return new ErrorDataResult<User>(Messages.InvalidPass);
-                }
 
                 HashingHelper.CreatePasswordHash(request.NewPassword, out var passwordSalt, out var passwordHash);
                 var user = await _userRepository.GetAsync(u => u.CitizenId == request.CitizenId && u.Status);

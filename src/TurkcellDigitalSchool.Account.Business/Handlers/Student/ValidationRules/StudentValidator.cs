@@ -17,7 +17,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.ValidationRule
         private static string EmailIsNotValid = Messages.EmailIsNotValid;
         public UpdateStudentEmailValidator()
         {
-            RuleFor(x => x.UserId).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
             RuleFor(x => x.Email).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
             RuleFor(x => x.Email).EmailAddress().WithMessage(EmailIsNotValid.PrepareRedisMessage());
         }
