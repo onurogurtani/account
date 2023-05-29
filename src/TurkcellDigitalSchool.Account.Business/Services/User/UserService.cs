@@ -146,7 +146,8 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         {
             return _userRepository.Get(w => w.Id == userId);
         }
-        [MessageConstAttr(MessageCodeType.Error, "İl,İlçe,Okul İl/İlçe/Kurum Türü ile eşleşmiyor,Sınıf,Öğrenim Durumu,YKS Deneyimi,Mezuniyet Yılı,Diploma Notu,Alan,Puan Türü")]
+
+        [MessageConstAttr(MessageCodeType.Error, "İl,İlçe,Okul Kurum Türü ile eşleşmiyor,Okul İl/İlçe/Kurum Türü ile eşleşmiyor,Sınıf Bulunamadı,Sınıf,Öğrenim Durumu,YKS Deneyimi,Mezuniyet Yılı,Diploma Notu,Alan,Puan Türü")]
         private static string FieldIsNotNullOrEmpty = Messages.FieldIsNotNullOrEmpty;
 
         [MessageConstAttr(MessageCodeType.Error)]
@@ -179,7 +180,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             {
                 if (!existSchool.Any())
                 {
-                    return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Okul İl/İlçe/Kurum Türü ile eşleşmiyor");
+                    return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Okul Kurum Türü ile eşleşmiyor");
                 }
             }
             else
@@ -197,7 +198,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 classroom = _classroomRepository.Query().FirstOrDefault(w => w.Id == studentEducationRequestDto.ClassroomId);
                 if (classroom == null)
                 {
-                    return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Sınıf");
+                    return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Sınıf Bulunamadı");
                 }
             }
 
@@ -229,7 +230,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
 
                 if (studentEducationRequestDto.IsGraduate == true)
                 {
-                    //if (studentEducationRequestDto.GraduationYear == null)
+                    if (studentEducationRequestDto.GraduationYear == null)
                     {
                         return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Mezuniyet Yılı");
                     }
