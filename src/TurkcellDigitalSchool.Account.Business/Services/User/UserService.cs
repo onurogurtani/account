@@ -230,12 +230,12 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
 
                 if (studentEducationRequestDto.IsGraduate == true)
                 {
-                    if (studentEducationRequestDto.GraduationYear == null)
+                    if (studentEducationRequestDto.GraduationYear == null || studentEducationRequestDto.GraduationYear == 0)
                     {
                         return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Mezuniyet Yılı");
                     }
 
-                    if (studentEducationRequestDto.DiplomaGrade == null)
+                    if (studentEducationRequestDto.DiplomaGrade == null || studentEducationRequestDto.DiplomaGrade == 0)
                     {
                         return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Diploma Notu");
                     }
