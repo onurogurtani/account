@@ -14,6 +14,8 @@ using FluentAssertions;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using AutoMapper;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
+using TurkcellDigitalSchool.Account.Business.Services.Otp;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
 {
@@ -33,6 +35,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
         Mock<IServiceProvider> _serviceProvider;
         Mock<IMediator> _mediator;
         Mock<IMapper> _mapper;
+        Mock<ITokenHelper> _tokenHelper;
+        Mock<IOtpService> _otpService;
+
+
         Mock<RedisService> _redisService;
 
         [SetUp]
@@ -44,7 +50,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
             _httpRequest = new Mock<HttpRequest>();
             _headerDictionary = new Mock<IHeaderDictionary>();
             _mapper = new Mock<IMapper>();
+            _tokenHelper = new Mock<ITokenHelper>();
             _redisService = new Mock<RedisService>();
+            _otpService = new Mock<IOtpService>();
+
 
             _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
             ServiceTool.ServiceProvider = _serviceProvider.Object;
@@ -58,7 +67,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
             _userService = new Mock<IUserService>();
 
             _updateStudentEmailCommand = new UpdateStudentEmailCommand();
-            _updateStudentEmailCommandHandler = new UpdateStudentEmailCommandHandler(_userRepository.Object, _userService.Object);
+            _updateStudentEmailCommandHandler = new UpdateStudentEmailCommandHandler(_userRepository.Object, _userService.Object, _tokenHelper.Object, _otpService.Object);
         }
 
         [Test]
@@ -66,7 +75,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
         {
             _updateStudentEmailCommand = new()
             {
-                UserId = 1,
                 Email = "yusuf.daskin@turkcell.com.tr"
             };
 
@@ -81,7 +89,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
         {
             _updateStudentEmailCommand = new()
             {
-                UserId = 1,
                 Email = "yusuf.daskin@turkcell.com.tr"
             };
 
@@ -95,7 +102,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
         {
             _updateStudentEmailCommand = new()
             {
-                UserId = 1,
                 Email = "yusuf.daskin@turkcell.com.tr"
             };
 
@@ -116,7 +122,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
         {
             _updateStudentEmailCommand = new()
             {
-                UserId = 1,
                 Email = "yusuf.daskin@turkcell.com.tr"
             };
             _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns(new User { Id = 1, AvatarId = 1 });

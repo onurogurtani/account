@@ -41,6 +41,8 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
         Mock<IPackageTestExamPackageRepository> _packageTestExamPackageRepository;
         Mock<IPackageTestExamRepository> _packageTestExamRepository;
         Mock<IPackageEventRepository> _packageEventRepository;
+        Mock<IPackageRoleRepository> _packageRoleRepository;
+
 
         Mock<IHeaderDictionary> _headerDictionary;
         Mock<HttpRequest> _httpRequest;
@@ -83,12 +85,15 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
             _packageTestExamPackageRepository = new Mock<IPackageTestExamPackageRepository>();
             _packageTestExamRepository = new Mock<IPackageTestExamRepository>();
             _packageEventRepository = new Mock<IPackageEventRepository>();
+            _packageRoleRepository = new Mock<IPackageRoleRepository>();
+
+
             _capPublisher = new Mock<ICapPublisher>();
 
             _updatePackageCommand = new UpdatePackageCommand();
             _updatePackageCommandHandler = new(_packageCoachServicePackageRepository.Object, _packageEventRepository.Object, _packageMotivationActivityPackageRepository.Object,
                 _packageTestExamPackageRepository.Object, _packagePackageTypeEnumRepository.Object, _packageFieldTypeRepository.Object, _packageRepository.Object, _imageOfPackageRepository.Object,
-                _packageLessonRepository.Object, _packagePublisherRepository.Object, _packageDocumentRepository.Object, _packageContractTypeRepository.Object, _packageTestExamRepository.Object, _capPublisher.Object);
+                _packageLessonRepository.Object, _packagePublisherRepository.Object, _packageDocumentRepository.Object, _packageContractTypeRepository.Object, _packageTestExamRepository.Object, _capPublisher.Object, _packageRoleRepository.Object);
         }
 
         [Test]
