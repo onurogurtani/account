@@ -1,16 +1,21 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DotNetCore.CAP;
+using Microsoft.AspNetCore.Http;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Enums.OTP;
 using TurkcellDigitalSchool.Common;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.SubServiceConst;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 
 namespace TurkcellDigitalSchool.Account.Business.Services.Otp
@@ -21,11 +26,13 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
         private readonly IUserRepository _userRepository;
 
         private readonly ConfigurationManager _configurationManager;
-        public OtpService(IOneTimePasswordRepository oneTimePasswordRepository, ConfigurationManager configurationManager, IUserRepository userRepository)
+        private readonly ICapPublisher _capPublisher;
+        public OtpService(IOneTimePasswordRepository oneTimePasswordRepository, ConfigurationManager configurationManager, IUserRepository userRepository, ICapPublisher capPublisher)
         {
             _oneTimePasswordRepository = oneTimePasswordRepository;
             _configurationManager = configurationManager;
             _userRepository = userRepository;
+            _capPublisher = capPublisher;
         }
         public DataResult<int> GenerateOtp(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId, OTPExpiryDate oTPExpiryDate)
         {
@@ -39,7 +46,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
             }
 
             int otp = RandomPassword.RandomNumberGenerator();
-           
 
             var newRecord = new OneTimePassword
             {
@@ -54,12 +60,9 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
             };
             _oneTimePasswordRepository.CreateAndSave(newRecord);
 
+            SendOtp(otp, ChanellTypeId, ServiceId, UserId);
 
-            //TODO Sms ve mail gönderimi için code fix yapıalcak.
-
-
-
-            return new DataResult<int>(otp, true, "Başarılı");
+            return new DataResult<int>(data: otp, true, "Başarılı");
         }
         public Result VerifyOtp(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId, int Code)
         {
@@ -114,5 +117,21 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
                 _userRepository.UpdateAndSave(getUserInfo);
             }
         }
+        private void SendOtp(int otpCode, ChannelType chanellTypeId, OtpServices serviceId, long userId)
+        {
+
+            var userInfo = _userRepository.Get(w => w.Id == userId);
+            if (serviceId == OtpServices.Mail_StudentProfileMailVerify)
+            {
+                var dictoryString = new Dictionary<string, string>();
+                dictoryString.Add(EmailVerifyParameters.NameSurname, $"{userInfo.Name} {userInfo.SurName}");
+                dictoryString.Add(EmailVerifyParameters.OtpCode, otpCode.ToString());
+                dictoryString.Add(EmailVerifyParameters.RecipientAddress, userInfo.Email);
+                _capPublisher.Publish(SubServiceConst.SENDING_EMAIL_ADDRESS_VERIFY_REQUEST, dictoryString);
+            }
+
+            //todo sms için servis bağlanacak.
+        }
+
     }
 }
