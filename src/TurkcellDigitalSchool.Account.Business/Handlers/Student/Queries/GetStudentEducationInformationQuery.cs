@@ -28,6 +28,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
 
             public virtual async Task<IDataResult<EducationInfoDto>> Handle(GetStudentEducationInformationQuery request, CancellationToken cancellationToken)
             {
+                //TODO userId tokenden alınacak.
                 if (request.UserId == null)
                 {
                     return new ErrorDataResult<EducationInfoDto>(RecordIsNotFound.PrepareRedisMessage());
