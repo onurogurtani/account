@@ -57,7 +57,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
         }
         public Result VerifyOtp(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId, int Code)
         {
-            var getOtp = _oneTimePasswordRepository.Query().FirstOrDefault(w => w.OtpStatusId == OtpStatus.NotUsed && w.UserId == UserId && w.ChannelTypeId == ChanellTypeId && w.ServiceId == ServiceId);
+            var getOtp = _oneTimePasswordRepository.Query().LastOrDefault(w => w.OtpStatusId == OtpStatus.NotUsed && w.ExpiryDate > DateTime.Now && w.UserId == UserId && w.ChannelTypeId == ChanellTypeId && w.ServiceId == ServiceId);
             if (getOtp == null)
             {
                 return new Result(false, "Kod bulunamadı.");
