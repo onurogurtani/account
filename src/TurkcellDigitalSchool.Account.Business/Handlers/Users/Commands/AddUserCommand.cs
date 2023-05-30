@@ -60,6 +60,16 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 
             public async Task<IDataResult<SelectionItem>> Handle(AddUserCommand request, CancellationToken cancellationToken)
             {
+
+                if (_userRepository.GetCountAsync(w => w.Email == request.Email).Result > 0)
+                {
+                    return new ErrorDataResult<SelectionItem>("Mail adresi daha önce kullanılmış.");
+                }
+                else if (_userRepository.GetCountAsync(w => w.MobilePhones == request.MobilePhones).Result > 0)
+                {
+                    return new ErrorDataResult<SelectionItem>("Telefon numarası daha önce kullanılmış.");
+                }
+
                 int randomPassword = RandomPassword.RandomNumberGenerator();
                 if (_configurationManager.Mode == ApplicationMode.DEV  )
                     randomPassword = 123456;
