@@ -9,6 +9,7 @@ using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
@@ -21,7 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
     {
         public long Id { get; set; }
         public UserType UserType { get; set; }
-        public long CitizenId { get; set; }
+        public long? CitizenId { get; set; }
         public string BirthPlace { get; set; }
         public DateTime BirthDate { get; set; }
         public string Name { get; set; }
@@ -59,12 +60,21 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                 if (record == null)
                     return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
 
+                if (_userRepository.GetCountAsync(w => w.Email == request.Email).Result > 0)
+                {
+                    return new ErrorDataResult<SelectionItem>("Mail adresi daha önce kullanılmış.");
+                }
+                else if (_userRepository.GetCountAsync(w => w.MobilePhones == request.MobilePhones).Result > 0)
+                {
+                    return new ErrorDataResult<SelectionItem>("Telefon numarası daha önce kullanılmış.");
+                }
+
                 record.UserType = request.UserType;
                 record.Name = request.Name;
                 record.SurName = request.SurName;
                 record.Email = request.Email;
                 record.MobilePhones = request.MobilePhones;
-                if (await _userRepository.IsPackageBuyer(record.Id))
+                if (await _userRepository.IsPackageBuyer(record.Id) || record.UserType == UserType.Parent)
                 {
                     record.CitizenId = request.CitizenId;
                     record.BirthDate = request.BirthDate;
