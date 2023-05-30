@@ -10,6 +10,7 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Account.Domain.Dtos.OrganisationDtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
@@ -24,7 +25,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
     [TransactionScope]
     public class UpdateOrganisationCommand : IRequest<IResult>
     {
-        public Organisation Organisation { get; set; }
+        public UpdateOrganisationDto Organisation { get; set; }
 
         [MessageClassAttr("Kurum Güncelleme")]
         public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisationCommand, IResult>
@@ -36,15 +37,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
             private readonly IUserRepository _userRepository;
             private readonly IMediator _mediator;
             private readonly ICapPublisher _capPublisher;
+            private readonly IPackageRepository _packageRepository;
 
-            [MessageConstAttr(MessageCodeType.Error)]
-            private static string SameNameAlreadyExist = Messages.SameNameAlreadyExist;
-            [MessageConstAttr(MessageCodeType.Error)]
-            private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
-            [MessageConstAttr(MessageCodeType.Information)]
-            private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-            public UpdateOrganisationCommandHandler(IOrganisationRepository organisationRepository, IOrganisationTypeRepository organisationTypeRepository, IMapper mapper, IPackageRoleRepository packageRoleRepository, IUserRepository userRepository, IMediator mediator, ICapPublisher capPublisher)
+            public UpdateOrganisationCommandHandler(IOrganisationRepository organisationRepository, IOrganisationTypeRepository organisationTypeRepository, IMapper mapper, IPackageRoleRepository packageRoleRepository, IUserRepository userRepository, IMediator mediator, ICapPublisher capPublisher, IPackageRepository packageRepository)
             {
                 _organisationRepository = organisationRepository;
                 _organisationTypeRepository = organisationTypeRepository;
@@ -53,9 +48,19 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                 _userRepository = userRepository;
                 _mediator = mediator;
                 _capPublisher = capPublisher;
+                _packageRepository = packageRepository;
             }
 
-            [SecuredOperation]   
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string SameNameAlreadyExist = Messages.SameNameAlreadyExist;
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string PackageIsNotFound = Constants.Messages.PackageIsNotFound;
+            [MessageConstAttr(MessageCodeType.Information)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
+
+            [SecuredOperation]
             public async Task<IResult> Handle(UpdateOrganisationCommand request, CancellationToken cancellationToken)
             {
                 var organisation = await _organisationRepository.Query().AnyAsync(x => x.Id != request.Organisation.Id && x.Name.Trim().ToLower() == request.Organisation.Name.Trim().ToLower() && x.CrmId == request.Organisation.CrmId);
@@ -65,6 +70,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                 var entity = await _organisationRepository.GetAsync(x => x.Id == request.Organisation.Id);
                 if (entity == null)
                     return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
+
+                var package = await _packageRepository.Query().Where(x => x.Id == request.Organisation.PackageId).FirstOrDefaultAsync();
+                if (package == null)
+                    return new ErrorResult(PackageIsNotFound.PrepareRedisMessage());
 
                 var isSingleOrPluralOrganisation = await _organisationTypeRepository.Query().AnyAsync(x => x.Id == request.Organisation.OrganisationTypeId && x.IsSingularOrganisation);
 
@@ -100,6 +109,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                 }
 
                 _mapper.Map(request.Organisation, entity);
+                entity.PackageName = package.Name;
                 var record = _organisationRepository.Update(entity);
                 await _organisationRepository.SaveChangesAsync();
                 await _capPublisher.PublishAsync(entity.GeneratePublishName(EntityState.Modified),
