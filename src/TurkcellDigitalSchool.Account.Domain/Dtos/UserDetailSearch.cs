@@ -15,7 +15,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public string Email { get; set; }
         public string MobilePhones { get; set; }
         public UserType UserTypeId { get; set; }
-        public bool[] PackageBuyStatus { get; set; } = Array.Empty<bool>();
+        public bool? PackageBuyStatus { get; set; }
         public string OrderBy { get; set; }
     }
 }

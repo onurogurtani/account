@@ -68,13 +68,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                     .AsQueryable();
 
                 if (!string.IsNullOrWhiteSpace(request.UserDetailSearch.Name))
-                    query = query.Where(x => x.Name.Contains(request.UserDetailSearch.Name));
+                    query = query.Where(x => x.Name.ToLower().Contains(request.UserDetailSearch.Name.ToLower()));
 
                 if (!string.IsNullOrWhiteSpace(request.UserDetailSearch.SurName))
-                    query = query.Where(x => x.SurName.Contains(request.UserDetailSearch.SurName));
+                    query = query.Where(x => x.SurName.ToLower().Contains(request.UserDetailSearch.SurName.ToLower()));
 
                 if (!string.IsNullOrWhiteSpace(request.UserDetailSearch.Email))
-                    query = query.Where(x => x.Email.Contains(request.UserDetailSearch.Email));
+                    query = query.Where(x => x.Email.ToLower().Contains(request.UserDetailSearch.Email.ToLower()));
 
                 if (!string.IsNullOrWhiteSpace(request.UserDetailSearch.MobilePhones))
                     query = query.Where(x => x.MobilePhones.Contains(request.UserDetailSearch.MobilePhones));
@@ -84,6 +84,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 
                 if (request.UserDetailSearch.CitizenId > 0)
                     query = query.Where(x => x.CitizenId == request.UserDetailSearch.CitizenId);
+
+                if (request.UserDetailSearch.PackageBuyStatus != null)
+                    query = query.Where(x => (x.IsPackageBuyer == null) || (x.IsPackageBuyer == request.UserDetailSearch.PackageBuyStatus));
 
                 switch (request.UserDetailSearch.OrderBy)
                 {

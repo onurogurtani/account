@@ -11,7 +11,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.ValidationRules
     public class AddUserValidator : AbstractValidator<AddUserCommand>
     {
         [MessageConstAttr(MessageCodeType.Error, "Kullanıcı Tipi,Ad,Soyad,TCKN,Email")]
-        private static string RequiredField = Messages.RequiredField;
+        private static string RequiredField = Messages.FieldIsNotNullOrEmpty;
         [MessageConstAttr(MessageCodeType.Error, "Email")]
         private static string EmailIsNotValid = Messages.EmailIsNotValid;
         public AddUserValidator()
@@ -30,7 +30,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.ValidationRules
     public class UpdateUserMemberValidator : AbstractValidator<UpdateUserMemberCommand>
     {
         [MessageConstAttr(MessageCodeType.Error, "Kullanıcı Tipi,Ad,Soyad,TCKN,Email")]
-        private static string RequiredField = Messages.RequiredField;
+        private static string RequiredField = Messages.FieldIsNotNullOrEmpty;
         [MessageConstAttr(MessageCodeType.Error, "Email")]
         private static string EmailIsNotValid = Messages.EmailIsNotValid;
         public UpdateUserMemberValidator()
