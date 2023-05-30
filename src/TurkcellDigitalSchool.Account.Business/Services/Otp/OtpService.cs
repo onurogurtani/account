@@ -32,8 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
 
             if (existOtpCodes)
             {
-                return new DataResult<int>(0, false, $"Yeni kod oluşturmak için {oTPExpiryDate} sn dolmalıdır.");
-
+                return new DataResult<int>(0, false, $"Yeni kod oluşturmak için {(int)oTPExpiryDate} sn dolmalıdır.");
             }
 
             int otp = RandomPassword.RandomNumberGenerator();
