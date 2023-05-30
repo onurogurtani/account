@@ -1,12 +1,15 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Account.Domain.Dtos.OrganisationDtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
@@ -18,7 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
 {
     public class CreateOrganisationCommand : IRequest<IResult>
     {
-        public Organisation Organisation { get; set; }
+        public AddOrganisationDto Organisation { get; set; }
 
         [MessageClassAttr("Kurum Ekleme")]
         public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisationCommand, IResult>
@@ -27,26 +30,35 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
             private readonly IOrganisationTypeRepository _organisationTypeRepository;
             private readonly IPackageRoleRepository _packageRoleRepository;
             private readonly IMediator _mediator;
+            private readonly IPackageRepository _packageRepository;
+            private readonly IMapper _mapper;
 
-            public CreateOrganisationCommandHandler(IOrganisationRepository organisationRepository, IOrganisationTypeRepository organisationTypeRepository, IPackageRoleRepository packageRoleRepository, IMediator mediator)
+            public CreateOrganisationCommandHandler(IOrganisationRepository organisationRepository, IOrganisationTypeRepository organisationTypeRepository, IPackageRoleRepository packageRoleRepository, IMediator mediator, IPackageRepository packageRepository, IMapper mapper)
             {
                 _organisationRepository = organisationRepository;
                 _organisationTypeRepository = organisationTypeRepository;
                 _packageRoleRepository = packageRoleRepository;
                 _mediator = mediator;
+                _packageRepository = packageRepository;
+                _mapper = mapper;
             }
 
             [MessageConstAttr(MessageCodeType.Error)]
             private static string SameNameAlreadyExist = Messages.SameNameAlreadyExist;
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string PackageIsNotFound = Constants.Messages.PackageIsNotFound;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
-            [SecuredOperation] 
+            [SecuredOperation]
             public async Task<IResult> Handle(CreateOrganisationCommand request, CancellationToken cancellationToken)
             {
                 var organisation = await _organisationRepository.Query().AnyAsync(x => x.Name.Trim().ToLower() == request.Organisation.Name.Trim().ToLower() && x.CrmId == request.Organisation.CrmId);
                 if (organisation)
                     return new ErrorResult(SameNameAlreadyExist.PrepareRedisMessage());
+                var package = await _packageRepository.Query().Where(x => x.Id == request.Organisation.PackageId).FirstOrDefaultAsync();
+                if (package == null)
+                    return new ErrorResult(PackageIsNotFound.PrepareRedisMessage());
 
                 var isSingleOrPluralOrganisation = await _organisationTypeRepository.Query().AnyAsync(x => x.Id == request.Organisation.OrganisationTypeId && x.IsSingularOrganisation);
 
@@ -78,10 +90,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                 {
                     return adminCreateResult;
                 }
-                var record = _organisationRepository.Add(request.Organisation);
+                var record = _mapper.Map<Organisation>(request.Organisation);
+                var entity = _organisationRepository.Add(record);
+                entity.PackageName = package.Name;
                 await _organisationRepository.SaveChangesAsync();
 
-                return new SuccessDataResult<Organisation>(record, SuccessfulOperation.PrepareRedisMessage());
+                return new SuccessDataResult<Organisation>(entity, SuccessfulOperation.PrepareRedisMessage());
             }
         }
     }
