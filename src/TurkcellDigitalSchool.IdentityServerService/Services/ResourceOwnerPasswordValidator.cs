@@ -41,7 +41,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
         private readonly IAppSettingRepository _appSettingRepository;
         private readonly SessionRedisSvc _sessionRedisSvc;
         private readonly string _environment;
-        private readonly LdapConnection _ldapConnection;
+        private LdapConnection _ldapConnection;
         private SearchResponse _ldapSearchResponse;
         private LdapConfig ldapConfig;
         private string userDnInfo;
@@ -97,7 +97,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 //LdapGiriş Kontrol
                 if (isAdminConnectDAP().Result)
                 {
-                    bool isUserLogin = IsUserLoginAuth(context.UserName,context.Password).Result;
+                    bool isUserLogin = IsUserLoginAuth(context.UserName, context.Password).Result;
                     if (isUserLogin)
                     {
                         var user = await _customUserSvc.FindByUserName(context.UserName);
@@ -390,7 +390,6 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
         private Task<bool> isAdminConnectDAP()
         {
-            LdapConnection _ldapConnection = null;
             string host = ldapConfig.Host;
             string portValue = ldapConfig.PortValue;
             string adminUser = ldapConfig.AdminUser;
@@ -436,7 +435,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             return Task.FromResult(true);
         }
 
-        private Task<bool> IsUserLoginAuth(string userName,string userPassword)
+        private Task<bool> IsUserLoginAuth(string userName, string userPassword)
         {
 
             //Kullanıcıya ait dn bilgisi yoksa önce kullanıcı var mı bakılıp dn bilgisinin dolması sağlanır
@@ -449,7 +448,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
         }
 
         //Kullanıcı Giriş Doğrulama
-        private Task<bool> IsUserLoginAuthentication(string userName,string userPassword)
+        private Task<bool> IsUserLoginAuthentication(string userName, string userPassword)
         {
             string host = ldapConfig.Host;
             string portValue = ldapConfig.PortValue;
@@ -468,9 +467,9 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                     connUserLogin.AuthType = AuthType.Basic;
 
                     connUserLogin.SessionOptions.ProtocolVersion = 3;
+                    connUserLogin.SessionOptions.VerifyServerCertificate += delegate { return true; };
 
-                    _ldapConnection.SessionOptions.VerifyServerCertificate += delegate { return true; };
-                    _ldapConnection.SessionOptions.SecureSocketLayer = true;
+                    connUserLogin.SessionOptions.SecureSocketLayer = true;
 
                     connUserLogin.Bind();
                     connUserLogin.Dispose();
@@ -496,7 +495,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 userName = EscapeLdapSearchFilter(userName);
 
                 SearchRequest ldapSearchRequest;
-                ldapSearchRequest = new SearchRequest(ldapConfig.Dn, string.Format($"(&(uid={userName})(objectClass=person)(status=1))"), System.DirectoryServices.Protocols.SearchScope.Subtree, null);                
+                ldapSearchRequest = new SearchRequest(ldapConfig.Dn, string.Format($"(&(uid={userName})(objectClass=person)(status=1))"), System.DirectoryServices.Protocols.SearchScope.Subtree, null);
                 if (_ldapConnection != null)
                 {
 
@@ -506,7 +505,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                         userDnInfo = _ldapSearchResponse.Entries[0].DistinguishedName;
                         return Task.FromResult(true);
                     }
-                }                                
+                }
             }
             catch (Exception ex)
             {
