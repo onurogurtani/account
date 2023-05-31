@@ -92,7 +92,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             //ldap Login
             var ldapUser = _userRepository.GetAsync(u => u.UserName == context.UserName && !u.IsDeleted &&
                        u.Status && u.IsLdapUser);
-            if (ldapUser != null)
+            if (ldapUser.Result != null)
             {
                 //LdapGiriş Kontrol
                 if (isAdminConnectDAP().Result)

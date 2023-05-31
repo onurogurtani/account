@@ -28,6 +28,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             {
                 return false;
             }
+            HashingHelper.CreatePasswordHash(password, out var passwordSalt, out var passwordHash);
+
             var result = HashingHelper.VerifyPasswordHash(password, user.PassSalt, user.PassHash);
             return result;
         }

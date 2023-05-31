@@ -122,8 +122,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                                         Sn = sn,
                                         ObjectClass = objectClass,
                                         UnitName = unitName,
-                                        Status = Int16.Parse(statusAccount) == 1,
-
+                                        Status = true,
                                     };
 
                                     _ldapUserInfoRepository.Add(ldapUserInfo);
@@ -151,7 +150,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                                         MobilePhones = mobile,
                                         PasswordHash = passwordHash,
                                         PasswordSalt = passwordSalt,
-                                        IsLdapUser = true
+                                        IsLdapUser = true,
+                                        Status = true
                                     };
                                     _userRepository.Add(user);
                                     await _userRepository.SaveChangesAsync();
