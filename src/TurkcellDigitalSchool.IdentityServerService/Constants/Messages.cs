@@ -13,5 +13,6 @@
         public static string ClientTanimliDegil = "Sistemde tanımlı client bilgisine ulaşılamadı ! Client Adı : {0}";
         public static string OtpNotCreate = "Otp oluşturulamadı !";
         public static string PasswordChangeLinkSendedEMail = "Şifre yenileme linki e-posta adresine gönderilmiştir.";
+        public static string LdapLoginFail = "Kullanıcı girişi başarısız.";
     }
 }

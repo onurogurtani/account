@@ -35,7 +35,9 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations
             builder.HasIndex(x => x.RelatedIdentity).IsUnique();
 
             builder.HasIndex(x => x.CitizenId).IsUnique();
-            builder.HasIndex(x => x.Email).IsUnique();  
+            builder.HasIndex(x => x.Email).IsUnique();
+
+            builder.Property(x => x.IsLdapUser).IsRequired().HasDefaultValue(false);
         }
     }
 }
