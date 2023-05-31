@@ -26,5 +26,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public virtual ICollection<UserRole> UserRoles { get; set; }
 
         public virtual ICollection<OrganisationUser> OrganisationUsers { get; set; }
+
+        public bool IsLdapUser { get; set; }
     } 
 }

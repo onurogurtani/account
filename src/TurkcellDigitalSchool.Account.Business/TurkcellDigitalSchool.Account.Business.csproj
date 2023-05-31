@@ -26,6 +26,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
     <PackageReference Include="Ocelot" />
+    <PackageReference Include="System.DirectoryServices" />
+    <PackageReference Include="System.DirectoryServices.Protocols" />
     <PackageReference Include="System.ServiceModel.Duplex" />
     <PackageReference Include="System.ServiceModel.Http" />
     <PackageReference Include="System.ServiceModel.NetTcp" />
