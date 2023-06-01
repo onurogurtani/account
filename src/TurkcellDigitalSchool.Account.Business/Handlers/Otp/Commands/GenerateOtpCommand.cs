@@ -43,7 +43,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Otp.Commands
                 {
                     new ErrorDataResult<int>(otpCode.Data, Messages.UserNotFound);
                 }
-                await _smsOtpRepository.Send(user.MobilePhones, $"Şifreniz: {otpCode.Data}");
+                await _smsOtpRepository.Send(user.MobilePhones, $"Tek Kullanımlık Şifreniz : {otpCode.Data}");
                 return new SuccessDataResult<int>(otpCode.Data,otpCode.Message);
             }
 
