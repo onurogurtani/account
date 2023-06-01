@@ -1,15 +1,19 @@
 using System.Diagnostics.CodeAnalysis;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Handlers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Requests;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageLessons.Queries
 {
     [ExcludeFromCodeCoverage]
+    [SecuredOperation]
+    [LogScope]
     public class GetPackageLessonQuery : QueryByIdRequestBase<PackageLesson>
     {
-        public class GetPackageLessonQueryHandler : QueryByIdRequestHandlerBase<PackageLesson>
+        public class GetPackageLessonQueryHandler : QueryByIdBase<PackageLesson, GetPackageLessonQuery>
         {
             public GetPackageLessonQueryHandler(IPackageLessonRepository packageLessonRepository) : base(packageLessonRepository)
             {

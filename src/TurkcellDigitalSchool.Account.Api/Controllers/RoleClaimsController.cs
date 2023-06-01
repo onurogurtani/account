@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using TurkcellDigitalSchool.Account.Business.Handlers.RoleClaims.Commands;
+using TurkcellDigitalSchool.Account.Business.Handlers.RoleClaims.Queries;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Controllers;
 
@@ -9,7 +11,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class RoleClaimsController : BaseCrudController<RoleClaim>
+    public class RoleClaimsController : BaseCrud2Controller<RoleClaim, GetRoleClaimsQuery, GetRoleClaimQuery, CreateRoleClaimCommand, UpdateRoleClaimCommand, DeleteRoleClaimCommand>
     {
     }
 }

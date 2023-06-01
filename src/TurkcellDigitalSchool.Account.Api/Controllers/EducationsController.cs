@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TurkcellDigitalSchool.Account.Business.Handlers.Educations.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Educations.Queries;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Controllers;
@@ -13,9 +14,8 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class EducationsController : BaseCrudController<Education>
-    {
-
+    public class EducationsController : BaseCrud2Controller<Education, GetEducationsQuery, GetEducationQuery, CreateEducationCommand, UpdateEducationCommand, DeleteEducationCommand>
+    { 
         ///<summary>
         ///Get By User Id Education
         ///</summary>

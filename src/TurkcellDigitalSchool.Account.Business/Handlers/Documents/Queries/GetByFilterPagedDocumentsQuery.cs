@@ -20,6 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
     ///</summary>
     ///<remarks>OrderBy default "IdDESC" also can be "RecordStatusASC","RecordStatusDESC","ContractKindASC","ContractKindDESC","ContractTypeASC","ContractTypeDESC","ContentASC","ContentDESC","VersionASC","VersionDESC","ValidStartDateASC","ValidStartDateDESC","ValidEndDateASC","ValidEndDateDESC","IdASC","IdDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC"  </remarks>
     [LogScope]
+    [SecuredOperation]
     public class GetByFilterPagedDocumentsQuery : IRequest<IDataResult<PagedList<DocumentDto>>>
     {
         public DocumentDetailSearch DocumentDetailSearch { get; set; } = new DocumentDetailSearch();
@@ -37,8 +38,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
                 _userRepository = userRepository;
             } 
              
-            [SecuredOperation]
-            public virtual async Task<IDataResult<PagedList<DocumentDto>>> Handle(GetByFilterPagedDocumentsQuery request, CancellationToken cancellationToken)
+
+            public  async Task<IDataResult<PagedList<DocumentDto>>> Handle(GetByFilterPagedDocumentsQuery request, CancellationToken cancellationToken)
             {
                 var query = _documentRepository.Query()
                    .Include(x => x.ContractTypes).ThenInclude(x => x.ContractType)

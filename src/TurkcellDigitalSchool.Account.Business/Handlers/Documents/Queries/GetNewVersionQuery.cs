@@ -16,6 +16,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
     /// Get New Versiyon No
     /// </summary>
     [ExcludeFromCodeCoverage]
+    [SecuredOperation]
     [LogScope]
     public class GetNewVersionQuery : IRequest<IDataResult<DocumentVersionDto>>
     {
@@ -30,8 +31,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
                 _documentRepository = documentRepository;
             }
              
-            [SecuredOperation]
-            public virtual async Task<IDataResult<DocumentVersionDto>> Handle(GetNewVersionQuery request, CancellationToken cancellationToken)
+  
+            public async Task<IDataResult<DocumentVersionDto>> Handle(GetNewVersionQuery request, CancellationToken cancellationToken)
             {
                 var lastVersion = _documentRepository.Query()
                   .OrderBy(x => x.Version)

@@ -1,15 +1,19 @@
 using System.Diagnostics.CodeAnalysis;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Handlers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Requests;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.UserRoles.Commands
 {
     [ExcludeFromCodeCoverage]
+    [SecuredOperation]
+    [LogScope]
     public class UpdateUserRoleCommand : UpdateRequestBase<UserRole>
     {
-        public class UpdateUserRoleCommandHandler : UpdateRequestHandlerBase<UserRole>
+        public class UpdateUserRoleCommandHandler : UpdateHandlerBase<UserRole, UpdateUserRoleCommand>
         {
             public UpdateUserRoleCommandHandler(IUserRoleRepository userRoleRepository) : base(userRoleRepository)
             {

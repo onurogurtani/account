@@ -16,10 +16,8 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : BaseCrudController<User>
-    {
-
-
+    public class UsersController : BaseCrud2Controller<User, GetUsersQuery, GetUserQuery, CreateUserCommand, UpdateUserCommand, DeleteUserCommand>
+    { 
         ///<summary>
         /// Update  user information
         ///</summary>

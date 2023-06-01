@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using TurkcellDigitalSchool.Account.Business.Handlers.InstitutionTypes.Commands;
+using TurkcellDigitalSchool.Account.Business.Handlers.InstitutionTypes.Queries;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Controllers;
 
@@ -9,7 +11,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class InstitutionTypesController : BaseCrudController<InstitutionType>
+    public class InstitutionTypesController : BaseCrud2Controller<InstitutionType, GetInstitutionTypesQuery, GetInstitutionTypeQuery, CreateInstitutionTypeCommand, UpdateInstitutionTypeCommand, DeleteInstitutionTypeCommand>
     {
     }
 }

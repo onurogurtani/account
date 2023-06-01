@@ -14,6 +14,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
     /// <summary>
     /// Copy Document
     /// </summary>
+
+    [SecuredOperation]
     public class CopyDocumentCommand : IRequest<IResult>
     {
         public long Id { get; set; }
@@ -31,7 +33,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
                 _documentContractTypeRepository = documentContractTypeRepository;
             }
 
-            [SecuredOperation]
+          
 
             public async Task<IResult> Handle(CopyDocumentCommand request, CancellationToken cancellationToken)
             {

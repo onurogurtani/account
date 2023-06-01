@@ -5,6 +5,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
@@ -12,30 +13,31 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
     /// <summary>
     /// Update WorkPlan
     /// </summary>
+    [SecuredOperation]
+    [LogScope]
     public class UpdateDocumentCommand : IRequest<IResult>
     {
         public Document Entity { get; set; }
 
         public class UpdateDocumentCommandHandler : IRequestHandler<UpdateDocumentCommand, IResult>
         {
-            private readonly IDocumentRepository  _documentRepository;
+            private readonly IDocumentRepository _documentRepository;
             private readonly IDocumentContractTypeRepository _documentContractTypeRepository;
 
-            public UpdateDocumentCommandHandler(IDocumentRepository  documentRepository, IDocumentContractTypeRepository documentContractTypeRepository)
+            public UpdateDocumentCommandHandler(IDocumentRepository documentRepository, IDocumentContractTypeRepository documentContractTypeRepository)
             {
-                _documentRepository =  documentRepository;
+                _documentRepository = documentRepository;
                 _documentContractTypeRepository = documentContractTypeRepository;
             }
 
-            [SecuredOperation]
- 
+        
             public async Task<IResult> Handle(UpdateDocumentCommand request, CancellationToken cancellationToken)
             {
                 var entity = await _documentRepository.GetAsync(x => x.Id == request.Entity.Id);
                 if (entity == null)
                     return new ErrorResult(Messages.RecordDoesNotExist);
 
-                var  contractTypes = await _documentContractTypeRepository.GetListAsync(x => x.DocumentId == request.Entity.Id);
+                var contractTypes = await _documentContractTypeRepository.GetListAsync(x => x.DocumentId == request.Entity.Id);
                 _documentContractTypeRepository.DeleteRange(contractTypes);
 
 
@@ -51,7 +53,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
 
 
 
-            var record = _documentRepository.Update(entity);
+                var record = _documentRepository.Update(entity);
                 await _documentRepository.SaveChangesAsync();
                 return new SuccessDataResult<Document>(record, Messages.SuccessfulOperation);
             }

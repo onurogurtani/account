@@ -12,11 +12,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
     [SecuredOperation]
     [LogScope]
 
-    public class GetUserQuery : QueryByIdRequestBase<User>
+    public class GetUsersQuery : QueryByFilterRequestBase<User>
     {
-        public class GetUserQueryHandler : QueryByIdBase<User, GetUserQuery>
+        public class GetUsersQueryHandler : QueryByFilterBase<User, GetUsersQuery>
         {
-            public GetUserQueryHandler(IUserRepository repository) : base(repository)
+            public GetUsersQueryHandler(IUserRepository repository) : base(repository)
             {
             }
         }

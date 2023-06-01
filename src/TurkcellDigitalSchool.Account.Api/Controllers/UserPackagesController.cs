@@ -7,6 +7,7 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Controllers;
 using TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries;
 using System.Collections.Generic;
+using TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Commands;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
 {
@@ -15,7 +16,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class UserPackagesController : BaseCrudController<UserPackage>
+    public class UserPackagesController : BaseCrud2Controller<UserPackage, GetUserPackagesQuery, GetUserPackageQuery, CreateUserPackageCommand, UpdateUserPackageCommand, DeleteUserPackageCommand>
     {
 
         ///<summary>

@@ -8,6 +8,8 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.Controllers;
+using TurkcellDigitalSchool.Core.Entities;
+using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
@@ -17,7 +19,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class DocumentsController : BaseCrudController<Document>
+    public class DocumentsController   : BaseApiController
     {
 
         ///<summary>
@@ -80,8 +82,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         }
 
 
-     
-           ///<summary>
+        ///<summary>
         ///Get By with relation data Document 
         ///</summary>
         ///<return>List TEntitys</return>
@@ -113,6 +114,68 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         public async Task<IActionResult> GetByFilterPagedDocuments([FromQuery] GetByFilterPagedDocumentsQuery query, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(query, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+
+        /// <summary>
+        /// Delete TEntity.
+        /// </summary>
+        /// <returns></returns>
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpDelete]
+        public async Task<IActionResult> Delete(long id, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(new DeleteDocumentCommand { Id = id }, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost]
+        public async Task<IActionResult> Add([FromBody] CreateDocumentCommand createTEntity, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(createTEntity, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEntityDefault))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpGet("getbyid")]
+        public async Task<IActionResult> GetById(long id, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(new GetDocumentQuery { Id = id }, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<IEntity>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("getList")]
+        public async Task<IActionResult> GetList([FromQuery] PaginationQuery query, CancellationToken cancellationToken, [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] FilterQuery[] filterQuery = null)
+
+        {
+            var result = await Mediator.Send(new GetDocumentsQuery { PaginationQuery = query, FilterQuery = filterQuery }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);

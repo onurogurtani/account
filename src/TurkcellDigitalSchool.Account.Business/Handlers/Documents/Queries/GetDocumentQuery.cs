@@ -18,6 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
     /// Get DocumentDto
     /// </summary>
     [LogScope]
+    [SecuredOperation]
     public class GetDocumentQuery : IRequest<IDataResult<DocumentDto>>
     {
         public long Id { get; set; }
@@ -35,10 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
                 _userRepository = userRepository;
                 _mapper = mapper;
             }
-
-
-            [CacheRemoveAspect("Get")] 
-            [SecuredOperation]
+ 
             public virtual async Task<IDataResult<DocumentDto>> Handle(GetDocumentQuery request, CancellationToken cancellationToken)
             {
                 var query = _documentRepository.Query()
@@ -61,10 +59,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
                     dto.InsertUserFullName = _userRepository.Get(x => x.Id == (long)dto.InsertUserId)?.NameSurname;
 
 
-                return new SuccessDataResult<DocumentDto>(dto, Messages.Deleted);
-
+                return new SuccessDataResult<DocumentDto>(dto, Messages.Deleted); 
             }
-        }
-
+        } 
     }
 }

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TurkcellDigitalSchool.Account.Business.Handlers.Parents.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Parents.Queries;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
@@ -16,7 +17,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class ParentsController : BaseCrudController<Parent>
+    public class ParentsController : BaseCrud2Controller<Parent, GetParentsQuery, GetParentQuery, CreateParentCommand, UpdateParentCommand, DeleteParentCommand>
     {
         ///<summary>
         ///Get ByStudentUserId Parent
