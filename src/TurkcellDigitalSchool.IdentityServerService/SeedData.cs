@@ -1,5 +1,6 @@
 ﻿using Duende.IdentityServer.EntityFramework.DbContexts;
-using Duende.IdentityServer.EntityFramework.Mappers; 
+using Duende.IdentityServer.EntityFramework.Mappers;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -21,15 +22,20 @@ namespace TurkcellDigitalSchool.IdentityServerService
 
                 if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "DEVTURKCELL")
                 {
-                    scope.ServiceProvider.GetService<PersistedGrantDbContext>().Database.Migrate();
+                    using (var data =scope.ServiceProvider.GetService<PersistedGrantDbContext>())
+                    {
+                        data.Database.Migrate();
+                    } 
                 }
 
-                var context = scope.ServiceProvider.GetService<ConfigurationDbContext>();
-                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "DEVTURKCELL")
+                using (var context = scope.ServiceProvider.GetService<ConfigurationDbContext>())
                 {
-                    context.Database.Migrate();
-                }
-                EnsureSeedData(context);
+                    if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "DEVTURKCELL")
+                    {
+                        context.Database.Migrate();
+                    }
+                    EnsureSeedData(context);
+                } 
             }
         }
 

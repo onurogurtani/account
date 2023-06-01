@@ -20,7 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageHandler.Command
     {
         public List<ConstantMessageDtos> ConstantMessageDtos { get; set; }
 
-        [MessageClassAttr("Message Oluþturma")]
+        [MessageClassAttr("Message Oluþturma")] 
         public class CreateMessageCommandHandler : IRequestHandler<CreateMessageCommand, IResult>
         {
             private readonly IMessageRepository _messageRepository;

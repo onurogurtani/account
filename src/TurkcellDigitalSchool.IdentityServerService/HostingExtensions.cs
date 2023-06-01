@@ -55,8 +55,9 @@ namespace TurkcellDigitalSchool.IdentityServerService
             builder.Services.Configure<RedisConfig>(builder.Configuration.GetSection("RedisConfig"));
             builder.Services.AddSingleton<IRedisConnectionFactory, RedisConnectionFactory>();
             builder.Services.AddSingleton<SessionRedisSvc>();
+            builder.Services.AddSingleton<HandlerCacheRedisSvc>();
 
- 
+
 
             var capConfig = builder.Configuration.GetSection("CapConfig").Get<CapConfig>();
             builder.Services.AddCap(options =>

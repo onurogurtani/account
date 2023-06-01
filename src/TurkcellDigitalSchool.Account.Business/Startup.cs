@@ -93,6 +93,7 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LogBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CacheBehavior<,>)); 
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
 
             services.AddMediatR(typeof(BusinessStartup).GetTypeInfo().Assembly);
@@ -101,6 +102,7 @@ namespace TurkcellDigitalSchool.Account.Business
             services.Configure<RedisConfig>(Configuration.GetSection("RedisConfig"));
             services.AddSingleton<IRedisConnectionFactory, RedisConnectionFactory>();
             services.AddSingleton<SessionRedisSvc>();
+            services.AddSingleton<HandlerCacheRedisSvc>();
 
             services.AddTransient<ICustomMessgeHelperService, CustomMessgeHelperService>();
             services.AddSubServices();
