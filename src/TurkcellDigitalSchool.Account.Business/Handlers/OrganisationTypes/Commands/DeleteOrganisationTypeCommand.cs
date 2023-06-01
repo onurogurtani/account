@@ -28,13 +28,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationTypes.Comm
             [MessageConstAttr(MessageCodeType.Error)]
             private static string CanNotChangeForRelationOrganisation = Constants.Messages.CanNotChangeForRelationOrganisation;
 
-            public override async Task<IDataResult<OrganisationType>> Handle(DeleteRequestBase<OrganisationType> request, CancellationToken cancellationToken)
+            public override async Task<DataResult<OrganisationType>> Handle(DeleteRequestBase<OrganisationType> request, CancellationToken cancellationToken)
             {
                 if (await _organisationRepository.Query().AnyAsync(x => x.OrganisationTypeId == request.Id))
                 {
                     return new ErrorDataResult<OrganisationType>(CanNotChangeForRelationOrganisation.PrepareRedisMessage());
                 }
-                return (IDataResult<OrganisationType>)base.Handle(request, cancellationToken);
+                return  await  base.Handle(request, cancellationToken);
             }
         }
     }

@@ -5,7 +5,6 @@ using System.Threading;
 using TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Controllers;
-using TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries;
 using System.Collections.Generic;
 using TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Commands;
 
