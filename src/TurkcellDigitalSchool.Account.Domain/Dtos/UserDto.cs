@@ -14,7 +14,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public bool Status { get; set; }
         public bool? ViewMyData { get; set; }
         public DateTime? LastLoginDate { get; set; }
-        public ExamType? ExamType { get; set; }
+        public ExamKind? ExamKind { get; set; }
         public UserType UserType { get; set; }
         public bool? IsPackageBuyer { get; set; } = false;
         public RegisterStatus RegisterStatus { get; set; }

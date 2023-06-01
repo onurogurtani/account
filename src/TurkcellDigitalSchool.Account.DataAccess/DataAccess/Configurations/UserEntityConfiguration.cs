@@ -8,7 +8,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(x => x.Id); 
+            builder.HasKey(x => x.Id);
             builder.Property(x => x.Name).HasMaxLength(100);
             builder.Property(x => x.SurName).HasMaxLength(100);
             builder.Property(x => x.NameSurname).HasMaxLength(100);
@@ -28,12 +28,12 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations
             builder.Property(x => x.RemindLater);
             builder.Property(x => x.ViewMyData);
             builder.Property(x => x.FailLoginCount).IsRequired(false);
+            builder.Property(x => x.ExamKind).IsRequired(false);
 
             builder.HasIndex(x => x.CitizenId);
             builder.HasIndex(x => x.MobilePhones);
 
             builder.HasIndex(x => x.RelatedIdentity).IsUnique();
-
             builder.HasIndex(x => x.CitizenId).IsUnique();
             builder.HasIndex(x => x.Email).IsUnique();
 

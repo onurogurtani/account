@@ -5,7 +5,7 @@ using TurkcellDigitalSchool.Core.Enums;
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
-    public class User : UserDto , IPublishEntity
+    public class User : UserDto, IPublishEntity
     {
         /// <summary>
         /// This is required when encoding token. Not in db. The default is Person.
@@ -20,7 +20,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public string OAuthOpenIdConnectToken { get; set; }
 
         public RegisterStatus RegisterStatus { get; set; }
-        public ExamType? ExamType { get; set; }
+        public ExamKind? ExamKind { get; set; }
         public UserType UserType { get; set; }
         public int? FailLoginCount { get; set; }
         public int? FailOtpCount { get; set; }
@@ -29,5 +29,5 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public virtual ICollection<OrganisationUser> OrganisationUsers { get; set; }
 
         public bool IsLdapUser { get; set; }
-    } 
+    }
 }

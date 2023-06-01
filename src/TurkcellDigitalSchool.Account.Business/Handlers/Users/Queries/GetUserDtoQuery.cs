@@ -47,7 +47,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                                    MobilePhones = u.MobilePhones,
                                    Status = u.Status,
                                    SurName = u.SurName,
-                                   ExamType = u.ExamType,
+                                   ExamKind = u.ExamKind,
                                    UserType = u.UserType,
                                    ViewMyData = u.ViewMyData,
                                    IsPackageBuyer = pj.Id > 0,

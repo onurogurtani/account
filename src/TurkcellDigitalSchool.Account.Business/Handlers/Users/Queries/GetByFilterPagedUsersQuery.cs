@@ -1,17 +1,13 @@
 using AutoMapper;
 using MediatR;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
@@ -40,7 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                 _accountDbContext = accountDbContext;
             }
 
-           
+
             [SecuredOperation]
             public virtual async Task<IDataResult<PagedList<UserDto>>> Handle(GetByFilterPagedUsersQuery request, CancellationToken cancellationToken)
             {
@@ -54,7 +50,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                                  MobilePhones = u.MobilePhones,
                                  Status = u.Status,
                                  SurName = u.SurName,
-                                 ExamType = u.ExamType,
+                                 ExamKind = u.ExamKind,
                                  UserType = u.UserType,
                                  ViewMyData = u.ViewMyData,
                                  IsPackageBuyer = (_accountDbContext.UserPackages.Any(w => w.UserId == u.Id)),
