@@ -19,7 +19,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous]
-    public class AdminUsersController : BaseCrudController<User>
+    public class AdminUsersController : BaseApiController 
     {
 
         /// <summary>

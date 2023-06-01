@@ -18,7 +18,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class AppSettingsController : BaseCrudController<AppSetting>
+    public class AppSettingsController : BaseCrud2Controller<AppSetting, GetAppSettingsQuery, GetAppSettingQuery,CreateAppSettingCommand,UpdateAppSettingCommand,DeleteAppSettingCommand>
     {
 
         /// <summary>

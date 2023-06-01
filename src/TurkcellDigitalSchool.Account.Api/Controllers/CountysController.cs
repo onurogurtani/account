@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using TurkcellDigitalSchool.Account.Business.Handlers.Countrys.Queries;
+using TurkcellDigitalSchool.Account.Business.Handlers.Countys.Commands;
+using TurkcellDigitalSchool.Account.Business.Handlers.Countys.Queries;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Controllers;
 
@@ -9,7 +12,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class CountysController : BaseCrudController<County>
+    public class CountysController : BaseCrud2Controller<County,GetCountysQuery,GetCountyQuery, CreateCountyCommand, UpdateCountyCommand, DeleteCountyCommand>
     {
     }
 }
