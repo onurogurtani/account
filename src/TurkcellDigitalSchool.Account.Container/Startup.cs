@@ -14,9 +14,11 @@ using Microsoft.Extensions.Hosting;
 using ServiceStack;
 using TurkcellDigitalSchool.Account.Business;
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
+using TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands;
 using TurkcellDigitalSchool.Account.Business.Jobs;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts; 
 using TurkcellDigitalSchool.Common.Middleware;
+using TurkcellDigitalSchool.Core.ApiDoc;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.Enums;
@@ -128,7 +130,11 @@ namespace TurkcellDigitalSchool.Account.Container
 
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "Kg Teknoloji"); });
             app.UseCors("AllowOrigin");
-
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new HangifreAuthorizationFilter() }
+            });
+            RunHangFireJobs();
             //app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -158,6 +164,9 @@ namespace TurkcellDigitalSchool.Account.Container
 
         public static void RunHangFireJobs()
         {
+            RecurringJob.AddOrUpdate<HangfireJobSender>("Get_Ldap_Learnup_Users_Routine",
+            job => job.Send(new LdapUserInfoCommand()), Cron.Daily());
+
             RecurringJob.AddOrUpdate<HangfireJobSender>(" LongTimeNotLogin_Notification_Routine",
                 job => job.Send(new LongTimeNotLoginNotificationCommand()), Cron.DayInterval(10));
 

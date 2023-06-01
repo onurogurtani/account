@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
@@ -11,9 +12,10 @@ using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
 {
     [DbContext(typeof(AccountDbContext))]
-    partial class AccountDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230530204924_user_examType_added")]
+    partial class user_examType_added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -717,93 +719,6 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasName("pk_institutiontype");
 
                     b.ToTable("institutiontype", (string)null);
-                });
-
-            modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.LdapUserInfo", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("BirthDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("birthdate");
-
-                    b.Property<string>("DivisionGroupName")
-                        .HasColumnType("text")
-                        .HasColumnName("divisiongroupname");
-
-                    b.Property<string>("FullName")
-                        .HasColumnType("text")
-                        .HasColumnName("fullname");
-
-                    b.Property<string>("Group")
-                        .HasColumnType("text")
-                        .HasColumnName("group");
-
-                    b.Property<DateTime>("InsertTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("inserttime");
-
-                    b.Property<long?>("InsertUserId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("insertuserid");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("isdeleted");
-
-                    b.Property<string>("Mail")
-                        .HasColumnType("text")
-                        .HasColumnName("mail");
-
-                    b.Property<string>("ManagerName")
-                        .HasColumnType("text")
-                        .HasColumnName("managername");
-
-                    b.Property<string>("Mobile")
-                        .HasColumnType("text")
-                        .HasColumnName("mobile");
-
-                    b.Property<string>("ObjectClass")
-                        .HasColumnType("text")
-                        .HasColumnName("objectclass");
-
-                    b.Property<string>("PositionName")
-                        .HasColumnType("text")
-                        .HasColumnName("positionname");
-
-                    b.Property<string>("Sn")
-                        .HasColumnType("text")
-                        .HasColumnName("sn");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("boolean")
-                        .HasColumnName("status");
-
-                    b.Property<string>("UId")
-                        .HasColumnType("text")
-                        .HasColumnName("uid");
-
-                    b.Property<string>("UnitName")
-                        .HasColumnType("text")
-                        .HasColumnName("unitname");
-
-                    b.Property<DateTime?>("UpdateTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updatetime");
-
-                    b.Property<long?>("UpdateUserId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("updateuserid");
-
-                    b.HasKey("Id")
-                        .HasName("pk_ldapuserinfo");
-
-                    b.ToTable("ldapuserinfo", (string)null);
                 });
 
             modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.LoginFailCounter", b =>
@@ -3586,12 +3501,6 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean")
                         .HasColumnName("isdeleted");
-
-                    b.Property<bool>("IsLdapUser")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false)
-                        .HasColumnName("isldapuser");
 
                     b.Property<long?>("LastMobileSessionId")
                         .HasColumnType("bigint")

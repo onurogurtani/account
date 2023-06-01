@@ -34,6 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
         Mock<IOrganisationRepository> _organisationRepository;
         Mock<IOrganisationTypeRepository> _organisationTypeRepository;
         Mock<IPackageRoleRepository> _packageRoleRepository;
+        Mock<IPackageRepository> _packageRepository;
 
         Mock<IHeaderDictionary> _headerDictionary;
         Mock<HttpRequest> _httpRequest;
@@ -65,9 +66,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
             _organisationRepository = new Mock<IOrganisationRepository>();
             _organisationTypeRepository = new Mock<IOrganisationTypeRepository>();
             _packageRoleRepository = new Mock<IPackageRoleRepository>();
+            _packageRepository = new Mock<IPackageRepository>();
 
             _createOrganisationCommand = new CreateOrganisationCommand();
-            _createOrganisationCommandHandler = new(_organisationRepository.Object, _organisationTypeRepository.Object, _packageRoleRepository.Object, _mediator.Object);
+            _createOrganisationCommandHandler = new(_organisationRepository.Object, _organisationTypeRepository.Object, _packageRoleRepository.Object, _mediator.Object, _packageRepository.Object, _mapper.Object);
         }
 
         [Test]
@@ -77,12 +79,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
             {
                 Organisation = new()
                 {
-                    Id = 0,
-                    Code = "Test",
                     Name = "Test",
-                    InsertTime = DateTime.Now,
-                    RecordStatus = RecordStatus.Active,
-                    PackageName = "Test",
                     VirtualMeetingRoomQuota = 1,
                     VirtualTrainingRoomQuota = 1,
                     OrganisationWebSite = "Test",
@@ -143,7 +140,6 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
             {
                 Organisation = new()
                 {
-                    Id = 1,
                     Name = "Name",
                     CrmId = 1,
                 },

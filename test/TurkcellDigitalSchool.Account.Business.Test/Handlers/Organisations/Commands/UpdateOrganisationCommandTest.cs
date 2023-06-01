@@ -17,6 +17,7 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Account.Domain.Dtos.OrganisationDtos;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
@@ -36,6 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
         Mock<IOrganisationTypeRepository> _organisationTypeRepository;
         Mock<IPackageRoleRepository> _packageRoleRepository;
         Mock<IUserRepository> _userRepository;
+        Mock<IPackageRepository> _packageRepository;
 
         Mock<IHeaderDictionary> _headerDictionary;
         Mock<HttpRequest> _httpRequest;
@@ -70,9 +72,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
             _packageRoleRepository = new Mock<IPackageRoleRepository>();
             _userRepository = new Mock<IUserRepository>();
             _capPublisher = new Mock<ICapPublisher>();
+            _packageRepository = new Mock<IPackageRepository>();
 
             _UpdateOrganisationCommand = new UpdateOrganisationCommand();
-            _UpdateOrganisationCommandHandler = new(_organisationRepository.Object, _organisationTypeRepository.Object, _mapper.Object, _packageRoleRepository.Object, _userRepository.Object, _mediator.Object, _capPublisher.Object);
+            _UpdateOrganisationCommandHandler = new(_organisationRepository.Object, _organisationTypeRepository.Object, _mapper.Object, _packageRoleRepository.Object, _userRepository.Object, _mediator.Object, _capPublisher.Object, _packageRepository.Object);
         }
 
         [Test]
@@ -83,10 +86,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
                 Organisation = new()
                 {
                     Id = 1,
-                    Code = "Test",
                     Name = "Test",
-                    InsertTime = DateTime.Now,
-                    RecordStatus = RecordStatus.Active,
                 }
             };
 
@@ -127,6 +127,12 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
                 }
             };
 
+            var fakeEntity = new Organisation()
+            {
+                Id = 0,
+                Name = _UpdateOrganisationCommand.Organisation.Name,
+            };
+
             _mediator.Setup(x => x.Send(It.IsAny<UpdateAdminCommand>(), CancellationToken.None)).ReturnsAsync(new SuccessResult());
 
             _organisationTypeRepository.Setup(x => x.Query()).Returns(organisationTypes.AsQueryable().BuildMock());
@@ -138,8 +144,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
             _userRepository.Setup(x => x.Query()).Returns(users.AsQueryable().BuildMock());
             _userRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<User, bool>>>())).ReturnsAsync(users.First());
 
-            _organisationRepository.Setup(x => x.Query()).Returns(organisations.AsQueryable().BuildMock());
-            _organisationRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<Organisation, bool>>>())).ReturnsAsync(_UpdateOrganisationCommand.Organisation);
+            //_organisationRepository.Setup(x => x.Query()).Returns(organisations.AsQueryable().BuildMock());
+            //_organisationRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<UpdateOrganisationDto, bool>>>())).ReturnsAsync(_UpdateOrganisationCommand.Organisation);
+            _mapper.Setup(x => x.Map<Organisation>(It.IsAny<object>())).Returns(fakeEntity);
+
             _organisationRepository.Setup(x => x.Update(It.IsAny<Organisation>())).Returns(new Organisation());
 
             var result = await _UpdateOrganisationCommandHandler.Handle(_UpdateOrganisationCommand, CancellationToken.None);
@@ -155,10 +163,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
                 Organisation = new()
                 {
                     Id = 1,
-                    Code = "Test",
                     Name = "Test",
-                    InsertTime = DateTime.Now,
-                    RecordStatus = RecordStatus.Active,
                     CrmId = 1,
                 }
             };
@@ -168,8 +173,15 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
                 new Organisation{Id = 2, Name = "Test", CrmId = 1 }
             };
 
-            _organisationRepository.Setup(x => x.Query()).Returns(organisations.AsQueryable().BuildMock());
-            _organisationRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<Organisation, bool>>>())).ReturnsAsync(_UpdateOrganisationCommand.Organisation);
+            var fakeEntity = new Organisation()
+            {
+                Id = 0,
+                Name = _UpdateOrganisationCommand.Organisation.Name,
+            };
+
+            //_organisationRepository.Setup(x => x.Query()).Returns(organisations.AsQueryable().BuildMock());
+            //_organisationRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<Organisation, bool>>>())).ReturnsAsync(_UpdateOrganisationCommand.Organisation);
+            _mapper.Setup(x => x.Map<Organisation>(It.IsAny<object>())).Returns(fakeEntity);
             _organisationRepository.Setup(x => x.Update(It.IsAny<Organisation>())).Returns(new Organisation());
 
             var result = await _UpdateOrganisationCommandHandler.Handle(_UpdateOrganisationCommand, CancellationToken.None);

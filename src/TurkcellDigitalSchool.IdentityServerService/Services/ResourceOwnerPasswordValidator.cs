@@ -1,4 +1,7 @@
-﻿using System.Security.Claims;
+﻿using System.DirectoryServices.Protocols;
+using System.Net;
+using System.Security.Claims;
+using System.Text;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Validation;
 using IdentityModel;
@@ -18,6 +21,7 @@ using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 using TurkcellDigitalSchool.IdentityServerService.Constants;
 using TurkcellDigitalSchool.IdentityServerService.Services.Contract;
 using TurkcellDigitalSchool.IdentityServerService.Services.Model;
+using static TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands.LdapUserInfoCommand.LdapUserInfoCommandHandler;
 
 namespace TurkcellDigitalSchool.IdentityServerService.Services
 {
@@ -27,6 +31,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
         private readonly ILoginFailCounterRepository _loginFailCounterRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserSessionRepository _userSessionRepository;
+        private readonly IUserRepository _userRepository;
         private readonly ICaptchaManager _captchaManager;
         private readonly IMobileLoginRepository _mobileLoginRepository;
         private readonly ISmsOtpRepository _smsOtpRepository;
@@ -36,15 +41,19 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
         private readonly IAppSettingRepository _appSettingRepository;
         private readonly SessionRedisSvc _sessionRedisSvc;
         private readonly string _environment;
-
+        private LdapConnection _ldapConnection;
+        private SearchResponse _ldapSearchResponse;
+        private LdapConfig ldapConfig;
+        private string userDnInfo;
         public ResourceOwnerPasswordValidator(ICustomUserSvc customUserSvc, IHttpContextAccessor httpContextAccessor,
             IUserSessionRepository userSessionRepository, IMobileLoginRepository mobileLoginRepository, ISmsOtpRepository smsOtpRepository,
-            ILoginFailCounterRepository loginFailCounterRepository, ICaptchaManager captchaManager, IMailService mailService,
+            ILoginFailCounterRepository loginFailCounterRepository, ICaptchaManager captchaManager, IMailService mailService, IUserRepository userRepository,
             IConfiguration configuration, ILoginFailForgetPassSendLinkRepository loginFailForgetPassSendLinkRepository, IAppSettingRepository appSettingRepository, SessionRedisSvc sessionRedisSvc)
         {
             _customUserSvc = customUserSvc;
             _httpContextAccessor = httpContextAccessor;
             _userSessionRepository = userSessionRepository;
+            _userRepository = userRepository;
             _mobileLoginRepository = mobileLoginRepository;
             _smsOtpRepository = smsOtpRepository;
             _loginFailCounterRepository = loginFailCounterRepository;
@@ -55,6 +64,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             _environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             _appSettingRepository = appSettingRepository;
             _sessionRedisSvc = sessionRedisSvc;
+            ldapConfig = _configuration.GetSection("LdapConfig").Get<LdapConfig>();
         }
 
         private const string CapthcaShowRequestText = "IsCapthcaShow";
@@ -79,7 +89,30 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 return;
             }
 
+            //ldap Login
+            var ldapUser = _userRepository.GetAsync(u => u.UserName == context.UserName && !u.IsDeleted &&
+                       u.Status && u.IsLdapUser);
+            if (ldapUser.Result != null)
+            {
+                //LdapGiriş Kontrol
+                if (isAdminConnectDAP().Result)
+                {
+                    bool isUserLogin = IsUserLoginAuth(context.UserName, context.Password).Result;
+                    if (isUserLogin)
+                    {
+                        var user = await _customUserSvc.FindByUserName(context.UserName);
+                        await LoginSuccessProcess(context, 0, csrf_token, user);
+                        return;
+                    }
+                    else
+                    {
+                        context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
+                        Messages.LdapLoginFail);
+                        return;
+                    }
+                }
 
+            }
             var errorCount = await _loginFailCounterRepository.GetCsrfTokenFailLoginCount(csrf_token);
 
             if (errorCount >= 3 && errorCount < 5)
@@ -309,7 +342,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             //  await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
             // SMS servisi
             await _smsOtpRepository.Send(cellPhone, $"Şifreniz: {otp.ToString()}");
-            
+
 
 
             date = DateTime.Now;
@@ -354,5 +387,178 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 Content = content
             });
         }
+
+        private Task<bool> isAdminConnectDAP()
+        {
+            string host = ldapConfig.Host;
+            string portValue = ldapConfig.PortValue;
+            string adminUser = ldapConfig.AdminUser;
+            string adminPass = ldapConfig.AdminPass;
+            string ldapSecurityMethod = ldapConfig.PortValue;
+
+            try
+            {
+                //LDAP Parametre validasyon kontrolü
+                if (IsUserValidation().Result)
+                {
+                    int port = int.Parse(portValue);
+                    _ldapConnection = new LdapConnection(host + ":" + port);
+
+                    NetworkCredential authAdmin = new NetworkCredential(adminUser, adminPass);
+                    _ldapConnection.Credential = authAdmin;
+                    _ldapConnection.AuthType = AuthType.Basic;
+                    _ldapConnection.SessionOptions.ProtocolVersion = 3;
+
+                    _ldapConnection.SessionOptions.VerifyServerCertificate += delegate { return true; };
+                    _ldapConnection.SessionOptions.SecureSocketLayer = true;
+                    _ldapConnection.Bind();
+                    return Task.FromResult(true);
+                }
+                else
+                {
+                    return Task.FromResult(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                //Admin LDAP bağlantısı gerçekleşmedi! ;
+                _ldapConnection.Dispose();
+                return Task.FromResult(false);
+            }
+        }
+        private Task<bool> IsUserValidation()
+        {
+            if (ldapConfig.Host == "" || ldapConfig.PortValue == "" || ldapConfig.AdminUser == "" || ldapConfig.AdminPass == "" || ldapConfig.LdapSecurityMethod == "")
+            {
+                return Task.FromResult(false);
+            }
+            return Task.FromResult(true);
+        }
+
+        private Task<bool> IsUserLoginAuth(string userName, string userPassword)
+        {
+
+            //Kullanıcıya ait dn bilgisi yoksa önce kullanıcı var mı bakılıp dn bilgisinin dolması sağlanır
+            if (IsThereAUserValid(userName).Result)
+            {
+                //Kullanıcı bulunduktan sonra dn bilgisi doldurulduğu için giriş doğrulama yapılsın
+                return Task.FromResult(IsUserLoginAuthentication(userName, userPassword).Result);
+            }
+            return Task.FromResult(false);
+        }
+
+        //Kullanıcı Giriş Doğrulama
+        private Task<bool> IsUserLoginAuthentication(string userName, string userPassword)
+        {
+            string host = ldapConfig.Host;
+            string portValue = ldapConfig.PortValue;
+            string adminUser = ldapConfig.AdminUser;
+            string adminPass = ldapConfig.AdminPass;
+            string ldapSecurityMethod = ldapConfig.PortValue;
+
+            if (IsUserValidation().Result)
+            {
+                int port = int.Parse(portValue);
+                LdapConnection connUserLogin = new LdapConnection(host + ":" + port);
+                try
+                {
+                    NetworkCredential auth2 = new System.Net.NetworkCredential(userDnInfo, userPassword);
+                    connUserLogin.Credential = auth2;
+                    connUserLogin.AuthType = AuthType.Basic;
+
+                    connUserLogin.SessionOptions.ProtocolVersion = 3;
+                    connUserLogin.SessionOptions.VerifyServerCertificate += delegate { return true; };
+
+                    connUserLogin.SessionOptions.SecureSocketLayer = true;
+
+                    connUserLogin.Bind();
+                    connUserLogin.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    connUserLogin.Dispose();
+                    return Task.FromResult(false);
+                }
+            }
+            else
+            {
+                return Task.FromResult(false);
+            }
+            return Task.FromResult(true);
+        }
+
+        private Task<bool> IsThereAUserValid(string userName)
+        {
+            try
+            {
+                //LDAP injection saldırılarını önlemek için LDAP arama filtresinden çıkarma
+                userName = EscapeLdapSearchFilter(userName);
+
+                SearchRequest ldapSearchRequest;
+                ldapSearchRequest = new SearchRequest(ldapConfig.Dn, string.Format($"(&(uid={userName})(objectClass=person)(status=1))"), System.DirectoryServices.Protocols.SearchScope.Subtree, null);
+                if (_ldapConnection != null)
+                {
+
+                    _ldapSearchResponse = (SearchResponse)_ldapConnection.SendRequest(ldapSearchRequest);
+                    if (_ldapSearchResponse.Entries.Count > 0)
+                    {
+                        userDnInfo = _ldapSearchResponse.Entries[0].DistinguishedName;
+                        return Task.FromResult(true);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _ldapConnection.Dispose();
+                return Task.FromResult(false);
+            }
+            return Task.FromResult(false);
+        }
+
+        /// <summary>
+        /// Escapes the LDAP search filter to prevent LDAP injection attacks.
+        /// </summary>
+        /// <param name="searchFilter">The search filter.</param>
+        /// <returns>The escaped search filter.</returns>
+        private static string EscapeLdapSearchFilter(string searchFilter)
+        {
+            var escape = new StringBuilder();
+            foreach (var current in searchFilter)
+            {
+                switch (current)
+                {
+                    case '\\':
+                        escape.Append(@"\5c");
+                        break;
+
+                    case '*':
+                        escape.Append(@"\2a");
+                        break;
+
+                    case '(':
+                        escape.Append(@"\28");
+                        break;
+
+                    case ')':
+                        escape.Append(@"\29");
+                        break;
+
+                    case '\u0000':
+                        escape.Append(@"\00");
+                        break;
+
+                    case '/':
+                        escape.Append(@"\2f");
+                        break;
+
+                    default:
+                        escape.Append(current);
+                        break;
+                }
+            }
+
+            return escape.ToString();
+        }
+
     }
 }

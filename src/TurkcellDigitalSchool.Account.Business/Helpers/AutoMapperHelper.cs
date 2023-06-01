@@ -4,8 +4,9 @@ using System.Linq;
 using TurkcellDigitalSchool.Account.Business.SubServices;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
-using TurkcellDigitalSchool.Account.Domain.Dtos; 
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.Services.CustomMessgeHelperService.Model;
+using TurkcellDigitalSchool.Account.Domain.Dtos.OrganisationDtos;
 
 namespace TurkcellDigitalSchool.Account.Business.Helpers
 {
@@ -50,6 +51,8 @@ namespace TurkcellDigitalSchool.Account.Business.Helpers
                 .ForMember(dest => dest.InsertUserId, act => act.Ignore());
 
             CreateMap<Organisation, OrganisationDto>().ReverseMap();
+            CreateMap<Organisation, AddOrganisationDto>().ReverseMap();
+            CreateMap<Organisation, UpdateOrganisationDto>().ReverseMap();
 
             CreateMap<OrganisationType, OrganisationType>().ReverseMap()
                 .ForMember(dest => dest.UpdateTime, act => act.Ignore())
@@ -139,7 +142,7 @@ namespace TurkcellDigitalSchool.Account.Business.Helpers
             CreateMap<Domain.Concrete.OrganisationChangeReqContent, UpdateOrganisationChangeReqContentDto>().ReverseMap();
             CreateMap<Domain.Concrete.OrganisationChangeReqContent, GetOrganisationChangeReqContentDto>().ReverseMap();
 
-            CreateMap<ConstantMessageDtos, MessageMap>().ReverseMap(); 
+            CreateMap<ConstantMessageDtos, MessageMap>().ReverseMap();
 
         }
     }

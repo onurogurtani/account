@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TurkcellDigitalSchool.Account.Business\TurkcellDigitalSchool.Account.Business.csproj" />
     <ProjectReference Include="..\TurkcellDigitalSchool.Account.DataAccess\TurkcellDigitalSchool.Account.DataAccess.csproj" />
   </ItemGroup>
 

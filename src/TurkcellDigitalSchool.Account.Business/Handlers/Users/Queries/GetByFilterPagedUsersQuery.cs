@@ -45,8 +45,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
             public virtual async Task<IDataResult<PagedList<UserDto>>> Handle(GetByFilterPagedUsersQuery request, CancellationToken cancellationToken)
             {
                 var query = (from u in _accountDbContext.Users
-                             join p in _accountDbContext.UserPackages on u.Id equals p.UserId into users
-                             from pj in users.DefaultIfEmpty()
                              select new UserDto
                              {
                                  CitizenId = u.CitizenId,
@@ -56,9 +54,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                                  MobilePhones = u.MobilePhones,
                                  Status = u.Status,
                                  SurName = u.SurName,
+                                 ExamType = u.ExamType,
                                  UserType = u.UserType,
                                  ViewMyData = u.ViewMyData,
-                                 IsPackageBuyer = pj.Id > 0,
+                                 IsPackageBuyer = (_accountDbContext.UserPackages.Any(w => w.UserId == u.Id)),
                                  RegisterStatus = u.RegisterStatus,
                                  InsertTime = u.InsertTime,
                                  UpdateTime = u.UpdateTime

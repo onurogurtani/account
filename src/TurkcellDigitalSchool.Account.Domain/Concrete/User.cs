@@ -20,11 +20,14 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public string OAuthOpenIdConnectToken { get; set; }
 
         public RegisterStatus RegisterStatus { get; set; }
+        public ExamType? ExamType { get; set; }
         public UserType UserType { get; set; }
         public int? FailLoginCount { get; set; }
         public int? FailOtpCount { get; set; }
         public virtual ICollection<UserRole> UserRoles { get; set; }
 
         public virtual ICollection<OrganisationUser> OrganisationUsers { get; set; }
+
+        public bool IsLdapUser { get; set; }
     } 
 }

@@ -1,23 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
-using TurkcellDigitalSchool.Core.DataAccess;
-using TurkcellDigitalSchool.Core.Entities;
 using TurkcellDigitalSchool.Core.Enums;
 
-namespace TurkcellDigitalSchool.Account.Domain.Concrete
+namespace TurkcellDigitalSchool.Account.Domain.Dtos.OrganisationDtos
 {
-    /// <summary>
-    /// Kurum bilgileri
-    /// </summary>
-    public class Organisation : EntityDefinition, IPublishEntity
+    public class AddOrganisationDto
     {
+        public string Name { get; set; }
         public long CrmId { get; set; }
         public string OrganisationManager { get; set; }
         public string CustomerNumber { get; set; }
         public string CustomerManager { get; set; }
         public long OrganisationTypeId { get; set; }
-        public OrganisationType OrganisationType { get; set; }
         public string OrganisationAddress { get; set; }
         public string OrganisationMail { get; set; }
         public string OrganisationWebSite { get; set; }
@@ -32,7 +25,6 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public DateTime ContractFinishDate { get; set; }
         public PackageKind PackageKind { get; set; }
         public long PackageId { get; set; }
-        public string PackageName { get; set; }
         public int LicenceNumber { get; set; }
         public string DomainName { get; set; }
         public DateTime MembershipStartDate { get; set; }
@@ -49,11 +41,8 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public string ApiSecret { get; set; }
         public int VirtualTrainingRoomQuota { get; set; }
         public int VirtualMeetingRoomQuota { get; set; }
-        public OrganisationStatusInfo OrganisationStatusInfo { get; set; } = OrganisationStatusInfo.WaitingAction;
+        public OrganisationStatusInfo OrganisationStatusInfo { get; set; }
         public string ReasonForStatus { get; set; }
         public long? ParantId { get; set; }
-        public virtual ICollection<OrganisationUser> OrganisationUsers { get; set; }
-        public virtual ICollection<BranchMainField> BranchMainFields { get; set; }
-
     }
 }
