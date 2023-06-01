@@ -125,9 +125,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                     case "UserTypeIdASC":
                         query = query.OrderBy(x => x.UserType);
                         break;
+                    default:
+                        query = query.OrderByDescending(x => x.UpdateTime == null ? x.InsertTime : x.UpdateTime);
+                        break;
                 }
-
-                query = query.OrderByDescending(x => x.UpdateTime == null ? x.InsertTime : x.UpdateTime);
 
                 var items = query.ToList();
 
