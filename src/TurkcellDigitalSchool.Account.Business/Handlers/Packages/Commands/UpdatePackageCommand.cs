@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DotNetCore.CAP;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
@@ -14,6 +15,7 @@ using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using JsonConverter = System.Text.Json.Serialization.JsonConverter;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
 {
@@ -85,55 +87,55 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 var imageOfPackages = await _imageOfPackageRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _imageOfPackageRepository.DeleteRange(imageOfPackages);
 
-     
+
                 var packageLessons = await _packageLessonRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageLessonRepository.DeleteRange(packageLessons);
-                
-                foreach (var item  in packageLessons)
+
+                foreach (var item in packageLessons)
                 {
-                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Deleted),cancellationToken);
-                } 
+                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Deleted), item, cancellationToken: cancellationToken);
+                }
 
                 var packagePublishers = await _packagePublisherRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packagePublisherRepository.DeleteRange(packagePublishers);
-                 
+
 
                 var packageDocuments = await _packageDocumentRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageDocumentRepository.DeleteRange(packageDocuments);
-                 
+
                 var packageContractTypes = await _packageContractTypeRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageContractTypeRepository.DeleteRange(packageContractTypes);
 
-     
+
                 var packagePackageTypeEnums = await _packagePackageTypeEnumRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packagePackageTypeEnumRepository.DeleteRange(packagePackageTypeEnums);
 
-     
+
                 var packageFieldTypes = await _packageFieldTypeRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageFieldTypeRepository.DeleteRange(packageFieldTypes);
 
                 var packageCoachServicePackages = await _packageCoachServicePackageRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageCoachServicePackageRepository.DeleteRange(packageCoachServicePackages);
 
-        
+
 
                 var packageMotivationActivityPackages = await _packageMotivationActivityPackageRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageMotivationActivityPackageRepository.DeleteRange(packageMotivationActivityPackages);
 
-        
+
                 var packageTestExamPackages = await _packageTestExamPackageRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageTestExamPackageRepository.DeleteRange(packageTestExamPackages);
-                
+
                 var packageRoles = await _packageRoleRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageRoleRepository.DeleteRange(packageRoles);
 
-   
+
                 var packageTestExams = await _packageTestExamRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageTestExamRepository.DeleteRange(packageTestExams);
 
                 foreach (var item in packageTestExams)
-                {
-                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Deleted), cancellationToken);
+                { 
+                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Deleted), item, cancellationToken: cancellationToken);
                 }
 
 
@@ -154,7 +156,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 entity.HasMotivationEvent = request.Package.HasMotivationEvent;
                 entity.PackageKind = request.Package.PackageKind;
                 entity.PackageLessons = request.Package.PackageLessons;
-                 
+
                 entity.PackageDocuments = request.Package.PackageDocuments;
                 entity.PackageContractTypes = request.Package.PackageContractTypes;
                 entity.PackageFieldTypes = request.Package.PackageFieldTypes;
@@ -167,14 +169,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 entity.EducationYearId = request.Package.EducationYearId;
                 entity.PackageRoles = request.Package.PackageRoles;
 
-               
-                
-                var record = _packageRepository.Update(entity); 
+
+
+                var record = _packageRepository.Update(entity);
                 await _packageRepository.SaveChangesAsync();
 
-
-         
-                await _capPublisher.PublishAsync(record.GeneratePublishName(EntityState.Modified), cancellationToken);
+                 
+                await _capPublisher.PublishAsync(record.GeneratePublishName(EntityState.Modified), record, cancellationToken: cancellationToken);
 
 
                 var imageOfPackageAddList = request.Package.ImageOfPackages.Select(s => new ImageOfPackage
@@ -184,7 +185,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 }).ToList();
 
                 await _imageOfPackageRepository.AddRangeAsync(imageOfPackageAddList);
-                await  _imageOfPackageRepository.SaveChangesAsync();
+                await _imageOfPackageRepository.SaveChangesAsync();
 
 
                 var packagePublishersAddList = request.Package.PackagePublishers.Select(s =>
@@ -195,7 +196,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                     });
 
                 await _packagePublisherRepository.AddRangeAsync(packagePublishersAddList);
-                await _packagePublisherRepository.SaveChangesAsync(); 
+                await _packagePublisherRepository.SaveChangesAsync();
 
                 return new SuccessDataResult<Package>(record, SuccessfulOperation.PrepareRedisMessage());
             }
