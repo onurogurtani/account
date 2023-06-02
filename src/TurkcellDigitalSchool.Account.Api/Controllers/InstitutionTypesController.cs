@@ -11,7 +11,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class InstitutionTypesController : BaseCrud2Controller<InstitutionType, GetInstitutionTypesQuery, GetInstitutionTypeQuery, CreateInstitutionTypeCommand, UpdateInstitutionTypeCommand, DeleteInstitutionTypeCommand>
+    public class InstitutionTypesController : BaseCrudController<InstitutionType, GetInstitutionTypesQuery, GetInstitutionTypeQuery, CreateInstitutionTypeCommand, UpdateInstitutionTypeCommand, DeleteInstitutionTypeCommand>
     {
     }
 }

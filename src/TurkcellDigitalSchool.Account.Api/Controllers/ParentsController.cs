@@ -17,7 +17,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class ParentsController : BaseCrud2Controller<Parent, GetParentsQuery, GetParentQuery, CreateParentCommand, UpdateParentCommand, DeleteParentCommand>
+    public class ParentsController : BaseCrudController<Parent, GetParentsQuery, GetParentQuery, CreateParentCommand, UpdateParentCommand, DeleteParentCommand>
     {
         ///<summary>
         ///Get ByStudentUserId Parent

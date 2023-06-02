@@ -12,7 +12,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class CountysController : BaseCrud2Controller<County,GetCountysQuery,GetCountyQuery, CreateCountyCommand, UpdateCountyCommand, DeleteCountyCommand>
+    public class CountysController : BaseCrudController<County,GetCountysQuery,GetCountyQuery, CreateCountyCommand, UpdateCountyCommand, DeleteCountyCommand>
     {
     }
 }

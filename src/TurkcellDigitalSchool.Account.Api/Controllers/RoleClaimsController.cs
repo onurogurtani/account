@@ -11,7 +11,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class RoleClaimsController : BaseCrud2Controller<RoleClaim, GetRoleClaimsQuery, GetRoleClaimQuery, CreateRoleClaimCommand, UpdateRoleClaimCommand, DeleteRoleClaimCommand>
+    public class RoleClaimsController : BaseCrudController<RoleClaim, GetRoleClaimsQuery, GetRoleClaimQuery, CreateRoleClaimCommand, UpdateRoleClaimCommand, DeleteRoleClaimCommand>
     {
     }
 }

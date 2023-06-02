@@ -11,7 +11,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class PackageRolesController : BaseCrud2Controller<PackageRole, GetPackageRolesQuery, GetPackageRoleQuery, CreatePackageRoleCommand, UpdatePackageRoleCommand, DeletePackageRoleCommand>
+    public class PackageRolesController : BaseCrudController<PackageRole, GetPackageRolesQuery, GetPackageRoleQuery, CreatePackageRoleCommand, UpdatePackageRoleCommand, DeletePackageRoleCommand>
     {
     }
 }

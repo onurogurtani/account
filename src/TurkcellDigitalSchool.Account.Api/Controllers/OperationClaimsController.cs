@@ -11,7 +11,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class OperationClaimsController : BaseCrud2Controller<OperationClaim, GetOperationClaimsQuery, GetOperationClaimQuery, CreateOperationClaimCommand, UpdateOperationClaimCommand, DeleteOperationClaimCommand>
+    public class OperationClaimsController : BaseCrudController<OperationClaim, GetOperationClaimsQuery, GetOperationClaimQuery, CreateOperationClaimCommand, UpdateOperationClaimCommand, DeleteOperationClaimCommand>
     {
     }
 }
