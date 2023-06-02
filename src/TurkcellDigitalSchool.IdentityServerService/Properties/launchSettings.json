@@ -1,5 +1,5 @@
 {
-  "profiles": { 
+  "profiles": {
     "TurkcellDigitalSchool.Api.DEV": {
       "commandName": "Project",
       "launchBrowser": true,
@@ -16,6 +16,16 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "DEVTURKCELL"
+      },
+      "applicationUrl": "http://localhost:6001",
+      "dotnetRunMessages": true
+    },
+    "TurkcellDigitalSchool.Api.STAGING": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "STAGING"
       },
       "applicationUrl": "http://localhost:6001",
       "dotnetRunMessages": true

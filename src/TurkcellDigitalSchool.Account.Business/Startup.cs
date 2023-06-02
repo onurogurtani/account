@@ -169,73 +169,11 @@ namespace TurkcellDigitalSchool.Account.Business
         }
 
 
-        /// <summary>
-        /// This method gets called by the Qa
-        /// </summary>
-        /// <param name="services"></param>
-        public void ConfigureQaServices(IServiceCollection services)
+        public void ConfigureSTAGINGServices(IServiceCollection services)
         {
             ConfigureDEVServices(services);
         }
-
-        /// <summary>
-        /// This method gets called by the Prod
-        /// </summary>
-        /// <param name="services"></param>
-        public void ConfigureProdServices(IServiceCollection services)
-        {
-            ConfigureDEVServices(services);
-        }
-
-        /// <summary>
-        /// This method gets called by the Development
-        /// </summary>
-        /// <param name="services"></param>
-        public void ConfigureDevelopmentServices(IServiceCollection services)
-        {
-            ConfigureServices(services);
-        }
-
-        /// <summary>
-        /// This method gets called by the Testing
-        /// </summary>
-        /// <param name="services"></param>
-        public void ConfigureTestingServices(IServiceCollection services)
-        {
-            ConfigureDEVServices(services);
-        }
-
-        /// <summary>
-        /// This method gets called by the Docker
-        /// </summary>
-        /// <param name="services"></param>
-        public void ConfigureDockerServices(IServiceCollection services)
-        {
-            ConfigureDEVServices(services);
-        }
-
-        /// <summary>
-        /// This method gets called by the Staging
-        /// </summary>
-        /// <param name="services"></param>
-        public void ConfigureStagingServices(IServiceCollection services)
-        {
-            ConfigureDEVServices(services);
-        }
-
-        /// <summary>
-        /// This method gets called by the Production
-        /// </summary>
-        /// <param name="services"></param>
-        public void ConfigureProductionServices(IServiceCollection services)
-        {
-            ConfigureServices(services);
-
-            services.AddDbContext<AccountDbContext>();
-            services.AddDbContext<AccountSubscribeDbContext>();
-        }
-
-
+          
         /// <summary>
         ///
         /// </summary>
