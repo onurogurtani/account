@@ -37,7 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
                 using (var connection = new NpgsqlConnection(connectionString))
                 {
                     connection.Open();
-                    var CommandText = $"with recursive cte as ( select  st.*, 1 lvl from  (select p.id packageid , 0 parentid    from public.package  p"
+                    var CommandText = $"with recursive cte as ( select  st.*, 1 lvl from  (select p.id packageid , 0 parentid    from public.package  p where p.finishdate > '" + System.DateTime.Now + "' "
                    + " union all  select pt.testexampackageid packageid, pt.packageid parentid from  public.packagetestexampackage pt"
                    + " union all  select ptm.motivationactivitypackageid packageid , ptm.packageid parentid from  public.packagemotivationactivitypackage ptm"
                    + " union all  select ptc.coachservicepackageid packageid   , ptc.packageid parentid from  public.packagecoachservicepackages ptc ) st where exists"
