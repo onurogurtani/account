@@ -17,10 +17,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Educations.Queries
     [ExcludeFromCodeCoverage]
     [SecuredOperation] 
     [LogScope]
-    public class GetByUserIdEducationQuery : IRequest<IDataResult<Education>>
+    public class GetByUserIdEducationQuery : IRequest<DataResult<Education>>
     {
         public long UserId { get; set; }
-        public class GetByUserIdEducationQueryHandler : IRequestHandler<GetByUserIdEducationQuery, IDataResult<Education>>
+        public class GetByUserIdEducationQueryHandler : IRequestHandler<GetByUserIdEducationQuery, DataResult<Education>>
         {
             private readonly IEducationRepository _educationRepository;
 
@@ -28,7 +28,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Educations.Queries
             {
                 _educationRepository = educationRepository;
             } 
-            public async Task<IDataResult<Education>> Handle(GetByUserIdEducationQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<Education>> Handle(GetByUserIdEducationQuery request, CancellationToken cancellationToken)
             {
                 var education = await _educationRepository.GetAsync(x => x.UserId == request.UserId);
                 return new SuccessDataResult<Education>(education, Messages.SuccessfulOperation);

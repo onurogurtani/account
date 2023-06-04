@@ -9,7 +9,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
     [LogScope]
-    public class LoginUserHandler : IRequestHandler<LoginUserCommand, IDataResult<LoginUserResult>>
+    public class LoginUserHandler : IRequestHandler<LoginUserCommand, DataResult<LoginUserResult>>
     {
         private readonly IAuthenticationCoordinator _coordinator;
 
@@ -25,7 +25,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
         /// <param name="cancellationToken"></param>
         /// <returns></returns> 
      
-        public async Task<IDataResult<LoginUserResult>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+        public async Task<DataResult<LoginUserResult>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
             var provider = _coordinator.SelectProvider(request.Provider);
             return new SuccessDataResult<LoginUserResult>(await provider.Login(request));

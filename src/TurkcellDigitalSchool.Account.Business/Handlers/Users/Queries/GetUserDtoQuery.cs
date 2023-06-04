@@ -17,11 +17,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
     /// </summary>
 
     [LogScope]
-    public class GetUserDtoQuery : IRequest<IDataResult<UserDto>>
+    public class GetUserDtoQuery : IRequest<DataResult<UserDto>>
     {
         public long Id { get; set; }
 
-        public class GetUserDtoQueryHandler : IRequestHandler<GetUserDtoQuery, IDataResult<UserDto>>
+        public class GetUserDtoQueryHandler : IRequestHandler<GetUserDtoQuery, DataResult<UserDto>>
         {
             private readonly AccountDbContext _accountDbContext;
 
@@ -32,7 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 
            
             [SecuredOperation]
-            public virtual async Task<IDataResult<UserDto>> Handle(GetUserDtoQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<UserDto>> Handle(GetUserDtoQuery request, CancellationToken cancellationToken)
             {
                 var userDto = (from u in _accountDbContext.Users
                                join p in _accountDbContext.UserPackages on u.Id equals p.UserId into users

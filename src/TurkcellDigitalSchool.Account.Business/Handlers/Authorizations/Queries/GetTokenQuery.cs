@@ -14,13 +14,13 @@ using TurkcellDigitalSchool.Integration.IntegrationServices.IdentityServerServic
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
     [LogScope]
-    public class GetTokenQuery : IRequest<IDataResult<TokenIntegraitonResponse>>   
+    public class GetTokenQuery : IRequest<DataResult<TokenIntegraitonResponse>>   
     {
         public string ClientId { get; set; }
         public string Password { get; set; }
         public long UserId { get; set; }
 
-        public class GetTokenQueryHandler : IRequestHandler<GetTokenQuery, IDataResult<TokenIntegraitonResponse>>
+        public class GetTokenQueryHandler : IRequestHandler<GetTokenQuery, DataResult<TokenIntegraitonResponse>>
         {
             private readonly IUserRepository _userRepository;
             private readonly IIDentityServerServices _identityServerServices;
@@ -39,7 +39,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             /// </summary>
             
             [SecuredOperation]
-            public async Task<IDataResult<TokenIntegraitonResponse>> Handle(GetTokenQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<TokenIntegraitonResponse>> Handle(GetTokenQuery request, CancellationToken cancellationToken)
             {
              
                 var  user  = await _userRepository.GetAsync(w => w.Status && w.Id== request.UserId && !w.IsDeleted  );

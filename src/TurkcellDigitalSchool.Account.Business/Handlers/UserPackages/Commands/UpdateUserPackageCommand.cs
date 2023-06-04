@@ -9,9 +9,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Commands
     [ExcludeFromCodeCoverage]
     public class UpdateUserPackageCommand : UpdateRequestBase<UserPackage>
     {
-        public class UpdateUserPackageCommandHandler : UpdateHandlerBase<UserPackage, UpdateUserPackageCommand>
+        public class UpdateRequestUserPackageCommandHandler : UpdateRequestHandlerBase<UserPackage, UpdateUserPackageCommand>
         {
-            public UpdateUserPackageCommandHandler(IUserPackageRepository userPackageRepository) : base(userPackageRepository)
+            public UpdateRequestUserPackageCommandHandler(IUserPackageRepository userPackageRepository) : base(userPackageRepository)
             {
             }
         }

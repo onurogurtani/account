@@ -17,7 +17,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
     /// <summary>
     /// Add User/Teacher
     /// </summary>
-    public class AddTeacherCommand : IRequest<IDataResult<long>>
+    public class AddTeacherCommand : IRequest<DataResult<long>>
     {
         public long CitizenId { get; set; }
         public string Name { get; set; }
@@ -26,7 +26,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
         public string MobilePhones { get; set; }
 
         [MessageClassAttr("Öğretmen Ekleme")]
-        public class AddTeacherCommandHandler : IRequestHandler<AddTeacherCommand, IDataResult<long>>
+        public class AddTeacherCommandHandler : IRequestHandler<AddTeacherCommand, DataResult<long>>
         {
             private readonly IUserRepository _userRepository;
 
@@ -42,7 +42,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
 
             [SecuredOperation]
              
-            public async Task<IDataResult<long>> Handle(AddTeacherCommand request, CancellationToken cancellationToken)
+            public async Task<DataResult<long>> Handle(AddTeacherCommand request, CancellationToken cancellationToken)
             {
                 var isCitizenIdExist = _userRepository.Query().Any(q => q.CitizenId == request.CitizenId);
                 if (isCitizenIdExist) { return new ErrorDataResult<long>(CitizenIdAlreadyExist.PrepareRedisMessage()); }

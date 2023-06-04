@@ -12,7 +12,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Authentication
             throw new NotImplementedException();
         }
 
-        public virtual Task<IDataResult<DArchToken>> Verify(VerifyOtpCommand command)
+        public virtual Task<DataResult<DArchToken>> Verify(VerifyOtpCommand command)
         {
             throw new NotImplementedException();
         }

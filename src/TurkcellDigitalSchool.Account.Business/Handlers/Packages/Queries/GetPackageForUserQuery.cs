@@ -25,12 +25,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     ///<br />   PageNumber can be  entered manually </remarks>
 
     [LogScope]
-    public class GetPackageForUserQuery : IRequest<IDataResult<GetPackageForUserResponseDto>>
+    public class GetPackageForUserQuery : IRequest<DataResult<GetPackageForUserResponseDto>>
     {
         public long Id { get; set; }
 
         [MessageClassAttr("Kullanýcý Detay Sayfasý Paket Görüntüleme")]
-        public class GetPackageForUserQueryHandler : IRequestHandler<GetPackageForUserQuery, IDataResult<GetPackageForUserResponseDto>>
+        public class GetPackageForUserQueryHandler : IRequestHandler<GetPackageForUserQuery, DataResult<GetPackageForUserResponseDto>>
         {
 
             private readonly IPackageRepository _packageRepository;
@@ -50,7 +50,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
              
             [SecuredOperation]
-            public async Task<IDataResult<GetPackageForUserResponseDto>> Handle(GetPackageForUserQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<GetPackageForUserResponseDto>> Handle(GetPackageForUserQuery request, CancellationToken cancellationToken)
             {
                 var package = await _packageRepository.Query().Where(q => q.Id == request.Id && q.IsActive)
                     .Include(x => x.PackageLessons).ThenInclude(x => x.Lesson)

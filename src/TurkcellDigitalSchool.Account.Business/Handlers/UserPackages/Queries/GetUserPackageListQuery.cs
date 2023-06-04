@@ -15,9 +15,9 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
 {
     [LogScope]
-    public class GetUserPackageListQuery : IRequest<IDataResult<List<GetUserTestExamPackageDto>>>
+    public class GetUserPackageListQuery : IRequest<DataResult<List<GetUserTestExamPackageDto>>>
     {
-        public class GetUserPackageListQueryHandler : IRequestHandler<GetUserPackageListQuery, IDataResult<List<GetUserTestExamPackageDto>>>
+        public class GetUserPackageListQueryHandler : IRequestHandler<GetUserPackageListQuery, DataResult<List<GetUserTestExamPackageDto>>>
         {
             private readonly IConfiguration _configuration;
             private readonly ITokenHelper _tokenHelper;
@@ -29,7 +29,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
             }
 
 
-            public async Task<IDataResult<List<GetUserTestExamPackageDto>>> Handle(GetUserPackageListQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<List<GetUserTestExamPackageDto>>> Handle(GetUserPackageListQuery request, CancellationToken cancellationToken)
             {
                 var userId = _tokenHelper.GetUserIdByCurrentToken();
 
@@ -37,7 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
                 using (var connection = new NpgsqlConnection(connectionString))
                 {
                     connection.Open();
-                    var CommandText = $"with recursive cte as ( select  st.*, 1 lvl from  (select p.id packageid , 0 parentid    from public.package  p where p.finishdate > '" + System.DateTime.Now + "' "
+                    var CommandText = $"with recursive cte as ( select  st.*, 1 lvl from  (select p.id packageid , 0 parentid    from public.package  p where p.finishdate > '" + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "' "
                    + " union all  select pt.testexampackageid packageid, pt.packageid parentid from  public.packagetestexampackage pt"
                    + " union all  select ptm.motivationactivitypackageid packageid , ptm.packageid parentid from  public.packagemotivationactivitypackage ptm"
                    + " union all  select ptc.coachservicepackageid packageid   , ptc.packageid parentid from  public.packagecoachservicepackages ptc ) st where exists"

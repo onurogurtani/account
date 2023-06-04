@@ -14,9 +14,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.RoleClaims.Commands
 
     public class UpdateRoleClaimCommand : UpdateRequestBase<RoleClaim>
     {
-        public class UpdateRoleClaimCommandHandler : UpdateHandlerBase<RoleClaim, UpdateRoleClaimCommand>
+        public class UpdateRequestRoleClaimCommandHandler : UpdateRequestHandlerBase<RoleClaim, UpdateRoleClaimCommand>
         {
-            public UpdateRoleClaimCommandHandler(IRoleClaimRepository roleClaimRepository) : base(roleClaimRepository)
+            public UpdateRequestRoleClaimCommandHandler(IRoleClaimRepository roleClaimRepository) : base(roleClaimRepository)
             {
             }
         }

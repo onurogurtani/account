@@ -9,7 +9,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
     [ExcludeFromCodeCoverage]
     public class GetContractKindsQuery : QueryByFilterRequestBase<ContractKind>
     {
-        public class GetContractKindsQueryHandler : QueryByFilterBase<ContractKind, GetContractKindsQuery>
+        public class GetContractKindsQueryHandler : QueryByFilterRequestHandlerBase<ContractKind, GetContractKindsQuery>
         {
             public GetContractKindsQueryHandler(IContractKindRepository repository) : base(repository)
             {

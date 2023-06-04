@@ -18,11 +18,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
     [ExcludeFromCodeCoverage]
     [SecuredOperation]
     [LogScope]
-    public class GetNewVersionQuery : IRequest<IDataResult<DocumentVersionDto>>
+    public class GetNewVersionQuery : IRequest<DataResult<DocumentVersionDto>>
     {
         public long ContractKindId { get; set; }
 
-        public class GetNewVersionQueryHandler : IRequestHandler<GetNewVersionQuery, IDataResult<DocumentVersionDto>>
+        public class GetNewVersionQueryHandler : IRequestHandler<GetNewVersionQuery, DataResult<DocumentVersionDto>>
         {
             private readonly IDocumentRepository _documentRepository;
 
@@ -32,7 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
             }
              
   
-            public async Task<IDataResult<DocumentVersionDto>> Handle(GetNewVersionQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<DocumentVersionDto>> Handle(GetNewVersionQuery request, CancellationToken cancellationToken)
             {
                 var lastVersion = _documentRepository.Query()
                   .OrderBy(x => x.Version)

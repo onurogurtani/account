@@ -14,9 +14,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageRoles.Commands
 
     public class UpdatePackageRoleCommand : UpdateRequestBase<PackageRole>
     {
-        public class UpdatePackageRoleCommandHandler : UpdateHandlerBase<PackageRole, UpdatePackageRoleCommand>
+        public class UpdateRequestPackageRoleCommandHandler : UpdateRequestHandlerBase<PackageRole, UpdatePackageRoleCommand>
         {
-            public UpdatePackageRoleCommandHandler(IPackageRoleRepository packageRoleRepository) : base(packageRoleRepository)
+            public UpdateRequestPackageRoleCommandHandler(IPackageRoleRepository packageRoleRepository) : base(packageRoleRepository)
             {
             }
         }

@@ -13,7 +13,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserRoles.Queries
     [LogScope]
     public class GetUserRoleQuery : QueryByIdRequestBase<UserRole>
     {
-        public class GetUserRoleQueryHandler : QueryByIdBase<UserRole, GetUserRoleQuery>
+        public class GetUserRoleQueryHandler : QueryByIdRequestHandlerBase<UserRole, GetUserRoleQuery>
         {
             public GetUserRoleQueryHandler(IUserRoleRepository userRoleRepository) : base(userRoleRepository)
             {

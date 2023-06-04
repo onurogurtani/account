@@ -15,9 +15,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 {
     [ExcludeFromCodeCoverage]
     [LogScope]
-    public class GetUserLookupQuery : IRequest<IDataResult<IEnumerable<SelectionItem>>>
+    public class GetUserLookupQuery : IRequest<DataResult<IEnumerable<SelectionItem>>>
     {
-        public class GetUserLookupQueryHandler : IRequestHandler<GetUserLookupQuery, IDataResult<IEnumerable<SelectionItem>>>
+        public class GetUserLookupQueryHandler : IRequestHandler<GetUserLookupQuery, DataResult<IEnumerable<SelectionItem>>>
         {
             private readonly IUserRepository _userRepository;
             public GetUserLookupQueryHandler(IUserRepository userRepository)
@@ -26,7 +26,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
             }
             [SecuredOperation]
             [CacheAspect(10)] 
-            public async Task<IDataResult<IEnumerable<SelectionItem>>> Handle(GetUserLookupQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<IEnumerable<SelectionItem>>> Handle(GetUserLookupQuery request, CancellationToken cancellationToken)
             {
                 var list = await _userRepository.GetListAsync(x => x.Status);
                 var userLookup = list.Select(x => new SelectionItem() { Id = x.Id.ToString(), Label = x.GetFullName() });

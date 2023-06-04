@@ -12,10 +12,10 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.ServiceMessages.Queries
 {
-    public class GetAppMessagesQuery : IRequest<IDataResult<List<ConstantMessageDtos>>>
+    public class GetAppMessagesQuery : IRequest<DataResult<List<ConstantMessageDtos>>>
     {
         [MessageClassAttr("App Mesaj Oluşturma")]
-        public class GetAppMessagesQueryHandler : IRequestHandler<GetAppMessagesQuery, IDataResult<List<ConstantMessageDtos>>>
+        public class GetAppMessagesQueryHandler : IRequestHandler<GetAppMessagesQuery, DataResult<List<ConstantMessageDtos>>>
         {
             private readonly ICustomMessgeHelperService _customMessgeHelperService;
 
@@ -29,7 +29,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ServiceMessages.Querie
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
-            public async Task<IDataResult<List<ConstantMessageDtos>>> Handle(GetAppMessagesQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<List<ConstantMessageDtos>>> Handle(GetAppMessagesQuery request, CancellationToken cancellationToken)
             {
                 var getAllMessage = _customMessgeHelperService.GetAllMessageDeclarations();
                 if (getAllMessage.Count <= 0)

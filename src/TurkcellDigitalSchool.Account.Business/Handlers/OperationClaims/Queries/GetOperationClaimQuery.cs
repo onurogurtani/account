@@ -15,7 +15,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OperationClaims.Querie
     [LogScope]
     public class GetOperationClaimQuery : QueryByIdRequestBase<OperationClaim>
     {
-        public class GetOperationClaimQueryHandler : QueryByIdBase<OperationClaim, GetOperationClaimQuery>
+        public class GetOperationClaimQueryHandler : QueryByIdRequestHandlerBase<OperationClaim, GetOperationClaimQuery>
         {
             /// <summary>
             /// Get Operation Claim

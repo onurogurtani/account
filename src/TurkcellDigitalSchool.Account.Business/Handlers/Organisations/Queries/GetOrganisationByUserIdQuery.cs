@@ -18,10 +18,10 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
 {
     [LogScope]
-    public class GetOrganisationByUserIdQuery : IRequest<IDataResult<OrganisationUsersDto>>
+    public class GetOrganisationByUserIdQuery : IRequest<DataResult<OrganisationUsersDto>>
     {
         [MessageClassAttr("Kullanýcý Kurumlarýný Görüntüleme")]
-        public class GetOrganisationByUserIdQueryHandler : IRequestHandler<GetOrganisationByUserIdQuery, IDataResult<OrganisationUsersDto>>
+        public class GetOrganisationByUserIdQueryHandler : IRequestHandler<GetOrganisationByUserIdQuery, DataResult<OrganisationUsersDto>>
         {
             private readonly IOrganisationUserRepository _organisationUserRepository;
             private readonly ITokenHelper _tokenHelper;
@@ -38,7 +38,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
              
             [SecuredOperation]
-            public virtual async Task<IDataResult<OrganisationUsersDto>> Handle(GetOrganisationByUserIdQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<OrganisationUsersDto>> Handle(GetOrganisationByUserIdQuery request, CancellationToken cancellationToken)
             {
                 var userId = _tokenHelper.GetUserIdByCurrentToken();
 

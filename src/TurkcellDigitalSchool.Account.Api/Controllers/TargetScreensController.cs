@@ -29,7 +29,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>PagedList TargetScreens</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PagedList<TargetScreen>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<PagedList<TargetScreen>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("GetByFilterPagedTargetScreens")]
         public async Task<IActionResult> GetByFilterPagedTargetScreens([FromQuery] GetByFilterPagedTargetScreensQuery query, CancellationToken cancellationToken)
@@ -71,7 +71,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>TEntity</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<TargetScreen>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<TargetScreen>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getbyid")]
         public async Task<IActionResult> GetById([FromQuery] GetTargetScreenQuery query, CancellationToken cancellationToken)

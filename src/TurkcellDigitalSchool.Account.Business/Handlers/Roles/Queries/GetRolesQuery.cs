@@ -9,7 +9,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
     [ExcludeFromCodeCoverage]
     public class GetRolesQuery : QueryByFilterRequestBase<Role>
     {
-        public class GetRolesQueryHandler : QueryByFilterBase<Role, GetRolesQuery>
+        public class GetRolesQueryHandler : QueryByFilterRequestHandlerBase<Role, GetRolesQuery>
         {
             public GetRolesQueryHandler(IRoleRepository repository) : base(repository)
             {

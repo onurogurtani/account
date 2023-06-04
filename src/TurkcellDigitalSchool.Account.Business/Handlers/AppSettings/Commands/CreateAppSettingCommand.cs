@@ -9,9 +9,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Commands
     [ExcludeFromCodeCoverage]
     public class CreateAppSettingCommand : CreateRequestBase<AppSetting>
     {
-        public class CreateAppSettingCommandHandler : CreateHandlerBase<AppSetting, CreateAppSettingCommand>
+        public class CreateRequestAppSettingCommandHandler : CreateRequestHandlerBase<AppSetting, CreateAppSettingCommand>
         {
-            public CreateAppSettingCommandHandler(IAppSettingRepository appSettingRepository) : base(appSettingRepository)
+            public CreateRequestAppSettingCommandHandler(IAppSettingRepository appSettingRepository) : base(appSettingRepository)
             {
             }
         }

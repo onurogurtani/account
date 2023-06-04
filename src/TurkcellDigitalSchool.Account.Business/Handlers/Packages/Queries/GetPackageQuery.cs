@@ -21,12 +21,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     /// Get Package
     /// </summary>
     [LogScope]
-    public class GetPackageQuery : IRequest<IDataResult<Package>>
+    public class GetPackageQuery : IRequest<DataResult<Package>>
     {
         public long Id { get; set; }
 
         [MessageClassAttr("Paket Görüntüleme")]
-        public class GetPackageQueryHandler : IRequestHandler<GetPackageQuery, IDataResult<Package>>
+        public class GetPackageQueryHandler : IRequestHandler<GetPackageQuery, DataResult<Package>>
         {
             private readonly IPackageRepository _packageRepository;
 
@@ -42,7 +42,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
              
             [SecuredOperation]
-            public virtual async Task<IDataResult<Package>> Handle(GetPackageQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<Package>> Handle(GetPackageQuery request, CancellationToken cancellationToken)
             {
                 var query = _packageRepository.Query()
                     .Include(x => x.ImageOfPackages).ThenInclude(x => x.File)

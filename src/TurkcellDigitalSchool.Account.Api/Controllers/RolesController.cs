@@ -29,7 +29,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>PagedList Roles</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PagedList<GetRoleDto>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<PagedList<GetRoleDto>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("GetByFilterPagedRoles")]
         public async Task<IActionResult> GetByFilterPagedRoles(GetByFilterPagedRolesQuery query, CancellationToken cancellationToken)
@@ -69,7 +69,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>TEntity</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<GetRoleDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<GetRoleDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getbyid")]
         public async Task<IActionResult> GetById([FromQuery] GetRoleQuery getRoleQuery, CancellationToken cancellationToken)
@@ -88,7 +88,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// <return>TEntity</return>
         /// <response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<Role>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<Role>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("PassiveCheckControlRole")]
         public async Task<IActionResult> GetById([FromQuery] PassiveCheckControlRoleQuery passiveCheckControlRoleQuery, CancellationToken cancellationToken)

@@ -8,13 +8,13 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
 { 
-    public class GetAppSettingByCodeQuery : IRequest<IDataResult<AppSetting>>
+    public class GetAppSettingByCodeQuery : IRequest<DataResult<AppSetting>>
     {
         public string Code { get; set; }
         public int CustomerId { get; set; }
         public int VouId { get; set; }
 
-        public class GetAppSettingByCodeQueryHandler : IRequestHandler<GetAppSettingByCodeQuery, IDataResult<AppSetting>>
+        public class GetAppSettingByCodeQueryHandler : IRequestHandler<GetAppSettingByCodeQuery, DataResult<AppSetting>>
         {
             private readonly IAppSettingRepository _appSettingRepository;
 
@@ -24,7 +24,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
             }
 
             [SecuredOperation]
-            public async Task<IDataResult<AppSetting>> Handle(GetAppSettingByCodeQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<AppSetting>> Handle(GetAppSettingByCodeQuery request, CancellationToken cancellationToken)
             {
                 var data = await _appSettingRepository.GetAppSettingValue(request.Code, request.CustomerId, request.VouId);
 

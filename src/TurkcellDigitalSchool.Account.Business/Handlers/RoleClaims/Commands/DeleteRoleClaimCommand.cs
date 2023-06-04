@@ -14,9 +14,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.RoleClaims.Commands
 
     public class DeleteRoleClaimCommand : DeleteRequestBase<RoleClaim>
     {
-        public class DeleteRoleClaimCommandHandler : DeleteHandlerBase<RoleClaim, DeleteRoleClaimCommand>
+        public class DeleteRequestRoleClaimCommandHandler : DeleteRequestHandlerBase<RoleClaim, DeleteRoleClaimCommand>
         {
-            public DeleteRoleClaimCommandHandler(IRoleClaimRepository repository) : base(repository)
+            public DeleteRequestRoleClaimCommandHandler(IRoleClaimRepository repository) : base(repository)
             {
             }
         }

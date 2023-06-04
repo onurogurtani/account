@@ -14,12 +14,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Parents.Commands
 
     public class CreateParentCommand : CreateRequestBase<Parent>
     {
-        public class CreateParentCommandHandler : CreateHandlerBase<Parent, CreateParentCommand>
+        public class CreateRequestParentCommandHandler : CreateRequestHandlerBase<Parent, CreateParentCommand>
         {
             /// <summary>
             /// Create Parent
             /// </summary>
-            public CreateParentCommandHandler(IParentRepository parentRepository) : base(parentRepository)
+            public CreateRequestParentCommandHandler(IParentRepository parentRepository) : base(parentRepository)
             {
             }
         }

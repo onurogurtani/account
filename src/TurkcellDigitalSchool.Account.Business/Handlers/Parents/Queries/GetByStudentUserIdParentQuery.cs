@@ -15,12 +15,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Parents.Queries
 {
     [ExcludeFromCodeCoverage]
     [LogScope]
-    public class GetByStudentUserIdParentQuery : IRequest<IDataResult<Parent>>
+    public class GetByStudentUserIdParentQuery : IRequest<DataResult<Parent>>
     {
         public long StudentUserId { get; set; } // student
 
         [MessageClassAttr("Öðrenci Velisi Görüntüleme")]
-        public class GetByStudentUserIdParentQueryHandler : IRequestHandler<GetByStudentUserIdParentQuery, IDataResult<Parent>>
+        public class GetByStudentUserIdParentQueryHandler : IRequestHandler<GetByStudentUserIdParentQuery, DataResult<Parent>>
         {
             private readonly IParentRepository _parentRepository;
 
@@ -36,7 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Parents.Queries
             /// Parent information query with student user Id
             /// </summary>
             
-            public async Task<IDataResult<Parent>> Handle(GetByStudentUserIdParentQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<Parent>> Handle(GetByStudentUserIdParentQuery request, CancellationToken cancellationToken)
             {
                 var parent = await _parentRepository.GetAsync(x => x.UserId == request.StudentUserId);
                 return new SuccessDataResult<Parent>(parent, SuccessfulOperation.PrepareRedisMessage());

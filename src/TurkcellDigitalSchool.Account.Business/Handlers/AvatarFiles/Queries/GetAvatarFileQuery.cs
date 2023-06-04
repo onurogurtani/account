@@ -10,11 +10,11 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Queries
 {
-    public class GetAvatarFileQuery : IRequest<IDataResult<AvatarFileDto>>
+    public class GetAvatarFileQuery : IRequest<DataResult<AvatarFileDto>>
     {
         public long Id { get; set; }
 
-        public class GetAvatarFileQueryHandler : IRequestHandler<GetAvatarFileQuery, IDataResult<AvatarFileDto>>
+        public class GetAvatarFileQueryHandler : IRequestHandler<GetAvatarFileQuery, DataResult<AvatarFileDto>>
         {
             private readonly IFileService _fileService;
             private readonly IFileRepository _fileRepository;
@@ -24,7 +24,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Queries
                 _fileRepository = fileRepository;
             }
 
-            public async Task<IDataResult<AvatarFileDto>> Handle(GetAvatarFileQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<AvatarFileDto>> Handle(GetAvatarFileQuery request, CancellationToken cancellationToken)
             {
                 var record = await _fileRepository.GetAsync(x => x.Id == request.Id);
 

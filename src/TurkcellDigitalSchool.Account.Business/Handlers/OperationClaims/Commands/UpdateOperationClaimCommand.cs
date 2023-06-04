@@ -15,12 +15,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OperationClaims.Comman
     [LogScope]
     public class UpdateOperationClaimCommand : UpdateRequestBase<OperationClaim>
     {
-        public class UpdateOperationClaimCommandHandler : UpdateHandlerBase<OperationClaim, UpdateOperationClaimCommand>
+        public class UpdateRequestOperationClaimCommandHandler : UpdateRequestHandlerBase<OperationClaim, UpdateOperationClaimCommand>
         {
             /// <summary>
             /// Update Operation Claim
             /// </summary>
-            public UpdateOperationClaimCommandHandler(IOperationClaimRepository operationClaimRepository) : base(operationClaimRepository)
+            public UpdateRequestOperationClaimCommandHandler(IOperationClaimRepository operationClaimRepository) : base(operationClaimRepository)
             {
             }
         }

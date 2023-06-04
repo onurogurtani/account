@@ -27,7 +27,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>PagedList AdminDtos</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PagedList<AdminDto>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<PagedList<AdminDto>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("GetByFilterPagedAdmins")]
         public async Task<IActionResult> GetByFilterPagedAdmins([FromQuery] GetByFilterPagedAdminsQuery query, CancellationToken cancellationToken)
@@ -47,7 +47,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>TEntity</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AdminDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<AdminDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getbyid")]
         public async Task<IActionResult> GetById([FromQuery] GetAdminQuery query, CancellationToken cancellationToken)
@@ -149,7 +149,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>TEntity</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<OrganisationUsersDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<OrganisationUsersDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("GetOrganisationByAdminTypeQuery")]
         public async Task<IActionResult> GetOrganisationByAdminTypeQuery([FromQuery] GetOrganisationByAdminTypeQuery getOrganisationByAdminTypeQuery, CancellationToken cancellationToken)

@@ -19,11 +19,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "NameASC","NameDESC","RecordStatusASC","RecordStatusDESC","IsOrganisationViewASC","IsOrganisationViewDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC","IdASC","IdDESC" </remarks>
     [LogScope]
-    public class GetByFilterPagedRolesQuery : IRequest<IDataResult<PagedList<GetRoleDto>>>
+    public class GetByFilterPagedRolesQuery : IRequest<DataResult<PagedList<GetRoleDto>>>
     {
         public RoleDetailSearch RoleDetailSearch { get; set; } = new RoleDetailSearch();
 
-        public class GetByFilterPagedRolesQueryHandler : IRequestHandler<GetByFilterPagedRolesQuery, IDataResult<PagedList<GetRoleDto>>>
+        public class GetByFilterPagedRolesQueryHandler : IRequestHandler<GetByFilterPagedRolesQuery, DataResult<PagedList<GetRoleDto>>>
         {
             private readonly IRoleRepository _roleRepository;
             private readonly IMapper _mapper;
@@ -36,7 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
 
             
             [SecuredOperation]
-            public virtual async Task<IDataResult<PagedList<GetRoleDto>>> Handle(GetByFilterPagedRolesQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<PagedList<GetRoleDto>>> Handle(GetByFilterPagedRolesQuery request, CancellationToken cancellationToken)
             {
                 var query = _roleRepository.Query()
                     .Include(x => x.RoleClaims)

@@ -28,7 +28,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<remarks></remarks>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PagedList<OrganisationTypeDto>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<PagedList<OrganisationTypeDto>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("GetByFilterPagedOrganisationTypes")]
         public async Task<IActionResult> GetByFilterPagedPackages([FromQuery] GetByFilterPagedOrganisationTypesQuery query, CancellationToken cancellationToken)
@@ -71,7 +71,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>TEntity</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<OrganisationType>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<OrganisationType>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getbyid")]
         public async Task<IActionResult> GetById([FromQuery] GetOrganisationTypeQuery getOrganisationTypeQuery, CancellationToken cancellationToken)

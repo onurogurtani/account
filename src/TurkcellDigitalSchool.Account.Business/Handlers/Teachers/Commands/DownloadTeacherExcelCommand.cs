@@ -22,10 +22,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
     /// Download User/Teacher
     /// </summary>
     [LogScope]
-    public class DownloadTeacherExcelCommand : IRequest<IDataResult<ExcelResponse>>
+    public class DownloadTeacherExcelCommand : IRequest<DataResult<ExcelResponse>>
     {
         [MessageClassAttr("Öðretmen Excel Tablosu Ýndirme")]
-        public class DownloadTeacherExcelCommandHandler : IRequestHandler<DownloadTeacherExcelCommand, IDataResult<ExcelResponse>>
+        public class DownloadTeacherExcelCommandHandler : IRequestHandler<DownloadTeacherExcelCommand, DataResult<ExcelResponse>>
         {
 
             public DownloadTeacherExcelCommandHandler() { }
@@ -36,7 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
             [SecuredOperation]
             [CacheRemoveAspect("Get")]
            
-            public async Task<IDataResult<ExcelResponse>> Handle(DownloadTeacherExcelCommand request, CancellationToken cancellationToken)
+            public async Task<DataResult<ExcelResponse>> Handle(DownloadTeacherExcelCommand request, CancellationToken cancellationToken)
             {
                 byte[] workbookBytes;
 

@@ -7,9 +7,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
 {
     public class DeleteMessageMapCommand : DeleteRequestBase<MessageMap>
     {
-        public class DeleteMessageMapCommandHandler : DeleteHandlerBase<MessageMap, DeleteMessageMapCommand>
+        public class DeleteRequestMessageMapCommandHandler : DeleteRequestHandlerBase<MessageMap, DeleteMessageMapCommand>
         {
-            public DeleteMessageMapCommandHandler(IMessageMapRepository repository) : base(repository)
+            public DeleteRequestMessageMapCommandHandler(IMessageMapRepository repository) : base(repository)
             {
             }
         }

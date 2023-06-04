@@ -21,11 +21,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
     ///<remarks>OrderBy default "IdDESC" also can be "RecordStatusASC","RecordStatusDESC","ContractKindASC","ContractKindDESC","ContractTypeASC","ContractTypeDESC","ContentASC","ContentDESC","VersionASC","VersionDESC","ValidStartDateASC","ValidStartDateDESC","ValidEndDateASC","ValidEndDateDESC","IdASC","IdDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC"  </remarks>
     [LogScope]
     [SecuredOperation]
-    public class GetByFilterPagedDocumentsQuery : IRequest<IDataResult<PagedList<DocumentDto>>>
+    public class GetByFilterPagedDocumentsQuery : IRequest<DataResult<PagedList<DocumentDto>>>
     {
         public DocumentDetailSearch DocumentDetailSearch { get; set; } = new DocumentDetailSearch();
 
-        public class GetByFilterPagedDocumentsQueryHandler : IRequestHandler<GetByFilterPagedDocumentsQuery, IDataResult<PagedList<DocumentDto>>>
+        public class GetByFilterPagedDocumentsQueryHandler : IRequestHandler<GetByFilterPagedDocumentsQuery, DataResult<PagedList<DocumentDto>>>
         {
             private readonly IDocumentRepository _documentRepository;
             private readonly IMapper _mapper;
@@ -39,7 +39,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
             } 
              
 
-            public  async Task<IDataResult<PagedList<DocumentDto>>> Handle(GetByFilterPagedDocumentsQuery request, CancellationToken cancellationToken)
+            public  async Task<DataResult<PagedList<DocumentDto>>> Handle(GetByFilterPagedDocumentsQuery request, CancellationToken cancellationToken)
             {
                 var query = _documentRepository.Query()
                    .Include(x => x.ContractTypes).ThenInclude(x => x.ContractType)

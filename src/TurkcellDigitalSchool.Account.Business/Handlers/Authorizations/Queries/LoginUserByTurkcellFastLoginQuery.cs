@@ -18,12 +18,12 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
     [LogScope]
-    public class LoginUserByTurkcellFastLoginQuery : IRequest<IDataResult<AccessToken>>, ITokenRequest
+    public class LoginUserByTurkcellFastLoginQuery : IRequest<DataResult<AccessToken>>, ITokenRequest
     {
         public string AuthenticationCode { get; set; }
         public SessionType SessionType { get; set; }
 
-        public class LoginUserByTurkcellFastLoginQueryHandler : IRequestHandler<LoginUserByTurkcellFastLoginQuery, IDataResult<AccessToken>>
+        public class LoginUserByTurkcellFastLoginQueryHandler : IRequestHandler<LoginUserByTurkcellFastLoginQuery, DataResult<AccessToken>>
         {
             private readonly TurkcellFastLoginService _turkcellFastLoginService;
             private readonly IUserRepository _userRepository;
@@ -42,7 +42,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 _httpContextAccessor = httpContextAccessor;
             }
              
-            public async Task<IDataResult<AccessToken>> Handle(LoginUserByTurkcellFastLoginQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<AccessToken>> Handle(LoginUserByTurkcellFastLoginQuery request, CancellationToken cancellationToken)
             {
                 try
                 {
@@ -83,11 +83,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                     addedSessionRecord.NotBefore = accessToken.NotBefore;
                     _userSessionRepository.UpdateAndSave(addedSessionRecord);
 
-                    return new SuccessDataResult<DArchToken>(accessToken, Messages.SuccessfulLogin);
+                    return new SuccessDataResult<AccessToken>(accessToken, Messages.SuccessfulLogin);
                 }
                 catch (Exception e)
                 {
-                    return new ErrorDataResult<DArchToken>(e.Message);
+                    return new ErrorDataResult<AccessToken>(e.Message);
                 }
             }
         }

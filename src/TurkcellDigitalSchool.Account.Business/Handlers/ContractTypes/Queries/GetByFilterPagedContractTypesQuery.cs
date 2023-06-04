@@ -21,10 +21,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Queries
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "NameASC","NameDESC","RecordStatusASC","RecordStatusDESC","DescriptionASC","DescriptionDESC","IdASC","IdDESC"</remarks>
     [ExcludeFromCodeCoverage]
     [LogScope]
-    public class GetByFilterPagedContractTypesQuery : IRequest<IDataResult<PagedList<ContractType>>>
+    public class GetByFilterPagedContractTypesQuery : IRequest<DataResult<PagedList<ContractType>>>
     {
         public ContractTypeDto ContractTypeDto { get; set; } = new ContractTypeDto();
-        public class GetByFilterPagedContractTypesQueryHandler : IRequestHandler<GetByFilterPagedContractTypesQuery, IDataResult<PagedList<ContractType>>>
+        public class GetByFilterPagedContractTypesQueryHandler : IRequestHandler<GetByFilterPagedContractTypesQuery, DataResult<PagedList<ContractType>>>
         {
             private readonly IContractTypeRepository _contractTypeRepository;
 
@@ -35,7 +35,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Queries
 
             [CacheRemoveAspect("Get")] 
             [SecuredOperation]
-            public virtual async Task<IDataResult<PagedList<ContractType>>> Handle(GetByFilterPagedContractTypesQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<PagedList<ContractType>>> Handle(GetByFilterPagedContractTypesQuery request, CancellationToken cancellationToken)
             {
                 var query = _contractTypeRepository.Query().AsQueryable();
 

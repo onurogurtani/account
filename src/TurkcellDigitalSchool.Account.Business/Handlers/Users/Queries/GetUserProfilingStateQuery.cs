@@ -19,11 +19,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
     /// </summary>
 
     [LogScope]
-    public class GetUserProfilingStateQuery : IRequest<IDataResult<int>>
+    public class GetUserProfilingStateQuery : IRequest<DataResult<int>>
     {
         public long UserId { get; set; }
 
-        public class GetUserProfilingStateQueryHandler : IRequestHandler<GetUserProfilingStateQuery, IDataResult<int>>
+        public class GetUserProfilingStateQueryHandler : IRequestHandler<GetUserProfilingStateQuery, DataResult<int>>
         {
             private readonly IUserRepository _userRepository;
 
@@ -34,7 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 
 
             [SecuredOperation]
-            public virtual async Task<IDataResult<int>> Handle(GetUserProfilingStateQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<int>> Handle(GetUserProfilingStateQuery request, CancellationToken cancellationToken)
             {
                 var user = _userRepository.GetAsync(w => w.Id == request.UserId).Result;
                 if (user == null)

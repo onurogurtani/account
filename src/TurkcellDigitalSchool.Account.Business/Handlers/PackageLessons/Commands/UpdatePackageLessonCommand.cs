@@ -13,9 +13,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageLessons.Command
     [LogScope]
     public class UpdatePackageLessonCommand : UpdateRequestBase<PackageLesson>
     {
-        public class UpdatePackageLessonCommandHandler : UpdateHandlerBase<PackageLesson, UpdatePackageLessonCommand>
+        public class UpdateRequestPackageLessonCommandHandler : UpdateRequestHandlerBase<PackageLesson, UpdatePackageLessonCommand>
         {
-            public UpdatePackageLessonCommandHandler(IPackageLessonRepository packageLessonRepository) : base(packageLessonRepository)
+            public UpdateRequestPackageLessonCommandHandler(IPackageLessonRepository packageLessonRepository) : base(packageLessonRepository)
             {
             }
         }

@@ -13,7 +13,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
     [LogScope]
     public class GetDocumentsQuery : QueryByFilterRequestBase<Document>
     {
-        public class GetDocumentsQueryHandler : QueryByFilterBase<Document, GetDocumentsQuery>
+        public class GetDocumentsQueryHandler : QueryByFilterRequestHandlerBase<Document, GetDocumentsQuery>
         {
             public GetDocumentsQueryHandler(IDocumentRepository repository) : base(repository)
             {

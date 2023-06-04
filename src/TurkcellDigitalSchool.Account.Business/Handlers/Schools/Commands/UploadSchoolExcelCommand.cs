@@ -24,12 +24,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
 {
 
     [LogScope]
-    public class UploadSchoolExcelCommand : IRequest<IDataResult<List<School>>>
+    public class UploadSchoolExcelCommand : IRequest<DataResult<List<School>>>
     {
         public IFormFile FormFile { get; set; }
 
         [MessageClassAttr("Okul Excel Yükleme")]
-        public class UploadSchoolExcelCommandHandler : IRequestHandler<UploadSchoolExcelCommand, IDataResult<List<School>>>
+        public class UploadSchoolExcelCommandHandler : IRequestHandler<UploadSchoolExcelCommand, DataResult<List<School>>>
         {
             private readonly IExcelService _excelService;
             private readonly ISchoolRepository _schoolRepository;
@@ -61,7 +61,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
             [SecuredOperation]
             [CacheRemoveAspect("Get")]
            
-            public async Task<IDataResult<List<School>>> Handle(UploadSchoolExcelCommand request, CancellationToken cancellationToken)
+            public async Task<DataResult<List<School>>> Handle(UploadSchoolExcelCommand request, CancellationToken cancellationToken)
             {
                 List<School> schoolList = new();
                 int startRow = 2;

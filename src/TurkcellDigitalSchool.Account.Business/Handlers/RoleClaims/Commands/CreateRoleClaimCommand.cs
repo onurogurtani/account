@@ -14,9 +14,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.RoleClaims.Commands
 
     public class CreateRoleClaimCommand : CreateRequestBase<RoleClaim>
     {
-        public class CreateRoleClaimCommandHandler : CreateHandlerBase<RoleClaim, CreateRoleClaimCommand>
+        public class CreateRequestRoleClaimCommandHandler : CreateRequestHandlerBase<RoleClaim, CreateRoleClaimCommand>
         {
-            public CreateRoleClaimCommandHandler(IRoleClaimRepository roleClaimRepository) : base(roleClaimRepository)
+            public CreateRequestRoleClaimCommandHandler(IRoleClaimRepository roleClaimRepository) : base(roleClaimRepository)
             {
             }
         }

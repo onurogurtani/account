@@ -13,11 +13,11 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Queries
 {
-    public class GetMessageMapsQuery : IRequest<IDataResult<PagedList<MessageMapDto>>>
+    public class GetMessageMapsQuery : IRequest<DataResult<PagedList<MessageMapDto>>>
     {
         public MessageMapDetailSearchDto MessageMapDetailSearchDto { get; set; } = new MessageMapDetailSearchDto();
 
-        public class GetMessageMapsQueryHandler : IRequestHandler<GetMessageMapsQuery, IDataResult<PagedList<MessageMapDto>>>
+        public class GetMessageMapsQueryHandler : IRequestHandler<GetMessageMapsQuery, DataResult<PagedList<MessageMapDto>>>
         {
             private readonly IMessageMapRepository _messageMapRepository;
 
@@ -26,7 +26,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Queries
                 _messageMapRepository = messageMapRepository;
             }
 
-            public async Task<IDataResult<PagedList<MessageMapDto>>> Handle(GetMessageMapsQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<PagedList<MessageMapDto>>> Handle(GetMessageMapsQuery request, CancellationToken cancellationToken)
             {
                 var query = _messageMapRepository.Query().Select(s => new MessageMapDto
                                 {

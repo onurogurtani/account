@@ -13,9 +13,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserRoles.Commands
     [LogScope]
     public class UpdateUserRoleCommand : UpdateRequestBase<UserRole>
     {
-        public class UpdateUserRoleCommandHandler : UpdateHandlerBase<UserRole, UpdateUserRoleCommand>
+        public class UpdateRequestUserRoleCommandHandler : UpdateRequestHandlerBase<UserRole, UpdateUserRoleCommand>
         {
-            public UpdateUserRoleCommandHandler(IUserRoleRepository userRoleRepository) : base(userRoleRepository)
+            public UpdateRequestUserRoleCommandHandler(IUserRoleRepository userRoleRepository) : base(userRoleRepository)
             {
             }
         }

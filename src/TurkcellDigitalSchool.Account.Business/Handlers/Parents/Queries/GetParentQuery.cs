@@ -14,7 +14,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Parents.Queries
 
     public class GetParentQuery : QueryByIdRequestBase<Parent>
     {
-        public class GetParentQueryHandler : QueryByIdBase<Parent, GetParentQuery>
+        public class GetParentQueryHandler : QueryByIdRequestHandlerBase<Parent, GetParentQuery>
         {
             /// <summary>
             /// Get Parent

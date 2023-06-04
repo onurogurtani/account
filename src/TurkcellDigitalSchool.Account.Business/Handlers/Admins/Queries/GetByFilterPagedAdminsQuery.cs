@@ -20,11 +20,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
     ///Get Filtered Paged Admins  with Roles
     /// </summary>
     [LogScope]
-    public class GetByFilterPagedAdminsQuery : IRequest<IDataResult<PagedList<AdminDto>>>
+    public class GetByFilterPagedAdminsQuery : IRequest<DataResult<PagedList<AdminDto>>>
     {
         public AdminDetailSearch AdminDetailSearch { get; set; } = new AdminDetailSearch();
 
-        public class GetByFilterPagedAdminsQueryHandler : IRequestHandler<GetByFilterPagedAdminsQuery, IDataResult<PagedList<AdminDto>>>
+        public class GetByFilterPagedAdminsQueryHandler : IRequestHandler<GetByFilterPagedAdminsQuery, DataResult<PagedList<AdminDto>>>
         {
             private readonly IUserRepository _userRepository;
             private readonly IOrganisationUserRepository _organisationUserRepository;
@@ -38,7 +38,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
             }
              
             [SecuredOperation]
-            public virtual async Task<IDataResult<PagedList<AdminDto>>> Handle(GetByFilterPagedAdminsQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<PagedList<AdminDto>>> Handle(GetByFilterPagedAdminsQuery request, CancellationToken cancellationToken)
             {
                 long currentUserId = _tokenHelper.GetUserIdByCurrentToken();
                 var currentUser = await _userRepository.GetAsync(p => p.Id == currentUserId);

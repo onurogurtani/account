@@ -13,9 +13,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserRoles.Commands
     [LogScope]
     public class CreateUserRoleCommand : CreateRequestBase<UserRole>
     {
-        public class CreateUserRoleCommandHandler : CreateHandlerBase<UserRole, CreateUserRoleCommand>
+        public class CreateRequestUserRoleCommandHandler : CreateRequestHandlerBase<UserRole, CreateUserRoleCommand>
         {
-            public CreateUserRoleCommandHandler(IUserRoleRepository userRoleRepository) : base(userRoleRepository)
+            public CreateRequestUserRoleCommandHandler(IUserRoleRepository userRoleRepository) : base(userRoleRepository)
             {
             }
         }

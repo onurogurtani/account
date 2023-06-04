@@ -21,10 +21,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     ///Get Packages For User list Page
     ///<br />  PageNumber can be  entered manually </remarks>
     [LogScope]
-    public class GetPackagesForUserQuery : IRequest<IDataResult<PagedList<GetPackagesForUserResponseDto>>>
+    public class GetPackagesForUserQuery : IRequest<DataResult<PagedList<GetPackagesForUserResponseDto>>>
     {
         public PaginationQuery Pagination { get; set; }
-        public class GetPackagesForUserQueryHandler : IRequestHandler<GetPackagesForUserQuery, IDataResult<PagedList<GetPackagesForUserResponseDto>>>
+        public class GetPackagesForUserQueryHandler : IRequestHandler<GetPackagesForUserQuery, DataResult<PagedList<GetPackagesForUserResponseDto>>>
         {
 
             private readonly IPackageRepository _packageRepository;
@@ -40,7 +40,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
 
              
             [SecuredOperation]
-            public async Task<IDataResult<PagedList<GetPackagesForUserResponseDto>>> Handle(GetPackagesForUserQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<PagedList<GetPackagesForUserResponseDto>>> Handle(GetPackagesForUserQuery request, CancellationToken cancellationToken)
             {
                 var query = _packageRepository.Query().Where(q => q.IsActive)
                     .Include(x => x.PackageLessons).ThenInclude(x => x.Lesson)

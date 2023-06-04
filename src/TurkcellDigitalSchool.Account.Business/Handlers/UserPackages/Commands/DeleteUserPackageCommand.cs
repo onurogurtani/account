@@ -9,9 +9,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Commands
     [ExcludeFromCodeCoverage]
     public class DeleteUserPackageCommand : DeleteRequestBase<UserPackage>
     {
-        public class DeleteUserPackageCommandHandler : DeleteHandlerBase<UserPackage, DeleteUserPackageCommand>
+        public class DeleteRequestUserPackageCommandHandler : DeleteRequestHandlerBase<UserPackage, DeleteUserPackageCommand>
         {
-            public DeleteUserPackageCommandHandler(IUserPackageRepository repository) : base(repository)
+            public DeleteRequestUserPackageCommandHandler(IUserPackageRepository repository) : base(repository)
             {
             }
         }

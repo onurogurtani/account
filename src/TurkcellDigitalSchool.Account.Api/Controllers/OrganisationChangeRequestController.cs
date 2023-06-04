@@ -27,7 +27,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>PagedList GetOrganisationInfoChangeRequestDto</return>               
         ///<response code="200"></response>                      
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PagedList<GetOrganisationInfoChangeRequestDto>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<PagedList<GetOrganisationInfoChangeRequestDto>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("GetByFilterPagedOrganisationChangeRequests")]
         public async Task<IActionResult> GetByFilterPagedOrganisationChangeRequests(GetByFilterPagedOrganisationChangeRequestQuery query, CancellationToken cancellationToken)
@@ -52,7 +52,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         //[HttpPost("getList")]
         //public async Task<IActionResult> GetList([FromQuery] PaginationQuery query, CancellationToken cancellationToken, [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] FilterQuery[] filterQuery = null)
         //{
-        //    var result = await Mediator.Send(new QueryByFilterRequestBase<OrganisationInfoChangeRequest> { PaginationQuery = query, FilterQuery = filterQuery }, cancellationToken);
+        //    var result = await Mediator.Send(new GetByFilterPagedOrganisationChangeRequestQuery { PaginationQuery = query, FilterQuery = filterQuery }, cancellationToken);
         //    if (result.Success)
         //    {
         //        return Ok(result);
@@ -69,7 +69,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>TEntity</return>
         ///<response code = "200" ></ response >
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<GetOrganisationInfoChangeRequestDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<GetOrganisationInfoChangeRequestDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getbyid")]
         public async Task<IActionResult> GetById([FromQuery] GetOrganisationChangeRequestByIdQuery getOrganisationChangeRequestByIdQuery, CancellationToken cancellationToken)

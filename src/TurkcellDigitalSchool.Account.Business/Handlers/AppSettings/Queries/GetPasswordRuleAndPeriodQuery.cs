@@ -11,9 +11,9 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
 {
-    public class GetPasswordRuleAndPeriodQuery : IRequest<IDataResult<PasswordRuleAndPeriodDto>>
+    public class GetPasswordRuleAndPeriodQuery : IRequest<DataResult<PasswordRuleAndPeriodDto>>
     {
-        public class GetPasswordRuleAndPeriodQueryHandler : IRequestHandler<GetPasswordRuleAndPeriodQuery, IDataResult<PasswordRuleAndPeriodDto>>
+        public class GetPasswordRuleAndPeriodQueryHandler : IRequestHandler<GetPasswordRuleAndPeriodQuery, DataResult<PasswordRuleAndPeriodDto>>
         {
             private readonly IAppSettingRepository _appSettingRepository;
 
@@ -22,7 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
                 _appSettingRepository = appSettingRepository;
             }
 
-            public async Task<IDataResult<PasswordRuleAndPeriodDto>> Handle(GetPasswordRuleAndPeriodQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<PasswordRuleAndPeriodDto>> Handle(GetPasswordRuleAndPeriodQuery request, CancellationToken cancellationToken)
             {
                 var passwordRuleAndPeriodDto = new PasswordRuleAndPeriodDto();
 

@@ -19,11 +19,11 @@ using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.R
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Queries
 {
     [LogScope]
-    public class GetOrganisationChangeRequestByIdQuery : IRequest<IDataResult<GetOrganisationInfoChangeRequestDto>>
+    public class GetOrganisationChangeRequestByIdQuery : IRequest<DataResult<GetOrganisationInfoChangeRequestDto>>
     {
         public long Id { get; set; }
 
-        public class GetOrganisationChangeRequestByIdQueryHandler : IRequestHandler<GetOrganisationChangeRequestByIdQuery, IDataResult<GetOrganisationInfoChangeRequestDto>>
+        public class GetOrganisationChangeRequestByIdQueryHandler : IRequestHandler<GetOrganisationChangeRequestByIdQuery, DataResult<GetOrganisationInfoChangeRequestDto>>
         {
             private readonly IOrganisationInfoChangeRequestRepository _organisationInfoChangeRequestRepository;
             private readonly ICityRepository _cityRepository;
@@ -42,7 +42,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
             }
              
             [SecuredOperation]
-            public virtual async Task<IDataResult<GetOrganisationInfoChangeRequestDto>> Handle(GetOrganisationChangeRequestByIdQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<GetOrganisationInfoChangeRequestDto>> Handle(GetOrganisationChangeRequestByIdQuery request, CancellationToken cancellationToken)
             {
                 var query = _organisationInfoChangeRequestRepository.Query()
                     .Include(x => x.Organisation).ThenInclude(x => x.OrganisationType)

@@ -29,10 +29,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
 
     }
     [LogScope]
-    public class GetUserPackagesByUserIdQuery : IRequest<IDataResult<List<UserPackageDto>>>
+    public class GetUserPackagesByUserIdQuery : IRequest<DataResult<List<UserPackageDto>>>
     {
         public long UserId { get; set; }
-        public class GetUserPackagesByUserIdQueryHandler : IRequestHandler<GetUserPackagesByUserIdQuery, IDataResult<List<UserPackageDto>>>
+        public class GetUserPackagesByUserIdQueryHandler : IRequestHandler<GetUserPackagesByUserIdQuery, DataResult<List<UserPackageDto>>>
         {
             private readonly IUserPackageRepository _UserPackageRepository;
 
@@ -40,7 +40,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
             {
                 _UserPackageRepository = UserPackageRepository;
             } 
-            public async Task<IDataResult<List<UserPackageDto>>> Handle(GetUserPackagesByUserIdQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<List<UserPackageDto>>> Handle(GetUserPackagesByUserIdQuery request, CancellationToken cancellationToken)
             {
                 var userPackageList = _UserPackageRepository
                     .Query().Include(i => i.Package).AsQueryable()

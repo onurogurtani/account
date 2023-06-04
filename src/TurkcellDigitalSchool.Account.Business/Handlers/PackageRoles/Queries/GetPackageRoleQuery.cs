@@ -14,7 +14,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageRoles.Queries
 
     public class GetPackageRoleQuery : QueryByIdRequestBase<PackageRole>
     {
-        public class GetPackageRoleQueryHandler : QueryByIdBase<PackageRole, GetPackageRoleQuery>
+        public class GetPackageRoleQueryHandler : QueryByIdRequestHandlerBase<PackageRole, GetPackageRoleQuery>
         {
             public GetPackageRoleQueryHandler(IPackageRoleRepository packageRoleRepository) : base(packageRoleRepository)
             {

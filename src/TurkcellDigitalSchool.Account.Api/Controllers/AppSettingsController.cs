@@ -45,7 +45,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<List<GetPasswordRulesQueryResultDto>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<List<GetPasswordRulesQueryResultDto>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [AllowAnonymous]
         [HttpGet("getPasswordRules")]

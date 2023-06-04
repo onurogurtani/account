@@ -9,7 +9,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
     [ExcludeFromCodeCoverage]
     public class GetAppSettingQuery : QueryByIdRequestBase<AppSetting>
     {
-        public class GetAppSettingQueryHandler : QueryByIdBase<AppSetting, GetAppSettingQuery>
+        public class GetAppSettingQueryHandler : QueryByIdRequestHandlerBase<AppSetting, GetAppSettingQuery>
         {
             public GetAppSettingQueryHandler(IAppSettingRepository appSettingRepository) : base(appSettingRepository)
             {

@@ -14,7 +14,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Countys.Queries
 
     public class GetCountyQuery : QueryByIdRequestBase<County>
     {
-        public class GetCountyQueryHandler : QueryByIdBase<County, GetCountyQuery>
+        public class GetCountyQueryHandler : QueryByIdRequestHandlerBase<County, GetCountyQuery>
         {
             /// <summary>
             /// Get County

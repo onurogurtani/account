@@ -16,7 +16,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Queries
 {
     [LogScope]
-    public class GetSchoolListQuery : IRequest<IDataResult<PagedList<School>>>
+    public class GetSchoolListQuery : IRequest<DataResult<PagedList<School>>>
     {
         public PaginationQuery PaginationQuery { get; set; }
 
@@ -31,7 +31,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Queries
             public long? CountyId { get; set; }
         }
 
-        public class GetSchoolListQueryHandler : IRequestHandler<GetSchoolListQuery, IDataResult<PagedList<School>>>
+        public class GetSchoolListQueryHandler : IRequestHandler<GetSchoolListQuery, DataResult<PagedList<School>>>
         {
             private readonly ISchoolRepository _schoolRepository;
 
@@ -47,7 +47,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Queries
             /// </summary> 
             
             [SecuredOperation]
-            public async Task<IDataResult<PagedList<School>>> Handle(GetSchoolListQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<PagedList<School>>> Handle(GetSchoolListQuery request, CancellationToken cancellationToken)
             {
                 var query = _schoolRepository.Query();
 

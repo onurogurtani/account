@@ -20,12 +20,12 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
     [LogScope]
-    public class BehalfOfLoginQuery : IRequest<IDataResult<DArchToken>>, ITokenRequest
+    public class BehalfOfLoginQuery : IRequest<DataResult<DArchToken>>, ITokenRequest
     {
         public long UserId { get; set; }
         public SessionType SessionType { get; set; }
 
-        public class BehalfOfLoginQueryHandler : IRequestHandler<BehalfOfLoginQuery, IDataResult<DArchToken>>
+        public class BehalfOfLoginQueryHandler : IRequestHandler<BehalfOfLoginQuery, DataResult<DArchToken>>
         {
             private readonly IUserRepository _userRepository; 
             private readonly ITokenHelper _tokenHelper;
@@ -49,7 +49,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             /// If true, the token is created.
             /// </summary> 
             [SecuredOperation]
-            public async Task<IDataResult<DArchToken>> Handle(BehalfOfLoginQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<DArchToken>> Handle(BehalfOfLoginQuery request, CancellationToken cancellationToken)
             {
              
                 var targetUser = await _userRepository.GetAsync(u => u.Status && u.ViewMyData && (u.Id == request.UserId));

@@ -20,14 +20,14 @@ using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
     [LogScope]
-    public class LoginUserQuery : IRequest<IDataResult<AccessToken>>
+    public class LoginUserQuery : IRequest<DataResult<AccessToken>>
     {
         public long CitizenId { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         public string CaptchaKey { get; set; }
 
-        public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, IDataResult<AccessToken>>
+        public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, DataResult<AccessToken>>
         {
             private readonly ConfigurationManager _configurationManager;
             private readonly IUserRepository _userRepository;
@@ -44,7 +44,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 _captchaManager = captchaManager;
             }
              
-            public async Task<IDataResult<AccessToken>> Handle(LoginUserQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<AccessToken>> Handle(LoginUserQuery request, CancellationToken cancellationToken)
             {
                 if (!(_configurationManager.Mode == ApplicationMode.DEV && request.CaptchaKey == "kg"))
                 {

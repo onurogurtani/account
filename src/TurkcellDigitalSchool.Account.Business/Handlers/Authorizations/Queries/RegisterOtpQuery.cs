@@ -23,13 +23,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 
     [TransactionScope]
     [LogScope]
-    public class RegisterOtpQuery : IRequest<IDataResult<AccessToken>>, ITokenRequest
+    public class RegisterOtpQuery : IRequest<DataResult<AccessToken>>, ITokenRequest
     {
         public long MobileLoginId { get; set; }
         public int Otp { get; set; }
         public SessionType SessionType { get; set; }
 
-        public class RegisterOtpQueryHandler : IRequestHandler<RegisterOtpQuery, IDataResult<AccessToken>>
+        public class RegisterOtpQueryHandler : IRequestHandler<RegisterOtpQuery, DataResult<AccessToken>>
         {
             private readonly ConfigurationManager _configurationManager;
             private readonly IUserRepository _userRepository;
@@ -52,7 +52,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 _httpContextAccessor = httpContextAccessor;
                 _capPublisher = capPublisher;
             } 
-            public async Task<IDataResult<AccessToken>> Handle(RegisterOtpQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<AccessToken>> Handle(RegisterOtpQuery request, CancellationToken cancellationToken)
             {
                 try
                 {
@@ -66,7 +66,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 
                     if (mobileLogin == null)
                     {
-                        return new ErrorDataResult<DArchToken>(Messages.InvalidOtp);
+                        return new ErrorDataResult<AccessToken>(Messages.InvalidOtp);
                     }
 
                     var user = await _userRepository.GetAsync(u => u.Id == mobileLogin.UserId);
@@ -117,11 +117,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                         user, cancellationToken: cancellationToken);
 
 
-                    return new SuccessDataResult<DArchToken>(accessToken, Messages.SuccessfulLogin);
+                    return new SuccessDataResult<AccessToken>(accessToken, Messages.SuccessfulLogin);
                 }
                 catch (Exception e)
                 {
-                    return new ErrorDataResult<DArchToken>(e.Message);
+                    return new ErrorDataResult<AccessToken>(e.Message);
                 }
             }
         }

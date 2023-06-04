@@ -13,12 +13,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Institutions.Commands
     [LogScope]
     public class UpdateInstitutionCommand : UpdateRequestBase<Institution>
     {
-        public class UpdateInstitutionCommandHandler : UpdateHandlerBase<Institution, UpdateInstitutionCommand>
+        public class UpdateRequestInstitutionCommandHandler : UpdateRequestHandlerBase<Institution, UpdateInstitutionCommand>
         {
             /// <summary>
             /// Update Institution
             /// </summary>
-            public UpdateInstitutionCommandHandler(IInstitutionRepository ınstitutionRepository) : base(ınstitutionRepository)
+            public UpdateRequestInstitutionCommandHandler(IInstitutionRepository ınstitutionRepository) : base(ınstitutionRepository)
             {
             }
         }

@@ -9,9 +9,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
     [ExcludeFromCodeCoverage]
     public class DeleteOrganisationCommand : DeleteRequestBase<Organisation>
     {
-        public class DeleteOrganisationCommandHandler : DeleteHandlerBase<Organisation, DeleteOrganisationCommand>
+        public class DeleteRequestOrganisationCommandHandler : DeleteRequestHandlerBase<Organisation, DeleteOrganisationCommand>
         {
-            public DeleteOrganisationCommandHandler(IOrganisationRepository repository) : base(repository)
+            public DeleteRequestOrganisationCommandHandler(IOrganisationRepository repository) : base(repository)
             {
             }
         }

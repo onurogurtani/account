@@ -14,7 +14,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 
     public class GetUsersQuery : QueryByFilterRequestBase<User>
     {
-        public class GetUsersQueryHandler : QueryByFilterBase<User, GetUsersQuery>
+        public class GetUsersQueryHandler : QueryByFilterRequestHandlerBase<User, GetUsersQuery>
         {
             public GetUsersQueryHandler(IUserRepository repository) : base(repository)
             {

@@ -29,7 +29,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>PagedList Organisations</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PagedList<Organisation>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<PagedList<Organisation>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("GetByFilterPagedOrganisations")]
         public async Task<IActionResult> GetByFilterPagedOrganisations(GetByFilterPagedOrganisationsQuery query, CancellationToken cancellationToken)
@@ -69,7 +69,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>TEntity</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<OrganisationDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<OrganisationDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getbyid")]
         public async Task<IActionResult> GetById([FromQuery] GetOrganisationQuery getOrganisationQuery, CancellationToken cancellationToken)
@@ -247,7 +247,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>TEntity</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<OrganisationUsersDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<OrganisationUsersDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("GetOrganisationByUserIdQuery")]
         public async Task<IActionResult> GetOrganisationByUserIdQuery([FromQuery] GetOrganisationByUserIdQuery getOrganisationUserQuery, CancellationToken cancellationToken)
@@ -261,7 +261,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         }
 
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<OrganisationUserDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<OrganisationUserDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("GetUserOrganisationInfoByOrganisationIdQuery")]
         public async Task<IActionResult> GetUserOrganisationInfoByOrganisationIdQuery([FromQuery] GetUserOrganisationInfoByOrganisationIdQuery getUserOrganisationInfoByOrganisationIdQuery, CancellationToken cancellationToken)

@@ -49,7 +49,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>PagedList ContractKinds</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PagedList<ContractKind>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<PagedList<ContractKind>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("GetByFilterPagedContractKinds")]
         public async Task<IActionResult> GetByFilterPagedContractKinds(GetByFilterPagedContractKindsQuery query, CancellationToken cancellationToken)
@@ -89,7 +89,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>TEntity</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<ContractKind>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<ContractKind>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getbyid")]
         public async Task<IActionResult> GetById([FromQuery] GetContractKindQuery query, CancellationToken cancellationToken)

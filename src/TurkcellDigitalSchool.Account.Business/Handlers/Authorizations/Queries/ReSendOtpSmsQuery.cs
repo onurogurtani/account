@@ -18,12 +18,12 @@ using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
     [LogScope]
-    public class ReSendOtpSmsQuery : IRequest<IDataResult<AccessToken>>
+    public class ReSendOtpSmsQuery : IRequest<DataResult<AccessToken>>
     {
         public long MobileLoginId { get; set; }
         public bool IsRegister { get; set; }
 
-        public class ReSendSmsQueryHandler : IRequestHandler<ReSendOtpSmsQuery, IDataResult<AccessToken>>
+        public class ReSendSmsQueryHandler : IRequestHandler<ReSendOtpSmsQuery, DataResult<AccessToken>>
         {
             private readonly ConfigurationManager _configurationManager;
             private readonly IUserRepository _userRepository;
@@ -44,7 +44,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 _configurationManager = configurationManager;
             }
              
-            public async Task<IDataResult<AccessToken>> Handle(ReSendOtpSmsQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<AccessToken>> Handle(ReSendOtpSmsQuery request, CancellationToken cancellationToken)
             {
                 MobileLogin mobileLogin = await _mobileLoginRepository.GetAsync(w => w.Id == request.MobileLoginId);
 

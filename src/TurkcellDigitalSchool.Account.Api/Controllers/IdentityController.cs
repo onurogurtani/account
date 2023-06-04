@@ -42,7 +42,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         //[AllowAnonymous]
         //[Consumes("application/json")]
         //[Produces("application/json", "text/plain")]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<AccessToken>))]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         //[HttpPost("login")]
         //public async Task<IActionResult> Login([FromBody] LoginUserQuery loginModel, CancellationToken cancellationToken)
@@ -66,7 +66,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         //[AllowAnonymous]
         //[Consumes("application/json")]
         //[Produces("application/json", "text/plain")]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<AccessToken>))]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         //[HttpPost("LoginByLdap")]
         //public async Task<IActionResult> LoginByLdap([FromBody] LoginUserByLdapQuery loginModel, CancellationToken cancellationToken)
@@ -89,7 +89,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         //[AllowAnonymous]
         //[Consumes("application/json")]
         //[Produces("application/json", "text/plain")]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<AccessToken>))]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         //[HttpPost("LoginByTurkcellFastLogin")]
         //public async Task<IActionResult> LoginByTurkcellFastLogin([FromBody] LoginUserByTurkcellFastLoginQuery loginModel, CancellationToken cancellationToken)
@@ -111,7 +111,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// <returns></returns>
         //[Consumes("application/json")]
         //[Produces("application/json", "text/plain")]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<AccessToken>))]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         //[HttpPost("BehalfOfLogin")]
         //public async Task<IActionResult> BehalfOfLogin([FromBody] BehalfOfLoginQuery loginModel, CancellationToken cancellationToken)
@@ -134,7 +134,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         //[AllowAnonymous]
         //[Consumes("application/json")]
         //[Produces("application/json", "text/plain")]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<AccessToken>))]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         //[HttpPost("loginTry")]
         //public async Task<IActionResult> LoginTry([FromBody] LoginUserTryQuery loginModel, CancellationToken cancellationToken)
@@ -150,7 +150,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// <returns></returns>
         [Consumes("application/json")]
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<AccessToken>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("logout")]
         public async Task<IActionResult> Logout([FromBody] LogoutUserQuery logoutUserQuery, CancellationToken cancellationToken)
@@ -172,7 +172,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [AllowAnonymous]
         [Consumes("application/json")]
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<AccessToken>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("resendotpsms")]
         public async Task<IActionResult> ReSendOtpSms([FromBody] ReSendOtpSmsQuery loginModel, CancellationToken cancellationToken)
@@ -203,7 +203,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         //[AllowAnonymous]
         //[Consumes("application/json")]
         //[Produces("application/json", "text/plain")]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<AccessToken>))]
         //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         //[HttpPost("loginOtp")]
         //public async Task<IActionResult> LoginOtp([FromBody] LoginOtpQuery loginModel, CancellationToken cancellationToken)
@@ -229,7 +229,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [AllowAnonymous]
         [Consumes("application/json")]
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<string>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("loginFailReSendOtpSms")]
         public async Task<IActionResult> LoginFailReSendOtpSms([FromBody] LoginFailReSendOtpSmsQuery loginModel, CancellationToken cancellationToken)
@@ -253,7 +253,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [AllowAnonymous]
         [Consumes("application/json")]
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<string>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("loginFailCheckOtp")]
         public async Task<IActionResult> LoginFailCheckOtpQuery([FromBody] LoginFailCheckOtpQuery request, CancellationToken cancellationToken)
@@ -275,7 +275,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [AllowAnonymous]
         [Consumes("application/json")]
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<string>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("loginFailOtpNewPassword")]
         public async Task<IActionResult> LoginFailOtpNewPassword([FromBody] LoginFailOtpNewPasswordCommand request, CancellationToken cancellationToken)
@@ -298,7 +298,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [AllowAnonymous]
         [Consumes("application/json")]
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<string>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("forgotPasswordWithCheckFailCount")]
         public async Task<IActionResult> ForgotPasswordWithCheckFailCount([FromBody] ForgotPasswordWithCheckFailCountCommand request, CancellationToken cancellationToken)
@@ -321,7 +321,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [AllowAnonymous]
         [Consumes("application/json")]
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<string>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("ForgotPasswordSendLinkCheck")]
         public async Task<IActionResult> ForgotPasswordSendLinkCheck([FromBody] ForgotPasswordSendLinkCheckCommand request, CancellationToken cancellationToken)
@@ -344,7 +344,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [AllowAnonymous]
         [Consumes("application/json")]
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<string>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<string>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("forgotPasswordSendLinkChangePassword")]
         public async Task<IActionResult> ForgotPasswordSendLinkChangePassword([FromBody] ForgotPasswordSendLinkChangePasswordCommand request, CancellationToken cancellationToken)
@@ -485,7 +485,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [AllowAnonymous]
         [Consumes("application/json")]
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<AccessToken>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("registerOtp")]
         public async Task<IActionResult> RegisterOtp([FromBody] RegisterOtpQuery query, CancellationToken cancellationToken)
@@ -533,7 +533,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [AllowAnonymous]
         [Consumes("application/json")]
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<AccessToken>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut("forgottenpasswordchange")]
         public async Task<IActionResult> ForgottenPasswordChange([FromBody] ForgottenPasswordChangeCommand forgottenPasswordChangeCommand, CancellationToken cancellationToken)
@@ -557,7 +557,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [AllowAnonymous]
         [Consumes("application/json")]
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<AccessToken>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<AccessToken>))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string))]
         [HttpPut("forgottenPasswordTokenCheck")]
         public async Task<IActionResult> ForgottenPasswordTokenCheck([FromBody] ForgottenPasswordTokenCheckCommand forgottenPasswordTokenCheckCommand, CancellationToken cancellationToken)

@@ -17,10 +17,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationTypes.Comm
     public class DeleteOrganisationTypeCommand : DeleteRequestBase<OrganisationType>
     {
         [MessageClassAttr("Kurum Türü Silme")]
-        public class DeleteOrganisationTypeCommandHandler : DeleteHandlerBase<OrganisationType, DeleteOrganisationTypeCommand>
+        public class DeleteRequestOrganisationTypeCommandHandler : DeleteRequestHandlerBase<OrganisationType, DeleteOrganisationTypeCommand>
         {
             IOrganisationRepository _organisationRepository;
-            public DeleteOrganisationTypeCommandHandler(IOrganisationTypeRepository repository, IOrganisationRepository organisationRepository) : base(repository)
+            public DeleteRequestOrganisationTypeCommandHandler(IOrganisationTypeRepository repository, IOrganisationRepository organisationRepository) : base(repository)
             {
                 _organisationRepository = organisationRepository;
             }

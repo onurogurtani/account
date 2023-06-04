@@ -19,11 +19,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be ""RequestDateASC" ,"RequestDateDESC",  "RequestStateASC","RequestStateDESC", "ResponseStateASC" , "ResponseStateDESC", "CustomerManagerASC", "CustomerManagerDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC","IdASC","IdDESC" </remarks>
     [LogScope]
-    public class GetByFilterPagedOrganisationChangeRequestQuery : IRequest<IDataResult<PagedList<GetOrganisationInfoChangeRequestDto>>>
+    public class GetByFilterPagedOrganisationChangeRequestQuery : IRequest<DataResult<PagedList<GetOrganisationInfoChangeRequestDto>>>
     {
         public OrganisationChangeRequestDetailSearch OrganisationChangeRequestDetailSearch { get; set; } = new OrganisationChangeRequestDetailSearch();
 
-        public class GetByFilterPagedOrganisationChangeRequestQueryHandler : IRequestHandler<GetByFilterPagedOrganisationChangeRequestQuery, IDataResult<PagedList<GetOrganisationInfoChangeRequestDto>>>
+        public class GetByFilterPagedOrganisationChangeRequestQueryHandler : IRequestHandler<GetByFilterPagedOrganisationChangeRequestQuery, DataResult<PagedList<GetOrganisationInfoChangeRequestDto>>>
         {
             private readonly IOrganisationInfoChangeRequestRepository _organisationInfoChangeRequestRepository;
             private readonly IMapper _mapper;
@@ -35,7 +35,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
             }
              
             [SecuredOperation]
-            public virtual async Task<IDataResult<PagedList<GetOrganisationInfoChangeRequestDto>>> Handle(GetByFilterPagedOrganisationChangeRequestQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<PagedList<GetOrganisationInfoChangeRequestDto>>> Handle(GetByFilterPagedOrganisationChangeRequestQuery request, CancellationToken cancellationToken)
             {
                 var query = _organisationInfoChangeRequestRepository.Query()
                     .Include(x => x.OrganisationChangeReqContents)

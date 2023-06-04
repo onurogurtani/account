@@ -7,7 +7,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Queries
 {
     public class GetMessageMapQuery : QueryByIdRequestBase<MessageMap>
     {
-        public class GetMessageMapQueryHandler : QueryByIdBase<MessageMap, GetMessageMapQuery>
+        public class GetMessageMapQueryHandler : QueryByIdRequestHandlerBase<MessageMap, GetMessageMapQuery>
         {
             public GetMessageMapQueryHandler(IMessageMapRepository messageMapRepository) : base(messageMapRepository)
             {

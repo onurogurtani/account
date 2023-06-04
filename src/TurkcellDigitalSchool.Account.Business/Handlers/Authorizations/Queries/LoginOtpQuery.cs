@@ -19,13 +19,13 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
     [LogScope]
-    public class LoginOtpQuery : IRequest<IDataResult<DArchToken>>, ITokenRequest
+    public class LoginOtpQuery : IRequest<DataResult<DArchToken>>, ITokenRequest
     {
         public long MobileLoginId { get; set; }
         public int Otp { get; set; }
         public SessionType SessionType { get; set; }
 
-        public class LoginOtpQueryHandler : IRequestHandler<LoginOtpQuery, IDataResult<DArchToken>>
+        public class LoginOtpQueryHandler : IRequestHandler<LoginOtpQuery, DataResult<DArchToken>>
         {
             private readonly ConfigurationManager _configurationManager;
             private readonly IUserRepository _userRepository;
@@ -50,7 +50,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 _httpContextAccessor = httpContextAccessor;
 
             } 
-            public async Task<IDataResult<DArchToken>> Handle(LoginOtpQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<DArchToken>> Handle(LoginOtpQuery request, CancellationToken cancellationToken)
             {
                 try
                 {

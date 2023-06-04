@@ -19,7 +19,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
 {
     [LogScope]
-    public class GetTeacherQuery : IRequest<IDataResult<GetTeacherResponseDto>>
+    public class GetTeacherQuery : IRequest<DataResult<GetTeacherResponseDto>>
     {
         /// <summary>
         /// Get Teacher
@@ -27,7 +27,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
         public long Id { get; set; }
 
         [MessageClassAttr("Öðretmen Görüntüleme")]
-        public class GetTeacherQueryHandler : IRequestHandler<GetTeacherQuery, IDataResult<GetTeacherResponseDto>>
+        public class GetTeacherQueryHandler : IRequestHandler<GetTeacherQuery, DataResult<GetTeacherResponseDto>>
         {
             private readonly IUserRepository _userRepository;
             private readonly IMapper _mapper;
@@ -45,7 +45,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
 
           
             [SecuredOperation]
-            public async Task<IDataResult<GetTeacherResponseDto>> Handle(GetTeacherQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<GetTeacherResponseDto>> Handle(GetTeacherQuery request, CancellationToken cancellationToken)
             {
                 var teacherQueryable = _userRepository.Query().AsQueryable();
 

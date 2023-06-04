@@ -13,7 +13,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageLessons.Queries
     [LogScope]
     public class GetPackageLessonQuery : QueryByIdRequestBase<PackageLesson>
     {
-        public class GetPackageLessonQueryHandler : QueryByIdBase<PackageLesson, GetPackageLessonQuery>
+        public class GetPackageLessonQueryHandler : QueryByIdRequestHandlerBase<PackageLesson, GetPackageLessonQuery>
         {
             public GetPackageLessonQueryHandler(IPackageLessonRepository packageLessonRepository) : base(packageLessonRepository)
             {

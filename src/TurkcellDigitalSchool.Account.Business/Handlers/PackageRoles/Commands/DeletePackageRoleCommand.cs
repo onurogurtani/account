@@ -14,9 +14,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageRoles.Commands
 
     public class DeletePackageRoleCommand : DeleteRequestBase<PackageRole>
     {
-        public class DeletePackageRoleCommandHandler : DeleteHandlerBase<PackageRole, DeletePackageRoleCommand>
+        public class DeleteRequestPackageRoleCommandHandler : DeleteRequestHandlerBase<PackageRole, DeletePackageRoleCommand>
         {
-            public DeletePackageRoleCommandHandler(IPackageRoleRepository repository) : base(repository)
+            public DeleteRequestPackageRoleCommandHandler(IPackageRoleRepository repository) : base(repository)
             {
             }
         }

@@ -16,12 +16,12 @@ using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
     [LogScope]
-    public class LoginFailReSendOtpSmsQuery : IRequest<IDataResult<LoginFailReSendOtpSmsQuery.LoginFailReSendOtpSmsQueryResponse>>
+    public class LoginFailReSendOtpSmsQuery : IRequest<DataResult<LoginFailReSendOtpSmsQuery.LoginFailReSendOtpSmsQueryResponse>>
     {
         public long MobileLoginId { get; set; }
         public string XId { get; set; }
 
-        public class LoginFailReSendOtpSmsQueryHandler : IRequestHandler<LoginFailReSendOtpSmsQuery, IDataResult<LoginFailReSendOtpSmsQueryResponse>>
+        public class LoginFailReSendOtpSmsQueryHandler : IRequestHandler<LoginFailReSendOtpSmsQuery, DataResult<LoginFailReSendOtpSmsQueryResponse>>
         {
             private readonly IUserRepository _userRepository;
             private readonly IMobileLoginRepository _mobileLoginRepository;
@@ -35,7 +35,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 _environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             }
              
-            public async Task<IDataResult<LoginFailReSendOtpSmsQueryResponse>> Handle(LoginFailReSendOtpSmsQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<LoginFailReSendOtpSmsQueryResponse>> Handle(LoginFailReSendOtpSmsQuery request, CancellationToken cancellationToken)
             {
 
                 MobileLogin mobileLogin = await _mobileLoginRepository.GetAsync(w => w.Id == request.MobileLoginId && w.Status == UsedStatus.Send);

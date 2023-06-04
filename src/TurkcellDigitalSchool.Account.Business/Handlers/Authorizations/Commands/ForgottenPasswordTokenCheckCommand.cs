@@ -14,11 +14,11 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
     [LogScope]
-    public class ForgottenPasswordTokenCheckCommand : IRequest<IDataResult<UserSession>>
+    public class ForgottenPasswordTokenCheckCommand : IRequest<DataResult<UserSession>>
     {
         public string Token { get; set; }
 
-        public class ForgottenPasswordTokenCheckCommandHandler : IRequestHandler<ForgottenPasswordTokenCheckCommand, IDataResult<UserSession>>
+        public class ForgottenPasswordTokenCheckCommandHandler : IRequestHandler<ForgottenPasswordTokenCheckCommand, DataResult<UserSession>>
         {
             private readonly IUserRepository _userRepository;
             private readonly IConfiguration _configuration;
@@ -34,7 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 
 
         
-            public async Task<IDataResult<UserSession>> Handle(ForgottenPasswordTokenCheckCommand request, CancellationToken cancellationToken)
+            public async Task<DataResult<UserSession>> Handle(ForgottenPasswordTokenCheckCommand request, CancellationToken cancellationToken)
             {
                 UserSession userSession = new();
                 string token = "";

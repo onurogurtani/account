@@ -14,7 +14,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Citys.Queries
     [LogScope]
     public class GetCitysQuery : QueryByFilterRequestBase<City>
     {
-        public class GetCitysQueryHandler : QueryByFilterBase<City, GetCitysQuery>
+        public class GetCitysQueryHandler : QueryByFilterRequestHandlerBase<City, GetCitysQuery>
         {
             public GetCitysQueryHandler(ICityRepository repository) : base(repository)
             {

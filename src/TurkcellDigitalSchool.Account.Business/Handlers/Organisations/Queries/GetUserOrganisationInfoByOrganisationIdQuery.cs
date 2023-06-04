@@ -16,10 +16,10 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
 {
     [LogScope]
-    public class GetUserOrganisationInfoByOrganisationIdQuery : IRequest<IDataResult<OrganisationUserDto>>
+    public class GetUserOrganisationInfoByOrganisationIdQuery : IRequest<DataResult<OrganisationUserDto>>
     {
         [MessageClassAttr("Kullanýcý Kurum Görüntüleme")]
-        public class GetUserOrganisationInfoByOrganisationIdQueryHandler : IRequestHandler<GetUserOrganisationInfoByOrganisationIdQuery, IDataResult<OrganisationUserDto>>
+        public class GetUserOrganisationInfoByOrganisationIdQueryHandler : IRequestHandler<GetUserOrganisationInfoByOrganisationIdQuery, DataResult<OrganisationUserDto>>
         {
             private readonly ICityRepository _cityRepository;
             private readonly ICountyRepository _countyRepository;
@@ -41,7 +41,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
              
             [SecuredOperation]
-            public virtual async Task<IDataResult<OrganisationUserDto>> Handle(GetUserOrganisationInfoByOrganisationIdQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<OrganisationUserDto>> Handle(GetUserOrganisationInfoByOrganisationIdQuery request, CancellationToken cancellationToken)
             {
                 var organisationId = _tokenHelper.GetCurrentOrganisationId();
 

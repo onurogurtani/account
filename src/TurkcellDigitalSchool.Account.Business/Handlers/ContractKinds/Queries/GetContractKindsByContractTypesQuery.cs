@@ -19,10 +19,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
     /// </summary>
 
     [LogScope]
-    public class GetContractKindsByContractTypesQuery : IRequest<IDataResult<List<SelectionItem>>>
+    public class GetContractKindsByContractTypesQuery : IRequest<DataResult<List<SelectionItem>>>
     {
         public long[] Ids { get; set; }
-        public class GetContractKindsByContractTypesQueryHandler : IRequestHandler<GetContractKindsByContractTypesQuery, IDataResult<List<SelectionItem>>>
+        public class GetContractKindsByContractTypesQueryHandler : IRequestHandler<GetContractKindsByContractTypesQuery, DataResult<List<SelectionItem>>>
         {
             private readonly IDocumentRepository _documentRepository;
             private readonly IContractTypeRepository _contractTypeRepository;
@@ -36,7 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
 
           
             [SecuredOperation]
-            public async Task<IDataResult<List<SelectionItem>>> Handle(GetContractKindsByContractTypesQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<List<SelectionItem>>> Handle(GetContractKindsByContractTypesQuery request, CancellationToken cancellationToken)
             {
                 var isThereRecord = _contractTypeRepository.Query().Any(u => request.Ids.Contains(u.Id));
                 if (!isThereRecord)

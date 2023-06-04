@@ -13,9 +13,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
     [LogScope]
     public class CreateDocumentCommand : CreateRequestBase<Document>
     {
-        public class CreateDocumentCommandHandler : CreateHandlerBase<Document, CreateDocumentCommand>
+        public class CreateRequestDocumentCommandHandler : CreateRequestHandlerBase<Document, CreateDocumentCommand>
         {
-            public CreateDocumentCommandHandler(IDocumentRepository documentRepository) : base(documentRepository)
+            public CreateRequestDocumentCommandHandler(IDocumentRepository documentRepository) : base(documentRepository)
             {
             }
         }

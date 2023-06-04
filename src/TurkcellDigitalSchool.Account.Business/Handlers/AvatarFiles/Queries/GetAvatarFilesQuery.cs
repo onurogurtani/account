@@ -17,10 +17,10 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Queries
 {
     [LogScope]
-    public class GetAvatarFilesQuery : IRequest<IDataResult<PagedList<AvatarFilesDto>>>
+    public class GetAvatarFilesQuery : IRequest<DataResult<PagedList<AvatarFilesDto>>>
     {
         public PaginationQuery PaginationQuery { get; set; }
-        public class GetAvatarFilesQueryHandler : IRequestHandler<GetAvatarFilesQuery, IDataResult<PagedList<AvatarFilesDto>>>
+        public class GetAvatarFilesQueryHandler : IRequestHandler<GetAvatarFilesQuery, DataResult<PagedList<AvatarFilesDto>>>
         {
             private readonly IFileRepository _fileRepository;
             private readonly IFileService _fileService;
@@ -34,7 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Queries
 
            
             [SecuredOperation]
-            public async Task<IDataResult<PagedList<AvatarFilesDto>>> Handle(GetAvatarFilesQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<PagedList<AvatarFilesDto>>> Handle(GetAvatarFilesQuery request, CancellationToken cancellationToken)
             {
                 var query = _fileRepository.Query().Where(x => x.FileType == FileType.Avatar);
 

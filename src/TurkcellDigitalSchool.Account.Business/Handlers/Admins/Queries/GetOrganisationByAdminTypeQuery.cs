@@ -20,10 +20,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
 {
 
     [LogScope]
-    public class GetOrganisationByAdminTypeQuery : IRequest<IDataResult<OrganisationUsersDto>>
+    public class GetOrganisationByAdminTypeQuery : IRequest<DataResult<OrganisationUsersDto>>
     {
         [MessageClassAttr("Admin Tipine Göre Kullanýcý Kurumlarýný Listeleme")]
-        public class GetOrganisationByAdminTypeQueryHandler : IRequestHandler<GetOrganisationByAdminTypeQuery, IDataResult<OrganisationUsersDto>>
+        public class GetOrganisationByAdminTypeQueryHandler : IRequestHandler<GetOrganisationByAdminTypeQuery, DataResult<OrganisationUsersDto>>
         {
             private readonly IUserRepository _userRepository;
             private readonly IOrganisationUserRepository _organisationUserRepository;
@@ -43,7 +43,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
 
          
             [SecuredOperation]
-            public virtual async Task<IDataResult<OrganisationUsersDto>> Handle(GetOrganisationByAdminTypeQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<OrganisationUsersDto>> Handle(GetOrganisationByAdminTypeQuery request, CancellationToken cancellationToken)
             {
                 var userId = _tokenHelper.GetUserIdByCurrentToken();
                 var user = await _userRepository.GetAsync(w => w.Id == userId);

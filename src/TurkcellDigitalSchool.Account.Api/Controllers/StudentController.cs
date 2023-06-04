@@ -27,7 +27,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// <param name="request"></param>
         /// <returns>ParentInfoDto</returns>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<StudentInfoDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<StudentInfoDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("GetStudentInformations")]
         public async Task<IActionResult> GetStudentInformations([FromQuery] GetStudentInformationsQuery request, CancellationToken cancellationToken)
@@ -47,7 +47,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// <param name="request"></param>
         /// <returns>ParentInfoDto</returns>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<List<PackageInfoDto>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<List<PackageInfoDto>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("GetStudentPackageInformation")]
         public async Task<IActionResult> GetStudentPackageInformation([FromQuery] GetStudentPackageInformationQuery request, CancellationToken cancellationToken)
@@ -67,7 +67,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// <param name="request"></param>
         /// <returns>ParentInfoDto</returns>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<List<ParentInfoDto>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<List<ParentInfoDto>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("GetStudentParentInformation")]
         public async Task<IActionResult> GetStudentParentInformation([FromQuery] GetStudentParentInformationQuery request, CancellationToken cancellationToken)
@@ -88,7 +88,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// <param name="request"></param>
         /// <returns>EducationInfoDto</returns>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<EducationInfoDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<EducationInfoDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("GetStudentEducationInformation")]
         public async Task<IActionResult> GetStudentEducationInformation([FromQuery] GetStudentEducationInformationQuery request, CancellationToken cancellationToken)
@@ -127,7 +127,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// <param name="request"></param>
         /// <returns>PersonalInfoDto</returns>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PersonalInfoDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<PersonalInfoDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("GetStudentPersonalInformation")]
         public async Task<IActionResult> GetStudentPersonalInformation([FromQuery] GetStudentPersonalInformationQuery request, CancellationToken cancellationToken)
@@ -166,7 +166,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// <param name="request"></param>
         /// <returns>PersonalInfoDto</returns>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<SettingsInfoDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<SettingsInfoDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("GetStudentSettingsInformation")]
         public async Task<IActionResult> GetStudentSettingsInformation([FromQuery] GetStudentSettingsInformationQuery request, CancellationToken cancellationToken)
@@ -245,7 +245,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// <param name="request"></param>
         /// <returns>ParentInfoDto</returns>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<List<ParentInfoDto>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<List<ParentInfoDto>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("GetStudentParentsInformation")]
         public async Task<IActionResult> GetStudentParentsInformation([FromQuery] GetStudentParentsInformationQuery request, CancellationToken cancellationToken)
@@ -264,7 +264,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// <param name="request"></param>
         /// <returns>ParentInfoDto</returns>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<List<ParentInfoDto>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<List<ParentInfoDto>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("GetStudentsByParentCitizenId")]
         public async Task<IActionResult> GetStudentsByParentCitizenId([FromQuery] GetStudentsByParentCitizenIdQuery request, CancellationToken cancellationToken)
@@ -283,7 +283,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// <param name="request"></param>
         /// <returns>ParentInfoDto</returns>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<List<ParentInfoDto>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<List<ParentInfoDto>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("GetStudentsByParentId")]
         public async Task<IActionResult> GetStudentsByParentId([FromQuery] GetStudentsByParentIdQuery request, CancellationToken cancellationToken)

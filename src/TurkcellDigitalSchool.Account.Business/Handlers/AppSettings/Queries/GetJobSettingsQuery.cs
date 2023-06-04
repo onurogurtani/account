@@ -14,9 +14,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
 {
 
     [LogScope]
-    public class GetJobSettingsQuery : IRequest<IDataResult<IEnumerable<AppSetting>>>
+    public class GetJobSettingsQuery : IRequest<DataResult<IEnumerable<AppSetting>>>
     {
-        public class GetJobSettingsQueryHandler : IRequestHandler<GetJobSettingsQuery, IDataResult<IEnumerable<AppSetting>>>
+        public class GetJobSettingsQueryHandler : IRequestHandler<GetJobSettingsQuery, DataResult<IEnumerable<AppSetting>>>
         {
             private readonly IAppSettingRepository _appSettingRepository;
 
@@ -25,7 +25,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
                 _appSettingRepository = appSettingRepository;
             }
              
-            public async Task<IDataResult<IEnumerable<AppSetting>>> Handle(GetJobSettingsQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<IEnumerable<AppSetting>>> Handle(GetJobSettingsQuery request, CancellationToken cancellationToken)
             {
                 var jobs = Enum.GetValues(typeof(JobType)).Cast<JobType>().Select(v => v.ToString()).ToList();
 
