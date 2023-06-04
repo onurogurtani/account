@@ -56,7 +56,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [HttpPost("getList")]
         public async Task<IActionResult> GetList([FromQuery] PaginationQuery query, CancellationToken cancellationToken, [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] FilterQuery[] filterQuery = null)
         {
-            var result = await Mediator.Send(new QueryByFilterRequestBase<OrganisationType> { PaginationQuery = query, FilterQuery = filterQuery }, cancellationToken);
+            var result = await Mediator.Send(new GetOrganisationTypesQuery { PaginationQuery = query, FilterQuery = filterQuery }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -135,7 +135,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [HttpDelete("Delete")]
         public async Task<IActionResult> Delete(long id, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new DeleteRequestBase<OrganisationType> { Id = id }, cancellationToken);
+            var result = await Mediator.Send(new DeleteOrganisationTypeCommand { Id = id }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);

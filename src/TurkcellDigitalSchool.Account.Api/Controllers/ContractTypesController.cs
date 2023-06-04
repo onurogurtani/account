@@ -92,7 +92,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(long id, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new DeleteRequestBase<ContractType> { Id = id }, cancellationToken);
+            var result = await Mediator.Send(new DeleteContractTypeCommand { Id = id }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -112,7 +112,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [HttpGet("getbyid")]
         public async Task<IActionResult> GetById(long id, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new QueryByIdRequestBase<ContractType> { Id = id }, cancellationToken);
+            var result = await Mediator.Send(new GetContractTypeQuery { Id = id }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
@@ -132,7 +132,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [HttpPost("getList")]
         public async Task<IActionResult> GetList([FromQuery] PaginationQuery query, CancellationToken cancellationToken, [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] FilterQuery[] filterQuery = null)
         {
-            var result = await Mediator.Send(new QueryByFilterRequestBase<ContractType> { PaginationQuery = query, FilterQuery = filterQuery }, cancellationToken);
+            var result = await Mediator.Send(new GetContractTypesQuery { PaginationQuery = query, FilterQuery = filterQuery }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);

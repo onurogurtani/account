@@ -55,7 +55,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [HttpPost("getList")]
         public async Task<IActionResult> GetList([FromQuery] PaginationQuery query, CancellationToken cancellationToken, [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] FilterQuery[] filterQuery = null)
         {
-            var result = await Mediator.Send(new QueryByFilterRequestBase<TargetScreen> { PaginationQuery = query, FilterQuery = filterQuery }, cancellationToken);
+            var result = await Mediator.Send(new GetTargetScreensQuery { PaginationQuery = query, FilterQuery = filterQuery }, cancellationToken);
             if (result.Success)
             {
                 return Ok(result);
