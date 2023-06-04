@@ -174,7 +174,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 var record = _packageRepository.Update(entity);
                 await _packageRepository.SaveChangesAsync();
 
-                 
+                foreach (var item in record.PackageTestExams)
+                {
+                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Added), item, cancellationToken: cancellationToken);
+                }
+
                 await _capPublisher.PublishAsync(record.GeneratePublishName(EntityState.Modified), record, cancellationToken: cancellationToken);
 
 
