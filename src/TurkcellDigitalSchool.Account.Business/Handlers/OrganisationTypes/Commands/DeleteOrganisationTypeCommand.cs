@@ -17,7 +17,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationTypes.Comm
     public class DeleteOrganisationTypeCommand : DeleteRequestBase<OrganisationType>
     {
         [MessageClassAttr("Kurum Türü Silme")]
-        public class DeleteOrganisationTypeCommandHandler : DeleteRequestHandlerBase<OrganisationType>
+        public class DeleteOrganisationTypeCommandHandler : DeleteHandlerBase<OrganisationType, DeleteOrganisationTypeCommand>
         {
             IOrganisationRepository _organisationRepository;
             public DeleteOrganisationTypeCommandHandler(IOrganisationTypeRepository repository, IOrganisationRepository organisationRepository) : base(repository)
@@ -28,7 +28,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationTypes.Comm
             [MessageConstAttr(MessageCodeType.Error)]
             private static string CanNotChangeForRelationOrganisation = Constants.Messages.CanNotChangeForRelationOrganisation;
 
-            public override async Task<DataResult<OrganisationType>> Handle(DeleteRequestBase<OrganisationType> request, CancellationToken cancellationToken)
+            public override async Task<DataResult<OrganisationType>> Handle(DeleteOrganisationTypeCommand request, CancellationToken cancellationToken)
             {
                 if (await _organisationRepository.Query().AnyAsync(x => x.OrganisationTypeId == request.Id))
                 {

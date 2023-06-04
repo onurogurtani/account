@@ -9,7 +9,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Queries
     [ExcludeFromCodeCoverage]
     public class GetTargetScreensQuery : QueryByFilterRequestBase<TargetScreen>
     {
-        public class GetTargetScreensQueryHandler : QueryByFilterRequestHandlerBase<TargetScreen>
+        public class GetTargetScreensQueryHandler : QueryByFilterBase<TargetScreen, GetTargetScreensQuery>
         {
             public GetTargetScreensQueryHandler(ITargetScreenRepository repository) : base(repository)
             {

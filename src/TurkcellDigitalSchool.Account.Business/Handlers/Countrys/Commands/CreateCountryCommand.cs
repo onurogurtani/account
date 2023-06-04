@@ -9,7 +9,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Countrys.Commands
     [ExcludeFromCodeCoverage]
     public class CreateCountryCommand : CreateRequestBase<Country>
     {
-        public class CreateCountryCommandHandler : CreateDefinitionRequestHandlerBase<Country>
+        public class CreateCountryCommandHandler : CreateDefinitionHandlerBase<Country, CreateCountryCommand>
         {
             public CreateCountryCommandHandler(ICountryRepository countryRepository) : base(countryRepository)
             {

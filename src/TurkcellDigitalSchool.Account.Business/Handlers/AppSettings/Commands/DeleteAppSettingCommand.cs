@@ -9,7 +9,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Commands
     [ExcludeFromCodeCoverage]
     public class DeleteAppSettingCommand : DeleteRequestBase<AppSetting>
     {
-        public class DeleteAppSettingCommandHandler : DeleteRequestHandlerBase<AppSetting>
+        public class DeleteAppSettingCommandHandler : DeleteHandlerBase<AppSetting, DeleteAppSettingCommand>
         {
             public DeleteAppSettingCommandHandler(IAppSettingRepository repository) : base(repository)
             {

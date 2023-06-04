@@ -9,7 +9,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Commands
     [ExcludeFromCodeCoverage]
     public class UpdateAppSettingCommand : UpdateRequestBase<AppSetting>
     {
-        public class UpdateAppSettingCommandHandler : UpdateDefinitionRequestHandlerBase<AppSetting>
+        public class UpdateAppSettingCommandHandler : UpdateDefinitionHandlerBase<AppSetting, UpdateAppSettingCommand>
         {
             public UpdateAppSettingCommandHandler(IAppSettingRepository appSettingRepository) : base(appSettingRepository)
             {

@@ -9,7 +9,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationTypes.Quer
     [ExcludeFromCodeCoverage]
     public class GetOrganisationTypesQuery : QueryByFilterRequestBase<OrganisationType>
     {
-        public class GetOrganisationTypesQueryHandler : QueryByFilterRequestHandlerBase<OrganisationType>
+        public class GetOrganisationTypesQueryHandler : QueryByFilterBase<OrganisationType, GetOrganisationTypesQuery>
         {
             public GetOrganisationTypesQueryHandler(IOrganisationTypeRepository repository) : base(repository)
             {
