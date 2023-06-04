@@ -14,7 +14,7 @@ using TurkcellDigitalSchool.Integration.IntegrationServices.IdentityServerServic
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
     [LogScope]
-    public class OldPasswordToNewPasswordCommand : IRequest<IDataResult<TokenIntegraitonResponse>>
+    public class OldPasswordToNewPasswordCommand : IRequest<DataResult<TokenIntegraitonResponse>>
     {
         public string XId { get; set; }
         public string Guid { get; set; } 
@@ -23,7 +23,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
         public string NewPassAgain { get; set; }
         public string ClientId { get; set; }
 
-        public class OldPasswordToNewPasswordCommandHandler : IRequestHandler<OldPasswordToNewPasswordCommand, IDataResult<TokenIntegraitonResponse>>
+        public class OldPasswordToNewPasswordCommandHandler : IRequestHandler<OldPasswordToNewPasswordCommand, DataResult<TokenIntegraitonResponse>>
         {
             private readonly IUserRepository _userRepository;
             private readonly IMediator _mediator;
@@ -34,7 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 _mediator = mediator;
             }
              
-            public async Task<IDataResult<TokenIntegraitonResponse>> Handle(OldPasswordToNewPasswordCommand request, CancellationToken cancellationToken)
+            public async Task<DataResult<TokenIntegraitonResponse>> Handle(OldPasswordToNewPasswordCommand request, CancellationToken cancellationToken)
             {
                 if (request.NewPass != request.NewPassAgain)
                 {

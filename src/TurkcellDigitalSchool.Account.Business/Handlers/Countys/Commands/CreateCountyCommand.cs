@@ -15,12 +15,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Countys.Commands
     [RemoveCacheScope(RequestTypes = new[] { typeof(GetCountysQuery) })]
     public class CreateCountyCommand : CreateRequestBase<County>
     {
-        public class CreateCountyCommandHandler : CreateHandlerBase<County, CreateCountyCommand>
+        public class CreateRequestCountyCommandHandler : CreateRequestHandlerBase<County, CreateCountyCommand>
         {
             /// <summary>
             /// Create County
             /// </summary>
-            public CreateCountyCommandHandler(ICountyRepository countyRepository) : base(countyRepository)
+            public CreateRequestCountyCommandHandler(ICountyRepository countyRepository) : base(countyRepository)
             {
             } 
         }

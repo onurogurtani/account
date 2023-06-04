@@ -17,9 +17,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Educations.Commands
     [LogScope]
     public class UpdateEducationCommand : UpdateRequestBase<Education>
     {
-        public class UpdateEducationCommandHandler : UpdateHandlerBase<Education, UpdateEducationCommand>
+        public class UpdateRequestEducationCommandHandler : UpdateRequestHandlerBase<Education, UpdateEducationCommand>
         {
-            public UpdateEducationCommandHandler(IEducationRepository educationRepository) : base(educationRepository)
+            public UpdateRequestEducationCommandHandler(IEducationRepository educationRepository) : base(educationRepository)
             {
             }
         }

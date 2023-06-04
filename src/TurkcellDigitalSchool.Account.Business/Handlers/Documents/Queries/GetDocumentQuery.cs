@@ -19,11 +19,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
     /// </summary>
     [LogScope]
     [SecuredOperation]
-    public class GetDocumentQuery : IRequest<IDataResult<DocumentDto>>
+    public class GetDocumentQuery : IRequest<DataResult<DocumentDto>>
     {
         public long Id { get; set; }
 
-        public class GetDocumentQueryHandler : IRequestHandler<GetDocumentQuery, IDataResult<DocumentDto>>
+        public class GetDocumentQueryHandler : IRequestHandler<GetDocumentQuery, DataResult<DocumentDto>>
         {
             private readonly IDocumentRepository _documentRepository;
             private readonly IMapper _mapper;
@@ -37,7 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
                 _mapper = mapper;
             }
  
-            public virtual async Task<IDataResult<DocumentDto>> Handle(GetDocumentQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<DocumentDto>> Handle(GetDocumentQuery request, CancellationToken cancellationToken)
             {
                 var query = _documentRepository.Query()
                    .Include(x => x.ContractTypes).ThenInclude(x => x.ContractType)

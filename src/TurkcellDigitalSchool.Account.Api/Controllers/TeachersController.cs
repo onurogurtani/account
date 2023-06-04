@@ -28,7 +28,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// <return>Invalid Records (Excel)</return>
         /// <response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<ExcelResponse>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<ExcelResponse>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("uploadTeacherExcel")]
         public async Task<IActionResult> UploadTeacherExcel([FromForm] UploadTeacherExcelCommand command, CancellationToken cancellationToken)
@@ -71,7 +71,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>PagedList Teachers</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PagedList<GetTeachersResponseDto>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<PagedList<GetTeachersResponseDto>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("GetByFilterPagedTeachers")]
         public async Task<IActionResult> GetByFilterPagedTeachers([FromBody] GetByFilterPagedTeachersQuery request, CancellationToken cancellationToken)
@@ -92,7 +92,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>TEntity</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<GetTeacherResponseDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<GetTeacherResponseDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getbyid")]
         public async Task<IActionResult> GetById(long id, CancellationToken cancellationToken)

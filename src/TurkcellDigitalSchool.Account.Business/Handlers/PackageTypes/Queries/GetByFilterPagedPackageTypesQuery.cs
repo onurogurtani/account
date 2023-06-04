@@ -19,11 +19,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Queries
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "IsActiveASC","IsActiveDESC","NameASC","NameDESC","PackageTypeASC","PackageTypeDESC","IdASC","IdDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC" 
     ///<br />   PageNumber can be  entered manually </remarks>
     [LogScope]
-    public class GetByFilterPagedPackageTypesQuery : IRequest<IDataResult<PagedList<PackageType>>>
+    public class GetByFilterPagedPackageTypesQuery : IRequest<DataResult<PagedList<PackageType>>>
     {
         public PackageTypeDetailSearch PackageTypeDetailSearch { get; set; } = new PackageTypeDetailSearch();
 
-        public class GetByFilterPagedPackageTypesQueryHandler : IRequestHandler<GetByFilterPagedPackageTypesQuery, IDataResult<PagedList<PackageType>>>
+        public class GetByFilterPagedPackageTypesQueryHandler : IRequestHandler<GetByFilterPagedPackageTypesQuery, DataResult<PagedList<PackageType>>>
         {
             private readonly IPackageTypeRepository _packageRepository;
 
@@ -36,7 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Queries
              
             
             [SecuredOperation]
-            public virtual async Task<IDataResult<PagedList<PackageType>>> Handle(GetByFilterPagedPackageTypesQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<PagedList<PackageType>>> Handle(GetByFilterPagedPackageTypesQuery request, CancellationToken cancellationToken)
             {
                 var query = _packageRepository.Query()
                     .Include(x => x.PackageTypeTargetScreens).ThenInclude(x => x.TargetScreen)

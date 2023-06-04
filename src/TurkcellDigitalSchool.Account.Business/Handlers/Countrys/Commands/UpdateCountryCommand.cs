@@ -9,9 +9,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Countrys.Commands
     [ExcludeFromCodeCoverage]
     public class UpdateCountryCommand : UpdateRequestBase<Country>
     {
-        public class UpdateCountryCommandHandler : UpdateHandlerBase<Country, UpdateCountryCommand>
+        public class UpdateRequestCountryCommandHandler : UpdateRequestHandlerBase<Country, UpdateCountryCommand>
         {
-            public UpdateCountryCommandHandler(ICountryRepository countryRepository) : base(countryRepository)
+            public UpdateRequestCountryCommandHandler(ICountryRepository countryRepository) : base(countryRepository)
             {
             }
         }

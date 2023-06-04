@@ -38,12 +38,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Queries
     /// Get PackageType
     /// </summary>
     [LogScope]
-    public class GetPackageTypeQuery : IRequest<IDataResult<PackageType>>
+    public class GetPackageTypeQuery : IRequest<DataResult<PackageType>>
     {
         public long Id { get; set; }
 
         [MessageClassAttr("Paket Türü Görüntüleme")]
-        public class GetPackageTypeQueryHandler : IRequestHandler<GetPackageTypeQuery, IDataResult<PackageType>>
+        public class GetPackageTypeQueryHandler : IRequestHandler<GetPackageTypeQuery, DataResult<PackageType>>
         {
             private readonly IPackageTypeRepository _packageTypeRepository;
 
@@ -59,7 +59,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Queries
             private static string Deleted = Messages.Deleted;
               
             [SecuredOperation]
-            public virtual async Task<IDataResult<PackageType>> Handle(GetPackageTypeQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<PackageType>> Handle(GetPackageTypeQuery request, CancellationToken cancellationToken)
             {
                 var query = _packageTypeRepository.Query()
                     .Include(x => x.PackageTypeTargetScreens).ThenInclude(x => x.TargetScreenId)

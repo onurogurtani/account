@@ -18,11 +18,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "IsActiveASC","IsActiveDESC","NameASC","NameDESC","PackageKindASC","PackageKindDESC","SummaryASC","SummaryDESC","ContentASC","ContentDESC","PackageTypeASC","PackageTypeDESC","MaxNetCountASC","MaxNetCountDESC","EducationYearASC","EducationYearDESC","ClassroomDESC","ClassroomASC","LessonDESC","LessonASC","PackageFieldTypeASC","PackageFieldTypeDESC","RoleDESC","RoleASC","StartDateASC","StartDateDESC","FinishDateASC","FinishDateDESC","HasCoachServiceASC","HasCoachServiceDESC","HasTryingTestASC","HasTryingTestDESC","TryingTestQuestionCountASC","TryingTestQuestionCountDESC","HasMotivationEventASC","HasMotivationEventDESC","IdASC","IdDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC"  </remarks>
     [LogScope]
-    public class GetByFilterPagedPackagesQuery : IRequest<IDataResult<PagedList<Package>>>
+    public class GetByFilterPagedPackagesQuery : IRequest<DataResult<PagedList<Package>>>
     {
         public PackageDetailSearch PackageDetailSearch { get; set; } = new PackageDetailSearch();
 
-        public class GetByFilterPagedPackagesQueryHandler : IRequestHandler<GetByFilterPagedPackagesQuery, IDataResult<PagedList<Package>>>
+        public class GetByFilterPagedPackagesQueryHandler : IRequestHandler<GetByFilterPagedPackagesQuery, DataResult<PagedList<Package>>>
         {
             private readonly IPackageRepository _packageRepository;
 
@@ -33,7 +33,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
 
            
             [SecuredOperation]
-            public virtual async Task<IDataResult<PagedList<Package>>> Handle(GetByFilterPagedPackagesQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<PagedList<Package>>> Handle(GetByFilterPagedPackagesQuery request, CancellationToken cancellationToken)
             {
                 var query = _packageRepository.Query()
                     .Include(x => x.ImageOfPackages).ThenInclude(x => x.File)

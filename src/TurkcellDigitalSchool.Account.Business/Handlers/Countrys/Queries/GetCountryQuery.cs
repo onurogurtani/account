@@ -9,7 +9,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Countrys.Queries
     [ExcludeFromCodeCoverage]
     public class GetCountryQuery : QueryByIdRequestBase<Country>
     {
-        public class GetCountryQueryHandler : QueryByIdBase<Country, GetCountryQuery>
+        public class GetCountryQueryHandler : QueryByIdRequestHandlerBase<Country, GetCountryQuery>
         {
             public GetCountryQueryHandler(ICountryRepository countryRepository) : base(countryRepository)
             {

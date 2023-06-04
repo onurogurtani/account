@@ -12,7 +12,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     [ExcludeFromCodeCoverage]
     public class GetPackagesQuery : QueryByFilterRequestBase<Package>
     {
-        public class GetPackagesQueryHandler : QueryByFilterBase<Package, GetPackagesQuery>
+        public class GetPackagesQueryHandler : QueryByFilterRequestHandlerBase<Package, GetPackagesQuery>
         {
             public GetPackagesQueryHandler(IPackageRepository repository) : base(repository)
             {

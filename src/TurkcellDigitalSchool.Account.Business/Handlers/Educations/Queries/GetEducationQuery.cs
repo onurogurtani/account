@@ -16,7 +16,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Educations.Queries
     [LogScope]
     public class GetEducationQuery : QueryByIdRequestBase<Education>
     {
-        public class GetEducationQueryHandler : QueryByIdBase<Education, GetEducationQuery>
+        public class GetEducationQueryHandler : QueryByIdRequestHandlerBase<Education, GetEducationQuery>
         {
             public GetEducationQueryHandler(IEducationRepository educationRepository) : base(educationRepository)
             {

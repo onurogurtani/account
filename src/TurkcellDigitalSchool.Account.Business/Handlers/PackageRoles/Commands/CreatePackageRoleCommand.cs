@@ -14,9 +14,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageRoles.Commands
 
     public class CreatePackageRoleCommand : CreateRequestBase<PackageRole>
     {
-        public class CreatePackageRoleCommandHandler : CreateHandlerBase<PackageRole, CreatePackageRoleCommand>
+        public class CreateRequestPackageRoleCommandHandler : CreateRequestHandlerBase<PackageRole, CreatePackageRoleCommand>
         {
-            public CreatePackageRoleCommandHandler(IPackageRoleRepository packageRoleRepository) : base(packageRoleRepository)
+            public CreateRequestPackageRoleCommandHandler(IPackageRoleRepository packageRoleRepository) : base(packageRoleRepository)
             {
             }
         }

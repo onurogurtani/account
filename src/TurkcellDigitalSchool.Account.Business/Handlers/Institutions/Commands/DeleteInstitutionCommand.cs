@@ -13,12 +13,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Institutions.Commands
     [LogScope]
     public class DeleteInstitutionCommand : DeleteRequestBase<Institution>
     {
-        public class DeleteInstitutionCommandHandler : DeleteHandlerBase<Institution, DeleteInstitutionCommand>
+        public class DeleteRequestInstitutionCommandHandler : DeleteRequestHandlerBase<Institution, DeleteInstitutionCommand>
         {
             /// <summary>
             /// Delete Institution
             /// </summary>
-            public DeleteInstitutionCommandHandler(IInstitutionRepository repository) : base(repository)
+            public DeleteRequestInstitutionCommandHandler(IInstitutionRepository repository) : base(repository)
             {
             }
         }

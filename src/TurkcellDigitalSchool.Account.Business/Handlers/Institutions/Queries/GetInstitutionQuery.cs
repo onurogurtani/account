@@ -13,7 +13,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Institutions.Queries
     [LogScope]
     public class GetInstitutionQuery : QueryByIdRequestBase<Institution>
     {
-        public class GetInstitutionQueryHandler : QueryByIdBase<Institution, GetInstitutionQuery>
+        public class GetInstitutionQueryHandler : QueryByIdRequestHandlerBase<Institution, GetInstitutionQuery>
         {
             /// <summary>
             /// Get Institution

@@ -13,12 +13,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
     [LogScope]
     public class CreateSchoolCommand : CreateRequestBase<School>
     {
-        public class CreateSchoolCommandHandler : CreateHandlerBase<School, CreateSchoolCommand>
+        public class CreateRequestSchoolCommandHandler : CreateRequestHandlerBase<School, CreateSchoolCommand>
         {
             /// <summary>
             /// Create School
             /// </summary>
-            public CreateSchoolCommandHandler(ISchoolRepository schoolRepository) : base(schoolRepository)
+            public CreateRequestSchoolCommandHandler(ISchoolRepository schoolRepository) : base(schoolRepository)
             {
             }
         }

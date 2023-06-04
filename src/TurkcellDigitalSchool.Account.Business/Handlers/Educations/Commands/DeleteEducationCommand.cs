@@ -16,9 +16,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Educations.Commands
     [LogScope]
     public class DeleteEducationCommand : DeleteRequestBase<Education>
     {
-        public class DeleteEducationCommandHandler : DeleteHandlerBase<Education, DeleteEducationCommand>
+        public class DeleteRequestEducationCommandHandler : DeleteRequestHandlerBase<Education, DeleteEducationCommand>
         {
-            public DeleteEducationCommandHandler(IEducationRepository repository) : base(repository)
+            public DeleteRequestEducationCommandHandler(IEducationRepository repository) : base(repository)
             {
             }
         }

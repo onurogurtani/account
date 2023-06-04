@@ -9,9 +9,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Commands
     [ExcludeFromCodeCoverage]
     public class DeleteContractKindCommand : DeleteRequestBase<ContractKind>
     {
-        public class DeleteContractKindCommandHandler : DeleteHandlerBase<ContractKind, DeleteContractKindCommand>
+        public class DeleteRequestContractKindCommandHandler : DeleteRequestHandlerBase<ContractKind, DeleteContractKindCommand>
         {
-            public DeleteContractKindCommandHandler(IContractKindRepository repository) : base(repository)
+            public DeleteRequestContractKindCommandHandler(IContractKindRepository repository) : base(repository)
             {
             }
         }

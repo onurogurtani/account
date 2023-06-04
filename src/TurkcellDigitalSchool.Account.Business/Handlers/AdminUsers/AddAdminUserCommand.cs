@@ -19,7 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
     /// <summary>
     /// Add User
     /// </summary>
-    public class AddAdminUserCommand : IRequest<IDataResult<SelectionItem>>
+    public class AddAdminUserCommand : IRequest<DataResult<SelectionItem>>
     {
         public UserType UserTypeId { get; set; }
         public long CitizenId { get; set; }
@@ -30,7 +30,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
         public string UserName { get; set; }
 
         [MessageClassAttr("Kullanıcı Ekleme")]
-        public class AddAdminUserCommandHandler : IRequestHandler<AddAdminUserCommand, IDataResult<SelectionItem>>
+        public class AddAdminUserCommandHandler : IRequestHandler<AddAdminUserCommand, DataResult<SelectionItem>>
         {
             private readonly IUserRepository _userRepository;
             private readonly IUserRoleRepository _userRoleRepository;
@@ -59,7 +59,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
 
             [SecuredOperation]
 
-            public async Task<IDataResult<SelectionItem>> Handle(AddAdminUserCommand request, CancellationToken cancellationToken)
+            public async Task<DataResult<SelectionItem>> Handle(AddAdminUserCommand request, CancellationToken cancellationToken)
             {
 
                 var roleId = await _mediator.Send(new CreateAdminRoleCommand());

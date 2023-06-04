@@ -20,7 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "NameASC","NameDESC","SurNameASC","SurNameDESC" </remarks>
     [LogScope]
-    public class GetByFilterPagedTeachersQuery : IRequest<IDataResult<PagedList<GetTeachersResponseDto>>>
+    public class GetByFilterPagedTeachersQuery : IRequest<DataResult<PagedList<GetTeachersResponseDto>>>
     {
         public PaginationQuery Pagination { get; set; } = new();
 
@@ -28,7 +28,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
         public string SurName { get; set; }
         public string OrderBy { get; set; }
 
-        public class GetByFilterPagedTeachersQueryHandler : IRequestHandler<GetByFilterPagedTeachersQuery, IDataResult<PagedList<GetTeachersResponseDto>>>
+        public class GetByFilterPagedTeachersQueryHandler : IRequestHandler<GetByFilterPagedTeachersQuery, DataResult<PagedList<GetTeachersResponseDto>>>
         {
             private readonly IUserRepository _userRepository;
             private readonly IMapper _mapper;
@@ -41,7 +41,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
 
             
             [SecuredOperation]
-            public virtual async Task<IDataResult<PagedList<GetTeachersResponseDto>>> Handle(GetByFilterPagedTeachersQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<PagedList<GetTeachersResponseDto>>> Handle(GetByFilterPagedTeachersQuery request, CancellationToken cancellationToken)
             {
                 var query = _userRepository.Query();
                 query = query.Where(q => q.UserType == UserType.Teacher);

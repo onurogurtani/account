@@ -14,12 +14,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
 
     public class UpdateSchoolCommand : UpdateRequestBase<School>
     {
-        public class UpdateSchoolCommandHandler : UpdateHandlerBase<School, UpdateSchoolCommand>
+        public class UpdateRequestSchoolCommandHandler : UpdateRequestHandlerBase<School, UpdateSchoolCommand>
         {
             /// <summary>
             /// Update School
             /// </summary>
-            public UpdateSchoolCommandHandler(ISchoolRepository schoolRepository) : base(schoolRepository)
+            public UpdateRequestSchoolCommandHandler(ISchoolRepository schoolRepository) : base(schoolRepository)
             {
             }
         }

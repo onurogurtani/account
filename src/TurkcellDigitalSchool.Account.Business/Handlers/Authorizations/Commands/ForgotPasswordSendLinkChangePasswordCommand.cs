@@ -16,7 +16,7 @@ using TurkcellDigitalSchool.Integration.IntegrationServices.IdentityServerServic
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
     [LogScope]
-    public class ForgotPasswordSendLinkChangePasswordCommand : IRequest<IDataResult<TokenIntegraitonResponse>>
+    public class ForgotPasswordSendLinkChangePasswordCommand : IRequest<DataResult<TokenIntegraitonResponse>>
     {
         public string XId { get; set; }
         public string Guid { get; set; }
@@ -25,7 +25,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
         public string NewPass { get; set; }
         public string NewPassAgain { get; set; }
 
-        public class ForgotPasswordSendLinkCheckCommandHandler : IRequestHandler<ForgotPasswordSendLinkChangePasswordCommand, IDataResult<TokenIntegraitonResponse>>
+        public class ForgotPasswordSendLinkCheckCommandHandler : IRequestHandler<ForgotPasswordSendLinkChangePasswordCommand, DataResult<TokenIntegraitonResponse>>
         {
             private readonly IUserRepository _userRepository;
             private readonly ILoginFailCounterRepository _loginFailCounterRepository;
@@ -42,7 +42,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             }
 
             
-            public async Task<IDataResult<TokenIntegraitonResponse>> Handle(ForgotPasswordSendLinkChangePasswordCommand request, CancellationToken cancellationToken)
+            public async Task<DataResult<TokenIntegraitonResponse>> Handle(ForgotPasswordSendLinkChangePasswordCommand request, CancellationToken cancellationToken)
             {
                 if (request.NewPass != request.NewPassAgain)
                 {

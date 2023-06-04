@@ -14,11 +14,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 {
     [ExcludeFromCodeCoverage]
     [LogScope]
-    public class GetUserMailsQuery : IRequest<IDataResult<IEnumerable<UserMailDto>>>
+    public class GetUserMailsQuery : IRequest<DataResult<IEnumerable<UserMailDto>>>
     {
         public int UserId { get; set; }
 
-        public class GetUserMailsQueryHandler : IRequestHandler<GetUserMailsQuery, IDataResult<IEnumerable<UserMailDto>>>
+        public class GetUserMailsQueryHandler : IRequestHandler<GetUserMailsQuery, DataResult<IEnumerable<UserMailDto>>>
         {
             private readonly IUserRepository _userRepository;
             private readonly IMediator _mediator;
@@ -30,7 +30,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
             }
 
             [SecuredOperation] 
-            public async Task<IDataResult<IEnumerable<UserMailDto>>> Handle(GetUserMailsQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<IEnumerable<UserMailDto>>> Handle(GetUserMailsQuery request, CancellationToken cancellationToken)
             {
                 List<UserMailDto> emailList = _userRepository.Query()
                         .Where(x => x.Id == request.UserId)

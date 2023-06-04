@@ -14,12 +14,12 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
 {
-    public class PassiveCheckControlRoleQuery : IRequest<IDataResult<RolePassiveCheckResult>>
+    public class PassiveCheckControlRoleQuery : IRequest<DataResult<RolePassiveCheckResult>>
     {
         public long RoleId { get; set; }
 
         [MessageClassAttr("Pasif Rol Kontrolü")]
-        public class PassiveCheckControlRoleQueryHandler : IRequestHandler<PassiveCheckControlRoleQuery, IDataResult<RolePassiveCheckResult>>
+        public class PassiveCheckControlRoleQueryHandler : IRequestHandler<PassiveCheckControlRoleQuery, DataResult<RolePassiveCheckResult>>
         {
             private readonly IUserRoleRepository _userRoleRepository;
             private readonly IPackageRoleRepository _packageRoleRepository;
@@ -35,7 +35,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
-            public async Task<IDataResult<RolePassiveCheckResult>> Handle(PassiveCheckControlRoleQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<RolePassiveCheckResult>> Handle(PassiveCheckControlRoleQuery request, CancellationToken cancellationToken)
             {
                 RolePassiveCheckResult result = new RolePassiveCheckResult();
 

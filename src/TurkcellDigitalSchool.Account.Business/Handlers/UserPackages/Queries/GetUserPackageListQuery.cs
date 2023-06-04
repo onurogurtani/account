@@ -15,9 +15,9 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
 {
     [LogScope]
-    public class GetUserPackageListQuery : IRequest<IDataResult<List<GetUserTestExamPackageDto>>>
+    public class GetUserPackageListQuery : IRequest<DataResult<List<GetUserTestExamPackageDto>>>
     {
-        public class GetUserPackageListQueryHandler : IRequestHandler<GetUserPackageListQuery, IDataResult<List<GetUserTestExamPackageDto>>>
+        public class GetUserPackageListQueryHandler : IRequestHandler<GetUserPackageListQuery, DataResult<List<GetUserTestExamPackageDto>>>
         {
             private readonly IConfiguration _configuration;
             private readonly ITokenHelper _tokenHelper;
@@ -29,7 +29,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
             }
 
 
-            public async Task<IDataResult<List<GetUserTestExamPackageDto>>> Handle(GetUserPackageListQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<List<GetUserTestExamPackageDto>>> Handle(GetUserPackageListQuery request, CancellationToken cancellationToken)
             {
                 var userId = _tokenHelper.GetUserIdByCurrentToken();
 

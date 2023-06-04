@@ -18,13 +18,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
 {
     [ExcludeFromCodeCoverage]
     [LogScope]
-    public class GetUserTypesQuery : IRequest<IDataResult<List<SelectionItem>>>
+    public class GetUserTypesQuery : IRequest<DataResult<List<SelectionItem>>>
     {
-        public class GetUserTypesQueryHandler : IRequestHandler<GetUserTypesQuery, IDataResult<List<SelectionItem>>>
+        public class GetUserTypesQueryHandler : IRequestHandler<GetUserTypesQuery, DataResult<List<SelectionItem>>>
         {
           
             [SecuredOperation]
-            public async Task<IDataResult<List<SelectionItem>>> Handle(GetUserTypesQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<List<SelectionItem>>> Handle(GetUserTypesQuery request, CancellationToken cancellationToken)
             {
                 var adminTypes = AdminTypeConst.ADMIN_TYPES;
                 var items = ((UserType[])Enum.GetValues(typeof(UserType)))

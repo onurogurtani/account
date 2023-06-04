@@ -15,12 +15,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OperationClaims.Comman
     [LogScope]
     public class DeleteOperationClaimCommand : DeleteRequestBase<OperationClaim>
     {
-        public class DeleteOperationClaimCommandHandler : DeleteHandlerBase<OperationClaim, DeleteOperationClaimCommand>
+        public class DeleteRequestOperationClaimCommandHandler : DeleteRequestHandlerBase<OperationClaim, DeleteOperationClaimCommand>
         {
             /// <summary>
             /// Delete Operation Claim
             /// </summary>
-            public DeleteOperationClaimCommandHandler(IOperationClaimRepository repository) : base(repository)
+            public DeleteRequestOperationClaimCommandHandler(IOperationClaimRepository repository) : base(repository)
             {
             }
         }

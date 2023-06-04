@@ -14,9 +14,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 
     public class UpdateUserCommand : UpdateRequestBase<User>
     {
-        public class UpdateUserCommandHandler : UpdateHandlerBase<User, UpdateUserCommand>
+        public class UpdateRequestUserCommandHandler : UpdateRequestHandlerBase<User, UpdateUserCommand>
         {
-            public UpdateUserCommandHandler(IUserRepository userRepository) : base(userRepository)
+            public UpdateRequestUserCommandHandler(IUserRepository userRepository) : base(userRepository)
             {
             }
         }

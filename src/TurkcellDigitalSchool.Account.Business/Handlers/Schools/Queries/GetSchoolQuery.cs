@@ -13,7 +13,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Queries
     [LogScope]
     public class GetSchoolQuery : QueryByIdRequestBase<School>
     {
-        public class GetSchoolQueryHandler : QueryByIdBase<School, GetSchoolQuery>
+        public class GetSchoolQueryHandler : QueryByIdRequestHandlerBase<School, GetSchoolQuery>
         {
             /// <summary>
             /// Get School

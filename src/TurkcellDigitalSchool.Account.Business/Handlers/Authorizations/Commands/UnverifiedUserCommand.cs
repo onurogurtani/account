@@ -19,7 +19,7 @@ using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
     [LogScope]
-    public class UnverifiedUserCommand : IRequest<IDataResult<UnverifiedUserDto>>
+    public class UnverifiedUserCommand : IRequest<DataResult<UnverifiedUserDto>>
     {
         public UserType UserTypeId { get; set; }
         public string Name { get; set; }
@@ -28,7 +28,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
         public string MobilePhones { get; set; }
         public string Password { get; set; }
 
-        public class UnverifiedUserCommandCommandHandler : IRequestHandler<UnverifiedUserCommand, IDataResult<UnverifiedUserDto>>
+        public class UnverifiedUserCommandCommandHandler : IRequestHandler<UnverifiedUserCommand, DataResult<UnverifiedUserDto>>
         {
             private readonly IUnverifiedUserRepository _unverifiedUserRepository;
             private readonly IUserRepository _userRepository;
@@ -47,7 +47,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             /// Will be reedited
             /// </summary> 
             [CacheRemoveAspect("Get")] 
-            public async Task<IDataResult<UnverifiedUserDto>> Handle(UnverifiedUserCommand request, CancellationToken cancellationToken)
+            public async Task<DataResult<UnverifiedUserDto>> Handle(UnverifiedUserCommand request, CancellationToken cancellationToken)
             {
                 HashingHelper.CreatePasswordHash(request.Password, out var passwordSalt, out var passwordHash);
 

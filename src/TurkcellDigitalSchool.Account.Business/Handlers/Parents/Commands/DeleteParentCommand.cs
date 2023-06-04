@@ -14,12 +14,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Parents.Commands
 
     public class DeleteParentCommand : DeleteRequestBase<Parent>
     {
-        public class DeleteParentCommandHandler : DeleteHandlerBase<Parent, DeleteParentCommand>
+        public class DeleteRequestParentCommandHandler : DeleteRequestHandlerBase<Parent, DeleteParentCommand>
         {
             /// <summary>
             /// Delete Parent
             /// </summary>
-            public DeleteParentCommandHandler(IParentRepository repository) : base(repository)
+            public DeleteRequestParentCommandHandler(IParentRepository repository) : base(repository)
             {
             }
         }

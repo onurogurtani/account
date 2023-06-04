@@ -17,7 +17,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Educations.Queries
     [LogScope]
     public class GetEducationsQuery : QueryByFilterRequestBase<Education>
     {
-        public class GetEducationsQueryHandler : QueryByFilterBase<Education, GetEducationsQuery>
+        public class GetEducationsQueryHandler : QueryByFilterRequestHandlerBase<Education, GetEducationsQuery>
         {
             public GetEducationsQueryHandler(IEducationRepository repository) : base(repository)
             {

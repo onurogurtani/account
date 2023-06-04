@@ -23,11 +23,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Queries
     ///<br />   PageNumber can be  entered manually </remarks>
     [ExcludeFromCodeCoverage]
     [LogScope]
-    public class GetByFilterPagedTargetScreensQuery : IRequest<IDataResult<PagedList<TargetScreen>>>
+    public class GetByFilterPagedTargetScreensQuery : IRequest<DataResult<PagedList<TargetScreen>>>
     {
         public TargetScreenDetailSearch TargetScreenDetailSearch { get; set; } = new TargetScreenDetailSearch();
 
-        public class GetByFilterPagedTargetScreensQueryHandler : IRequestHandler<GetByFilterPagedTargetScreensQuery, IDataResult<PagedList<TargetScreen>>>
+        public class GetByFilterPagedTargetScreensQueryHandler : IRequestHandler<GetByFilterPagedTargetScreensQuery, DataResult<PagedList<TargetScreen>>>
         {
             private readonly ITargetScreenRepository _packageRepository;
 
@@ -39,7 +39,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Queries
              
           
             [SecuredOperation]
-            public virtual async Task<IDataResult<PagedList<TargetScreen>>> Handle(GetByFilterPagedTargetScreensQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<PagedList<TargetScreen>>> Handle(GetByFilterPagedTargetScreensQuery request, CancellationToken cancellationToken)
             {
                 var query = _packageRepository.Query()
                     .AsQueryable();

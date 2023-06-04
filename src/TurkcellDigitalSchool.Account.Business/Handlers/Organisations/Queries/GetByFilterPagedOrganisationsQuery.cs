@@ -19,11 +19,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be ""CrmIdASC","CrmIdDESC","OrganisationTypeNameASC","OrganisationTypeNameDESC",NameASC","NameDESC","OrganisationManagerASC","OrganisationManagerDESC","PackageNameASC","PackageNameDESC","LicenceNumberASC","LicenceNumberDESC","DomainNameASC","DomainNameDESC","CustomerNumberASC","CustomerNumberDESC","OrganisationStatusInfoASC","OrganisationStatusInfoDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC","IdASC","IdDESC" </remarks>
     [LogScope]
-    public class GetByFilterPagedOrganisationsQuery : IRequest<IDataResult<PagedList<Organisation>>>
+    public class GetByFilterPagedOrganisationsQuery : IRequest<DataResult<PagedList<Organisation>>>
     {
         public OrganisationDetailSearch OrganisationDetailSearch { get; set; } = new OrganisationDetailSearch();
 
-        public class GetByFilterPagedOrganisationsQueryHandler : IRequestHandler<GetByFilterPagedOrganisationsQuery, IDataResult<PagedList<Organisation>>>
+        public class GetByFilterPagedOrganisationsQueryHandler : IRequestHandler<GetByFilterPagedOrganisationsQuery, DataResult<PagedList<Organisation>>>
         {
             private readonly IOrganisationRepository _organisationRepository;
 
@@ -34,7 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
 
             [CacheRemoveAspect("Get")] 
             [SecuredOperation]
-            public virtual async Task<IDataResult<PagedList<Organisation>>> Handle(GetByFilterPagedOrganisationsQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<PagedList<Organisation>>> Handle(GetByFilterPagedOrganisationsQuery request, CancellationToken cancellationToken)
             {
                 var query = _organisationRepository.Query()
                     .Include(x => x.OrganisationType)

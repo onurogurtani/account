@@ -19,9 +19,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
     /// 
     [ExcludeFromCodeCoverage] 
     [LogScope]
-    public class GetContractKindNamesQuery : IRequest<IDataResult<List<string>>>
+    public class GetContractKindNamesQuery : IRequest<DataResult<List<string>>>
     {
-        public class GetContractKindNamesQueryHandler : IRequestHandler<GetContractKindNamesQuery, IDataResult<List<string>>>
+        public class GetContractKindNamesQueryHandler : IRequestHandler<GetContractKindNamesQuery, DataResult<List<string>>>
         {
             private readonly IContractKindRepository _contractKindRepository;
 
@@ -33,7 +33,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
 
             [CacheRemoveAspect("Get")] 
             [SecuredOperation]
-            public async Task<IDataResult<List<string>>> Handle(GetContractKindNamesQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<List<string>>> Handle(GetContractKindNamesQuery request, CancellationToken cancellationToken)
             {
                 var contractKindNames = await _contractKindRepository.Query().Select(x => x.Name).ToListAsync();
                 return new SuccessDataResult<List<string>>(contractKindNames);

@@ -21,10 +21,10 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
 {
     [LogScope]
-    public class DownloadSchoolExcelCommand : IRequest<IDataResult<ExcelResponse>>
+    public class DownloadSchoolExcelCommand : IRequest<DataResult<ExcelResponse>>
     {
         [MessageClassAttr("Okul Excel İndirme")]
-        public class DownloadSchoolExcelCommandHandler : IRequestHandler<DownloadSchoolExcelCommand, IDataResult<ExcelResponse>>
+        public class DownloadSchoolExcelCommandHandler : IRequestHandler<DownloadSchoolExcelCommand, DataResult<ExcelResponse>>
         {
             private readonly IInstitutionTypeRepository _institutionTypeRepository;
             private readonly IInstitutionRepository _institutionRepository;
@@ -52,7 +52,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
             /// </summary>
             [SecuredOperation]
             [CacheRemoveAspect("Get")] 
-            public async Task<IDataResult<ExcelResponse>> Handle(DownloadSchoolExcelCommand request, CancellationToken cancellationToken)
+            public async Task<DataResult<ExcelResponse>> Handle(DownloadSchoolExcelCommand request, CancellationToken cancellationToken)
             {
                 byte[] workbookBytes;
 

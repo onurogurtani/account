@@ -12,10 +12,10 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
 {
-    public class GetStudentParentsInformationQuery : IRequest<IDataResult<List<ParentInfoDto>>>
+    public class GetStudentParentsInformationQuery : IRequest<DataResult<List<ParentInfoDto>>>
     {
         public long? UserId { get; set; }
-        public class GetStudentParentsInformationQueryHandler : IRequestHandler<GetStudentParentsInformationQuery, IDataResult<List<ParentInfoDto>>>
+        public class GetStudentParentsInformationQueryHandler : IRequestHandler<GetStudentParentsInformationQuery, DataResult<List<ParentInfoDto>>>
         {
             private readonly IUserService _userService;
 
@@ -27,7 +27,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
 
-            public virtual async Task<IDataResult<List<ParentInfoDto>>> Handle(GetStudentParentsInformationQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<List<ParentInfoDto>>> Handle(GetStudentParentsInformationQuery request, CancellationToken cancellationToken)
             {
                 if (request.UserId == null)
                 {

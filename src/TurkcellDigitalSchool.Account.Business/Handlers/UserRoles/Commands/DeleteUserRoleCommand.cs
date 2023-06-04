@@ -13,9 +13,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserRoles.Commands
     [LogScope]
     public class DeleteUserRoleCommand : DeleteRequestBase<UserRole>
     {
-        public class DeleteUserRoleCommandHandler : DeleteHandlerBase<UserRole, DeleteUserRoleCommand>
+        public class DeleteRequestUserRoleCommandHandler : DeleteRequestHandlerBase<UserRole, DeleteUserRoleCommand>
         {
-            public DeleteUserRoleCommandHandler(IUserRoleRepository repository) : base(repository)
+            public DeleteRequestUserRoleCommandHandler(IUserRoleRepository repository) : base(repository)
             {
             }
         }

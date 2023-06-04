@@ -20,7 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
     /// <summary>
     /// Add User
     /// </summary>
-    public class AddUserCommand : IRequest<IDataResult<SelectionItem>>
+    public class AddUserCommand : IRequest<DataResult<SelectionItem>>
     {
         public UserType UserTypeId { get; set; }
         public long? CitizenId { get; set; }
@@ -38,7 +38,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
         public bool ContactByCall { get; set; }
 
         [MessageClassAttr("Kullanıcı Ekleme")]
-        public class AddUserCommandHandler : IRequestHandler<AddUserCommand, IDataResult<SelectionItem>>
+        public class AddUserCommandHandler : IRequestHandler<AddUserCommand, DataResult<SelectionItem>>
         {
             private readonly IUserRepository _userRepository;
             private readonly Microsoft.Extensions.Configuration.IConfiguration _configuration;
@@ -58,7 +58,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 
             [SecuredOperation]
 
-            public async Task<IDataResult<SelectionItem>> Handle(AddUserCommand request, CancellationToken cancellationToken)
+            public async Task<DataResult<SelectionItem>> Handle(AddUserCommand request, CancellationToken cancellationToken)
             {
 
                 if (_userRepository.GetCountAsync(w => w.Email == request.Email).Result > 0)

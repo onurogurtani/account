@@ -16,12 +16,12 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries;
 [LogScope]
-public class GetRoleQuery : IRequest<IDataResult<GetRoleDto>>
+public class GetRoleQuery : IRequest<DataResult<GetRoleDto>>
 {
     public long Id { get; set; }
 
     [MessageClassAttr("Rol Görüntüleme")]
-    public class GetRoleQueryHandler : IRequestHandler<GetRoleQuery, IDataResult<GetRoleDto>>
+    public class GetRoleQueryHandler : IRequestHandler<GetRoleQuery, DataResult<GetRoleDto>>
     {
         private readonly IRoleRepository _roleRepository;
         private readonly IMapper _mapper;
@@ -39,7 +39,7 @@ public class GetRoleQuery : IRequest<IDataResult<GetRoleDto>>
 
       
         [SecuredOperation]
-        public virtual async Task<IDataResult<GetRoleDto>> Handle(GetRoleQuery request, CancellationToken cancellationToken)
+        public virtual async Task<DataResult<GetRoleDto>> Handle(GetRoleQuery request, CancellationToken cancellationToken)
         {
             var query = _roleRepository.Query()
                 .Include(x => x.RoleClaims)

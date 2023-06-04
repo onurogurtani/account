@@ -16,7 +16,7 @@ using TurkcellDigitalSchool.Integration.IntegrationServices.IdentityServerServic
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
     [LogScope]
-    public class LoginFailOtpNewPasswordCommand : IRequest<IDataResult<TokenIntegraitonResponse>>
+    public class LoginFailOtpNewPasswordCommand : IRequest<DataResult<TokenIntegraitonResponse>>
     {
         public long MobileLoginId { get; set; }
         public string Guid { get; set; }
@@ -25,7 +25,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
         public string CsrfToken { get; set; }
         public string ClientId { get; set; }
 
-        public class LoginFailOtpNewPasswordCommandHandler : IRequestHandler<LoginFailOtpNewPasswordCommand, IDataResult<TokenIntegraitonResponse>>
+        public class LoginFailOtpNewPasswordCommandHandler : IRequestHandler<LoginFailOtpNewPasswordCommand, DataResult<TokenIntegraitonResponse>>
         {
             private readonly IUserRepository _userRepository;
             private readonly IMobileLoginRepository _mobileLoginRepository;
@@ -40,7 +40,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 _mediator = mediator;
             } 
 
-            public async Task<IDataResult<TokenIntegraitonResponse>> Handle(LoginFailOtpNewPasswordCommand request, CancellationToken cancellationToken)
+            public async Task<DataResult<TokenIntegraitonResponse>> Handle(LoginFailOtpNewPasswordCommand request, CancellationToken cancellationToken)
             {
                 if (request.NewPass != request.NewPassAgain)
                 {

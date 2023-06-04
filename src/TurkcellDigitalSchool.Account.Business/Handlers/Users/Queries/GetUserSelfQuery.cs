@@ -16,9 +16,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
     [ExcludeFromCodeCoverage]
     [PerformanceScope]
     [LogScope]
-    public class GetUserSelfQuery : IRequest<IDataResult<CurrentUserDto>>
+    public class GetUserSelfQuery : IRequest<DataResult<CurrentUserDto>>
     {
-        public class GetUserSelfQueryHandler : IRequestHandler<GetUserSelfQuery, IDataResult<CurrentUserDto>>
+        public class GetUserSelfQueryHandler : IRequestHandler<GetUserSelfQuery, DataResult<CurrentUserDto>>
         {
             private readonly IUserRepository _userRepository;
             private readonly IMapper _mapper; 
@@ -32,7 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
             }
 
           //  [LogAspect(typeof(FileLogger))]
-            public async Task<IDataResult<CurrentUserDto>> Handle(GetUserSelfQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<CurrentUserDto>> Handle(GetUserSelfQuery request, CancellationToken cancellationToken)
             {
                 long userId = _tokenHelper.GetUserIdByCurrentToken();
                 var user = await _userRepository.GetAsync(p => p.Id == userId);

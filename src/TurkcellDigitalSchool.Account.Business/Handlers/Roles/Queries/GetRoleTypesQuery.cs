@@ -16,13 +16,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
 {
     [ExcludeFromCodeCoverage]
     [LogScope]
-    public class GetRoleTypesQuery : IRequest<IDataResult<List<SelectionItem>>>
+    public class GetRoleTypesQuery : IRequest<DataResult<List<SelectionItem>>>
     {
-        public class GetRoleTypesQueryHandler : IRequestHandler<GetRoleTypesQuery, IDataResult<List<SelectionItem>>>
+        public class GetRoleTypesQueryHandler : IRequestHandler<GetRoleTypesQuery, DataResult<List<SelectionItem>>>
         {
          
             [SecuredOperation]
-            public async Task<IDataResult<List<SelectionItem>>> Handle(GetRoleTypesQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<List<SelectionItem>>> Handle(GetRoleTypesQuery request, CancellationToken cancellationToken)
             {
                 var items = ((UserType[])Enum.GetValues(typeof(UserType)))
                 .Select(x => new SelectionItem

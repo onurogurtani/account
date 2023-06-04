@@ -14,13 +14,13 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
     [LogScope]
-    public class LoginUserByLdapQuery : IRequest<IDataResult<AccessToken>>
+    public class LoginUserByLdapQuery : IRequest<DataResult<AccessToken>>
     {
         public string UserName { get; set; }
         public string Password { get; set; }
         public string CaptchaKey { get; set; }
 
-        public class LoginUserByLdapQueryHandler : IRequestHandler<LoginUserByLdapQuery, IDataResult<AccessToken>>
+        public class LoginUserByLdapQueryHandler : IRequestHandler<LoginUserByLdapQuery, DataResult<AccessToken>>
         {
             private readonly LdapLoginService _ldapLoginService;
             private readonly ConfigurationManager _configurationManager;
@@ -45,7 +45,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 _captchaManager = captchaManager;
             }
              
-            public async Task<IDataResult<AccessToken>> Handle(LoginUserByLdapQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<AccessToken>> Handle(LoginUserByLdapQuery request, CancellationToken cancellationToken)
             {
                 // Daha sonra yapılacak
                 throw new NotImplementedException();

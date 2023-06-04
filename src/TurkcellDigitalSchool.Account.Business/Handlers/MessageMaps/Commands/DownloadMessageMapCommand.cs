@@ -13,11 +13,11 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
 {
-    public class DownloadMessageMapCommand : IRequest<IDataResult<FileDto>>
+    public class DownloadMessageMapCommand : IRequest<DataResult<FileDto>>
     {
         public MessageMapDetailSearchDto MessageMapDetailSearchDto { get; set; } = new MessageMapDetailSearchDto();
 
-        public class DownloadMessageMapCommandHandler : IRequestHandler<DownloadMessageMapCommand, IDataResult<FileDto>>
+        public class DownloadMessageMapCommandHandler : IRequestHandler<DownloadMessageMapCommand, DataResult<FileDto>>
         {
             private readonly IMessageMapRepository _messageMapRepository;
 
@@ -26,7 +26,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
                 _messageMapRepository = messageMapRepository;
             }
 
-            public async Task<IDataResult<FileDto>> Handle(DownloadMessageMapCommand request, CancellationToken cancellationToken)
+            public async Task<DataResult<FileDto>> Handle(DownloadMessageMapCommand request, CancellationToken cancellationToken)
             {
                 FileDto result = new();
 

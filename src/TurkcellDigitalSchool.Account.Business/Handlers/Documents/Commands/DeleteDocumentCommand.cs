@@ -14,9 +14,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
 
     public class DeleteDocumentCommand : DeleteRequestBase<Document>
     {
-        public class DeleteDocumentCommandHandler : DeleteHandlerBase<Document, DeleteDocumentCommand>
+        public class DeleteRequestDocumentCommandHandler : DeleteRequestHandlerBase<Document, DeleteDocumentCommand>
         {
-            public DeleteDocumentCommandHandler(IDocumentRepository repository) : base(repository)
+            public DeleteRequestDocumentCommandHandler(IDocumentRepository repository) : base(repository)
             {
             }
         }

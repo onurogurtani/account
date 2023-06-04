@@ -29,7 +29,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>PagedList PackageTypes</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PagedList<PackageType>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<PagedList<PackageType>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("GetByFilterPagedPackageTypes")]
         public async Task<IActionResult> GetByFilterPagedPackageTypes([FromQuery] GetByFilterPagedPackageTypesQuery query, CancellationToken cancellationToken)
@@ -70,7 +70,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         ///<return>TEntity</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<PackageType>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<PackageType>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getbyid")]
         public async Task<IActionResult> GetById([FromQuery] GetPackageTypeQuery query, CancellationToken cancellationToken)

@@ -9,9 +9,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Countrys.Commands
     [ExcludeFromCodeCoverage]
     public class DeleteCountryCommand : DeleteRequestBase<Country>
     {
-        public class DeleteCountryCommandHandler : DeleteHandlerBase<Country, DeleteCountryCommand>
+        public class DeleteRequestCountryCommandHandler : DeleteRequestHandlerBase<Country, DeleteCountryCommand>
         {
-            public DeleteCountryCommandHandler(ICountryRepository repository) : base(repository)
+            public DeleteRequestCountryCommandHandler(ICountryRepository repository) : base(repository)
             {
             }
         }

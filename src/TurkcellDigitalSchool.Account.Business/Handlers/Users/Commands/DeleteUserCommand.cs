@@ -14,9 +14,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 
     public class DeleteUserCommand : DeleteRequestBase<User>
     {
-        public class DeleteUserCommandHandler : DeleteHandlerBase<User, DeleteUserCommand>
+        public class DeleteRequestUserCommandHandler : DeleteRequestHandlerBase<User, DeleteUserCommand>
         {
-            public DeleteUserCommandHandler(IUserRepository repository) : base(repository)
+            public DeleteRequestUserCommandHandler(IUserRepository repository) : base(repository)
             {
             }
         }

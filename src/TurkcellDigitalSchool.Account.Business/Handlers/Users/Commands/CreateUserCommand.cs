@@ -14,9 +14,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 
     public class CreateUserCommand : CreateRequestBase<User>
     {
-        public class CreateUserCommandHandler : CreateHandlerBase<User, CreateUserCommand>
+        public class CreateRequestUserCommandHandler : CreateRequestHandlerBase<User, CreateUserCommand>
         {
-            public CreateUserCommandHandler(IUserRepository UserRepository) : base(UserRepository)
+            public CreateRequestUserCommandHandler(IUserRepository UserRepository) : base(UserRepository)
             {
             }
         }

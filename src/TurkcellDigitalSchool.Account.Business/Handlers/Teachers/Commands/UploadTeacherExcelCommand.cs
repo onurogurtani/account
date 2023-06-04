@@ -21,12 +21,12 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
 {
     [LogScope]
-    public class UploadTeacherExcelCommand : IRequest<IDataResult<ExcelResponse>>
+    public class UploadTeacherExcelCommand : IRequest<DataResult<ExcelResponse>>
     {
         public IFormFile FormFile { get; set; }
 
         [MessageClassAttr("Öğretmen Excel Yükleme")]
-        public class UploadTeacherExcelCommandHandler : IRequestHandler<UploadTeacherExcelCommand, IDataResult<ExcelResponse>>
+        public class UploadTeacherExcelCommandHandler : IRequestHandler<UploadTeacherExcelCommand, DataResult<ExcelResponse>>
         {
             private readonly IMediator _mediator;
 
@@ -55,7 +55,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
             [SecuredOperation]
             [CacheRemoveAspect("Get")]
           
-            public async Task<IDataResult<ExcelResponse>> Handle(UploadTeacherExcelCommand request, CancellationToken cancellationToken)
+            public async Task<DataResult<ExcelResponse>> Handle(UploadTeacherExcelCommand request, CancellationToken cancellationToken)
             {
                 int startRow = 1;
                 var formFile = request.FormFile;

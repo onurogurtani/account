@@ -15,9 +15,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     /// Get Names that using in Packages
     /// </summary>
     [LogScope]
-    public class GetPackageNamesQuery : IRequest<IDataResult<List<string>>>
+    public class GetPackageNamesQuery : IRequest<DataResult<List<string>>>
     {
-        public class GetPackageNamesQueryHandler : IRequestHandler<GetPackageNamesQuery, IDataResult<List<string>>>
+        public class GetPackageNamesQueryHandler : IRequestHandler<GetPackageNamesQuery, DataResult<List<string>>>
         {
             private readonly IPackageRepository _packageRepository;
 
@@ -28,7 +28,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
             } 
 
             [SecuredOperation]
-            public async Task<IDataResult<List<string>>> Handle(GetPackageNamesQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<List<string>>> Handle(GetPackageNamesQuery request, CancellationToken cancellationToken)
             {
                 var packageNames = await _packageRepository.Query().Select(x => x.Name).ToListAsync();
                 return new SuccessDataResult<List<string>>(packageNames);

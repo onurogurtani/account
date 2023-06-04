@@ -18,11 +18,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
     /// Get Admin User with Roles
     /// </summary>
     [LogScope]
-    public class GetAdminQuery : IRequest<IDataResult<AdminDto>>
+    public class GetAdminQuery : IRequest<DataResult<AdminDto>>
     {
         public long Id { get; set; }
 
-        public class GetAdminQueryHandler : IRequestHandler<GetAdminQuery, IDataResult<AdminDto>>
+        public class GetAdminQueryHandler : IRequestHandler<GetAdminQuery, DataResult<AdminDto>>
         {
             private readonly IMapper _mapper;
             private readonly IUserRepository _userRepository;
@@ -36,7 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
             }
              
             [SecuredOperation]
-            public virtual async Task<IDataResult<AdminDto>> Handle(GetAdminQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<AdminDto>> Handle(GetAdminQuery request, CancellationToken cancellationToken)
             {
                 //var query = _userRepository.Query()
                 //    .AsQueryable();

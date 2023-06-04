@@ -13,12 +13,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.InstitutionTypes.Comma
     [LogScope]
     public class DeleteInstitutionTypeCommand : DeleteRequestBase<InstitutionType>
     {
-        public class DeleteInstitutionTypeCommandHandler : DeleteHandlerBase<InstitutionType, DeleteInstitutionTypeCommand>
+        public class DeleteRequestInstitutionTypeCommandHandler : DeleteRequestHandlerBase<InstitutionType, DeleteInstitutionTypeCommand>
         {
             /// <summary>
             /// Delete Institution Type
             /// </summary>
-            public DeleteInstitutionTypeCommandHandler(IInstitutionTypeRepository repository) : base(repository)
+            public DeleteRequestInstitutionTypeCommandHandler(IInstitutionTypeRepository repository) : base(repository)
             {
             }
         }

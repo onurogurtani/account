@@ -14,7 +14,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.RoleClaims.Queries
 
     public class GetRoleClaimQuery : QueryByIdRequestBase<RoleClaim>
     {
-        public class GetRoleClaimQueryHandler : QueryByIdBase<RoleClaim, GetRoleClaimQuery>
+        public class GetRoleClaimQueryHandler : QueryByIdRequestHandlerBase<RoleClaim, GetRoleClaimQuery>
         {
             public GetRoleClaimQueryHandler(IRoleClaimRepository roleClaimRepository) : base(roleClaimRepository)
             {

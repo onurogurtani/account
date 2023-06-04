@@ -19,12 +19,12 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Queries
 {
     [LogScope]
-    public class GetUserBasketPackagesQuery : IRequest<IDataResult<GetUserBasketPackagesResponseDto>>
+    public class GetUserBasketPackagesQuery : IRequest<DataResult<GetUserBasketPackagesResponseDto>>
     {
         public PaginationQuery Pagination { get; set; }
 
         [MessageClassAttr("Kullanýcý Paket Sepeti Görüntüleme")]
-        public class GetUserBasketPackagesQueryHandler : IRequestHandler<GetUserBasketPackagesQuery, IDataResult<GetUserBasketPackagesResponseDto>>
+        public class GetUserBasketPackagesQueryHandler : IRequestHandler<GetUserBasketPackagesQuery, DataResult<GetUserBasketPackagesResponseDto>>
         {
             private readonly IUserBasketPackageRepository _userBasketPackageRepository;
             private readonly ITokenHelper _tokenHelper;
@@ -40,7 +40,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Que
 
             
             [SecuredOperation]
-            public async Task<IDataResult<GetUserBasketPackagesResponseDto>> Handle(GetUserBasketPackagesQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<GetUserBasketPackagesResponseDto>> Handle(GetUserBasketPackagesQuery request, CancellationToken cancellationToken)
             {
                 var currentUserId = _tokenHelper.GetUserIdByCurrentToken();
 

@@ -18,12 +18,12 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
 {
     [LogScope]
-    public class GetOrganisationQuery : IRequest<IDataResult<OrganisationDto>>
+    public class GetOrganisationQuery : IRequest<DataResult<OrganisationDto>>
     {
         public long Id { get; set; }
 
         [MessageClassAttr("Kurum Görüntüleme")]
-        public class GetOrganisationQueryHandler : IRequestHandler<GetOrganisationQuery, IDataResult<OrganisationDto>>
+        public class GetOrganisationQueryHandler : IRequestHandler<GetOrganisationQuery, DataResult<OrganisationDto>>
         {
             private readonly IOrganisationRepository _organisationRepository;
             private readonly IUserRepository _userRepository;
@@ -46,7 +46,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
               
             [SecuredOperation]
-            public virtual async Task<IDataResult<OrganisationDto>> Handle(GetOrganisationQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<OrganisationDto>> Handle(GetOrganisationQuery request, CancellationToken cancellationToken)
             {
                 var query = _organisationRepository.Query()
                     .Include(x => x.OrganisationType)

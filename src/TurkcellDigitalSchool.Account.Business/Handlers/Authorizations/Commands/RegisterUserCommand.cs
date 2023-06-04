@@ -24,7 +24,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 {
     [TransactionScope]
     [LogScope]
-    public class RegisterUserCommand : IRequest<IDataResult<AccessToken>>
+    public class RegisterUserCommand : IRequest<DataResult<AccessToken>>
     {
         public UserType UserTypeId { get; set; }
         public long CitizenId { get; set; }
@@ -34,7 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
         public string MobilePhones { get; set; }
         public string Password { get; set; }
 
-        public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, IDataResult<AccessToken>>
+        public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, DataResult<AccessToken>>
         {
             private readonly IUserRepository _userRepository;
             private readonly ISendOtpSmsHelper _sendOtpSmsHelper;
@@ -52,7 +52,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             /// </summary> 
             [CacheRemoveAspect("Get")]
           
-            public async Task<IDataResult<AccessToken>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+            public async Task<DataResult<AccessToken>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
             {
                 HashingHelper.CreatePasswordHash(request.Password, out var passwordSalt, out var passwordHash);
 

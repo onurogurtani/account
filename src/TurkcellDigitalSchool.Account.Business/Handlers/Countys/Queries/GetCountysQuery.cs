@@ -14,7 +14,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Countys.Queries
     [CacheScope]
     public class GetCountysQuery : QueryByFilterRequestBase<County>
     {
-        public class GetCountysQueryHandler : QueryByFilterBase<County, GetCountysQuery>
+        public class GetCountysQueryHandler : QueryByFilterRequestHandlerBase<County, GetCountysQuery>
         {
             /// <summary>
             /// Get Countys

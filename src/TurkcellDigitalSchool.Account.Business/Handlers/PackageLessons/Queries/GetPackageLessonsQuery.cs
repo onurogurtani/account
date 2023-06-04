@@ -13,7 +13,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageLessons.Queries
     [LogScope]
     public class GetPackageLessonsQuery : QueryByFilterRequestBase<PackageLesson>
     {
-        public class GetPackageLessonsQueryHandler : QueryByFilterBase<PackageLesson, GetPackageLessonsQuery>
+        public class GetPackageLessonsQueryHandler : QueryByFilterRequestHandlerBase<PackageLesson, GetPackageLessonsQuery>
         {
             public GetPackageLessonsQueryHandler(IPackageLessonRepository repository) : base(repository)
             {

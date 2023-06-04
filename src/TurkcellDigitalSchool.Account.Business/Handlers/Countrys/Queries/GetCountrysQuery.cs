@@ -10,7 +10,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Countrys.Queries
     [ExcludeFromCodeCoverage]
     public class GetCountrysQuery : QueryByFilterRequestBase<Country>
     {
-        public class GetCountrysQueryHandler : QueryByFilterBase<Country, GetCountrysQuery>
+        public class GetCountrysQueryHandler : QueryByFilterRequestHandlerBase<Country, GetCountrysQuery>
         {
             public GetCountrysQueryHandler(ICountryRepository repository) : base(repository)
             {

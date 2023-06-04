@@ -9,7 +9,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
     [ExcludeFromCodeCoverage]
     public class GetUserPackageQuery : QueryByIdRequestBase<UserPackage>
     {
-        public class GetUserPackageQueryHandler : QueryByIdBase<UserPackage, GetUserPackageQuery>
+        public class GetUserPackageQueryHandler : QueryByIdRequestHandlerBase<UserPackage, GetUserPackageQuery>
         {
             public GetUserPackageQueryHandler(IUserPackageRepository userPackageRepository) : base(userPackageRepository)
             {

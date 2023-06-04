@@ -19,13 +19,13 @@ using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
     [LogScope]
-    public class ForgottenPasswordChangeCommand : IRequest<IDataResult<AccessToken>>
+    public class ForgottenPasswordChangeCommand : IRequest<DataResult<AccessToken>>
     {
 
         public string Token { get; set; }
         public string NewPassword { get; set; }
 
-        public class ForgottenPasswordChangeCommandHandler : IRequestHandler<ForgottenPasswordChangeCommand, IDataResult<AccessToken>>
+        public class ForgottenPasswordChangeCommandHandler : IRequestHandler<ForgottenPasswordChangeCommand, DataResult<AccessToken>>
         {
             private readonly ConfigurationManager _configurationManager;
             private readonly IUserRepository _userRepository;
@@ -52,7 +52,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             /// </summary>
            
          
-            public async Task<IDataResult<AccessToken>> Handle(ForgottenPasswordChangeCommand request, CancellationToken cancellationToken)
+            public async Task<DataResult<AccessToken>> Handle(ForgottenPasswordChangeCommand request, CancellationToken cancellationToken)
             {
                 var userSessionRepository = _mediator.Send(new ForgottenPasswordTokenCheckCommand { Token = request.Token }, cancellationToken).Result.Data;
 

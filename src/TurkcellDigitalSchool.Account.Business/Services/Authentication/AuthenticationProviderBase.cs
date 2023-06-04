@@ -18,7 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Authentication
             _logins = logins;
         }
 
-        public virtual async Task<IDataResult<DArchToken>> Verify(VerifyOtpCommand command)
+        public virtual async Task<DataResult<DArchToken>> Verify(VerifyOtpCommand command)
         {
             var userId = command.UserId;
             var date = DateTime.Now;

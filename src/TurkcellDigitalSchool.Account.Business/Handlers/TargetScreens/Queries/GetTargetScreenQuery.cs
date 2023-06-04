@@ -21,12 +21,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Queries
     /// Get TargetScreen
     /// </summary>
     [LogScope]
-    public class GetTargetScreenQuery : IRequest<IDataResult<TargetScreen>>
+    public class GetTargetScreenQuery : IRequest<DataResult<TargetScreen>>
     {
         public long Id { get; set; }
 
         [MessageClassAttr("Hedef Ekraný Görüntüleme")]
-        public class GetTargetScreenQueryHandler : IRequestHandler<GetTargetScreenQuery, IDataResult<TargetScreen>>
+        public class GetTargetScreenQueryHandler : IRequestHandler<GetTargetScreenQuery, DataResult<TargetScreen>>
         {
             private readonly ITargetScreenRepository _targetScreenRepository;
 
@@ -42,7 +42,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Queries
 
         
             [SecuredOperation]
-            public virtual async Task<IDataResult<TargetScreen>> Handle(GetTargetScreenQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<TargetScreen>> Handle(GetTargetScreenQuery request, CancellationToken cancellationToken)
             {
                 var query = _targetScreenRepository.Query()
                     .AsQueryable();

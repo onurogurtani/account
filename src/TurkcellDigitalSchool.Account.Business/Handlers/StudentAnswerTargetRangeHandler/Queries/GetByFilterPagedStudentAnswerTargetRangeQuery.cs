@@ -13,11 +13,11 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRangeHandler.Queries
 {
-    public class GetByFilterPagedStudentAnswerTargetRangeQuery : IRequest<IDataResult<PagedList<StudentAnswerTargetRangeResponse>>>
+    public class GetByFilterPagedStudentAnswerTargetRangeQuery : IRequest<DataResult<PagedList<StudentAnswerTargetRangeResponse>>>
     {
         public StudentAnswerTargetRangeDetailSearch StudentAnswerTargetRangeDetailSearch { get; set; }
 
-        public class GetByFilterPagedStudentAnswerTargetRangeQueryHandler : IRequestHandler<GetByFilterPagedStudentAnswerTargetRangeQuery, IDataResult<PagedList<StudentAnswerTargetRangeResponse>>>
+        public class GetByFilterPagedStudentAnswerTargetRangeQueryHandler : IRequestHandler<GetByFilterPagedStudentAnswerTargetRangeQuery, DataResult<PagedList<StudentAnswerTargetRangeResponse>>>
         {
             IMapper _mapper;
             IStudentAnswerTargetRangeRepository _studentAnswerTargetRangeRepository;
@@ -32,7 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRan
                 _mapper = mapper;
             }
 
-            public virtual async Task<IDataResult<PagedList<StudentAnswerTargetRangeResponse>>> Handle(GetByFilterPagedStudentAnswerTargetRangeQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<PagedList<StudentAnswerTargetRangeResponse>>> Handle(GetByFilterPagedStudentAnswerTargetRangeQuery request, CancellationToken cancellationToken)
             {
                 var query = _studentAnswerTargetRangeRepository.Query().Include(x=>x.Package).AsQueryable();
 

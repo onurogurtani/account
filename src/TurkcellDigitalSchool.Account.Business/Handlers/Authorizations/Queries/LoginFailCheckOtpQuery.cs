@@ -14,12 +14,12 @@ using static TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Quer
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
     [LogScope]
-    public class LoginFailCheckOtpQuery : IRequest<IDataResult<LoginFailCheckOtpResponse>>
+    public class LoginFailCheckOtpQuery : IRequest<DataResult<LoginFailCheckOtpResponse>>
     {
         public long MobileLoginId { get; set; }
         public int Otp { get; set; } 
 
-        public class LoginFailCheckOtpQueryHandler : IRequestHandler<LoginFailCheckOtpQuery, IDataResult<LoginFailCheckOtpResponse>>
+        public class LoginFailCheckOtpQueryHandler : IRequestHandler<LoginFailCheckOtpQuery, DataResult<LoginFailCheckOtpResponse>>
         {
             private readonly IUserRepository _userRepository;
             private readonly IMobileLoginRepository _mobileLoginRepository;
@@ -34,7 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             }
 
         
-            public async Task<IDataResult<LoginFailCheckOtpResponse>> Handle(LoginFailCheckOtpQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<LoginFailCheckOtpResponse>> Handle(LoginFailCheckOtpQuery request, CancellationToken cancellationToken)
             {
                 var mobileLogin = await _mobileLoginRepository.GetAsync(m =>
                     m.Provider == AuthenticationProviderType.Person &&

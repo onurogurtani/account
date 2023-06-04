@@ -9,9 +9,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Commands
     [ExcludeFromCodeCoverage]
     public class CreateUserPackageCommand : CreateRequestBase<UserPackage>
     {
-        public class CreateUserPackageCommandHandler : CreateHandlerBase<UserPackage, CreateUserPackageCommand>
+        public class CreateRequestUserPackageCommandHandler : CreateRequestHandlerBase<UserPackage, CreateUserPackageCommand>
         {
-            public CreateUserPackageCommandHandler(IUserPackageRepository userPackageRepository) : base(userPackageRepository)
+            public CreateRequestUserPackageCommandHandler(IUserPackageRepository userPackageRepository) : base(userPackageRepository)
             {
             }
         }

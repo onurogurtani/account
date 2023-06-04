@@ -8,7 +8,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Authentication.Model
     /// <summary>
     /// It contains login information for different user profiles.
     /// </summary>
-    public class LoginUserCommand : IRequest<IDataResult<LoginUserResult>>
+    public class LoginUserCommand : IRequest<DataResult<LoginUserResult>>
     {
         /// <summary>
         /// It is the user number that changes according to the provider.
