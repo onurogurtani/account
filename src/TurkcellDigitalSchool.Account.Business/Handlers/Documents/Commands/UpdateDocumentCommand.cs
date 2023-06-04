@@ -1,6 +1,6 @@
-﻿using System.Threading;
+﻿using MediatR;
+using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
@@ -15,6 +15,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
     /// </summary>
     [SecuredOperation]
     [LogScope]
+    [TransactionScope]
     public class UpdateDocumentCommand : IRequest<IResult>
     {
         public Document Entity { get; set; }
@@ -29,7 +30,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
                 _documentRepository = documentRepository;
                 _documentContractTypeRepository = documentContractTypeRepository;
             }
-
         
             public async Task<IResult> Handle(UpdateDocumentCommand request, CancellationToken cancellationToken)
             {
@@ -40,7 +40,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
                 var contractTypes = await _documentContractTypeRepository.GetListAsync(x => x.DocumentId == request.Entity.Id);
                 _documentContractTypeRepository.DeleteRange(contractTypes);
 
-
                 entity.RecordStatus = request.Entity.RecordStatus;
                 entity.Content = request.Entity.Content;
                 entity.Version = request.Entity.Version;
@@ -50,8 +49,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
                 entity.ContractTypes = request.Entity.ContractTypes;
                 entity.ValidStartDate = request.Entity.ValidStartDate;
                 entity.ValidEndDate = request.Entity.ValidEndDate;
-
-
 
                 var record = _documentRepository.Update(entity);
                 await _documentRepository.SaveChangesAsync();

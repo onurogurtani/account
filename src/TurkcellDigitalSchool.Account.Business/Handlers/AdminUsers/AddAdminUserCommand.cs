@@ -1,16 +1,20 @@
-﻿using System;
+﻿using DotNetCore.CAP;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 
@@ -19,6 +23,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
     /// <summary>
     /// Add User
     /// </summary>
+    [TransactionScope]
     public class AddAdminUserCommand : IRequest<IDataResult<SelectionItem>>
     {
         public UserType UserTypeId { get; set; }
@@ -37,15 +42,17 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
             private readonly Microsoft.Extensions.Configuration.IConfiguration _configuration;
             private readonly ConfigurationManager _configurationManager;
             private readonly IMediator _mediator;
+            private readonly ICapPublisher _capPublisher;
 
             public AddAdminUserCommandHandler(IUserRepository userRepository, Microsoft.Extensions.Configuration.IConfiguration configuration,
-                ConfigurationManager configurationManager, IMediator mediator, IUserRoleRepository userRoleRepository)
+                ConfigurationManager configurationManager, IMediator mediator, IUserRoleRepository userRoleRepository, ICapPublisher capPublisher)
             {
                 _userRepository = userRepository;
                 _configuration = configuration;
                 _configurationManager = configurationManager;
                 _mediator = mediator;
                 _userRoleRepository = userRoleRepository;
+                _capPublisher = capPublisher;
             }
 
             [MessageConstAttr(MessageCodeType.Information)]
@@ -76,7 +83,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
                         return new ErrorDataResult<SelectionItem>(CitizenIdAlreadyExist.PrepareRedisMessage());
                     if (citizenIdCheck.Email == request.Email)
                         return new ErrorDataResult<SelectionItem>(EmailAlreadyExist.PrepareRedisMessage());
-
                 }
 
 
@@ -86,7 +92,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
                 {
                     Name = request.Name,
                     SurName = request.SurName,
-                    UserName=request.UserName,
+                    UserName = request.UserName,
                     UserType = request.UserTypeId,
                     CitizenId = request.CitizenId,
                     Email = request.Email,
@@ -94,19 +100,20 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
                     PasswordSalt = passwordSalt,
                     Status = true,
                     RegisterStatus = RegisterStatus.Registered
-
                 };
 
                 if (request.UserTypeId == UserType.OrganisationAdmin || request.UserTypeId == UserType.FranchiseAdmin)
                 {
                     user.UserName = request.CitizenId.ToString();
                 }
-
                 _userRepository.Add(user);
                 await _userRepository.SaveChangesAsync();
+                await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Added), user, cancellationToken: cancellationToken);
+
                 var userRole = new UserRole { UserId = user.Id, RoleId = roleId };
                 _userRoleRepository.Add(userRole);
                 await _userRoleRepository.SaveChangesAsync();
+                await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Added), user, cancellationToken: cancellationToken);
 
                 return new SuccessDataResult<SelectionItem>(Added.PrepareRedisMessage());
             }

@@ -8,13 +8,12 @@ using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 {
     public class UpdateStudentPersonalInformationCommand : IRequest<IResult>
     {
-        //TODO UserId Tokendan alınacaktır?
-        public long UserId { get; set; }
         public string UserName { get; set; }
         public int AvatarId { get; set; }
         public string MobilPhone { get; set; }
@@ -26,10 +25,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
         {
             private readonly IUserRepository _userRepository;
             private readonly IUserService _userService;
-            public UpdateStudentPersonalInformationCommandHandler(IUserRepository userRepository, IUserService userService)
+            private readonly ITokenHelper _tokenHelper;
+            public UpdateStudentPersonalInformationCommandHandler(IUserRepository userRepository, IUserService userService, ITokenHelper tokenHelper)
             {
                 _userRepository = userRepository;
                 _userService = userService;
+                _tokenHelper = tokenHelper;
             }
 
             [MessageConstAttr(MessageCodeType.Information)]
@@ -40,8 +41,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             private static string RecordsDoesNotExist = Constants.Messages.RecordsDoesNotExist;
             public async Task<IResult> Handle(UpdateStudentPersonalInformationCommand request, CancellationToken cancellationToken)
             {
-                var getUser = _userService.GetUserById(request.UserId);
-
+                var userId = _tokenHelper.GetUserIdByCurrentToken();
+                var getUser = _userService.GetUserById(userId);
                 if (getUser == null)
                     return new ErrorResult(string.Format(RecordsDoesNotExist.PrepareRedisMessage(), "Kullanıcı"));
 
@@ -53,7 +54,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                     return new ErrorResult(string.Format(RecordsDoesNotExist.PrepareRedisMessage(), "İlçe"));
 
 
-                if (_userService.IsExistUserName(request.UserId, request.UserName))
+                if (_userService.IsExistUserName(userId, request.UserName))
                     return new ErrorResult(UserNameAlreadyExist.PrepareRedisMessage());
 
                 getUser.UserName = request.UserName;

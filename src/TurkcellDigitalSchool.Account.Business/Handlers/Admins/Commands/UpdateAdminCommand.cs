@@ -1,12 +1,13 @@
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
@@ -16,6 +17,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
     /// <summary>
     /// Update Admin User
     /// </summary>
+    [TransactionScope]
     public class UpdateAdminCommand : IRequest<IResult>
     {
         public CreateUpdateAdminDto Admin { get; set; }

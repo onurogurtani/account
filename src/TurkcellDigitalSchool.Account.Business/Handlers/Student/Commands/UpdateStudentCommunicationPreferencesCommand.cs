@@ -9,6 +9,7 @@ using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 {
@@ -21,11 +22,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             private readonly IUserRepository _userRepository;
             private readonly IUserService _userService;
             private readonly IUserCommunicationPreferencesRepository _userCommunicationPreferencesRepository;
-            public UpdateStudentCommunicationPreferencesCommandHandler(IUserRepository userRepository, IUserService userService, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository)
+            private readonly ITokenHelper _tokenHelper;
+            public UpdateStudentCommunicationPreferencesCommandHandler(IUserRepository userRepository, IUserService userService, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, ITokenHelper tokenHelper)
             {
                 _userRepository = userRepository;
                 _userService = userService;
                 _userCommunicationPreferencesRepository = userCommunicationPreferencesRepository;
+                _tokenHelper = tokenHelper;
             }
 
 
@@ -37,12 +40,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 
             public async Task<IResult> Handle(UpdateStudentCommunicationPreferencesCommand request, CancellationToken cancellationToken)
             {
-                //TODO UserId Tokendan alınacaktır?
-                var getUser = _userService.GetUserById(request.StudentCommunicationPreferencesRequest.UserId);
+                var userId = _tokenHelper.GetUserIdByCurrentToken();
+                var getUser = _userService.GetUserById(userId);
                 if (getUser == null)
                     return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
 
-                var getStudentCommunicationPreferences = _userCommunicationPreferencesRepository.Get(w => w.UserId == request.StudentCommunicationPreferencesRequest.UserId);
+                var getStudentCommunicationPreferences = _userCommunicationPreferencesRepository.Get(w => w.UserId == userId);
 
                 var validationMessages = _userService.StudentCommunicationPreferencesValidationRules(request.StudentCommunicationPreferencesRequest);
                 if (!string.IsNullOrWhiteSpace(validationMessages))

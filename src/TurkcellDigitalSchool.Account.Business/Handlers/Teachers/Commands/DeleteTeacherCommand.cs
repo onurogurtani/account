@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using DotNetCore.CAP;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,8 +9,10 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
@@ -16,6 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
     /// <summary>
     /// Delete User/Teacher
     /// </summary>
+    [TransactionScope]
     public class DeleteTeacherCommand : IRequest<IResult>
     {
         public long UserId { get; set; }
@@ -26,11 +31,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
         {
             private readonly IUserRepository _userRepository;
             private readonly IOrganisationUserRepository _organisationUserRepository;
+            private readonly ICapPublisher _capPublisher;
 
-            public DeleteTeacherCommandHandler(IUserRepository userRepository, IOrganisationUserRepository organisationUserRepository)
+            public DeleteTeacherCommandHandler(IUserRepository userRepository, IOrganisationUserRepository organisationUserRepository, ICapPublisher capPublisher)
             {
                 _userRepository = userRepository;
                 _organisationUserRepository = organisationUserRepository;
+                _capPublisher = capPublisher;
             }
 
             [MessageConstAttr(MessageCodeType.Error)]
@@ -39,7 +46,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
             [SecuredOperation]
-             
+
             public async Task<IResult> Handle(DeleteTeacherCommand request, CancellationToken cancellationToken)
             {
                 var targetOrganisationUser = _organisationUserRepository.Query().Where(x => x.UserId == request.UserId && x.OrganisationId == request.OrganisationId).FirstOrDefault();
@@ -57,12 +64,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
                     {
                         return new ErrorDataResult<User>(RecordDoesNotExist.PrepareRedisMessage());
                     }
-
                     userEntity.Status = false;
                     _userRepository.Update(userEntity);
                     await _userRepository.SaveChangesAsync();
+                    await _capPublisher.PublishAsync(userEntity.GeneratePublishName(EntityState.Added), userEntity, cancellationToken: cancellationToken);
                 }
-
                 return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }
         }

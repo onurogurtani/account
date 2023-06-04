@@ -1,8 +1,8 @@
-﻿using System;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.Business.Helpers;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
@@ -13,12 +13,13 @@ using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Core.Utilities.Security.Hashing; 
+using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
     [LogScope]
+    [TransactionScope]
     public class UnverifiedUserCommand : IRequest<IDataResult<UnverifiedUserDto>>
     {
         public UserType UserTypeId { get; set; }
@@ -46,40 +47,35 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             /// <summary>
             /// Will be reedited
             /// </summary> 
-            [CacheRemoveAspect("Get")] 
+            [CacheRemoveAspect("Get")]
             public async Task<IDataResult<UnverifiedUserDto>> Handle(UnverifiedUserCommand request, CancellationToken cancellationToken)
             {
                 HashingHelper.CreatePasswordHash(request.Password, out var passwordSalt, out var passwordHash);
-
 
                 var existEmail = await _userRepository.Query().AnyAsync(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
                 if (existEmail)
                     return new ErrorDataResult<UnverifiedUserDto>(Messages.EmailAlreadyExist);
 
-
                 if (!string.IsNullOrEmpty(request.MobilePhones))
                 {
                     var existPhone = await _userRepository.Query().AnyAsync(x => x.MobilePhones == request.MobilePhones);
                     if (existPhone)
-                        return new ErrorDataResult<UnverifiedUserDto>(Messages.MobilePhoneAlreadyExist); 
+                        return new ErrorDataResult<UnverifiedUserDto>(Messages.MobilePhoneAlreadyExist);
                 }
 
                 var unverifiedExistEmail = await _unverifiedUserRepository.Query().AnyAsync(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
-                if (existEmail)
+                if (unverifiedExistEmail)
                 {
-                    var unverifiedUserEmail =  _unverifiedUserRepository.Get(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
-                     _unverifiedUserRepository.Delete(new UnverifiedUser { Id= unverifiedUserEmail.Id});
+                    var unverifiedUserEmail = _unverifiedUserRepository.Get(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
+                    _unverifiedUserRepository.Delete(new UnverifiedUser { Id = unverifiedUserEmail.Id });
                 }
 
                 var unverifiedExistMobilePhone = await _unverifiedUserRepository.Query().AnyAsync(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
-                if (existEmail)
+                if (unverifiedExistMobilePhone)
                 {
                     var unverifiedUserMobilePhone = _unverifiedUserRepository.Get(x => x.MobilePhones.Trim() == request.Email.Trim());
                     _unverifiedUserRepository.Delete(new UnverifiedUser { Id = unverifiedUserMobilePhone.Id });
                 }
-
-
-
 
                 var unverifiedUser = new UnverifiedUser
                 {
@@ -90,10 +86,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     MobilePhones = request.MobilePhones,
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt,
-                    VerificationKeyLastTime = DateTime.UtcNow.AddSeconds(90),
-
+                    VerificationKeyLastTime = DateTime.UtcNow.AddSeconds(90)
                 };
-
 
                 if (unverifiedUser.UserTypeId == UserType.Student)
                 {
@@ -110,7 +104,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 else
                 {
                     MobileLogin mobileLogin;
-
                     try
                     {
                         mobileLogin = await _sendOtpSmsHelper.SendOtpSms(AuthenticationProviderType.Person, unverifiedUser.MobilePhones, unverifiedUser.Id);
@@ -120,8 +113,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     {
                         return new ErrorDataResult<UnverifiedUserDto>(e.Message);
                     }
-
-                        
                 }
 
                 _unverifiedUserRepository.Add(unverifiedUser);
@@ -131,8 +122,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     Id = unverifiedUser.Id,
                     VerificationKey = unverifiedUser.VerificationKey,
                 };
-                
-                    return new SuccessDataResult<UnverifiedUserDto>(unverifiedUserDto);
+                return new SuccessDataResult<UnverifiedUserDto>(unverifiedUserDto);
 
             }
 

@@ -19,6 +19,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
+using DotNetCore.CAP;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Admins.Commands
 {
@@ -31,6 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Admins.Commands
         private Mock<IUserRepository> _userRepository;
         private Mock<IUserRoleRepository> _userRoleRepository;
         private Mock<ITokenHelper> _tokenHelper;
+        private Mock<ICapPublisher> _capPublisher;
 
         Mock<IHeaderDictionary> _headerDictionary;
         Mock<HttpRequest> _httpRequest;
@@ -62,9 +64,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Admins.Commands
             _tokenHelper = new Mock<ITokenHelper>();
             _userRepository = new Mock<IUserRepository>();
             _userRoleRepository = new Mock<IUserRoleRepository>();
+            _capPublisher = new Mock<ICapPublisher>();
 
             _createAdminCommand = new CreateAdminCommand();
-            _createAdminCommandHandler = new CreateAdminCommand.CreateAdminCommandHandler(_userRoleRepository.Object, _userRepository.Object, _tokenHelper.Object, _mapper.Object);
+            _createAdminCommandHandler = new CreateAdminCommand.CreateAdminCommandHandler(_userRoleRepository.Object, _userRepository.Object, _tokenHelper.Object, _mapper.Object, _capPublisher.Object);
         }
 
         [Test]

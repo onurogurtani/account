@@ -11,6 +11,7 @@ using TurkcellDigitalSchool.Account.Business.Handlers.MessageHandler.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Services.CustomMessgeHelperService.Model;
@@ -19,6 +20,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
 {
     [ExcludeFromCodeCoverage]
+    [TransactionScope]
     public class CreateMessageMapCommand : IRequest<IResult>
     {
         public List<ConstantMessageDtos> ConstantMessageDtos { get; set; }
@@ -31,10 +33,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
             private readonly IMapper _mapper;
             private readonly IMediator _mediator;
 
-            public CreateMessageMapCommandHandler(IMessageMapRepository messageMapRepository, IMessageRepository messageRepository
-                , IMapper mapper
-                , IMediator mediator
-                )
+            public CreateMessageMapCommandHandler(IMessageMapRepository messageMapRepository, IMessageRepository messageRepository, IMapper mapper, IMediator mediator)
             {
                 _messageMapRepository = messageMapRepository;
                 _messageRepository = messageRepository;
@@ -48,10 +47,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
             public async Task<IResult> Handle(CreateMessageMapCommand request, CancellationToken cancellationToken)
             {
-                var createMessage = await _mediator.Send(new CreateMessageCommand{ConstantMessageDtos = request.ConstantMessageDtos}, cancellationToken);
+                var createMessage = await _mediator.Send(new CreateMessageCommand { ConstantMessageDtos = request.ConstantMessageDtos }, cancellationToken);
                 if (createMessage.Success == false)
                     return new ErrorResult(Messages.UnableToProccess);
-                
+
                 if (request.ConstantMessageDtos.Count == 0)
                 {
                     return new ErrorResult(Messages.RecordIsNotFound);
@@ -103,7 +102,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
             {
                 var entity = await _messageRepository.Query()
                     .Where(w => w.MessageKey == messageKey && w.UsedClass == usedClass)
-                    .Include(x=>x.MessageType)
+                    .Include(x => x.MessageType)
                     .FirstOrDefaultAsync();
                 return entity.MessageType.Code + entity.MessageNumber.ToString().PadLeft(4, '0');
             }

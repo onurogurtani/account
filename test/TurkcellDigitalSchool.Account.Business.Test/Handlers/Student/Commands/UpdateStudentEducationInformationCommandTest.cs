@@ -18,6 +18,7 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.Enums;
 using AutoMapper;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
 {
@@ -29,6 +30,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
 
         Mock<IStudentEducationInformationRepository> _studentEducationInformationRepository;
         Mock<IUserService> _userService;
+        Mock<ITokenHelper> _tokenHelper;
 
         Mock<IHeaderDictionary> _headerDictionary;
         Mock<HttpRequest> _httpRequest;
@@ -59,9 +61,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
 
             _studentEducationInformationRepository = new Mock<IStudentEducationInformationRepository>();
             _userService = new Mock<IUserService>();
+            _tokenHelper = new Mock<ITokenHelper>();
 
             _updateStudentEducationInformationCommand = new UpdateStudentEducationInformationCommand();
-            _updateStudentEducationInformationCommandHandler = new UpdateStudentEducationInformationCommandHandler(_studentEducationInformationRepository.Object, _userService.Object);
+            _updateStudentEducationInformationCommandHandler = new UpdateStudentEducationInformationCommandHandler(_studentEducationInformationRepository.Object, _userService.Object, _tokenHelper.Object);
         }
 
         [Test]

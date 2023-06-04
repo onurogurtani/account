@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DotNetCore.CAP;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -28,6 +29,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Commands
 
         Mock<IUserRepository> _userRepository;
         Mock<IOrganisationUserRepository> _organisationUserRepository;
+        Mock<ICapPublisher> _capPublisher;
 
         Mock<IHeaderDictionary> _headerDictionary;
         Mock<HttpRequest> _httpRequest;
@@ -61,9 +63,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Commands
 
             _userRepository = new Mock<IUserRepository>();
             _organisationUserRepository = new Mock<IOrganisationUserRepository>();
+            _capPublisher = new Mock<ICapPublisher>();
 
             _deleteTeacherCommand = new DeleteTeacherCommand();
-            _deleteTeacherCommandHandler = new(_userRepository.Object, _organisationUserRepository.Object);
+            _deleteTeacherCommandHandler = new(_userRepository.Object, _organisationUserRepository.Object, _capPublisher.Object);
 
             _fakeOrganisationUsers = new List<OrganisationUser>
             {

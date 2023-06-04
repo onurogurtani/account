@@ -7,6 +7,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
@@ -15,6 +16,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageTypes.Commands
     /// <summary>
     /// Create MessageType
     /// </summary>
+    [TransactionScope]
     public class CreateMessageTypeCommand : IRequest<IResult>
     {
         public class CreateMessageTypeCommandHandler : IRequestHandler<CreateMessageTypeCommand, IResult>

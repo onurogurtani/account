@@ -1,9 +1,11 @@
-﻿using System;
+﻿using DotNetCore.CAP;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
@@ -11,14 +13,16 @@ using TurkcellDigitalSchool.Common;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.Core.Utilities.Toolkit; 
+using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
     [LogScope]
+    [TransactionScope]
     public class ForgottenPasswordChangeCommand : IRequest<IDataResult<AccessToken>>
     {
 
@@ -33,8 +37,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             private readonly IMobileLoginRepository _mobileLoginRepository;
             private readonly ISmsOtpRepository _smsOtpRepository;
             private readonly IUserSessionRepository _userSessionRepository;
+            private readonly ICapPublisher _capPublisher;
 
-            public ForgottenPasswordChangeCommandHandler(IUserRepository userRepository, IMediator mediator, IMobileLoginRepository mobileLoginRepository, ISmsOtpRepository smsOtpRepository, ConfigurationManager configurationManager, IUserSessionRepository userSessionRepository)
+            public ForgottenPasswordChangeCommandHandler(IUserRepository userRepository, IMediator mediator, IMobileLoginRepository mobileLoginRepository, ISmsOtpRepository smsOtpRepository, ConfigurationManager configurationManager, IUserSessionRepository userSessionRepository, ICapPublisher capPublisher)
             {
                 _userRepository = userRepository;
                 _mediator = mediator;
@@ -42,6 +47,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 _smsOtpRepository = smsOtpRepository;
                 _configurationManager = configurationManager;
                 _userSessionRepository = userSessionRepository;
+                _capPublisher = capPublisher;
             }
 
             /// <summary>
@@ -50,8 +56,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             /// If the check is successful, the new password is updated to the user account.
             /// A verification code is sent to the phone for the sms verification page.
             /// </summary>
-           
-         
+
+
             public async Task<IDataResult<AccessToken>> Handle(ForgottenPasswordChangeCommand request, CancellationToken cancellationToken)
             {
                 var userSessionRepository = _mediator.Send(new ForgottenPasswordTokenCheckCommand { Token = request.Token }, cancellationToken).Result.Data;
@@ -70,7 +76,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 
                 _userRepository.Update(user);
                 await _userRepository.SaveChangesAsync();
-
+                await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Added), user, cancellationToken: cancellationToken);
                 MobileLogin mobileLogin;
 
                 try
