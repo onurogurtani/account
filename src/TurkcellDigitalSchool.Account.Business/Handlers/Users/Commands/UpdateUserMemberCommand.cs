@@ -60,11 +60,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                 if (record == null)
                     return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
 
-                if (_userRepository.GetCountAsync(w => w.Email == request.Email).Result > 0)
+                if (_userRepository.GetCountAsync(w => w.Id != record.Id && w.Email.Trim().ToLower() == request.Email.Trim().ToLower()).Result > 0)
                 {
                     return new ErrorDataResult<SelectionItem>("Mail adresi daha önce kullanılmış.");
                 }
-                else if (_userRepository.GetCountAsync(w => w.MobilePhones == request.MobilePhones).Result > 0)
+                else if (_userRepository.GetCountAsync(w => w.Id != record.Id && w.MobilePhones.Trim().ToLower() == request.MobilePhones.Trim().ToLower()).Result > 0)
                 {
                     return new ErrorDataResult<SelectionItem>("Telefon numarası daha önce kullanılmış.");
                 }
@@ -74,7 +74,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                 record.SurName = request.SurName;
                 record.Email = request.Email;
                 record.MobilePhones = request.MobilePhones;
-                if (await _userRepository.IsPackageBuyer(record.Id) || record.UserType == UserType.Parent)
+                if (await _userRepository.IsPackageBuyer(record.Id))
                 {
                     record.CitizenId = request.CitizenId;
                     record.BirthDate = request.BirthDate;

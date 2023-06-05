@@ -61,11 +61,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
             public async Task<DataResult<SelectionItem>> Handle(AddUserCommand request, CancellationToken cancellationToken)
             {
 
-                if (_userRepository.GetCountAsync(w => w.Email == request.Email).Result > 0)
+                if (_userRepository.GetCountAsync(w => w.Email.Trim().ToLower() == request.Email.Trim().ToLower()).Result > 0)
                 {
                     return new ErrorDataResult<SelectionItem>("Mail adresi daha önce kullanılmış.");
                 }
-                else if (_userRepository.GetCountAsync(w => w.MobilePhones == request.MobilePhones).Result > 0)
+                else if (_userRepository.GetCountAsync(w => w.MobilePhones.Trim().ToLower() == request.MobilePhones.Trim().ToLower()).Result > 0)
                 {
                     return new ErrorDataResult<SelectionItem>("Telefon numarası daha önce kullanılmış.");
                 }
