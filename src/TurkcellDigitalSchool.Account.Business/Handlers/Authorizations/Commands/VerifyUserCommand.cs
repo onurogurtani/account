@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using DotNetCore.CAP;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
     [LogScope]
+    [TransactionScope]
     public class VerifyUserCommand : IRequest<IResult>
     {
         public int Id { get; set; }
@@ -21,11 +25,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
         {
             private readonly IUserRepository _userRepository;
             private readonly IUnverifiedUserRepository _unverifiedUserRepository;
+            private readonly ICapPublisher _capPublisher;
 
-            public VerifyUserCommandHandler(IUserRepository userRepository,IUnverifiedUserRepository unverifiedUserRepository)
+            public VerifyUserCommandHandler(IUserRepository userRepository, IUnverifiedUserRepository unverifiedUserRepository, ICapPublisher capPublisher)
             {
                 _userRepository = userRepository;
                 _unverifiedUserRepository = unverifiedUserRepository;
+                _capPublisher = capPublisher;
             }
 
             /// <summary>
@@ -77,6 +83,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 {
                     _userRepository.Add(user);
                     await _userRepository.SaveChangesAsync();
+                    await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Added), user, cancellationToken: cancellationToken);
 
                     _unverifiedUserRepository.Delete(unverifiedUser);
                     await _unverifiedUserRepository.SaveChangesAsync();

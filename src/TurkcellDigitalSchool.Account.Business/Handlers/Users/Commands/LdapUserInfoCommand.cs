@@ -3,33 +3,25 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.DirectoryServices.Protocols;
 using System.Globalization;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Handlers;
 using TurkcellDigitalSchool.Common.Helpers;
-using TurkcellDigitalSchool.Core.Configure;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
-using TurkcellDigitalSchool.Core.DataAccess;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
-using TurkcellDigitalSchool.Core.Utilities.MessageBrokers.RabbitMq;
-using TurkcellDigitalSchool.Core.Utilities.Requests;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
-using static TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands.LdapUserInfoCommand;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 {
+    [TransactionScope]
     public class LdapUserInfoCommand : IRequest<IResult>
     {
         [MessageClassAttr("Get Ldap Users Into System")]

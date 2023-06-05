@@ -12,12 +12,12 @@ using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 {
     public class UpdateStudentSupportTeamViewMyDataCommand : IRequest<IResult>
     {
-        public long UserId { get; set; }
         public bool IsViewMyData { get; set; }
         public bool IsFifteenMinutes { get; set; }
         public bool IsOneMonth { get; set; }
@@ -27,10 +27,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
         {
             private readonly IUserService _userService;
             private readonly IUserSupportTeamViewMyDataRepository _userSupportTeamViewMyDataRepository;
-            public UpdateStudentSupportTeamViewMyDataCommandHandler(IUserService userService, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository)
+            private readonly ITokenHelper _tokenHelper;
+            public UpdateStudentSupportTeamViewMyDataCommandHandler(IUserService userService, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository, ITokenHelper tokenHelper)
             {
                 _userService = userService;
                 _userSupportTeamViewMyDataRepository = userSupportTeamViewMyDataRepository;
+                _tokenHelper = tokenHelper;
             }
 
 
@@ -48,12 +50,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 
             public async Task<IResult> Handle(UpdateStudentSupportTeamViewMyDataCommand request, CancellationToken cancellationToken)
             {
-                //TODO UserId Tokendan alınacaktır?
-                var getUser = _userService.GetUserById(request.UserId);
+                var userId = _tokenHelper.GetUserIdByCurrentToken();
+                var getUser = _userService.GetUserById(userId);
                 if (getUser == null)
                     return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
 
-                if (request.IsViewMyData && (!request.IsFifteenMinutes && !request.IsAlways && !request.IsOneMonth ))
+                if (request.IsViewMyData && (!request.IsFifteenMinutes && !request.IsAlways && !request.IsOneMonth))
                 {
                     return new ErrorResult(YouMustChoose.PrepareRedisMessage());
                 }
@@ -73,7 +75,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                     return new ErrorResult(OnlyOneCanBeSelected.PrepareRedisMessage());
                 }
 
-                var getStudentSupportTeamViewMyData = _userSupportTeamViewMyDataRepository.Get(w => w.UserId == request.UserId);
+                var getStudentSupportTeamViewMyData = _userSupportTeamViewMyDataRepository.Get(w => w.UserId == userId);
                 getStudentSupportTeamViewMyData.IsViewMyData = request.IsViewMyData;
                 getStudentSupportTeamViewMyData.IsFifteenMinutes = request.IsViewMyData ? request.IsFifteenMinutes : null;
                 getStudentSupportTeamViewMyData.IsOneMonth = request.IsViewMyData ? request.IsOneMonth : null;

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DotNetCore.CAP;
 using MediatR;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries;
@@ -9,6 +10,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Integration.IntegrationServices.IdentityServerServices.Model.Response;
@@ -16,7 +18,8 @@ using TurkcellDigitalSchool.Integration.IntegrationServices.IdentityServerServic
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
     [LogScope]
-    public class LoginFailOtpNewPasswordCommand : IRequest<DataResult<TokenIntegraitonResponse>>
+    [TransactionScope]
+    public class LoginFailOtpNewPasswordCommand : IRequest<IDataResult<TokenIntegraitonResponse>>
     {
         public long MobileLoginId { get; set; }
         public string Guid { get; set; }
@@ -25,22 +28,24 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
         public string CsrfToken { get; set; }
         public string ClientId { get; set; }
 
-        public class LoginFailOtpNewPasswordCommandHandler : IRequestHandler<LoginFailOtpNewPasswordCommand, DataResult<TokenIntegraitonResponse>>
+        public class LoginFailOtpNewPasswordCommandHandler : IRequestHandler<LoginFailOtpNewPasswordCommand, IDataResult<TokenIntegraitonResponse>>
         {
             private readonly IUserRepository _userRepository;
             private readonly IMobileLoginRepository _mobileLoginRepository;
             private readonly ILoginFailCounterRepository _loginFailCounterRepository;
             private readonly IMediator _mediator;
+            private readonly ICapPublisher _capPublisher;
 
-            public LoginFailOtpNewPasswordCommandHandler(IUserRepository userRepository, IMobileLoginRepository mobileLoginRepository, ILoginFailCounterRepository loginFailCounterRepository, IMediator mediator)
+            public LoginFailOtpNewPasswordCommandHandler(IUserRepository userRepository, IMobileLoginRepository mobileLoginRepository, ILoginFailCounterRepository loginFailCounterRepository, IMediator mediator, ICapPublisher capPublisher)
             {
                 _userRepository = userRepository;
                 _mobileLoginRepository = mobileLoginRepository;
                 _loginFailCounterRepository = loginFailCounterRepository;
                 _mediator = mediator;
-            } 
+                _capPublisher = capPublisher;
+            }
 
-            public async Task<DataResult<TokenIntegraitonResponse>> Handle(LoginFailOtpNewPasswordCommand request, CancellationToken cancellationToken)
+            public async Task<IDataResult<TokenIntegraitonResponse>> Handle(LoginFailOtpNewPasswordCommand request, CancellationToken cancellationToken)
             {
                 if (request.NewPass != request.NewPassAgain)
                 {
@@ -69,6 +74,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 user.FailOtpCount = 0;
                 user.LastPasswordDate = DateTime.Now;
                 await _userRepository.UpdateAndSaveAsync(user);
+                await _capPublisher.PublishAsync(user.GeneratePublishName(Microsoft.EntityFrameworkCore.EntityState.Modified), user, cancellationToken: cancellationToken);
 
                 mobileLogin.NewPassStatus = UsedStatus.Used;
                 await _mobileLoginRepository.UpdateAndSaveAsync(mobileLogin);

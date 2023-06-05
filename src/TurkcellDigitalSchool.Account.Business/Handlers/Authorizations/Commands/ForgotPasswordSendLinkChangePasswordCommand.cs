@@ -1,22 +1,26 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;  
+using System.Threading.Tasks;
+using DotNetCore.CAP;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
-using TurkcellDigitalSchool.Integration.IntegrationServices.IdentityServerServices.Model.Response; 
+using TurkcellDigitalSchool.Integration.IntegrationServices.IdentityServerServices.Model.Response;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
     [LogScope]
-    public class ForgotPasswordSendLinkChangePasswordCommand : IRequest<DataResult<TokenIntegraitonResponse>>
+    [TransactionScope]
+    public class ForgotPasswordSendLinkChangePasswordCommand : IRequest<IDataResult<TokenIntegraitonResponse>>
     {
         public string XId { get; set; }
         public string Guid { get; set; }
@@ -25,24 +29,26 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
         public string NewPass { get; set; }
         public string NewPassAgain { get; set; }
 
-        public class ForgotPasswordSendLinkCheckCommandHandler : IRequestHandler<ForgotPasswordSendLinkChangePasswordCommand, DataResult<TokenIntegraitonResponse>>
+        public class ForgotPasswordSendLinkCheckCommandHandler : IRequestHandler<ForgotPasswordSendLinkChangePasswordCommand, IDataResult<TokenIntegraitonResponse>>
         {
             private readonly IUserRepository _userRepository;
             private readonly ILoginFailCounterRepository _loginFailCounterRepository;
             private readonly ILoginFailForgetPassSendLinkRepository _loginFailForgetPassSendLinkRepository;
             private readonly IMediator _mediator;
+            private readonly ICapPublisher _capPublisher;
 
             public ForgotPasswordSendLinkCheckCommandHandler(IUserRepository userRepository,
-                ILoginFailCounterRepository loginFailCounterRepository, ILoginFailForgetPassSendLinkRepository loginFailForgetPassSendLinkRepository, IMediator mediator)
+                ILoginFailCounterRepository loginFailCounterRepository, ILoginFailForgetPassSendLinkRepository loginFailForgetPassSendLinkRepository, IMediator mediator, ICapPublisher capPublisher)
             {
                 _userRepository = userRepository;
                 _loginFailCounterRepository = loginFailCounterRepository;
                 _loginFailForgetPassSendLinkRepository = loginFailForgetPassSendLinkRepository;
                 _mediator = mediator;
+                _capPublisher = capPublisher;
             }
 
-            
-            public async Task<DataResult<TokenIntegraitonResponse>> Handle(ForgotPasswordSendLinkChangePasswordCommand request, CancellationToken cancellationToken)
+
+            public async Task<IDataResult<TokenIntegraitonResponse>> Handle(ForgotPasswordSendLinkChangePasswordCommand request, CancellationToken cancellationToken)
             {
                 if (request.NewPass != request.NewPassAgain)
                 {
@@ -89,8 +95,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 user.FailOtpCount = 0;
                 user.LastPasswordDate = DateTime.Now;
                 await _userRepository.UpdateAndSaveAsync(user);
+                await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Modified), user, cancellationToken: cancellationToken);
                 await _loginFailCounterRepository.ResetCsrfTokenFailLoginCount(request.CsrfToken);
-
                 var tokenResponse = await _mediator.Send(new GetTokenQuery
                 {
                     UserId = user.Id,
@@ -98,7 +104,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     ClientId = request.ClientId,
                 });
 
-                return new SuccessDataResult<TokenIntegraitonResponse>(tokenResponse.Data,Messages.PasswordChanged);
+                return new SuccessDataResult<TokenIntegraitonResponse>(tokenResponse.Data, Messages.PasswordChanged);
             }
         }
     }

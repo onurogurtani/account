@@ -1,20 +1,22 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
 {
+    [TransactionScope]
     public class CreateAdminRoleCommand : IRequest<long>
-    { 
+    {
         [MessageClassAttr("Rol Ekleme")]
         public class CreateAdminRoleCommandHandler : IRequestHandler<CreateAdminRoleCommand, long>
         {
@@ -45,7 +47,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
                 var role = await _roleRepository.Query().FirstOrDefaultAsync(x => x.Name == roleName) ?? new Role
                 {
                     Name = roleName,
-                    UserType= UserType.Admin,
+                    UserType = UserType.Admin,
                 };
                 if (role.Id == 0)
                 {

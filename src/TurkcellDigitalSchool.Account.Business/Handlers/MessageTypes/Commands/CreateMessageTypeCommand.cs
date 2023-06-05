@@ -7,6 +7,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
@@ -43,8 +44,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageTypes.Commands
                         Name = item.Name,
                         Code = item.Code
                     });
-                    await _messageTypeRepository.SaveChangesAsync();
                 }
+                await _messageTypeRepository.SaveChangesAsync();
                 return new SuccessResult(Messages.SuccessfulOperation);
             }
         }

@@ -6,6 +6,7 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -15,6 +16,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Commands
     /// <summary>
     /// Update PackageType
     /// </summary>
+    [TransactionScope]
     public class UpdatePackageTypeCommand : IRequest<IResult>
     {
         public PackageType PackageType { get; set; }

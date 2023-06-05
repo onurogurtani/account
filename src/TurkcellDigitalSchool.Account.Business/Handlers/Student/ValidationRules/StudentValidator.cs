@@ -32,7 +32,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.ValidationRule
         private static string InvalidPhoneNumber = Constants.Messages.InvalidPhoneNumber;
         public UpdateStudentPersonalInformationValidator()
         {
-            RuleFor(x => x.UserId).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
             RuleFor(x => x.UserName).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
             RuleFor(x => x.AvatarId).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
             RuleFor(x => x.MobilPhone).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());

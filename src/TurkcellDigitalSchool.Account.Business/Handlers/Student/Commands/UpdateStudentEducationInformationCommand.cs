@@ -9,12 +9,15 @@ using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Account.Domain.Enums.Institution;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 {
+    [TransactionScope]
     public class UpdateStudentEducationInformationCommand : IRequest<IResult>
     {
         public StudentEducationRequestDto StudentEducationRequest { get; set; }
@@ -23,10 +26,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
         {
             private readonly IStudentEducationInformationRepository _studentEducationInformationRepository;
             private readonly IUserService _userService;
-            public UpdateStudentEducationInformationCommandHandler(IStudentEducationInformationRepository studentEducationInformationRepository, IUserService userService)
+            private readonly ITokenHelper _tokenHelper;
+
+            public UpdateStudentEducationInformationCommandHandler(IStudentEducationInformationRepository studentEducationInformationRepository, IUserService userService, ITokenHelper tokenHelper)
             {
                 _studentEducationInformationRepository = studentEducationInformationRepository;
                 _userService = userService;
+                _tokenHelper = tokenHelper;
             }
 
             [MessageConstAttr(MessageCodeType.Information)]
@@ -37,8 +43,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 
             public async Task<IResult> Handle(UpdateStudentEducationInformationCommand request, CancellationToken cancellationToken)
             {
-                //TODO UserId Tokendan alınacaktır?
-                var getUser = _userService.GetUserById(request.StudentEducationRequest.UserId);
+                var userId = _tokenHelper.GetUserIdByCurrentToken();
+                var getUser = _userService.GetUserById(userId);
                 if (getUser == null)
                     return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
 

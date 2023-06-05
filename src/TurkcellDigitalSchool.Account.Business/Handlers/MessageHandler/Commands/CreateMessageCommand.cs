@@ -8,6 +8,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Services.CustomMessgeHelperService.Model;
@@ -16,11 +17,12 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageHandler.Commands
 {
     [ExcludeFromCodeCoverage]
+    [TransactionScope]
     public class CreateMessageCommand : IRequest<IResult>
     {
         public List<ConstantMessageDtos> ConstantMessageDtos { get; set; }
 
-        [MessageClassAttr("Message Oluþturma")] 
+        [MessageClassAttr("Message Oluþturma")]
         public class CreateMessageCommandHandler : IRequestHandler<CreateMessageCommand, IResult>
         {
             private readonly IMessageRepository _messageRepository;
@@ -57,9 +59,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageHandler.Command
                         var entity = _messageRepository.Get(x => x.MessageKey == itemMessageDetail.MessageKey && x.UsedClass == item.UsedClass);
                         if (entity == null)
                         {
-                            var messageType = _messageTypeRepository.GetAsync(w=>w.Code == ((MessageCodeType)itemMessageDetail.MessageCodeType).DescriptionAttr().ToString()).Result;
+                            var messageType = _messageTypeRepository.GetAsync(w => w.Code == ((MessageCodeType)itemMessageDetail.MessageCodeType).DescriptionAttr().ToString()).Result;
 
-                            var messageEntity = new  Message
+                            var messageEntity = new Message
                             {
                                 UsedClass = item.UsedClass,
                                 MessageKey = itemMessageDetail.MessageKey,
@@ -75,7 +77,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageHandler.Command
                         }
                     }
                 }
-
                 return new SuccessResult(Messages.SuccessfulOperation.PrepareRedisMessage());
             }
         }

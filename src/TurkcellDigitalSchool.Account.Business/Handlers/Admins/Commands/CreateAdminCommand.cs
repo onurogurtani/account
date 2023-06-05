@@ -1,14 +1,17 @@
+using AutoMapper;
+using DotNetCore.CAP;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
-using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
@@ -18,6 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
     /// <summary>
     /// Create Admin User with Groups
     /// </summary>
+    [TransactionScope]
     public class CreateAdminCommand : IRequest<IResult>
     {
         public CreateUpdateAdminDto Admin { get; set; }
@@ -29,16 +33,18 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
             private readonly IUserRepository _userRepository;
             private readonly IUserRoleRepository _userRoleRepository;
             private readonly ITokenHelper _tokenHelper;
+            private readonly ICapPublisher _capPublisher;
 
-            public CreateAdminCommandHandler(IUserRoleRepository userRoleRepository, IUserRepository userRepository, ITokenHelper tokenHelper, IMapper mapper)
+            public CreateAdminCommandHandler(IUserRoleRepository userRoleRepository, IUserRepository userRepository, ITokenHelper tokenHelper, IMapper mapper, ICapPublisher capPublisher)
             {
                 _userRepository = userRepository;
                 _userRoleRepository = userRoleRepository;
                 _mapper = mapper;
                 _tokenHelper = tokenHelper;
+                _capPublisher = capPublisher;
             }
 
-          //  [SecuredOperation] 
+            //  [SecuredOperation] 
             public async Task<IResult> Handle(CreateAdminCommand request, CancellationToken cancellationToken)
             {
                 long currentuserId = _tokenHelper.GetUserIdByCurrentToken();
@@ -83,14 +89,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
 
                 var record = _userRepository.Add(user);
                 await _userRepository.SaveChangesAsync();
+                await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Added), user, cancellationToken: cancellationToken);
 
                 foreach (var roleId in request.Admin.RoleIds)
                     _userRoleRepository.Add(new UserRole { RoleId = roleId, UserId = record.Id });
-                await _userRoleRepository.SaveChangesAsync();
+                await _userRoleRepository.SaveChangesAsync();                
 
                 return new SuccessResult(Messages.SuccessfulOperation);
-
-
             }
         }
     }

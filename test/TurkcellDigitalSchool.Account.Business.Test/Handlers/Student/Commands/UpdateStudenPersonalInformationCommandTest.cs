@@ -14,6 +14,7 @@ using FluentAssertions;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using AutoMapper;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
 {
@@ -25,6 +26,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
 
         Mock<IUserRepository> _userRepository;
         Mock<IUserService> _userService;
+        Mock<ITokenHelper> _tokenHelper;
 
         Mock<IHeaderDictionary> _headerDictionary;
         Mock<HttpRequest> _httpRequest;
@@ -55,9 +57,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
 
             _userRepository = new Mock<IUserRepository>();
             _userService = new Mock<IUserService>();
+            _tokenHelper = new Mock<ITokenHelper>();
 
             _updateStudentPersonalInformationCommand = new UpdateStudentPersonalInformationCommand();
-            _updateStudentPersonalInformationCommandHandler = new UpdateStudentPersonalInformationCommandHandler(_userRepository.Object, _userService.Object);
+            _updateStudentPersonalInformationCommandHandler = new UpdateStudentPersonalInformationCommandHandler(_userRepository.Object, _userService.Object, _tokenHelper.Object);
         }
 
         [Test]
@@ -65,17 +68,16 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
         {
             _updateStudentPersonalInformationCommand = new()
             {
-                UserId = 1,
                 AvatarId = 1,
                 MobilPhone = "",
                 ResidenceCityId = 1,
                 ResidenceCountyId = 1,
                 UserName = "yadaskinn@gmail.com"
-
             };
-            _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns(new  User { Id = 1, AvatarId = 1 });
+            _tokenHelper.Setup(s => s.GetUserIdByCurrentToken()).Returns(1);
+            _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns(new User { Id = 1, AvatarId = 1 });
             _userService.Setup(w => w.IsExistUserName(It.IsAny<long>(), It.IsAny<string>())).Returns(false);
-            _userRepository.Setup(x => x.CreateAndSave(It.IsAny< User>(), It.IsAny<int>(), It.IsAny<bool>()));
+            _userRepository.Setup(x => x.CreateAndSave(It.IsAny<User>(), It.IsAny<int>(), It.IsAny<bool>()));
             var result = await _updateStudentPersonalInformationCommandHandler.Handle(_updateStudentPersonalInformationCommand, new CancellationToken());
             result.Success.Should().BeTrue();
         }
@@ -85,13 +87,13 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
         {
             _updateStudentPersonalInformationCommand = new()
             {
-                UserId = 1,
                 AvatarId = 1,
                 MobilPhone = "",
                 ResidenceCityId = 1,
                 ResidenceCountyId = 1,
                 UserName = "yadaskinn@gmail.com"
             };
+            _tokenHelper.Setup(s => s.GetUserIdByCurrentToken()).Returns(1);
             _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns((User)null);
             var result = await _updateStudentPersonalInformationCommandHandler.Handle(_updateStudentPersonalInformationCommand, new CancellationToken());
             result.Success.Should().BeFalse();
@@ -102,13 +104,13 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
         {
             _updateStudentPersonalInformationCommand = new()
             {
-                UserId = 1,
                 AvatarId = 1,
                 MobilPhone = "",
                 ResidenceCityId = 1,
                 ResidenceCountyId = 1,
                 UserName = "yadaskinn@gmail.com"
             };
+            _tokenHelper.Setup(s => s.GetUserIdByCurrentToken()).Returns(1);
             _userService.Setup(w => w.GetUserById(It.IsAny<long>())).Returns(new User { Id = 1, AvatarId = 1 });
             _userService.Setup(w => w.IsExistUserName(It.IsAny<long>(), It.IsAny<string>())).Returns(true);
             var result = await _updateStudentPersonalInformationCommandHandler.Handle(_updateStudentPersonalInformationCommand, new CancellationToken());
