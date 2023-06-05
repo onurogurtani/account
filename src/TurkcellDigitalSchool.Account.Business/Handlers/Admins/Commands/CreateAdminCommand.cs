@@ -93,8 +93,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
 
                 foreach (var roleId in request.Admin.RoleIds)
                     _userRoleRepository.Add(new UserRole { RoleId = roleId, UserId = record.Id });
-                await _userRoleRepository.SaveChangesAsync();
-                await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Added), user, cancellationToken: cancellationToken);
+                await _userRoleRepository.SaveChangesAsync();                
 
                 return new SuccessResult(Messages.SuccessfulOperation);
             }

@@ -1,5 +1,7 @@
 using AutoMapper;
+using DotNetCore.CAP;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
@@ -9,6 +11,7 @@ using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
@@ -28,16 +31,18 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
             private readonly IUserRoleRepository _userRoleRepository;
             private readonly IMapper _mapper;
             private readonly ITokenHelper _tokenHelper;
+            private readonly ICapPublisher _capPublisher;
 
-            public UpdateAdminCommandHandler(IUserRoleRepository userRoleRepository, IUserRepository userRepository, IMapper mapper, ITokenHelper tokenHelper)
+            public UpdateAdminCommandHandler(IUserRoleRepository userRoleRepository, IUserRepository userRepository, IMapper mapper, ITokenHelper tokenHelper, ICapPublisher capPublisher)
             {
                 _userRepository = userRepository;
                 _userRoleRepository = userRoleRepository;
                 _mapper = mapper;
                 _tokenHelper = tokenHelper;
+                _capPublisher = capPublisher;
             }
 
-            [SecuredOperation] 
+            [SecuredOperation]
             public async Task<IResult> Handle(UpdateAdminCommand request, CancellationToken cancellationToken)
             {
                 long currentuserId = _tokenHelper.GetUserIdByCurrentToken();
@@ -55,6 +60,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
 
                 var record = _userRepository.Update(entity);
                 await _userRepository.SaveChangesAsync();
+                await _capPublisher.PublishAsync(entity.GeneratePublishName(EntityState.Modified), entity, cancellationToken: cancellationToken);
 
                 var userGroups = await _userRoleRepository.GetListAsync(x => x.UserId == request.Admin.Id);
                 _userRoleRepository.DeleteRange(userGroups);
@@ -62,7 +68,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
                 foreach (var roleId in request.Admin.RoleIds)
                     _userRoleRepository.Add(new UserRole { RoleId = roleId, UserId = record.Id });
                 await _userRoleRepository.SaveChangesAsync();
-
 
                 //var mappedRecord = _mapper.Map<User, AdminDto>(record);
 

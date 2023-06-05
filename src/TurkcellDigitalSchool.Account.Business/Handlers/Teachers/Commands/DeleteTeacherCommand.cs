@@ -67,7 +67,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
                     userEntity.Status = false;
                     _userRepository.Update(userEntity);
                     await _userRepository.SaveChangesAsync();
-                    await _capPublisher.PublishAsync(userEntity.GeneratePublishName(EntityState.Added), userEntity, cancellationToken: cancellationToken);
+                    await _capPublisher.PublishAsync(userEntity.GeneratePublishName(EntityState.Modified), userEntity, cancellationToken: cancellationToken);
                 }
                 return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }

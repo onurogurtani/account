@@ -16,7 +16,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageTypes.Commands
     /// <summary>
     /// Create MessageType
     /// </summary>
-    [TransactionScope]
     public class CreateMessageTypeCommand : IRequest<IResult>
     {
         public class CreateMessageTypeCommandHandler : IRequestHandler<CreateMessageTypeCommand, IResult>
@@ -45,8 +44,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageTypes.Commands
                         Name = item.Name,
                         Code = item.Code
                     });
-                    await _messageTypeRepository.SaveChangesAsync();
                 }
+                await _messageTypeRepository.SaveChangesAsync();
                 return new SuccessResult(Messages.SuccessfulOperation);
             }
         }

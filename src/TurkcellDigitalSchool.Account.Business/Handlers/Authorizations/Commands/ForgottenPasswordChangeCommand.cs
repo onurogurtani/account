@@ -76,7 +76,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 
                 _userRepository.Update(user);
                 await _userRepository.SaveChangesAsync();
-                await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Added), user, cancellationToken: cancellationToken);
+                await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Modified), user, cancellationToken: cancellationToken);
                 MobileLogin mobileLogin;
 
                 try
@@ -122,15 +122,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 }
 
                 int otp = RandomPassword.RandomNumberGenerator();
- 
+
 
                 if (_configurationManager.Mode != ApplicationMode.DEV)
                 {
                     // Eski boş SMS kodu
                     //  await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
                     // SMS servisi
-                    await _smsOtpRepository.Send(cellPhone, $"Şifreniz: {otp.ToString()}" );
-                   
+                    await _smsOtpRepository.Send(cellPhone, $"Şifreniz: {otp.ToString()}");
+
                 }
 
                 date = DateTime.Now;

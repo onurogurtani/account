@@ -113,7 +113,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
                 var userRole = new UserRole { UserId = user.Id, RoleId = roleId };
                 _userRoleRepository.Add(userRole);
                 await _userRoleRepository.SaveChangesAsync();
-                await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Added), user, cancellationToken: cancellationToken);
 
                 return new SuccessDataResult<SelectionItem>(Added.PrepareRedisMessage());
             }

@@ -59,7 +59,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                 try
                 {
                     if (!string.IsNullOrEmpty(ldapConfig.searchFilter))
-                    { 
+                    {
                         string searchFilter = ldapConfig.searchFilter;
 
                         //LDAP aranacak DN bilgisi
