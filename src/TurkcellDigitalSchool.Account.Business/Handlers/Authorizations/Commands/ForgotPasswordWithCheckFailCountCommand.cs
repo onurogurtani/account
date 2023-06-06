@@ -159,7 +159,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 {   // Eski boş SMS kodu
                     // await _smsOtpRepository.ExecInsertSpForSms(user.MobilePhones, user.Id, guid);
                     // SMS servisi
-                    await _smsOtpRepository.Send(user.MobilePhones, HttpUtility.HtmlEncode("Şifrenizi yenilemek için \"" + link + "\" tıklayınız. "));
+                    await _smsOtpRepository.Send(user.MobilePhones, $"Şifrenizi yenilemek için { link} tıklayınız. ");
 
                     messsgePach = user.MobilePhones.MaskPhoneNumber() + " mobil hattına";
                 }
