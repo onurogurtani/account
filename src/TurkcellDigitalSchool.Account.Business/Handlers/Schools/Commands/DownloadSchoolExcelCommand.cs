@@ -21,6 +21,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
 {
     [LogScope]
+    [SecuredOperation]
     public class DownloadSchoolExcelCommand : IRequest<DataResult<ExcelResponse>>
     {
         [MessageClassAttr("Okul Excel İndirme")]
@@ -50,7 +51,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
             /// Nested dependent dropdownlist was created for city and county.
             /// The data was transferred into dropdownlist.
             /// </summary>
-            [SecuredOperation]
             [CacheRemoveAspect("Get")] 
             public async Task<DataResult<ExcelResponse>> Handle(DownloadSchoolExcelCommand request, CancellationToken cancellationToken)
             {

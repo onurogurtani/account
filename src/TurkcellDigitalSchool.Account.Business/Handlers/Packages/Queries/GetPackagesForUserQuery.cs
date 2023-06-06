@@ -21,6 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     ///Get Packages For User list Page
     ///<br />  PageNumber can be  entered manually </remarks>
     [LogScope]
+    [SecuredOperation]
     public class GetPackagesForUserQuery : IRequest<DataResult<PagedList<GetPackagesForUserResponseDto>>>
     {
         public PaginationQuery Pagination { get; set; }
@@ -38,8 +39,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
                 _fileService = fileService;
             }
 
-             
-            [SecuredOperation]
             public async Task<DataResult<PagedList<GetPackagesForUserResponseDto>>> Handle(GetPackagesForUserQuery request, CancellationToken cancellationToken)
             {
                 var query = _packageRepository.Query().Where(q => q.IsActive)

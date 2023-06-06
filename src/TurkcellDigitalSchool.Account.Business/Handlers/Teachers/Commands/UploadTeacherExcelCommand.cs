@@ -21,6 +21,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
 {
     [LogScope]
+    [SecuredOperation]
     public class UploadTeacherExcelCommand : IRequest<DataResult<ExcelResponse>>
     {
         public IFormFile FormFile { get; set; }
@@ -52,7 +53,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
             /// If there is no data, an error message is given.
             /// Added record to user table.
             /// </summary> 
-            [SecuredOperation]
             [CacheRemoveAspect("Get")]
           
             public async Task<DataResult<ExcelResponse>> Handle(UploadTeacherExcelCommand request, CancellationToken cancellationToken)

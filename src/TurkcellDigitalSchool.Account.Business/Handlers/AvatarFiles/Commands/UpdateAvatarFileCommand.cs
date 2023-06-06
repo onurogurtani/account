@@ -12,9 +12,13 @@ using System.IO;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
 {
+    [LogScope]
+    [SecuredOperation]
     public class UpdateAvatarFileCommand : IRequest<Core.Utilities.Results.IResult>
     {
         public long Id { get; set; }

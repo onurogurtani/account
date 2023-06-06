@@ -5,8 +5,10 @@ using TurkcellDigitalSchool.Account.Business.Services.Otp;
 using TurkcellDigitalSchool.Account.Business.Services.User;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Enums.OTP;
+using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -14,6 +16,8 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 {
+    [LogScope]
+    [SecuredOperation]
     public class UpdateStudentEmailCommand : IRequest<IResult>
     {
         public string Email { get; set; }

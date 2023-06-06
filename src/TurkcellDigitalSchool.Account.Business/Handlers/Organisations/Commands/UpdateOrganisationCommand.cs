@@ -22,6 +22,8 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
 {
+    [LogScope]
+    [SecuredOperation]
     [TransactionScope]
     public class UpdateOrganisationCommand : IRequest<IResult>
     {
@@ -59,8 +61,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
             private static string PackageIsNotFound = Constants.Messages.PackageIsNotFound;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-            [SecuredOperation]
             public async Task<IResult> Handle(UpdateOrganisationCommand request, CancellationToken cancellationToken)
             {
                 var organisation = await _organisationRepository.Query().AnyAsync(x => x.Id != request.Organisation.Id && x.Name.Trim().ToLower() == request.Organisation.Name.Trim().ToLower() && x.CrmId == request.Organisation.CrmId);

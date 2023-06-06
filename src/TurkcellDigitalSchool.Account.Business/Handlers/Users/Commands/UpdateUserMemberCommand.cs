@@ -1,13 +1,12 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
-using Org.BouncyCastle.Asn1.Ocsp;
-using TurkcellDigitalSchool.Account.Business.Handlers.Users.ValidationRules;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
@@ -18,6 +17,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
     /// <summary>
     /// SetStatus User
     /// </summary>
+    [LogScope]
+    [SecuredOperation]
     public class UpdateUserMemberCommand : IRequest<IResult>
     {
         public long Id { get; set; }
@@ -51,8 +52,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-            [SecuredOperation]
 
             public async Task<IResult> Handle(UpdateUserMemberCommand request, CancellationToken cancellationToken)
             {

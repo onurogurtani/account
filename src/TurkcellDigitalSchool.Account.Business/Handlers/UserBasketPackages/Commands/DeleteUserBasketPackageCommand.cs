@@ -5,6 +5,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -15,6 +16,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Com
     /// <summary>
     /// Delete UserBasketPackage
     /// </summary>
+    [LogScope]
+    [SecuredOperation]
     public class DeleteUserBasketPackageCommand : IRequest<IResult>
     {
         public long Id { get; set; }
@@ -35,9 +38,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Com
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-            [SecuredOperation]
-             
+                         
             public async Task<IResult> Handle(DeleteUserBasketPackageCommand request, CancellationToken cancellationToken)
             {
                 var currentUserId = _tokenHelper.GetUserIdByCurrentToken();

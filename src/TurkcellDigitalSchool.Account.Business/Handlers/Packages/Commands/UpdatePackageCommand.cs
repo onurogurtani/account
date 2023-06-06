@@ -24,6 +24,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
     /// </summary>
 
     [TransactionScope]
+    [LogScope]
+    [SecuredOperation]
     public class UpdatePackageCommand : IRequest<IResult>
     {
         public Package Package { get; set; }
@@ -72,8 +74,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-            [SecuredOperation]
             public async Task<IResult> Handle(UpdatePackageCommand request, CancellationToken cancellationToken)
             {
                 var isExist = _packageRepository.Query().Any(x => x.Id != request.Package.Id && x.Name.Trim().ToLower() == request.Package.Name.Trim().ToLower() && x.IsActive);

@@ -21,8 +21,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Queries
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "IsActiveASC","IsActiveDESC","NameASC","NameDESC","PageNameASC","PageNameDESC","IdASC","IdDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC" 
     ///<br />   PageNumber can be  entered manually </remarks>
-    [ExcludeFromCodeCoverage]
     [LogScope]
+    [SecuredOperation]
     public class GetByFilterPagedTargetScreensQuery : IRequest<DataResult<PagedList<TargetScreen>>>
     {
         public TargetScreenDetailSearch TargetScreenDetailSearch { get; set; } = new TargetScreenDetailSearch();
@@ -36,9 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Queries
             {
                 _packageRepository = packageRepository;
             }
-             
-          
-            [SecuredOperation]
+            
             public virtual async Task<DataResult<PagedList<TargetScreen>>> Handle(GetByFilterPagedTargetScreensQuery request, CancellationToken cancellationToken)
             {
                 var query = _packageRepository.Query()

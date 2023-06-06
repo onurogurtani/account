@@ -21,6 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     /// Get Package
     /// </summary>
     [LogScope]
+    [SecuredOperation]
     public class GetPackageQuery : IRequest<DataResult<Package>>
     {
         public long Id { get; set; }
@@ -40,8 +41,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-             
-            [SecuredOperation]
             public virtual async Task<DataResult<Package>> Handle(GetPackageQuery request, CancellationToken cancellationToken)
             {
                 var query = _packageRepository.Query()

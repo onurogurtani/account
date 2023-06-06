@@ -16,6 +16,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Queries
 {
     [LogScope]
+    [SecuredOperation]
     public class GetSchoolListQuery : IRequest<DataResult<PagedList<School>>>
     {
         public PaginationQuery PaginationQuery { get; set; }
@@ -45,8 +46,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Queries
             /// Get By Filtered Paged Schools with relation data 
             /// RecordStatus, InstitutionId, CityId, CountyId
             /// </summary> 
-            
-            [SecuredOperation]
             public async Task<DataResult<PagedList<School>>> Handle(GetSchoolListQuery request, CancellationToken cancellationToken)
             {
                 var query = _schoolRepository.Query();

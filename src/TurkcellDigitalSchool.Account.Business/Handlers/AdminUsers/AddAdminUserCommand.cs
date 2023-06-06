@@ -24,6 +24,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
     /// Add User
     /// </summary>
     [TransactionScope]
+    [LogScope]
+    [SecuredOperation]
     public class AddAdminUserCommand : IRequest<IDataResult<SelectionItem>>
     {
         public UserType UserTypeId { get; set; }
@@ -63,8 +65,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
             private static string CitizenIdAlreadyExist = Messages.CitizenIdAlreadyExist;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string EmailAlreadyExist = Messages.EmailAlreadyExist;
-
-            [SecuredOperation]
 
             public async Task<IDataResult<SelectionItem>> Handle(AddAdminUserCommand request, CancellationToken cancellationToken)
             {

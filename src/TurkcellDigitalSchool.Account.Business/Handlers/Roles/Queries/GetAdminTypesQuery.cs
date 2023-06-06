@@ -16,12 +16,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
 {
     [ExcludeFromCodeCoverage]
     [LogScope]
+    [SecuredOperation]
     public class GetAdminTypesQuery : IRequest<DataResult<List<SelectionItem>>>
     {
         public class GetAdminTypesQueryHandler : IRequestHandler<GetAdminTypesQuery, DataResult<List<SelectionItem>>>
         {
-          
-            [SecuredOperation]
             public async Task<DataResult<List<SelectionItem>>> Handle(GetAdminTypesQuery request, CancellationToken cancellationToken)
             {
                 var adminTypes = AdminTypeConst.ADMIN_TYPES;

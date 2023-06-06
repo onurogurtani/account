@@ -17,8 +17,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
     ///<summary>
     ///Get Filtered Paged Users
     /// </summary>
-
     [LogScope]
+    [SecuredOperation]
     public class GetUserProfilingStateQuery : IRequest<DataResult<int>>
     {
         public long UserId { get; set; }
@@ -32,8 +32,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                 _userRepository = userRepository;
             }
 
-
-            [SecuredOperation]
             public virtual async Task<DataResult<int>> Handle(GetUserProfilingStateQuery request, CancellationToken cancellationToken)
             {
                 var user = _userRepository.GetAsync(w => w.Id == request.UserId).Result;

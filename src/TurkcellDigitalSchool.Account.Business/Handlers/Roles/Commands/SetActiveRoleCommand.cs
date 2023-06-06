@@ -7,12 +7,15 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
 {
+    [LogScope]
+    [SecuredOperation]
     public class SetActiveRoleCommand : IRequest<IResult>
     {
         public int RoleId { get; set; }
@@ -31,8 +34,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
 
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RoleIsAlreadyActive = Messages.RoleIsAlreadyActive;
-
-            [SecuredOperation]
             [CacheRemoveAspect("Get")]
             public async Task<IResult> Handle(SetActiveRoleCommand request, CancellationToken cancellationToken)
             {

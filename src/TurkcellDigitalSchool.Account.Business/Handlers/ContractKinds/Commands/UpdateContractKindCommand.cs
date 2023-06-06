@@ -7,11 +7,14 @@ using TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.ValidationRu
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants; 
+using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Commands
 {
+    [LogScope]
+    [SecuredOperation]
     public class UpdateContractKindCommand : IRequest<IResult>
     {
         public ContractKind ContractKind { get; set; }
@@ -27,7 +30,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Commands
                 _mapper = mapper;
             }
 
-            [SecuredOperation] 
             public async Task<IResult> Handle(UpdateContractKindCommand request, CancellationToken cancellationToken)
             {
 

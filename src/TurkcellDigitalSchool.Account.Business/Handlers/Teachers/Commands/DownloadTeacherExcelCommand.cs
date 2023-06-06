@@ -22,6 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
     /// Download User/Teacher
     /// </summary>
     [LogScope]
+    [SecuredOperation]
     public class DownloadTeacherExcelCommand : IRequest<DataResult<ExcelResponse>>
     {
         [MessageClassAttr("Öðretmen Excel Tablosu Ýndirme")]
@@ -32,8 +33,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
 
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-            [SecuredOperation]
             [CacheRemoveAspect("Get")]
            
             public async Task<DataResult<ExcelResponse>> Handle(DownloadTeacherExcelCommand request, CancellationToken cancellationToken)

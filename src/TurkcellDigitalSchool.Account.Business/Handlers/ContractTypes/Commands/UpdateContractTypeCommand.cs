@@ -7,10 +7,13 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Commands
 {
+    [LogScope]
+    [SecuredOperation]
     public class UpdateContractTypeCommand : IRequest<IResult>
     {
         public ContractType ContractType { get; set; }
@@ -26,7 +29,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Commands
                 _mapper = mapper;
             }
 
-            [SecuredOperation] 
             public async Task<IResult> Handle(UpdateContractTypeCommand request, CancellationToken cancellationToken)
             {
                 var contractType = await _contractTypeRepository.Query().AnyAsync(x => x.Id != request.ContractType.Id && x.Name.Trim().ToLower() == request.ContractType.Name.Trim().ToLower());

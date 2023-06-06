@@ -8,6 +8,7 @@ using TurkcellDigitalSchool.Common;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
@@ -20,6 +21,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
     /// <summary>
     /// Add User
     /// </summary>
+    [LogScope]
+    [SecuredOperation]
     public class AddUserCommand : IRequest<DataResult<SelectionItem>>
     {
         public UserType UserTypeId { get; set; }
@@ -55,8 +58,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
             private static string Added = Messages.Added;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string UserInformations = Constants.Messages.UserInformations;
-
-            [SecuredOperation]
 
             public async Task<DataResult<SelectionItem>> Handle(AddUserCommand request, CancellationToken cancellationToken)
             {

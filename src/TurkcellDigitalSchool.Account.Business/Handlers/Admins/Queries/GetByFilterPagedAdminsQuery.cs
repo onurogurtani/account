@@ -20,6 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
     ///Get Filtered Paged Admins  with Roles
     /// </summary>
     [LogScope]
+    [SecuredOperation]
     public class GetByFilterPagedAdminsQuery : IRequest<DataResult<PagedList<AdminDto>>>
     {
         public AdminDetailSearch AdminDetailSearch { get; set; } = new AdminDetailSearch();
@@ -36,8 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
                 _organisationUserRepository = organisationUserRepository;
                 _tokenHelper = tokenHelper;
             }
-             
-            [SecuredOperation]
+
             public virtual async Task<DataResult<PagedList<AdminDto>>> Handle(GetByFilterPagedAdminsQuery request, CancellationToken cancellationToken)
             {
                 long currentUserId = _tokenHelper.GetUserIdByCurrentToken();

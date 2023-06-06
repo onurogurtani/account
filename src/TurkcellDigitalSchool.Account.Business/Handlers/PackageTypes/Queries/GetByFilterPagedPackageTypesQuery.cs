@@ -19,6 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Queries
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "IsActiveASC","IsActiveDESC","NameASC","NameDESC","PackageTypeASC","PackageTypeDESC","IdASC","IdDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC" 
     ///<br />   PageNumber can be  entered manually </remarks>
     [LogScope]
+    [SecuredOperation]
     public class GetByFilterPagedPackageTypesQuery : IRequest<DataResult<PagedList<PackageType>>>
     {
         public PackageTypeDetailSearch PackageTypeDetailSearch { get; set; } = new PackageTypeDetailSearch();
@@ -33,9 +34,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Queries
                 _packageRepository = packageRepository;
             }
 
-             
-            
-            [SecuredOperation]
             public virtual async Task<DataResult<PagedList<PackageType>>> Handle(GetByFilterPagedPackageTypesQuery request, CancellationToken cancellationToken)
             {
                 var query = _packageRepository.Query()

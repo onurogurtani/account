@@ -18,6 +18,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
 {
     [LogScope]
+    [SecuredOperation]
     public class GetOrganisationQuery : IRequest<DataResult<OrganisationDto>>
     {
         public long Id { get; set; }
@@ -44,8 +45,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-              
-            [SecuredOperation]
             public virtual async Task<DataResult<OrganisationDto>> Handle(GetOrganisationQuery request, CancellationToken cancellationToken)
             {
                 var query = _organisationRepository.Query()

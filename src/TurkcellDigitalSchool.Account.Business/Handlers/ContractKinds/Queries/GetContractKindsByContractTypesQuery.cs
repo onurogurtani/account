@@ -17,8 +17,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
     /// <summary>
     /// Contract Kind By Contract Types
     /// </summary>
-
     [LogScope]
+    [SecuredOperation]
     public class GetContractKindsByContractTypesQuery : IRequest<DataResult<List<SelectionItem>>>
     {
         public long[] Ids { get; set; }
@@ -34,8 +34,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
                 _contractTypeRepository = contractTypeRepository;
             }
 
-          
-            [SecuredOperation]
             public async Task<DataResult<List<SelectionItem>>> Handle(GetContractKindsByContractTypesQuery request, CancellationToken cancellationToken)
             {
                 var isThereRecord = _contractTypeRepository.Query().Any(u => request.Ids.Contains(u.Id));

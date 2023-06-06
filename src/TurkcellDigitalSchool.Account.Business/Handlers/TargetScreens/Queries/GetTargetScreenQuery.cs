@@ -21,6 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Queries
     /// Get TargetScreen
     /// </summary>
     [LogScope]
+    [SecuredOperation]
     public class GetTargetScreenQuery : IRequest<DataResult<TargetScreen>>
     {
         public long Id { get; set; }
@@ -39,9 +40,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Queries
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string Deleted = Messages.Deleted;
-
-        
-            [SecuredOperation]
             public virtual async Task<DataResult<TargetScreen>> Handle(GetTargetScreenQuery request, CancellationToken cancellationToken)
             {
                 var query = _targetScreenRepository.Query()

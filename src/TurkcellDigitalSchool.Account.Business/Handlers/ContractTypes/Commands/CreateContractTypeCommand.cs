@@ -6,6 +6,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Commands
@@ -13,6 +14,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Commands
     /// <summary>
     /// Create ContractType
     /// </summary>
+    [LogScope]
+    [SecuredOperation]
     public class CreateContractTypeCommand : IRequest<IResult>
     {
         public ContractType ContractType { get; set; }
@@ -27,7 +30,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Commands
                 _contractTypeRepository = ContractTypeRepository;
             }
 
-            [SecuredOperation] 
             public async Task<IResult> Handle(CreateContractTypeCommand request, CancellationToken cancellationToken)
             {
                 var contractType = await _contractTypeRepository.Query().AnyAsync(x => x.Name.Trim().ToLower() == request.ContractType.Name.Trim().ToLower());

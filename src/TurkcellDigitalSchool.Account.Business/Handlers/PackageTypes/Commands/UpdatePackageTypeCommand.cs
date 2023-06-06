@@ -17,6 +17,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Commands
     /// Update PackageType
     /// </summary>
     [TransactionScope]
+    [LogScope]
+    [SecuredOperation]
     public class UpdatePackageTypeCommand : IRequest<IResult>
     {
         public PackageType PackageType { get; set; }
@@ -38,7 +40,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Commands
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
-            [SecuredOperation] 
             public async Task<IResult> Handle(UpdatePackageTypeCommand request, CancellationToken cancellationToken)
             {
 

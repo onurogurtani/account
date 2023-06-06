@@ -19,6 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be ""RequestDateASC" ,"RequestDateDESC",  "RequestStateASC","RequestStateDESC", "ResponseStateASC" , "ResponseStateDESC", "CustomerManagerASC", "CustomerManagerDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC","IdASC","IdDESC" </remarks>
     [LogScope]
+    [SecuredOperation]
     public class GetByFilterPagedOrganisationChangeRequestQuery : IRequest<DataResult<PagedList<GetOrganisationInfoChangeRequestDto>>>
     {
         public OrganisationChangeRequestDetailSearch OrganisationChangeRequestDetailSearch { get; set; } = new OrganisationChangeRequestDetailSearch();
@@ -33,8 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                 _organisationInfoChangeRequestRepository = organisationInfoChangeRequestRepository;
                 _mapper = mapper;
             }
-             
-            [SecuredOperation]
+            
             public virtual async Task<DataResult<PagedList<GetOrganisationInfoChangeRequestDto>>> Handle(GetByFilterPagedOrganisationChangeRequestQuery request, CancellationToken cancellationToken)
             {
                 var query = _organisationInfoChangeRequestRepository.Query()

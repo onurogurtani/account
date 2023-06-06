@@ -5,6 +5,7 @@ using DotNetCore.CAP;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
@@ -18,6 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 {
     [TransactionScope]
     [LogScope]
+    [SecuredOperation]
     public class UpdateCurentUserInformationCommand : IRequest<IResult>
     {
         public string NameSurname { get; set; }

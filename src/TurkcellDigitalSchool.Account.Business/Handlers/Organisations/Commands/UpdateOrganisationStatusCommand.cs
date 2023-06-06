@@ -13,6 +13,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
 {
     [LogScope]
+    [SecuredOperation]
     public class UpdateOrganisationStatusCommand : IRequest<IResult>
     {
         public long Id { get; set; }
@@ -31,8 +32,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
 
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-            [SecuredOperation]  
             public async Task<IResult> Handle(UpdateOrganisationStatusCommand request, CancellationToken cancellationToken)
             {
                 var organisation = await _organisationRepository.GetAsync(x => x.Id == request.Id);
