@@ -15,9 +15,13 @@ using Refit;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Common.BusinessAspects;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
 {
+    [LogScope]
+    [SecuredOperation]
     public class CreateAvatarFileCommand : IRequest<IResult>
     {
         public IFormFile Image { get; set; }

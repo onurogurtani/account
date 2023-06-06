@@ -5,12 +5,15 @@ using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Commands
 {
+    [LogScope]
+    [SecuredOperation]
     public class DeleteOrganisationChangeRequestCommand : IRequest<IResult>
     {
         public long Id { get; set; }
@@ -30,7 +33,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                 _mapper = mapper;
             }
 
-            [SecuredOperation] 
             public async Task<IResult> Handle(DeleteOrganisationChangeRequestCommand request, CancellationToken cancellationToken)
             {
 

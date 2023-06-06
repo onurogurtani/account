@@ -7,6 +7,7 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -17,6 +18,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Com
     /// <summary>
     /// Create UserBasketPackage
     /// </summary>
+    [LogScope]
+    [SecuredOperation]
     public class CreateUserBasketPackageCommand : IRequest<IResult>
     {
         public long PackageId { get; set; }
@@ -35,9 +38,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Com
 
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-            [SecuredOperation]
-             
+                         
             public async Task<IResult> Handle(CreateUserBasketPackageCommand request, CancellationToken cancellationToken)
             {
 

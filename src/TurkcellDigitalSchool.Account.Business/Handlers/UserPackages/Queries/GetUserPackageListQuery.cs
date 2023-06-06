@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
@@ -15,6 +16,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
 {
     [LogScope]
+    [SecuredOperation]
     public class GetUserPackageListQuery : IRequest<DataResult<List<GetUserTestExamPackageDto>>>
     {
         public class GetUserPackageListQueryHandler : IRequestHandler<GetUserPackageListQuery, DataResult<List<GetUserTestExamPackageDto>>>

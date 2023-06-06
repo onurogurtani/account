@@ -19,6 +19,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Queries
 {
     [LogScope]
+    [SecuredOperation]
     public class GetUserBasketPackagesQuery : IRequest<DataResult<GetUserBasketPackagesResponseDto>>
     {
         public PaginationQuery Pagination { get; set; }
@@ -38,8 +39,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Que
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
 
-            
-            [SecuredOperation]
             public async Task<DataResult<GetUserBasketPackagesResponseDto>> Handle(GetUserBasketPackagesQuery request, CancellationToken cancellationToken)
             {
                 var currentUserId = _tokenHelper.GetUserIdByCurrentToken();

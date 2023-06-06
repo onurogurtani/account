@@ -18,6 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Queries
     /// </summary>
     [ExcludeFromCodeCoverage]
     [LogScope]
+    [SecuredOperation]
     public class GetContractTypeNamesQuery : IRequest<DataResult<List<string>>>
     {
         public class GetContractTypeNamesQueryHandler : IRequestHandler<GetContractTypeNamesQuery, DataResult<List<string>>>
@@ -30,8 +31,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Queries
                 _contractTypeRepository = contractTypeRepository;
             }
 
-            [CacheRemoveAspect("Get")] 
-            [SecuredOperation]
+            [CacheRemoveAspect("Get")]
             public async Task<DataResult<List<string>>> Handle(GetContractTypeNamesQuery request, CancellationToken cancellationToken)
             {
                 var contractTypeNames = await _contractTypeRepository.Query().Select(x => x.Name).ToListAsync();

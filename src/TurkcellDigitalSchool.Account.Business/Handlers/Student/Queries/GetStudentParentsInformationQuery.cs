@@ -4,14 +4,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Services.User;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
 {
+    [LogScope]
+    [SecuredOperation]
     public class GetStudentParentsInformationQuery : IRequest<DataResult<List<ParentInfoDto>>>
     {
         public long? UserId { get; set; }

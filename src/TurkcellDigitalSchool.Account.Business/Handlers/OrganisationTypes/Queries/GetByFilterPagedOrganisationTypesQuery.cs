@@ -22,6 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationTypes.Quer
     ///</summary>
     ///<remarks></remarks>
     [LogScope]
+    [SecuredOperation]
     public class GetByFilterPagedOrganisationTypesQuery : IRequest<DataResult<PagedList<OrganisationTypeDto>>>
     {
         public PaginationQuery PaginationQuery { get; set; } = new PaginationQuery();
@@ -37,8 +38,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationTypes.Quer
                 _organisationRepository = organisationRepository;
                 _mapper = mapper;
             }
-             
-            [SecuredOperation]
+            
             public virtual async Task<DataResult<PagedList<OrganisationTypeDto>>> Handle(GetByFilterPagedOrganisationTypesQuery request, CancellationToken cancellationToken)
             {
                 var query = _organisationTypeRepository.Query()

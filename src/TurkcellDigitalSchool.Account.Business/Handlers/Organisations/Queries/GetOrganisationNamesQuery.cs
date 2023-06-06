@@ -15,6 +15,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
 {
     [ExcludeFromCodeCoverage]
     [LogScope]
+    [SecuredOperation]
     public class GetOrganisationNamesQuery : IRequest<DataResult<List<SelectionItem>>>
     {
         public class GetOrganisationNamesQueryHandler : IRequestHandler<GetOrganisationNamesQuery, DataResult<List<SelectionItem>>>
@@ -26,7 +27,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
                 _organisationRepository = organisationRepository;
             } 
 
-            [SecuredOperation]
             public async Task<DataResult<List<SelectionItem>>> Handle(GetOrganisationNamesQuery request, CancellationToken cancellationToken)
             {
                 var items = await _organisationRepository.Query().Select(x => new SelectionItem { Id = x.Id, Label = x.Name }).Distinct().ToListAsync(cancellationToken: cancellationToken);

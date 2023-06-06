@@ -22,6 +22,8 @@ using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Commands
 {
+    [LogScope]
+    [SecuredOperation]
     [TransactionScope]
     public class CreateOrganisationChangeRequestCommand : IRequest<Core.Utilities.Results.IResult>
     {
@@ -45,8 +47,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                 _mapper = mapper;
                 _fileService = fileService;
             }
-
-            [SecuredOperation]  
 
             public async Task<Core.Utilities.Results.IResult> Handle(CreateOrganisationChangeRequestCommand request, CancellationToken cancellationToken)
             {

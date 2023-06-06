@@ -18,8 +18,8 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
 {
-
     [LogScope]
+    [SecuredOperation]
     public class GetOrganisationByAdminTypeQuery : IRequest<DataResult<OrganisationUsersDto>>
     {
         [MessageClassAttr("Admin Tipine Göre Kullanýcý Kurumlarýný Listeleme")]
@@ -40,9 +40,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
 
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-         
-            [SecuredOperation]
             public virtual async Task<DataResult<OrganisationUsersDto>> Handle(GetOrganisationByAdminTypeQuery request, CancellationToken cancellationToken)
             {
                 var userId = _tokenHelper.GetUserIdByCurrentToken();

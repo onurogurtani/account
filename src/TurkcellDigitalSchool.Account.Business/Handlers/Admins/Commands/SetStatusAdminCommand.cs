@@ -4,6 +4,7 @@ using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
@@ -11,6 +12,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
     /// <summary>
     /// SetStatus Admin User
     /// </summary>
+    [LogScope]
+    [SecuredOperation]
     public class SetStatusAdminCommand : IRequest<IResult>
     {
         public long Id { get; set; }
@@ -26,7 +29,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
                 _userRepository = userRepository;
             }
 
-            [SecuredOperation] 
             public async Task<IResult> Handle(SetStatusAdminCommand request, CancellationToken cancellationToken)
             {
                 var record = await _userRepository.GetAsync(x => x.Id == request.Id);

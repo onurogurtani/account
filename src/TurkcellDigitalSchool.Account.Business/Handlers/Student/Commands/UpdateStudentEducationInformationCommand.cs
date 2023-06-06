@@ -7,6 +7,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Account.Domain.Enums.Institution;
+using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
@@ -18,6 +19,8 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 {
     [TransactionScope]
+    [LogScope]
+    [SecuredOperation]
     public class UpdateStudentEducationInformationCommand : IRequest<IResult>
     {
         public StudentEducationRequestDto StudentEducationRequest { get; set; }
@@ -39,7 +42,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
-
 
             public async Task<IResult> Handle(UpdateStudentEducationInformationCommand request, CancellationToken cancellationToken)
             {

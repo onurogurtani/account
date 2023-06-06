@@ -19,6 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be ""CrmIdASC","CrmIdDESC","OrganisationTypeNameASC","OrganisationTypeNameDESC",NameASC","NameDESC","OrganisationManagerASC","OrganisationManagerDESC","PackageNameASC","PackageNameDESC","LicenceNumberASC","LicenceNumberDESC","DomainNameASC","DomainNameDESC","CustomerNumberASC","CustomerNumberDESC","OrganisationStatusInfoASC","OrganisationStatusInfoDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC","IdASC","IdDESC" </remarks>
     [LogScope]
+    [SecuredOperation]
     public class GetByFilterPagedOrganisationsQuery : IRequest<DataResult<PagedList<Organisation>>>
     {
         public OrganisationDetailSearch OrganisationDetailSearch { get; set; } = new OrganisationDetailSearch();
@@ -32,8 +33,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
                 _organisationRepository = organisationRepository;
             }
 
-            [CacheRemoveAspect("Get")] 
-            [SecuredOperation]
+            [CacheRemoveAspect("Get")]
             public virtual async Task<DataResult<PagedList<Organisation>>> Handle(GetByFilterPagedOrganisationsQuery request, CancellationToken cancellationToken)
             {
                 var query = _organisationRepository.Query()

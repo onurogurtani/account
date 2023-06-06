@@ -22,6 +22,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
     /// Create Admin User with Groups
     /// </summary>
     [TransactionScope]
+    [LogScope]
+    //[SecuredOperation]
     public class CreateAdminCommand : IRequest<IResult>
     {
         public CreateUpdateAdminDto Admin { get; set; }
@@ -44,7 +46,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
                 _capPublisher = capPublisher;
             }
 
-            //  [SecuredOperation] 
             public async Task<IResult> Handle(CreateAdminCommand request, CancellationToken cancellationToken)
             {
                 long currentuserId = _tokenHelper.GetUserIdByCurrentToken();

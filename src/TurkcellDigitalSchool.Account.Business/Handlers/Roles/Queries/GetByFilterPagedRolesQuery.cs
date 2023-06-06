@@ -19,6 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "NameASC","NameDESC","RecordStatusASC","RecordStatusDESC","IsOrganisationViewASC","IsOrganisationViewDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC","IdASC","IdDESC" </remarks>
     [LogScope]
+    [SecuredOperation]
     public class GetByFilterPagedRolesQuery : IRequest<DataResult<PagedList<GetRoleDto>>>
     {
         public RoleDetailSearch RoleDetailSearch { get; set; } = new RoleDetailSearch();
@@ -34,8 +35,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
                 _mapper = mapper;
             }
 
-            
-            [SecuredOperation]
             public virtual async Task<DataResult<PagedList<GetRoleDto>>> Handle(GetByFilterPagedRolesQuery request, CancellationToken cancellationToken)
             {
                 var query = _roleRepository.Query()
