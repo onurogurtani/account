@@ -1,5 +1,5 @@
 ﻿using System.Runtime.Serialization;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using TurkcellDigitalSchool.Core.Entities;
 using TurkcellDigitalSchool.Core.Enums; 
 
