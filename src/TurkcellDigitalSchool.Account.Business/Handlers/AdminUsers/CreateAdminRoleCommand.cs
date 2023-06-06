@@ -15,6 +15,8 @@ using TurkcellDigitalSchool.Core.Enums;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
 {
     [TransactionScope]
+    [LogScope]
+    [SecuredOperation]
     public class CreateAdminRoleCommand : IRequest<long>
     {
         [MessageClassAttr("Rol Ekleme")]
@@ -39,7 +41,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
             [MessageConstAttr(MessageCodeType.Information)]
             private static string RoleAdded = Constants.Messages.RoleAdded;
 
-            [SecuredOperation]
             public async Task<long> Handle(CreateAdminRoleCommand request, CancellationToken cancellationToken)
             {
 

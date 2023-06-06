@@ -7,6 +7,7 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -16,6 +17,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
     /// <summary>
     /// Create Package
     /// </summary> 
+    [LogScope]
+    [SecuredOperation]
     public class CreatePackageCommand : IRequest<IResult>
     {
         public Package Package { get; set; }
@@ -34,8 +37,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
             private static string RecordAlreadyExists = Messages.RecordAlreadyExists;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-            [SecuredOperation]  
             public async Task<IResult> Handle(CreatePackageCommand request, CancellationToken cancellationToken)
             {
                 var isExist = _packageRepository.Query().Any(x => x.Name.Trim().ToLower() == request.Package.Name.Trim().ToLower() && x.IsActive);

@@ -15,6 +15,8 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
 {
     [TransactionScope]
+    [LogScope]
+    [SecuredOperation]
     public class SetPassiveRoleCommand : IRequest<IResult>
     {
         public long RoleId { get; set; }
@@ -40,8 +42,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
             private static string TranferRoleIsNotActive = Messages.TranferRoleIsNotActive;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RoleandTransferRoleCantBeTheSame = Messages.RoleandTransferRoleCantBeTheSame;
-
-            [SecuredOperation]
             [CacheRemoveAspect("Get")] 
             public async Task<IResult> Handle(SetPassiveRoleCommand request, CancellationToken cancellationToken)
             {

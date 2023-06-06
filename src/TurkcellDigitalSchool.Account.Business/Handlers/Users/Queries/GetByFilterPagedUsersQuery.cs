@@ -19,6 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
     ///Get Filtered Paged Users
     /// </summary>
     [LogScope]
+    [SecuredOperation]
     public class GetByFilterPagedUsersQuery : IRequest<DataResult<PagedList<UserDto>>>
     {
         public UserDetailSearch UserDetailSearch { get; set; } = new UserDetailSearch();
@@ -36,8 +37,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                 _accountDbContext = accountDbContext;
             }
 
-
-            [SecuredOperation]
             public virtual async Task<DataResult<PagedList<UserDto>>> Handle(GetByFilterPagedUsersQuery request, CancellationToken cancellationToken)
             {
                 var query = (from u in _accountDbContext.Users

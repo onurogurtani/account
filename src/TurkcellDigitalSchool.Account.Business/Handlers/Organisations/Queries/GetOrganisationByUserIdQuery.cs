@@ -18,6 +18,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
 {
     [LogScope]
+    [SecuredOperation]
     public class GetOrganisationByUserIdQuery : IRequest<DataResult<OrganisationUsersDto>>
     {
         [MessageClassAttr("Kullanýcý Kurumlarýný Görüntüleme")]
@@ -36,8 +37,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-             
-            [SecuredOperation]
             public virtual async Task<DataResult<OrganisationUsersDto>> Handle(GetOrganisationByUserIdQuery request, CancellationToken cancellationToken)
             {
                 var userId = _tokenHelper.GetUserIdByCurrentToken();

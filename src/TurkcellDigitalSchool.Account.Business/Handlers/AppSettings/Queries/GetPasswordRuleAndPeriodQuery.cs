@@ -6,11 +6,13 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
 {
+    [LogScope]
     public class GetPasswordRuleAndPeriodQuery : IRequest<DataResult<PasswordRuleAndPeriodDto>>
     {
         public class GetPasswordRuleAndPeriodQueryHandler : IRequestHandler<GetPasswordRuleAndPeriodQuery, DataResult<PasswordRuleAndPeriodDto>>

@@ -15,6 +15,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.SwearWords.Queries
     /// CheckIsValidWordsQuery
     /// </summary>
     [LogScope]
+    [SecuredOperation]
     public class CheckIsValidWordsQuery : IRequest<IResult>
     {
         public string? Text { get; set; }
@@ -30,9 +31,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.SwearWords.Queries
             private static string CheckMessage = Messages.CheckMessage;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-            
-            [SecuredOperation]
             public virtual async Task<IResult> Handle(CheckIsValidWordsQuery request, CancellationToken cancellationToken)
             {
                 bool check2 = false;

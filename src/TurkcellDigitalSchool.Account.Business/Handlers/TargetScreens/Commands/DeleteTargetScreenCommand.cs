@@ -5,6 +5,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -14,6 +15,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Commands
     /// <summary>
     /// Delete TargetScreen
     /// </summary>
+    [LogScope]
+    [SecuredOperation]
     public class DeleteTargetScreenCommand : IRequest<IResult>
     {
         public long Id { get; set; }
@@ -32,9 +35,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Commands
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-            [SecuredOperation]
-             
             public async Task<IResult> Handle(DeleteTargetScreenCommand request, CancellationToken cancellationToken)
             {
                 var getTargetScreen = await _targetScreenRepository.GetAsync(x => x.Id == request.Id);

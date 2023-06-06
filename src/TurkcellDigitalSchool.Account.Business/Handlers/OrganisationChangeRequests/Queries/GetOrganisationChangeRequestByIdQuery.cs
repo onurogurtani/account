@@ -19,6 +19,7 @@ using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.R
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Queries
 {
     [LogScope]
+    [SecuredOperation]
     public class GetOrganisationChangeRequestByIdQuery : IRequest<DataResult<GetOrganisationInfoChangeRequestDto>>
     {
         public long Id { get; set; }
@@ -40,8 +41,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                 _fileService = fileService;
                 _mapper = mapper;
             }
-             
-            [SecuredOperation]
+            
             public virtual async Task<DataResult<GetOrganisationInfoChangeRequestDto>> Handle(GetOrganisationChangeRequestByIdQuery request, CancellationToken cancellationToken)
             {
                 var query = _organisationInfoChangeRequestRepository.Query()

@@ -9,12 +9,15 @@ using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
 {
+    [LogScope]
+    [SecuredOperation]
     public class CreateRoleCommand : IRequest<IResult>
     {
         public AddRoleDto Role { get; set; }
@@ -35,8 +38,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
             private static string SameNameAlreadyExist = Messages.SameNameAlreadyExist;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string RoleAdded = Constants.Messages.RoleAdded;
-
-            [SecuredOperation] 
             public async Task<IResult> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
             {
                 var role = await _roleRepository.Query().AnyAsync(x => x.Name.Trim().ToLower() == request.Role.Name.Trim().ToLower());

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
@@ -18,7 +19,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
     /// <summary>
     /// Get By UserId  UserPackage
     /// </summary>
-    [ExcludeFromCodeCoverage]
 
     public class UserPackageDto 
     {
@@ -29,6 +29,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
 
     }
     [LogScope]
+    [SecuredOperation]
     public class GetUserPackagesByUserIdQuery : IRequest<DataResult<List<UserPackageDto>>>
     {
         public long UserId { get; set; }

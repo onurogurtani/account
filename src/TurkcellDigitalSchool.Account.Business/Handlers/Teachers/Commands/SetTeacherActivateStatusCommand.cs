@@ -16,6 +16,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
 {
     [LogScope]
+    [SecuredOperation]
     public class SetTeacherActivateStatusCommand : IRequest<IResult>
     {
         public long Id { get; set; }
@@ -37,8 +38,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
             private static string UserIsNotTeacher = Constants.Messages.UserIsNotTeacher;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-            [SecuredOperation]
           
             public async Task<IResult> Handle(SetTeacherActivateStatusCommand request, CancellationToken cancellationToken)
             {

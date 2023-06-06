@@ -20,6 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "NameASC","NameDESC","SurNameASC","SurNameDESC" </remarks>
     [LogScope]
+    [SecuredOperation]
     public class GetByFilterPagedTeachersQuery : IRequest<DataResult<PagedList<GetTeachersResponseDto>>>
     {
         public PaginationQuery Pagination { get; set; } = new();
@@ -39,8 +40,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
                 _mapper = mapper;
             }
 
-            
-            [SecuredOperation]
             public virtual async Task<DataResult<PagedList<GetTeachersResponseDto>>> Handle(GetByFilterPagedTeachersQuery request, CancellationToken cancellationToken)
             {
                 var query = _userRepository.Query();

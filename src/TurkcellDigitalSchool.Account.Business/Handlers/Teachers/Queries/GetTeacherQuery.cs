@@ -19,6 +19,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
 {
     [LogScope]
+    [SecuredOperation]
     public class GetTeacherQuery : IRequest<DataResult<GetTeacherResponseDto>>
     {
         /// <summary>
@@ -42,9 +43,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-          
-            [SecuredOperation]
             public async Task<DataResult<GetTeacherResponseDto>> Handle(GetTeacherQuery request, CancellationToken cancellationToken)
             {
                 var teacherQueryable = _userRepository.Query().AsQueryable();

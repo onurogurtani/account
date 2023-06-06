@@ -14,45 +14,45 @@ using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
-namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries;
-[LogScope]
-public class GetRoleQuery : IRequest<DataResult<GetRoleDto>>
+namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
 {
-    public long Id { get; set; }
-
-    [MessageClassAttr("Rol Görüntüleme")]
-    public class GetRoleQueryHandler : IRequestHandler<GetRoleQuery, DataResult<GetRoleDto>>
+    [LogScope]
+    [SecuredOperation]
+    public class GetRoleQuery : IRequest<DataResult<GetRoleDto>>
     {
-        private readonly IRoleRepository _roleRepository;
-        private readonly IMapper _mapper;
+        public long Id { get; set; }
 
-        public GetRoleQueryHandler(IRoleRepository roleRepository, IMapper mapper)
+        [MessageClassAttr("Rol Görüntüleme")]
+        public class GetRoleQueryHandler : IRequestHandler<GetRoleQuery, DataResult<GetRoleDto>>
         {
-            _roleRepository = roleRepository;
-            _mapper = mapper;
-        }
+            private readonly IRoleRepository _roleRepository;
+            private readonly IMapper _mapper;
 
-        [MessageConstAttr(MessageCodeType.Error)]
-        private static string RecordIsNotFound = Messages.RecordIsNotFound;
-        [MessageConstAttr(MessageCodeType.Information)]
-        private static string SuccessfulOperation = Messages.SuccessfulOperation;
+            public GetRoleQueryHandler(IRoleRepository roleRepository, IMapper mapper)
+            {
+                _roleRepository = roleRepository;
+                _mapper = mapper;
+            }
 
-      
-        [SecuredOperation]
-        public virtual async Task<DataResult<GetRoleDto>> Handle(GetRoleQuery request, CancellationToken cancellationToken)
-        {
-            var query = _roleRepository.Query()
-                .Include(x => x.RoleClaims)
-                .AsQueryable();
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string RecordIsNotFound = Messages.RecordIsNotFound;
+            [MessageConstAttr(MessageCodeType.Information)]
+            private static string SuccessfulOperation = Messages.SuccessfulOperation;
+            public virtual async Task<DataResult<GetRoleDto>> Handle(GetRoleQuery request, CancellationToken cancellationToken)
+            {
+                var query = _roleRepository.Query()
+                    .Include(x => x.RoleClaims)
+                    .AsQueryable();
 
-            var data = await query.FirstOrDefaultAsync(x => x.Id == request.Id);
+                var data = await query.FirstOrDefaultAsync(x => x.Id == request.Id);
 
-            if (data == null)
-                return new ErrorDataResult<GetRoleDto>(null, RecordIsNotFound.PrepareRedisMessage());
+                if (data == null)
+                    return new ErrorDataResult<GetRoleDto>(null, RecordIsNotFound.PrepareRedisMessage());
 
-            var role = _mapper.Map<GetRoleDto>(data);
+                var role = _mapper.Map<GetRoleDto>(data);
 
-            return new SuccessDataResult<GetRoleDto>(role, SuccessfulOperation.PrepareRedisMessage());
+                return new SuccessDataResult<GetRoleDto>(role, SuccessfulOperation.PrepareRedisMessage());
+            }
         }
     }
 }

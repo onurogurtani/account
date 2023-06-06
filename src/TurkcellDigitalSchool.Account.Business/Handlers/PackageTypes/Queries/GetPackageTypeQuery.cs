@@ -38,6 +38,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Queries
     /// Get PackageType
     /// </summary>
     [LogScope]
+    [SecuredOperation]
     public class GetPackageTypeQuery : IRequest<DataResult<PackageType>>
     {
         public long Id { get; set; }
@@ -57,8 +58,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Queries
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string Deleted = Messages.Deleted;
-              
-            [SecuredOperation]
             public virtual async Task<DataResult<PackageType>> Handle(GetPackageTypeQuery request, CancellationToken cancellationToken)
             {
                 var query = _packageTypeRepository.Query()

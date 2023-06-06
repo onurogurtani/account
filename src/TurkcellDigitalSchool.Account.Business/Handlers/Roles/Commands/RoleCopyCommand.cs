@@ -9,12 +9,15 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
 {
+    [LogScope]
+    [SecuredOperation]
     public class RoleCopyCommand : IRequest<IResult>
     {
         public long RoleId { get; set; }
@@ -40,8 +43,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string RoleAdded = Constants.Messages.RoleAdded;
-
-            [SecuredOperation] 
             public async Task<IResult> Handle(RoleCopyCommand request, CancellationToken cancellationToken)
             {
                 var role = await _roleRepository.Query().AnyAsync(x => x.Name.Trim().ToLower() == request.RoleName.Trim().ToLower());

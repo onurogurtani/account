@@ -13,6 +13,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
 {
     [LogScope]
+    [SecuredOperation]
     public class GetContractKindQuery : IRequest<DataResult<ContractKind>>
     {
         public long Id { get; set; }
@@ -25,8 +26,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
             {
                 _contractKindRepository = contractKindRepository;
             }
-             
-            [SecuredOperation]
+            
             public virtual async Task<DataResult<ContractKind>> Handle(GetContractKindQuery request, CancellationToken cancellationToken)
             {
                 var query = _contractKindRepository.Query()

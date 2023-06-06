@@ -21,6 +21,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
     /// Delete User/Teacher
     /// </summary>
     [TransactionScope]
+    [LogScope]
+    [SecuredOperation]
     public class DeleteTeacherCommand : IRequest<IResult>
     {
         public long UserId { get; set; }
@@ -44,8 +46,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-            [SecuredOperation]
 
             public async Task<IResult> Handle(DeleteTeacherCommand request, CancellationToken cancellationToken)
             {

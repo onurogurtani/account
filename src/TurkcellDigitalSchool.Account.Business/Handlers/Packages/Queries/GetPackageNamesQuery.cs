@@ -15,6 +15,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     /// Get Names that using in Packages
     /// </summary>
     [LogScope]
+    [SecuredOperation]
     public class GetPackageNamesQuery : IRequest<DataResult<List<string>>>
     {
         public class GetPackageNamesQueryHandler : IRequestHandler<GetPackageNamesQuery, DataResult<List<string>>>
@@ -27,7 +28,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
                 _packageRepository = packageRepository;
             } 
 
-            [SecuredOperation]
             public async Task<DataResult<List<string>>> Handle(GetPackageNamesQuery request, CancellationToken cancellationToken)
             {
                 var packageNames = await _packageRepository.Query().Select(x => x.Name).ToListAsync();

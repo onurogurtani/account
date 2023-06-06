@@ -25,6 +25,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     ///<br />   PageNumber can be  entered manually </remarks>
 
     [LogScope]
+    [SecuredOperation]
     public class GetPackageForUserQuery : IRequest<DataResult<GetPackageForUserResponseDto>>
     {
         public long Id { get; set; }
@@ -48,8 +49,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
 
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
-             
-            [SecuredOperation]
             public async Task<DataResult<GetPackageForUserResponseDto>> Handle(GetPackageForUserQuery request, CancellationToken cancellationToken)
             {
                 var package = await _packageRepository.Query().Where(q => q.Id == request.Id && q.IsActive)

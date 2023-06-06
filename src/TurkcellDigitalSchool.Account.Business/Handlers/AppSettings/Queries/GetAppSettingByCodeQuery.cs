@@ -4,10 +4,13 @@ using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
-{ 
+{
+    [LogScope]
+    [SecuredOperation]
     public class GetAppSettingByCodeQuery : IRequest<DataResult<AppSetting>>
     {
         public string Code { get; set; }
@@ -23,7 +26,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
                 _appSettingRepository = appSettingRepository;
             }
 
-            [SecuredOperation]
             public async Task<DataResult<AppSetting>> Handle(GetAppSettingByCodeQuery request, CancellationToken cancellationToken)
             {
                 var data = await _appSettingRepository.GetAppSettingValue(request.Code, request.CustomerId, request.VouId);

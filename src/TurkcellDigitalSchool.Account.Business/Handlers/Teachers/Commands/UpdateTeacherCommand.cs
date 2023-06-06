@@ -7,6 +7,7 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -16,6 +17,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
     /// <summary>
     /// Update User/Teacher
     /// </summary>
+    [LogScope]
+    [SecuredOperation]
     public class UpdateTeacherCommand : IRequest<DataResult<User>>
     {
         public long Id { get; set; }
@@ -42,9 +45,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
             private static string UserIsNotTeacher = Constants.Messages.UserIsNotTeacher;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-            [SecuredOperation]
-             
+                         
             public async Task<DataResult<User>> Handle(UpdateTeacherCommand request, CancellationToken cancellationToken)
             {
                 var isCitizenIdExist = _userRepository.Query().Any(q => q.Id != request.Id && q.CitizenId == request.CitizenId);

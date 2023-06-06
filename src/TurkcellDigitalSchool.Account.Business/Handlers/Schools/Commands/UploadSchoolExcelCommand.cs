@@ -22,8 +22,8 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
 {
-
     [LogScope]
+    [SecuredOperation]
     public class UploadSchoolExcelCommand : IRequest<DataResult<List<School>>>
     {
         public IFormFile FormFile { get; set; }
@@ -58,7 +58,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
             /// Id information obtain from the relevant tables for the city, county, institution and institution type fields.
             /// Added record to school table.
             /// </summary>
-            [SecuredOperation]
             [CacheRemoveAspect("Get")]
            
             public async Task<DataResult<List<School>>> Handle(UploadSchoolExcelCommand request, CancellationToken cancellationToken)

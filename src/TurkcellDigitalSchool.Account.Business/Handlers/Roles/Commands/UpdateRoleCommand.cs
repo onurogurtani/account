@@ -16,6 +16,8 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
 {
     [TransactionScope]
+    [LogScope]
+    [SecuredOperation]
     public class UpdateRoleCommand : IRequest<IResult>
     {
         public UpdateRoleDto Role { get; set; }
@@ -47,7 +49,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
             [MessageConstAttr(MessageCodeType.Information)]
             private static string RoleUpdated = Constants.Messages.RoleUpdated;
 
-            [SecuredOperation] 
             public async Task<IResult> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
             {
                 var role = await _roleRepository.Query().AnyAsync(x => x.Id != request.Role.Id && x.Name.Trim().ToLower() == request.Role.Name.Trim().ToLower());

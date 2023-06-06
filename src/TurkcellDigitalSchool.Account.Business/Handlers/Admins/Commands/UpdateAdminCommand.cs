@@ -21,6 +21,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
     /// Update Admin User
     /// </summary>
     [TransactionScope]
+    [LogScope]
+    [SecuredOperation]
     public class UpdateAdminCommand : IRequest<IResult>
     {
         public CreateUpdateAdminDto Admin { get; set; }
@@ -42,7 +44,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
                 _capPublisher = capPublisher;
             }
 
-            [SecuredOperation]
             public async Task<IResult> Handle(UpdateAdminCommand request, CancellationToken cancellationToken)
             {
                 long currentuserId = _tokenHelper.GetUserIdByCurrentToken();

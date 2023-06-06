@@ -13,12 +13,15 @@ using TurkcellDigitalSchool.Account.Domain.Dtos.OrganisationDtos;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
 {
+    [LogScope]
+    [SecuredOperation]
     public class CreateOrganisationCommand : IRequest<IResult>
     {
         public AddOrganisationDto Organisation { get; set; }
@@ -49,8 +52,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
             private static string PackageIsNotFound = Constants.Messages.PackageIsNotFound;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-            [SecuredOperation]
             public async Task<IResult> Handle(CreateOrganisationCommand request, CancellationToken cancellationToken)
             {
                 var organisation = await _organisationRepository.Query().AnyAsync(x => x.Name.Trim().ToLower() == request.Organisation.Name.Trim().ToLower() && x.CrmId == request.Organisation.CrmId);

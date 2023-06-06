@@ -8,13 +8,16 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Common.Helpers; 
+using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationTypes.Commands
 {
+    [LogScope]
+    [SecuredOperation]
     public class UpdateOrganisationTypeCommand : IRequest<IResult>
     {
         public OrganisationType OrganisationType { get; set; }
@@ -41,8 +44,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationTypes.Comm
             private static string CanNotChangeForRelationOrganisation = Constants.Messages.CanNotChangeForRelationOrganisation;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-
-            [SecuredOperation] 
             public async Task<IResult> Handle(UpdateOrganisationTypeCommand request, CancellationToken cancellationToken)
             {
                 var organisationType = await _organisationTypeRepository.Query().AnyAsync(x => x.Id != request.OrganisationType.Id && x.Name.Trim().ToLower() == request.OrganisationType.Name.Trim().ToLower());

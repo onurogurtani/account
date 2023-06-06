@@ -7,6 +7,7 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -17,6 +18,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
     /// <summary>
     /// Add User/Teacher
     /// </summary>
+    [LogScope]
+    [SecuredOperation]
     public class AddTeacherCommand : IRequest<DataResult<long>>
     {
         public long CitizenId { get; set; }
@@ -39,8 +42,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
             private static string CitizenIdAlreadyExist = Messages.CitizenIdAlreadyExist;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string Added = Messages.Added;
-
-            [SecuredOperation]
              
             public async Task<DataResult<long>> Handle(AddTeacherCommand request, CancellationToken cancellationToken)
             {

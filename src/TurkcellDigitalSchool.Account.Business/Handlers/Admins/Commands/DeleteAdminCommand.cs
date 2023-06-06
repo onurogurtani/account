@@ -4,6 +4,7 @@ using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Common.BusinessAspects;
 using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
@@ -11,6 +12,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
     /// <summary>
     /// Delete Admin User
     /// </summary>
+    [LogScope]
+    [SecuredOperation]
     public class DeleteAdminCommand : IRequest<IResult>
     {
         public long Id { get; set; }
@@ -23,9 +26,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
             {
                 _userRepository = userRepository;
             }
-
-            [SecuredOperation]
-             
+                         
             public async Task<IResult> Handle(DeleteAdminCommand request, CancellationToken cancellationToken)
             {
                 var getAdmin = await _userRepository.GetAsync(x => x.Id == request.Id);
