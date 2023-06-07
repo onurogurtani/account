@@ -9,9 +9,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     {
         [HttpGet("ping")]
         [AllowAnonymous]
-        public IActionResult Ping()
+        public string Ping()
         {
-            return Ok("OK");
+            return "OK";
         }
     }
 }
