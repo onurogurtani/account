@@ -1,0 +1,102 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
+    <PackageVersion Include="Autofac.Extras.DynamicProxy" Version="6.0.1" />
+    <PackageVersion Include="AutoMapper" Version="11.0.1" />
+    <PackageVersion Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageVersion Include="ClosedXML" Version="0.95.4" />
+    <PackageVersion Include="Consul" Version="1.6.10.8" />
+    <PackageVersion Include="coverlet.collector" Version="3.1.0" />
+    <PackageVersion Include="Duende.IdentityServer.EntityFramework" Version="6.2.0" />
+    <PackageVersion Include="EFCore.NamingConventions" Version="6.0.0" />
+    <PackageVersion Include="FastReport.OpenSource.Export.PdfSimple" Version="2022.2.0" />
+    <PackageVersion Include="FluentAssertions" Version="6.10.0" />
+    <PackageVersion Include="FluentValidation" Version="10.4.0" />
+    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="10.4.0" />
+    <PackageVersion Include="Flurl" Version="3.0.6" />
+    <PackageVersion Include="Flurl.Http" Version="3.2.4" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.7" />
+    <PackageVersion Include="NuGet.CommandLine" Version="6.5.0" />
+    <PackageVersion Include="PushSharp" Version="4.0.10" />
+    <PackageVersion Include="Hangfire.AspNetCore" Version="1.7.32" />
+    <PackageVersion Include="Hangfire.Core" Version="1.7.32" />
+    <PackageVersion Include="Hangfire.MemoryStorage" Version="1.7.0" />
+    <PackageVersion Include="HtmlAgilityPack" Version="1.11.46" />
+    <PackageVersion Include="MailKit" Version="3.1.1" />
+    <PackageVersion Include="MediatR" Version="10.0.1" />
+    <PackageVersion Include="MediatR.Extensions.Autofac.DependencyInjection" Version="8.0.1" />
+    <PackageVersion Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.ApplicationInsights" Version="2.20.0" />
+    <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.20.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.3" />
+    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="6.0.7" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.7" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.7" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.7" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
+    <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="6.16.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageVersion Include="Microsoft.OpenApi" Version="1.2.3" />
+    <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+    <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.2" />
+    <PackageVersion Include="MimeKit" Version="3.1.1" />
+    <PackageVersion Include="MMLib.SwaggerForOcelot" Version="6.0.0" />
+    <PackageVersion Include="MockQueryable.Moq" Version="7.0.0" />
+    <PackageVersion Include="Moq" Version="4.18.4" />
+    <PackageVersion Include="NEST" Version="7.17.0" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.6" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="4.0.0" />
+    <PackageVersion Include="NUnit" Version="3.13.2" />
+    <PackageVersion Include="Ocelot" Version="18.0.0" />
+    <PackageVersion Include="PdfPig" Version="0.1.7" />
+    <PackageVersion Include="PushSharp.Core" Version="1.0.2" />
+    <PackageVersion Include="RabbitMQ.Client" Version="6.2.4" />
+    <PackageVersion Include="Refit" Version="6.3.2" />
+    <PackageVersion Include="Refit.HttpClientFactory" Version="6.3.2" />
+    <PackageVersion Include="Serilog" Version="2.10.1-dev-01249" />
+    <PackageVersion Include="Serilog.AspNetCore" Version="6.1.0" />
+    <PackageVersion Include="Serilog.Enrichers.Environment" Version="2.2.0" />
+    <PackageVersion Include="Serilog.Enrichers.Thread" Version="3.1.0" />
+    <PackageVersion Include="Serilog.Formatting.Elasticsearch" Version="8.4.1" />
+    <PackageVersion Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Http" Version="7.2.0" />
+    <PackageVersion Include="Serilog.Sinks.MicrosoftTeams" Version="0.2.1" />
+    <PackageVersion Include="Serilog.Sinks.MSSqlServer" Version="5.7.0" />
+    <PackageVersion Include="ServiceStack.Redis.Core" Version="6.8.0" />
+    <PackageVersion Include="StackExchange.Redis" Version="2.6.104" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+	<PackageVersion Include="AWSSDK.S3" Version="3.7.104.27" />
+    <PackageVersion Include="System.DirectoryServices">
+      <Version>6.0.0</Version>
+    </PackageVersion>
+    <PackageVersion Include="System.DirectoryServices.Protocols">
+      <Version>6.0.0</Version>
+    </PackageVersion>
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="6.16.0" />
+    <PackageVersion Include="System.ServiceModel.Duplex" Version="4.9.0" />
+    <PackageVersion Include="System.ServiceModel.Federation" Version="4.9.0" />
+    <PackageVersion Include="System.ServiceModel.Http" Version="4.9.0" />
+    <PackageVersion Include="System.ServiceModel.NetTcp" Version="4.9.0" />
+    <PackageVersion Include="System.ServiceModel.Security" Version="4.9.0" />
+    <PackageVersion Include="DotNetCore.CAP" Version="6.2.1" />
+    <PackageVersion Include="DotNetCore.CAP.Dashboard" Version="6.2.1" />
+    <PackageVersion Include="DotNetCore.CAP.PostgreSql" Version="6.2.1" />
+    <PackageVersion Include="DotNetCore.CAP.RabbitMQ" Version="6.2.1" />
+    <PackageVersion Include="TurkcellDigitalSchool.Common" Version="1.0.1.50" />
+    <PackageVersion Include="TurkcellDigitalSchool.Core" Version="1.0.1.50" />
+    <PackageVersion Include="TurkcellDigitalSchool.DbAccess" Version="1.0.1.50" />
+    <PackageVersion Include="TurkcellDigitalSchool.Integration" Version="1.0.1.50" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageVersion Update="StackExchange.Redis" Version="2.6.111" />
+    <PackageVersion Update="StackExchange.Redis" Version="2.6.111" />
+  </ItemGroup>
+</Project>
