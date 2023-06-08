@@ -33,8 +33,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
             public virtual async Task<DataResult<UserDto>> Handle(GetUserDtoQuery request, CancellationToken cancellationToken)
             {
                 var userDto = (from u in _accountDbContext.Users
-                               join p in _accountDbContext.UserPackages on u.Id equals p.UserId into users
-                               from pj in users.DefaultIfEmpty()
                                where u.Id == request.Id
                                select new UserDto
                                {
@@ -48,7 +46,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                                    ExamKind = u.ExamKind,
                                    UserType = u.UserType,
                                    ViewMyData = u.ViewMyData,
-                                   IsPackageBuyer = pj.Id > 0,
+                                   IsPackageBuyer = (_accountDbContext.UserPackages.Any(w => w.UserId == u.Id)),
                                    RegisterStatus = u.RegisterStatus,
                                    InsertTime = u.InsertTime,
                                    UpdateTime = u.UpdateTime,
