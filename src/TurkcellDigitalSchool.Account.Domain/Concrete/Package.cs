@@ -14,6 +14,8 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public int? TryingTestQuestionCount { get; set; }
         public bool HasMotivationEvent { get; set; }
         public PackageKind PackageKind { get; set; }
+        public PackageTypeEnum PackageTypeEnum { get; set; }
+        public ExamKind ExamKind { get; set; }
 
         public long EducationYearId { get; set; }
         public EducationYear EducationYear { get; set; }
@@ -32,7 +34,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public virtual ICollection<PackageContractType> PackageContractTypes { get; set; }
 
         public virtual ICollection<PackageFieldType> PackageFieldTypes { get; set; }
-        public virtual ICollection<PackagePackageTypeEnum> PackagePackageTypeEnums { get; set; }
+        public virtual ICollection<PackagePackageTypeEnum> PackagePackageTypeEnums { get; set; }  //TODO   silinecek
         public virtual ICollection<PackageTestExamPackage> TestExamPackages { get; set; }
         public virtual ICollection<PackageCoachServicePackage> CoachServicePackages { get; set; }
         public virtual ICollection<PackageMotivationActivityPackage> MotivationActivityPackages { get; set; }

@@ -5,6 +5,7 @@ using TurkcellDigitalSchool.Core.Enums;
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
+    //TODO   silinecek
     public class PackagePackageTypeEnum : EntityDefault
     {
         public long PackageId { get; set; }
