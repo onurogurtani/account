@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -20,7 +21,7 @@ namespace TurkcellDigitalSchool.Account.Api
         public static void Main(string[] args)
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            CreateHostBuilder(args).Build().Run(); 
+            CreateHostBuilder(args).Build().Run();
         }
 
         /// <summary>
@@ -33,6 +34,7 @@ namespace TurkcellDigitalSchool.Account.Api
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+
                     webBuilder
                         .UseStartup<Startup>()
                         .ConfigureLogging(builder =>
@@ -49,8 +51,13 @@ namespace TurkcellDigitalSchool.Account.Api
                         })
                         .ConfigureKestrel((context, options) =>
                         {
+                            var address = context.Configuration.GetValue<string>("Consul:AppUrl");
+
+                            var uri = new Uri(address);
+                            var port = uri.Port;
+                            var ip = uri.Host;
                             options.AddServerHeader = false;
-                            options.Listen(IPAddress.Any, 6021, listenOptions =>
+                            options.Listen(IPAddress.Any, uri.Port, listenOptions =>
                             {
                                 // Enables HTTP/3
                                 //listenOptions.Protocols = HttpProtocols.Http3;

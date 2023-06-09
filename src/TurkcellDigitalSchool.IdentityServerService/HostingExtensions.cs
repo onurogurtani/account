@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
+using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Configure; 
 using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Redis.Contract;
@@ -159,7 +160,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
             app.UseRouting();
             app.UseIdentityServer();
             app.UseAuthorization();
-
+            app.UseConsul(app.Configuration, "IdentityServer");
             app.MapRazorPages()
                 .RequireAuthorization();
 
