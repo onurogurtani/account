@@ -10,7 +10,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Common.Helpers;
-using TurkcellDigitalSchool.Core.Configure; 
+using TurkcellDigitalSchool.Core.Configure;
 using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Redis.Contract;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
@@ -20,7 +20,7 @@ using TurkcellDigitalSchool.IdentityServerService.Pages.Admin.ApiScopes;
 using TurkcellDigitalSchool.IdentityServerService.Pages.Admin.Clients;
 using TurkcellDigitalSchool.IdentityServerService.Pages.Admin.IdentityScopes;
 using TurkcellDigitalSchool.IdentityServerService.Services;
-using TurkcellDigitalSchool.IdentityServerService.Services.Contract; 
+using TurkcellDigitalSchool.IdentityServerService.Services.Contract;
 
 namespace TurkcellDigitalSchool.IdentityServerService
 {
@@ -131,6 +131,8 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 builder.Services.AddTransient<ClientRepository>();
                 builder.Services.AddTransient<IdentityScopeRepository>();
                 builder.Services.AddTransient<ApiScopeRepository>();
+
+                builder.Services.AddConsulConfig(builder.Configuration);
             }
 
             return builder.Build();
@@ -160,10 +162,10 @@ namespace TurkcellDigitalSchool.IdentityServerService
             app.UseRouting();
             app.UseIdentityServer();
             app.UseAuthorization();
-            app.UseConsul(app.Configuration, "IdentityServer");
+
             app.MapRazorPages()
                 .RequireAuthorization();
-
+            app.UseConsul(app.Configuration, "IdentityServer");
             return app;
         }
     }
