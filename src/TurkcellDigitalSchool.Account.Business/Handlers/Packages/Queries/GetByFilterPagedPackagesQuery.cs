@@ -60,6 +60,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
                     query = query.Where(x => x.PackagePublishers.Any(q => request.PackageDetailSearch.PublisherIds.Contains((long)q.PublisherId)));
 
                 if (request.PackageDetailSearch.PackageTypeEnumIds?.Length > 0)
+                    query = query.Where(x => request.PackageDetailSearch.PackageTypeEnumIds.Contains((long)x.PackageTypeEnum));
+
+
+                if (request.PackageDetailSearch.PackageTypeEnumIds?.Length > 0)
                     query = query.Where(x => x.PackagePackageTypeEnums.Any(q => request.PackageDetailSearch.PackageTypeEnumIds.Contains((long)q.PackageTypeEnum)));
 
 
@@ -114,8 +118,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
                     "SummaryDESC" => query.OrderByDescending(x => x.Summary),
                     "ContentASC" => query.OrderBy(x => x.Content),
                     "ContentDESC" => query.OrderByDescending(x => x.Content),
-                    "PackageTypeASC" => query.OrderBy(x => x.PackagePackageTypeEnums),
-                    "PackageTypeDESC" => query.OrderByDescending(x => x.PackagePackageTypeEnums),
+                    "PackageTypeASC" => query.OrderBy(x => x.PackageTypeEnum),
+                    "PackageTypeDESC" => query.OrderByDescending(x => x.PackageTypeEnum),
                     "EducationYearASC" => query.OrderBy(x => x.EducationYear.StartYear),
                     "EducationYearDESC" => query.OrderByDescending(x => x.EducationYear.StartYear),
                     "ClassroomDESC" => query.OrderByDescending(x => x.PackageLessons.First().Lesson.Classroom.Name),

@@ -155,6 +155,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 entity.TryingTestQuestionCount = request.Package.TryingTestQuestionCount;
                 entity.HasMotivationEvent = request.Package.HasMotivationEvent;
                 entity.PackageKind = request.Package.PackageKind;
+                entity.ExamKind = request.Package.ExamKind;
+                entity.PackageTypeEnum = request.Package.PackageTypeEnum;
                 entity.PackageLessons = request.Package.PackageLessons;
 
                 entity.PackageDocuments = request.Package.PackageDocuments;
