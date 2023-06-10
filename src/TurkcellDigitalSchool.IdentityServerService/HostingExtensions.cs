@@ -6,6 +6,7 @@ using Serilog;
 using System.Configuration;
 using System.Globalization;
 using System.Text.Json.Serialization;
+using TurkcellDigitalSchool.Account.Business.Helpers;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
@@ -47,6 +48,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
             builder.Services.AddScoped<IMobileLoginRepository, MobileLoginRepository>();
             builder.Services.AddScoped<IOperationClaimRepository, OperationClaimRepository>();
             builder.Services.AddScoped<ITokenHelper, JwtHelper>();
+            builder.Services.AddScoped<ILdapHelper, LdapHelper>();
             builder.Services.AddScoped<ISmsOtpRepository, SmsOtpRepository>();
             builder.Services.AddTransient<ICaptchaManager, CaptchaManager>();
             builder.Services.AddTransient<ILoginFailForgetPassSendLinkRepository, LoginFailForgetPassSendLinkRepository>();
