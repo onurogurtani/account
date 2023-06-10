@@ -62,9 +62,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
                 if (request.PackageDetailSearch.PackageTypeEnumIds?.Length > 0)
                     query = query.Where(x => request.PackageDetailSearch.PackageTypeEnumIds.Contains((long)x.PackageTypeEnum));
 
+                 if (request.PackageDetailSearch.PackageKindIds?.Length > 0)
+                    query = query.Where(x => request.PackageDetailSearch.PackageKindIds.Contains((long)x.PackageKind));
+
 
                 if (request.PackageDetailSearch.PackageTypeEnumIds?.Length > 0)
-                    query = query.Where(x => x.PackagePackageTypeEnums.Any(q => request.PackageDetailSearch.PackageTypeEnumIds.Contains((long)q.PackageTypeEnum)));
+                    query = query.Where(x => x.PackagePackageTypeEnums.Any(q => request.PackageDetailSearch.PackageTypeEnumIds.Contains((long)q.PackageTypeEnum))); 
+                
+              
 
 
                 if (!string.IsNullOrWhiteSpace(request.PackageDetailSearch.Name))
