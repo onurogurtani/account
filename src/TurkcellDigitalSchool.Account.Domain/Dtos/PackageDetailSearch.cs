@@ -12,6 +12,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public long[] FieldTypeIds { get; set; } = new long[0];
         public long[] PackageTypeEnumIds { get; set; } = new long[0];
         public long[] PackageKindIds { get; set; } = new long[0];
+        public long[] ExamKindIds { get; set; } = new long[0];
         public long[] PublisherIds { get; set; } = new long[0];
 
         public long[] EducationYearIds { get; set; } = new long[0];
