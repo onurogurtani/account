@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: application-service
+objects:
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      name: application-service
+      namespace: testroyer
+      labels:
+        app: application-service
+    spec:
+      strategy:
+        type: Rolling
+        rollingParams:
+          updatePeriodSeconds: 1
+          intervalSeconds: 1
+          timeoutSeconds: 600
+          maxUnavailable: 25%
+          maxSurge: 25%
+        resources: {}
+        activeDeadlineSeconds: 21600
+      triggers:
+        - type: ConfigChange
+      replicas: 1
+      test: false
+      selector:
+        app: application-service
+        deploymentconfig: application-service
+      template:
+        metadata:
+          creationTimestamp: null
+          labels:
+            app: application-service
+            deploymentconfig: application-service
+          annotations:
+            openshift.io/generated-by: OpenShiftWebConsole
+        spec:
+          containers:
+            - env:
+                - name: PROFILE
+                  value: '${PROFILE}'
+                - name : TZ
+                  value : Europe/Istanbul
+                - name: OPENSHIFT_DB_JDBC_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: database-secrets
+                      key: jdbc_url
+                - name: OPENSHIFT_DB_USER_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: database-secrets
+                      key: username
+                - name: OPENSHIFT_DB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: database-secrets
+                      key: password
+                - name: OPENSHIFT_JWT_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: jwt-secret
+                      key: secret
+              name: application-service
+              ports:
+                - containerPort: 8015
+                  protocol: TCP
+              image: '${REGISTRY_URL}'
+              resources:
+                limits:
+                  cpu: 500m
+                  memory: 1024Mi
+                requests:
+                  cpu: 50m
+                  memory: 256Mi
+              imagePullPolicy: IfNotPresent
+          restartPolicy: Always
+          terminationGracePeriodSeconds: 30
+          dnsPolicy: ClusterFirst
+          securityContext: {}
+parameters:
+- name: REGISTRY_URL
+  displayName: OpenShift Container Registry
+  description: URL of the container in Registry (baseUrl/container-name:version)
+  required: true
+
+- name: PROFILE
+  displayName: OpenShift Container Registry
+  description: Set all required variables via this parameters for container
+  required: true
