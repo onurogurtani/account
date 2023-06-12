@@ -1,48 +1,41 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: ${APP_NAME}
+  name: '${APP_NAME}'
 objects:
   - apiVersion: v1
     kind: BuildConfig
     metadata:
       labels:
-        app: ${APP_NAME}
-        build: ${APP_NAME}
-      name: ${APP_NAME}
+        app: '${APP_NAME}'
+        build: '${APP_NAME}'
+      name: '${APP_NAME}'
     spec:
-      completionDeadlineSeconds: 1800
-      successfulBuildsHistoryLimit: 0
-      failedBuildsHistoryLimit: 1
       output:
         to:
           kind: DockerImage
-          name: ${REGISTRY_URL}
+          name: '${REGISTRY_URL}'
         pushSecret:
-          name: ${PUSH_SECRET}
+          name: '${PUSH_SECRET}'
       source:
         git:
-          ref: ${BRANCH_NAME}
-          uri: ${SOURCE_REPOSITORY_URL}
+          ref: '${BRANCH_NAME}'
+          uri: '${SOURCE_REPOSITORY_URL}'
         sourceSecret:
-          name: ${SOURCE_SECRET_NAME}
+          name: '${SOURCE_SECRET_NAME}'
         type: Git
       strategy:
         dockerStrategy:
-          dockerfilePath: ${DOCKERFILE_PATH}
-          buildArgs:
-            - name: "ARTIFACTORY_URL"
-              value: ${ARTIFACTORY_URL}
           type: Docker
           pullSecret:
-            name: ${PULL_SECRET}
+            name: '${PULL_SECRET}'
       resources:
         requests:
-          cpu: "100m"
-          memory: "512Mi"
+          cpu: 250m
+          memory: 1024Mi
         limits:
-          cpu: "750m"
-          memory: "1024Mi"
+          cpu: 1024m
+          memory: 6144Mi
 parameters:
   - name: APP_NAME
     displayName: Application Name
@@ -78,13 +71,5 @@ parameters:
     required: true
   - name: REGISTRY_URL
     displayName: OpenShift Container Registry
-    description: URL of the container in Registry (baseUrl/container-name:version)
-    required: true
-  - name: ARTIFACTORY_URL
-    displayName: Package artifactory repo path of package
-    description: URL of the package in Artifactory
-    required: true
-  - name: DOCKERFILE_PATH
-    displayName: Dockerfile absolute path
-    description: Dockerfile absolute path
+    description: 'URL of the container in Registry (baseUrl/container-name:version)'
     required: true

@@ -2,7 +2,7 @@
 
 pipeline {
 
-    agent { label '' }
+    agent { label 'tocpt2-dotnet6' }
     options {
         timestamps()
         buildDiscarder(logRotator(numToKeepStr: '30'))
@@ -15,8 +15,10 @@ pipeline {
         mainBranch = "devops"
         appServiceName = "DIJITAL_DERSHANE_APP"
         softwareModuleName = "account"
-        subsoftwareModuleName = "gui-backend"
+        subsoftwareModuleName = "TurkcellDigitalSchool-Account-Api"
         serviceId = "471949"
+
+        appVersion = "${mainBranch}-${env.BUILD_NUMBER}"
 
         artifactoryHostAddress = "artifactory.turkcell.com.tr"
 
@@ -29,7 +31,7 @@ pipeline {
         // openshift namespace to be used in this script
         openshiftProjectName = "learnup"
         // openshift credential name in Jenkins
-        openshiftClientToken = ""
+        openshiftClientToken = "tocpt4-learnup-token"
         // push secret name for docker registry on artifactory
         imagePushSecret = "artifactory-ifts"
         // pull secret name for docker registry on artifactory
@@ -40,7 +42,7 @@ pipeline {
         buildConfigTemplate = "openshift/build/buildconfig-template.yaml"			// openshift build config template yaml file
         deploymentConfigTemplate = "openshift/deploy/deployment.yaml"
 
-        defaultMailReceivers = "TEAM-FRAUD-DEV@turkcellteknoloji.com.tr"
+        defaultMailReceivers = ""
         successMailReceivers = "${defaultMailReceivers}"
         failureMailReceivers = "${defaultMailReceivers}"
 
@@ -56,21 +58,22 @@ pipeline {
 	}
 
 	parameters {
-
+        
     }
 
     stages {
-        // stage('Build') {
+        stage('Build') {
 
-        //     steps{
-        //         script {
-        //             printSectionBoundry ("Build stage starting...")
+            steps{
+                script {
+                    printSectionBoundry ("Build stage starting...")
+                    sh "dotnet restore"
+                    sh "dotnet build"
 
-
-        //             printSectionBoundry("Build stage finished!")
-        //         }
-        //     }
-        // }
+                    printSectionBoundry("Build stage finished!")
+                }
+            }
+        }
 		// stage('Sonar - Code Quality') {
         //     when {
         //         anyOf {
@@ -146,7 +149,6 @@ pipeline {
 							        openshiftClient {
 							        	openshift.apply(
                                         openshift.process(readFile(file: buildConfigTemplate),
-                                        "-p", "ARTIFACTORY_URL=${artifactoryRepoPath}",
                                         "-p", "APP_NAME=${subsoftwareModuleName}",
                                         "-p", "APP_VERSION=${appVersion}",
                                         "-p", "SOURCE_REPOSITORY_URL=${GIT_URL}",
