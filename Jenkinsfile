@@ -33,9 +33,9 @@ pipeline {
         // openshift credential name in Jenkins
         openshiftClientToken = "tocpt4-learnup-token"
         // push secret name for docker registry on artifactory
-        imagePushSecret = "artifactory-ifts"
+        imagePushSecret = "artifactory-ccs"
         // pull secret name for docker registry on artifactory
-        imagePullSecret = "artifactory-ifts"
+        imagePullSecret = "artifactory-ccs"
         // openshift build config git credential secret name
         gitCredentialSecret = "jenkins-git"
         // openshift build config template yaml file
@@ -57,9 +57,6 @@ pipeline {
 		SONAR_LOGIN_KEY = ''
 	}
 
-	parameters {
-        
-    }
 
     stages {
         stage('Build') {
