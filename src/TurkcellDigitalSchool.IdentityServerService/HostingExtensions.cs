@@ -28,6 +28,8 @@ namespace TurkcellDigitalSchool.IdentityServerService
     {
         public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
         {
+
+
             builder.Services.AddRazorPages();
             var connectionString = builder.Configuration.GetConnectionString("DArchPostgreContext");
 
