@@ -93,7 +93,7 @@
     <PackageVersion Include="TurkcellDigitalSchool.Common" Version="1.0.1.51" />
     <PackageVersion Include="TurkcellDigitalSchool.Core" Version="1.0.1.51" />
     <PackageVersion Include="TurkcellDigitalSchool.DbAccess" Version="1.0.1.51" />
-    <PackageVersion Include="TurkcellDigitalSchool.Integration" Version="1.0.1.51" />
+    <PackageVersion Include="TurkcellDigitalSchool.Integration" Version="1.0.1.52" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Update="StackExchange.Redis" Version="2.6.111" />
