@@ -75,7 +75,6 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public long Id { get; set; }
         public string PackageName { get; set; }
         public File File { get; set; }
-        public byte[] FileBase64 { get; set; } // TODO CDN entegrasyonuna karar verildiğinde filepath kullanılacak.
         public DateTime PurchaseDate { get; set; }
         public string PackageContent { get; set; }
 
