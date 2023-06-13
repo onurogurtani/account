@@ -15,7 +15,7 @@ pipeline {
         mainBranch = "devops"
         appServiceName = "DIJITAL_DERSHANE_APP"
         softwareModuleName = "account"
-        subsoftwareModuleName = "TurkcellDigitalSchool-Account-Api"
+        subsoftwareModuleName = "turkcelldigitalschool-account-api"
         serviceId = "471949"
 
         appVersion = "${mainBranch}-${env.BUILD_NUMBER}"
