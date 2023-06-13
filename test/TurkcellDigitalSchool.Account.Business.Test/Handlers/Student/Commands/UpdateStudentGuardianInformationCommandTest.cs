@@ -11,7 +11,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using static TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands.UpdateStudentParentInformationCommand;
 using System.Linq.Expressions;
-using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Constants;
 using FluentAssertions;
 using System.Linq;
 using MockQueryable.Moq;

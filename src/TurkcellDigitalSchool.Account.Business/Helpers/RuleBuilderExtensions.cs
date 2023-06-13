@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using FluentValidation;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Constants;
 
 namespace TurkcellDigitalSchool.Account.Business.Helpers
 {

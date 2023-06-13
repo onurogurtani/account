@@ -5,8 +5,8 @@ using Microsoft.Extensions.Configuration;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
 using TurkcellDigitalSchool.Core.DataAccess;
-using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
+using TurkcellDigitalSchool.Core.DataAccess.Contexts;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt; 
 
 namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
 {

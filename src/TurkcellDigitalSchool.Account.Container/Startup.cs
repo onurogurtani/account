@@ -17,8 +17,8 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands;
 using TurkcellDigitalSchool.Account.Business.Jobs;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Common.Helpers;
-using TurkcellDigitalSchool.Common.Middleware;
+using TurkcellDigitalSchool.Core.Common.Helpers;
+using TurkcellDigitalSchool.Core.Common.Middleware;
 using TurkcellDigitalSchool.Core.ApiDoc;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
@@ -103,7 +103,7 @@ namespace TurkcellDigitalSchool.Account.Container
             ServiceTool.ServiceProvider = app.ApplicationServices;
 
 
-            var configurationManager = app.ApplicationServices.GetService<Common.ConfigurationManager>();
+            var configurationManager = app.ApplicationServices.GetService<Core.Common.ConfigurationManager>();
             switch (configurationManager.Mode)
             {
                

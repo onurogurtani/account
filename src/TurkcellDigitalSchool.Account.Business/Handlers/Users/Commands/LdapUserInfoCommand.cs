@@ -10,8 +10,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
@@ -44,15 +44,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
             }
 
             [MessageConstAttr(MessageCodeType.Error)]
-            private static string LdapUsersIsNotFound = Common.Constants.Messages.LdapUsersIsNotFound;
+            private static string LdapUsersIsNotFound = Core.Common.Constants.Messages.LdapUsersIsNotFound;
 
             [MessageConstAttr(MessageCodeType.Error)]
-            private static string LdapConnectionFail = Common.Constants.Messages.LdapConnectionFail;
+            private static string LdapConnectionFail = Core.Common.Constants.Messages.LdapConnectionFail;
 
             [MessageConstAttr(MessageCodeType.Information)]
-            private static string SuccessfulOperation = Common.Constants.Messages.SuccessfulOperation;
+            private static string SuccessfulOperation = Core.Common.Constants.Messages.SuccessfulOperation;
 
-            [SecuredOperation]
+            [SecuredOperationScope]
             public async Task<IResult> Handle(LdapUserInfoCommand request, CancellationToken cancellationToken)
             {
                 bool isLdapConnect = isAdminConnectDAP().Result;

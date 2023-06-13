@@ -7,7 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
@@ -17,7 +17,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
     [ExcludeFromCodeCoverage]
     [PerformanceScope]
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetUserSelfQuery : IRequest<DataResult<CurrentUserDto>>
     {
         public class GetUserSelfQueryHandler : IRequestHandler<GetUserSelfQuery, DataResult<CurrentUserDto>>

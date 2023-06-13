@@ -6,7 +6,7 @@ using TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Command
 using TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Queries;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.Controllers;
+using TurkcellDigitalSchool.Core.Common.Controllers;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 

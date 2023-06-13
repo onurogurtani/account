@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
@@ -29,7 +29,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
 
     }
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetUserPackagesByUserIdQuery : IRequest<DataResult<List<UserPackageDto>>>
     {
         public long UserId { get; set; }

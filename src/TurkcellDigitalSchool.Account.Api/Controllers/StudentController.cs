@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.Controllers;
+using TurkcellDigitalSchool.Core.Common.Controllers;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers

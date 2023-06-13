@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
@@ -17,7 +17,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
 {
     [ExcludeFromCodeCoverage]
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetOrganisationPackageNamesQuery : IRequest<DataResult<List<SelectionItem>>>
     {
         public class GetOrganisationPackageNamesQueryHandler : IRequestHandler<GetOrganisationPackageNamesQuery, DataResult<List<SelectionItem>>>

@@ -3,8 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
@@ -13,7 +13,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
     /// <summary>
     /// Update WorkPlan
     /// </summary>
-    [SecuredOperation]
+    [SecuredOperationScope]
     [LogScope]
     [TransactionScope]
     public class UpdateDocumentCommand : IRequest<IResult>

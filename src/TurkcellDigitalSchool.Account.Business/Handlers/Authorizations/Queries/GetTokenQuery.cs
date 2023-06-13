@@ -4,12 +4,11 @@ using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.Business.Constants; 
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute; 
 using TurkcellDigitalSchool.Core.Utilities.Results; 
-using TurkcellDigitalSchool.Integration.IntegrationServices.IdentityServerServices;
-using TurkcellDigitalSchool.Integration.IntegrationServices.IdentityServerServices.Model.Request;
-using TurkcellDigitalSchool.Integration.IntegrationServices.IdentityServerServices.Model.Response;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.IdentityServerServices;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.IdentityServerServices.Model.Request;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.IdentityServerServices.Model.Response;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
@@ -38,7 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             /// If true, the token is created.
             /// </summary>
             
-            [SecuredOperation]
+            [SecuredOperationScope]
             public async Task<DataResult<TokenIntegraitonResponse>> Handle(GetTokenQuery request, CancellationToken cancellationToken)
             {
              

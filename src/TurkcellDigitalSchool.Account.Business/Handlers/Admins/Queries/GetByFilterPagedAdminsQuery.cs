@@ -6,9 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants; 
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -20,7 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
     ///Get Filtered Paged Admins  with Roles
     /// </summary>
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetByFilterPagedAdminsQuery : IRequest<DataResult<PagedList<AdminDto>>>
     {
         public AdminDetailSearch AdminDetailSearch { get; set; } = new AdminDetailSearch();

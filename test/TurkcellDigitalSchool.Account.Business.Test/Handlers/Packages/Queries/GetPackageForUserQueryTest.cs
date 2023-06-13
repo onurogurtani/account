@@ -20,7 +20,7 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices;
 using static TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries.GetPackageForUserQuery;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries

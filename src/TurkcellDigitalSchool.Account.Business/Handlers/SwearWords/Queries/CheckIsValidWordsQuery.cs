@@ -1,9 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
@@ -15,7 +15,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.SwearWords.Queries
     /// CheckIsValidWordsQuery
     /// </summary>
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class CheckIsValidWordsQuery : IRequest<IResult>
     {
         public string? Text { get; set; }
@@ -39,9 +39,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.SwearWords.Queries
 
                 for (int i = 0; i < words?.Length; i++)
                 {
-                    bool check1 = Common.Constants.SwearWords.Words.Contains(words[i]);
+                    bool check1 = Core.Common.Constants.SwearWords.Words.Contains(words[i]);
                     if (words.Length > i + 1)
-                        check2 = Common.Constants.SwearWords.Words.Contains(words[i] + " " + words[i + 1]);
+                        check2 = Core.Common.Constants.SwearWords.Words.Contains(words[i] + " " + words[i + 1]);
                     if (check1 || check2)
                         return new ErrorResult(CheckMessage.PrepareRedisMessage());
                 }

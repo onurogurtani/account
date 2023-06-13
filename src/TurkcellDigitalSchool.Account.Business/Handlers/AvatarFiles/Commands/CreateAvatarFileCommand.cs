@@ -3,12 +3,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using IResult = TurkcellDigitalSchool.Core.Utilities.Results.IResult;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
-using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices;
 using System.IO;
 using System.Text;
 using Refit;
@@ -16,12 +16,12 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
 {
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class CreateAvatarFileCommand : IRequest<IResult>
     {
         public IFormFile Image { get; set; }

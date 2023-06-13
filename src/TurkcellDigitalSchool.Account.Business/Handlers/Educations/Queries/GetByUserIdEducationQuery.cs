@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
@@ -15,7 +15,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Educations.Queries
     /// Get By UserId  Education
     /// </summary>
     [ExcludeFromCodeCoverage]
-    [SecuredOperation] 
+    [SecuredOperationScope] 
     [LogScope]
     public class GetByUserIdEducationQuery : IRequest<DataResult<Education>>
     {

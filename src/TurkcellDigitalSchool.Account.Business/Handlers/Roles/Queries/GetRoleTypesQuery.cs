@@ -5,8 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
@@ -16,7 +16,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
 {
     [ExcludeFromCodeCoverage]
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetRoleTypesQuery : IRequest<DataResult<List<SelectionItem>>>
     {
         public class GetRoleTypesQueryHandler : IRequestHandler<GetRoleTypesQuery, DataResult<List<SelectionItem>>>

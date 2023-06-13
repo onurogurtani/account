@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -19,7 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
     /// 
     [ExcludeFromCodeCoverage]
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetContractKindNamesQuery : IRequest<DataResult<List<string>>>
     {
         public class GetContractKindNamesQueryHandler : IRequestHandler<GetContractKindNamesQuery, DataResult<List<string>>>

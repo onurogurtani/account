@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -15,7 +15,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
 {
     [ExcludeFromCodeCoverage]
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetOrganisationNamesQuery : IRequest<DataResult<List<SelectionItem>>>
     {
         public class GetOrganisationNamesQueryHandler : IRequestHandler<GetOrganisationNamesQuery, DataResult<List<SelectionItem>>>

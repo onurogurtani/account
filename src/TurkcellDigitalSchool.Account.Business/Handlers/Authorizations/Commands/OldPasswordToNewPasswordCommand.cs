@@ -9,7 +9,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
-using TurkcellDigitalSchool.Integration.IntegrationServices.IdentityServerServices.Model.Response;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.IdentityServerServices.Model.Response;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {

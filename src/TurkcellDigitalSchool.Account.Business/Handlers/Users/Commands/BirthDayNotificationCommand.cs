@@ -2,8 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -26,12 +26,12 @@ namespace TurkcellDigitalSchool.Exam.Business.Handlers.TestExams.Commands
             }
 
             [MessageConstAttr(MessageCodeType.Error)]
-            private static string AnnouncementTypeIsNotFound = Common.Constants.Messages.UnableToProccess;
+            private static string AnnouncementTypeIsNotFound = Core.Common.Constants.Messages.UnableToProccess;
 
             [MessageConstAttr(MessageCodeType.Information)]
-            private static string SuccessfulOperation = Common.Constants.Messages.SuccessfulOperation;
+            private static string SuccessfulOperation = Core.Common.Constants.Messages.SuccessfulOperation;
 
-            [SecuredOperation]
+            [SecuredOperationScope]
             public async Task<IResult> Handle(BirthDayNotificationCommand request, CancellationToken cancellationToken)
             {                
                 // Öğrenci

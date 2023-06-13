@@ -18,14 +18,16 @@ using TurkcellDigitalSchool.Account.Business.Services.TransactionManager;
 using TurkcellDigitalSchool.Account.Business.Services.User;
 using TurkcellDigitalSchool.Account.Business.SubServices.RegisterServices;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Common.DependencyResolvers;
-using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Behaviors;
+using TurkcellDigitalSchool.Core.Common.DependencyResolvers;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Configure;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Microsoft;
 using TurkcellDigitalSchool.Core.DependencyResolvers;
 using TurkcellDigitalSchool.Core.Extensions;
+using TurkcellDigitalSchool.Core.Integration.Helper;
+using TurkcellDigitalSchool.Core.Integration.Type;
 using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Redis.Contract;
 using TurkcellDigitalSchool.Core.Services.CustomMessgeHelperService;
@@ -36,8 +38,6 @@ using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Core.Utilities.MessageBrokers.RabbitMq;
 using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.Integration.Helper;
-using TurkcellDigitalSchool.Integration.Type;
 
 namespace TurkcellDigitalSchool.Account.Business
 {
@@ -72,7 +72,7 @@ namespace TurkcellDigitalSchool.Account.Business
             var coreModule = new CoreModule();
 
             services.AddDependencyResolvers(Configuration, new ICoreModule[] { coreModule });
-            services.AddSingleton<Common.ConfigurationManager>();
+            services.AddSingleton<Core.Common.ConfigurationManager>();
             services.AddTransient<ITokenHelper, JwtHelper>();
             services.AddTransient<IElasticSearch, ElasticSearchManager>();
             services.AddTransient<ICaptchaManager, CaptchaManager>();
@@ -180,7 +180,7 @@ namespace TurkcellDigitalSchool.Account.Business
         /// <param name="builder"></param>
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterModule(new AutofacBusinessModule(new TurkcellDigitalSchool.Common.ConfigurationManager(Configuration, HostEnvironment)));
+            builder.RegisterModule(new AutofacBusinessModule(new TurkcellDigitalSchool.Core.Common.ConfigurationManager(Configuration, HostEnvironment)));
         }
     }
 }

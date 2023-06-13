@@ -91,7 +91,7 @@
     <PackageVersion Include="DotNetCore.CAP.PostgreSql" Version="6.2.1" />
     <PackageVersion Include="DotNetCore.CAP.RabbitMQ" Version="6.2.1" />
     <PackageVersion Include="TurkcellDigitalSchool.Common" Version="1.0.1.51" />
-    <PackageVersion Include="TurkcellDigitalSchool.Core" Version="1.0.1.51" />
+    <PackageVersion Include="TurkcellDigitalSchool.Core" Version="1.0.1.60" />
     <PackageVersion Include="TurkcellDigitalSchool.DbAccess" Version="1.0.1.51" />
     <PackageVersion Include="TurkcellDigitalSchool.Integration" Version="1.0.1.52" />
   </ItemGroup>

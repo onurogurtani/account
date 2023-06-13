@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries;
 using TurkcellDigitalSchool.Account.Business.Handlers.SwearWords.Queries;
-using TurkcellDigitalSchool.Common.Controllers;
+using TurkcellDigitalSchool.Core.Common.Controllers;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
 {

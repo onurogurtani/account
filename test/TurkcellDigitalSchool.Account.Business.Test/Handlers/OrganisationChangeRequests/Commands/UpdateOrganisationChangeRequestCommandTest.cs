@@ -15,7 +15,7 @@ using MockQueryable.Moq;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using AutoMapper;
 using System.Linq.Expressions;
-using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices;
 using Refit;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;

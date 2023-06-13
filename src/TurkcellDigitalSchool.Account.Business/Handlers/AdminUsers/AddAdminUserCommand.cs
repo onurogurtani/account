@@ -6,11 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Common;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Common;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
@@ -25,7 +24,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
     /// </summary>
     [TransactionScope]
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class AddAdminUserCommand : IRequest<IDataResult<SelectionItem>>
     {
         public UserType UserTypeId { get; set; }

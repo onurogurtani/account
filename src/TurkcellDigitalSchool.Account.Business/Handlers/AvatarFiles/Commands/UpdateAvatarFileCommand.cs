@@ -2,23 +2,23 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using System;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.Request;
-using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices.Model.Request;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices;
 using Refit;
 using System.IO;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Core.CustomAttribute;
-using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
 {
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class UpdateAvatarFileCommand : IRequest<Core.Utilities.Results.IResult>
     {
         public long Id { get; set; }

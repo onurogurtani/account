@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.LdapLoginService;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Common;
+using TurkcellDigitalSchool.Core.Common;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.Utilities.Results;

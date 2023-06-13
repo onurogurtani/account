@@ -53,9 +53,7 @@ namespace TurkcellDigitalSchool.Account.Api
                         {
                             var address = context.Configuration.GetValue<string>("Consul:AppUrl");
 
-                            var uri = new Uri(address);
-                            var port = uri.Port;
-                            var ip = uri.Host;
+                            var uri = new Uri(address); 
                             options.AddServerHeader = false;
                             options.Listen(IPAddress.Any, uri.Port, listenOptions =>
                             {

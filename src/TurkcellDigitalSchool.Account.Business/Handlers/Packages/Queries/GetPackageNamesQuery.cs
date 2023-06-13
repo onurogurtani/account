@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Common.BusinessAspects; 
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute; 
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute; 
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
@@ -15,7 +15,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     /// Get Names that using in Packages
     /// </summary>
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetPackageNamesQuery : IRequest<DataResult<List<string>>>
     {
         public class GetPackageNamesQueryHandler : IRequestHandler<GetPackageNamesQuery, DataResult<List<string>>>

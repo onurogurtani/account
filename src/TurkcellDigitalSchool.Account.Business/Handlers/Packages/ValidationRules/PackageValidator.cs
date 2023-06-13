@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using FluentValidation;
 using TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands;
-using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 

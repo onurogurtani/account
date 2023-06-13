@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
@@ -16,7 +16,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
     /// Get New Versiyon No
     /// </summary>
     [ExcludeFromCodeCoverage]
-    [SecuredOperation]
+    [SecuredOperationScope]
     [LogScope]
     public class GetNewVersionQuery : IRequest<DataResult<DocumentVersionDto>>
     {

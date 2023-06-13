@@ -4,14 +4,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Handlers.ServiceMessages.Queries;
-using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Services.CustomMessgeHelperService.Model;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Integration.IntegrationServices.EducationServices;
-using TurkcellDigitalSchool.Integration.IntegrationServices.EventServices;
-using TurkcellDigitalSchool.Integration.IntegrationServices.ExamServices;
-using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
-using TurkcellDigitalSchool.Integration.IntegrationServices.ReportingServices;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.EducationServices;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.EventServices;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.ExamServices;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.ReportingServices;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
 {

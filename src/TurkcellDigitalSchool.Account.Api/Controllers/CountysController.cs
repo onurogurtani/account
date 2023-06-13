@@ -3,7 +3,7 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Countrys.Queries;
 using TurkcellDigitalSchool.Account.Business.Handlers.Countys.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Countys.Queries;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Common.Controllers;
+using TurkcellDigitalSchool.Core.Common.Controllers;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
 {

@@ -32,8 +32,6 @@
     <PackageReference Include="System.ServiceModel.Http" />
     <PackageReference Include="System.ServiceModel.NetTcp" />
     <PackageReference Include="System.ServiceModel.Security" />
-    <PackageReference Include="TurkcellDigitalSchool.Common" />
-    <PackageReference Include="TurkcellDigitalSchool.Integration" />
   </ItemGroup>
   
   <ItemGroup>

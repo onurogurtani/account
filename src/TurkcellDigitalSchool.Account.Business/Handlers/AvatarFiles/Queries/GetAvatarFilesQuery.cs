@@ -7,7 +7,7 @@ using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.File;
@@ -17,7 +17,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Queries
 {
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetAvatarFilesQuery : IRequest<DataResult<PagedList<AvatarFilesDto>>>
     {
         public PaginationQuery PaginationQuery { get; set; }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Threading;
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
-using TurkcellDigitalSchool.Common.Controllers;
+using TurkcellDigitalSchool.Core.Common.Controllers;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication.Model;
 using TurkcellDigitalSchool.Account.Business.Handlers.Otp.Commands;
 using TurkcellDigitalSchool.Core.Utilities.Results;

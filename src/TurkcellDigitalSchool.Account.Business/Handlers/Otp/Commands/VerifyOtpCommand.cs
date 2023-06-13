@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
 using TurkcellDigitalSchool.Account.Business.Services.Otp;
 using TurkcellDigitalSchool.Account.Domain.Enums.OTP;
-using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
@@ -17,7 +17,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Otp.Commands
 {
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class VerifyOtpCommand : IRequest<IResult>
     {
         public ChannelType ChanellTypeId { get; set; }

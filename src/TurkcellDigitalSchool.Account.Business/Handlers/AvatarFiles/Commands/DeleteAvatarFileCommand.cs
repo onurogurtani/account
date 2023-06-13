@@ -5,19 +5,19 @@ using System.Threading.Tasks;
 using MediatR;
 using Refit;
 using TurkcellDigitalSchool.Account.Business.Constants;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
-using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.Request;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices.Model.Request;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
 {
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class DeleteAvatarFileCommand : IRequest<IResult>
     {
         public long Id { get; set; }
