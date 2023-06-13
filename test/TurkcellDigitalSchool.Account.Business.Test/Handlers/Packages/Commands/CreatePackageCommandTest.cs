@@ -27,7 +27,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
         private CreatePackageCommandHandler _createPackageCommandHandler;
 
         Mock<IPackageRepository> _packageRepository;
-
+         
         Mock<IHeaderDictionary> _headerDictionary;
         Mock<HttpRequest> _httpRequest;
         Mock<IHttpContextAccessor> _httpContextAccessor;
@@ -58,7 +58,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
             _packageRepository = new Mock<IPackageRepository>();
 
             _createPackageCommand = new CreatePackageCommand();
-            _createPackageCommandHandler = new(_packageRepository.Object);
+            _createPackageCommandHandler = new(_packageRepository.Object, _mediator.Object);
         }
 
         [Test]
