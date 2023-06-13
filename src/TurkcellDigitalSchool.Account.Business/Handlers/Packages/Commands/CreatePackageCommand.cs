@@ -45,7 +45,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 if (isExist)
                     return new ErrorResult(RecordAlreadyExists.PrepareRedisMessage());
 
-                await _mediator.Send(new ValidatePackageCommand() { Package = request.Package });
+                var resultValid = await _mediator.Send(new ValidatePackageCommand() { Package = request.Package });
+                if (!resultValid.Success)
+                    return new ErrorResult(resultValid.Message);
 
                 var record = _packageRepository.Add(request.Package);
                 await _packageRepository.SaveChangesAsync();

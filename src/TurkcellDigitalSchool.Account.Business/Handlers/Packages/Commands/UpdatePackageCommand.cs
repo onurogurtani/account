@@ -87,7 +87,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 if (entity == null)
                     return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
 
-                await _mediator.Send(new ValidatePackageCommand() { Package = request.Package });
+                var resultValid = await _mediator.Send(new ValidatePackageCommand() { Package = request.Package });
+                if (!resultValid.Success)
+                    return new ErrorResult(resultValid.Message);
+
 
                 var imageOfPackages = await _imageOfPackageRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _imageOfPackageRepository.DeleteRange(imageOfPackages);

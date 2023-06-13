@@ -65,7 +65,6 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string PackageExamKindError = "Paketin Sınav türü ile seçilen Deneme Sınavının türü aynı olmalı!";
         public static string CoachServicePackageError = "Koçluk Hizmeti Paketleri seçimlerinin türü hatalı!";
         public static string MotivationPackageError = "Motivasyon Paketleri seçimlerinin türü hatalı!";
-        public static string ExamKindPackageError = "Motivasyon Paketleri seçimlerinin türü hatalı!";
         public static string TargetRangeIsAlreadyExist = "Bu paketin, net hedef aralığı daha önce eklenmiştir.";
         public static string CheckDates = "Lütfen girilen tarihleri kontrol ediniz.";
         public static string MinImageOfPackage = "En az {0} Paket Görseli eklenmeli.";

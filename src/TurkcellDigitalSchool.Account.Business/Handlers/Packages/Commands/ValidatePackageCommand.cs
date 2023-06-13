@@ -60,7 +60,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                     var package = _packageRepository.Query().AsNoTracking().FirstOrDefault(x => x.Id == examPackage.PackageId);
                     if (package != null)
                     {
-                        if (package.ExamKind != request.Package.ExamKind)
+                        if (package.PackageTypeEnum != PackageTypeEnum.TestExam)
                             return new ErrorResult(PackageTestExamExamKindError.PrepareRedisMessage());
                     }
                     else
