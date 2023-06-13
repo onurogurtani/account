@@ -168,6 +168,14 @@ namespace TurkcellDigitalSchool.Account.Business
             ConfigureDEVServices(services);
         }
 
+        /// <summary>
+        /// This method gets called by the TURKCELL Environment
+        /// </summary>
+        /// <param name="services"></param>
+        public void ConfigureALPHATURKCELLServices(IServiceCollection services)
+        {
+            ConfigureDEVServices(services);
+        }
 
         public void ConfigureSTAGINGServices(IServiceCollection services)
         {
