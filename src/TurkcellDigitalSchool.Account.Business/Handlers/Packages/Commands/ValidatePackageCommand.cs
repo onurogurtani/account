@@ -6,13 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
 {
@@ -22,7 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
 
     [TransactionScope]
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class ValidatePackageCommand : IRequest<IResult>
     {
         public Package Package { get; set; }
@@ -41,9 +40,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
             }
 
             [MessageConstAttr(MessageCodeType.Error)]
-            private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
+            private static string RecordDoesNotExist = Core.Common.Constants.Messages.RecordDoesNotExist;
             [MessageConstAttr(MessageCodeType.Information)]
-            private static string SuccessfulOperation = Messages.SuccessfulOperation;
+            private static string SuccessfulOperation = Core.Common.Constants.Messages.SuccessfulOperation;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string PackageExamKindError = Constants.Messages.PackageExamKindError;
             [MessageConstAttr(MessageCodeType.Information)]

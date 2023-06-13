@@ -93,7 +93,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
             _updatePackageCommand = new UpdatePackageCommand();
             _updatePackageCommandHandler = new(_packageCoachServicePackageRepository.Object, _packageEventRepository.Object, _packageMotivationActivityPackageRepository.Object,
                 _packageTestExamPackageRepository.Object, _packagePackageTypeEnumRepository.Object, _packageFieldTypeRepository.Object, _packageRepository.Object, _imageOfPackageRepository.Object,
-                _packageLessonRepository.Object, _packagePublisherRepository.Object, _packageDocumentRepository.Object, _packageContractTypeRepository.Object, _packageTestExamRepository.Object, _capPublisher.Object, _packageRoleRepository.Object);
+                _packageLessonRepository.Object, _packagePublisherRepository.Object, _packageDocumentRepository.Object, _packageContractTypeRepository.Object, _packageTestExamRepository.Object, _capPublisher.Object, _packageRoleRepository.Object, _mediator.Object);
         }
 
         [Test]
