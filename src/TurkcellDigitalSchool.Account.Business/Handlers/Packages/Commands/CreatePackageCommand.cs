@@ -27,10 +27,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
         public class CreatePackageCommandHandler : IRequestHandler<CreatePackageCommand, IResult>
         {
             private readonly IPackageRepository _packageRepository;
+            private readonly IMediator _mediator;
 
-            public CreatePackageCommandHandler(IPackageRepository packageRepository)
+            public CreatePackageCommandHandler(IPackageRepository packageRepository, IMediator mediator)
             {
                 _packageRepository = packageRepository;
+                _mediator = mediator;
             }
 
             [MessageConstAttr(MessageCodeType.Error)]
@@ -42,6 +44,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 var isExist = _packageRepository.Query().Any(x => x.Name.Trim().ToLower() == request.Package.Name.Trim().ToLower() && x.IsActive);
                 if (isExist)
                     return new ErrorResult(RecordAlreadyExists.PrepareRedisMessage());
+
+                await _mediator.Send(new ValidatePackageCommand() { Package = request.Package });
 
                 var record = _packageRepository.Add(request.Package);
                 await _packageRepository.SaveChangesAsync();
