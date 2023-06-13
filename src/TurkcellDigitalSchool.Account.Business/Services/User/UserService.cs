@@ -285,11 +285,10 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 resultPackageList.Add(new PackageInfoDto
                 {
                     Id = package.Id,
-                    File = package.Package.ImageOfPackages.First().File,//TODO file dosya ve base64 işlemleri daha sonra test edilecek.
+                    File = package.Package.ImageOfPackages.First().File,
                     PackageName = package.Package.Name,
                     PurchaseDate = package.PurchaseDate,
                     PackageContent = package.Package.Content,
-                    FileBase64 = _fileService.GetFile(package.Package.ImageOfPackages.First().File.FilePath).GetAwaiter().GetResult().Data
                 });
             }
 
@@ -314,11 +313,10 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 resultPackageList.Add(new PackageInfoDto
                 {
                     Id = package.Id,
-                    File = package.Package.ImageOfPackages.First().File,//TODO file dosya ve base64 işlemleri daha sonra test edilecek.
+                    File = package.Package.ImageOfPackages.First().File,
                     PackageName = package.Package.Name,
                     PurchaseDate = package.PurchaseDate,
                     PackageContent = package.Package.Content,
-                    FileBase64 = _fileService.GetFile(package.Package.ImageOfPackages.First().File.FilePath).GetAwaiter().GetResult().Data
                 });
             }
 
