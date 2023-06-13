@@ -74,3 +74,7 @@ parameters:
     displayName: OpenShift Container Registry
     description: 'URL of the container in Registry (baseUrl/container-name:version)'
     required: true
+  - name: DOCKERFILE_PATH
+    displayName: Dockerfile absolute path
+    description: Dockerfile absolute path
+    required: true

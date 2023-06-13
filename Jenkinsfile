@@ -59,18 +59,18 @@ pipeline {
 
 
     stages {
-        stage('Build') {
+        // stage('Build') {
 
-            steps{
-                script {
-                    printSectionBoundry ("Build stage starting...")
-                    sh "dotnet restore"
-                    sh "dotnet build"
+        //     steps{
+        //         script {
+        //             printSectionBoundry ("Build stage starting...")
+        //             sh "dotnet restore"
+        //             sh "dotnet build"
 
-                    printSectionBoundry("Build stage finished!")
-                }
-            }
-        }
+        //             printSectionBoundry("Build stage finished!")
+        //         }
+        //     }
+        // }
 		// stage('Sonar - Code Quality') {
         //     when {
         //         anyOf {
