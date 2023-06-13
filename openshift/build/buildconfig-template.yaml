@@ -26,6 +26,7 @@ objects:
         type: Git
       strategy:
         dockerStrategy:
+          dockerfilePath: ${DOCKERFILE_PATH}
           type: Docker
           pullSecret:
             name: '${PULL_SECRET}'
