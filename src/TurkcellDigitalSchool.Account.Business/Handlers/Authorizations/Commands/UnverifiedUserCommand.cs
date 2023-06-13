@@ -66,15 +66,18 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 var unverifiedExistEmail = await _unverifiedUserRepository.Query().AnyAsync(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
                 if (unverifiedExistEmail)
                 {
-                    var unverifiedUserEmail = _unverifiedUserRepository.Get(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
-                    _unverifiedUserRepository.Delete(new UnverifiedUser { Id = unverifiedUserEmail.Id });
+                    var entity= _unverifiedUserRepository.Get(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
+                    if (entity != null)
+                        _unverifiedUserRepository.Delete(entity);
+
                 }
 
                 var unverifiedExistMobilePhone = await _unverifiedUserRepository.Query().AnyAsync(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
                 if (unverifiedExistMobilePhone)
                 {
-                    var unverifiedUserMobilePhone = _unverifiedUserRepository.Get(x => x.MobilePhones.Trim() == request.Email.Trim());
-                    _unverifiedUserRepository.Delete(new UnverifiedUser { Id = unverifiedUserMobilePhone.Id });
+                    var entity = _unverifiedUserRepository.Get(x => x.MobilePhones.Trim() == request.Email.Trim());
+                    if (entity != null)
+                        _unverifiedUserRepository.Delete(entity);
                 }
 
                 var unverifiedUser = new UnverifiedUser
