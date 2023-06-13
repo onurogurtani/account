@@ -5,6 +5,7 @@ using DotNetCore.CAP;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
@@ -48,8 +49,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
             private readonly IPackageTestExamRepository _packageTestExamRepository;
             private readonly IPackageEventRepository _packageEventRepository;
             private readonly ICapPublisher _capPublisher;
+            private readonly IMediator _mediator;
             public UpdatePackageCommandHandler(
-                IPackageCoachServicePackageRepository packageCoachServicePackageRepository, IPackageEventRepository packageEventRepository, IPackageMotivationActivityPackageRepository packageMotivationActivityPackageRepository, IPackageTestExamPackageRepository packageTestExamPackageRepository, IPackagePackageTypeEnumRepository packagePackageTypeEnumRepository, IPackageFieldTypeRepository packageFieldTypeRepository, IPackageRepository packageRepository, IImageOfPackageRepository imageOfPackageRepository, IPackageLessonRepository packageLessonRepository, IPackagePublisherRepository packagePublisherRepository, IPackageDocumentRepository packageDocumentRepository, IPackageContractTypeRepository packageContractTypeRepository, IPackageTestExamRepository packageTestExamRepository, ICapPublisher capPublisher, IPackageRoleRepository packageRoleRepository)
+                IPackageCoachServicePackageRepository packageCoachServicePackageRepository, IPackageEventRepository packageEventRepository, IPackageMotivationActivityPackageRepository packageMotivationActivityPackageRepository, IPackageTestExamPackageRepository packageTestExamPackageRepository, IPackagePackageTypeEnumRepository packagePackageTypeEnumRepository, IPackageFieldTypeRepository packageFieldTypeRepository, IPackageRepository packageRepository, IImageOfPackageRepository imageOfPackageRepository, IPackageLessonRepository packageLessonRepository, IPackagePublisherRepository packagePublisherRepository, IPackageDocumentRepository packageDocumentRepository, IPackageContractTypeRepository packageContractTypeRepository, IPackageTestExamRepository packageTestExamRepository, ICapPublisher capPublisher, IPackageRoleRepository packageRoleRepository, IMediator mediator)
             {
                 _packageRepository = packageRepository;
                 _imageOfPackageRepository = imageOfPackageRepository;
@@ -66,6 +68,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 _packageTestExamRepository = packageTestExamRepository;
                 _capPublisher = capPublisher;
                 _packageRoleRepository = packageRoleRepository;
+                _mediator = mediator;
             }
 
             [MessageConstAttr(MessageCodeType.Error)]
@@ -83,6 +86,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 var entity = await _packageRepository.GetAsync(x => x.Id == request.Package.Id);
                 if (entity == null)
                     return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
+
+                var resultValid = await _mediator.Send(new ValidatePackageCommand() { Package = request.Package });
+                if (!resultValid.Success)
+                    return new ErrorResult(resultValid.Message);
+
 
                 var imageOfPackages = await _imageOfPackageRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _imageOfPackageRepository.DeleteRange(imageOfPackages);
@@ -134,7 +142,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 _packageTestExamRepository.DeleteRange(packageTestExams);
 
                 foreach (var item in packageTestExams)
-                { 
+                {
                     await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Deleted), item, cancellationToken: cancellationToken);
                 }
 

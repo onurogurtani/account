@@ -61,11 +61,16 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string MustBeOnlyLetter = "{0} sadece harflerden oluşmalıdır.";
         public static string CitizenIdMust11Digits = "TCKN 11 hane olmalıdır.";
         public static string PackageIsNotFound = "Paket bulunamadı !";
+        public static string PackageTestExamExamKindError = "Paketin Sınav türü ile seçilen Deneme Sınavı Paketinin türü aynı olmalı!";
+        public static string PackageExamKindError = "Paketin Sınav türü ile seçilen Deneme Sınavının türü aynı olmalı!";
+        public static string CoachServicePackageError = "Koçluk Hizmeti Paketleri seçimlerinin türü hatalı!";
+        public static string MotivationPackageError = "Motivasyon Paketleri seçimlerinin türü hatalı!";
         public static string TargetRangeIsAlreadyExist = "Bu paketin, net hedef aralığı daha önce eklenmiştir.";
         public static string CheckDates = "Lütfen girilen tarihleri kontrol ediniz.";
         public static string MinImageOfPackage = "En az {0} Paket Görseli eklenmeli.";
         public static string MaxImageOfPackage = "En fazla {0} Paket Görseli eklenebilir.";
         public static string MotivationIsNotExistCannotChoose = "Motivasyon Yoktur ise  motivasyon ile ilgili seçimler yapılamaz";
+        public static string ShouldChooseCoachServicePackage= "Koçluk Hizmeti Paketi seçim yapmanız gerekmektedir";
         public static string ShouldChooseMotivationEvent = "Motivasyon etkinliği seçim yapmanız gerekmektedir";
         public static string MotivationTabsOnlyOneChoose = "Motivasyon sekmelerden sadece seçtiğiniz bir tanesi üzerinde seçim yapabilirsiniz";
         public static string MotivationTabsHaveToChoose = " Motivasyon  sekmelerden  seçtiğiniz bir tanesi üzerinde seçim yapmanız gerekmektedir";
