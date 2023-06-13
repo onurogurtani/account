@@ -13,7 +13,7 @@ pipeline {
 
 		// App Variables
         mainBranch = "devops"
-        appServiceName = "DIJITAL_DERSHANE_APP"
+        appServiceName = "dijital_dershane_app"
         softwareModuleName = "account"
         subsoftwareModuleName = "accountapi"
         serviceId = "471949"
@@ -154,7 +154,7 @@ pipeline {
                                         "-p", "PULL_SECRET=${imagePullSecret}",
                                         "-p", "REGISTRY_URL=${newImageUrl}",
                                         "-p", "SOURCE_SECRET_NAME=${gitCredentialSecret}",
-                                        "-p", "DOCKERFILE_PATH=/src/TurkcellDigitalSchool.Account.Api/Dockerfile"
+                                        "-p", "DOCKERFILE_PATH=./src/TurkcellDigitalSchool.Account.Api/Dockerfile"
                                         )
                                         )
 							        	openshift.startBuild("${subsoftwareModuleName}", "--wait", "--follow")
