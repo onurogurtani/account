@@ -97,11 +97,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                     var testExam = _testExamRepository.Query().AsNoTracking().FirstOrDefault(x => x.Id == packageTest.TestExamId);
                     if (testExam != null)
                     {
-                        if ((int)testExam.ExamType != (int)request.Package.ExamKind)
+                        if ((int)testExam.ExamKind != (int)request.Package.ExamKind)
                         {
                             if (request.Package.ExamKind == ExamKind.YKS)
                             {
-                                if (testExam.ExamType != ExamType.TYT && testExam.ExamType != ExamType.AYT)
+                                if (testExam.ExamKind != ExamKind.TYT && testExam.ExamKind != ExamKind.AYT)
                                     return new ErrorResult(PackageExamKindError.PrepareRedisMessage());
                             }
                             else
