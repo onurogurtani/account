@@ -51,11 +51,9 @@ namespace TurkcellDigitalSchool.Account.Api
                         })
                         .ConfigureKestrel((context, options) =>
                         {
-                            var address = context.Configuration.GetValue<string>("Consul:AppUrl");
-
-                            var uri = new Uri(address); 
+                             
                             options.AddServerHeader = false;
-                            options.Listen(IPAddress.Any, uri.Port, listenOptions =>
+                            options.Listen(IPAddress.Any, 6021, listenOptions =>
                             {
                                 // Enables HTTP/3
                                 //listenOptions.Protocols = HttpProtocols.Http3;
