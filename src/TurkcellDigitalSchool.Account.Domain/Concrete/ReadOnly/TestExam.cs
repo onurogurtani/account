@@ -32,7 +32,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly
         public DateTime StartDate { get; set; }
         public DateTime FinishDate { get; set; }
         public TestExamStatus TestExamStatus { get; set; }
-        public ExamType ExamType { get; set; }
+        public ExamKind ExamKind { get; set; }
         public bool TransitionBetweenQuestions { get; set; }
         public bool TransitionBetweenSections { get; set; }
         public bool IsAllowDownloadPdf { get; set; }

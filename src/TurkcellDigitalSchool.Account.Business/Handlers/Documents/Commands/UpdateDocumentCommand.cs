@@ -5,8 +5,13 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using Microsoft.EntityFrameworkCore;
+using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Common.Helpers;
+using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
+using System.Linq;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
 {
@@ -24,18 +29,30 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
         {
             private readonly IDocumentRepository _documentRepository;
             private readonly IDocumentContractTypeRepository _documentContractTypeRepository;
+            private readonly AccountDbContext _dbContext;
 
-            public UpdateDocumentCommandHandler(IDocumentRepository documentRepository, IDocumentContractTypeRepository documentContractTypeRepository)
+            public UpdateDocumentCommandHandler(IDocumentRepository documentRepository, IDocumentContractTypeRepository documentContractTypeRepository, AccountDbContext dbContext)
             {
                 _documentRepository = documentRepository;
                 _documentContractTypeRepository = documentContractTypeRepository;
+                _dbContext = dbContext;
             }
-        
+
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string DocumentAlreadyExist = Business.Constants.Messages.DocumentAlreadyExist;
             public async Task<IResult> Handle(UpdateDocumentCommand request, CancellationToken cancellationToken)
             {
                 var entity = await _documentRepository.GetAsync(x => x.Id == request.Entity.Id);
                 if (entity == null)
                     return new ErrorResult(Messages.RecordDoesNotExist);
+
+                var documentAlreadyExist = (from d in _dbContext.Documents.Where(w => w.Id != request.Entity.Id && w.Version == request.Entity.Version && w.ContractKindId == request.Entity.ContractKindId)
+                                            join dc in _dbContext.DocumentContractTypes.Where(w => request.Entity.ContractTypes.Select(s => s.ContractTypeId).Contains(w.ContractTypeId))
+                                            on d.Id equals dc.DocumentId
+                                            select d.Id
+                                             ).Any();
+                if (documentAlreadyExist)
+                    return new ErrorDataResult<Document>(DocumentAlreadyExist.PrepareRedisMessage());
 
                 var contractTypes = await _documentContractTypeRepository.GetListAsync(x => x.DocumentId == request.Entity.Id);
                 _documentContractTypeRepository.DeleteRange(contractTypes);
