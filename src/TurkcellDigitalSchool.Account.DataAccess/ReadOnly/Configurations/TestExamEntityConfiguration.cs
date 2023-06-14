@@ -21,7 +21,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Configurations
             builder.Property(x => x.StartDate);
             builder.Property(x => x.FinishDate);
             builder.Property(x => x.TestExamStatus);
-            builder.Property(x => x.ExamType);
+            builder.Property(x => x.ExamKind);
             builder.Property(x => x.TransitionBetweenQuestions).HasDefaultValue(true).IsRequired();
             builder.Property(x => x.TransitionBetweenSections).HasDefaultValue(true).IsRequired();
             builder.Property(x => x.IsAllowDownloadPdf).HasDefaultValue(true).IsRequired();
