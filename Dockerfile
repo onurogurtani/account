@@ -4,11 +4,10 @@ EXPOSE 6021
 # Copy everything else and build
 COPY ./src/ ./ 
 
-#RUN dotnet nuget add source -n TurcellSource https://artifactory.turkcell.com.tr/artifactory/api/nuget/nuget 
-RUN dotnet restore --configfile nuget.config ./TurkcellDigitalSchool.Account.Api/TurkcellDigitalSchool.Account.Api.csproj -s https://artifactory.turkcell.com.tr/artifactory/api/nuget/nuget/
+COPY ["nuget.config", "."]  
+COPY ["Directory.Packages.props", "."]  
 
-
-#RUN dotnet restore ./TurkcellDigitalSchool.Account.Api/TurkcellDigitalSchool.Account.Api.csproj
+RUN dotnet restore ./TurkcellDigitalSchool.Account.Api/TurkcellDigitalSchool.Account.Api.csproj
 RUN dotnet publish ./TurkcellDigitalSchool.Account.Api/TurkcellDigitalSchool.Account.Api.csproj -c Release -o out
 
 # Build runtime image
