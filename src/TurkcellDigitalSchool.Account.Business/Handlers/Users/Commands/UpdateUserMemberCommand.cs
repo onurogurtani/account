@@ -59,11 +59,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                 if (record == null)
                     return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
 
-                if (_userRepository.GetCountAsync(w => w.Id != record.Id && w.Email.Trim().ToLower() == request.Email.Trim().ToLower()).Result > 0)
+                if (request.Email != null && _userRepository.GetCountAsync(w => w.Id != record.Id && w.Email.Trim().ToLower() == request.Email.Trim().ToLower()).Result > 0)
                 {
                     return new ErrorDataResult<SelectionItem>("Mail adresi daha önce kullanılmış.");
                 }
-                else if (_userRepository.GetCountAsync(w => w.Id != record.Id && w.MobilePhones.Trim().ToLower() == request.MobilePhones.Trim().ToLower()).Result > 0)
+                else if (request.MobilePhones != null && _userRepository.GetCountAsync(w => w.Id != record.Id && w.MobilePhones.Trim().ToLower() == request.MobilePhones.Trim().ToLower()).Result > 0)
                 {
                     return new ErrorDataResult<SelectionItem>("Telefon numarası daha önce kullanılmış.");
                 }
