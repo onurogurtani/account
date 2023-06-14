@@ -124,7 +124,7 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string OnlyOneCanBeSelected = "Sadece bir tane seçilebilir";
         public static string YouMustChoose = "Seçim yapmalısınız";
 
-
+        public static string DocumentAlreadyExist = "“Bu sözleşme daha önce tanımlanmış. Lütfen alanları kontrol ediniz ya da versiyon güncelleyiniz.";
 
 #pragma warning restore CA2211
 #pragma warning restore S2223
