@@ -1,7 +1,4 @@
-﻿using System.DirectoryServices.Protocols;
-using System.Net;
-using System.Security.Claims;
-using System.Text;
+﻿using System.Security.Claims;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Validation;
 using IdentityModel;
@@ -10,8 +7,6 @@ using TurkcellDigitalSchool.Account.Business.Helpers;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Redis;
@@ -22,7 +17,6 @@ using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 using TurkcellDigitalSchool.IdentityServerService.Constants;
 using TurkcellDigitalSchool.IdentityServerService.Services.Contract;
 using TurkcellDigitalSchool.IdentityServerService.Services.Model;
-using static TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands.LdapUserInfoCommand.LdapUserInfoCommandHandler;
 
 namespace TurkcellDigitalSchool.IdentityServerService.Services
 {
@@ -275,6 +269,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
             try
             {
+                sessionInfo.UserClaims = _userRepository.GetClaims(user.Id).Select(s => s.Name).ToList();
                 await _sessionRedisSvc.SetAsync(user.Id.ToString(), sessionInfo);
             }
             catch (Exception e)
