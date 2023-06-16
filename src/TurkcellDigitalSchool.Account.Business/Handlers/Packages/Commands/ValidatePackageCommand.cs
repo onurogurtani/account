@@ -56,7 +56,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
 
                 foreach (var examPackage in request.Package.TestExamPackages)
                 {
-                    var package = _packageRepository.Query().AsNoTracking().FirstOrDefault(x => x.Id == examPackage.PackageId);
+                    var package = _packageRepository.Query().AsNoTracking().FirstOrDefault(x => x.Id == examPackage.TestExamPackageId);
                     if (package != null)
                     {
                         if (package.PackageTypeEnum != PackageTypeEnum.TestExam)
@@ -68,7 +68,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
 
                 foreach (var packageMotivation in request.Package.MotivationActivityPackages)
                 {
-                    var package = _packageRepository.Query().AsNoTracking().FirstOrDefault(x => x.Id == packageMotivation.PackageId);
+                    var package = _packageRepository.Query().AsNoTracking().FirstOrDefault(x => x.Id == packageMotivation.MotivationActivityPackageId);
                     if (package != null)
                     {
                         if (package.PackageTypeEnum != PackageTypeEnum.MotivationEvent)
@@ -80,7 +80,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
 
                 foreach (var packageMotivation in request.Package.CoachServicePackages)
                 {
-                    var package = _packageRepository.Query().AsNoTracking().FirstOrDefault(x => x.Id == packageMotivation.PackageId);
+                    var package = _packageRepository.Query().AsNoTracking().FirstOrDefault(x => x.Id == packageMotivation.CoachServicePackageId);
                     if (package != null)
                     {
                         if (package.PackageTypeEnum != PackageTypeEnum.CoachService)
