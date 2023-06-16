@@ -18,6 +18,8 @@ using TurkcellDigitalSchool.Account.Business.Services.TransactionManager;
 using TurkcellDigitalSchool.Account.Business.Services.User;
 using TurkcellDigitalSchool.Account.Business.SubServices.RegisterServices;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
+using TurkcellDigitalSchool.Core.AuthorityManagement.Services;
+using TurkcellDigitalSchool.Core.AuthorityManagement.Services.Abstract;
 using TurkcellDigitalSchool.Core.Behaviors;
 using TurkcellDigitalSchool.Core.Common.DependencyResolvers;
 using TurkcellDigitalSchool.Core.Common.Helpers;
@@ -86,6 +88,7 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOtpService, OtpService>();
             services.AddScoped<ITransactionManager, AccountDbTransactionManagerSvc>();
+            services.AddScoped<IClaimDefinitionService, ClaimDefinitionService>();
             services.AddAutoMapper( Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
