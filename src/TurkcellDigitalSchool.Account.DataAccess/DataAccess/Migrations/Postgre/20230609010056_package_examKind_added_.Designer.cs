@@ -3759,7 +3759,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .IsUnique()
                         .HasDatabaseName("ix_users_relatedidentity");
 
-                    b.ToTable("users", (string)null);
+                    b.ToTable("user", (string)null);
                 });
 
             modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.UserBasketPackage", b =>

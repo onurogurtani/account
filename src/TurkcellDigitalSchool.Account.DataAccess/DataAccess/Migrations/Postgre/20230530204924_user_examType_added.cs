@@ -10,7 +10,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
         {
             migrationBuilder.AddColumn<int>(
                 name: "examtype",
-                table: "users",
+                table: "user",
                 type: "integer",
                 nullable: true);
         }
@@ -19,7 +19,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
         {
             migrationBuilder.DropColumn(
                 name: "examtype",
-                table: "users");
+                table: "user");
         }
     }
 }

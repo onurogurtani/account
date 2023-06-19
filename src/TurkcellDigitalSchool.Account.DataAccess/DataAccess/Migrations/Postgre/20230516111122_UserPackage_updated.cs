@@ -51,7 +51,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                 name: "fk_userpackage_users_userid",
                 table: "userpackage",
                 column: "userid",
-                principalTable: "users",
+                principalTable: "user",
                 principalColumn: "id",
                 onDelete: ReferentialAction.Cascade);
         }
@@ -101,7 +101,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                 name: "fk_userpackages_users_userid",
                 table: "userpackages",
                 column: "userid",
-                principalTable: "users",
+                principalTable: "user",
                 principalColumn: "id",
                 onDelete: ReferentialAction.Cascade);
         }

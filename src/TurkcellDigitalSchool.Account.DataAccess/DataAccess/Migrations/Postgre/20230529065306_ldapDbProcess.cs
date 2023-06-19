@@ -12,7 +12,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
         {
             migrationBuilder.AddColumn<bool>(
                 name: "isldapuser",
-                table: "users",
+                table: "user",
                 type: "boolean",
                 nullable: false,
                 defaultValue: false);
@@ -55,7 +55,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
 
             migrationBuilder.DropColumn(
                 name: "isldapuser",
-                table: "users");
+                table: "user");
         }
     }
 }

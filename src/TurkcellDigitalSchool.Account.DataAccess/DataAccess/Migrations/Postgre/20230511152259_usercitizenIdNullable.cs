@@ -10,7 +10,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
         {
             migrationBuilder.AlterColumn<long>(
                 name: "citizenid",
-                table: "users",
+                table: "user",
                 type: "bigint",
                 nullable: true,
                 oldClrType: typeof(long),
@@ -21,7 +21,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
         {
             migrationBuilder.AlterColumn<long>(
                 name: "citizenid",
-                table: "users",
+                table: "user",
                 type: "bigint",
                 nullable: false,
                 defaultValue: 0L,

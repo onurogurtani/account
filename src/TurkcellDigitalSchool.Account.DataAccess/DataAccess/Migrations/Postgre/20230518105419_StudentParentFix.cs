@@ -44,7 +44,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                 name: "fk_studentparentinformation_users_parentid",
                 table: "studentparentinformation",
                 column: "parentid",
-                principalTable: "users",
+                principalTable: "user",
                 principalColumn: "id",
                 onDelete: ReferentialAction.Cascade);
         }
