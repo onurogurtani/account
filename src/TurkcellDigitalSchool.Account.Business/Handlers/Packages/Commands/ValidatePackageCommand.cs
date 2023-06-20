@@ -53,66 +53,75 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
             private static string CoachServicePackageError = Constants.Messages.CoachServicePackageError;
             public async Task<IResult> Handle(ValidatePackageCommand request, CancellationToken cancellationToken)
             {
-
-                foreach (var examPackage in request.Package.TestExamPackages)
+                if (request.Package.TestExamPackages != null)
                 {
-                    var package = _packageRepository.Query().AsNoTracking().FirstOrDefault(x => x.Id == examPackage.TestExamPackageId);
-                    if (package != null)
+                    foreach (var examPackage in request.Package.TestExamPackages)
                     {
-                        if (package.PackageTypeEnum != PackageTypeEnum.TestExam)
-                            return new ErrorResult(PackageTestExamExamKindError.PrepareRedisMessage());
-                    }
-                    else
-                        return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
-                }
-
-                foreach (var packageMotivation in request.Package.MotivationActivityPackages)
-                {
-                    var package = _packageRepository.Query().AsNoTracking().FirstOrDefault(x => x.Id == packageMotivation.MotivationActivityPackageId);
-                    if (package != null)
-                    {
-                        if (package.PackageTypeEnum != PackageTypeEnum.MotivationEvent)
-                            return new ErrorResult(MotivationPackageError.PrepareRedisMessage());
-                    }
-                    else
-                        return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
-                }
-
-                foreach (var packageMotivation in request.Package.CoachServicePackages)
-                {
-                    var package = _packageRepository.Query().AsNoTracking().FirstOrDefault(x => x.Id == packageMotivation.CoachServicePackageId);
-                    if (package != null)
-                    {
-                        if (package.PackageTypeEnum != PackageTypeEnum.CoachService)
-                            return new ErrorResult(CoachServicePackageError.PrepareRedisMessage());
-                    }
-                    else
-                        return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
-                }
-
-
-
-                foreach (var packageTest in request.Package.PackageTestExams)
-                {
-                    var testExam = _testExamRepository.Query().AsNoTracking().FirstOrDefault(x => x.Id == packageTest.TestExamId);
-                    if (testExam != null)
-                    {
-                        if ((int)testExam.ExamKind != (int)request.Package.ExamKind)
+                        var package = _packageRepository.Query().AsNoTracking().FirstOrDefault(x => x.Id == examPackage.TestExamPackageId);
+                        if (package != null)
                         {
-                            if (request.Package.ExamKind == ExamKind.YKS)
+                            if (package.PackageTypeEnum != PackageTypeEnum.TestExam)
+                                return new ErrorResult(PackageTestExamExamKindError.PrepareRedisMessage());
+                        }
+                        else
+                            return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
+                    }
+                }
+                if (request.Package.MotivationActivityPackages != null)
+                {
+                    foreach (var packageMotivation in request.Package.MotivationActivityPackages)
+                    {
+                        var package = _packageRepository.Query().AsNoTracking().FirstOrDefault(x => x.Id == packageMotivation.MotivationActivityPackageId);
+                        if (package != null)
+                        {
+                            if (package.PackageTypeEnum != PackageTypeEnum.MotivationEvent)
+                                return new ErrorResult(MotivationPackageError.PrepareRedisMessage());
+                        }
+                        else
+                            return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
+                    }
+                }
+
+                if (request.Package.CoachServicePackages != null)
+                {
+                    foreach (var packageMotivation in request.Package.CoachServicePackages)
+                    {
+                        var package = _packageRepository.Query().AsNoTracking().FirstOrDefault(x => x.Id == packageMotivation.CoachServicePackageId);
+                        if (package != null)
+                        {
+                            if (package.PackageTypeEnum != PackageTypeEnum.CoachService)
+                                return new ErrorResult(CoachServicePackageError.PrepareRedisMessage());
+                        }
+                        else
+                            return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
+                    }
+                }
+
+                if (request.Package.PackageTestExams != null)
+                {
+
+                    foreach (var packageTest in request.Package.PackageTestExams)
+                    {
+                        var testExam = _testExamRepository.Query().AsNoTracking().FirstOrDefault(x => x.Id == packageTest.TestExamId);
+                        if (testExam != null)
+                        {
+                            if ((int)testExam.ExamKind != (int)request.Package.ExamKind)
                             {
-                                if (testExam.ExamKind != ExamKind.TYT && testExam.ExamKind != ExamKind.AYT)
+                                if (request.Package.ExamKind == ExamKind.YKS)
+                                {
+                                    if (testExam.ExamKind != ExamKind.TYT && testExam.ExamKind != ExamKind.AYT)
+                                        return new ErrorResult(PackageExamKindError.PrepareRedisMessage());
+                                }
+                                else
+                                {
                                     return new ErrorResult(PackageExamKindError.PrepareRedisMessage());
-                            }
-                            else
-                            {
-                                return new ErrorResult(PackageExamKindError.PrepareRedisMessage());
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
+                        else
+                        {
+                            return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
+                        }
                     }
                 }
 
