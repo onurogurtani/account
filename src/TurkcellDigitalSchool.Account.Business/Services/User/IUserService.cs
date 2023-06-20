@@ -7,7 +7,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
     public interface IUserService
     {
         PersonalInfoDto GetByStudentPersonalInformation(long userId);
-        EducationInfoDto GetByStudentEducationInformation(long userId);
         List<ParentInfoDto> GetByStudentParentInfoInformation(long userId);
         List<PackageInfoDto> GetByStudentPackageInformation(long userId);
         List<PackageInfoDto> GetByParentPackageInformation(long userId);
@@ -15,7 +14,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         bool IsExistEmail(long userId, string email);
         bool IsExistUserName(long userId, string userName);
         Domain.Concrete.User GetUserById(long userId);
-        string StudentEducationValidationRules(StudentEducationRequestDto studentEducationRequestDto);
         string StudentCommunicationPreferencesValidationRules(StudentCommunicationPreferencesDto studentCommunicationPreferencesDto);
         bool IsExistCity(long cityId);
         bool IsExistCounty(long cityId, long countyId);

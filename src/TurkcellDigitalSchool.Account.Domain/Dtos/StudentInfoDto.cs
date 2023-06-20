@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
-using TurkcellDigitalSchool.Core.Enums;
 
 namespace TurkcellDigitalSchool.Account.Domain.Dtos
 {
     public class StudentInfoDto
     {
         public PersonalInfoDto Personal { get; set; }
-        public EducationInfoDto Education { get; set; }
         public List<ParentInfoDto> Parents { get; set; }
         public List<PackageInfoDto> Packages { get; set; }
         public SettingsInfoDto Settings { get; set; }
@@ -34,25 +31,6 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public UserInformationDefinationDto County { get; set; }
         public string MobilePhone { get; set; }
         public bool? MobilePhoneVerify { get; set; }
-    }
-    public class EducationInfoDto
-    {
-        public long Id { get; set; }
-        public ExamType ExamType { get; set; }
-        public UserInformationDefinationDto City { get; set; }
-        public UserInformationDefinationDto County { get; set; }
-        public UserInformationDefinationDto Institution { get; set; }
-        public UserInformationDefinationDto School { get; set; }
-        public UserInformationDefinationDto Classroom { get; set; }
-        public int? GraduationYear { get; set; }
-        public double? DiplomaGrade { get; set; }
-        public YKSStatementEnum? YKSExperienceInformation { get; set; }
-        public FieldType? FieldType { get; set; }
-        public FieldType? PointType { get; set; }
-        public bool? ReligionLessonStatus { get; set; }
-        public bool? IsGraduate { get; set; }
-
-
     }
     public class UserInformationDefinationDto
     {

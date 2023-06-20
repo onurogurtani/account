@@ -52,7 +52,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "fk_studentparentinformation_users_parentid",
+                name: "fk_studentparentinformation_user_parentid",
                 table: "studentparentinformation");
 
             migrationBuilder.DropIndex(

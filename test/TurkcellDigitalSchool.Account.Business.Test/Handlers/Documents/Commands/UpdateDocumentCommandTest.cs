@@ -13,6 +13,7 @@ using Moq;
 using NUnit.Framework;
 using TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
@@ -25,6 +26,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Documents.Command
     {
         private UpdateDocumentCommand _updateDocumentCommand;
         private UpdateDocumentCommand.UpdateDocumentCommandHandler _updateDocumentCommandHandler;
+        Mock<AccountDbContext> _accountDbContext;
 
         Mock<IDocumentRepository> _documentRepository;
         Mock<IDocumentContractTypeRepository> _documentContractTypeRepository;
@@ -59,8 +61,10 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Documents.Command
             _documentRepository = new Mock<IDocumentRepository>();
             _documentContractTypeRepository = new Mock<IDocumentContractTypeRepository>();
 
+            _accountDbContext = new Mock<AccountDbContext>();
+
             _updateDocumentCommand = new UpdateDocumentCommand();
-            _updateDocumentCommandHandler = new(_documentRepository.Object, _documentContractTypeRepository.Object);
+            _updateDocumentCommandHandler = new(_documentRepository.Object, _documentContractTypeRepository.Object, _accountDbContext.Object);
         }
 
         [Test]

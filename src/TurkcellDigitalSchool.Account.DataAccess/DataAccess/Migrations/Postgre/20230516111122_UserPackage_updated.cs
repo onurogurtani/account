@@ -13,7 +13,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                 table: "userpackages");
 
             migrationBuilder.DropForeignKey(
-                name: "fk_userpackages_users_userid",
+                name: "fk_userpackages_user_userid",
                 table: "userpackages");
 
             migrationBuilder.DropPrimaryKey(
@@ -63,7 +63,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                 table: "userpackage");
 
             migrationBuilder.DropForeignKey(
-                name: "fk_userpackage_users_userid",
+                name: "fk_userpackage_user_userid",
                 table: "userpackage");
 
             migrationBuilder.DropPrimaryKey(
