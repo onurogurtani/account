@@ -75,8 +75,6 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         public DbSet<RoleClaim> RoleClaims { get; set; }
         public DbSet<School> Schools { get; set; }
         public DbSet<StudentAnswerTargetRange> StudentAnswerTargetRanges { get; set; }
-
-        public DbSet<StudentEducationInformation> StudentEducationInformations { get; set; }
         public DbSet<StudentParentInformation> StudentParentInformations { get; set; }
 
         public DbSet<TargetScreen> TargetScreens { get; set; }

@@ -1,14 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Account.Domain.Enums.Institution;
 using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
@@ -20,31 +17,23 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IStudentEducationInformationRepository _studentEducationInformationRepository;
         private readonly IStudentParentInformationRepository _studentParentInformationRepository;
         private readonly IUserPackageRepository _userPackageRepository;
         private readonly ICityRepository _cityRepository;
         private readonly ICountyRepository _countyRepository;
-        private readonly ISchoolRepository _schoolRepository;
         private readonly IUserContratRepository _userContratRepository;
         private readonly IUserCommunicationPreferencesRepository _userCommunicationPreferencesRepository;
         private readonly IUserSupportTeamViewMyDataRepository _userSupportTeamViewMyDataRepository;
-        private readonly IFileService _fileService;
-        private readonly IClassroomRepository _classroomRepository;
-        public UserService(IUserRepository userRepository, IStudentEducationInformationRepository studentEducationInformationRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository, IUserContratRepository userContratRepository, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository, IFileService fileService, IClassroomRepository classroomRepository)
+        public UserService(IUserRepository userRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository, IUserContratRepository userContratRepository, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository, IFileService fileService, IClassroomRepository classroomRepository, IInstitutionRepository institutionRepository)
         {
             _userRepository = userRepository;
-            _studentEducationInformationRepository = studentEducationInformationRepository;
             _studentParentInformationRepository = studentParentInformationRepository;
             _cityRepository = cityRepository;
             _countyRepository = countyRepository;
-            _schoolRepository = schoolRepository;
             _userPackageRepository = userPackageRepository;
             _userContratRepository = userContratRepository;
             _userCommunicationPreferencesRepository = userCommunicationPreferencesRepository;
             _userSupportTeamViewMyDataRepository = userSupportTeamViewMyDataRepository;
-            _fileService = fileService;
-            _classroomRepository = classroomRepository;
         }
         public PersonalInfoDto GetByStudentPersonalInformation(long userId)
         {
@@ -81,39 +70,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 } : null,
                 MobilePhone = getUser.MobilePhones,
                 MobilePhoneVerify = getUser.MobilePhonesVerify,
-            };
-        }
-        public EducationInfoDto GetByStudentEducationInformation(long userId)
-        {
-            var getEducation = _studentEducationInformationRepository.Query()
-                .Include(w => w.City)
-                .Include(w => w.County)
-                .Include(w => w.Classroom)
-                .Include(w => w.School)
-                .Include(w => w.User)
-                .Include(w => w.Institution)
-                .Where(w => w.UserId == userId)
-                .FirstOrDefault();
-            if (getEducation == null)
-            {
-                return new EducationInfoDto { };
-            }
-            return new EducationInfoDto
-            {
-                Id = getEducation.Id,
-                ExamType = getEducation.ExamType,
-                City = getEducation.City != null ? new UserInformationDefinationDto { Id = getEducation.CityId, Name = getEducation.City?.Name } : null,
-                County = getEducation.County != null ? new UserInformationDefinationDto { Id = getEducation.County.Id, Name = getEducation.County.Name } : null,
-                Institution = new UserInformationDefinationDto { Id = getEducation.Institution.Id, Name = getEducation.Institution.Name },
-                School = new UserInformationDefinationDto { Id = getEducation.School.Id, Name = getEducation.School.Name },
-                Classroom = getEducation.Classroom != null ? new UserInformationDefinationDto { Id = getEducation.Classroom.Id, Name = getEducation.Classroom?.Name } : null,
-                GraduationYear = getEducation.ExamType == ExamType.LGS ? null : getEducation.GraduationYear,
-                DiplomaGrade = getEducation.ExamType == ExamType.LGS ? null : getEducation.DiplomaGrade,
-                YKSExperienceInformation = getEducation.ExamType == ExamType.LGS ? null : getEducation.YKSStatement,
-                FieldType = getEducation.ExamType == ExamType.LGS ? null : getEducation.FieldType,
-                PointType = getEducation.ExamType == ExamType.LGS ? null : getEducation.PointType,
-                ReligionLessonStatus = getEducation.ExamType == ExamType.LGS ? null : getEducation.ReligionLessonStatus,
-                IsGraduate = getEducation.ExamType == ExamType.LGS ? null : getEducation.IsGraduate
             };
         }
         public List<ParentInfoDto> GetByStudentParentInfoInformation(long userId)
@@ -158,107 +114,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         [MessageConstAttr(MessageCodeType.Error)]
         private static string CommunicationChannelVerifyPhone = Constants.Messages.CommunicationChannelVerifyPhone;
 
-        public string StudentEducationValidationRules(StudentEducationRequestDto studentEducationRequestDto)
-        {
-            if (studentEducationRequestDto.InstitutionId != (int)InstitutionEnum.AcikOgretimKurumlari)
-            {
-                var existCity = IsExistCity(studentEducationRequestDto.CityId);
-                if (!existCity)
-                {
-                    return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "İl");
-                }
-
-                var existCounty = IsExistCounty(studentEducationRequestDto.CityId, studentEducationRequestDto.CountyId);
-                if (!existCounty)
-                {
-                    return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "İlçe");
-                }
-            }
-            var existSchool = _schoolRepository.Query().Where(w => w.InstitutionId == studentEducationRequestDto.InstitutionId && w.Id == studentEducationRequestDto.SchoolId).AsQueryable();
-
-            if (studentEducationRequestDto.InstitutionId == (int)InstitutionEnum.AcikOgretimKurumlari)
-            {
-                if (!existSchool.Any())
-                {
-                    return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Okul Kurum Türü ile eşleşmiyor");
-                }
-            }
-            else
-            {
-                if (!existSchool.Where(w => w.CityId == studentEducationRequestDto.CityId && w.CountyId == studentEducationRequestDto.CountyId).Any())
-                {
-                    return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Okul İl/İlçe/Kurum Türü ile eşleşmiyor");
-                }
-            }
-
-            Classroom classroom = null;
-
-            if (studentEducationRequestDto.ClassroomId != null && studentEducationRequestDto.ClassroomId != 0)
-            {
-                classroom = _classroomRepository.Query().FirstOrDefault(w => w.Id == studentEducationRequestDto.ClassroomId);
-                if (classroom == null)
-                {
-                    return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Sınıf Bulunamadı");
-                }
-            }
-
-
-            if (studentEducationRequestDto.ExamType == ExamType.LGS)
-            {
-                if (studentEducationRequestDto.ClassroomId == null || studentEducationRequestDto.ClassroomId == 0)
-                {
-                    return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Sınıf");
-                }
-            }
-            else
-            {
-
-                if (studentEducationRequestDto.IsGraduate == null)
-                {
-                    return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Öğrenim Durumu");
-                }
-
-                if (studentEducationRequestDto.IsGraduate == false && (studentEducationRequestDto.ClassroomId == 0))
-                {
-                    return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Sınıf");
-                }
-
-                if (studentEducationRequestDto.YKSExperienceInformation == null || !Enum.IsDefined(typeof(YKSStatementEnum), studentEducationRequestDto.YKSExperienceInformation))
-                {
-                    return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "YKS Deneyimi");
-                }
-
-                if (studentEducationRequestDto.IsGraduate == true)
-                {
-                    if (studentEducationRequestDto.GraduationYear == null || studentEducationRequestDto.GraduationYear == 0)
-                    {
-                        return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Mezuniyet Yılı");
-                    }
-
-                    if (studentEducationRequestDto.DiplomaGrade == null || studentEducationRequestDto.DiplomaGrade == 0)
-                    {
-                        return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Diploma Notu");
-                    }
-                }
-
-                //sınıf 9 ise=> alan ve puan türü zorunlu değil.
-                if (classroom == null || !classroom.Name.Contains("9"))
-                {
-                    if (studentEducationRequestDto.FieldType == null || !Enum.IsDefined(typeof(FieldType), studentEducationRequestDto.FieldType))
-                    {
-                        return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Alan");
-                    }
-
-                    if (studentEducationRequestDto.PointType == null || !Enum.IsDefined(typeof(FieldType), studentEducationRequestDto.PointType))
-                    {
-                        return string.Format(FieldIsNotNullOrEmpty.PrepareRedisMessage(), "Puan Türü");
-                    }
-                }
-
-            }
-
-            return string.Empty;
-        }
         public bool IsExistCity(long cityId)
         {
             return _cityRepository.Query().Any(w => w.Id == cityId);
@@ -323,7 +178,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             return resultPackageList;
 
         }
-
         public SettingsInfoDto GetByStudentSettingsInfoInformation(long userId)
         {
             var getUserContractList = _userContratRepository.Query()
@@ -450,7 +304,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 .ToList();
             return getParents;
         }
-
         public List<ParentInfoDto> GetStudentsByParentId(long? parentId)
         {
             var getParents = _studentParentInformationRepository.Query()
@@ -470,6 +323,4 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         }
 
     }
-
-
 }

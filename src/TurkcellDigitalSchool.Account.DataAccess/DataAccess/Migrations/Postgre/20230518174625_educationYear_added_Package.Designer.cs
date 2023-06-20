@@ -3676,22 +3676,22 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasColumnName("viewmydata");
 
                     b.HasKey("Id")
-                        .HasName("pk_users");
+                        .HasName("pk_user");
 
                     b.HasIndex("CitizenId")
                         .IsUnique()
-                        .HasDatabaseName("ix_users_citizenid");
+                        .HasDatabaseName("ix_user_citizenid");
 
                     b.HasIndex("Email")
                         .IsUnique()
-                        .HasDatabaseName("ix_users_email");
+                        .HasDatabaseName("ix_user_email");
 
                     b.HasIndex("MobilePhones")
-                        .HasDatabaseName("ix_users_mobilephones");
+                        .HasDatabaseName("ix_user_mobilephones");
 
                     b.HasIndex("RelatedIdentity")
                         .IsUnique()
-                        .HasDatabaseName("ix_users_relatedidentity");
+                        .HasDatabaseName("ix_user_relatedidentity");
 
                     b.ToTable("user", (string)null);
                 });
@@ -4256,7 +4256,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_organisationuser_users_userid");
+                        .HasConstraintName("fk_organisationuser_user_userid");
 
                     b.Navigation("Organisation");
 
@@ -4642,7 +4642,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_studenteducationinformation_users_userid");
+                        .HasConstraintName("fk_studenteducationinformation_user_userid");
 
                     b.Navigation("City");
 
@@ -4666,14 +4666,14 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_studentparentinformation_users_parentid");
+                        .HasConstraintName("fk_studentparentinformation_user_parentid");
 
                     b.HasOne("TurkcellDigitalSchool.Account.Domain.Concrete.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_studentparentinformation_users_userid");
+                        .HasConstraintName("fk_studentparentinformation_user_userid");
 
                     b.Navigation("Parent");
 
@@ -4694,7 +4694,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_userbasketpackages_users_userid");
+                        .HasConstraintName("fk_userbasketpackages_user_userid");
 
                     b.Navigation("Package");
 
@@ -4708,7 +4708,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_usercommunicationpreferences_users_userid");
+                        .HasConstraintName("fk_usercommunicationpreferences_user_userid");
 
                     b.Navigation("User");
                 });
@@ -4727,7 +4727,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_usercontrat_users_userid");
+                        .HasConstraintName("fk_usercontrat_user_userid");
 
                     b.Navigation("Document");
 
@@ -4748,7 +4748,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_userpackage_users_userid");
+                        .HasConstraintName("fk_userpackage_user_userid");
 
                     b.Navigation("Package");
 
@@ -4774,7 +4774,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_userrole_users_userid");
+                        .HasConstraintName("fk_userrole_user_userid");
 
                     b.Navigation("Package");
 
@@ -4790,7 +4790,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_usersessions_users_userid");
+                        .HasConstraintName("fk_usersessions_user_userid");
 
                     b.Navigation("User");
                 });
@@ -4802,7 +4802,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_usersupportteamviewmydata_users_userid");
+                        .HasConstraintName("fk_usersupportteamviewmydata_user_userid");
 
                     b.Navigation("User");
                 });

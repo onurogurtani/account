@@ -650,7 +650,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_users", x => x.id);
+                    table.PrimaryKey("pk_user", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -2207,24 +2207,24 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                 column: "userid");
 
             migrationBuilder.CreateIndex(
-                name: "ix_users_citizenid",
+                name: "ix_user_citizenid",
                 table: "user",
                 column: "citizenid",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_users_email",
+                name: "ix_user_email",
                 table: "user",
                 column: "email",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_users_mobilephones",
+                name: "ix_user_mobilephones",
                 table: "user",
                 column: "mobilephones");
 
             migrationBuilder.CreateIndex(
-                name: "ix_users_relatedidentity",
+                name: "ix_user_relatedidentity",
                 table: "user",
                 column: "relatedidentity",
                 unique: true);
