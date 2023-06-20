@@ -25,4 +25,5 @@ COPY --from=publish /app/publish .
 EXPOSE 6021
 ENV ASPNETCORE_ENVIRONMENT="DEV"
 ENV ASPNETCORE_URLS="http://+:6021"
+ENV TZ=Europe/Istanbul
 ENTRYPOINT ["dotnet", "TurkcellDigitalSchool.Account.Api.dll"]
