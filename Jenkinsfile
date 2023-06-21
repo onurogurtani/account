@@ -189,8 +189,8 @@ pipeline {
 
 
                         openshiftClient {
-                            openshift.apply(openshift.process(readFile(file: deploymentConfigTemplate), "-p", "REGISTRY_URL=${newImageUrl}", "-p", "APP_NAME=${APP_NAME}","-p", "NAMESPACE=${openshiftProjectName}"))
-                            def dc = openshift.selector('dc', "${APP_NAME}")
+                            openshift.apply(openshift.process(readFile(file: deploymentConfigTemplate), "-p", "REGISTRY_URL=${newImageUrl}", "-p", "APP_NAME=${subsoftwareModuleName}","-p", "NAMESPACE=${openshiftProjectName}"))
+                            def dc = openshift.selector('dc', "${subsoftwareModuleName}")
                             dc.rollout().status()
                         }
 
