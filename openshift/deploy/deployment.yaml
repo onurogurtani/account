@@ -1,15 +1,15 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: application-service
+  name: '${APP_NAME}'
 objects:
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
-      name: application-service
-      namespace: testroyer
+      name: '${APP_NAME}'
+      namespace: ${NAMESPACE}
       labels:
-        app: application-service
+        app: '${APP_NAME}'
     spec:
       strategy:
         type: Rolling
@@ -24,69 +24,49 @@ objects:
       triggers:
         - type: ConfigChange
       replicas: 1
+      revisionHistoryLimit: 5
       test: false
       selector:
-        app: application-service
-        deploymentconfig: application-service
+        app: '${APP_NAME}'
+        deploymentconfig: '${APP_NAME}'
       template:
         metadata:
           creationTimestamp: null
           labels:
-            app: application-service
-            deploymentconfig: application-service
-          annotations:
-            openshift.io/generated-by: OpenShiftWebConsole
+            app: '${APP_NAME}'
+            deploymentconfig: '${APP_NAME}'
         spec:
           containers:
-            - env:
-                - name: PROFILE
-                  value: '${PROFILE}'
-                - name : TZ
-                  value : Europe/Istanbul
-                - name: OPENSHIFT_DB_JDBC_URL
-                  valueFrom:
-                    secretKeyRef:
-                      name: database-secrets
-                      key: jdbc_url
-                - name: OPENSHIFT_DB_USER_NAME
-                  valueFrom:
-                    secretKeyRef:
-                      name: database-secrets
-                      key: username
-                - name: OPENSHIFT_DB_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      name: database-secrets
-                      key: password
-                - name: OPENSHIFT_JWT_SECRET
-                  valueFrom:
-                    secretKeyRef:
-                      name: jwt-secret
-                      key: secret
-              name: application-service
-              ports:
-                - containerPort: 8015
-                  protocol: TCP
-              image: '${REGISTRY_URL}'
-              resources:
+            - resources:
                 limits:
-                  cpu: 500m
-                  memory: 1024Mi
+                  cpu: '1'
+                  memory: 2Gi
                 requests:
                   cpu: 50m
-                  memory: 256Mi
+                  memory: 512Mi
+              terminationMessagePath: /dev/termination-log
+              name: '${APP_NAME}'
+              ports:
+                - containerPort: 6021
+                  protocol: TCP
               imagePullPolicy: IfNotPresent
+              terminationMessagePolicy: File
+              image: '${REGISTRY_URL}'
           restartPolicy: Always
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
           securityContext: {}
+          schedulerName: default-scheduler
 parameters:
-- name: REGISTRY_URL
-  displayName: OpenShift Container Registry
-  description: URL of the container in Registry (baseUrl/container-name:version)
-  required: true
-
-- name: PROFILE
-  displayName: OpenShift Container Registry
-  description: Set all required variables via this parameters for container
-  required: true
+  - name: REGISTRY_URL
+    displayName: OpenShift Container Registry
+    description: URL of the container in Registry (baseUrl/container-name:version)
+    required: true
+  - name: APP_NAME
+    displayName: Application Name
+    description: Unique application name
+    required: true
+  - name: NAMESPACE
+    displayName: Service Name
+    description: Unique service name
+    required: true
