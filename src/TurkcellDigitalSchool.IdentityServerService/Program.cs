@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Text.Json.Serialization;
 using Serilog;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.IdentityServerService;
@@ -15,8 +16,18 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
+    builder.Services.AddControllers()
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.IgnoreNullValues = true;
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        });
+
+
     builder.WebHost.ConfigureKestrel((context, options) =>
     {
+  
+        options.AddServerHeader = false;
         options.Listen(IPAddress.Any, 6001, listenOptions =>
         {
             // Enables HTTP/3
@@ -42,8 +53,8 @@ try
     Log.Information("Seeding database...");
     SeedData.EnsureSeedData(app);
     Log.Information("Done seeding database. Exiting.");
- 
 
+    app.MapControllers();
 
     app.Run();
 }

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
@@ -22,7 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Queries
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "IsActiveASC","IsActiveDESC","NameASC","NameDESC","PageNameASC","PageNameDESC","IdASC","IdDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC" 
     ///<br />   PageNumber can be  entered manually </remarks>
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetByFilterPagedTargetScreensQuery : IRequest<DataResult<PagedList<TargetScreen>>>
     {
         public TargetScreenDetailSearch TargetScreenDetailSearch { get; set; } = new TargetScreenDetailSearch();

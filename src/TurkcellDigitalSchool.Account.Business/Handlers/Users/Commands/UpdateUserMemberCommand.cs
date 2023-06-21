@@ -3,9 +3,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
@@ -18,7 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
     /// SetStatus User
     /// </summary>
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class UpdateUserMemberCommand : IRequest<IResult>
     {
         public long Id { get; set; }
@@ -59,11 +59,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                 if (record == null)
                     return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
 
-                if (_userRepository.GetCountAsync(w => w.Id != record.Id && w.Email.Trim().ToLower() == request.Email.Trim().ToLower()).Result > 0)
+                if (request.Email != null && _userRepository.GetCountAsync(w => w.Id != record.Id && w.Email.Trim().ToLower() == request.Email.Trim().ToLower()).Result > 0)
                 {
                     return new ErrorDataResult<SelectionItem>("Mail adresi daha önce kullanılmış.");
                 }
-                else if (_userRepository.GetCountAsync(w => w.Id != record.Id && w.MobilePhones.Trim().ToLower() == request.MobilePhones.Trim().ToLower()).Result > 0)
+                else if (request.MobilePhones != null && _userRepository.GetCountAsync(w => w.Id != record.Id && w.MobilePhones.Trim().ToLower() == request.MobilePhones.Trim().ToLower()).Result > 0)
                 {
                     return new ErrorDataResult<SelectionItem>("Telefon numarası daha önce kullanılmış.");
                 }

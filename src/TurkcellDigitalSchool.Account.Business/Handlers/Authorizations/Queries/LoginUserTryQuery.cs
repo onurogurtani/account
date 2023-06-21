@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Common;
+using TurkcellDigitalSchool.Core.Common;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.Entities.Dtos;

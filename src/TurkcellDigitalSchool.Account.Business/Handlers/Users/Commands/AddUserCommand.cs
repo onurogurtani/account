@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Common;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Common;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
@@ -22,7 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
     /// Add User
     /// </summary>
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class AddUserCommand : IRequest<DataResult<SelectionItem>>
     {
         public UserType UserTypeId { get; set; }
@@ -62,11 +62,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
             public async Task<DataResult<SelectionItem>> Handle(AddUserCommand request, CancellationToken cancellationToken)
             {
 
-                if (_userRepository.GetCountAsync(w => w.Email.Trim().ToLower() == request.Email.Trim().ToLower()).Result > 0)
+                if (request.Email != null && _userRepository.GetCountAsync(w => w.Email.Trim().ToLower() == request.Email.Trim().ToLower()).Result > 0)
                 {
                     return new ErrorDataResult<SelectionItem>("Mail adresi daha önce kullanılmış.");
                 }
-                else if (_userRepository.GetCountAsync(w => w.MobilePhones.Trim().ToLower() == request.MobilePhones.Trim().ToLower()).Result > 0)
+                else if (request.MobilePhones != null && _userRepository.GetCountAsync(w => w.MobilePhones.Trim().ToLower() == request.MobilePhones.Trim().ToLower()).Result > 0)
                 {
                     return new ErrorDataResult<SelectionItem>("Telefon numarası daha önce kullanılmış.");
                 }

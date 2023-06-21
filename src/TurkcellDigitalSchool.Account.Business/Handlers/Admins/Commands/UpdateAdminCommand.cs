@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
@@ -22,7 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
     /// </summary>
     [TransactionScope]
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class UpdateAdminCommand : IRequest<IResult>
     {
         public CreateUpdateAdminDto Admin { get; set; }

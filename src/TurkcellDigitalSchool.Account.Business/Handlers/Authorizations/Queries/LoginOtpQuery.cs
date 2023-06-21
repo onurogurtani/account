@@ -8,7 +8,7 @@ using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Common;
+using TurkcellDigitalSchool.Core.Common;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
@@ -77,7 +77,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                     var isOldPassword = await IsOldPassword(mobileLogin.UserId);
                     if (isOldPassword == true)
                     {
-                        return new ErrorDataResult<DArchToken>(new DArchToken { IsOldPassword = true }, Common.Constants.Messages.TryAgain);
+                        return new ErrorDataResult<DArchToken>(new DArchToken { IsOldPassword = true }, Core.Common.Constants.Messages.TryAgain);
                     }
 
                     var ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();

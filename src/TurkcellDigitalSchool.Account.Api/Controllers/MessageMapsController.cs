@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Queries;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Common.Controllers; 
+using TurkcellDigitalSchool.Core.Common.Controllers; 
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
 {

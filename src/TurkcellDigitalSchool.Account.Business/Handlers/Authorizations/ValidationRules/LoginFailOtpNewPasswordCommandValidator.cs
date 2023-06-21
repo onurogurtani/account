@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands;
 using TurkcellDigitalSchool.Account.Business.Helpers;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.ValidationRules

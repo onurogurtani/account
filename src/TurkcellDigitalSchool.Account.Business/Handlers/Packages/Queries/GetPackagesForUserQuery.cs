@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.File;
@@ -21,7 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     ///Get Packages For User list Page
     ///<br />  PageNumber can be  entered manually </remarks>
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetPackagesForUserQuery : IRequest<DataResult<PagedList<GetPackagesForUserResponseDto>>>
     {
         public PaginationQuery Pagination { get; set; }

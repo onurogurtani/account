@@ -1,6 +1,6 @@
 using FluentValidation;
 using TurkcellDigitalSchool.Account.Business.Handlers.Countrys.Commands;
-using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Constants;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Countrys.ValidationRules
 {

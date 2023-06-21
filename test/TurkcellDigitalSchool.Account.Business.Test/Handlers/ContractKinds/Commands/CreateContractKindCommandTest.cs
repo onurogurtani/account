@@ -13,7 +13,7 @@ using NUnit.Framework;
 using TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 

@@ -593,7 +593,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                 });
 
             migrationBuilder.CreateTable(
-                name: "users",
+                name: "user",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
@@ -650,7 +650,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_users", x => x.id);
+                    table.PrimaryKey("pk_user", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -1251,7 +1251,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     table.ForeignKey(
                         name: "fk_studentparentinformation_users_userid",
                         column: x => x.userid,
-                        principalTable: "users",
+                        principalTable: "user",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1283,7 +1283,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     table.ForeignKey(
                         name: "fk_userbasketpackages_users_userid",
                         column: x => x.userid,
-                        principalTable: "users",
+                        principalTable: "user",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1311,7 +1311,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     table.ForeignKey(
                         name: "fk_usercommunicationpreferences_users_userid",
                         column: x => x.userid,
-                        principalTable: "users",
+                        principalTable: "user",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1343,7 +1343,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     table.ForeignKey(
                         name: "fk_userpackages_users_userid",
                         column: x => x.userid,
-                        principalTable: "users",
+                        principalTable: "user",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1380,7 +1380,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     table.ForeignKey(
                         name: "fk_userrole_users_userid",
                         column: x => x.userid,
-                        principalTable: "users",
+                        principalTable: "user",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1412,7 +1412,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     table.ForeignKey(
                         name: "fk_usersessions_users_userid",
                         column: x => x.userid,
-                        principalTable: "users",
+                        principalTable: "user",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1440,7 +1440,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     table.ForeignKey(
                         name: "fk_usersupportteamviewmydata_users_userid",
                         column: x => x.userid,
-                        principalTable: "users",
+                        principalTable: "user",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1627,7 +1627,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     table.ForeignKey(
                         name: "fk_organisationuser_users_userid",
                         column: x => x.userid,
-                        principalTable: "users",
+                        principalTable: "user",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1729,7 +1729,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     table.ForeignKey(
                         name: "fk_studenteducationinformation_users_userid",
                         column: x => x.userid,
-                        principalTable: "users",
+                        principalTable: "user",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1825,7 +1825,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     table.ForeignKey(
                         name: "fk_usercontrat_users_userid",
                         column: x => x.userid,
-                        principalTable: "users",
+                        principalTable: "user",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -2207,25 +2207,25 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                 column: "userid");
 
             migrationBuilder.CreateIndex(
-                name: "ix_users_citizenid",
-                table: "users",
+                name: "ix_user_citizenid",
+                table: "user",
                 column: "citizenid",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_users_email",
-                table: "users",
+                name: "ix_user_email",
+                table: "user",
                 column: "email",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_users_mobilephones",
-                table: "users",
+                name: "ix_user_mobilephones",
+                table: "user",
                 column: "mobilephones");
 
             migrationBuilder.CreateIndex(
-                name: "ix_users_relatedidentity",
-                table: "users",
+                name: "ix_user_relatedidentity",
+                table: "user",
                 column: "relatedidentity",
                 unique: true);
 
@@ -2413,7 +2413,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                 name: "role");
 
             migrationBuilder.DropTable(
-                name: "users");
+                name: "user");
 
             migrationBuilder.DropTable(
                 name: "organisation");

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
@@ -29,7 +29,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                 _mediator = mediator;
             }
 
-            [SecuredOperation] 
+            [SecuredOperationScope] 
             public async Task<DataResult<IEnumerable<UserMailDto>>> Handle(GetUserMailsQuery request, CancellationToken cancellationToken)
             {
                 List<UserMailDto> emailList = _userRepository.Query()

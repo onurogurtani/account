@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
-using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 
@@ -58,23 +58,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.ValidationRule
             RuleFor(x => x.Email).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
             RuleFor(x => x.MobilePhones).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
             RuleFor(x => x.MobilePhones).PhoneNumberAlphacharCheck();
-        }
-    }
-
-    [MessageClassAttr("Öğrenci Profilim Eğitim Bilgilerim Ekeleme/Güncelleme Validasyonu")]
-    public class UpdateStudentEducationInformationValidator : AbstractValidator<UpdateStudentEducationInformationCommand>
-    {
-        [MessageConstAttr(MessageCodeType.Error, "UserId,Sınav Tipi,Kurum Türü,Okul")]
-        private static string FieldIsNotNullOrEmpty = Messages.FieldIsNotNullOrEmpty;
-        public UpdateStudentEducationInformationValidator()
-        {
-            RuleFor(x => x.StudentEducationRequest.UserId).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "UserId" }));
-            RuleFor(x => x.StudentEducationRequest.ExamType).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Sınav Tipi" }));
-            //RuleFor(x => x.StudentEducationRequest.CityId).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
-            //RuleFor(x => x.StudentEducationRequest.CountyId).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
-            RuleFor(x => x.StudentEducationRequest.InstitutionId).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Kurum Türü" }));
-            RuleFor(x => x.StudentEducationRequest.SchoolId).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Okul" }));
-
         }
     }
 

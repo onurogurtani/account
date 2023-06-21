@@ -6,8 +6,8 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -18,7 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
     /// Get DocumentDto
     /// </summary>
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetDocumentQuery : IRequest<DataResult<DocumentDto>>
     {
         public long Id { get; set; }

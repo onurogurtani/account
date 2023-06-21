@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using FluentValidation;
 using TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands;
-using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 
@@ -38,6 +38,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.ValidationRul
         private static string TestExamTabsOnlyOneChoose = Constants.Messages.TestExamTabsOnlyOneChoose;
         [MessageConstAttr(MessageCodeType.Error)]
         private static string TestExamTabsHaveToChoose = Constants.Messages.TestExamTabsHaveToChoose;
+        [MessageConstAttr(MessageCodeType.Error)]
+        private static string ShouldChooseCoachServicePackage = Constants.Messages.ShouldChooseCoachServicePackage;
         public CreatePackageValidator()
         {
             RuleFor(x => x.Package.Name).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Paket Adý" }));
@@ -51,11 +53,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.ValidationRul
 
             RuleFor(x => x.Package.PackageKind).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Paket Tipi" }));
             RuleFor(x => x.Package.PackageKind).IsInEnum().WithMessage(IsInEnumValue.PrepareRedisMessage());
+            RuleFor(x => x.Package.PackageTypeEnum).IsInEnum().WithMessage(IsInEnumValue.PrepareRedisMessage());
 
-            RuleForEach(x => x.Package.PackagePackageTypeEnums).ChildRules(child =>
-                {
-                    child.RuleFor(x => x.PackageTypeEnum).IsInEnum().WithMessage(IsInEnumValue.PrepareRedisMessage());
-                });
+
 
             RuleFor(x => x.Package.ImageOfPackages.Count)
                 .LessThan(6).WithMessage(MaxImageOfPackage.PrepareRedisMessage(messageParameters: new object[] { "5" }))
@@ -73,7 +73,20 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.ValidationRul
 
             When(x => x.Package.HasCoachService, () =>
             {
-                RuleFor(x => x.Package.PackageFieldTypes).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Motivasyon Seçim" }));
+                // koçluk hizmet seçili
+                When(x => x.Package.PackageTypeEnum == PackageTypeEnum.CoachService || x.Package.PackageTypeEnum == PackageTypeEnum.Demo, () =>
+                {
+                    //TODO kocluk hizmeti listesi dolu olmalý
+                    //RuleFor(x => x.Package.CoachServices).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Koçluk Seçim" }));
+                }
+                );
+
+                // koçluk hizmet seçili deðil
+                When(x => x.Package.PackageTypeEnum != PackageTypeEnum.CoachService || x.Package.PackageTypeEnum != PackageTypeEnum.Demo, () =>
+                {
+                    RuleFor(x => x.Package).Must(x => x.CoachServicePackages?.Count > 0)
+                   .WithMessage(ShouldChooseCoachServicePackage.PrepareRedisMessage());
+                });
             });
 
 
@@ -88,13 +101,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.ValidationRul
             When(x => x.Package.HasMotivationEvent, () =>
                 {
                     // motivation seçili
-                    When(x => x.Package.PackagePackageTypeEnums.Any(s => s.PackageTypeEnum == PackageTypeEnum.MotivationEvent || s.PackageTypeEnum == PackageTypeEnum.Demo), () =>
+                    When(x => x.Package.PackageTypeEnum == PackageTypeEnum.MotivationEvent || x.Package.PackageTypeEnum == PackageTypeEnum.Demo, () =>
                     {
                         RuleFor(x => x.Package.PackageEvents).NotEmpty().WithMessage(ShouldChooseMotivationEvent.PrepareRedisMessage());
-                    });
+                    }
+
+                    );
 
                     // motivation seçili deðil
-                    When(x => x.Package.PackagePackageTypeEnums.All(s => s.PackageTypeEnum != PackageTypeEnum.MotivationEvent || s.PackageTypeEnum != PackageTypeEnum.Demo), () =>
+                    When(x => x.Package.PackageTypeEnum != PackageTypeEnum.MotivationEvent || x.Package.PackageTypeEnum != PackageTypeEnum.Demo, () =>
                     {
                         RuleFor(x => x.Package).Must(x =>
                         (x.PackageEvents?.Count == 0 && x.MotivationActivityPackages?.Count == 0) ||
@@ -120,13 +135,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.ValidationRul
             When(x => x.Package.HasTryingTest, () =>
                 {
                     // test exams seçili
-                    When(x => x.Package.PackagePackageTypeEnums.Any(s => s.PackageTypeEnum == PackageTypeEnum.TestExam || s.PackageTypeEnum == PackageTypeEnum.Demo), () =>
+                    When(x => x.Package.PackageTypeEnum == PackageTypeEnum.TestExam || x.Package.PackageTypeEnum == PackageTypeEnum.Demo, () =>
                     {
                         RuleFor(x => x.Package.PackageTestExams).NotEmpty().WithMessage(ShouldChooseTestExam.PrepareRedisMessage());
                     });
 
                     // test exams  seçili deðil
-                    When(x => x.Package.PackagePackageTypeEnums.All(s => s.PackageTypeEnum != PackageTypeEnum.TestExam || s.PackageTypeEnum != PackageTypeEnum.Demo), () =>
+                    When(x => x.Package.PackageTypeEnum != PackageTypeEnum.TestExam || x.Package.PackageTypeEnum != PackageTypeEnum.Demo, () =>
                     {
                         RuleFor(x => x.Package).Must(x =>
                         (x.PackageTestExams?.Count == 0 && x.TestExamPackages?.Count == 0) ||
@@ -172,6 +187,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.ValidationRul
         private static string TestExamTabsOnlyOneChoose = Constants.Messages.TestExamTabsOnlyOneChoose;
         [MessageConstAttr(MessageCodeType.Error)]
         private static string TestExamTabsHaveToChoose = Constants.Messages.TestExamTabsHaveToChoose;
+        [MessageConstAttr(MessageCodeType.Error)]
+        private static string ShouldChooseCoachServicePackage = Constants.Messages.ShouldChooseCoachServicePackage;
         public UpdatePackageValidator()
         {
             RuleFor(x => x.Package.Name).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Paket Adý" }));
@@ -185,11 +202,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.ValidationRul
 
             RuleFor(x => x.Package.PackageKind).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Paket Tipi" }));
             RuleFor(x => x.Package.PackageKind).IsInEnum().WithMessage(IsInEnumValue.PrepareRedisMessage());
+            RuleFor(x => x.Package.PackageTypeEnum).IsInEnum().WithMessage(IsInEnumValue.PrepareRedisMessage());
 
-            RuleForEach(x => x.Package.PackagePackageTypeEnums).ChildRules(child =>
-                {
-                    child.RuleFor(x => x.PackageTypeEnum).IsInEnum().WithMessage(IsInEnumValue.PrepareRedisMessage());
-                });
 
             RuleFor(x => x.Package.ImageOfPackages.Count)
                 .LessThan(6).WithMessage(MaxImageOfPackage.PrepareRedisMessage(messageParameters: new object[] { "5" }))
@@ -205,9 +219,23 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.ValidationRul
             });
 
 
+
             When(x => x.Package.HasCoachService, () =>
             {
-                RuleFor(x => x.Package.PackageFieldTypes).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Motivasyon Seçim" }));
+                // koçluk hizmet seçili
+                When(x => x.Package.PackageTypeEnum == PackageTypeEnum.CoachService || x.Package.PackageTypeEnum == PackageTypeEnum.Demo, () =>
+                {
+                    //TODO kocluk hizmeti listesi dolu olmalý
+                    //RuleFor(x => x.Package.CoachServices).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Koçluk Seçim" }));
+                }
+                );
+
+                // koçluk hizmet seçili deðil
+                When(x => x.Package.PackageTypeEnum != PackageTypeEnum.CoachService || x.Package.PackageTypeEnum != PackageTypeEnum.Demo, () =>
+                {
+                    RuleFor(x => x.Package).Must(x => x.CoachServicePackages?.Count > 0)
+                   .WithMessage(ShouldChooseCoachServicePackage.PrepareRedisMessage());
+                });
             });
 
 
@@ -220,27 +248,29 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.ValidationRul
 
 
             When(x => x.Package.HasMotivationEvent, () =>
+            {
+                // motivation seçili
+                When(x => x.Package.PackageTypeEnum == PackageTypeEnum.MotivationEvent || x.Package.PackageTypeEnum == PackageTypeEnum.Demo, () =>
                 {
-                    // motivation seçili
-                    When(x => x.Package.PackagePackageTypeEnums.Any(s => s.PackageTypeEnum == PackageTypeEnum.MotivationEvent || s.PackageTypeEnum == PackageTypeEnum.Demo), () =>
-                    {
-                        RuleFor(x => x.Package.PackageEvents).NotEmpty().WithMessage(ShouldChooseMotivationEvent.PrepareRedisMessage());
-                    });
+                    RuleFor(x => x.Package.PackageEvents).NotEmpty().WithMessage(ShouldChooseMotivationEvent.PrepareRedisMessage());
+                }
 
-                    // motivation seçili deðil
-                    When(x => x.Package.PackagePackageTypeEnums.All(s => s.PackageTypeEnum != PackageTypeEnum.MotivationEvent || s.PackageTypeEnum != PackageTypeEnum.Demo), () =>
-                    {
-                        RuleFor(x => x.Package).Must(x =>
-                        (x.PackageEvents?.Count == 0 && x.MotivationActivityPackages?.Count == 0) ||
-                        (x.PackageEvents?.Count > 0 && x.MotivationActivityPackages?.Count == 0) ||
-                        (x.PackageEvents?.Count == 0 && x.MotivationActivityPackages?.Count > 0))
-                        .WithMessage(MotivationTabsOnlyOneChoose.PrepareRedisMessage());
+                );
 
-                        RuleFor(x => x.Package).Must(x => x.PackageEvents?.Count > 0 || x.MotivationActivityPackages?.Count > 0)
-                       .WithMessage(MotivationTabsHaveToChoose.PrepareRedisMessage());
-                    });
+                // motivation seçili deðil
+                When(x => x.Package.PackageTypeEnum != PackageTypeEnum.MotivationEvent || x.Package.PackageTypeEnum != PackageTypeEnum.Demo, () =>
+                {
+                    RuleFor(x => x.Package).Must(x =>
+                    (x.PackageEvents?.Count == 0 && x.MotivationActivityPackages?.Count == 0) ||
+                    (x.PackageEvents?.Count > 0 && x.MotivationActivityPackages?.Count == 0) ||
+                    (x.PackageEvents?.Count == 0 && x.MotivationActivityPackages?.Count > 0))
+                    .WithMessage(MotivationTabsOnlyOneChoose.PrepareRedisMessage());
 
+                    RuleFor(x => x.Package).Must(x => x.PackageEvents?.Count > 0 || x.MotivationActivityPackages?.Count > 0)
+                   .WithMessage(MotivationTabsHaveToChoose.PrepareRedisMessage());
                 });
+
+            });
 
 
 
@@ -252,27 +282,27 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.ValidationRul
             });
 
             When(x => x.Package.HasTryingTest, () =>
+            {
+                // test exams seçili
+                When(x => x.Package.PackageTypeEnum == PackageTypeEnum.TestExam || x.Package.PackageTypeEnum == PackageTypeEnum.Demo, () =>
                 {
-                    // test exams seçili
-                    When(x => x.Package.PackagePackageTypeEnums.Any(s => s.PackageTypeEnum == PackageTypeEnum.TestExam || s.PackageTypeEnum == PackageTypeEnum.Demo), () =>
-                    {
-                        RuleFor(x => x.Package.PackageTestExams).NotEmpty().WithMessage(ShouldChooseTestExam.PrepareRedisMessage());
-                    });
-
-                    // test exams  seçili deðil
-                    When(x => x.Package.PackagePackageTypeEnums.All(s => s.PackageTypeEnum != PackageTypeEnum.TestExam || s.PackageTypeEnum != PackageTypeEnum.Demo), () =>
-                    {
-                        RuleFor(x => x.Package).Must(x =>
-                        (x.PackageTestExams?.Count == 0 && x.TestExamPackages?.Count == 0) ||
-                        (x.PackageTestExams?.Count > 0 && x.TestExamPackages?.Count == 0) ||
-                        (x.PackageTestExams?.Count == 0 && x.TestExamPackages?.Count > 0))
-                        .WithMessage(TestExamTabsOnlyOneChoose.PrepareRedisMessage());
-
-                        RuleFor(x => x.Package).Must(x => x.PackageTestExams.Count > 0 || x.TestExamPackages.Count > 0)
-                       .WithMessage(TestExamTabsHaveToChoose.PrepareRedisMessage());
-                    });
-
+                    RuleFor(x => x.Package.PackageTestExams).NotEmpty().WithMessage(ShouldChooseTestExam.PrepareRedisMessage());
                 });
+
+                // test exams  seçili deðil
+                When(x => x.Package.PackageTypeEnum != PackageTypeEnum.TestExam || x.Package.PackageTypeEnum != PackageTypeEnum.Demo, () =>
+                {
+                    RuleFor(x => x.Package).Must(x =>
+                    (x.PackageTestExams?.Count == 0 && x.TestExamPackages?.Count == 0) ||
+                    (x.PackageTestExams?.Count > 0 && x.TestExamPackages?.Count == 0) ||
+                    (x.PackageTestExams?.Count == 0 && x.TestExamPackages?.Count > 0))
+                    .WithMessage(TestExamTabsOnlyOneChoose.PrepareRedisMessage());
+
+                    RuleFor(x => x.Package).Must(x => x.PackageTestExams.Count > 0 || x.TestExamPackages.Count > 0)
+                   .WithMessage(TestExamTabsHaveToChoose.PrepareRedisMessage());
+                });
+
+            });
         }
 
     }

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using TurkcellDigitalSchool.Account.Business.Handlers.PackageRoles.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.PackageRoles.Queries;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Common.Controllers;
+using TurkcellDigitalSchool.Core.Common.Controllers;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
 {

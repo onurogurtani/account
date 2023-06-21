@@ -5,8 +5,8 @@ using Microsoft.Extensions.Configuration;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
 using TurkcellDigitalSchool.Core.DataAccess;
-using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.DbAccess.DataAccess.Contexts;
+using TurkcellDigitalSchool.Core.DataAccess.Contexts;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt; 
 
 namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
 {
@@ -75,8 +75,6 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         public DbSet<RoleClaim> RoleClaims { get; set; }
         public DbSet<School> Schools { get; set; }
         public DbSet<StudentAnswerTargetRange> StudentAnswerTargetRanges { get; set; }
-
-        public DbSet<StudentEducationInformation> StudentEducationInformations { get; set; }
         public DbSet<StudentParentInformation> StudentParentInformations { get; set; }
 
         public DbSet<TargetScreen> TargetScreens { get; set; }

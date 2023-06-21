@@ -6,5 +6,6 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
     {
         public long Id { get; set; }
         public long TestExamId { get; set; }
+        public int PackageTypeEnum { get; set; }
     }
 }

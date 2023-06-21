@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.Utilities.Results;

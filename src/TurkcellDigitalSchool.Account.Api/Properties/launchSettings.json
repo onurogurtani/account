@@ -1,25 +1,4 @@
 {
-  "$schema": "http://json.schemastore.org/launchsettings.json",
-  "IIS Express": {
-    "commandName": "IISExpress",
-    "launchBrowser": true,
-    "launchUrl": "swagger",
-    "environmentVariables": {
-      "ASPNETCORE_ENVIRONMENT": "Development"
-    }
-  },
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iis": {
-      "applicationUrl": "http://localhost/TurkcellDigitalSchool.Auth.Api",
-      "sslPort": 0
-    },
-    "iisExpress": {
-      "applicationUrl": "http://localhost:6021",
-      "sslPort": 0
-    }
-  },
   "profiles": {
     "TurkcellDigitalSchool.Api.DEV": {
       "commandName": "Project",
@@ -41,6 +20,16 @@
       "applicationUrl": "http://localhost:6021",
       "dotnetRunMessages": true
     },
+    "TurkcellDigitalSchool.Api.ALPHATURKCELL": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "ALPHATURKCELL"
+      },
+      "applicationUrl": "http://localhost:6021",
+      "dotnetRunMessages": true
+    },
     "TurkcellDigitalSchool.Api.STAGING": {
       "commandName": "Project",
       "launchBrowser": true,
@@ -50,6 +39,36 @@
       },
       "applicationUrl": "http://localhost:6021",
       "dotnetRunMessages": true
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+      "publishAllPorts": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "DEV"
+      }
+    }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "IIS Express": {
+    "commandName": "IISExpress",
+    "launchBrowser": true,
+    "launchUrl": "swagger",
+    "environmentVariables": {
+      "ASPNETCORE_ENVIRONMENT": "Development"
+    }
+  },
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/TurkcellDigitalSchool.Auth.Api",
+      "sslPort": 0
+    },
+    "iisExpress": {
+      "applicationUrl": "http://localhost:6021",
+      "sslPort": 0
     }
   }
 }

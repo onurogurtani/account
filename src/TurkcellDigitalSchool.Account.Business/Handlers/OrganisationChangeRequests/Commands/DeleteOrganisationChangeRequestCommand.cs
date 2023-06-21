@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -13,7 +13,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Commands
 {
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class DeleteOrganisationChangeRequestCommand : IRequest<IResult>
     {
         public long Id { get; set; }
@@ -41,7 +41,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
                     return new ErrorResult(Messages.RecordDoesNotExist);
 
                 if (entity.RequestState != OrganisationChangeRequestState.Forwarded)
-                    return new ErrorResult(Common.Constants.Messages.ErrorInDeletingProcess);
+                    return new ErrorResult(Messages.ErrorInDeletingProcess);
 
               //Analiz netleþmedi.
                 //var changeContent = await _organisationChangeReqContentRepository.GetListAsync(x => x.RequestId == request.Id);

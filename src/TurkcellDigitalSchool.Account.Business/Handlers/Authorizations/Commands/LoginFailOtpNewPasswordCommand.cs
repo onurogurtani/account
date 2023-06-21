@@ -13,7 +13,7 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
-using TurkcellDigitalSchool.Integration.IntegrationServices.IdentityServerServices.Model.Response;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.IdentityServerServices.Model.Response;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {

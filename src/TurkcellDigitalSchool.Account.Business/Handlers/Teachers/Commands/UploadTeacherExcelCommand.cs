@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using ClosedXML.Excel;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
@@ -21,7 +21,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
 {
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class UploadTeacherExcelCommand : IRequest<DataResult<ExcelResponse>>
     {
         public IFormFile FormFile { get; set; }

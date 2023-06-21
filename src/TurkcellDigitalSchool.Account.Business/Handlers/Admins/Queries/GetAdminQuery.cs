@@ -6,8 +6,8 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -18,7 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
     /// Get Admin User with Roles
     /// </summary>
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetAdminQuery : IRequest<DataResult<AdminDto>>
     {
         public long Id { get; set; }

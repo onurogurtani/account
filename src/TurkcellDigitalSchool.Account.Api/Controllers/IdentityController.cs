@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries;
-using TurkcellDigitalSchool.Common.Controllers;
+using TurkcellDigitalSchool.Core.Common.Controllers;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;

@@ -3,10 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Services.User;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Common.Helpers;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -14,7 +13,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
 {
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetStudentInformationsQuery : IRequest<DataResult<StudentInfoDto>>
     {
         public long? UserId { get; set; }
@@ -37,7 +36,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
                 }
                 await _userService.SetDefaultSettingValues((long)request.UserId);
 
-                var education = _userService.GetByStudentEducationInformation((int)request.UserId);
                 var packages = _userService.GetByStudentPackageInformation((int)request.UserId);
                 var parent = _userService.GetByStudentParentInfoInformation((int)request.UserId);
                 var personal = _userService.GetByStudentPersonalInformation((int)request.UserId);
@@ -45,7 +43,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
 
                 var studentInfoResult = new StudentInfoDto
                 {
-                    Education = education,
                     Packages = packages,
                     Parents = parent,
                     Personal = personal,

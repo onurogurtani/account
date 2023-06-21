@@ -7,7 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
@@ -20,7 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "NameASC","NameDESC","SurNameASC","SurNameDESC" </remarks>
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetByFilterPagedTeachersQuery : IRequest<DataResult<PagedList<GetTeachersResponseDto>>>
     {
         public PaginationQuery Pagination { get; set; } = new();

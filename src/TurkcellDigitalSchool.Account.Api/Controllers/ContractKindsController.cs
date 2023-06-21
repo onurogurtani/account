@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Common.Controllers;
+using TurkcellDigitalSchool.Core.Common.Controllers;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Requests;

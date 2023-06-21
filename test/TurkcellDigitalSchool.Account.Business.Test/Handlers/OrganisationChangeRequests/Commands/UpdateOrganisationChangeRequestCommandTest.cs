@@ -15,14 +15,14 @@ using MockQueryable.Moq;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using AutoMapper;
 using System.Linq.Expressions;
-using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices;
 using Refit;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Core.Enums;
-using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.Response;
+using TurkcellDigitalSchool.Core.Enums; 
 using OrganisationChangeReqContent = TurkcellDigitalSchool.Account.Domain.Concrete.OrganisationChangeReqContent;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices.Model.Response;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChangeRequests.Commands
 {
@@ -278,7 +278,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
             _tokenHelper.Setup(x => x.GetCurrentOrganisationId()).Returns(1);
             _fileService.Setup(x => x.CreateFileCommand(It.IsAny<ByteArrayPart>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(new CreateFileCommandIntegrationResponse()
-            { Data = new Integration.IntegrationServices.FileServices.Model.Response.Dto.File() { Id = 12, FileType = FileType.OrganisationLogo } });
+            { Data = new Core.Integration.IntegrationServices.FileServices.Model.Response.Dto.File() { Id = 12, FileType = FileType.OrganisationLogo } });
 
             _organisationInfoChangeRequestRepository.Setup(x => x.Query()).Returns(changeRequests.AsQueryable().BuildMock());
             _organisationRepository.Setup(x => x.Query()).Returns(organisations.AsQueryable().BuildMock());

@@ -10,7 +10,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
         {
             migrationBuilder.RenameColumn(
                 name: "examtype",
-                table: "users",
+                table: "user",
                 newName: "examkind");
         }
 
@@ -18,7 +18,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
         {
             migrationBuilder.RenameColumn(
                 name: "examkind",
-                table: "users",
+                table: "user",
                 newName: "examtype");
         }
     }

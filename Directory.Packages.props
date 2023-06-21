@@ -73,7 +73,7 @@
     <PackageVersion Include="ServiceStack.Redis.Core" Version="6.8.0" />
     <PackageVersion Include="StackExchange.Redis" Version="2.6.104" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-	<PackageVersion Include="AWSSDK.S3" Version="3.7.104.27" />
+    <PackageVersion Include="AWSSDK.S3" Version="3.7.104.27" />
     <PackageVersion Include="System.DirectoryServices">
       <Version>6.0.0</Version>
     </PackageVersion>
@@ -90,10 +90,7 @@
     <PackageVersion Include="DotNetCore.CAP.Dashboard" Version="6.2.1" />
     <PackageVersion Include="DotNetCore.CAP.PostgreSql" Version="6.2.1" />
     <PackageVersion Include="DotNetCore.CAP.RabbitMQ" Version="6.2.1" />
-    <PackageVersion Include="TurkcellDigitalSchool.Common" Version="1.0.1.50" />
-    <PackageVersion Include="TurkcellDigitalSchool.Core" Version="1.0.1.50" />
-    <PackageVersion Include="TurkcellDigitalSchool.DbAccess" Version="1.0.1.50" />
-    <PackageVersion Include="TurkcellDigitalSchool.Integration" Version="1.0.1.50" />
+    <PackageVersion Include="TurkcellDigitalSchool.Core" Version="1.0.1.73" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Update="StackExchange.Redis" Version="2.6.111" />

@@ -18,13 +18,12 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
-using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
-using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.Request;
-using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.Response;
-using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.Response.Dto;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices.Model.Request; 
 using File = TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly.File;
 using OrganisationChangeReqContent = TurkcellDigitalSchool.Account.Domain.Concrete.OrganisationChangeReqContent;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices.Model.Response;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChangeRequests.Queries
 {
@@ -169,7 +168,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
 
             _fileService.Setup(x => x.GetFileQuery(It.IsAny<GetFileIntegrationRequest>())).ReturnsAsync(new GetFileQueryIntegrationResponse()
             {
-                Data = new Integration.IntegrationServices.FileServices.Model.Response.Dto.FileDto
+                Data = new Core.Integration.IntegrationServices.FileServices.Model.Response.Dto.FileDto
                 {
                     Id = 1,
                     FileName = "Test.jpg",

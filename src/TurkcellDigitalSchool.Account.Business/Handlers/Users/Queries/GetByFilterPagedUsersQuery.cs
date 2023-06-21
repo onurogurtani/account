@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
@@ -19,7 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
     ///Get Filtered Paged Users
     /// </summary>
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetByFilterPagedUsersQuery : IRequest<DataResult<PagedList<UserDto>>>
     {
         public UserDetailSearch UserDetailSearch { get; set; } = new UserDetailSearch();

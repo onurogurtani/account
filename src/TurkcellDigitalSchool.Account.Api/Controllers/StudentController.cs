@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.Controllers;
+using TurkcellDigitalSchool.Core.Common.Controllers;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
@@ -79,47 +79,6 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             }
             return BadRequest(result);
         }
-
-       
-
-        /// <summary>
-        /// Get Student Education information
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns>EducationInfoDto</returns>
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<EducationInfoDto>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpGet("GetStudentEducationInformation")]
-        public async Task<IActionResult> GetStudentEducationInformation([FromQuery] GetStudentEducationInformationQuery request, CancellationToken cancellationToken)
-        {
-            var result = await Mediator.Send(request, cancellationToken);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
-
-        /// <summary>
-        /// student education information add/update
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPut("UpdateStudentEducationInformation")]
-        public async Task<IActionResult> UpdateStudentEducationInformation([FromBody] UpdateStudentEducationInformationCommand request, CancellationToken cancellationToken)
-        {
-            var result = await Mediator.Send(request, cancellationToken);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
-
        
         /// <summary>
         /// Get Student Personal information

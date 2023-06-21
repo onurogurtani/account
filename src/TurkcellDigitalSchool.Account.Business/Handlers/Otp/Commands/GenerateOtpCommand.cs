@@ -10,7 +10,7 @@ using TurkcellDigitalSchool.Account.Business.Services.Otp;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre;
 using TurkcellDigitalSchool.Account.Domain.Enums.OTP;
-using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
@@ -18,7 +18,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Otp.Commands
 {
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GenerateOtpCommand : IRequest<IResult>
     {
         public ChannelType ChanellTypeId { get; set; }

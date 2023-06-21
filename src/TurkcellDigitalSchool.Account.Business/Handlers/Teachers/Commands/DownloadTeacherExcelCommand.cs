@@ -4,9 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
 using MediatR;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
@@ -22,7 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
     /// Download User/Teacher
     /// </summary>
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class DownloadTeacherExcelCommand : IRequest<DataResult<ExcelResponse>>
     {
         [MessageClassAttr("Öðretmen Excel Tablosu Ýndirme")]

@@ -3,14 +3,14 @@ using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
 {
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetAppSettingByCodeQuery : IRequest<DataResult<AppSetting>>
     {
         public string Code { get; set; }

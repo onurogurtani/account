@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -18,7 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "IsActiveASC","IsActiveDESC","NameASC","NameDESC","PackageKindASC","PackageKindDESC","SummaryASC","SummaryDESC","ContentASC","ContentDESC","PackageTypeASC","PackageTypeDESC","MaxNetCountASC","MaxNetCountDESC","EducationYearASC","EducationYearDESC","ClassroomDESC","ClassroomASC","LessonDESC","LessonASC","PackageFieldTypeASC","PackageFieldTypeDESC","RoleDESC","RoleASC","StartDateASC","StartDateDESC","FinishDateASC","FinishDateDESC","HasCoachServiceASC","HasCoachServiceDESC","HasTryingTestASC","HasTryingTestDESC","TryingTestQuestionCountASC","TryingTestQuestionCountDESC","HasMotivationEventASC","HasMotivationEventDESC","IdASC","IdDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC"  </remarks>
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetByFilterPagedPackagesQuery : IRequest<DataResult<PagedList<Package>>>
     {
         public PackageDetailSearch PackageDetailSearch { get; set; } = new PackageDetailSearch();
@@ -60,7 +60,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
                     query = query.Where(x => x.PackagePublishers.Any(q => request.PackageDetailSearch.PublisherIds.Contains((long)q.PublisherId)));
 
                 if (request.PackageDetailSearch.PackageTypeEnumIds?.Length > 0)
-                    query = query.Where(x => x.PackagePackageTypeEnums.Any(q => request.PackageDetailSearch.PackageTypeEnumIds.Contains((long)q.PackageTypeEnum)));
+                    query = query.Where(x => request.PackageDetailSearch.PackageTypeEnumIds.Contains((long)x.PackageTypeEnum));
+
+                 if (request.PackageDetailSearch.PackageKindIds?.Length > 0)
+                    query = query.Where(x => request.PackageDetailSearch.PackageKindIds.Contains((long)x.PackageKind));
+
+                  if (request.PackageDetailSearch.ExamKindIds?.Length > 0)
+                    query = query.Where(x => request.PackageDetailSearch.ExamKindIds.Contains((long)x.ExamKind));
+
+              
 
 
                 if (!string.IsNullOrWhiteSpace(request.PackageDetailSearch.Name))
@@ -114,8 +122,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
                     "SummaryDESC" => query.OrderByDescending(x => x.Summary),
                     "ContentASC" => query.OrderBy(x => x.Content),
                     "ContentDESC" => query.OrderByDescending(x => x.Content),
-                    "PackageTypeASC" => query.OrderBy(x => x.PackagePackageTypeEnums),
-                    "PackageTypeDESC" => query.OrderByDescending(x => x.PackagePackageTypeEnums),
+                    "PackageTypeASC" => query.OrderBy(x => x.PackageTypeEnum),
+                    "PackageTypeDESC" => query.OrderByDescending(x => x.PackageTypeEnum),
                     "EducationYearASC" => query.OrderBy(x => x.EducationYear.StartYear),
                     "EducationYearDESC" => query.OrderByDescending(x => x.EducationYear.StartYear),
                     "ClassroomDESC" => query.OrderByDescending(x => x.PackageLessons.First().Lesson.Classroom.Name),

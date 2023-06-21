@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Handlers.ServiceMessages.Command;
-using TurkcellDigitalSchool.Common.Controllers;
+using TurkcellDigitalSchool.Core.Common.Controllers;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
 {

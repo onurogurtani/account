@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Serilog;
-using System.Configuration;
 using System.Globalization;
 using System.Text.Json.Serialization;
+using TurkcellDigitalSchool.Account.Business.Helpers;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Core.Configure; 
+using TurkcellDigitalSchool.Core.Common.Helpers; 
+using TurkcellDigitalSchool.Core.Configure;
 using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Redis.Contract;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
@@ -19,7 +20,7 @@ using TurkcellDigitalSchool.IdentityServerService.Pages.Admin.ApiScopes;
 using TurkcellDigitalSchool.IdentityServerService.Pages.Admin.Clients;
 using TurkcellDigitalSchool.IdentityServerService.Pages.Admin.IdentityScopes;
 using TurkcellDigitalSchool.IdentityServerService.Services;
-using TurkcellDigitalSchool.IdentityServerService.Services.Contract; 
+using TurkcellDigitalSchool.IdentityServerService.Services.Contract;
 
 namespace TurkcellDigitalSchool.IdentityServerService
 {
@@ -27,6 +28,8 @@ namespace TurkcellDigitalSchool.IdentityServerService
     {
         public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
         {
+
+
             builder.Services.AddRazorPages();
             var connectionString = builder.Configuration.GetConnectionString("DArchPostgreContext");
 
@@ -46,6 +49,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
             builder.Services.AddScoped<IMobileLoginRepository, MobileLoginRepository>();
             builder.Services.AddScoped<IOperationClaimRepository, OperationClaimRepository>();
             builder.Services.AddScoped<ITokenHelper, JwtHelper>();
+            builder.Services.AddScoped<ILdapHelper, LdapHelper>();
             builder.Services.AddScoped<ISmsOtpRepository, SmsOtpRepository>();
             builder.Services.AddTransient<ICaptchaManager, CaptchaManager>();
             builder.Services.AddTransient<ILoginFailForgetPassSendLinkRepository, LoginFailForgetPassSendLinkRepository>();
@@ -130,6 +134,8 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 builder.Services.AddTransient<ClientRepository>();
                 builder.Services.AddTransient<IdentityScopeRepository>();
                 builder.Services.AddTransient<ApiScopeRepository>();
+
+                builder.Services.AddConsulConfig(builder.Configuration);
             }
 
             return builder.Build();
@@ -162,7 +168,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
 
             app.MapRazorPages()
                 .RequireAuthorization();
-
+            app.UseConsul(app.Configuration, "IdentityServer");
             return app;
         }
     }

@@ -6,9 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
@@ -22,7 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
     /// </summary>
     [TransactionScope]
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class DeleteTeacherCommand : IRequest<IResult>
     {
         public long UserId { get; set; }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRangeHandler.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRangeHandler.Queries;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.Controllers;
+using TurkcellDigitalSchool.Core.Common.Controllers;
 using TurkcellDigitalSchool.Core.Entities; 
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers

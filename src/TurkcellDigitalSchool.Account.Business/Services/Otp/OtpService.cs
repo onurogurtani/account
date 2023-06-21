@@ -5,7 +5,7 @@ using System.Linq;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Enums.OTP;
-using TurkcellDigitalSchool.Common;
+using TurkcellDigitalSchool.Core.Common;
 using TurkcellDigitalSchool.Core.SubServiceConst;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Toolkit;

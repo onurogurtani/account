@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
@@ -18,7 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
     /// Create Package
     /// </summary> 
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class CreatePackageCommand : IRequest<IResult>
     {
         public Package Package { get; set; }
@@ -27,10 +27,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
         public class CreatePackageCommandHandler : IRequestHandler<CreatePackageCommand, IResult>
         {
             private readonly IPackageRepository _packageRepository;
+            private readonly IMediator _mediator;
 
-            public CreatePackageCommandHandler(IPackageRepository packageRepository)
+            public CreatePackageCommandHandler(IPackageRepository packageRepository, IMediator mediator)
             {
                 _packageRepository = packageRepository;
+                _mediator = mediator;
             }
 
             [MessageConstAttr(MessageCodeType.Error)]
@@ -42,6 +44,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 var isExist = _packageRepository.Query().Any(x => x.Name.Trim().ToLower() == request.Package.Name.Trim().ToLower() && x.IsActive);
                 if (isExist)
                     return new ErrorResult(RecordAlreadyExists.PrepareRedisMessage());
+
+                var resultValid = await _mediator.Send(new ValidatePackageCommand() { Package = request.Package });
+                if (!resultValid.Success)
+                    return new ErrorResult(resultValid.Message);
 
                 var record = _packageRepository.Add(request.Package);
                 await _packageRepository.SaveChangesAsync();

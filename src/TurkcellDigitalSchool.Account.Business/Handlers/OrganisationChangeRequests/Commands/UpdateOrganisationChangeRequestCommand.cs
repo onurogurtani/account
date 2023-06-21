@@ -12,18 +12,18 @@ using Refit;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants; 
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants; 
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt; 
-using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Commands
 {
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     [TransactionScope]
     public class UpdateOrganisationChangeRequestCommand : IRequest<Core.Utilities.Results.IResult>
     {

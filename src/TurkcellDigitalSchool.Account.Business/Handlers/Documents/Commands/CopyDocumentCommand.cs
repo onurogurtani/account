@@ -5,8 +5,8 @@ using AutoMapper;
 using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
@@ -15,7 +15,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
     /// Copy Document
     /// </summary>
 
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class CopyDocumentCommand : IRequest<IResult>
     {
         public long Id { get; set; }

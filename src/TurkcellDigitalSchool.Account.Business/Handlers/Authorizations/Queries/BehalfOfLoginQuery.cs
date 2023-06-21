@@ -7,7 +7,7 @@ using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Common.BusinessAspects;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
@@ -48,7 +48,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             /// It is taken from the ViewMyData field in the user table.
             /// If true, the token is created.
             /// </summary> 
-            [SecuredOperation]
+            [SecuredOperationScope]
             public async Task<DataResult<DArchToken>> Handle(BehalfOfLoginQuery request, CancellationToken cancellationToken)
             {
              

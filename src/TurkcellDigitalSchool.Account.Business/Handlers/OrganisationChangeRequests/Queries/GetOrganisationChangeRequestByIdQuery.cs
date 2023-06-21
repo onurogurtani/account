@@ -8,18 +8,18 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices;
-using TurkcellDigitalSchool.Integration.IntegrationServices.FileServices.Model.Request;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices;
+using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices.Model.Request;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Queries
 {
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetOrganisationChangeRequestByIdQuery : IRequest<DataResult<GetOrganisationInfoChangeRequestDto>>
     {
         public long Id { get; set; }

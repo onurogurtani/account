@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using TurkcellDigitalSchool.Common.BusinessAspects;
-using TurkcellDigitalSchool.Common.Helpers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
@@ -18,7 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
 {
     [ExcludeFromCodeCoverage]
     [LogScope]
-    [SecuredOperation]
+    [SecuredOperationScope]
     public class GetUserTypesQuery : IRequest<DataResult<List<SelectionItem>>>
     {
         public class GetUserTypesQueryHandler : IRequestHandler<GetUserTypesQuery, DataResult<List<SelectionItem>>>
