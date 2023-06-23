@@ -39,8 +39,8 @@ pipeline {
         // openshift build config git credential secret name
         gitCredentialSecret = "jenkins-git"
         // openshift build config template yaml file
-        buildConfigTemplate = "openshift/build/buildconfig-template.yaml"			// openshift build config template yaml file
-        deploymentConfigTemplate = "openshift/deploy/deployment.yaml"
+        buildConfigTemplate = "openshift/build/buildconfig-template-identity.yaml"			// openshift build config template yaml file
+        deploymentConfigTemplate = "openshift/deploy/deployment-identity.yaml"
 
         defaultMailReceivers = ""
         successMailReceivers = "${defaultMailReceivers}"
