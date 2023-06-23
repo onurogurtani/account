@@ -12,7 +12,7 @@ pipeline {
 	environment {
 
 		// App Variables
-        mainBranch = "devops"
+        mainBranch = "dev"
         appServiceName = "dijital_dershane_app"
         softwareModuleName = "account"
         subsoftwareModuleName = "accountapi"
