@@ -8,8 +8,7 @@ using TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Common.Controllers;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
-using TurkcellDigitalSchool.Core.Utilities.Paging;
-using TurkcellDigitalSchool.Core.Utilities.Requests;
+using TurkcellDigitalSchool.Core.Utilities.Paging; 
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers

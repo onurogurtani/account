@@ -9,8 +9,7 @@ using TurkcellDigitalSchool.Core.Utilities.Requests;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Countys.Commands
 {
-    [ExcludeFromCodeCoverage]
-    [SecuredOperationScope]
+    [ExcludeFromCodeCoverage] 
     [LogScope]
     [RemoveCacheScope(RequestTypes = new[] { typeof(GetCountysQuery) })]
     public class CreateCountyCommand : CreateRequestBase<County>

@@ -19,7 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 {
     [TransactionScope]
     [LogScope]
-    [SecuredOperationScope]
+     
     public class UpdateCurentUserInformationCommand : IRequest<IResult>
     {
         public string NameSurname { get; set; }

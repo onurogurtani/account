@@ -21,8 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
     /// Update Admin User
     /// </summary>
     [TransactionScope]
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class UpdateAdminCommand : IRequest<IResult>
     {
         public CreateUpdateAdminDto Admin { get; set; }

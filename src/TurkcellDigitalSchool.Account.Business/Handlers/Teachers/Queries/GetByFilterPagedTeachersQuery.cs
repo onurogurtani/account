@@ -20,7 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "NameASC","NameDESC","SurNameASC","SurNameDESC" </remarks>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetByFilterPagedTeachersQuery : IRequest<DataResult<PagedList<GetTeachersResponseDto>>>
     {
         public PaginationQuery Pagination { get; set; } = new();

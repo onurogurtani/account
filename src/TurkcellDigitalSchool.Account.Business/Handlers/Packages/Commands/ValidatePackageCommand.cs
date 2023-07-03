@@ -21,7 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
 
     [TransactionScope]
     [LogScope]
-    [SecuredOperationScope]
+     
     public class ValidatePackageCommand : IRequest<IResult>
     {
         public Package Package { get; set; }

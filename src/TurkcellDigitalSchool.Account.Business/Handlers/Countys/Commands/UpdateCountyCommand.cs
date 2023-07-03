@@ -9,13 +9,11 @@ using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Handlers;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Entities;
-using TurkcellDigitalSchool.Core.Utilities.Requests;
-using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Utilities.Requests; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Countys.Commands
 {
-    [ExcludeFromCodeCoverage]
-    [SecuredOperationScope]
+    [ExcludeFromCodeCoverage] 
     [LogScope]
     [RemoveCacheScope(RequestTypes = new[] { typeof(GetCountysQuery) })]
     public class UpdateCountyCommand : UpdateRequestBase<County>

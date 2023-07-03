@@ -9,8 +9,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Queries
 {
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class GetAppSettingByCodeQuery : IRequest<DataResult<AppSetting>>
     {
         public string Code { get; set; }

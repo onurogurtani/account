@@ -16,8 +16,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 {
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class UpdateStudentEmailCommand : IRequest<IResult>
     {
         public string Email { get; set; }

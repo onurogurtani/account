@@ -8,8 +8,7 @@ using TurkcellDigitalSchool.Core.Utilities.Requests;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.InstitutionTypes.Queries
 {
-    [ExcludeFromCodeCoverage]
-    [SecuredOperationScope]
+    [ExcludeFromCodeCoverage] 
     [LogScope] 
     public class GetInstitutionTypesQuery : QueryByFilterRequestBase<InstitutionType>
     {

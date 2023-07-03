@@ -16,8 +16,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Queries
 {
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class GetAvatarFilesQuery : IRequest<DataResult<PagedList<AvatarFilesDto>>>
     {
         public PaginationQuery PaginationQuery { get; set; }

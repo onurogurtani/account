@@ -7,7 +7,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.AuthorityManagement; 
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -16,7 +16,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
 {
     [TransactionScope]
     [LogScope]
-    [SecuredOperationScope]
+    [SecuredOperationScope(ClaimNames = new[] { ClaimConst.RoleAndAuthorityManagementSetPasive })]
     public class SetPassiveRoleCommand : IRequest<IResult>
     {
         public long RoleId { get; set; }

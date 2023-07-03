@@ -21,8 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationTypes.Quer
     ///Get Filtered Paged OrganisationTypes with  IsSingularOrPluralChangeable property
     ///</summary>
     ///<remarks></remarks>
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class GetByFilterPagedOrganisationTypesQuery : IRequest<DataResult<PagedList<OrganisationTypeDto>>>
     {
         public PaginationQuery PaginationQuery { get; set; } = new PaginationQuery();

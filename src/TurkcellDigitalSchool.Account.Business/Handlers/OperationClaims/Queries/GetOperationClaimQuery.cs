@@ -10,8 +10,7 @@ using TurkcellDigitalSchool.Core.Utilities.Requests;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OperationClaims.Queries
 {
-    [ExcludeFromCodeCoverage] 
-    [SecuredOperationScope]
+    [ExcludeFromCodeCoverage]  
     [LogScope]
     public class GetOperationClaimQuery : QueryByIdRequestBase<OperationClaim>
     {

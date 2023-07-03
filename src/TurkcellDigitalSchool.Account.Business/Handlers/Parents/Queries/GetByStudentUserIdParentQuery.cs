@@ -15,7 +15,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Parents.Queries
 {
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetByStudentUserIdParentQuery : IRequest<DataResult<Parent>>
     {
         public long StudentUserId { get; set; } // student

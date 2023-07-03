@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Services.User
 {
@@ -21,5 +22,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         List<ParentInfoDto> GetStudentsByParentCitizenId(long? citizenId);
         List<ParentInfoDto> GetByStudentParentsInformation(long userId);
         List<ParentInfoDto> GetStudentsByParentId(long? parentId);
+        Task<IResult> UpdateAvatarAsync(long userId, long avatarId);
     }
 }

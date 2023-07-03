@@ -18,8 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequ
     ///Get Filtered Paged Role with relation data 
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be ""RequestDateASC" ,"RequestDateDESC",  "RequestStateASC","RequestStateDESC", "ResponseStateASC" , "ResponseStateDESC", "CustomerManagerASC", "CustomerManagerDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC","IdASC","IdDESC" </remarks>
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class GetByFilterPagedOrganisationChangeRequestQuery : IRequest<DataResult<PagedList<GetOrganisationInfoChangeRequestDto>>>
     {
         public OrganisationChangeRequestDetailSearch OrganisationChangeRequestDetailSearch { get; set; } = new OrganisationChangeRequestDetailSearch();

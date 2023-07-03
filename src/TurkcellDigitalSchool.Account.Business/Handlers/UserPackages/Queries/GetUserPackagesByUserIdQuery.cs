@@ -29,7 +29,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
 
     }
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetUserPackagesByUserIdQuery : IRequest<DataResult<List<UserPackageDto>>>
     {
         public long UserId { get; set; }

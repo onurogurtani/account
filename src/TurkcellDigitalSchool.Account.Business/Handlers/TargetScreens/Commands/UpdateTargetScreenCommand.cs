@@ -17,7 +17,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Commands
     /// Update TargetScreen
     /// </summary>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class UpdateTargetScreenCommand : IRequest<IResult>
     {
         public TargetScreen TargetScreen { get; set; }

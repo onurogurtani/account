@@ -15,8 +15,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
 {
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class GetUserOrganisationInfoByOrganisationIdQuery : IRequest<DataResult<OrganisationUserDto>>
     {
         [MessageClassAttr("Kullanýcý Kurum Görüntüleme")]

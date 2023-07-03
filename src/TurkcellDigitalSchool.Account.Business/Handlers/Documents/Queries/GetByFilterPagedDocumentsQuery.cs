@@ -19,8 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
     ///Get Filtered Paged Documents with relation data 
     ///</summary>
     ///<remarks>OrderBy default "IdDESC" also can be "RecordStatusASC","RecordStatusDESC","ContractKindASC","ContractKindDESC","ContractTypeASC","ContractTypeDESC","ContentASC","ContentDESC","VersionASC","VersionDESC","ValidStartDateASC","ValidStartDateDESC","ValidEndDateASC","ValidEndDateDESC","IdASC","IdDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC"  </remarks>
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class GetByFilterPagedDocumentsQuery : IRequest<DataResult<PagedList<DocumentDto>>>
     {
         public DocumentDetailSearch DocumentDetailSearch { get; set; } = new DocumentDetailSearch();

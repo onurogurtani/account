@@ -17,7 +17,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Com
     /// Delete UserBasketPackage
     /// </summary>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class DeleteUserBasketPackageCommand : IRequest<IResult>
     {
         public long Id { get; set; }

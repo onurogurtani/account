@@ -19,7 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
     ///Get Filtered Paged Admins  with Roles
     /// </summary>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetByFilterPagedAdminsQuery : IRequest<DataResult<PagedList<AdminDto>>>
     {
         public AdminDetailSearch AdminDetailSearch { get; set; } = new AdminDetailSearch();

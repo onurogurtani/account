@@ -18,7 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
 {
     [ExcludeFromCodeCoverage]
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetUserTypesQuery : IRequest<DataResult<List<SelectionItem>>>
     {
         public class GetUserTypesQueryHandler : IRequestHandler<GetUserTypesQuery, DataResult<List<SelectionItem>>>

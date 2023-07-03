@@ -17,7 +17,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries
 {
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetRoleQuery : IRequest<DataResult<GetRoleDto>>
     {
         public long Id { get; set; }

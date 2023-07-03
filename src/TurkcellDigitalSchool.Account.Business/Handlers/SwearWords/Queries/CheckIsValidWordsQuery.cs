@@ -15,7 +15,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.SwearWords.Queries
     /// CheckIsValidWordsQuery
     /// </summary>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class CheckIsValidWordsQuery : IRequest<IResult>
     {
         public string? Text { get; set; }

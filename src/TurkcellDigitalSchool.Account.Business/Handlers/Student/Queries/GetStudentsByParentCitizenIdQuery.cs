@@ -15,7 +15,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
 {
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetStudentsByParentCitizenIdQuery : IRequest<DataResult<List<ParentInfoDto>>>
     {
         public long? CitizenId { get; set; }

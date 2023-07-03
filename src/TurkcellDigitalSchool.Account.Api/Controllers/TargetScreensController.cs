@@ -7,8 +7,7 @@ using TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Queries;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Common.Controllers;
-using TurkcellDigitalSchool.Core.Utilities.Paging;
-using TurkcellDigitalSchool.Core.Utilities.Requests;
+using TurkcellDigitalSchool.Core.Utilities.Paging; 
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers

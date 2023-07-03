@@ -15,8 +15,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationTypes.Commands
 {
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class DeleteOrganisationTypeCommand : DeleteRequestBase<OrganisationType>
     {
         [MessageClassAttr("Kurum Türü Silme")]

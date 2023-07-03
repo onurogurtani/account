@@ -21,7 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     /// Get Package
     /// </summary>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetPackageQuery : IRequest<DataResult<Package>>
     {
         public long Id { get; set; }

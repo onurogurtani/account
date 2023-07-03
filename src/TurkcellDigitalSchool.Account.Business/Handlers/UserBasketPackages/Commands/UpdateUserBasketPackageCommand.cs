@@ -18,7 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Com
     /// Update UserBasketPackage
     /// </summary>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class UpdateUserBasketPackageCommand : IRequest<IResult>
     {
         public long Id { get; set; }

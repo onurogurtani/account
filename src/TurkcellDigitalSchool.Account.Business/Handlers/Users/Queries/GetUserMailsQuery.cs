@@ -29,7 +29,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                 _mediator = mediator;
             }
 
-            [SecuredOperationScope] 
+              
             public async Task<DataResult<IEnumerable<UserMailDto>>> Handle(GetUserMailsQuery request, CancellationToken cancellationToken)
             {
                 List<UserMailDto> emailList = _userRepository.Query()

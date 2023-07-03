@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
@@ -147,6 +148,10 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
+        /// <summary>
+        /// GetUserDtoById
+        /// </summary>
+        /// <returns></returns>
         [Consumes("application/json")]
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result))]
@@ -200,6 +205,44 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
+        /// <summary>
+        /// GetUserWeeklySession
+        /// </summary>
+        /// <returns></returns>
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("GetUserWeeklySession")]
+        public async Task<IActionResult> GetUserWeeklySession([FromBody] GetUserWeeklySessionQuery getUserWeeklySessionQuery, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(getUserWeeklySessionQuery, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+
+        /// <summary>
+        /// User avatar update
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPut("UpdateAvatar")]
+        public async Task<IActionResult> UpdateAvatar([FromBody] UpdateAvatarCommand request, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(request, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
 
 
     }

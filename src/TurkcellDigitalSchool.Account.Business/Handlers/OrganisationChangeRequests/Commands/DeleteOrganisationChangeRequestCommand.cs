@@ -12,8 +12,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Commands
 {
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class DeleteOrganisationChangeRequestCommand : IRequest<IResult>
     {
         public long Id { get; set; }

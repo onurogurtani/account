@@ -52,7 +52,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Core.Common.Constants.Messages.SuccessfulOperation;
 
-            [SecuredOperationScope]
+             
             public async Task<IResult> Handle(LdapUserInfoCommand request, CancellationToken cancellationToken)
             {
                 bool isLdapConnect = isAdminConnectDAP().Result;

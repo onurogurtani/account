@@ -1,6 +1,5 @@
 using FluentAssertions;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -8,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Core.Utilities.IoC;
 using System.Collections.Generic;
 using System.Linq;
 using MockQueryable.Moq;
@@ -19,10 +17,10 @@ using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices;
 using Refit;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Core.Enums; 
+using TurkcellDigitalSchool.Core.Enums;
 using OrganisationChangeReqContent = TurkcellDigitalSchool.Account.Domain.Concrete.OrganisationChangeReqContent;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices.Model.Response;
+using static TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Commands.UpdateOrganisationChangeRequestCommand;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChangeRequests.Commands
 {
@@ -31,41 +29,21 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
     public class UpdateOrganisationChangeRequestCommandTest
     {
         private UpdateOrganisationChangeRequestCommand _updateOrganisationChangeRequestCommand;
-        private UpdateOrganisationChangeRequestCommand.UpdateOrganisationChangeRequestCommandHandler _updateOrganisationChangeRequestCommandHandler;
+        private UpdateOrganisationChangeRequestCommandHandler _updateOrganisationChangeRequestCommandHandler;
 
-        Mock<IOrganisationInfoChangeRequestRepository> _organisationInfoChangeRequestRepository;
-        Mock<IOrganisationChangeReqContentRepository> _organisationChangeReqContentRepository;
-        Mock<IOrganisationRepository> _organisationRepository;
-        Mock<IFileServices> _fileService;
-        Mock<ITokenHelper> _tokenHelper;
-
-        Mock<IHeaderDictionary> _headerDictionary;
-        Mock<HttpRequest> _httpRequest;
-        Mock<IHttpContextAccessor> _httpContextAccessor;
-        Mock<IServiceProvider> _serviceProvider;
-        Mock<IMediator> _mediator;
-        Mock<IMapper> _mapper;
-        Mock<RedisService> _redisService;
+        private Mock<IOrganisationInfoChangeRequestRepository> _organisationInfoChangeRequestRepository;
+        private Mock<IOrganisationChangeReqContentRepository> _organisationChangeReqContentRepository;
+        private Mock<IOrganisationRepository> _organisationRepository;
+        private Mock<IFileServices> _fileService;
+        private Mock<ITokenHelper> _tokenHelper;
+        private Mock<IMediator> _mediator;
+        private Mock<IMapper> _mapper;
 
         [SetUp]
         public void Setup()
         {
             _mediator = new Mock<IMediator>();
-            _serviceProvider = new Mock<IServiceProvider>();
-            _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpRequest = new Mock<HttpRequest>();
-            _headerDictionary = new Mock<IHeaderDictionary>();
             _mapper = new Mock<IMapper>();
-            _redisService = new Mock<RedisService>();
-
-            _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
-            ServiceTool.ServiceProvider = _serviceProvider.Object;
-            _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
-            _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
-            _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
-
             _organisationInfoChangeRequestRepository = new Mock<IOrganisationInfoChangeRequestRepository>();
             _organisationChangeReqContentRepository = new Mock<IOrganisationChangeReqContentRepository>();
             _organisationRepository = new Mock<IOrganisationRepository>();
@@ -73,7 +51,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.OrganisationChang
             _tokenHelper = new Mock<ITokenHelper>();
 
             _updateOrganisationChangeRequestCommand = new UpdateOrganisationChangeRequestCommand();
-            _updateOrganisationChangeRequestCommandHandler = new(_organisationInfoChangeRequestRepository.Object, _organisationChangeReqContentRepository.Object, _organisationRepository.Object, _tokenHelper.Object, _mapper.Object, _fileService.Object, _mediator.Object);
+            _updateOrganisationChangeRequestCommandHandler = new UpdateOrganisationChangeRequestCommandHandler(_organisationInfoChangeRequestRepository.Object, _organisationChangeReqContentRepository.Object, _organisationRepository.Object, _tokenHelper.Object, _mapper.Object, _fileService.Object, _mediator.Object);
         }
 
         [Test]

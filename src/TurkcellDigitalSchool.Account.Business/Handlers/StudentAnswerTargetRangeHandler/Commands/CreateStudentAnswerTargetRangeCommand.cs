@@ -15,7 +15,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRangeHandler.Commands
 {
     [LogScope]
-    [SecuredOperationScope]
+     
     public class CreateStudentAnswerTargetRangeCommand : IRequest<IResult>
     {
         public long UserId { get; set; }

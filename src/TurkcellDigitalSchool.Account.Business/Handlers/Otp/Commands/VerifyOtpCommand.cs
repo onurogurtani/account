@@ -16,8 +16,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Otp.Commands
 {
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class VerifyOtpCommand : IRequest<IResult>
     {
         public ChannelType ChanellTypeId { get; set; }

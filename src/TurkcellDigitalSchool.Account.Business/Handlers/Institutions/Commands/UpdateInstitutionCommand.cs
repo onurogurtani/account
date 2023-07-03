@@ -8,8 +8,7 @@ using TurkcellDigitalSchool.Core.Utilities.Requests;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Institutions.Commands
 {
-    [ExcludeFromCodeCoverage] 
-    [SecuredOperationScope]
+    [ExcludeFromCodeCoverage]  
     [LogScope]
     public class UpdateInstitutionCommand : UpdateRequestBase<Institution>
     {

@@ -6,18 +6,18 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Core.AuthorityManagement;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
-using TurkcellDigitalSchool.Core.Common.Helpers;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Helpers; 
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
 {
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
+    [SecuredOperationScope(ClaimNames = new[] { ClaimConst.RoleAndAuthorityManagementCopy  })]
     public class RoleCopyCommand : IRequest<IResult>
     {
         public long RoleId { get; set; }

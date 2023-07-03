@@ -18,8 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
     ///Get Filtered Paged Organisation with relation data 
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be ""CrmIdASC","CrmIdDESC","OrganisationTypeNameASC","OrganisationTypeNameDESC",NameASC","NameDESC","OrganisationManagerASC","OrganisationManagerDESC","PackageNameASC","PackageNameDESC","LicenceNumberASC","LicenceNumberDESC","DomainNameASC","DomainNameDESC","CustomerNumberASC","CustomerNumberDESC","OrganisationStatusInfoASC","OrganisationStatusInfoDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC","IdASC","IdDESC" </remarks>
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class GetByFilterPagedOrganisationsQuery : IRequest<DataResult<PagedList<Organisation>>>
     {
         public OrganisationDetailSearch OrganisationDetailSearch { get; set; } = new OrganisationDetailSearch();

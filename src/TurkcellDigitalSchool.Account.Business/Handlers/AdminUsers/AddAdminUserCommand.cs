@@ -23,8 +23,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
     /// Add User
     /// </summary>
     [TransactionScope]
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class AddAdminUserCommand : IRequest<IDataResult<SelectionItem>>
     {
         public UserType UserTypeId { get; set; }

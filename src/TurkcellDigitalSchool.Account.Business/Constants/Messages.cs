@@ -125,6 +125,14 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string YouMustChoose = "Seçim yapmalısınız";
 
         public static string DocumentAlreadyExist = "“Bu sözleşme daha önce tanımlanmış. Lütfen alanları kontrol ediniz ya da versiyon güncelleyiniz.";
+        public static string GreetingMessageAlreadyExist = "Bu karşılama mesajı daha önce tanımlanmış.";
+        public static string GreetingMessageTodayControl = "Bugün için mesaj girilemez.";
+        public static string GreetingMessageDateConflict = "Bu tarih aralığında tanımlanmış karşılama mesajı zaten mevcut.";
+        public static string Waiting = "Bekliyor";
+        public static string Showing = "Gösterimde";
+        public static string Showed = "Gösterildi";
+        public static string EndDayMustGreaterThanStartDay = "Bitiş tarihi başlangıç tarihinden sonra olmalıdır.";
+        public static string StartDayMustGreaterThanToday = "Başlangıç tarihi bugünün tarihinden sonra olmalıdır.";
 
 #pragma warning restore CA2211
 #pragma warning restore S2223

@@ -31,7 +31,7 @@ namespace TurkcellDigitalSchool.Exam.Business.Handlers.TestExams.Commands
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Core.Common.Constants.Messages.SuccessfulOperation;
 
-            [SecuredOperationScope]
+             
             public async Task<IResult> Handle(BirthDayNotificationCommand request, CancellationToken cancellationToken)
             {                
                 // Öğrenci

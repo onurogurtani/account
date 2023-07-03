@@ -20,8 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Queries
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "NameASC","NameDESC","RecordStatusASC","RecordStatusDESC","DescriptionASC","DescriptionDESC","IdASC","IdDESC"</remarks>
     [ExcludeFromCodeCoverage]
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class GetByFilterPagedContractTypesQuery : IRequest<DataResult<PagedList<ContractType>>>
     {
         public ContractTypeDto ContractTypeDto { get; set; } = new ContractTypeDto();

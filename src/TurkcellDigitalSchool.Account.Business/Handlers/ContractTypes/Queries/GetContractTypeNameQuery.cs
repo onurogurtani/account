@@ -17,8 +17,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Queries
     /// Get Names that using in contractTypes
     /// </summary>
     [ExcludeFromCodeCoverage]
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class GetContractTypeNamesQuery : IRequest<DataResult<List<string>>>
     {
         public class GetContractTypeNamesQueryHandler : IRequestHandler<GetContractTypeNamesQuery, DataResult<List<string>>>

@@ -18,8 +18,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 {
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class UpdateStudentSupportTeamViewMyDataCommand : IRequest<IResult>
     {
         public bool IsViewMyData { get; set; }

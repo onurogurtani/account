@@ -22,7 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Queries
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "IsActiveASC","IsActiveDESC","NameASC","NameDESC","PageNameASC","PageNameDESC","IdASC","IdDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC" 
     ///<br />   PageNumber can be  entered manually </remarks>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetByFilterPagedTargetScreensQuery : IRequest<DataResult<PagedList<TargetScreen>>>
     {
         public TargetScreenDetailSearch TargetScreenDetailSearch { get; set; } = new TargetScreenDetailSearch();

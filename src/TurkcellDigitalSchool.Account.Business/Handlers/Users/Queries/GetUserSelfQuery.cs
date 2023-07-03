@@ -17,7 +17,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
     [ExcludeFromCodeCoverage]
     [PerformanceScope]
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetUserSelfQuery : IRequest<DataResult<CurrentUserDto>>
     {
         public class GetUserSelfQueryHandler : IRequestHandler<GetUserSelfQuery, DataResult<CurrentUserDto>>

@@ -6,7 +6,6 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Common.Helpers;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -15,11 +14,11 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 {
     [LogScope]
-    [SecuredOperationScope]
+     
     public class UpdateStudentPersonalInformationCommand : IRequest<IResult>
     {
         public string UserName { get; set; }
-        public int AvatarId { get; set; }
+        public string Email { get; set; }
         public string MobilPhone { get; set; }
         public long? ResidenceCityId { get; set; }
         public long? ResidenceCountyId { get; set; }
@@ -30,11 +29,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             private readonly IUserRepository _userRepository;
             private readonly IUserService _userService;
             private readonly ITokenHelper _tokenHelper;
-            public UpdateStudentPersonalInformationCommandHandler(IUserRepository userRepository, IUserService userService, ITokenHelper tokenHelper)
+            private readonly IMediator _mediator;
+            public UpdateStudentPersonalInformationCommandHandler(IUserRepository userRepository, IUserService userService, ITokenHelper tokenHelper, IMediator mediator)
             {
                 _userRepository = userRepository;
                 _userService = userService;
                 _tokenHelper = tokenHelper;
+                _mediator = mediator;
             }
 
             [MessageConstAttr(MessageCodeType.Information)]
@@ -61,8 +62,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                 if (_userService.IsExistUserName(userId, request.UserName))
                     return new ErrorResult(UserNameAlreadyExist.PrepareRedisMessage());
 
+                //todo email güncelleme burayaa alındı.
+                var updateEmail = await _mediator.Send(new UpdateStudentEmailCommand { Email = request.Email }, cancellationToken);
+                if (!updateEmail.Success)
+                {
+                    return new ErrorResult(updateEmail.Message);
+                }
+
                 getUser.UserName = request.UserName;
-                getUser.AvatarId = request.AvatarId;
                 getUser.MobilePhones = request.MobilPhone;
                 getUser.MobilePhonesVerify = (getUser.MobilePhones == request.MobilPhone) ? true : false;
                 getUser.ResidenceCityId = request.ResidenceCityId;

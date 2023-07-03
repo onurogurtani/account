@@ -14,8 +14,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Educations.Queries
     /// <summary>
     /// Get By UserId  Education
     /// </summary>
-    [ExcludeFromCodeCoverage]
-    [SecuredOperationScope] 
+    [ExcludeFromCodeCoverage] 
     [LogScope]
     public class GetByUserIdEducationQuery : IRequest<DataResult<Education>>
     {

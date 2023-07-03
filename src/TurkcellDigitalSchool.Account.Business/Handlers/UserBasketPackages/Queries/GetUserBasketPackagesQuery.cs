@@ -19,7 +19,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Queries
 {
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetUserBasketPackagesQuery : IRequest<DataResult<GetUserBasketPackagesResponseDto>>
     {
         public PaginationQuery Pagination { get; set; }

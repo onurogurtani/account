@@ -15,8 +15,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 {
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class UpdateStudentCommunicationPreferencesCommand : IRequest<IResult>
     {
         public StudentCommunicationPreferencesDto StudentCommunicationPreferencesRequest { get; set; }

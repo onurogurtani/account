@@ -17,7 +17,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Commands
     /// Create TargetScreen
     /// </summary>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class CreateTargetScreenCommand : IRequest<IResult>
     {
         public TargetScreen TargetScreen { get; set; }

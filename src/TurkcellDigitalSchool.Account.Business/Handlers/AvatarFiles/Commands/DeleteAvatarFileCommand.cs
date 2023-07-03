@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using MediatR;
 using Refit;
 using TurkcellDigitalSchool.Account.Business.Constants;
+using TurkcellDigitalSchool.Core.AuthorityManagement;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.Common.Helpers;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Helpers; 
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -17,7 +17,7 @@ using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices.Mo
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
 {
     [LogScope]
-    [SecuredOperationScope]
+    [SecuredOperationScope(ClaimNames = new []{ ClaimConst.AvatarManagamentDelete})]
     public class DeleteAvatarFileCommand : IRequest<IResult>
     {
         public long Id { get; set; }

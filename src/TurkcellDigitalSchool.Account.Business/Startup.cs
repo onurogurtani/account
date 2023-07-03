@@ -156,8 +156,7 @@ namespace TurkcellDigitalSchool.Account.Business
             ConfigureServices(services);
 
             services.AddDbContext<AccountDbContext>();
-            services.AddDbContext<AccountSubscribeDbContext>();
-            services.AddConsulConfig(Configuration);
+            services.AddDbContext<AccountSubscribeDbContext>(); 
         }
 
 

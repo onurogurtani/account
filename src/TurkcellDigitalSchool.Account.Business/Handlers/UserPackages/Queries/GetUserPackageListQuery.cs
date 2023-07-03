@@ -16,7 +16,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
 {
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetUserPackageListQuery : IRequest<DataResult<List<GetUserTestExamPackageDto>>>
     {
         public class GetUserPackageListQueryHandler : IRequestHandler<GetUserPackageListQuery, DataResult<List<GetUserTestExamPackageDto>>>

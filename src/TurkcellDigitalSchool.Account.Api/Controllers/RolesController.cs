@@ -9,8 +9,7 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.Common.Controllers;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
-using TurkcellDigitalSchool.Core.Utilities.Paging;
-using TurkcellDigitalSchool.Core.Utilities.Requests;
+using TurkcellDigitalSchool.Core.Utilities.Paging; 
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
@@ -111,7 +110,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<Role>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("SetPassiveRole")]
-        public async Task<IActionResult> Add([FromBody] SetPassiveRoleCommand setPassiveRoleCommand, CancellationToken cancellationToken)
+        public async Task<IActionResult> SetPassiveRole([FromBody] SetPassiveRoleCommand setPassiveRoleCommand, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(setPassiveRoleCommand, cancellationToken);
             if (result.Success)
@@ -151,7 +150,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("RoleCopy")]
-        public async Task<IActionResult> Add([FromBody] RoleCopyCommand roleCopyCommand, CancellationToken cancellationToken)
+        public async Task<IActionResult> RoleCopy([FromBody] RoleCopyCommand roleCopyCommand, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(roleCopyCommand, cancellationToken);
             if (result.Success)

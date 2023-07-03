@@ -23,7 +23,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
     /// </summary>
     [TransactionScope]
     [LogScope]
-    //[SecuredOperationScope]
+    // 
     public class CreateAdminCommand : IRequest<IResult>
     {
         public CreateUpdateAdminDto Admin { get; set; }

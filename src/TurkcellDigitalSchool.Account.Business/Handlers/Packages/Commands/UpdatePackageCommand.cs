@@ -4,19 +4,16 @@ using System.Threading.Tasks;
 using DotNetCore.CAP;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Core.AuthorityManagement;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
-using TurkcellDigitalSchool.Core.Common.Helpers;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Helpers; 
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using JsonConverter = System.Text.Json.Serialization.JsonConverter;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
 {
@@ -26,7 +23,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
 
     [TransactionScope]
     [LogScope]
-    [SecuredOperationScope]
+    [SecuredOperationScope(ClaimNames = new []{ ClaimConst.PackageEdit,ClaimConst.PackageCopy})]
     public class UpdatePackageCommand : IRequest<IResult>
     {
         public Package Package { get; set; }

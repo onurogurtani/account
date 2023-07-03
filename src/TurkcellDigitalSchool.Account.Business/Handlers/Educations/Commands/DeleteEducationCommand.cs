@@ -11,8 +11,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Educations.Commands
     /// <summary>
     /// Delete Education
     /// </summary>
-    [ExcludeFromCodeCoverage]
-    [SecuredOperationScope]
+    [ExcludeFromCodeCoverage] 
     [LogScope]
     public class DeleteEducationCommand : DeleteRequestBase<Education>
     {

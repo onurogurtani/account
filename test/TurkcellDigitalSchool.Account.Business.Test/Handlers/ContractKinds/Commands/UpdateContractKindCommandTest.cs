@@ -6,16 +6,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using FluentAssertions;
-using MediatR;
-using Microsoft.AspNetCore.Http;
 using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
 using TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
-using TurkcellDigitalSchool.Core.Utilities.IoC;
+using static TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Commands.UpdateContractKindCommand;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.ContractKinds.Commands
 {
@@ -24,43 +21,19 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.ContractKinds.Com
     public class UpdateContractKindCommandTest
     {
         private UpdateContractKindCommand _updateContractKindCommand;
-        private UpdateContractKindCommand.UpdateContractKindCommandHandler _updateContractKindCommandHandler;
+        private UpdateContractKindCommandHandler _updateContractKindCommandHandler;
 
-        Mock<IContractKindRepository> _contractKindRepository;
-        Mock<IContractTypeRepository> _contractTypeRepository;
-
-        Mock<IHeaderDictionary> _headerDictionary;
-        Mock<HttpRequest> _httpRequest;
-        Mock<IHttpContextAccessor> _httpContextAccessor;
-        Mock<IServiceProvider> _serviceProvider;
-        Mock<IMediator> _mediator;
-        Mock<IMapper> _mapper;
-        Mock<RedisService> _redisService;
+        private Mock<IContractKindRepository> _contractKindRepository;
+        private Mock<IMapper> _mapper;
 
         [SetUp]
         public void Setup()
         {
-            _mediator = new Mock<IMediator>();
-            _serviceProvider = new Mock<IServiceProvider>();
-            _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpRequest = new Mock<HttpRequest>();
-            _headerDictionary = new Mock<IHeaderDictionary>();
             _mapper = new Mock<IMapper>();
-            _redisService = new Mock<RedisService>();
-
-            _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
-            ServiceTool.ServiceProvider = _serviceProvider.Object;
-            _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
-            _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
-            _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
-
             _contractKindRepository = new Mock<IContractKindRepository>();
-            _contractTypeRepository = new Mock<IContractTypeRepository>();
 
             _updateContractKindCommand = new UpdateContractKindCommand();
-            _updateContractKindCommandHandler = new(_contractKindRepository.Object, _mapper.Object);
+            _updateContractKindCommandHandler = new UpdateContractKindCommandHandler(_contractKindRepository.Object, _mapper.Object);
         }
 
         [Test]

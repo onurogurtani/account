@@ -5,22 +5,21 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
-using TurkcellDigitalSchool.Core.Utilities.Results;
-using Microsoft.EntityFrameworkCore;
+using TurkcellDigitalSchool.Core.Utilities.Results; 
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using System.Linq;
+using TurkcellDigitalSchool.Core.AuthorityManagement;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
 {
     /// <summary>
     /// Update WorkPlan
-    /// </summary>
-    [SecuredOperationScope]
+    /// </summary> 
     [LogScope]
-    [TransactionScope]
+    [SecuredOperationScope(ClaimNames = new[] { ClaimConst.ContractDefEdit })]
     public class UpdateDocumentCommand : IRequest<IResult>
     {
         public Document Entity { get; set; }

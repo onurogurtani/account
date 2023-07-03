@@ -17,8 +17,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
     /// <summary>
     /// Contract Kind By Contract Types
     /// </summary>
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class GetContractKindsByContractTypesQuery : IRequest<DataResult<List<SelectionItem>>>
     {
         public long[] Ids { get; set; }

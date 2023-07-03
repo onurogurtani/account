@@ -19,7 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Queries
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "IsActiveASC","IsActiveDESC","NameASC","NameDESC","PackageTypeASC","PackageTypeDESC","IdASC","IdDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC" 
     ///<br />   PageNumber can be  entered manually </remarks>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetByFilterPagedPackageTypesQuery : IRequest<DataResult<PagedList<PackageType>>>
     {
         public PackageTypeDetailSearch PackageTypeDetailSearch { get; set; } = new PackageTypeDetailSearch();

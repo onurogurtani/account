@@ -36,8 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             /// It is taken from the ViewMyData field in the user table.
             /// If true, the token is created.
             /// </summary>
-            
-            [SecuredOperationScope]
+             
             public async Task<DataResult<TokenIntegraitonResponse>> Handle(GetTokenQuery request, CancellationToken cancellationToken)
             {
              

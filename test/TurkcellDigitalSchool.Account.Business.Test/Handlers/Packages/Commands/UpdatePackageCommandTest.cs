@@ -4,19 +4,15 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using DotNetCore.CAP;
 using FluentAssertions;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
 using TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
-using TurkcellDigitalSchool.Core.Utilities.IoC;
 using static TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands.UpdatePackageCommand;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
@@ -28,50 +24,27 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
         private UpdatePackageCommand _updatePackageCommand;
         private UpdatePackageCommandHandler _updatePackageCommandHandler;
 
-        Mock<IImageOfPackageRepository> _imageOfPackageRepository;
-        Mock<IPackageRepository> _packageRepository;
-        Mock<IPackageLessonRepository> _packageLessonRepository;
-        Mock<IPackagePublisherRepository> _packagePublisherRepository;
-        Mock<IPackageDocumentRepository> _packageDocumentRepository;
-        Mock<IPackageContractTypeRepository> _packageContractTypeRepository;
-        Mock<IPackagePackageTypeEnumRepository> _packagePackageTypeEnumRepository;
-        Mock<IPackageFieldTypeRepository> _packageFieldTypeRepository;
-        Mock<IPackageCoachServicePackageRepository> _packageCoachServicePackageRepository;
-        Mock<IPackageMotivationActivityPackageRepository> _packageMotivationActivityPackageRepository;
-        Mock<IPackageTestExamPackageRepository> _packageTestExamPackageRepository;
-        Mock<IPackageTestExamRepository> _packageTestExamRepository;
-        Mock<IPackageEventRepository> _packageEventRepository;
-        Mock<IPackageRoleRepository> _packageRoleRepository;
-
-
-        Mock<IHeaderDictionary> _headerDictionary;
-        Mock<HttpRequest> _httpRequest;
-        Mock<IHttpContextAccessor> _httpContextAccessor;
-        Mock<IServiceProvider> _serviceProvider;
-        Mock<IMediator> _mediator;
-        Mock<IMapper> _mapper;
-        Mock<RedisService> _redisService;
-        Mock<ICapPublisher> _capPublisher;
+        private Mock<IImageOfPackageRepository> _imageOfPackageRepository;
+        private Mock<IPackageRepository> _packageRepository;
+        private Mock<IPackageLessonRepository> _packageLessonRepository;
+        private Mock<IPackagePublisherRepository> _packagePublisherRepository;
+        private Mock<IPackageDocumentRepository> _packageDocumentRepository;
+        private Mock<IPackageContractTypeRepository> _packageContractTypeRepository;
+        private Mock<IPackagePackageTypeEnumRepository> _packagePackageTypeEnumRepository;
+        private Mock<IPackageFieldTypeRepository> _packageFieldTypeRepository;
+        private Mock<IPackageCoachServicePackageRepository> _packageCoachServicePackageRepository;
+        private Mock<IPackageMotivationActivityPackageRepository> _packageMotivationActivityPackageRepository;
+        private Mock<IPackageTestExamPackageRepository> _packageTestExamPackageRepository;
+        private Mock<IPackageTestExamRepository> _packageTestExamRepository;
+        private Mock<IPackageEventRepository> _packageEventRepository;
+        private Mock<IPackageRoleRepository> _packageRoleRepository;
+        private Mock<IMediator> _mediator;
+        private Mock<ICapPublisher> _capPublisher;
 
         [SetUp]
         public void Setup()
         {
             _mediator = new Mock<IMediator>();
-            _serviceProvider = new Mock<IServiceProvider>();
-            _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpRequest = new Mock<HttpRequest>();
-            _headerDictionary = new Mock<IHeaderDictionary>();
-            _mapper = new Mock<IMapper>();
-            _redisService = new Mock<RedisService>();
-
-            _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
-            ServiceTool.ServiceProvider = _serviceProvider.Object;
-            _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
-            _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
-            _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
-
             _imageOfPackageRepository = new Mock<IImageOfPackageRepository>();
             _packageRepository = new Mock<IPackageRepository>();
             _packageLessonRepository = new Mock<IPackageLessonRepository>();
@@ -91,7 +64,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Commands
             _capPublisher = new Mock<ICapPublisher>();
 
             _updatePackageCommand = new UpdatePackageCommand();
-            _updatePackageCommandHandler = new(_packageCoachServicePackageRepository.Object, _packageEventRepository.Object, _packageMotivationActivityPackageRepository.Object,
+            _updatePackageCommandHandler = new UpdatePackageCommandHandler(_packageCoachServicePackageRepository.Object, _packageEventRepository.Object, _packageMotivationActivityPackageRepository.Object,
                 _packageTestExamPackageRepository.Object, _packagePackageTypeEnumRepository.Object, _packageFieldTypeRepository.Object, _packageRepository.Object, _imageOfPackageRepository.Object,
                 _packageLessonRepository.Object, _packagePublisherRepository.Object, _packageDocumentRepository.Object, _packageContractTypeRepository.Object, _packageTestExamRepository.Object, _capPublisher.Object, _packageRoleRepository.Object, _mediator.Object);
         }
