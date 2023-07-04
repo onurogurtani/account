@@ -19,7 +19,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Queries
 {
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetTeacherQuery : IRequest<DataResult<GetTeacherResponseDto>>
     {
         /// <summary>

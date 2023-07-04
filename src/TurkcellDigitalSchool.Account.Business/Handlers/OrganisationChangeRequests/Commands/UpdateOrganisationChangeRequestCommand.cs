@@ -22,8 +22,7 @@ using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Commands
 {
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     [TransactionScope]
     public class UpdateOrganisationChangeRequestCommand : IRequest<Core.Utilities.Results.IResult>
     {

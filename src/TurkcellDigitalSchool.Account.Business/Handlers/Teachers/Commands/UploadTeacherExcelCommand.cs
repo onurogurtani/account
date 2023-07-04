@@ -10,9 +10,7 @@ using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.AuthorityManagement;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Excel.Model;
@@ -21,7 +19,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
 {
     [LogScope]
-    [SecuredOperationScope]
+    [SecuredOperationScope(ClaimNames = new[] { ClaimConst.TeachersImportFromExcel })]
     public class UploadTeacherExcelCommand : IRequest<DataResult<ExcelResponse>>
     {
         public IFormFile FormFile { get; set; }

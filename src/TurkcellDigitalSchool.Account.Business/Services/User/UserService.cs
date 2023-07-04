@@ -11,6 +11,7 @@ using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.File;
+using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Services.User
 {
@@ -24,7 +25,8 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         private readonly IUserContratRepository _userContratRepository;
         private readonly IUserCommunicationPreferencesRepository _userCommunicationPreferencesRepository;
         private readonly IUserSupportTeamViewMyDataRepository _userSupportTeamViewMyDataRepository;
-        public UserService(IUserRepository userRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository, IUserContratRepository userContratRepository, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository, IFileService fileService, IClassroomRepository classroomRepository, IInstitutionRepository institutionRepository)
+        private readonly IFileRepository _fileRepository;
+        public UserService(IUserRepository userRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository, IUserContratRepository userContratRepository, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository, IFileService fileService, IClassroomRepository classroomRepository, IInstitutionRepository institutionRepository, IFileRepository fileRepository)
         {
             _userRepository = userRepository;
             _studentParentInformationRepository = studentParentInformationRepository;
@@ -34,6 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             _userContratRepository = userContratRepository;
             _userCommunicationPreferencesRepository = userCommunicationPreferencesRepository;
             _userSupportTeamViewMyDataRepository = userSupportTeamViewMyDataRepository;
+            _fileRepository = fileRepository;
         }
         public PersonalInfoDto GetByStudentPersonalInformation(long userId)
         {
@@ -113,6 +116,9 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
 
         [MessageConstAttr(MessageCodeType.Error)]
         private static string CommunicationChannelVerifyPhone = Constants.Messages.CommunicationChannelVerifyPhone;
+
+        [MessageConstAttr(MessageCodeType.Error, "Avatar,Kullanıcı")]
+        private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
 
         public bool IsExistCity(long cityId)
         {
@@ -321,6 +327,23 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 .ToList();
             return getParents;
         }
+        public async Task<IResult> UpdateAvatarAsync(long userId, long avatarId)
+        {
 
+            var existAvatarFile = _fileRepository.Query().Any(w => w.Id == avatarId && w.FileType == FileType.Avatar);
+            if (!existAvatarFile)
+            {
+                return new ErrorResult { Success = false, Message = string.Format(RecordDoesNotExist.PrepareRedisMessage(), "Avatar") };
+            }
+            var getUser = _userRepository.Get(w => w.Id == userId);
+            if (getUser == null)
+            {
+                return new ErrorResult { Success = false, Message = string.Format(RecordDoesNotExist.PrepareRedisMessage(), "Kullanıcı") };
+            }
+
+            getUser.AvatarId = avatarId;
+            await _userRepository.UpdateAndSaveAsync(getUser);
+            return new SuccessResult { Success = true, Message = Messages.ConfirmSuccess };
+        }
     }
 }

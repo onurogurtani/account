@@ -9,7 +9,7 @@ using TurkcellDigitalSchool.Core.Utilities.Requests;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageLessons.Queries
 {
     [ExcludeFromCodeCoverage]
-    [SecuredOperationScope]
+     
     [LogScope]
     public class GetPackageLessonQuery : QueryByIdRequestBase<PackageLesson>
     {

@@ -17,8 +17,7 @@ using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
 {
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class UpdateAvatarFileCommand : IRequest<Core.Utilities.Results.IResult>
     {
         public long Id { get; set; }

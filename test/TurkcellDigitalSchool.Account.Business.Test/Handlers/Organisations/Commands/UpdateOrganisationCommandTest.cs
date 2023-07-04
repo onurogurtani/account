@@ -8,7 +8,6 @@ using AutoMapper;
 using DotNetCore.CAP;
 using FluentAssertions;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
@@ -17,10 +16,7 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Account.Domain.Dtos.OrganisationDtos;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.Enums;
-using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using static TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands.UpdateOrganisationCommand;
 
@@ -33,40 +29,20 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
         private UpdateOrganisationCommand _UpdateOrganisationCommand;
         private UpdateOrganisationCommandHandler _UpdateOrganisationCommandHandler;
 
-        Mock<IOrganisationRepository> _organisationRepository;
-        Mock<IOrganisationTypeRepository> _organisationTypeRepository;
-        Mock<IPackageRoleRepository> _packageRoleRepository;
-        Mock<IUserRepository> _userRepository;
-        Mock<IPackageRepository> _packageRepository;
-
-        Mock<IHeaderDictionary> _headerDictionary;
-        Mock<HttpRequest> _httpRequest;
-        Mock<IHttpContextAccessor> _httpContextAccessor;
-        Mock<IServiceProvider> _serviceProvider;
-        Mock<IMediator> _mediator;
-        Mock<IMapper> _mapper;
-        Mock<RedisService> _redisService;
+        private Mock<IOrganisationRepository> _organisationRepository;
+        private Mock<IOrganisationTypeRepository> _organisationTypeRepository;
+        private Mock<IPackageRoleRepository> _packageRoleRepository;
+        private Mock<IUserRepository> _userRepository;
+        private Mock<IPackageRepository> _packageRepository;
+        private Mock<IMediator> _mediator;
+        private Mock<IMapper> _mapper;
         private Mock<ICapPublisher> _capPublisher;
 
         [SetUp]
         public void Setup()
         {
             _mediator = new Mock<IMediator>();
-            _serviceProvider = new Mock<IServiceProvider>();
-            _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpRequest = new Mock<HttpRequest>();
-            _headerDictionary = new Mock<IHeaderDictionary>();
             _mapper = new Mock<IMapper>();
-            _redisService = new Mock<RedisService>();
-
-            _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
-            ServiceTool.ServiceProvider = _serviceProvider.Object;
-            _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
-            _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
-            _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
-
             _organisationRepository = new Mock<IOrganisationRepository>();
             _organisationTypeRepository = new Mock<IOrganisationTypeRepository>();
             _packageRoleRepository = new Mock<IPackageRoleRepository>();
@@ -87,6 +63,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
                 {
                     Id = 1,
                     Name = "Test",
+                    PackageId = 1,
                 }
             };
 
@@ -98,6 +75,11 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
             var organisationTypes = new List<OrganisationType>
             {
                 new OrganisationType{ Id = 1, Name = "Deneme", IsSingularOrganisation = true }
+            };
+
+            var packages = new List<Package>
+            {
+                new Package{ Id = 1, Name = "Test"}
             };
 
             var packageRoles = new List<PackageRole>
@@ -136,16 +118,20 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
             _mediator.Setup(x => x.Send(It.IsAny<UpdateAdminCommand>(), CancellationToken.None)).ReturnsAsync(new SuccessResult());
 
             _organisationTypeRepository.Setup(x => x.Query()).Returns(organisationTypes.AsQueryable().BuildMock());
-            _organisationTypeRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<OrganisationType, bool>>>())).ReturnsAsync(organisationTypes.First());
+            _organisationTypeRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<OrganisationType, bool>>>())).ReturnsAsync(organisationTypes.FirstOrDefault());
+
+            _packageRepository.Setup(x => x.Query()).Returns(packages.AsQueryable().BuildMock());
+            _packageRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<Package, bool>>>())).ReturnsAsync(packages.FirstOrDefault(x => x.Id == _UpdateOrganisationCommand.Organisation.PackageId));
 
             _packageRoleRepository.Setup(x => x.Query()).Returns(packageRoles.AsQueryable().BuildMock());
-            _packageRoleRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<PackageRole, bool>>>())).ReturnsAsync(packageRoles.First());
+            _packageRoleRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<PackageRole, bool>>>())).ReturnsAsync(packageRoles.FirstOrDefault());
 
             _userRepository.Setup(x => x.Query()).Returns(users.AsQueryable().BuildMock());
-            _userRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<User, bool>>>())).ReturnsAsync(users.First());
+            _userRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<User, bool>>>())).ReturnsAsync(users.FirstOrDefault());
 
-            //_organisationRepository.Setup(x => x.Query()).Returns(organisations.AsQueryable().BuildMock());
-            //_organisationRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<UpdateOrganisationDto, bool>>>())).ReturnsAsync(_UpdateOrganisationCommand.Organisation);
+            _organisationRepository.Setup(x => x.Query()).Returns(organisations.AsQueryable().BuildMock());
+            _organisationRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<Organisation, bool>>>())).ReturnsAsync(organisations.FirstOrDefault());
+
             _mapper.Setup(x => x.Map<Organisation>(It.IsAny<object>())).Returns(fakeEntity);
 
             _organisationRepository.Setup(x => x.Update(It.IsAny<Organisation>())).Returns(new Organisation());
@@ -179,8 +165,9 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
                 Name = _UpdateOrganisationCommand.Organisation.Name,
             };
 
-            //_organisationRepository.Setup(x => x.Query()).Returns(organisations.AsQueryable().BuildMock());
-            //_organisationRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<Organisation, bool>>>())).ReturnsAsync(_UpdateOrganisationCommand.Organisation);
+            _organisationRepository.Setup(x => x.Query()).Returns(organisations.AsQueryable().BuildMock());
+            _organisationRepository.Setup(x => x.GetAsync(It.IsAny<Expression<Func<Organisation, bool>>>())).ReturnsAsync(organisations.FirstOrDefault());
+
             _mapper.Setup(x => x.Map<Organisation>(It.IsAny<object>())).Returns(fakeEntity);
             _organisationRepository.Setup(x => x.Update(It.IsAny<Organisation>())).Returns(new Organisation());
 

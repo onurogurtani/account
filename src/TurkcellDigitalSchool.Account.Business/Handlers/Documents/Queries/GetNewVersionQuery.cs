@@ -15,8 +15,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
     /// <summary>
     /// Get New Versiyon No
     /// </summary>
-    [ExcludeFromCodeCoverage]
-    [SecuredOperationScope]
+    [ExcludeFromCodeCoverage] 
     [LogScope]
     public class GetNewVersionQuery : IRequest<DataResult<DocumentVersionDto>>
     {

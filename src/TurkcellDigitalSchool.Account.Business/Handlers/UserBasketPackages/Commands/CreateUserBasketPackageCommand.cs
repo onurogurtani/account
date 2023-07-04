@@ -19,7 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserBasketPackages.Com
     /// Create UserBasketPackage
     /// </summary>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class CreateUserBasketPackageCommand : IRequest<IResult>
     {
         public long PackageId { get; set; }

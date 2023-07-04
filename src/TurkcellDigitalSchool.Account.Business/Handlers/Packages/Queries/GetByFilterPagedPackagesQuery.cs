@@ -18,7 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "IsActiveASC","IsActiveDESC","NameASC","NameDESC","PackageKindASC","PackageKindDESC","SummaryASC","SummaryDESC","ContentASC","ContentDESC","PackageTypeASC","PackageTypeDESC","MaxNetCountASC","MaxNetCountDESC","EducationYearASC","EducationYearDESC","ClassroomDESC","ClassroomASC","LessonDESC","LessonASC","PackageFieldTypeASC","PackageFieldTypeDESC","RoleDESC","RoleASC","StartDateASC","StartDateDESC","FinishDateASC","FinishDateDESC","HasCoachServiceASC","HasCoachServiceDESC","HasTryingTestASC","HasTryingTestDESC","TryingTestQuestionCountASC","TryingTestQuestionCountDESC","HasMotivationEventASC","HasMotivationEventDESC","IdASC","IdDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC"  </remarks>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetByFilterPagedPackagesQuery : IRequest<DataResult<PagedList<Package>>>
     {
         public PackageDetailSearch PackageDetailSearch { get; set; } = new PackageDetailSearch();

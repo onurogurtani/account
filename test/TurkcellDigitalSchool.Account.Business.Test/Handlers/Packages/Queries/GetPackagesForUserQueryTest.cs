@@ -5,8 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using FluentAssertions;
-using MediatR;
-using Microsoft.AspNetCore.Http;
 using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
@@ -15,10 +13,8 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.File;
-using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using static TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries.GetPackagesForUserQuery;
 
@@ -32,34 +28,12 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
 
         private Mock<IPackageRepository> _packageRepository;
         private Mock<IFileService> _fileService;
-
-        Mock<IHeaderDictionary> _headerDictionary;
-        Mock<HttpRequest> _httpRequest;
-        Mock<IHttpContextAccessor> _httpContextAccessor;
-        Mock<IServiceProvider> _serviceProvider;
-        Mock<IMediator> _mediator;
-        Mock<IMapper> _mapper;
-        Mock<RedisService> _redisService;
+        private Mock<IMapper> _mapper;
 
         [SetUp]
         public void Setup()
         {
-            _mediator = new Mock<IMediator>();
-            _serviceProvider = new Mock<IServiceProvider>();
-            _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpRequest = new Mock<HttpRequest>();
-            _headerDictionary = new Mock<IHeaderDictionary>();
             _mapper = new Mock<IMapper>();
-            _redisService = new Mock<RedisService>();
-
-            _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
-            ServiceTool.ServiceProvider = _serviceProvider.Object;
-            _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
-            _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
-            _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
-
             _packageRepository = new Mock<IPackageRepository>();
             _fileService = new Mock<IFileService>();
 
@@ -98,7 +72,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
                                     Id=1,
                                     IsActive=true
                                 },
-                                Order=1 
+                                Order=1
 
                             },
                             LessonId=1,
@@ -139,8 +113,8 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Packages.Queries
             }
 
 
-            var saveFileReturn =  new DataResult<byte[]>(sevenThousandItems, true);
-            _fileService.Setup(x => x.GetFile(It.IsAny<string>())).ReturnsAsync(()=> saveFileReturn);
+            var saveFileReturn = new DataResult<byte[]>(sevenThousandItems, true);
+            _fileService.Setup(x => x.GetFile(It.IsAny<string>())).ReturnsAsync(() => saveFileReturn);
 
             _packageRepository.Setup(x => x.Query()).Returns(pageTypes.AsQueryable().BuildMock());
 

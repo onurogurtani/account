@@ -15,7 +15,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     /// Get Names that using in Packages
     /// </summary>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetPackageNamesQuery : IRequest<DataResult<List<string>>>
     {
         public class GetPackageNamesQueryHandler : IRequestHandler<GetPackageNamesQuery, DataResult<List<string>>>

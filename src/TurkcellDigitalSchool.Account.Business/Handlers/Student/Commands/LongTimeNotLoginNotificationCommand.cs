@@ -40,7 +40,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Core.Common.Constants.Messages.SuccessfulOperation;
 
-            [SecuredOperationScope]
+             
             public async Task<IResult> Handle(LongTimeNotLoginNotificationCommand request, CancellationToken cancellationToken)
             {
 

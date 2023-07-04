@@ -2,19 +2,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.ValidationRules;
+using Microsoft.EntityFrameworkCore; 
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Core.AuthorityManagement;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.Common.Constants;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants; 
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Commands
 {
     [LogScope]
-    [SecuredOperationScope]
+    [SecuredOperationScope(ClaimNames = new[] { ClaimConst.ContractRoundEdit })]
     public class UpdateContractKindCommand : IRequest<IResult>
     {
         public ContractKind ContractKind { get; set; }

@@ -14,8 +14,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
 {
     [ExcludeFromCodeCoverage]
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class GetOrganisationNamesQuery : IRequest<DataResult<List<SelectionItem>>>
     {
         public class GetOrganisationNamesQueryHandler : IRequestHandler<GetOrganisationNamesQuery, DataResult<List<SelectionItem>>>

@@ -5,10 +5,10 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Core.AuthorityManagement;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
-using TurkcellDigitalSchool.Core.Common.Helpers;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Helpers; 
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -17,7 +17,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
 {
     [TransactionScope]
     [LogScope]
-    [SecuredOperationScope]
+    [SecuredOperationScope(ClaimNames = new[] { ClaimConst.RoleAndAuthorityManagementEdit })]
     public class UpdateRoleCommand : IRequest<IResult>
     {
         public UpdateRoleDto Role { get; set; }

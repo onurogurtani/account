@@ -3,8 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.Common.Constants;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants; 
 using TurkcellDigitalSchool.Core.Utilities.Results; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
@@ -12,8 +11,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
     /// <summary>
     /// Delete Admin User
     /// </summary>
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class DeleteAdminCommand : IRequest<IResult>
     {
         public long Id { get; set; }

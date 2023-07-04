@@ -9,7 +9,7 @@ using TurkcellDigitalSchool.Core.Utilities.Requests;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageRoles.Commands
 {
     [ExcludeFromCodeCoverage]
-    [SecuredOperationScope]
+     
     [LogScope]
 
     public class DeletePackageRoleCommand : DeleteRequestBase<PackageRole>

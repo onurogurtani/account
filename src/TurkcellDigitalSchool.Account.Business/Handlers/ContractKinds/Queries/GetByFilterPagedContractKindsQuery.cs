@@ -20,8 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
     ///Get Filtered Paged ContractKind with relation data 
     ///</summary>
     ///<remarks>OrderBy default "UpdateTimeDESC" also can be "NameASC","NameDESC","RecordStatusASC","RecordStatusDESC","DescriptionASC","DescriptionDESC","IdASC","IdDESC","ContractTypeNameASC","ContractTypeNameDESC"</remarks>
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class GetByFilterPagedContractKindsQuery : IRequest<DataResult<PagedList<ContractKind>>>
     {
         public ContractKindDto ContractKindDto { get; set; } = new ContractKindDto();

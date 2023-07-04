@@ -12,8 +12,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Educations.Commands
     /// Update Education
     /// </summary>
 
-    [ExcludeFromCodeCoverage]
-    [SecuredOperationScope]
+    [ExcludeFromCodeCoverage] 
     [LogScope]
     public class UpdateEducationCommand : UpdateRequestBase<Education>
     {

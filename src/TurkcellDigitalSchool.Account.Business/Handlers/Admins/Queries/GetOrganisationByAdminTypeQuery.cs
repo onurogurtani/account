@@ -18,8 +18,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
 {
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class GetOrganisationByAdminTypeQuery : IRequest<DataResult<OrganisationUsersDto>>
     {
         [MessageClassAttr("Admin Tipine Göre Kullanýcý Kurumlarýný Listeleme")]

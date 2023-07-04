@@ -576,6 +576,80 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     b.ToTable("forgetpasswordfailcounters", (string)null);
                 });
 
+            modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.GreetingMessage", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Content")
+                        .HasColumnType("text")
+                        .HasColumnName("content");
+
+                    b.Property<long?>("DayCount")
+                        .HasColumnType("bigint")
+                        .HasColumnName("daycount");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("enddate");
+
+                    b.Property<long?>("FileId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("fileid");
+
+                    b.Property<bool>("HasDateRange")
+                        .HasColumnType("boolean")
+                        .HasColumnName("hasdaterange");
+
+                    b.Property<DateTime>("InsertTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("inserttime");
+
+                    b.Property<long?>("InsertUserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("insertuserid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("isdeleted");
+
+                    b.Property<long?>("Order")
+                        .HasColumnType("bigint")
+                        .HasColumnName("order");
+
+                    b.Property<int>("RecordStatus")
+                        .HasColumnType("integer")
+                        .HasColumnName("recordstatus");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("startdate");
+
+                    b.Property<DateTime?>("UpdateTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updatetime");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("updateuserid");
+
+                    b.HasKey("Id")
+                        .HasName("pk_greetingmessage");
+
+                    b.HasIndex("FileId")
+                        .HasDatabaseName("ix_greetingmessage_fileid");
+
+                    b.ToTable("greetingmessage", (string)null);
+                });
+
             modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.ImageOfPackage", b =>
                 {
                     b.Property<long>("Id")
@@ -4095,6 +4169,16 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasConstraintName("fk_documentcontracttype_documents_documentid");
 
                     b.Navigation("ContractType");
+                });
+
+            modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.GreetingMessage", b =>
+                {
+                    b.HasOne("TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly.File", "File")
+                        .WithMany()
+                        .HasForeignKey("FileId")
+                        .HasConstraintName("fk_greetingmessage_files_fileid");
+
+                    b.Navigation("File");
                 });
 
             modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.ImageOfPackage", b =>

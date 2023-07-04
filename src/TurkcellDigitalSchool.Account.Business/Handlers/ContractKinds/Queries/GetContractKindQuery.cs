@@ -6,14 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.Common.Constants;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants; 
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
 {
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class GetContractKindQuery : IRequest<DataResult<ContractKind>>
     {
         public long Id { get; set; }

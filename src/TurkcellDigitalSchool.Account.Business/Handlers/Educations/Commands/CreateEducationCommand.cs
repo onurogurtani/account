@@ -11,8 +11,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Educations.Commands
     /// <summary>
     /// Create Education
     /// </summary>
-    [ExcludeFromCodeCoverage]
-    [SecuredOperationScope]
+    [ExcludeFromCodeCoverage] 
     [LogScope]
     public class CreateEducationCommand : CreateRequestBase<Education>
     {

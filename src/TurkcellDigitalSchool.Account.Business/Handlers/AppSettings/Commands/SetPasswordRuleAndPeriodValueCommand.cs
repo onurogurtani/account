@@ -6,16 +6,16 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Core.AuthorityManagement;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.Common.Constants;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Constants; 
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Commands
 {
     [LogScope]
-    [SecuredOperationScope]
+    [SecuredOperationScope(ClaimNames = new []{ ClaimConst.PasswordManagementAdd,ClaimConst.PasswordManagementEdit})]
     public class SetPasswordRuleAndPeriodValueCommand : IRequest<IResult>
     {
         public int MinCharacter { get; set; }

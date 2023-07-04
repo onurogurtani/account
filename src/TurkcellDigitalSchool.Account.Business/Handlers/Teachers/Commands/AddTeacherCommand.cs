@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Core.AuthorityManagement;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
-using TurkcellDigitalSchool.Core.Common.Helpers;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Helpers; 
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -19,7 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
     /// Add User/Teacher
     /// </summary>
     [LogScope]
-    [SecuredOperationScope]
+    [SecuredOperationScope(ClaimNames = new[] { ClaimConst.TeachersAdd })]
     public class AddTeacherCommand : IRequest<DataResult<long>>
     {
         public long CitizenId { get; set; }

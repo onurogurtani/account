@@ -6,9 +6,7 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.AuthorityManagement;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -16,7 +14,8 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
 {
     [LogScope]
-    [SecuredOperationScope]
+     
+    [SecuredOperationScope(ClaimNames = new[] { ClaimConst.TeachersActivePassive })]
     public class SetTeacherActivateStatusCommand : IRequest<IResult>
     {
         public long Id { get; set; }
@@ -38,7 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
             private static string UserIsNotTeacher = Constants.Messages.UserIsNotTeacher;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-          
+
             public async Task<IResult> Handle(SetTeacherActivateStatusCommand request, CancellationToken cancellationToken)
             {
                 var teacher = await _userRepository.GetAsync(x => x.Id == request.Id);

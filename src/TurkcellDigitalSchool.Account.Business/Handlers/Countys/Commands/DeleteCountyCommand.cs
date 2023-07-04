@@ -14,8 +14,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Countys.Commands
 {
-    [ExcludeFromCodeCoverage]
-    [SecuredOperationScope]
+    [ExcludeFromCodeCoverage] 
     [LogScope]
     [RemoveCacheScope(RequestTypes = new[] { typeof(GetCountysQuery) })]
     public class DeleteCountyCommand : DeleteRequestBase<County>

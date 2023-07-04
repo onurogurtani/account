@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -10,18 +9,15 @@ using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices;
 using System.IO;
-using System.Text;
 using Refit;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+using TurkcellDigitalSchool.Core.AuthorityManagement;
 using TurkcellDigitalSchool.Core.Utilities.Results;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Commands
 {
     [LogScope]
-    [SecuredOperationScope]
+    [SecuredOperationScope(ClaimNames = new []{ ClaimConst.AvatarManagamentAdd })]
     public class CreateAvatarFileCommand : IRequest<IResult>
     {
         public IFormFile Image { get; set; }

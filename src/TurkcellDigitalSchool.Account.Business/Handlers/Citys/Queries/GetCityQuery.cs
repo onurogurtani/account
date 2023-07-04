@@ -8,8 +8,7 @@ using TurkcellDigitalSchool.Core.Utilities.Requests;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Citys.Queries
 {
-    [ExcludeFromCodeCoverage]
-    [SecuredOperationScope]
+    [ExcludeFromCodeCoverage] 
     [LogScope]
     public class GetCityQuery : QueryByIdRequestBase<City>
     {

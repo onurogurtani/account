@@ -12,8 +12,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
     /// <summary>
     /// SetStatus Admin User
     /// </summary>
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class SetStatusAdminCommand : IRequest<IResult>
     {
         public long Id { get; set; }

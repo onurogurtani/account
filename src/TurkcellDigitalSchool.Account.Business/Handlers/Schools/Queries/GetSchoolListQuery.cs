@@ -16,7 +16,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Queries
 {
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetSchoolListQuery : IRequest<DataResult<PagedList<School>>>
     {
         public PaginationQuery PaginationQuery { get; set; }

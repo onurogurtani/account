@@ -4,10 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using FluentAssertions;
-using MediatR;
-using Microsoft.AspNetCore.Http;
 using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
@@ -15,8 +12,7 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
-using TurkcellDigitalSchool.Core.Utilities.IoC;
+using static TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands.UpdateDocumentCommand;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Documents.Commands
 {
@@ -25,46 +21,21 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Documents.Command
     public class UpdateDocumentCommandTest
     {
         private UpdateDocumentCommand _updateDocumentCommand;
-        private UpdateDocumentCommand.UpdateDocumentCommandHandler _updateDocumentCommandHandler;
-        Mock<AccountDbContext> _accountDbContext;
+        private UpdateDocumentCommandHandler _updateDocumentCommandHandler;
 
-        Mock<IDocumentRepository> _documentRepository;
-        Mock<IDocumentContractTypeRepository> _documentContractTypeRepository;
-
-        Mock<IHeaderDictionary> _headerDictionary;
-        Mock<HttpRequest> _httpRequest;
-        Mock<IHttpContextAccessor> _httpContextAccessor;
-        Mock<IServiceProvider> _serviceProvider;
-        Mock<IMediator> _mediator;
-        Mock<IMapper> _mapper;
-        Mock<RedisService> _redisService;
+        private Mock<IDocumentRepository> _documentRepository;
+        private Mock<IDocumentContractTypeRepository> _documentContractTypeRepository;
+        private Mock<AccountDbContext> _accountDbContext;
 
         [SetUp]
         public void Setup()
         {
-            _mediator = new Mock<IMediator>();
-            _serviceProvider = new Mock<IServiceProvider>();
-            _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _httpRequest = new Mock<HttpRequest>();
-            _headerDictionary = new Mock<IHeaderDictionary>();
-            _mapper = new Mock<IMapper>();
-            _redisService = new Mock<RedisService>();
-
-            _serviceProvider.Setup(x => x.GetService(typeof(IMediator))).Returns(_mediator.Object);
-            ServiceTool.ServiceProvider = _serviceProvider.Object;
-            _headerDictionary.Setup(x => x["Referer"]).Returns("");
-            _httpRequest.Setup(x => x.Headers).Returns(_headerDictionary.Object);
-            _httpContextAccessor.Setup(x => x.HttpContext.Request).Returns(_httpRequest.Object);
-            _serviceProvider.Setup(x => x.GetService(typeof(IHttpContextAccessor))).Returns(_httpContextAccessor.Object);
-            _serviceProvider.Setup(x => x.GetService(typeof(RedisService))).Returns(_redisService.Object);
-
             _documentRepository = new Mock<IDocumentRepository>();
             _documentContractTypeRepository = new Mock<IDocumentContractTypeRepository>();
-
             _accountDbContext = new Mock<AccountDbContext>();
 
             _updateDocumentCommand = new UpdateDocumentCommand();
-            _updateDocumentCommandHandler = new(_documentRepository.Object, _documentContractTypeRepository.Object, _accountDbContext.Object);
+            _updateDocumentCommandHandler = new UpdateDocumentCommandHandler(_documentRepository.Object, _documentContractTypeRepository.Object, _accountDbContext.Object);
         }
 
         [Test]

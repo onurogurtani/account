@@ -9,7 +9,7 @@ using TurkcellDigitalSchool.Core.Utilities.Requests;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.UserRoles.Queries
 {
     [ExcludeFromCodeCoverage]
-    [SecuredOperationScope]
+     
     [LogScope]
     public class GetUserRoleQuery : QueryByIdRequestBase<UserRole>
     {

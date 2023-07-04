@@ -16,7 +16,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Commands
     /// Delete PackageType
     /// </summary>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class DeletePackageTypeCommand : IRequest<IResult>
     {
         public long Id { get; set; }

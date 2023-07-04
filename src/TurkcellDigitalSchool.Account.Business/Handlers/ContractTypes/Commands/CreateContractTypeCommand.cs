@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Core.AuthorityManagement;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
@@ -15,7 +16,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Commands
     /// Create ContractType
     /// </summary>
     [LogScope]
-    [SecuredOperationScope]
+    [SecuredOperationScope(ClaimNames = new[] { ClaimConst.ContractTypeAdd })]
     public class CreateContractTypeCommand : IRequest<IResult>
     {
         public ContractType ContractType { get; set; }

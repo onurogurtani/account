@@ -16,7 +16,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRangeHandler.Queries
 {
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetByFilterPagedStudentAnswerTargetRangeQuery : IRequest<DataResult<PagedList<StudentAnswerTargetRangeResponse>>>
     {
         public StudentAnswerTargetRangeDetailSearch StudentAnswerTargetRangeDetailSearch { get; set; }

@@ -9,7 +9,7 @@ using TurkcellDigitalSchool.Core.Utilities.Requests;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
 {
     [ExcludeFromCodeCoverage]
-    [SecuredOperationScope1(RequestTypes = new[] { ClaimConst.SchoolManagementDelete })]
+    [SecuredOperationScope(ClaimNames = new[] { ClaimConst.SchoolManagementDelete })]
     [LogScope]
     public class DeleteSchoolCommand : DeleteRequestBase<School>
     {

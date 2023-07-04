@@ -22,7 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
     /// Download User/Teacher
     /// </summary>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class DownloadTeacherExcelCommand : IRequest<DataResult<ExcelResponse>>
     {
         [MessageClassAttr("Öðretmen Excel Tablosu Ýndirme")]

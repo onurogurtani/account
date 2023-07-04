@@ -13,7 +13,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentAnswerTargetRangeHandler.Commands
 {
     [LogScope]
-    [SecuredOperationScope]
+     
     public class DeleteStudentAnswerTargetRangeCommand : IRequest<IResult>
     {
         public long Id { get; set; }

@@ -21,7 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Queries
     /// Get TargetScreen
     /// </summary>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetTargetScreenQuery : IRequest<DataResult<TargetScreen>>
     {
         public long Id { get; set; }

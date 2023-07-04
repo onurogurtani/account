@@ -15,8 +15,7 @@ using TurkcellDigitalSchool.Core.Enums;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
 {
     [TransactionScope]
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class CreateAdminRoleCommand : IRequest<long>
     {
         [MessageClassAttr("Rol Ekleme")]

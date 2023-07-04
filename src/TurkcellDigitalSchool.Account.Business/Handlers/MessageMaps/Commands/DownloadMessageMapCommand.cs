@@ -8,11 +8,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Core.AuthorityManagement;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;  
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
 {
+    [LogScope]
+    [SecuredOperationScope(ClaimNames = new[] { ClaimConst.ErrorAndWarningToExcel })]
     public class DownloadMessageMapCommand : IRequest<DataResult<FileDto>>
     {
         public MessageMapDetailSearchDto MessageMapDetailSearchDto { get; set; } = new MessageMapDetailSearchDto();

@@ -14,6 +14,7 @@ using TurkcellDigitalSchool.Core.Common.Handlers;
 using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using System.Linq;
+using TurkcellDigitalSchool.Core.AuthorityManagement;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
 {
@@ -21,7 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
     /// Create Document
     /// </summary>
     [ExcludeFromCodeCoverage]
-    [SecuredOperationScope]
+    [SecuredOperationScope(ClaimNames = new[] { ClaimConst.ContractDefAdd })]
     [LogScope]
     public class CreateDocumentCommand : CreateRequestBase<Document>
     {

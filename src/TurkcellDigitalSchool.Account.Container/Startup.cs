@@ -130,9 +130,7 @@ namespace TurkcellDigitalSchool.Account.Container
                         }
                         break;
                     }
-            }
-
-            app.UseConsul(Configuration, "Account");
+            } 
             app.UseDeveloperExceptionPage();
 
             app.ConfigureCustomExceptionMiddleware();

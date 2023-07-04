@@ -104,27 +104,22 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         //    return BadRequest(result);
         //}
 
-        /// <summary>
-        /// Otp İçin Gönderilir
-        /// </summary>
-        /// <param name="loginModel"></param>
-        /// <returns></returns>
-        //[Consumes("application/json")]
-        //[Produces("application/json", "text/plain")]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<AccessToken>))]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        //[HttpPost("BehalfOfLogin")]
-        //public async Task<IActionResult> BehalfOfLogin([FromBody] BehalfOfLoginQuery loginModel, CancellationToken cancellationToken)
-        //{
-        //    var result = await Mediator.Send(loginModel, cancellationToken);
 
-        //    if (result.Success)
-        //    {
-        //        return Ok(result);
-        //    }
-
-        //    return BadRequest(result);
-        //}
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<AccessToken>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("BehalfOfLogin")]
+        public async Task<IActionResult> BehalfOfLogin([FromBody] BehalfOfLoginQuery loginModel, CancellationToken cancellationToken)
+        {
+            return Ok();
+            var result = await Mediator.Send(loginModel, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
 
         /// <summary>
         /// Direk Token Almak İçin Development İçin
@@ -186,13 +181,6 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
 
             return BadRequest(result);
         }
-
-
-
-
-
-
-
 
 
         /// <summary>
@@ -633,7 +621,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
- 
+
 
 
         /// <summary>

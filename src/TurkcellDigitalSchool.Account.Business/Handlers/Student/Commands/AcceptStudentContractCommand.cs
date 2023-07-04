@@ -16,7 +16,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
 {
     [LogScope]
-    [SecuredOperationScope]
+     
     public class AcceptStudentContractCommand : IRequest<IResult>
     {
         public long Id { get; set; }

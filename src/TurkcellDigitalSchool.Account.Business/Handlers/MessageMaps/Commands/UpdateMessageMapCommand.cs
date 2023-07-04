@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Core.AuthorityManagement;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
@@ -11,6 +13,8 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
 {
+    [LogScope]
+    [SecuredOperationScope(ClaimNames = new[] { ClaimConst.ErrorAndWarningEdit })]
     public class UpdateMessageMapCommand : IRequest<IResult>
     {
         public long Id { get; set; }

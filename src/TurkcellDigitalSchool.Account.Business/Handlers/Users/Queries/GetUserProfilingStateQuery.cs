@@ -18,7 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
     ///Get Filtered Paged Users
     /// </summary>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetUserProfilingStateQuery : IRequest<DataResult<int>>
     {
         public long UserId { get; set; }

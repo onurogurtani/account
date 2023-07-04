@@ -16,7 +16,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
     /// SetStatus User
     /// </summary>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class SetUserProfilingStateCommand : IRequest<IResult>
     {
         public long Id { get; set; }

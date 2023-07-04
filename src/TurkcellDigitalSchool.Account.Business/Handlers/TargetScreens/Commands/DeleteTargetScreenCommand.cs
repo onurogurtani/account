@@ -16,7 +16,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.TargetScreens.Commands
     /// Delete TargetScreen
     /// </summary>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class DeleteTargetScreenCommand : IRequest<IResult>
     {
         public long Id { get; set; }

@@ -18,8 +18,7 @@ using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices.Mo
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OrganisationChangeRequests.Queries
 {
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class GetOrganisationChangeRequestByIdQuery : IRequest<DataResult<GetOrganisationInfoChangeRequestDto>>
     {
         public long Id { get; set; }

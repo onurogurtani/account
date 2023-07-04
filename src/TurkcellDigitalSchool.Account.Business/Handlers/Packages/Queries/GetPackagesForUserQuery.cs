@@ -21,7 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     ///Get Packages For User list Page
     ///<br />  PageNumber can be  entered manually </remarks>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetPackagesForUserQuery : IRequest<DataResult<PagedList<GetPackagesForUserResponseDto>>>
     {
         public PaginationQuery Pagination { get; set; }

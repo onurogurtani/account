@@ -33,7 +33,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.ValidationRule
         public UpdateStudentPersonalInformationValidator()
         {
             RuleFor(x => x.UserName).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
-            RuleFor(x => x.AvatarId).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
             RuleFor(x => x.MobilPhone).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
             RuleFor(x => x.MobilPhone).PhoneNumberAlphacharCheck();
 

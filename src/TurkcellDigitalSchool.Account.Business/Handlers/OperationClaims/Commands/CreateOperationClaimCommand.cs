@@ -9,8 +9,7 @@ using TurkcellDigitalSchool.Core.Utilities.Requests;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.OperationClaims.Commands
 {
-    [ExcludeFromCodeCoverage]
-    [SecuredOperationScope]
+    [ExcludeFromCodeCoverage] 
     [LogScope]
     public class CreateOperationClaimCommand : CreateRequestBase<OperationClaim>
     {

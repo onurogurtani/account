@@ -21,7 +21,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
 {
     [LogScope]
-    [SecuredOperationScope]
+     
     public class DownloadSchoolExcelCommand : IRequest<DataResult<ExcelResponse>>
     {
         [MessageClassAttr("Okul Excel İndirme")]

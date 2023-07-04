@@ -17,8 +17,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
     /// <summary>
     /// Get Admin User with Roles
     /// </summary>
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class GetAdminQuery : IRequest<DataResult<AdminDto>>
     {
         public long Id { get; set; }

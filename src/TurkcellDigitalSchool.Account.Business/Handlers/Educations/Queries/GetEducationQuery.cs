@@ -11,8 +11,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Educations.Queries
     /// <summary>
     /// Get Education
     /// </summary>
-    [ExcludeFromCodeCoverage]
-    [SecuredOperationScope]
+    [ExcludeFromCodeCoverage] 
     [LogScope]
     public class GetEducationQuery : QueryByIdRequestBase<Education>
     {

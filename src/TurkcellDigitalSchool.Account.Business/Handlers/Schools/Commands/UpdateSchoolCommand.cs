@@ -9,7 +9,7 @@ using TurkcellDigitalSchool.Core.Utilities.Requests;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
 {
     [ExcludeFromCodeCoverage]
-    [SecuredOperationScope1(RequestTypes = new[] { ClaimConst.SchoolManagementEdit })]
+    [SecuredOperationScope(ClaimNames = new[] { ClaimConst.SchoolManagementEdit})]
     [LogScope]
 
     public class UpdateSchoolCommand : UpdateRequestBase<School>

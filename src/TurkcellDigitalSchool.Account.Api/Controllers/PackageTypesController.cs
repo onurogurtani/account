@@ -7,8 +7,7 @@ using TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Queries;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Common.Controllers;
-using TurkcellDigitalSchool.Core.Utilities.Paging;
-using TurkcellDigitalSchool.Core.Utilities.Requests;
+using TurkcellDigitalSchool.Core.Utilities.Paging; 
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
@@ -83,9 +82,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
-
-
-
+ 
         /// <summary>
         /// Add TEntity.
         /// </summary>

@@ -10,7 +10,7 @@ using TurkcellDigitalSchool.Core.Utilities.Requests;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
 {
     [ExcludeFromCodeCoverage]
-    [SecuredOperationScope1(RequestTypes =new[]{ClaimConst.SchoolManagementAdd})]
+    [SecuredOperationScope(ClaimNames = new[]{ClaimConst.SchoolManagementAdd})]
     [LogScope]
     public class CreateSchoolCommand : CreateRequestBase<School>
     {

@@ -38,7 +38,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageTypes.Queries
     /// Get PackageType
     /// </summary>
     [LogScope]
-    [SecuredOperationScope]
+     
     public class GetPackageTypeQuery : IRequest<DataResult<PackageType>>
     {
         public long Id { get; set; }

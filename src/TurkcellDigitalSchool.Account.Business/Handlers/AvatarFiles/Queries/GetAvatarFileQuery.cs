@@ -12,8 +12,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AvatarFiles.Queries
 {
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class GetAvatarFileQuery : IRequest<DataResult<AvatarFileDto>>
     {
         public long Id { get; set; }

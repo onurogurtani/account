@@ -18,8 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
     /// </summary>
     /// 
     [ExcludeFromCodeCoverage]
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class GetContractKindNamesQuery : IRequest<DataResult<List<string>>>
     {
         public class GetContractKindNamesQueryHandler : IRequestHandler<GetContractKindNamesQuery, DataResult<List<string>>>

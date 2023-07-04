@@ -21,7 +21,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
 {
     [LogScope]
-    [SecuredOperationScope1(RequestTypes = new[] { ClaimConst.SchoolManagementImportFromExcel})]
+    [SecuredOperationScope(ClaimNames = new[] { ClaimConst.SchoolManagementImportFromExcel})]
     public class UploadSchoolExcelCommand : IRequest<DataResult<List<School>>>
     {
         public IFormFile FormFile { get; set; }

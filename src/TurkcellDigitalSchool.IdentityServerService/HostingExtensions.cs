@@ -133,9 +133,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
 
                 builder.Services.AddTransient<ClientRepository>();
                 builder.Services.AddTransient<IdentityScopeRepository>();
-                builder.Services.AddTransient<ApiScopeRepository>();
-
-                builder.Services.AddConsulConfig(builder.Configuration);
+                builder.Services.AddTransient<ApiScopeRepository>(); 
             }
 
             return builder.Build();
@@ -167,8 +165,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
             app.UseAuthorization();
 
             app.MapRazorPages()
-                .RequireAuthorization();
-            app.UseConsul(app.Configuration, "IdentityServer");
+                .RequireAuthorization(); 
             return app;
         }
     }

@@ -17,8 +17,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Queries
     /// <summary>
     /// Get DocumentDto
     /// </summary>
-    [LogScope]
-    [SecuredOperationScope]
+    [LogScope] 
     public class GetDocumentQuery : IRequest<DataResult<DocumentDto>>
     {
         public long Id { get; set; }

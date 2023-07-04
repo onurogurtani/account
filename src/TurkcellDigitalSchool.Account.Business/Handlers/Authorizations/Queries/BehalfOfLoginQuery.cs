@@ -7,11 +7,9 @@ using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Core.AuthorityManagement;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -20,6 +18,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
     [LogScope]
+    [SecuredOperationScope(ClaimNames = new[] { ClaimConst.IndividualMemberListLoginTo })]
     public class BehalfOfLoginQuery : IRequest<DataResult<DArchToken>>, ITokenRequest
     {
         public long UserId { get; set; }
@@ -47,8 +46,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             /// When the user says the support team can see my data, the administrator can log into the user account.
             /// It is taken from the ViewMyData field in the user table.
             /// If true, the token is created.
-            /// </summary> 
-            [SecuredOperationScope]
+            /// </summary>  
             public async Task<DataResult<DArchToken>> Handle(BehalfOfLoginQuery request, CancellationToken cancellationToken)
             {
              
