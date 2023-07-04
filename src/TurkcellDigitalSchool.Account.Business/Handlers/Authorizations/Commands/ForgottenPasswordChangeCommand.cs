@@ -18,6 +18,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.Core.Utilities.Toolkit;
+using Microsoft.AspNetCore.Http;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
@@ -31,7 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 
         public class ForgottenPasswordChangeCommandHandler : IRequestHandler<ForgottenPasswordChangeCommand, IDataResult<AccessToken>>
         {
-            private readonly ConfigurationManager _configurationManager;
+
             private readonly IUserRepository _userRepository;
             private readonly IMediator _mediator;
             private readonly IMobileLoginRepository _mobileLoginRepository;
@@ -39,13 +40,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             private readonly IUserSessionRepository _userSessionRepository;
             private readonly ICapPublisher _capPublisher;
 
-            public ForgottenPasswordChangeCommandHandler(IUserRepository userRepository, IMediator mediator, IMobileLoginRepository mobileLoginRepository, ISmsOtpRepository smsOtpRepository, ConfigurationManager configurationManager, IUserSessionRepository userSessionRepository, ICapPublisher capPublisher)
+
+            public ForgottenPasswordChangeCommandHandler(IUserRepository userRepository, IMediator mediator, IMobileLoginRepository mobileLoginRepository, ISmsOtpRepository smsOtpRepository, IUserSessionRepository userSessionRepository, ICapPublisher capPublisher)
             {
                 _userRepository = userRepository;
                 _mediator = mediator;
                 _mobileLoginRepository = mobileLoginRepository;
                 _smsOtpRepository = smsOtpRepository;
-                _configurationManager = configurationManager;
                 _userSessionRepository = userSessionRepository;
                 _capPublisher = capPublisher;
             }
@@ -121,18 +122,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     await _mobileLoginRepository.SaveChangesAsync();
                 }
 
-                int otp = RandomPassword.RandomNumberGenerator();
+                int otp = RandomPassword.RandomNumberGenerator(); 
 
-
-                if (_configurationManager.Mode != ApplicationMode.DEV)
-                {
-                    // Eski boş SMS kodu
-                    //  await _smsOtpRepository.ExecInsertSpForSms(cellPhone, userId, otp.ToString());
-                    // SMS servisi
-                    await _smsOtpRepository.Send(cellPhone, $"Şifreniz: {otp.ToString()}");
-
-                }
-
+                await _smsOtpRepository.Send(cellPhone, $"Şifreniz: {otp.ToString()}");
+                 
                 date = DateTime.Now;
 
                 var mobileLogin = _mobileLoginRepository.Add(new MobileLogin
@@ -146,6 +139,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     CellPhone = cellPhone,
                     ReSendCount = 0
                 });
+
                 await _mobileLoginRepository.SaveChangesAsync();
 
                 return mobileLogin;
