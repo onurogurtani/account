@@ -32,7 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.GreetingMessages.Queri
  
             public virtual async Task<DataResult<GreetingMessageDto>> Handle(GetGreetingMessageMaxOrderQuery request, CancellationToken cancellationToken)
             {
-                var query = _greetingMessageRepository.Query().Where(w => w.RecordStatus == Core.Enums.RecordStatus.Active && !w.IsDeleted).OrderByDescending(o => o.Order);
+                var query = _greetingMessageRepository.Query().Where(w => w.Order > 0).OrderByDescending(o => o.Order);
 
                 var record = await query.FirstOrDefaultAsync();
 

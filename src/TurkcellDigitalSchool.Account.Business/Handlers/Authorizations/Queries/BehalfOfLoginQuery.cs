@@ -10,6 +10,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.AuthorityManagement;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.CustomAttribute; 
@@ -63,12 +64,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
               
                 if (targetUser == null)
                 {
-                    return new ErrorDataResult<TokenIntegraitonResponse>(UserNotFound);
+                    return new ErrorDataResult<TokenIntegraitonResponse>(UserNotFound.PrepareRedisMessage());
                 }
 
                 if (request.SessionType == SessionType.None)
                 {
-                    return new ErrorDataResult<TokenIntegraitonResponse>(BadSessionType);
+                    return new ErrorDataResult<TokenIntegraitonResponse>(BadSessionType.PrepareRedisMessage());
                 }
 
                 var clientId = request.SessionType == SessionType.Mobile
@@ -87,7 +88,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                     grant_type = "password"
                 }, targetUser.BehalfOfLoginKey, _tokenHelper.GetUserIdByCurrentToken().ToString());
 
-                return new SuccessDataResult<TokenIntegraitonResponse>(tokenResponse, Messages.SuccessfulLogin);
+                return new SuccessDataResult<TokenIntegraitonResponse>(tokenResponse, Messages.SuccessfulLogin.PrepareRedisMessage());
             }
         }
     }
