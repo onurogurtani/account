@@ -19,5 +19,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public string? RefreshToken { get; set; }
         public string? IpAdress { get; set; }
         public string? DeviceInfo { get; set; }
+
+        public long? BehalfOfLoginUserId { get; set;}
     }
 }

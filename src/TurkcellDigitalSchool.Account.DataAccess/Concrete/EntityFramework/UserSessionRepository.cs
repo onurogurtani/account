@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
@@ -7,6 +8,7 @@ using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Services.Session;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
@@ -31,49 +33,25 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
         }
 
         public UserSession AddUserSession(UserSession entity)
-        {
-            var user = Context.Users.Where(w => w.Id == entity.UserId)
-                .FirstOrDefault();
+        { 
+            var behalfOfLoginUserCheck = entity.BehalfOfLoginUserId == null; 
 
-            if (user != null && ((entity.SessionType == Core.Enums.SessionType.Web && user.LastWebSessionId == null) ||
-                (entity.SessionType == Core.Enums.SessionType.Mobile && user.LastMobileSessionId == null)))
+            Expression<Func<UserSession, bool>> expression = behalfOfLoginUserCheck
+                ? u => u.BehalfOfLoginUserId == null
+                : u => u.BehalfOfLoginUserId != null;
+             
+            var openSessions = GetList(expression.And(w =>
+                w.User.Id == entity.UserId && w.SessionType == entity.SessionType && w.EndTime == null));
+
+
+            foreach (var itemSession in openSessions)
             {
-                var openSessions = GetList(w => w.User.Id == entity.UserId && w.SessionType == entity.SessionType && w.EndTime == null);
-                foreach (var itemSession in openSessions)
-                {
-                    itemSession.EndTime = DateTime.Now;
-                    Update(itemSession);
-                }
-            }
-            else
-            {
-                var sessionId = entity.SessionType == Core.Enums.SessionType.Mobile ? user.LastMobileSessionId : user.LastWebSessionId;
-                var oldSession = Context.UserSessions.FirstOrDefault(w => w.Id == sessionId);
-                oldSession.EndTime = DateTime.Now;
-                Update(oldSession);
+                itemSession.EndTime = DateTime.Now; 
             }
 
+            Add(entity); 
 
-
-
-            Add(entity);
-            SaveChanges();
-
-            if (entity.SessionType == Core.Enums.SessionType.Web)
-            {
-                user.LastWebSessionId = entity.Id;
-                user.LastWebSessionTime = entity.StartTime;
-            }
-            else if (entity.SessionType == Core.Enums.SessionType.Mobile)
-            {
-                user.LastMobileSessionId = entity.Id;
-                user.LastMobileSessionTime = entity.StartTime;
-            }
-            Context.SaveChanges();
-
-
-
-
+            Context.SaveChanges(); 
             return entity;
         }
 

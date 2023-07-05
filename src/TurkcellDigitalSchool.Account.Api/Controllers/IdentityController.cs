@@ -112,7 +112,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [HttpPost("BehalfOfLogin")]
         public async Task<IActionResult> BehalfOfLogin([FromBody] BehalfOfLoginQuery loginModel, CancellationToken cancellationToken)
         {
-            return Ok();
+           
             var result = await Mediator.Send(loginModel, cancellationToken);
             if (result.Success)
             {

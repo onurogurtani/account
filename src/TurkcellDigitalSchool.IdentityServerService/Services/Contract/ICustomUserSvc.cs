@@ -1,4 +1,5 @@
-﻿using TurkcellDigitalSchool.IdentityServerService.Services.Model;
+﻿using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.IdentityServerService.Services.Model;
 
 namespace TurkcellDigitalSchool.IdentityServerService.Services.Contract
 {
@@ -11,8 +12,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services.Contract
         Task<bool> UserHasPackage (long id);
         Task ResetUserOtpFailount (long userId);
 
-        Task<string> GenerateUserOldPassChange(long userId);
-
+        Task<string> GenerateUserOldPassChange(long userId); 
+        CustomUserDto GetCustomUser(User user);
 
     }
 }

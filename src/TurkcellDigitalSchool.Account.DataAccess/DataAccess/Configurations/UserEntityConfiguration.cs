@@ -24,6 +24,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations
             builder.Property(x => x.MobilePhonesVerify).HasDefaultValue(false).IsRequired();
             builder.Property(x => x.Notes).HasMaxLength(500);
             builder.Property(x => x.LastPasswordChangeGuid).HasMaxLength(200);
+            builder.Property(x => x.BehalfOfLoginKey).HasMaxLength(200);
             builder.Property(x => x.RelatedIdentity).HasMaxLength(2500);
             builder.Property(x => x.OAuthAccessToken).HasMaxLength(2500);
             builder.Property(x => x.RemindLater);
@@ -37,6 +38,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations
             builder.HasIndex(x => x.RelatedIdentity).IsUnique();
             builder.HasIndex(x => x.CitizenId).IsUnique();
             builder.HasIndex(x => x.Email).IsUnique();
+            builder.HasIndex(x => x.BehalfOfLoginKey);
 
             builder.Property(x => x.IsLdapUser).IsRequired().HasDefaultValue(false);
         }

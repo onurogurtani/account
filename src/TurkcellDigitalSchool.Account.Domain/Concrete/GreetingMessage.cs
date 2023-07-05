@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog.Parsing;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -24,5 +25,9 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public long? FileId { get; set; }
         [JsonIgnore]
         public File File { get; set; }
+        public uint ContentAlignment { get; set; } = 0;
+        public string ContentForeColor { get; set; }
+        public string DescriptionForeColor { get; set; }
+
     }
 }

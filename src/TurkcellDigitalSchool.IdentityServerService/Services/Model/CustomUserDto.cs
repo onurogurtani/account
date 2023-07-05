@@ -23,6 +23,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services.Model
 
         public int? FailLoginCount { get; set; }
         public int? FailOtpCount { get; set; }
-        public DateTime LastPasswordDate { get; set; }
+        public DateTime LastPasswordDate { get; set; } 
+        public long? BehalfOfLoginUserId { get; set;}
     }
 }

@@ -22,6 +22,9 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public RecordStatus RecordStatus { get; set; }
         public long? FileId { get; set; }
         public string FilePath { get; set; }
+        public uint ContentAlignment { get; set; } = 0;
+        public string ContentForeColor { get; set; }
+        public string DescriptionForeColor { get; set; }
         public string State => GetState();
 
         private string GetState()

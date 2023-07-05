@@ -133,6 +133,7 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string Showed = "Gösterildi";
         public static string EndDayMustGreaterThanStartDay = "Bitiş tarihi başlangıç tarihinden sonra olmalıdır.";
         public static string StartDayMustGreaterThanToday = "Başlangıç tarihi bugünün tarihinden sonra olmalıdır.";
+        public static string BadSessionType = "Hatalı Client tipi. İşleme devam edilemez.";
 
 #pragma warning restore CA2211
 #pragma warning restore S2223

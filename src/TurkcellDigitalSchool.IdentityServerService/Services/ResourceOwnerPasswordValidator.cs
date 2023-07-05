@@ -74,6 +74,22 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
         {
             var csrf_token = _httpContextAccessor.HttpContext.Request.Headers[CsrdTokenHeaderText].ToString();
 
+
+            var behalfOfLoginKey = _httpContextAccessor.HttpContext.Request.Headers["BehalfOfLoginKey"].ToString();
+            var behalfOfLoginUserIdstr = _httpContextAccessor.HttpContext.Request.Headers["BehalfOfLoginUserId"].ToString();
+            if (!string.IsNullOrEmpty(behalfOfLoginKey) && !string.IsNullOrEmpty(behalfOfLoginKey) )
+            {
+               var user= await _userRepository.GetAsync(u => u.BehalfOfLoginKey == behalfOfLoginKey);
+               var userDto= _customUserSvc.GetCustomUser(user);
+               long behalfOfLoginUserId = 0;
+               long.TryParse(behalfOfLoginUserIdstr, out behalfOfLoginUserId);
+               userDto.BehalfOfLoginUserId = behalfOfLoginUserId ;
+               userDto.FailLoginCount = 0; 
+               await LoginSuccessProcess(context,0,Guid.NewGuid().ToString(), userDto);
+               return;
+            }
+
+
             if (string.IsNullOrEmpty(csrf_token))
             {
                 context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
@@ -82,9 +98,11 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             }
 
             //ldap user'ın uygulama Db'sinde varlığının kontrolü
-            var ldapUser = _userRepository.GetAsync(u => u.UserName == context.UserName && !u.IsDeleted &&
+          
+            var ldapUser = await _userRepository.GetAsync(u => u.UserName == context.UserName && !u.IsDeleted &&
                        u.Status && u.IsLdapUser);
-            if (ldapUser.Result != null)
+
+            if (ldapUser != null)
             {
                 //Ldap bilgileriyle Giriş                
                 if (_ldapHelper.Login(context.UserName, context.Password).Result.Success)
@@ -100,6 +118,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                     return;
                 }
             }
+
             var errorCount = await _loginFailCounterRepository.GetCsrfTokenFailLoginCount(csrf_token);
 
             if (errorCount >= 3 && errorCount < 5)
@@ -236,7 +255,8 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                     context.Request.Client.ClientId == IdentityServerConst.CLIENT_DIDE_MOBILE ? SessionType.Mobile :
                     SessionType.None,
                 StartTime = DateTime.Now,
-                IpAdress = ip
+                IpAdress = ip,
+                BehalfOfLoginUserId = user.BehalfOfLoginUserId
             };
 
             if (session.SessionType == SessionType.None)
@@ -247,11 +267,10 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             }
 
             var addedSession = _userSessionRepository.AddUserSession(session);
-            await _userSessionRepository.SaveChangesAsync();
+           
             var hasPackage = (await _customUserSvc.UserHasPackage(user.Id)).ToString();
 
-
-
+             
             var sessionInfo = await _sessionRedisSvc.GetAsync<UserSessionInfo>(user.Id.ToString());
             if (sessionInfo == null)
             {
@@ -260,11 +279,25 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
             if (addedSession.SessionType == SessionType.Mobile)
             {
-                sessionInfo.SessionIdMobil = addedSession.Id;
+                if (addedSession.BehalfOfLoginUserId!=null)
+                {
+                    sessionInfo.BehalfOfLoginSessionIdMobil = addedSession.Id;
+                }
+                else
+                {
+                    sessionInfo.SessionIdMobil = addedSession.Id;
+                } 
             }
             else if (addedSession.SessionType == SessionType.Web)
             {
-                sessionInfo.SessionIdWeb = addedSession.Id;
+                if (addedSession.BehalfOfLoginUserId != null)
+                {
+                    sessionInfo.BehalfOfLoginSessionIdWeb = addedSession.Id;
+                }
+                else
+                {
+                    sessionInfo.SessionIdWeb = addedSession.Id;
+                } 
             }
 
             try
@@ -277,8 +310,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 Console.WriteLine(e);
                 throw;
             }
-
-
+             
             context.Result = new GrantValidationResult(user.Id.ToString(), OidcConstants.AuthenticationMethods.Password,
             new List<Claim>
                 {
