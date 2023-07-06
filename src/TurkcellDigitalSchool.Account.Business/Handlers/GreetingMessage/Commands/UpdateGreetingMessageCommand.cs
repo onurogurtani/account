@@ -63,7 +63,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.GreetingMessages.Comma
 
                 if (!request.Entity.HasDateRange && request.Entity.RecordStatus == RecordStatus.Active)
                 {
-                    var list = await _greetingMessageRepository.Query().Where(w => w.Id != request.Entity.Id && !w.HasDateRange && w.Order >= request.Entity.Order && w.RecordStatus == RecordStatus.Active && !w.IsDeleted).OrderBy(o => o.Order).ToListAsync(cancellationToken);
+                    var list = await _greetingMessageRepository.Query().Where(w => w.Id != request.Entity.Id && !w.HasDateRange && w.Order >= request.Entity.Order && !w.IsDeleted).OrderBy(o => o.Order).ToListAsync(cancellationToken);
                     uint newOrder = request.Entity.Order.Value + 1;
                     foreach (var item in list)
                     {
