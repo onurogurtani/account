@@ -28,7 +28,8 @@ namespace TurkcellDigitalSchool.Account.Business.Helpers
             {
                 Name = s.Name,
                 CategoryName = s.CategoryName,
-                Description = s.Description
+                Description = s.Description,
+                ModuleType = s.ModuleType,
             }).Where(w => !dbClaimList.Contains(w.Name)).ToList();
 
             await operationClaimRepository.AddRangeAsync(addingClaims);
