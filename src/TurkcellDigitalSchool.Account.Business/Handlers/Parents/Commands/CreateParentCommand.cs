@@ -12,9 +12,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Parents.Commands
      
     [LogScope]
 
-    public class CreateParentCommand : CreateRequestBase<Parent>
+    public class CreateParentCommand : CreateRequestBase<TurkcellDigitalSchool.Account.Domain.Concrete.Parent>
     {
-        public class CreateRequestParentCommandHandler : CreateRequestHandlerBase<Parent, CreateParentCommand>
+        public class CreateRequestParentCommandHandler : CreateRequestHandlerBase<TurkcellDigitalSchool.Account.Domain.Concrete.Parent, CreateParentCommand>
         {
             /// <summary>
             /// Create Parent

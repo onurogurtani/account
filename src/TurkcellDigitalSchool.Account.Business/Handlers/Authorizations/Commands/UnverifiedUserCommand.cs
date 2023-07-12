@@ -8,7 +8,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.Common.Constants;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
+ 
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
@@ -29,25 +29,25 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
         public string MobilePhones { get; set; }
         public string Password { get; set; }
 
-        public class UnverifiedUserCommandCommandHandler : IRequestHandler<UnverifiedUserCommand, IDataResult<UnverifiedUserDto>>
+        public class UnverifiedUserCommandHandler : IRequestHandler<UnverifiedUserCommand, IDataResult<UnverifiedUserDto>>
         {
             private readonly IUnverifiedUserRepository _unverifiedUserRepository;
             private readonly IUserRepository _userRepository;
-            private readonly ISendOtpSmsHelper _sendOtpSmsHelper;
+            private readonly ISmsOtpRepository _smsOtpRepository;
             private readonly IMailService _mailService;
 
-            public UnverifiedUserCommandCommandHandler(IUnverifiedUserRepository unverifiedUserRepository, ISendOtpSmsHelper sendOtpSmsHelper, IUserRepository userRepository, IMailService mailService)
+            public UnverifiedUserCommandHandler(IUnverifiedUserRepository unverifiedUserRepository, IUserRepository userRepository, IMailService mailService, ISmsOtpRepository smsOtpRepository)
             {
                 _unverifiedUserRepository = unverifiedUserRepository;
-                _sendOtpSmsHelper = sendOtpSmsHelper;
                 _userRepository = userRepository;
                 _mailService = mailService;
+                _smsOtpRepository = smsOtpRepository;
             }
 
             /// <summary>
             /// Will be reedited
             /// </summary> 
-            [CacheRemoveAspect("Get")]
+
             public async Task<IDataResult<UnverifiedUserDto>> Handle(UnverifiedUserCommand request, CancellationToken cancellationToken)
             {
                 HashingHelper.CreatePasswordHash(request.Password, out var passwordSalt, out var passwordHash);
@@ -89,12 +89,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     MobilePhones = request.MobilePhones,
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt,
-                    VerificationKeyLastTime = DateTime.UtcNow.AddSeconds(90)
+                    VerificationKeyLastTime = DateTime.UtcNow.AddSeconds(90),
+                    VerificationKey = RandomPassword.RandomNumberGenerator().ToString()
                 };
 
                 if (unverifiedUser.UserTypeId == UserType.Student)
                 {
-                    unverifiedUser.VerificationKey = RandomPassword.RandomNumberGenerator().ToString();
                     var content = $" Üyelik doğrulama kodu: {unverifiedUser.VerificationKey} ";
 
                     _mailService.Send(new EmailMessage
@@ -109,8 +109,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     MobileLogin mobileLogin;
                     try
                     {
-                        mobileLogin = await _sendOtpSmsHelper.SendOtpSms(AuthenticationProviderType.Person, unverifiedUser.MobilePhones, unverifiedUser.Id);
-                        unverifiedUser.VerificationKey = mobileLogin.Code.ToString();
+                        var content = $" Üyelik doğrulama kodu: {unverifiedUser.VerificationKey} ";
+                         await _smsOtpRepository.Send(unverifiedUser.MobilePhones, content);
                     }
                     catch (Exception e)
                     {

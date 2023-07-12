@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Services.User;
@@ -13,17 +12,18 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
-namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
+namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 {
-    [LogScope] 
-    public class GetStudentParentInformationQuery : IRequest<DataResult<List<ParentInfoDto>>>
+    [LogScope]
+
+    public class GetUserSettingsInformationQuery : IRequest<DataResult<SettingsInfoDto>>
     {
-        public class GetStudentParentInformationQueryHandler : IRequestHandler<GetStudentParentInformationQuery, DataResult<List<ParentInfoDto>>>
+        public class GetStudentSettingsInformationQueryHandler : IRequestHandler<GetUserSettingsInformationQuery, DataResult<SettingsInfoDto>>
         {
             private readonly IUserService _userService;
             private readonly ITokenHelper _tokenHelper;
 
-            public GetStudentParentInformationQueryHandler(IUserService userService, ITokenHelper tokenHelper)
+            public GetStudentSettingsInformationQueryHandler(IUserService userService, ITokenHelper tokenHelper)
             {
                 _userService = userService;
                 _tokenHelper = tokenHelper;
@@ -31,16 +31,16 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
 
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
-
-            public virtual async Task<DataResult<List<ParentInfoDto>>> Handle(GetStudentParentInformationQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<SettingsInfoDto>> Handle(GetUserSettingsInformationQuery request, CancellationToken cancellationToken)
             {
                 var userId = _tokenHelper.GetUserIdByCurrentToken();
 
                 if (userId == 0)
                 {
-                    return new ErrorDataResult<List<ParentInfoDto>>(RecordIsNotFound.PrepareRedisMessage());
+                    return new ErrorDataResult<SettingsInfoDto>(RecordIsNotFound.PrepareRedisMessage());
                 }
-                return new SuccessDataResult<List<ParentInfoDto>>(_userService.GetByStudentParentInfoInformation((int)userId));
+                await _userService.SetDefaultSettingValues(userId);
+                return new SuccessDataResult<SettingsInfoDto>(_userService.GetByUserSettingsInfoInformation(userId));
             }
 
         }

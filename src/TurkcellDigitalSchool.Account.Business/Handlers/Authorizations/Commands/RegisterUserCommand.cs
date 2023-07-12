@@ -10,8 +10,8 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+ 
+ 
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
@@ -50,7 +50,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             /// <summary>
             /// Will be reedited
             /// </summary> 
-            [CacheRemoveAspect("Get")]
+             
           
             public async Task<DataResult<AccessToken>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
             {

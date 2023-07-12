@@ -14,6 +14,7 @@ using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
 {
@@ -21,14 +22,16 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
      
     public class GetStudentPersonalInformationQuery : IRequest<DataResult<PersonalInfoDto>>
     {
-        public long? UserId { get; set; }
         public class GetStudentPersonalInformationQueryHandler : IRequestHandler<GetStudentPersonalInformationQuery, DataResult<PersonalInfoDto>>
         {
             private readonly IUserService _userService;
+            private readonly ITokenHelper _tokenHelper;
 
-            public GetStudentPersonalInformationQueryHandler(IUserService userService)
+
+            public GetStudentPersonalInformationQueryHandler(IUserService userService, ITokenHelper tokenHelper)
             {
                 _userService = userService;
+                _tokenHelper = tokenHelper;
             }
 
             [MessageConstAttr(MessageCodeType.Error)]
@@ -36,11 +39,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
 
             public virtual async Task<DataResult<PersonalInfoDto>> Handle(GetStudentPersonalInformationQuery request, CancellationToken cancellationToken)
             {
-                if (request.UserId == null)
+
+                var userId = _tokenHelper.GetUserIdByCurrentToken();
+                if (userId == 0)
                 {
                     return new ErrorDataResult<PersonalInfoDto>(RecordIsNotFound.PrepareRedisMessage());
                 }
-                return new SuccessDataResult<PersonalInfoDto>(_userService.GetByStudentPersonalInformation((int)request.UserId));
+                return new SuccessDataResult<PersonalInfoDto>(_userService.GetByPersonalInformation(userId));
+
+               
             }
 
         }

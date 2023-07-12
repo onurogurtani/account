@@ -61,7 +61,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                 getUser.EmailVerify = false;
                 await _userRepository.UpdateAndSaveAsync(getUser);
 
-                _otpService.GenerateOtp(userId, ChannelType.Mail, OtpServices.Mail_StudentProfileMailVerify, OTPExpiryDate.NinetySeconds);
+                _otpService.GenerateOtp(userId, ChannelType.Mail, OtpServices.Mail_UserProfileMailVerify, OTPExpiryDate.NinetySeconds);
 
                 return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }

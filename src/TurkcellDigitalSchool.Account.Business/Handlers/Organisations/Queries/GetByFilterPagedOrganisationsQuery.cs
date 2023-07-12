@@ -7,7 +7,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
+ 
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -32,7 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Queries
                 _organisationRepository = organisationRepository;
             }
 
-            [CacheRemoveAspect("Get")]
+             
             public virtual async Task<DataResult<PagedList<Organisation>>> Handle(GetByFilterPagedOrganisationsQuery request, CancellationToken cancellationToken)
             {
                 var query = _organisationRepository.Query()

@@ -12,9 +12,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Parents.Commands
      
     [LogScope]
 
-    public class UpdateParentCommand : UpdateRequestBase<Parent>
+    public class UpdateParentCommand : UpdateRequestBase<TurkcellDigitalSchool.Account.Domain.Concrete.Parent>
     {
-        public class UpdateRequestParentCommandHandler : UpdateRequestHandlerBase<Parent, UpdateParentCommand>
+        public class UpdateRequestParentCommandHandler : UpdateRequestHandlerBase<TurkcellDigitalSchool.Account.Domain.Concrete.Parent, UpdateParentCommand>
         {
             /// <summary>
             /// Update Parent

@@ -185,6 +185,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 {
                     await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Added), item, cancellationToken: cancellationToken);
                 }
+                foreach (var item in record.PackageLessons)
+                {
+                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Added), item, cancellationToken: cancellationToken);
+                }
 
                 await _capPublisher.PublishAsync(record.GeneratePublishName(EntityState.Modified), record, cancellationToken: cancellationToken);
 

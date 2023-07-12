@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
+ 
 using TurkcellDigitalSchool.Core.AuthorityManagement;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
@@ -51,7 +51,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
             /// If there is no data, an error message is given.
             /// Added record to user table.
             /// </summary> 
-            [CacheRemoveAspect("Get")]
+             
           
             public async Task<DataResult<ExcelResponse>> Handle(UploadTeacherExcelCommand request, CancellationToken cancellationToken)
             {

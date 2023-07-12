@@ -16,12 +16,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Parents.Queries
 {
     [LogScope]
      
-    public class GetByStudentUserIdParentQuery : IRequest<DataResult<Parent>>
+    public class GetByStudentUserIdParentQuery : IRequest<DataResult<TurkcellDigitalSchool.Account.Domain.Concrete.Parent>>
     {
         public long StudentUserId { get; set; } // student
 
         [MessageClassAttr("Öðrenci Velisi Görüntüleme")]
-        public class GetByStudentUserIdParentQueryHandler : IRequestHandler<GetByStudentUserIdParentQuery, DataResult<Parent>>
+        public class GetByStudentUserIdParentQueryHandler : IRequestHandler<GetByStudentUserIdParentQuery, DataResult<TurkcellDigitalSchool.Account.Domain.Concrete.Parent>>
         {
             private readonly IParentRepository _parentRepository;
 
@@ -37,10 +37,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Parents.Queries
             /// Parent information query with student user Id
             /// </summary>
             
-            public async Task<DataResult<Parent>> Handle(GetByStudentUserIdParentQuery request, CancellationToken cancellationToken)
+            public async Task<DataResult<TurkcellDigitalSchool.Account.Domain.Concrete.Parent>> Handle(GetByStudentUserIdParentQuery request, CancellationToken cancellationToken)
             {
                 var parent = await _parentRepository.GetAsync(x => x.UserId == request.StudentUserId);
-                return new SuccessDataResult<Parent>(parent, SuccessfulOperation.PrepareRedisMessage());
+                return new SuccessDataResult<TurkcellDigitalSchool.Account.Domain.Concrete.Parent>(parent, SuccessfulOperation.PrepareRedisMessage());
             }
 
         }

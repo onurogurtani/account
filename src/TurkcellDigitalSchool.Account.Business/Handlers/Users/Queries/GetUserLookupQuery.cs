@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
+ 
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Utilities.Results; 
@@ -24,8 +24,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
             {
                 _userRepository = userRepository;
             }
-             
-            [CacheAspect(10)] 
+              
             public async Task<DataResult<IEnumerable<SelectionItem>>> Handle(GetUserLookupQuery request, CancellationToken cancellationToken)
             {
                 var list = await _userRepository.GetListAsync(x => x.Status);

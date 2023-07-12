@@ -8,7 +8,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
+ 
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
@@ -33,7 +33,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractKinds.Queries
                 _contractKindRepository = contractKindRepository;
             }
 
-            [CacheRemoveAspect("Get")]
+             
             public virtual async Task<DataResult<PagedList<ContractKind>>> Handle(GetByFilterPagedContractKindsQuery request, CancellationToken cancellationToken)
             {
                 var query = _contractKindRepository.Query().Include(x => x.ContractType).AsQueryable();

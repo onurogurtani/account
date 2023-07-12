@@ -37,7 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Helpers
             }
             string hours = (totalMinutes / 60).ToString().PadLeft(2, '0');
             string minutes = (totalMinutes % 60).ToString().PadLeft(2, '0');
-            return $"{hours}:{minutes}";
+            return $"{hours} saat {minutes} dakika";
         }
     }
 }

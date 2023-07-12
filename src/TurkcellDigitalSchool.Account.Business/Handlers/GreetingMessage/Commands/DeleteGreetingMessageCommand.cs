@@ -38,15 +38,20 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.GreetingMessages.Comma
                 _repository.Delete(entityToDelete);
                 await _repository.SaveChangesAsync();
 
-                var list = await _repository.Query().Where(w => w.Id != request.Id && !w.HasDateRange && w.Order > entityToDelete.Order && !w.IsDeleted).OrderBy(o => o.Order).ToListAsync(cancellationToken);
-                uint newOrder = entityToDelete.Order.Value;
-                foreach (var item in list)
+                if (!entityToDelete.HasDateRange && entityToDelete.Order > 0)
                 {
-                    item.Order = newOrder++;
-                    _repository.Update(item);
-                    await _repository.SaveChangesAsync();
+                    var list = await _repository.Query().Where(w => w.Id != request.Id && !w.HasDateRange && w.Order > entityToDelete.Order && !w.IsDeleted).OrderBy(o => o.Order).ToListAsync(cancellationToken);
+                    if (list.Any())
+                    {
+                        uint newOrder = entityToDelete.Order.Value;
+                        foreach (var item in list)
+                        {
+                            item.Order = newOrder++;
+                            _repository.Update(item);
+                            await _repository.SaveChangesAsync();
+                        }
+                    }
                 }
-                await _repository.SaveChangesAsync();
 
                 return new SuccessDataResult<GreetingMessage>(Messages.Deleted);
             }

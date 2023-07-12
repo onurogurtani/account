@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Hangfire;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,7 +19,6 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands;
 using TurkcellDigitalSchool.Account.Business.Helpers;
 using TurkcellDigitalSchool.Account.Business.Jobs;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Common.Middleware;
 using TurkcellDigitalSchool.Core.ApiDoc;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
@@ -28,6 +28,8 @@ using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.Exam.Business.Handlers.TestExams.Commands;
+using TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Commands;
+using TurkcellDigitalSchool.Account.Business.SeedData;
 
 namespace TurkcellDigitalSchool.Account.Container
 {
@@ -97,11 +99,14 @@ namespace TurkcellDigitalSchool.Account.Container
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RedisService redisService)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env   )
         {
             // VERY IMPORTANT. Since we removed the build from AddDependencyResolvers, let's set the Service provider manually.
             // By the way, we can construct with DI by taking type to avoid calling static methods in aspects.
             ServiceTool.ServiceProvider = app.ApplicationServices;
+
+
+            SeedDataHelper.AppSettingDefaultData(app).GetResult();
 
 
             var configurationManager = app.ApplicationServices.GetService<Core.Common.ConfigurationManager>();

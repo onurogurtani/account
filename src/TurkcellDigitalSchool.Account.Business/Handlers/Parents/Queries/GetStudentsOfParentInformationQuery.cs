@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using MediatR;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,23 +8,22 @@ using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Common.Helpers;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
-namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
+namespace TurkcellDigitalSchool.Account.Business.Handlers.Parents.Queries
 {
-    [LogScope] 
-    public class GetStudentParentInformationQuery : IRequest<DataResult<List<ParentInfoDto>>>
+    [LogScope]
+    public class GetStudentsOfParentInformationQuery : IRequest<DataResult<List<StudentsOfParentDto>>>
     {
-        public class GetStudentParentInformationQueryHandler : IRequestHandler<GetStudentParentInformationQuery, DataResult<List<ParentInfoDto>>>
+        public class GetStudentPersonalInformationQueryHandler : IRequestHandler<GetStudentsOfParentInformationQuery, DataResult<List<StudentsOfParentDto>>>
         {
             private readonly IUserService _userService;
             private readonly ITokenHelper _tokenHelper;
 
-            public GetStudentParentInformationQueryHandler(IUserService userService, ITokenHelper tokenHelper)
+            public GetStudentPersonalInformationQueryHandler(IUserService userService, ITokenHelper tokenHelper)
             {
                 _userService = userService;
                 _tokenHelper = tokenHelper;
@@ -32,15 +32,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
 
-            public virtual async Task<DataResult<List<ParentInfoDto>>> Handle(GetStudentParentInformationQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<List<StudentsOfParentDto>>> Handle(GetStudentsOfParentInformationQuery request, CancellationToken cancellationToken)
             {
                 var userId = _tokenHelper.GetUserIdByCurrentToken();
-
                 if (userId == 0)
                 {
-                    return new ErrorDataResult<List<ParentInfoDto>>(RecordIsNotFound.PrepareRedisMessage());
+                    return new ErrorDataResult<List<StudentsOfParentDto>>(RecordIsNotFound.PrepareRedisMessage());
                 }
-                return new SuccessDataResult<List<ParentInfoDto>>(_userService.GetByStudentParentInfoInformation((int)userId));
+                return new SuccessDataResult<List<StudentsOfParentDto>>(_userService.GetStudentsOfParentByParentId(userId));
             }
 
         }

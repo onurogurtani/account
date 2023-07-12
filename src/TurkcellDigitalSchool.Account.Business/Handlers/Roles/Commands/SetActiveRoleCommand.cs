@@ -6,7 +6,7 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
+ 
 using TurkcellDigitalSchool.Core.AuthorityManagement; 
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
@@ -34,7 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
 
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RoleIsAlreadyActive = Messages.RoleIsAlreadyActive;
-            [CacheRemoveAspect("Get")]
+             
             public async Task<IResult> Handle(SetActiveRoleCommand request, CancellationToken cancellationToken)
             {
                 var role = await _mediator.Send(new GetRoleQuery { Id = request.RoleId }, cancellationToken);
