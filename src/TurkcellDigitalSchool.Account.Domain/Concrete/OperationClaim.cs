@@ -1,4 +1,5 @@
 ﻿using TurkcellDigitalSchool.Core.Entities;
+using TurkcellDigitalSchool.Core.Enums;
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
@@ -11,7 +12,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public string CategoryName { get; set; }
         public int? VouId { get; set; }
         public string VouName { get; set; }
-        public int? SegmentId { get; set; }
-
+        public int? SegmentId { get; set; } 
+        public ModuleType ModuleType { get; set; }
     }
 }
