@@ -142,9 +142,13 @@ namespace TurkcellDigitalSchool.Account.Container
             app.UseMiddleware<SessionCheckMiddleware>();
             app.UseDbOperationClaimCreator().GetResult();
 
-            app.UseSwagger();
+            if (env.EnvironmentName != "STBTURKCELL")
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "Kg Teknoloji"); });
+            }
 
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "Kg Teknoloji"); });
+             
             app.UseCors("AllowOrigin");
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {
