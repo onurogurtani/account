@@ -54,4 +54,18 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.ValidationRules
             RuleFor(x => x.Id).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage(messageParameters: new object[] { "Id" }));
         }
     }
+
+    [MessageClassAttr("Kullanıcı Profilim Kişisel Bilgilerim Email Güncelleme Validasyonu")]
+    public class UpdateUserEmailValidator : AbstractValidator<UpdateUserEmailCommand>
+    {
+        [MessageConstAttr(MessageCodeType.Error)]
+        private static string RequiredField = Messages.RequiredField;
+        [MessageConstAttr(MessageCodeType.Error)]
+        private static string EmailIsNotValid = Messages.EmailIsNotValid;
+        public UpdateUserEmailValidator()
+        {
+            RuleFor(x => x.Email).NotEmpty().WithMessage(RequiredField.PrepareRedisMessage());
+            RuleFor(x => x.Email).EmailAddress().WithMessage(EmailIsNotValid.PrepareRedisMessage());
+        }
+    }
 }

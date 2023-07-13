@@ -14,22 +14,22 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
-namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
+namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 {
-    [LogScope] 
-    public class UpdateStudentEmailCommand : IRequest<IResult>
+    [LogScope]
+    public class UpdateUserEmailCommand : IRequest<IResult>
     {
         public string Email { get; set; }
 
-        [MessageClassAttr("Öğrenci Profil Email Bilgisi Ekleme/Güncelleme")]
-        public class UpdateStudentEmailCommandHandler : IRequestHandler<UpdateStudentEmailCommand, IResult>
+        [MessageClassAttr("Kullanıcı Profil Email Bilgisi Ekleme/Güncelleme")]
+        public class UpdateUserEmailCommandHandler : IRequestHandler<UpdateUserEmailCommand, IResult>
         {
             private readonly IUserRepository _userRepository;
             private readonly IUserService _userService;
             private readonly ITokenHelper _tokenHelper;
             private readonly IOtpService _otpService;
 
-            public UpdateStudentEmailCommandHandler(IUserRepository userRepository, IUserService userService, ITokenHelper tokenHelper, IOtpService otpService)
+            public UpdateUserEmailCommandHandler(IUserRepository userRepository, IUserService userService, ITokenHelper tokenHelper, IOtpService otpService)
             {
                 _userRepository = userRepository;
                 _userService = userService;
@@ -45,7 +45,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string EnterDifferentEmail = Constants.Messages.EnterDifferentEmail;
-            public async Task<IResult> Handle(UpdateStudentEmailCommand request, CancellationToken cancellationToken)
+            public async Task<IResult> Handle(UpdateUserEmailCommand request, CancellationToken cancellationToken)
             {
                 var userId = _tokenHelper.GetUserIdByCurrentToken();
                 var getUser = _userService.GetUserById(userId);

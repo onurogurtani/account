@@ -3,21 +3,21 @@ using Moq;
 using NUnit.Framework;
 using System.Threading;
 using System.Threading.Tasks;
-using static TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands.UpdateStudentPersonalInformationCommand;
-using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
+using static TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands.UpdateUserPersonalInformationCommand;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Business.Services.User;
 using FluentAssertions;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
+using TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
 {
     [TestFixture]
     public class UpdateStudentPersonalInformationCommandTest
     {
-        private UpdateStudentPersonalInformationCommand _updateStudentPersonalInformationCommand;
-        private UpdateStudentPersonalInformationCommandHandler _updateStudentPersonalInformationCommandHandler;
+        private UpdateUserPersonalInformationCommand _updateStudentPersonalInformationCommand;
+        private UpdateUserPersonalInformationCommandHandler _updateStudentPersonalInformationCommandHandler;
 
         private Mock<IUserRepository> _userRepository;
         private Mock<IUserService> _userService;
@@ -32,8 +32,8 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
             _userService = new Mock<IUserService>();
             _tokenHelper = new Mock<ITokenHelper>();
 
-            _updateStudentPersonalInformationCommand = new UpdateStudentPersonalInformationCommand();
-            _updateStudentPersonalInformationCommandHandler = new UpdateStudentPersonalInformationCommandHandler(_userRepository.Object, _userService.Object, _tokenHelper.Object, _mediator.Object);
+            _updateStudentPersonalInformationCommand = new UpdateUserPersonalInformationCommand();
+            _updateStudentPersonalInformationCommandHandler = new UpdateUserPersonalInformationCommandHandler(_userRepository.Object, _userService.Object, _tokenHelper.Object, _mediator.Object);
         }
 
         [Test]
