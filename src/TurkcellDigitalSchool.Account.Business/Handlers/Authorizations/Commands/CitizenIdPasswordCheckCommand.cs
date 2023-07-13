@@ -2,11 +2,8 @@
 using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.Business.Constants;
-using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+using TurkcellDigitalSchool.Account.DataAccess.Abstract; 
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing; 
 
@@ -26,7 +23,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 _userRepository = userRepository;
             }
 
-            [CacheRemoveAspect("Get")] 
+              
             public async Task<IResult> Handle(CitizenIdPasswordCheckCommand request, CancellationToken cancellationToken)
             {
                 var user = await _userRepository.GetAsync(u => u.CitizenId == request.CitizenId && u.Status);

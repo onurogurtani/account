@@ -11,20 +11,22 @@ using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
 {
     [LogScope] 
     public class GetStudentParentsInformationQuery : IRequest<DataResult<List<ParentInfoDto>>>
     {
-        public long? UserId { get; set; }
         public class GetStudentParentsInformationQueryHandler : IRequestHandler<GetStudentParentsInformationQuery, DataResult<List<ParentInfoDto>>>
         {
             private readonly IUserService _userService;
+            private readonly ITokenHelper _tokenHelper;
 
-            public GetStudentParentsInformationQueryHandler(IUserService userService)
+            public GetStudentParentsInformationQueryHandler(IUserService userService, ITokenHelper tokenHelper)
             {
                 _userService = userService;
+                _tokenHelper = tokenHelper;
             }
 
             [MessageConstAttr(MessageCodeType.Error)]
@@ -32,11 +34,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
 
             public virtual async Task<DataResult<List<ParentInfoDto>>> Handle(GetStudentParentsInformationQuery request, CancellationToken cancellationToken)
             {
-                if (request.UserId == null)
+                var userId = _tokenHelper.GetUserIdByCurrentToken();
+
+                if (userId == 0)
                 {
                     return new ErrorDataResult<List<ParentInfoDto>>(RecordIsNotFound.PrepareRedisMessage());
                 }
-                return new SuccessDataResult<List<ParentInfoDto>>(_userService.GetByStudentParentsInformation((int) request.UserId));
+                return new SuccessDataResult<List<ParentInfoDto>>(_userService.GetByStudentParentsInformation((int) userId));
             }
 
         }

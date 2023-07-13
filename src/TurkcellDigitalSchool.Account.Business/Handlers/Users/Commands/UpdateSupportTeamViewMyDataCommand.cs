@@ -16,22 +16,22 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
-namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
+namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 {
-    [LogScope] 
-    public class UpdateStudentSupportTeamViewMyDataCommand : IRequest<IResult>
+    [LogScope]
+    public class UpdateSupportTeamViewMyDataCommand : IRequest<IResult>
     {
         public bool IsViewMyData { get; set; }
         public bool IsFifteenMinutes { get; set; }
         public bool IsOneMonth { get; set; }
         public bool IsAlways { get; set; }
 
-        public class UpdateStudentSupportTeamViewMyDataCommandHandler : IRequestHandler<UpdateStudentSupportTeamViewMyDataCommand, IResult>
+        public class UpdateSupportTeamViewMyDataCommandHandler : IRequestHandler<UpdateSupportTeamViewMyDataCommand, IResult>
         {
             private readonly IUserService _userService;
             private readonly IUserSupportTeamViewMyDataRepository _userSupportTeamViewMyDataRepository;
             private readonly ITokenHelper _tokenHelper;
-            public UpdateStudentSupportTeamViewMyDataCommandHandler(IUserService userService, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository, ITokenHelper tokenHelper)
+            public UpdateSupportTeamViewMyDataCommandHandler(IUserService userService, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository, ITokenHelper tokenHelper)
             {
                 _userService = userService;
                 _userSupportTeamViewMyDataRepository = userSupportTeamViewMyDataRepository;
@@ -51,14 +51,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             [MessageConstAttr(MessageCodeType.Error)]
             private static string YouMustChoose = Constants.Messages.YouMustChoose;
 
-            public async Task<IResult> Handle(UpdateStudentSupportTeamViewMyDataCommand request, CancellationToken cancellationToken)
+            public async Task<IResult> Handle(UpdateSupportTeamViewMyDataCommand request, CancellationToken cancellationToken)
             {
                 var userId = _tokenHelper.GetUserIdByCurrentToken();
                 var getUser = _userService.GetUserById(userId);
                 if (getUser == null)
                     return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
 
-                if (request.IsViewMyData && (!request.IsFifteenMinutes && !request.IsAlways && !request.IsOneMonth))
+                if (request.IsViewMyData && !request.IsFifteenMinutes && !request.IsAlways && !request.IsOneMonth)
                 {
                     return new ErrorResult(YouMustChoose.PrepareRedisMessage());
                 }
@@ -78,12 +78,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
                     return new ErrorResult(OnlyOneCanBeSelected.PrepareRedisMessage());
                 }
 
-                var getStudentSupportTeamViewMyData = _userSupportTeamViewMyDataRepository.Get(w => w.UserId == userId);
-                getStudentSupportTeamViewMyData.IsViewMyData = request.IsViewMyData;
-                getStudentSupportTeamViewMyData.IsFifteenMinutes = request.IsViewMyData ? request.IsFifteenMinutes : null;
-                getStudentSupportTeamViewMyData.IsOneMonth = request.IsViewMyData ? request.IsOneMonth : null;
-                getStudentSupportTeamViewMyData.IsAlways = request.IsViewMyData ? request.IsAlways : null;
-                await _userSupportTeamViewMyDataRepository.UpdateAndSaveAsync(getStudentSupportTeamViewMyData);
+                var getUserSupportTeamViewMyData = _userSupportTeamViewMyDataRepository.Get(w => w.UserId == userId);
+                getUserSupportTeamViewMyData.IsViewMyData = request.IsViewMyData;
+                getUserSupportTeamViewMyData.IsFifteenMinutes = request.IsViewMyData ? request.IsFifteenMinutes : null;
+                getUserSupportTeamViewMyData.IsOneMonth = request.IsViewMyData ? request.IsOneMonth : null;
+                getUserSupportTeamViewMyData.IsAlways = request.IsViewMyData ? request.IsAlways : null;
+                await _userSupportTeamViewMyDataRepository.UpdateAndSaveAsync(getUserSupportTeamViewMyData);
 
                 return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }

@@ -12,21 +12,23 @@ using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
+using System.Collections.Generic;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
 
-namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
+namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 {
     [LogScope]
-     
-    public class AcceptStudentContractCommand : IRequest<IResult>
-    {
-        public long Id { get; set; }
 
-        [MessageClassAttr("Öğrenci Profil Sözleşme Kabul/Ret Güncelleme")]
-        public class AcceptStudentContractCommandHandler : IRequestHandler<AcceptStudentContractCommand, IResult>
+    public class AcceptContractCommand : IRequest<IResult>
+    {
+        public List<long> Ids { get; set; }
+
+        [MessageClassAttr("Kullanıcı Profil Sözleşme Kabul/Ret Güncelleme")]
+        public class AcceptContractCommandHandler : IRequestHandler<AcceptContractCommand, IResult>
         {
             private readonly IUserContratRepository _userContratRepository;
             private readonly ITokenHelper _tokenHelper;
-            public AcceptStudentContractCommandHandler(IUserContratRepository userContratRepository, ITokenHelper tokenHelper)
+            public AcceptContractCommandHandler(IUserContratRepository userContratRepository, ITokenHelper tokenHelper)
             {
                 _userContratRepository = userContratRepository;
                 _tokenHelper = tokenHelper;
@@ -37,19 +39,17 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
 
-            public async Task<IResult> Handle(AcceptStudentContractCommand request, CancellationToken cancellationToken)
+            public async Task<IResult> Handle(AcceptContractCommand request, CancellationToken cancellationToken)
             {
                 var userId = _tokenHelper.GetUserIdByCurrentToken();
-                var existUserContract = _userContratRepository.Query().Where(w => w.Id == request.Id && w.UserId == userId).FirstOrDefault();
-                if (existUserContract == null)
+                var existUserContractList = _userContratRepository.Query().Where(w => request.Ids.Contains(w.Id) && w.UserId == userId).ToList();
+                if (existUserContractList.Count == 0)
                 {
                     return new ErrorResult(RecordDoesNotExist.PrepareRedisMessage());
                 }
 
-                existUserContract.IsAccepted = true;
-                existUserContract.AcceptedDate = DateTime.Now;
-
-                _userContratRepository.UpdateAndSave(existUserContract);
+                existUserContractList.ForEach(w => { w.IsAccepted = true; w.AcceptedDate = DateTime.Now; });
+                _userContratRepository.UpdateAndSave(existUserContractList);
 
                 return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }

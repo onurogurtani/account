@@ -9,8 +9,8 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+ 
+ 
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
@@ -51,7 +51,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
             /// Nested dependent dropdownlist was created for city and county.
             /// The data was transferred into dropdownlist.
             /// </summary>
-            [CacheRemoveAspect("Get")] 
+              
             public async Task<DataResult<ExcelResponse>> Handle(DownloadSchoolExcelCommand request, CancellationToken cancellationToken)
             {
                 byte[] workbookBytes;

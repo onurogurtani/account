@@ -35,7 +35,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
 
 
             builder.Services.AddDbContext<AccountDbContext>();
-
+            builder.Services.AddSingleton<Core.Common.ConfigurationManager>();
             builder.Services.AddScoped<ICustomUserSvc, CustomUserSvc>();
             builder.Services.AddScoped<IAppSettingRepository, AppSettingRepository>();
 

@@ -244,6 +244,82 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
+        /// <summary>
+        /// User Support Team View My Data  information update
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPut("UpdateSupportTeamViewMyData")]
+        public async Task<IActionResult> UpdateSupportTeamViewMyData([FromBody] UpdateSupportTeamViewMyDataCommand request, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(request, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        /// <summary>
+        /// User Communication Preferences information update
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPut("UpdateCommunicationPreferences")]
+        public async Task<IActionResult> UpdateCommunicationPreferences([FromBody] UpdateCommunicationPreferencesCommand request, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(request, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+
+        /// <summary>
+        /// Get User Settings information
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>PersonalInfoDto</returns>
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<SettingsInfoDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpGet("GetSettingsInformation")]
+        public async Task<IActionResult> GetSettingsInformation([FromQuery] GetUserSettingsInformationQuery request, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(request, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        /// <summary>
+        /// User contract Accept
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPut("AcceptContractInformation")]
+        public async Task<IActionResult> AcceptContractInformation([FromBody] AcceptContractCommand request, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(request, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
 
     }
 }

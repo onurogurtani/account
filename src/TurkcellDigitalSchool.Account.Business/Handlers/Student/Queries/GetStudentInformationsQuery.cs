@@ -9,45 +9,50 @@ using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
 {
     [LogScope] 
-    public class GetStudentInformationsQuery : IRequest<DataResult<StudentInfoDto>>
+    public class GetStudentInformationsQuery : IRequest<DataResult<UserProfileInfoDto>>
     {
-        public long? UserId { get; set; }
-        public class GetStudentInformationsQueryHandler : IRequestHandler<GetStudentInformationsQuery, DataResult<StudentInfoDto>>
+    
+        public class GetStudentInformationsQueryHandler : IRequestHandler<GetStudentInformationsQuery, DataResult<UserProfileInfoDto>>
         {
             private readonly IUserService _userService;
+            private readonly ITokenHelper _tokenHelper;
 
-            public GetStudentInformationsQueryHandler(IUserService userService)
+            public GetStudentInformationsQueryHandler(IUserService userService, ITokenHelper tokenHelper)
             {
                 _userService = userService;
+                _tokenHelper = tokenHelper;
             }
 
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
-            public virtual async Task<DataResult<StudentInfoDto>> Handle(GetStudentInformationsQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<UserProfileInfoDto>> Handle(GetStudentInformationsQuery request, CancellationToken cancellationToken)
             {
-                if (request.UserId == null)
+                var userId = _tokenHelper.GetUserIdByCurrentToken();
+                if (userId == 0)
                 {
-                    return new ErrorDataResult<StudentInfoDto>(RecordIsNotFound.PrepareRedisMessage());
+                    return new ErrorDataResult<UserProfileInfoDto>(RecordIsNotFound.PrepareRedisMessage());
                 }
-                await _userService.SetDefaultSettingValues((long)request.UserId);
 
-                var packages = _userService.GetByStudentPackageInformation((int)request.UserId);
-                var parent = _userService.GetByStudentParentInfoInformation((int)request.UserId);
-                var personal = _userService.GetByStudentPersonalInformation((int)request.UserId);
-                var settings = _userService.GetByStudentSettingsInfoInformation((long)request.UserId);
+                await _userService.SetDefaultSettingValues((long)userId);
 
-                var studentInfoResult = new StudentInfoDto
+                var packages = _userService.GetByStudentPackageInformation((int)userId);
+                var parent = _userService.GetByStudentParentInfoInformation((int)userId);
+                var personal = _userService.GetByPersonalInformation((int)userId);
+                var settings = _userService.GetByUserSettingsInfoInformation((long)userId);
+
+                var studentInfoResult = new UserProfileInfoDto
                 {
                     Packages = packages,
                     Parents = parent,
                     Personal = personal,
                     Settings = settings
                 };
-                return new SuccessDataResult<StudentInfoDto>(studentInfoResult);
+                return new SuccessDataResult<UserProfileInfoDto>(studentInfoResult);
             }
 
         }

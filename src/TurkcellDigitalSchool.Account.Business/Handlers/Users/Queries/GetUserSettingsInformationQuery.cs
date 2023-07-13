@@ -10,33 +10,37 @@ using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
-namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Queries
+namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 {
     [LogScope]
-     
-    public class GetStudentSettingsInformationQuery : IRequest<DataResult<SettingsInfoDto>>
+
+    public class GetUserSettingsInformationQuery : IRequest<DataResult<SettingsInfoDto>>
     {
-        public long? UserId { get; set; }
-        public class GetStudentSettingsInformationQueryHandler : IRequestHandler<GetStudentSettingsInformationQuery, DataResult<SettingsInfoDto>>
+        public class GetStudentSettingsInformationQueryHandler : IRequestHandler<GetUserSettingsInformationQuery, DataResult<SettingsInfoDto>>
         {
             private readonly IUserService _userService;
+            private readonly ITokenHelper _tokenHelper;
 
-            public GetStudentSettingsInformationQueryHandler(IUserService userService)
+            public GetStudentSettingsInformationQueryHandler(IUserService userService, ITokenHelper tokenHelper)
             {
                 _userService = userService;
+                _tokenHelper = tokenHelper;
             }
 
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
-            public virtual async Task<DataResult<SettingsInfoDto>> Handle(GetStudentSettingsInformationQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<SettingsInfoDto>> Handle(GetUserSettingsInformationQuery request, CancellationToken cancellationToken)
             {
-                if (request.UserId == null)
+                var userId = _tokenHelper.GetUserIdByCurrentToken();
+
+                if (userId == 0)
                 {
                     return new ErrorDataResult<SettingsInfoDto>(RecordIsNotFound.PrepareRedisMessage());
                 }
-                await _userService.SetDefaultSettingValues((long)request.UserId);
-                return new SuccessDataResult<SettingsInfoDto>(_userService.GetByStudentSettingsInfoInformation((long)request.UserId));
+                await _userService.SetDefaultSettingValues(userId);
+                return new SuccessDataResult<SettingsInfoDto>(_userService.GetByUserSettingsInfoInformation(userId));
             }
 
         }

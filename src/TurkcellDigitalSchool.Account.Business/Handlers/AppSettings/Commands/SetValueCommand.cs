@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -8,7 +7,6 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 

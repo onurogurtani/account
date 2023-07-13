@@ -11,7 +11,7 @@ using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
+ 
 using TurkcellDigitalSchool.Core.AuthorityManagement;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
@@ -56,7 +56,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
             /// Id information obtain from the relevant tables for the city, county, institution and institution type fields.
             /// Added record to school table.
             /// </summary>
-            [CacheRemoveAspect("Get")]
+             
            
             public async Task<DataResult<List<School>>> Handle(UploadSchoolExcelCommand request, CancellationToken cancellationToken)
             {

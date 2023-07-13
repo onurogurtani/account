@@ -7,7 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
+ 
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
@@ -30,7 +30,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.ContractTypes.Queries
                 _contractTypeRepository = contractTypeRepository;
             }
 
-            [CacheRemoveAspect("Get")]
+             
             public async Task<DataResult<List<string>>> Handle(GetContractTypeNamesQuery request, CancellationToken cancellationToken)
             {
                 var contractTypeNames = await _contractTypeRepository.Query().Select(x => x.Name).ToListAsync();

@@ -123,5 +123,31 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             } 
             return BadRequest(result);
         }
+
+
+
+        /// <summary>
+        /// You Can get Mobil App Version Information and ForceUpdate
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<AppVersionInfoDto>))]
+        [HttpPost("getAppVersionInfo")]
+        public async Task<IActionResult> GetPasswordRuleAndPeriod(GetAppVersionInfoQuery request ,CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(request, cancellationToken);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        
     }
 }

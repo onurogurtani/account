@@ -26,7 +26,8 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         private readonly IUserCommunicationPreferencesRepository _userCommunicationPreferencesRepository;
         private readonly IUserSupportTeamViewMyDataRepository _userSupportTeamViewMyDataRepository;
         private readonly IFileRepository _fileRepository;
-        public UserService(IUserRepository userRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository, IUserContratRepository userContratRepository, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository, IFileService fileService, IClassroomRepository classroomRepository, IInstitutionRepository institutionRepository, IFileRepository fileRepository)
+        private readonly IClassroomRepository _classroomRepository;
+        public UserService(IUserRepository userRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository, IUserContratRepository userContratRepository, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository, IFileRepository fileRepository, IClassroomRepository classroomRepository)
         {
             _userRepository = userRepository;
             _studentParentInformationRepository = studentParentInformationRepository;
@@ -37,10 +38,10 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             _userCommunicationPreferencesRepository = userCommunicationPreferencesRepository;
             _userSupportTeamViewMyDataRepository = userSupportTeamViewMyDataRepository;
             _fileRepository = fileRepository;
+            _classroomRepository = classroomRepository;
         }
-        public PersonalInfoDto GetByStudentPersonalInformation(long userId)
+        public PersonalInfoDto GetByPersonalInformation(long userId)
         {
-            //TODO AvatarId CND entegrasyonunda, City ve County tabloları dublice tablo olunca join yapılacak.
             var getUser = _userRepository.Get(w => w.Id == userId);
             if (getUser == null)
             {
@@ -48,12 +49,23 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             }
             var city = _cityRepository.Get(w => w.Id == getUser.ResidenceCityId);
             var county = _countyRepository.Get(w => w.Id == getUser.ResidenceCountyId);
+
+            var getFile = _fileRepository.Get(w => w.Id == getUser.AvatarId);
+
             return new PersonalInfoDto
             {
                 Name = getUser.Name,
                 SurName = getUser.SurName,
                 UserName = getUser.UserName,
-                Avatar = getUser.AvatarId,
+                Avatar = getFile != null ?
+                new FileDto
+                {
+                    FilePath = getFile.FilePath,
+                    Id = getFile.Id,
+                    FileName = getFile.FileName,
+                    ContentType = getFile.ContentType,
+                    Description = getFile.Description,
+                } : null,
                 CitizenId = getUser.CitizenId,
                 PlaceOfBirth = getUser.BirthPlace,
                 DateOfBirth = getUser.BirthDate,
@@ -184,7 +196,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             return resultPackageList;
 
         }
-        public SettingsInfoDto GetByStudentSettingsInfoInformation(long userId)
+        public SettingsInfoDto GetByUserSettingsInfoInformation(long userId)
         {
             var getUserContractList = _userContratRepository.Query()
                                    .Include(w => w.Document).ThenInclude(x => x.ContractKind)
@@ -344,6 +356,41 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             getUser.AvatarId = avatarId;
             await _userRepository.UpdateAndSaveAsync(getUser);
             return new SuccessResult { Success = true, Message = Messages.ConfirmSuccess };
+        }
+        public List<StudentsOfParentDto> GetStudentsOfParentByParentId(long parentId)
+        {
+            return _studentParentInformationRepository.Query()
+               .Include(w => w.User)
+               .Where(w => w.ParentId == parentId)
+               .Select(student => new StudentsOfParentDto
+               {
+                   Id = student.Id,
+                   CitizenId = student.User.CitizenId,
+                   Name = student.User.Name,
+                   SurName = student.User.SurName,
+                   Email = student.User.Email,
+                   MobilePhone = student.User.MobilePhones
+               })
+               .ToList();
+        }
+
+        public List<ParentPackegesDto> GetParentPackagesByParentId(long parentId)
+        {
+            var getStudentsOfParentList = GetStudentsOfParentByParentId(parentId).Select(w => w.Id).ToList();
+
+            return _userPackageRepository.Query()
+               .Include(w => w.Package).ThenInclude(w => w.ImageOfPackages)
+               .Where(w => getStudentsOfParentList.Contains(w.UserId) || w.UserId == parentId)
+               .Select(package => new ParentPackegesDto
+               {
+                   UserPackageId = package.Id,
+                   PackageId = package.PackageId,
+                   PurchaseDate = package.PurchaseDate,
+                   PackageImage=package.Package.ImageOfPackages,
+                   PackageTitle=package.Package.Name,
+                   PackageDetail=package.Package.Content
+               }).ToList();
+
         }
     }
 }

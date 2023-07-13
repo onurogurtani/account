@@ -5,7 +5,7 @@ using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.Common.Constants;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
+ 
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Toolkit;
@@ -28,7 +28,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             /// <summary>
             /// Will be reedited
             /// </summary> 
-            [CacheRemoveAspect("Get")]
+             
             
             public async Task<IResult> Handle(GenerateNewVerificationCodeCommand request, CancellationToken cancellationToken)
             {

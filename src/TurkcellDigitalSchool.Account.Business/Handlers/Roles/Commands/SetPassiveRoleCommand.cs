@@ -6,7 +6,7 @@ using TurkcellDigitalSchool.Account.Business.Handlers.Roles.Queries;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
+ 
 using TurkcellDigitalSchool.Core.AuthorityManagement; 
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
@@ -42,7 +42,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.Commands
             private static string TranferRoleIsNotActive = Messages.TranferRoleIsNotActive;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RoleandTransferRoleCantBeTheSame = Messages.RoleandTransferRoleCantBeTheSame;
-            [CacheRemoveAspect("Get")] 
+              
             public async Task<IResult> Handle(SetPassiveRoleCommand request, CancellationToken cancellationToken)
             {
                 if ((request.TransferRoleId ?? 0) == 0)

@@ -13,20 +13,20 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
-namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
+namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 {
-    [LogScope] 
-    public class UpdateStudentCommunicationPreferencesCommand : IRequest<IResult>
+    [LogScope]
+    public class UpdateCommunicationPreferencesCommand : IRequest<IResult>
     {
         public StudentCommunicationPreferencesDto StudentCommunicationPreferencesRequest { get; set; }
 
-        public class UpdateStudentCommunicationPreferencesCommandHandler : IRequestHandler<UpdateStudentCommunicationPreferencesCommand, IResult>
+        public class UpdateCommunicationPreferencesCommandHandler : IRequestHandler<UpdateCommunicationPreferencesCommand, IResult>
         {
             private readonly IUserRepository _userRepository;
             private readonly IUserService _userService;
             private readonly IUserCommunicationPreferencesRepository _userCommunicationPreferencesRepository;
             private readonly ITokenHelper _tokenHelper;
-            public UpdateStudentCommunicationPreferencesCommandHandler(IUserRepository userRepository, IUserService userService, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, ITokenHelper tokenHelper)
+            public UpdateCommunicationPreferencesCommandHandler(IUserRepository userRepository, IUserService userService, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, ITokenHelper tokenHelper)
             {
                 _userRepository = userRepository;
                 _userService = userService;
@@ -41,7 +41,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordDoesNotExist = Messages.RecordDoesNotExist;
 
-            public async Task<IResult> Handle(UpdateStudentCommunicationPreferencesCommand request, CancellationToken cancellationToken)
+            public async Task<IResult> Handle(UpdateCommunicationPreferencesCommand request, CancellationToken cancellationToken)
             {
                 var userId = _tokenHelper.GetUserIdByCurrentToken();
                 var getUser = _userService.GetUserById(userId);

@@ -12,9 +12,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Parents.Commands
      
     [LogScope]
 
-    public class DeleteParentCommand : DeleteRequestBase<Parent>
+    public class DeleteParentCommand : DeleteRequestBase<TurkcellDigitalSchool.Account.Domain.Concrete.Parent>
     {
-        public class DeleteRequestParentCommandHandler : DeleteRequestHandlerBase<Parent, DeleteParentCommand>
+        public class DeleteRequestParentCommandHandler : DeleteRequestHandlerBase<TurkcellDigitalSchool.Account.Domain.Concrete.Parent, DeleteParentCommand>
         {
             /// <summary>
             /// Delete Parent

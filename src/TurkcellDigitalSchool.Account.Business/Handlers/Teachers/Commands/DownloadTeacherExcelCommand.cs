@@ -7,8 +7,8 @@ using MediatR;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+ 
+ 
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
@@ -33,7 +33,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
 
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-            [CacheRemoveAspect("Get")]
+             
            
             public async Task<DataResult<ExcelResponse>> Handle(DownloadTeacherExcelCommand request, CancellationToken cancellationToken)
             {

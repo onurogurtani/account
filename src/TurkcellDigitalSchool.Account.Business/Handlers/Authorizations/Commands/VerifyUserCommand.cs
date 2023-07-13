@@ -7,11 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Common.Constants;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
+ 
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.SubServiceConst;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
@@ -37,7 +38,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             /// <summary>
             /// Will be reedited
             /// </summary> 
-            [CacheRemoveAspect("Get")] 
+              
             public async Task<IResult> Handle(VerifyUserCommand request, CancellationToken cancellationToken)
             { 
                 var unverifiedUser = _unverifiedUserRepository.Get(x=>x.Id == request.Id);
@@ -84,6 +85,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     _userRepository.Add(user);
                     await _userRepository.SaveChangesAsync();
                     await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Added), user, cancellationToken: cancellationToken);
+                    await _capPublisher.PublishAsync(SubServiceConst.VERIFY_USER_REQUEST, new { userId = user.Id }, cancellationToken: cancellationToken);
 
                     _unverifiedUserRepository.Delete(unverifiedUser);
                     await _unverifiedUserRepository.SaveChangesAsync();
@@ -93,7 +95,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 
                     return new ErrorResult(Messages.TryAgain);
                 }
-                
+
+         
+
                 return new SuccessResult(Messages.SuccessfulUserVerify);
             }
         }

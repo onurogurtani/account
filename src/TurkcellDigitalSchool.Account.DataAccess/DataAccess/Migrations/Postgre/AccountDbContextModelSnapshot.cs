@@ -589,6 +589,14 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasColumnType("text")
                         .HasColumnName("content");
 
+                    b.Property<long>("ContentAlignment")
+                        .HasColumnType("bigint")
+                        .HasColumnName("contentalignment");
+
+                    b.Property<string>("ContentForeColor")
+                        .HasColumnType("text")
+                        .HasColumnName("contentforecolor");
+
                     b.Property<long?>("DayCount")
                         .HasColumnType("bigint")
                         .HasColumnName("daycount");
@@ -596,6 +604,10 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     b.Property<string>("Description")
                         .HasColumnType("text")
                         .HasColumnName("description");
+
+                    b.Property<string>("DescriptionForeColor")
+                        .HasColumnType("text")
+                        .HasColumnName("descriptionforecolor");
 
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("timestamp with time zone")
@@ -1350,6 +1362,10 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean")
                         .HasColumnName("isdeleted");
+
+                    b.Property<int>("ModuleType")
+                        .HasColumnType("integer")
+                        .HasColumnName("moduletype");
 
                     b.Property<string>("Name")
                         .HasColumnType("text")
@@ -3492,6 +3508,10 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasColumnType("bigint")
                         .HasColumnName("avatarid");
 
+                    b.Property<string>("BehalfOfLoginKey")
+                        .HasColumnType("text")
+                        .HasColumnName("behalfofloginkey");
+
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("birthdate");
@@ -3983,6 +4003,10 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long?>("BehalfOfLoginUserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("behalfofloginuserid");
 
                     b.Property<string>("DeviceInfo")
                         .HasMaxLength(255)

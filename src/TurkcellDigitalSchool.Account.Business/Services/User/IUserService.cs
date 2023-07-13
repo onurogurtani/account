@@ -7,11 +7,12 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
 {
     public interface IUserService
     {
-        PersonalInfoDto GetByStudentPersonalInformation(long userId);
+       
+        PersonalInfoDto GetByPersonalInformation(long userId);
         List<ParentInfoDto> GetByStudentParentInfoInformation(long userId);
         List<PackageInfoDto> GetByStudentPackageInformation(long userId);
         List<PackageInfoDto> GetByParentPackageInformation(long userId);
-        SettingsInfoDto GetByStudentSettingsInfoInformation(long userId);
+        SettingsInfoDto GetByUserSettingsInfoInformation(long userId);
         bool IsExistEmail(long userId, string email);
         bool IsExistUserName(long userId, string userName);
         Domain.Concrete.User GetUserById(long userId);
@@ -23,5 +24,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         List<ParentInfoDto> GetByStudentParentsInformation(long userId);
         List<ParentInfoDto> GetStudentsByParentId(long? parentId);
         Task<IResult> UpdateAvatarAsync(long userId, long avatarId);
+        List<StudentsOfParentDto> GetStudentsOfParentByParentId(long parentId);
+        List<ParentPackegesDto> GetParentPackagesByParentId(long parentId);
     }
 }

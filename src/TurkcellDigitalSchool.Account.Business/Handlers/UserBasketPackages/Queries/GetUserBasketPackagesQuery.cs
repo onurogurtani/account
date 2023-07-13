@@ -7,7 +7,7 @@ using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Common.Helpers;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+ 
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.CustomAttribute;

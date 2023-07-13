@@ -72,11 +72,11 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
             _oneTimePasswordRepository.UpdateAndSave(getOtp);
 
 
-            if (ServiceId == OtpServices.Sms_StudentProfilePhoneVerify)
+            if (ServiceId == OtpServices.Sms_UserProfilePhoneVerify)
             {
                 UpdateVerifyPhone(UserId);
             }
-            if (ServiceId == OtpServices.Mail_StudentProfileMailVerify)
+            if (ServiceId == OtpServices.Mail_UserProfileMailVerify)
             {
                 UpdateVerifyMail(UserId);
             }
@@ -111,7 +111,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
         {
 
             var userInfo = _userRepository.Get(w => w.Id == userId);
-            if (serviceId == OtpServices.Mail_StudentProfileMailVerify)
+            if (serviceId == OtpServices.Mail_UserProfileMailVerify)
             {
                 var dictoryString = new Dictionary<string, string>();
                 dictoryString.Add(EmailVerifyParameters.NameSurname, $"{userInfo.Name} {userInfo.SurName}");

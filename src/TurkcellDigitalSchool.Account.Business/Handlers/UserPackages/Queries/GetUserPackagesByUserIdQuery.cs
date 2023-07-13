@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Logging;
+ 
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Utilities.Results;

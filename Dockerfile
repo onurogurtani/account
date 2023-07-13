@@ -21,6 +21,8 @@ RUN dotnet publish "TurkcellDigitalSchool.Account.Api.csproj" -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
+
+
 COPY --from=publish /app/publish .
 EXPOSE 6021
 ENV ASPNETCORE_ENVIRONMENT="DEVTURKCELL"

@@ -84,7 +84,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             return result;
         }
 
-        private CustomUserDto GetCustomUser(User user)
+        public CustomUserDto GetCustomUser(User user)
         {
             var result = new CustomUserDto
             {
@@ -102,7 +102,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 EMailVerify = user.EmailVerify,
                 MobilPhone = user.MobilePhones,
                 MobilPhoneVerify = user.MobilePhonesVerify,
-                LastPasswordDate = user.LastPasswordDate
+                LastPasswordDate = user.LastPasswordDate 
             };
             return result;
         }

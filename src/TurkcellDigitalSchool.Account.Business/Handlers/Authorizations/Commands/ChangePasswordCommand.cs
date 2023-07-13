@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
 using MediatR;
 using TurkcellDigitalSchool.Account.Business.Constants;
-using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.ValidationRules;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Core.Aspects.Autofac.Caching;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Validation;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 
@@ -34,7 +29,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 _mediator = mediator;
             }
 
-            [CacheRemoveAspect("Get")]
+             
             
             public async Task<IResult> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
             {

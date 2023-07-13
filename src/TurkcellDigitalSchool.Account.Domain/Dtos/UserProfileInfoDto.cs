@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
 
 namespace TurkcellDigitalSchool.Account.Domain.Dtos
 {
-    public class StudentInfoDto
+    public class UserProfileInfoDto
     {
         public PersonalInfoDto Personal { get; set; }
         public List<ParentInfoDto> Parents { get; set; }
@@ -21,7 +22,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public string Name { get; set; }
         public string SurName { get; set; }
         public string UserName { get; set; }
-        public long Avatar { get; set; } // TODO File olark yapılacak.
+        public FileDto Avatar { get; set; }
         public long? CitizenId { get; set; }
         public string PlaceOfBirth { get; set; }
         public DateTime? DateOfBirth { get; set; }
@@ -58,7 +59,6 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
 
 
     }
-
     public class SettingsInfoDto
     {
         public UserSupportTeamViewMyDataDto UserSupportTeamViewMyData { get; set; }
@@ -66,7 +66,6 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public List<UserContratDto> UserContrats { get; set; }
 
     }
-
     public class UserContratDto
     {
         public long Id { get; set; }
@@ -74,7 +73,6 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public bool? IsAccepted { get; set; }
         public DateTime? AcceptedDate { get; set; }
     }
-
     public class CommunicationPreferencesDto
     {
         public long? Id { get; set; }
@@ -83,7 +81,6 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public bool? IsCall { get; set; }
         public bool? IsNotification { get; set; }
     }
-
     public class UserInfoDocumentDto
     {
         public long Id { get; set; }
@@ -91,7 +88,6 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public string Content { get; set; }
         public bool RequiredApproval { get; set; }
     }
-
     public class UserSupportTeamViewMyDataDto
     {
         public long? Id { get; set; }
@@ -100,4 +96,24 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public bool? IsOneMonth { get; set; }
         public bool? IsAlways { get; set; }
     }
+    public class StudentsOfParentDto
+    {
+        public long Id { get; set; }
+        public long? CitizenId { get; set; }
+        public string Name { get; set; }
+        public string SurName { get; set; }
+        public string Email { get; set; }
+        public string MobilePhone { get; set; }
+
+    }
+    public class ParentPackegesDto
+    {
+        public long UserPackageId { get; set; }
+        public long PackageId { get; set; }
+        public string PackageTitle { get; set; }
+        public ICollection<ImageOfPackage> PackageImage { get; set; }
+        public DateTime PurchaseDate { get; set; }
+        public string PackageDetail { get; set; }
+    }
+
 }

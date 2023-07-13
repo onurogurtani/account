@@ -12,9 +12,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Parents.Queries
      
     [LogScope]
 
-    public class GetParentsQuery : QueryByFilterRequestBase<Parent>
+    public class GetParentsQuery : QueryByFilterRequestBase<TurkcellDigitalSchool.Account.Domain.Concrete.Parent>
     {
-        public class GetParentsQueryHandler : QueryByFilterRequestHandlerBase<Parent, GetParentsQuery>
+        public class GetParentsQueryHandler : QueryByFilterRequestHandlerBase<TurkcellDigitalSchool.Account.Domain.Concrete.Parent, GetParentsQuery>
         {
             /// <summary>
             /// Get Parents
