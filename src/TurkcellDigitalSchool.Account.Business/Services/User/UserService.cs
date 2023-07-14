@@ -268,14 +268,15 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         }
         public async Task SetDefaultSettingValues(long UserId)
         {
+            var user = GetUserById(UserId);
             var existUserCommunicationPreferences = _userCommunicationPreferencesRepository.Get(w => w.UserId == UserId);
             if (existUserCommunicationPreferences == null)
             {
                 var newRecord = new UserCommunicationPreferences
                 {
                     UserId = UserId,
-                    IsEMail = true,
-                    IsCall = true,
+                    IsEMail = user.MobilePhonesVerify == true ? true : false,
+                    IsCall = user.MobilePhonesVerify == true ? true : false,
                 };
                 await _userCommunicationPreferencesRepository.CreateAndSaveAsync(newRecord);
             }
@@ -386,9 +387,9 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                    UserPackageId = package.Id,
                    PackageId = package.PackageId,
                    PurchaseDate = package.PurchaseDate,
-                   PackageImage=package.Package.ImageOfPackages,
-                   PackageTitle=package.Package.Name,
-                   PackageDetail=package.Package.Content
+                   PackageImage = package.Package.ImageOfPackages,
+                   PackageTitle = package.Package.Name,
+                   PackageDetail = package.Package.Content
                }).ToList();
 
         }
