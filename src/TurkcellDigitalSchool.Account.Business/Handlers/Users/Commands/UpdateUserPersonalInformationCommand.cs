@@ -52,16 +52,24 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                 if (getUser == null)
                     return new ErrorResult(string.Format(RecordsDoesNotExist.PrepareRedisMessage(), "Kullanıcı"));
 
-                if (request.ResidenceCityId != null && !_userService.IsExistCity((long)request.ResidenceCityId))
-                    return new ErrorResult(string.Format(RecordsDoesNotExist.PrepareRedisMessage(), "İl"));
+                if (getUser.UserType != UserType.Parent)
+                {
+                    if (request.ResidenceCityId != null && !_userService.IsExistCity((long)request.ResidenceCityId))
+                        return new ErrorResult(string.Format(RecordsDoesNotExist.PrepareRedisMessage(), "İl"));
 
+                    if (request.ResidenceCityId != null && request.ResidenceCountyId != null && !_userService.IsExistCounty((long)request.ResidenceCityId, (long)request.ResidenceCountyId))
+                        return new ErrorResult(string.Format(RecordsDoesNotExist.PrepareRedisMessage(), "İlçe"));
 
-                if (request.ResidenceCityId != null && request.ResidenceCountyId != null && !_userService.IsExistCounty((long)request.ResidenceCityId, (long)request.ResidenceCountyId))
-                    return new ErrorResult(string.Format(RecordsDoesNotExist.PrepareRedisMessage(), "İlçe"));
+                    if (!string.IsNullOrWhiteSpace(request.UserName) && _userService.IsExistUserName(userId, request.UserName))
+                        return new ErrorResult(UserNameAlreadyExist.PrepareRedisMessage());
 
+                    getUser.UserName = request.UserName;
+                    getUser.ResidenceCityId = request.ResidenceCityId;
+                    getUser.ResidenceCountyId = request.ResidenceCountyId;
+                }
 
-                if (_userService.IsExistUserName(userId, request.UserName))
-                    return new ErrorResult(UserNameAlreadyExist.PrepareRedisMessage());
+                getUser.MobilePhones = request.MobilPhone;
+                getUser.MobilePhonesVerify = getUser.MobilePhones == request.MobilPhone ? true : false;
 
                 if (getUser.Email != request.Email)
                 {
@@ -73,11 +81,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                     }
                 }
 
-                getUser.UserName = request.UserName;
-                getUser.MobilePhones = request.MobilPhone;
-                getUser.MobilePhonesVerify = getUser.MobilePhones == request.MobilPhone ? true : false;
-                getUser.ResidenceCityId = request.ResidenceCityId;
-                getUser.ResidenceCountyId = request.ResidenceCountyId;
                 await _userRepository.UpdateAndSaveAsync(getUser);
                 return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }
