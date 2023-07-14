@@ -7,6 +7,11 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Common.Controllers;
 using System.Collections.Generic;
 using TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Commands;
+using TurkcellDigitalSchool.Core.Utilities.Results;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Text.Json;
+using TurkcellDigitalSchool.Core.Utilities.Paging;
+using TurkcellDigitalSchool.Core.Extensions;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
 {
@@ -15,9 +20,8 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class UserPackagesController : BaseCrudController<UserPackage, GetUserPackagesQuery, GetUserPackageQuery, CreateUserPackageCommand, UpdateUserPackageCommand, DeleteUserPackageCommand>
+    public class UserPackagesController : BaseApiController
     {
-
         ///<summary>
         ///Get UserPackage By UserId 
         ///</summary>
@@ -49,6 +53,91 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             {
                 return Ok(result);
             }
+            return BadRequest(result);
+        }
+
+        [Produces("application/json", new string[] { "text/plain" })]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<UserPackage>))]
+        [ProducesResponseType(400, Type = typeof(string))]
+        [HttpPost("getList")]
+        public async Task<IActionResult> GetList([FromQuery] PaginationQuery query, CancellationToken cancellationToken, [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] FilterQuery[] filterQuery = null)
+        {
+            DataResult<PagedList<UserPackage>> result = await base.Mediator.Send(new GetUserPackagesQuery
+            {
+                PaginationQuery = query,
+                FilterQuery = filterQuery
+            }, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [Produces("application/json", new string[] { "text/plain" })]
+        [ProducesResponseType(200, Type = typeof(UserPackage))]
+        [ProducesResponseType(400, Type = typeof(string))]
+        [HttpGet("getbyid")]
+        public async Task<IActionResult> GetById(long id, CancellationToken cancellationToken)
+        {
+            DataResult<UserPackage> result = await base.Mediator.Send(new GetUserPackageQuery
+            {
+                Id = id
+            }, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [Produces("application/json", new string[] { "text/plain" })]
+        [ProducesResponseType(200, Type = typeof(string))]
+        [ProducesResponseType(400, Type = typeof(string))]
+        [HttpPost]
+        public async Task<IActionResult> Add([FromBody] CreateUserPackageCommand createTEntity, CancellationToken cancellationToken)
+        {
+            Core.Utilities.Results.IResult result = await base.Mediator.Send(createTEntity, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [Produces("application/json", new string[] { "text/plain" })]
+        [ProducesResponseType(200, Type = typeof(string))]
+        [ProducesResponseType(400, Type = typeof(string))]
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] JsonElement json, CancellationToken cancellationToken)
+        {
+            DataResult<UserPackage> result = await base.Mediator.Send(json.ToUpdateCommand<UserPackage, UpdateUserPackageCommand>(), cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [Produces("application/json", new string[] { "text/plain" })]
+        [ProducesResponseType(200, Type = typeof(string))]
+        [ProducesResponseType(400, Type = typeof(string))]
+        [HttpDelete]
+        public async Task<IActionResult> Delete(long id, CancellationToken cancellationToken)
+        {
+            DataResult<UserPackage> result = await base.Mediator.Send(new DeleteUserPackageCommand
+            {
+                Id = id
+            }, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
             return BadRequest(result);
         }
     }
