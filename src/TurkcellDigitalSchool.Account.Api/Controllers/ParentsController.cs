@@ -44,10 +44,10 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// <param name="request"></param>
         /// <returns>ParentInfoDto</returns>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<List<PackageInfoDto>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<List<ParentPackegesDto>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("GetParentPackageInformation")]
-        public async Task<IActionResult> GetParentPackageInformation([FromQuery] GetParentPackageInformationQuery request, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetParentPackageInformation([FromQuery] GetParentPackagesQuery request, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(request, cancellationToken);
             if (result.Success)
