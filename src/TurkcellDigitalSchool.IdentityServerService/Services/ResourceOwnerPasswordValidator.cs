@@ -210,8 +210,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                     customResponse.Add(OtpCodeSendPhoneRequestText, otpResult.CellPhone.MaskPhoneNumber());
                     customResponse.Add("MobileLoginId", otpResult.Id);
                     customResponse.Add("XId", Base64UrlEncoder.Encode(otpResult.UserId.ToString()));
-                    if (_environment == ApplicationMode.DEV.ToString() ||
-                         _environment == ApplicationMode.DEVTURKCELL.ToString())
+                    if (_environment.EnvIsDEV())
                     {
                         customResponse.Add(OtpCodeRequestText, otpResult.Code);
                     }
@@ -355,7 +354,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
             int otp = RandomPassword.RandomNumberGenerator();
 
-            if (_environment == ApplicationMode.DEV.ToString() || _environment == ApplicationMode.DEVTURKCELL.ToString())
+            if (_environment.EnvIsDEV())
                 otp = 123456;
 
             // Eski boş SMS kodu

@@ -48,13 +48,13 @@ namespace TurkcellDigitalSchool.Account.Business
         public BusinessStartup(IConfiguration configuration, IHostEnvironment hostEnvironment)
         {
             Configuration = configuration;
-            HostEnvironment = hostEnvironment;
+            HostEnvironment = hostEnvironment; 
         }
 
         public IConfiguration Configuration { get; }
 
         protected IHostEnvironment HostEnvironment { get; }
-
+         
         /// <summary>
         /// This method gets called by the runtime. Use this method to add services to the container.
         /// </summary>
@@ -125,7 +125,7 @@ namespace TurkcellDigitalSchool.Account.Business
                 {
                     rabbitMqOptions.ConnectionFactoryOptions = connectionFactory =>
                     {
-                        connectionFactory.Ssl.Enabled = capConfig.SslEnable; ;
+                        connectionFactory.Ssl.Enabled = capConfig.SslEnable;
                         connectionFactory.HostName = capConfig.HostName;
                         connectionFactory.UserName = capConfig.UserName;
                         connectionFactory.Password = capConfig.Password;

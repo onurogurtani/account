@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json.Serialization;
 using Serilog;
+using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.IdentityServerService;
 
@@ -30,6 +31,10 @@ try
         options.AddServerHeader = false;
         options.Listen(IPAddress.Any, 6001, listenOptions =>
         {
+            if (context.HostingEnvironment.EnvironmentName.EnvIsUseHttps())
+            {
+                listenOptions.UseHttps();
+            } 
             // Enables HTTP/3
             //listenOptions.Protocols = HttpProtocols.Http3;
         });

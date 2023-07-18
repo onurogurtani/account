@@ -99,7 +99,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 
 
                     int otp = RandomPassword.RandomNumberGenerator();
-                    if (_environment == ApplicationMode.DEV.ToString() || _environment == ApplicationMode.DEVTURKCELL.ToString())
+                    if (_environment.EnvIsDEV())
                         otp = 123456;
 
                     // Eski boş SMS kodu

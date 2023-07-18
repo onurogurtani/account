@@ -11,6 +11,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Core.Common.Helpers; 
 using TurkcellDigitalSchool.Core.Configure;
+using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Redis.Contract;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
@@ -159,13 +160,18 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 app.UseDeveloperExceptionPage();
             }
 
+            if (app.Environment.EnvironmentName.EnvIsUseHttps())
+            {
+                app.UseHsts();
+                app.UseHttpsRedirection();
+            }
+
             app.UseStaticFiles();
             app.UseRouting();
             app.UseIdentityServer();
             app.UseAuthorization();
 
-            app.MapRazorPages()
-                .RequireAuthorization(); 
+            app.MapRazorPages().RequireAuthorization(); 
             return app;
         }
     }

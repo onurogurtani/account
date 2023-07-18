@@ -1,8 +1,8 @@
 ﻿using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Mappers;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using TurkcellDigitalSchool.Core.Extensions;
 
 namespace TurkcellDigitalSchool.IdentityServerService
 {
@@ -20,7 +20,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 //Update-Database -context ConfigurationDbContext
 
 
-                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "DEVTURKCELL")
+                if (app.Environment.EnvironmentName.EnvIsUseAutoMigration())
                 {
                     using (var data =scope.ServiceProvider.GetService<PersistedGrantDbContext>())
                     {
@@ -30,7 +30,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
 
                 using (var context = scope.ServiceProvider.GetService<ConfigurationDbContext>())
                 {
-                    if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "DEVTURKCELL")
+                    if (app.Environment.EnvironmentName.EnvIsUseAutoMigration())
                     {
                         context.Database.Migrate();
                     }
