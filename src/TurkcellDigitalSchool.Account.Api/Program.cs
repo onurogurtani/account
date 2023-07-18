@@ -54,11 +54,7 @@ namespace TurkcellDigitalSchool.Account.Api
                              
                             options.AddServerHeader = false;
                             options.Listen(IPAddress.Any, 6021, listenOptions =>
-                            {
-                                if (context.HostingEnvironment.EnvironmentName.EnvIsUseHttps())
-                                {
-                                    listenOptions.UseHttps();
-                                }
+                            { 
                             });
                         });
                 });

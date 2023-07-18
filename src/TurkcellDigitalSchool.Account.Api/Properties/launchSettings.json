@@ -17,7 +17,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "DEVTURKCELL"
       },
-      "applicationUrl": "https://localhost:6021",
+      "applicationUrl": "http://localhost:6021",
       "dotnetRunMessages": true
     },
     "TurkcellDigitalSchool.Api.STBTURKCELL": {
@@ -27,7 +27,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "STBTURKCELL"
       },
-      "applicationUrl": "https://localhost:6021",
+      "applicationUrl": "http://localhost:6021",
       "dotnetRunMessages": true
     },
     "TurkcellDigitalSchool.Api.ALPHATURKCELL": {
