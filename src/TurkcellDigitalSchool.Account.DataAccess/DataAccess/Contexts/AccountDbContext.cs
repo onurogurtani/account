@@ -104,6 +104,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         public DbSet<Publisher> Publishers { get; set; }
         public DbSet<TestExam> TestExams { get; set; }
         public DbSet<TestExamType> TestExamTypes { get; set; }
+        public DbSet<EYDataTransferMap> EYDataTransferMaps { get; set; }
 
         #endregion
     }
