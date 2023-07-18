@@ -6,6 +6,7 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
 using TurkcellDigitalSchool.Core.DataAccess;
 using TurkcellDigitalSchool.Core.DataAccess.Contexts;
+using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt; 
 
 namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
@@ -20,9 +21,13 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+            if (EnvName.EnvIsUseDbSchema())
+            {
+                modelBuilder.HasDefaultSchema("account");
+            } 
             var asssebly = Assembly.GetExecutingAssembly();
-            modelBuilder.ApplyConfigurationsFromAssembly(asssebly);
-
+            modelBuilder.ApplyConfigurationsFromAssembly(asssebly); 
         }
 
         #region Owner Entities
