@@ -29,6 +29,6 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 EXPOSE 6001
 ENV ASPNETCORE_ENVIRONMENT="DEVTURKCELL"
-ENV ASPNETCORE_URLS="http://+:6001"
+ENV ASPNETCORE_URLS="https://+:6001"
 ENV TZ=Europe/Istanbul
 ENTRYPOINT ["dotnet", "TurkcellDigitalSchool.IdentityServerService.dll"] 
