@@ -18,9 +18,9 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Parents.Queries
 {
     [LogScope]
-    public class GetParentPackagesQuery : IRequest<DataResult<List<ParentPackegesDto>>>
+    public class GetParentPackagesQuery : IRequest<DataResult<List<PackageInfoDto>>>
     {
-        public class GetParentPackagesQueryHandler : IRequestHandler<GetParentPackagesQuery, DataResult<List<ParentPackegesDto>>>
+        public class GetParentPackagesQueryHandler : IRequestHandler<GetParentPackagesQuery, DataResult<List<PackageInfoDto>>>
         {
             private readonly IUserService _userService;
             private readonly ITokenHelper _tokenHelper;
@@ -34,14 +34,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Parents.Queries
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
 
-            public virtual async Task<DataResult<List<ParentPackegesDto>>> Handle(GetParentPackagesQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<List<PackageInfoDto>>> Handle(GetParentPackagesQuery request, CancellationToken cancellationToken)
             {
                 var userId = _tokenHelper.GetUserIdByCurrentToken();
                 if (userId == 0)
                 {
-                    return new ErrorDataResult<List<ParentPackegesDto>>(RecordIsNotFound.PrepareRedisMessage());
+                    return new ErrorDataResult<List<PackageInfoDto>>(RecordIsNotFound.PrepareRedisMessage());
                 }
-                return new SuccessDataResult<List<ParentPackegesDto>>(_userService.GetParentPackagesByParentId(userId));
+                return new SuccessDataResult<List<PackageInfoDto>>(_userService.GetParentPackagesByParentId(userId));
             }
 
         }

@@ -146,60 +146,20 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         }
         public List<PackageInfoDto> GetByStudentPackageInformation(long userId)
         {
-            var getPackageList = _userPackageRepository.Query()
+            return  _userPackageRepository.Query()
                 .Include(w => w.Package.ImageOfPackages).ThenInclude(w => w.File)
-                .Where(w => w.UserId == userId).ToList();
-
-            if (getPackageList.Count() == 0)
-            {
-                return new List<PackageInfoDto> { };
-            }
-
-            var resultPackageList = new List<PackageInfoDto>();
-
-            foreach (var package in getPackageList)
-            {
-                resultPackageList.Add(new PackageInfoDto
+                .Where(w => w.UserId == userId)
+                .Select(s=> new PackageInfoDto
                 {
-                    Id = package.Id,
-                    File = package.Package.ImageOfPackages.First().File,
-                    PackageName = package.Package.Name,
-                    PurchaseDate = package.PurchaseDate,
-                    PackageContent = package.Package.Content,
-                });
-            }
-
-            return resultPackageList;
-
+                    Id = s.Package.Id,
+                    File = s.Package.ImageOfPackages.First().File,
+                    PackageName = s.Package.Name,
+                    PurchaseDate = s.PurchaseDate,
+                    PackageContent = s.Package.Content,
+                })
+                .ToList();
         }
-        public List<PackageInfoDto> GetByParentPackageInformation(long userId)
-        {
-            var getPackageList = _userPackageRepository.Query()
-                .Include(w => w.Package.ImageOfPackages).ThenInclude(w => w.File)
-                .Where(w => w.UserId == userId).ToList();
-
-            if (getPackageList.Count() == 0)
-            {
-                return new List<PackageInfoDto> { };
-            }
-
-            var resultPackageList = new List<PackageInfoDto>();
-
-            foreach (var package in getPackageList)
-            {
-                resultPackageList.Add(new PackageInfoDto
-                {
-                    Id = package.Id,
-                    File = package.Package.ImageOfPackages.First().File,
-                    PackageName = package.Package.Name,
-                    PurchaseDate = package.PurchaseDate,
-                    PackageContent = package.Package.Content,
-                });
-            }
-
-            return resultPackageList;
-
-        }
+       
         public SettingsInfoDto GetByUserSettingsInfoInformation(long userId)
         {
             var getUserContractList = _userContratRepository.Query()
@@ -379,24 +339,20 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                })
                .ToList();
         }
-
-        public List<ParentPackegesDto> GetParentPackagesByParentId(long parentId)
+        public List<PackageInfoDto> GetParentPackagesByParentId(long parentId)
         {
             var getStudentsOfParentList = GetStudentsOfParentByParentId(parentId).Select(w => w.Id).ToList();
-
             return _userPackageRepository.Query()
-               .Include(w => w.Package).ThenInclude(w => w.ImageOfPackages)
+               .Include(w => w.Package.ImageOfPackages).ThenInclude(w => w.File)
                .Where(w => getStudentsOfParentList.Contains(w.UserId) || w.UserId == parentId)
-               .Select(package => new ParentPackegesDto
+               .Select(package => new PackageInfoDto
                {
-                   UserPackageId = package.Id,
-                   PackageId = package.PackageId,
+                   Id = package.Id,
+                   File = package.Package.ImageOfPackages.First().File,
+                   PackageName = package.Package.Name,
                    PurchaseDate = package.PurchaseDate,
-                   PackageImage = package.Package.ImageOfPackages,
-                   PackageTitle = package.Package.Name,
-                   PackageDetail = package.Package.Content
+                   PackageContent = package.Package.Content,
                }).ToList();
-
         }
     }
 }
