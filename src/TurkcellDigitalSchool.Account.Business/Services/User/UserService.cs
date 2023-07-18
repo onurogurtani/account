@@ -12,6 +12,7 @@ using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.Business.Services.User
 {
@@ -27,7 +28,9 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         private readonly IUserSupportTeamViewMyDataRepository _userSupportTeamViewMyDataRepository;
         private readonly IFileRepository _fileRepository;
         private readonly IClassroomRepository _classroomRepository;
-        public UserService(IUserRepository userRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository, IUserContratRepository userContratRepository, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository, IFileRepository fileRepository, IClassroomRepository classroomRepository)
+        private readonly ITokenHelper _tokenHelper;
+
+        public UserService(IUserRepository userRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository, IUserContratRepository userContratRepository, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository, IFileRepository fileRepository, IClassroomRepository classroomRepository, ITokenHelper tokenHelper)
         {
             _userRepository = userRepository;
             _studentParentInformationRepository = studentParentInformationRepository;
@@ -39,6 +42,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             _userSupportTeamViewMyDataRepository = userSupportTeamViewMyDataRepository;
             _fileRepository = fileRepository;
             _classroomRepository = classroomRepository;
+            _tokenHelper = tokenHelper;
         }
         public PersonalInfoDto GetByPersonalInformation(long userId)
         {
@@ -142,60 +146,20 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         }
         public List<PackageInfoDto> GetByStudentPackageInformation(long userId)
         {
-            var getPackageList = _userPackageRepository.Query()
+            return  _userPackageRepository.Query()
                 .Include(w => w.Package.ImageOfPackages).ThenInclude(w => w.File)
-                .Where(w => w.UserId == userId).ToList();
-
-            if (getPackageList.Count() == 0)
-            {
-                return new List<PackageInfoDto> { };
-            }
-
-            var resultPackageList = new List<PackageInfoDto>();
-
-            foreach (var package in getPackageList)
-            {
-                resultPackageList.Add(new PackageInfoDto
+                .Where(w => w.UserId == userId)
+                .Select(s=> new PackageInfoDto
                 {
-                    Id = package.Id,
-                    File = package.Package.ImageOfPackages.First().File,
-                    PackageName = package.Package.Name,
-                    PurchaseDate = package.PurchaseDate,
-                    PackageContent = package.Package.Content,
-                });
-            }
-
-            return resultPackageList;
-
+                    Id = s.Package.Id,
+                    File = s.Package.ImageOfPackages.First().File,
+                    PackageName = s.Package.Name,
+                    PurchaseDate = s.PurchaseDate,
+                    PackageContent = s.Package.Content,
+                })
+                .ToList();
         }
-        public List<PackageInfoDto> GetByParentPackageInformation(long userId)
-        {
-            var getPackageList = _userPackageRepository.Query()
-                .Include(w => w.Package.ImageOfPackages).ThenInclude(w => w.File)
-                .Where(w => w.UserId == userId).ToList();
-
-            if (getPackageList.Count() == 0)
-            {
-                return new List<PackageInfoDto> { };
-            }
-
-            var resultPackageList = new List<PackageInfoDto>();
-
-            foreach (var package in getPackageList)
-            {
-                resultPackageList.Add(new PackageInfoDto
-                {
-                    Id = package.Id,
-                    File = package.Package.ImageOfPackages.First().File,
-                    PackageName = package.Package.Name,
-                    PurchaseDate = package.PurchaseDate,
-                    PackageContent = package.Package.Content,
-                });
-            }
-
-            return resultPackageList;
-
-        }
+       
         public SettingsInfoDto GetByUserSettingsInfoInformation(long userId)
         {
             var getUserContractList = _userContratRepository.Query()
@@ -248,7 +212,8 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         }
         public string StudentCommunicationPreferencesValidationRules(StudentCommunicationPreferencesDto studentCommunicationPreferencesDto)
         {
-            var getUser = GetUserById(studentCommunicationPreferencesDto.UserId);
+            var userId = _tokenHelper.GetUserIdByCurrentToken();
+            var getUser = GetUserById(userId);
 
             if (!studentCommunicationPreferencesDto.IsCall && !studentCommunicationPreferencesDto.IsSms && !studentCommunicationPreferencesDto.IsEMail && !studentCommunicationPreferencesDto.IsNotification)
             {
@@ -268,14 +233,15 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         }
         public async Task SetDefaultSettingValues(long UserId)
         {
+            var user = GetUserById(UserId);
             var existUserCommunicationPreferences = _userCommunicationPreferencesRepository.Get(w => w.UserId == UserId);
             if (existUserCommunicationPreferences == null)
             {
                 var newRecord = new UserCommunicationPreferences
                 {
                     UserId = UserId,
-                    IsEMail = true,
-                    IsCall = true,
+                    IsEMail = user.MobilePhonesVerify == true ? true : false,
+                    IsCall = user.MobilePhonesVerify == true ? true : false,
                 };
                 await _userCommunicationPreferencesRepository.CreateAndSaveAsync(newRecord);
             }
@@ -373,24 +339,20 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                })
                .ToList();
         }
-
-        public List<ParentPackegesDto> GetParentPackagesByParentId(long parentId)
+        public List<PackageInfoDto> GetParentPackagesByParentId(long parentId)
         {
             var getStudentsOfParentList = GetStudentsOfParentByParentId(parentId).Select(w => w.Id).ToList();
-
             return _userPackageRepository.Query()
-               .Include(w => w.Package).ThenInclude(w => w.ImageOfPackages)
+               .Include(w => w.Package.ImageOfPackages).ThenInclude(w => w.File)
                .Where(w => getStudentsOfParentList.Contains(w.UserId) || w.UserId == parentId)
-               .Select(package => new ParentPackegesDto
+               .Select(package => new PackageInfoDto
                {
-                   UserPackageId = package.Id,
-                   PackageId = package.PackageId,
+                   Id = package.Id,
+                   File = package.Package.ImageOfPackages.First().File,
+                   PackageName = package.Package.Name,
                    PurchaseDate = package.PurchaseDate,
-                   PackageImage=package.Package.ImageOfPackages,
-                   PackageTitle=package.Package.Name,
-                   PackageDetail=package.Package.Content
+                   PackageContent = package.Package.Content,
                }).ToList();
-
         }
     }
 }

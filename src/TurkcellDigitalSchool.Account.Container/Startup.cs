@@ -77,7 +77,10 @@ namespace TurkcellDigitalSchool.Account.Container
                     var identityConf = Configuration.GetSection("IdentityServerConfig").Get<IdentityServerConfig>();
                     options.Authority = identityConf.BaseUrl;  // IdentityServerUrl gateway or direct
                     options.Audience = IdentityServerConst.API_RESOURCE_ACCOUNT;
-                    options.RequireHttpsMetadata = false; 
+                    if (!HostEnvironment.EnvironmentName.EnvIsUseHttps())
+                    {
+                        options.RequireHttpsMetadata = false;
+                    }
                 });
  
 
@@ -123,8 +126,22 @@ namespace TurkcellDigitalSchool.Account.Container
                             var context = services.GetRequiredService<AccountDbContext>();
                             context.Database.Migrate();
                         }
+                        app.UseHsts();
+                        app.UseHttpsRedirection();
                         break;
                     }
+                case ApplicationMode.STBTURKCELL:
+                {
+                    using (var scope = app.ApplicationServices.CreateScope())
+                    {
+                        var services = scope.ServiceProvider;
+                        var context = services.GetRequiredService<AccountDbContext>();
+                        context.Database.Migrate();
+                    }
+                    app.UseHsts();
+                    app.UseHttpsRedirection();
+                        break;
+                }
                 case ApplicationMode.ALPHATURKCELL:
                     {
                         using (var scope = app.ApplicationServices.CreateScope())
@@ -142,9 +159,13 @@ namespace TurkcellDigitalSchool.Account.Container
             app.UseMiddleware<SessionCheckMiddleware>();
             app.UseDbOperationClaimCreator().GetResult();
 
-            app.UseSwagger();
+            if (!configurationManager.Mode.ToString().EnvIsSTB())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "Kg Teknoloji"); });
+            }
 
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "Kg Teknoloji"); });
+             
             app.UseCors("AllowOrigin");
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {

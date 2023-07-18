@@ -11,7 +11,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         PersonalInfoDto GetByPersonalInformation(long userId);
         List<ParentInfoDto> GetByStudentParentInfoInformation(long userId);
         List<PackageInfoDto> GetByStudentPackageInformation(long userId);
-        List<PackageInfoDto> GetByParentPackageInformation(long userId);
         SettingsInfoDto GetByUserSettingsInfoInformation(long userId);
         bool IsExistEmail(long userId, string email);
         bool IsExistUserName(long userId, string userName);
@@ -25,6 +24,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         List<ParentInfoDto> GetStudentsByParentId(long? parentId);
         Task<IResult> UpdateAvatarAsync(long userId, long avatarId);
         List<StudentsOfParentDto> GetStudentsOfParentByParentId(long parentId);
-        List<ParentPackegesDto> GetParentPackagesByParentId(long parentId);
+        List<PackageInfoDto> GetParentPackagesByParentId(long parentId);
     }
 }

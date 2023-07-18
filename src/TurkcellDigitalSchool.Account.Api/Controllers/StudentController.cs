@@ -23,25 +23,6 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         }
 
 
-        /// <summary>
-        /// Get Student information
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns>ParentInfoDto</returns>
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<UserProfileInfoDto>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpGet("GetStudentInformations")]
-        public async Task<IActionResult> GetStudentInformations([FromQuery] GetStudentInformationsQuery request, CancellationToken cancellationToken)
-        {
-            var result = await Mediator.Send(request, cancellationToken);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
-
 
         /// <summary>
         /// Get Student Package information
@@ -82,63 +63,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
        
-        /// <summary>
-        /// Get Student Personal information
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns>PersonalInfoDto</returns>
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<PersonalInfoDto>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpGet("GetStudentPersonalInformation")]
-        public async Task<IActionResult> GetStudentPersonalInformation([FromQuery] GetStudentPersonalInformationQuery request, CancellationToken cancellationToken)
-        {
-            var result = await Mediator.Send(request, cancellationToken);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
-
-        /// <summary>
-        /// student personal information add/update
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPut("UpdateStudentPersonalInformation")]
-        public async Task<IActionResult> UpdateStudentPersonalInformation([FromBody] UpdateStudentPersonalInformationCommand request, CancellationToken cancellationToken)
-        {
-            var result = await Mediator.Send(request, cancellationToken);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
-
-        /// <summary>
-        /// student email information update
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPut("UpdateStudentEmailInformation")]
-        public async Task<IActionResult> UpdateStudentEmailInformation([FromBody] UpdateStudentEmailCommand request, CancellationToken cancellationToken)
-        {
-            var result = await Mediator.Send(request, cancellationToken);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
-
+      
 
         /// <summary>
         /// Get Student Parents information

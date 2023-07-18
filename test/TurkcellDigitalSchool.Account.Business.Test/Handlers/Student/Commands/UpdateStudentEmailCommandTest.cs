@@ -5,19 +5,20 @@ using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
 using TurkcellDigitalSchool.Account.Business.Services.User;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using static TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands.UpdateStudentEmailCommand;
 using FluentAssertions;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.Account.Business.Services.Otp;
+using TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands;
+using static TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands.UpdateUserEmailCommand;
 
 namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
 {
     [TestFixture]
     public class UpdateStudentEmailCommandTest
     {
-        private UpdateStudentEmailCommand _updateStudentEmailCommand;
-        private UpdateStudentEmailCommandHandler _updateStudentEmailCommandHandler;
+        private UpdateUserEmailCommand _updateStudentEmailCommand;
+        private UpdateUserEmailCommandHandler _updateStudentEmailCommandHandler;
 
         //OTP geliştirmesi yazıldıktan sonra testi yazılacak.
         private Mock<IUserRepository> _userRepository;
@@ -31,8 +32,8 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Student.Commands
             _userRepository = new Mock<IUserRepository>();
             _userService = new Mock<IUserService>();
 
-            _updateStudentEmailCommand = new UpdateStudentEmailCommand();
-            _updateStudentEmailCommandHandler = new UpdateStudentEmailCommandHandler(_userRepository.Object, _userService.Object, _tokenHelper.Object, _otpService.Object);
+            _updateStudentEmailCommand = new UpdateUserEmailCommand();
+            _updateStudentEmailCommandHandler = new UpdateUserEmailCommandHandler(_userRepository.Object, _userService.Object, _tokenHelper.Object, _otpService.Object);
         }
 
         [Test]

@@ -2,10 +2,10 @@ using System;
 using System.Net;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using TurkcellDigitalSchool.Core.Extensions;
 
 namespace TurkcellDigitalSchool.Account.Api
 {
@@ -55,8 +55,10 @@ namespace TurkcellDigitalSchool.Account.Api
                             options.AddServerHeader = false;
                             options.Listen(IPAddress.Any, 6021, listenOptions =>
                             {
-                                // Enables HTTP/3
-                                //listenOptions.Protocols = HttpProtocols.Http3;
+                                if (context.HostingEnvironment.EnvironmentName.EnvIsUseHttps())
+                                {
+                                    listenOptions.UseHttps();
+                                }
                             });
                         });
                 });

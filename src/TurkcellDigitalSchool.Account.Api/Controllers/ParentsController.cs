@@ -47,26 +47,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<List<PackageInfoDto>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("GetParentPackageInformation")]
-        public async Task<IActionResult> GetParentPackageInformation([FromQuery] GetParentPackageInformationQuery request, CancellationToken cancellationToken)
-        {
-            var result = await Mediator.Send(request, cancellationToken);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
-
-        /// <summary>
-        /// Get Parent Personal information
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns>PersonalInfoDto</returns>
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<PersonalInfoDto>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpGet("GetParentPersonalInformation")]
-        public async Task<IActionResult> GetParentPersonalInformation([FromQuery] GetParentPersonalInformationQuery request, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetParentPackageInformation([FromQuery] GetParentPackagesQuery request, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(request, cancellationToken);
             if (result.Success)

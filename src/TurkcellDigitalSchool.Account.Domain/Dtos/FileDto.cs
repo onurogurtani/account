@@ -8,7 +8,6 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public byte[] File { get; set; }
         public string ContentType { get; set; }
         public string FileName { get; set; }
-        [JsonIgnore]
         public string FilePath { get; set; }
         public string Description { get; set; }
     }
