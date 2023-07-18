@@ -56,7 +56,7 @@ namespace TurkcellDigitalSchool.Account.Container
         public override void ConfigureServices(IServiceCollection services)
         {
             // Business katmanında olan dependency tanımlarının bir metot üzerinden buraya implemente edilmesi.
-            
+
             services.AddControllers()
                 .AddJsonOptions(options =>
                 {
@@ -70,26 +70,23 @@ namespace TurkcellDigitalSchool.Account.Container
                     "AllowOrigin",
                     builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
-             
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
                     var identityConf = Configuration.GetSection("IdentityServerConfig").Get<IdentityServerConfig>();
                     options.Authority = identityConf.BaseUrl;  // IdentityServerUrl gateway or direct
-                    options.Audience = IdentityServerConst.API_RESOURCE_ACCOUNT;
-                    if (!HostEnvironment.EnvironmentName.EnvIsUseHttps())
-                    {
-                        options.RequireHttpsMetadata = false;
-                    }
+                    options.Audience = IdentityServerConst.API_RESOURCE_ACCOUNT; 
+                    options.RequireHttpsMetadata = false; 
                 });
- 
+
 
             services.AddSwaggerGen(c =>
             {
                 c.IncludeXmlComments(Path.ChangeExtension(Assembly.GetEntryAssembly().Location, ".xml"));
             });
 
-          
+
             services.AddSingleton<RedisService>();
 
             base.ConfigureServices(services);
@@ -102,7 +99,7 @@ namespace TurkcellDigitalSchool.Account.Container
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env   )
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // VERY IMPORTANT. Since we removed the build from AddDependencyResolvers, let's set the Service provider manually.
             // By the way, we can construct with DI by taking type to avoid calling static methods in aspects.
@@ -115,7 +112,7 @@ namespace TurkcellDigitalSchool.Account.Container
             var configurationManager = app.ApplicationServices.GetService<Core.Common.ConfigurationManager>();
             switch (configurationManager.Mode)
             {
-               
+
                 case ApplicationMode.DEV:
                     break;
                 case ApplicationMode.DEVTURKCELL:
@@ -125,23 +122,19 @@ namespace TurkcellDigitalSchool.Account.Container
                             var services = scope.ServiceProvider;
                             var context = services.GetRequiredService<AccountDbContext>();
                             context.Database.Migrate();
-                        }
-                        app.UseHsts();
-                        app.UseHttpsRedirection();
+                        } 
                         break;
                     }
                 case ApplicationMode.STBTURKCELL:
-                {
-                    using (var scope = app.ApplicationServices.CreateScope())
                     {
-                        var services = scope.ServiceProvider;
-                        var context = services.GetRequiredService<AccountDbContext>();
-                        context.Database.Migrate();
-                    }
-                    app.UseHsts();
-                    app.UseHttpsRedirection();
+                        using (var scope = app.ApplicationServices.CreateScope())
+                        {
+                            var services = scope.ServiceProvider;
+                            var context = services.GetRequiredService<AccountDbContext>();
+                            context.Database.Migrate();
+                        } 
                         break;
-                }
+                    }
                 case ApplicationMode.ALPHATURKCELL:
                     {
                         using (var scope = app.ApplicationServices.CreateScope())
@@ -152,7 +145,7 @@ namespace TurkcellDigitalSchool.Account.Container
                         }
                         break;
                     }
-            } 
+            }
             app.UseDeveloperExceptionPage();
 
             app.ConfigureCustomExceptionMiddleware();
@@ -165,7 +158,7 @@ namespace TurkcellDigitalSchool.Account.Container
                 app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "Kg Teknoloji"); });
             }
 
-             
+
             app.UseCors("AllowOrigin");
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {
