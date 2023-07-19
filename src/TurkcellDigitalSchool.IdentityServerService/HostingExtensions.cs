@@ -160,11 +160,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 app.UseDeveloperExceptionPage();
             }
 
-            if (app.Environment.EnvironmentName.EnvIsUseHttps())
-            {
-                app.UseHsts();
-                app.UseHttpsRedirection();
-            }
+ 
 
             app.UseStaticFiles();
             app.UseRouting();
