@@ -31,4 +31,3 @@ ENV TZ=Europe/Istanbul
 ENTRYPOINT ["dotnet", "TurkcellDigitalSchool.Account.Api.dll"]
 
 
-(?=^.{1,9}$)
