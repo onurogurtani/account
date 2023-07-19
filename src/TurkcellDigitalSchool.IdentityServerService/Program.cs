@@ -30,11 +30,7 @@ try
   
         options.AddServerHeader = false;
         options.Listen(IPAddress.Any, 6001, listenOptions =>
-        {
-            if (context.HostingEnvironment.EnvironmentName.EnvIsUseHttps())
-            {
-                listenOptions.UseHttps();
-            } 
+        { 
             // Enables HTTP/3
             //listenOptions.Protocols = HttpProtocols.Http3;
         });
