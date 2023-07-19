@@ -120,7 +120,11 @@ namespace TurkcellDigitalSchool.Account.Business
             var capConfig = Configuration.GetSection("CapConfig").Get<CapConfig>();
             services.AddCap(options =>
             {
-                options.UsePostgreSql(Configuration.GetConnectionString("DArchPostgreContext"));
+                options.UsePostgreSql(sqlOptions =>
+                {
+                    sqlOptions.ConnectionString = Configuration.GetConnectionString("DArchPostgreContext");
+                    sqlOptions.Schema = "account";
+                }); 
                 options.UseRabbitMQ(rabbitMqOptions =>
                 {
                     rabbitMqOptions.ConnectionFactoryOptions = connectionFactory =>
