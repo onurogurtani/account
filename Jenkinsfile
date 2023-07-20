@@ -70,16 +70,6 @@ pipeline {
                     script {
                         printDebugMessage ("Openshift Project: ${openshiftProjectName}")
 
-                        newImageUrl = "${dockerRegistryBaseUrl}/${appServiceName}/${softwareModuleName}/${subsoftwareModuleName}:${appVersion}"
-
-                        printDebugMessage ("newImageUrl = " + newImageUrl)
-                        printSectionBoundry("Configuration stage finished!")
-
-
-
-
-                        printDebugMessage ("Openshift Project: ${openshiftProjectName}")
-
                         printDebugMessage ("Env Branch: ${env.GIT_BRANCH}")
                         printDebugMessage ("mainBranch: ${mainBranch}")
     
