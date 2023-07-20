@@ -85,14 +85,14 @@ pipeline {
                     newImageUrl = "${dockerRegistryBaseUrl}/${appServiceName}/${softwareModuleName}/${subsoftwareModuleName}:${appVersion}"
     
                     printDebugMessage ("mainBranch = " + mainBranch)
-                    printDebugMessage ("buildEnv = " + buildEnv)
+                    printDebugMessage ("deployEnv = " + deployEnv)
     
                     printDebugMessage ("newImageUrl = " + newImageUrl)
                     printSectionBoundry("Configuration stage finished!")
                 }
             }
         }
-        
+
         stage ('Continuous Integration'){    
             parallel {
                 stage('Openshift Build') {
@@ -176,52 +176,6 @@ pipeline {
         }
     }
 
-    // post{
-    //     success {
-    //         script {
-    //             printDebugMessage ("Build success!")
-    //             if (artifactoryDeployInfo != " ") {
-    //             devopsLibrary.sendEmail(successMailReceivers, softwareModuleName + "#${BUILD_NUMBER} succeeded!", getFormattedIssueList(devopsLibrary.getCommitMessagesFromChangeSet()) + artifactoryDeployInfo)
-    //             }
-
-
-    //             /* Trex v3 geçişi ile sonrasında Jira entegrasyonu için açılacak.
-    //             if(env.BRANCH_NAME == "releasable"){
-    //                 print("Releseable build successi Jirada statuyu BUILD TAMAMLANDI'ya güncelliyorum")
-    //                 devopsLibrary.updateJiraStatus("Success", "Moving to BUILD TAMAMLANDI","361")
-    //             }
-    //             */
-    //         }
-    //     }
-
-    //     failure {
-    //         script {
-    //             printDebugMessage ("Build failure!")
-    //             devopsLibrary.sendEmail(failureMailReceivers, softwareModuleName + "#${BUILD_NUMBER} failed!", getFormattedIssueList(devopsLibrary.getCommitMessagesFromChangeSet()) + artifactoryDeployInfo)
-
-    //             /* Trex v3 geçişi ile sonrasında Jira entegrasyonu için açılacak.
-    //             if(env.BRANCH_NAME == "releasable"){
-    //                 print("Releseable build failed Jirada statuyu BUILD FAILED'a güncelliyorum")
-    //                 devopsLibrary.updateJiraStatus("Success", "Back to BUILD FAILED","411")
-    //             }
-    //             */
-    //         }
-    //     }
-
-    //     unstable {
-    //         script {
-    //             printDebugMessage ("Build unstable!")
-    //             devopsLibrary.sendEmail(failureMailReceivers, softwareModuleName + "#${BUILD_NUMBER} is unstable!", getFormattedIssueList(devopsLibrary.getCommitMessagesFromChangeSet()) + artifactoryDeployInfo)
-
-    //             /* Trex v3 geçişi ile sonrasında Jira entegrasyonu için açılacak.
-    //             if(env.BRANCH_NAME == "releasable"){
-    //                 print("Releseable build failed Jirada statuyu BUILD UNSTABLE'a güncelliyorum")
-    //                 devopsLibrary.updateJiraStatus("Success", "Back to BUILD UNSTABLE","411")
-    //             }
-    //             */
-    //         }
-    //     }
-    // }
 }
 
 def imageUrlParsing (artifactPath){
