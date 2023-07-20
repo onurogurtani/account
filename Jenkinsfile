@@ -60,45 +60,43 @@ pipeline {
 	}
 
 
-    stages {
-        
-        stage ('Continuous Integration'){
+    stages {        
 
-            stage('Configuration') {
-                
-                steps {
-                    script {
-                        printDebugMessage ("Openshift Project: ${openshiftProjectName}")
+        stage('Configuration') {
+            
+            steps {
+                script {
+                    printDebugMessage ("Openshift Project: ${openshiftProjectName}")
 
-                        printDebugMessage ("Env Branch: ${env.GIT_BRANCH}")
-                        printDebugMessage ("mainBranch: ${mainBranch}")
+                    printDebugMessage ("Env Branch: ${env.GIT_BRANCH}")
+                    printDebugMessage ("mainBranch: ${mainBranch}")
     
-                        if ("${env.GIT_BRANCH}" == "dev" || "${env.GIT_BRANCH}" == "devops2") {
-                            mainBranch = "dev"
-                            deployEnv = "DEVTURKCELL"                        
-                        } else if (env.GIT_BRANCH == "stb") {
-                            mainBranch = "stb"
-                            deployEnv = "STBTURKCEL"
-                        }
-    
-    
-                        appVersion = "${mainBranch}-${env.BUILD_NUMBER}"
-    
-                        newImageUrl = "${dockerRegistryBaseUrl}/${appServiceName}/${softwareModuleName}/${subsoftwareModuleName}:${appVersion}"
-    
-                        printDebugMessage ("mainBranch = " + mainBranch)
-                        printDebugMessage ("buildEnv = " + buildEnv)
-    
-                        printDebugMessage ("newImageUrl = " + newImageUrl)
-                        printSectionBoundry("Configuration stage finished!")
+                    if ("${env.GIT_BRANCH}" == "dev") {
+                        mainBranch = "dev"
+                        deployEnv = "DEVTURKCELL"                        
+                    } else if (env.GIT_BRANCH == "stb") {
+                        mainBranch = "stb"
+                        deployEnv = "STBTURKCEL"
                     }
+    
+    
+                    appVersion = "${mainBranch}-${env.BUILD_NUMBER}"
+    
+                    newImageUrl = "${dockerRegistryBaseUrl}/${appServiceName}/${softwareModuleName}/${subsoftwareModuleName}:${appVersion}"
+    
+                    printDebugMessage ("mainBranch = " + mainBranch)
+                    printDebugMessage ("buildEnv = " + buildEnv)
+    
+                    printDebugMessage ("newImageUrl = " + newImageUrl)
+                    printSectionBoundry("Configuration stage finished!")
                 }
             }
-
+        }
+        
+        stage ('Continuous Integration'){    
             parallel {
                 stage('Openshift Build') {
                     stages  {
-                       
 
                         stage('Build Docker') {
                             when {
