@@ -21,7 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
     ///Get Weekly User Session
     /// </summary>
     [LogScope]
-     
+
     public class GetUserWeeklySessionQuery : IRequest<DataResult<UserSessionWeeklyDto>>
     {
         public long? UserId { get; set; }
@@ -46,8 +46,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                     .Where(w => w.StartTime >= startOfWeek || w.EndTime >= startOfWeek || w.EndTime == null)
                     .OrderByDescending(o => o.StartTime)
                     .ToListAsync();
-                UserSessionWeeklyDto dto = new UserSessionWeeklyDto { 
-                    TotalSessionTimeText = $"Bu hafta LearnUp' ta {UserSessionHelper.TotalTime(list, startOfWeek, startOfWeek.AddDays(7))} zaman geçirdin" 
+
+                var totalTimeString = UserSessionHelper.TotalTimeToString(UserSessionHelper.TotalTime(list, startOfWeek, startOfWeek.AddDays(7)));
+
+                UserSessionWeeklyDto dto = new UserSessionWeeklyDto
+                {
+                    TotalSessionTimeText = $"Bu hafta LearnUp' ta {totalTimeString} zaman geçirdin"
                 };
                 return new SuccessDataResult<UserSessionWeeklyDto>(dto);
             }

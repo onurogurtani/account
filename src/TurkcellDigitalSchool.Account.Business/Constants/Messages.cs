@@ -134,6 +134,7 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string EndDayMustGreaterThanStartDay = "Bitiş tarihi başlangıç tarihinden sonra olmalıdır.";
         public static string StartDayMustGreaterThanToday = "Başlangıç tarihi bugünün tarihinden sonra olmalıdır.";
         public static string BadSessionType = "Hatalı Client tipi. İşleme devam edilemez.";
+        public static string UserPackageNotFound = "Kullanıcıya ait paket yoktur !" ;
 
 #pragma warning restore CA2211
 #pragma warning restore S2223
