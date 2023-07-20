@@ -21,6 +21,8 @@ RUN dotnet publish "TurkcellDigitalSchool.Account.Api.csproj" -c Release -o /app
 
 FROM base AS final
 ARG deployEnv
+
+RUN echo "deployEnv = ${deployEnv}"
 WORKDIR /app
 
 
