@@ -1,18 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using Ocelot.RateLimit;
 using TurkcellDigitalSchool.Account.Business.Constants;
-using TurkcellDigitalSchool.Account.Business.Services.Authentication;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
-using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.AuthorityManagement;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.CustomAttribute; 
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Integration.IntegrationServices.IdentityServerServices;
@@ -35,15 +31,17 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
         public class BehalfOfLoginQueryHandler : IRequestHandler<BehalfOfLoginQuery, DataResult<TokenIntegraitonResponse>>
         {
             private readonly IUserRepository _userRepository;
+            private readonly IUserSupportTeamViewMyDataRepository _userSupportTeamViewMyDataRepository;
             private readonly ITokenHelper _tokenHelper;
 
             private readonly IIDentityServerServices _identityServerServices;
 
-            public BehalfOfLoginQueryHandler(IUserRepository userRepository, IIDentityServerServices identityServerServices, ITokenHelper tokenHelper)
+            public BehalfOfLoginQueryHandler(IUserRepository userRepository, IIDentityServerServices identityServerServices, ITokenHelper tokenHelper, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository)
             {
                 _userRepository = userRepository;
                 _identityServerServices = identityServerServices;
                 _tokenHelper = tokenHelper;
+                _userSupportTeamViewMyDataRepository = userSupportTeamViewMyDataRepository;
             }
 
             [MessageConstAttr(MessageCodeType.Warning)]
@@ -59,10 +57,22 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             /// If true, the token is created.
             /// </summary>  
             public async Task<DataResult<TokenIntegraitonResponse>> Handle(BehalfOfLoginQuery request, CancellationToken cancellationToken)
-            { 
-                var targetUser = await _userRepository.GetAsync(u => u.Status && u.ViewMyData && (u.Id == request.UserId));
+            {
+                var beforeMonth = DateTime.Now.AddMonths(-1);
+                var before15Min = DateTime.Now.AddMinutes(-15);
+
+                var isUserHasSupport= _userSupportTeamViewMyDataRepository.Query().Any(w => (w.UserId == request.UserId && !w.IsDeleted) &&
+                                                                      ((w.IsAlways ?? false) ||
+                                                                       ((w.IsOneMonth ?? false) &&
+                                                                        (w.UpdateTime ?? w.InsertTime) >=
+                                                                        beforeMonth) ||
+                                                                       ((w.IsFifteenMinutes ?? false) &&
+                                                                        (w.UpdateTime ?? w.InsertTime) >= before15Min)
+                                                                      ));
+
+                var targetUser = await _userRepository.GetAsync(u => !u.IsDeleted && u.Status  && (u.Id == request.UserId));
               
-                if (targetUser == null)
+                if (targetUser == null || !isUserHasSupport)
                 {
                     return new ErrorDataResult<TokenIntegraitonResponse>(UserNotFound.PrepareRedisMessage());
                 }

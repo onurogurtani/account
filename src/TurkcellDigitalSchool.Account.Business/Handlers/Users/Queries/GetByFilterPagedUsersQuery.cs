@@ -1,8 +1,10 @@
+using System;
 using AutoMapper;
 using MediatR;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ClosedXML.Excel;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
@@ -39,6 +41,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 
             public virtual async Task<DataResult<PagedList<UserDto>>> Handle(GetByFilterPagedUsersQuery request, CancellationToken cancellationToken)
             {
+                var beforeMonth = DateTime.Now.AddMonths(-1);
+                var before15Min = DateTime.Now.AddMinutes(-15);
                 var query = (from u in _accountDbContext.Users
                              select new UserDto
                              {
@@ -50,12 +54,16 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                                  Status = u.Status,
                                  SurName = u.SurName,
                                  ExamKind = u.ExamKind,
-                                 UserType = u.UserType,
-                                 ViewMyData = u.ViewMyData,
+                                 UserType = u.UserType, 
                                  IsPackageBuyer = (_accountDbContext.UserPackages.Any(w => w.UserId == u.Id)),
                                  RegisterStatus = u.RegisterStatus,
                                  InsertTime = u.InsertTime,
-                                 UpdateTime = u.UpdateTime
+                                 UpdateTime = u.UpdateTime,
+                                 ViewMyData = _accountDbContext.UserSupportTeamViewMyData.Any(w => (w.UserId == u.Id && !w.IsDeleted) &&
+                                     ((w.IsAlways ?? false) || 
+                                      ((w.IsOneMonth ?? false) && (w.UpdateTime ?? w.InsertTime) >= beforeMonth) ||
+                                      ((w.IsFifteenMinutes ?? false) && (w.UpdateTime ?? w.InsertTime) >= before15Min)
+                                      ))
                              }).Where(
                     x => x.UserType != UserType.Admin && x.UserType != UserType.OrganisationAdmin
                     && x.UserType != UserType.FranchiseAdmin && x.RegisterStatus == RegisterStatus.Registered)

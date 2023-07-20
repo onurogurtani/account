@@ -45,33 +45,23 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
         {
             var isMailAdres = userName.IndexOf("@", StringComparison.Ordinal) > -1;
 
-            Expression<Func<User, bool>> expression = null;
+            Expression<Func<User, bool>> expression = user1 => !user1.IsDeleted && user1.Status;
 
             if (isMailAdres)
             {
-                expression = user1 => user1.Email == userName;
+                expression = expression.And(user1 => user1.Email == userName);
             }
             else
             {
-                if (userName.Length == 11)
+                long citizenId = 0;
+                var isPars = long.TryParse(userName, out citizenId);
+                if (userName.Length == 11 && isPars && citizenId != 0)
                 {
-                    long citizenId = 0;
-
-                    var isPars = long.TryParse(userName, out citizenId);
-                    if (isPars && citizenId != 0)
-                    {
-                        expression = user1 => user1.CitizenId == citizenId;
-                    }
-                }
-
-                if (expression != null)
-                {
-
-                    expression = expression.Or(user1 => user1.UserName == userName);
+                    expression = expression.And(user1 => user1.CitizenId == citizenId);
                 }
                 else
                 {
-                    expression = user1 => user1.UserName == userName;
+                    expression = expression.And(user1 => user1.UserName == userName);
                 }
             }
 
@@ -102,7 +92,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 EMailVerify = user.EmailVerify,
                 MobilPhone = user.MobilePhones,
                 MobilPhoneVerify = user.MobilePhonesVerify,
-                LastPasswordDate = user.LastPasswordDate 
+                LastPasswordDate = user.LastPasswordDate
             };
             return result;
         }
@@ -136,11 +126,11 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             var user = await _userRepository.GetAsync(w => w.Id == userId);
 
 
-            if (!string.IsNullOrEmpty(user.LastPasswordChangeGuid) && 
-                user.LastPasswordChangeExpTime != null && user.LastPasswordChangeExpTime.Value.ToUniversalTime() > DateTime.Now )
+            if (!string.IsNullOrEmpty(user.LastPasswordChangeGuid) &&
+                user.LastPasswordChangeExpTime != null && user.LastPasswordChangeExpTime.Value.ToUniversalTime() > DateTime.Now)
             {
                 return user.LastPasswordChangeGuid;
-            } 
+            }
 
             user.LastPasswordChangeGuid = Guid.NewGuid().ToString();
             user.LastPasswordChangeExpTime = DateTime.Now.AddSeconds(OtpConst.NewPassOtpExpHour);

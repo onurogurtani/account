@@ -11,7 +11,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         PersonalInfoDto GetByPersonalInformation(long userId);
         List<ParentInfoDto> GetByStudentParentInfoInformation(long userId);
         List<PackageInfoDto> GetByStudentPackageInformation(long userId);
-        SettingsInfoDto GetByUserSettingsInfoInformation(long userId);
+        Task<SettingsInfoDto> GetByUserSettingsInfoInformation(long userId);
         bool IsExistEmail(long userId, string email);
         bool IsExistUserName(long userId, string userName);
         Domain.Concrete.User GetUserById(long userId);
