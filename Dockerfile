@@ -20,12 +20,13 @@ FROM build AS publish
 RUN dotnet publish "TurkcellDigitalSchool.Account.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
+ARG deployEnv
 WORKDIR /app
 
 
 COPY --from=publish /app/publish .
 EXPOSE 6021
-ENV ASPNETCORE_ENVIRONMENT="DEVTURKCELL"
+ENV ASPNETCORE_ENVIRONMENT=${deployEnv}
 ENV ASPNETCORE_URLS="http://+:6021"
 ENV TZ=Europe/Istanbul
 ENTRYPOINT ["dotnet", "TurkcellDigitalSchool.Account.Api.dll"]

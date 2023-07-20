@@ -30,6 +30,9 @@ objects:
           type: Docker
           pullSecret:
             name: '${PULL_SECRET}'
+          buildArgs: 
+            - name: "deployEnv"
+              value: ${DEPLOYENV}            
       resources:
         requests:
           cpu: 250m
@@ -78,3 +81,8 @@ parameters:
     displayName: Dockerfile absolute path
     description: Dockerfile absolute path
     required: true
+  - name: DEPLOYENV
+    displayName: Dockerfile deployEnv arg
+    description: Dockerfile deployEnv arg
+    required: true
+
