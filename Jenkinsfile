@@ -122,7 +122,7 @@ pipeline {
                                                 "-p", "REGISTRY_URL=${newImageUrl}",
                                                 "-p", "SOURCE_SECRET_NAME=${gitCredentialSecret}",
                                                 "-p", "DOCKERFILE_PATH=./Dockerfile", 
-                                                "-P", "DEPLOYENV=${deployEnv}"
+                                                "-p", "DEPLOYENV=${deployEnv}"
                                             )
                                         )
 							        	openshift.startBuild("${subsoftwareModuleName}", "--wait", "--follow")
