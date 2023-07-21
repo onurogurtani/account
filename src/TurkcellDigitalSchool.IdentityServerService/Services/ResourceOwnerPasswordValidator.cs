@@ -8,6 +8,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Exceptions;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Services.Session;
@@ -56,7 +57,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             _environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             _appSettingRepository = appSettingRepository;
             _sessionRedisSvc = sessionRedisSvc;
-            _ldapHelper =ldapHelper;
+            _ldapHelper = ldapHelper;
         }
 
         private const string CapthcaShowRequestText = "IsCapthcaShow";
@@ -77,16 +78,16 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
             var behalfOfLoginKey = _httpContextAccessor.HttpContext.Request.Headers["BehalfOfLoginKey"].ToString();
             var behalfOfLoginUserIdstr = _httpContextAccessor.HttpContext.Request.Headers["BehalfOfLoginUserId"].ToString();
-            if (!string.IsNullOrEmpty(behalfOfLoginKey) && !string.IsNullOrEmpty(behalfOfLoginKey) )
+            if (!string.IsNullOrEmpty(behalfOfLoginKey) && !string.IsNullOrEmpty(behalfOfLoginKey))
             {
-               var user= await _userRepository.GetAsync(u => u.BehalfOfLoginKey == behalfOfLoginKey);
-               var userDto= _customUserSvc.GetCustomUser(user);
-               long behalfOfLoginUserId = 0;
-               long.TryParse(behalfOfLoginUserIdstr, out behalfOfLoginUserId);
-               userDto.BehalfOfLoginUserId = behalfOfLoginUserId ;
-               userDto.FailLoginCount = 0; 
-               await LoginSuccessProcess(context,0,Guid.NewGuid().ToString(), userDto);
-               return;
+                var user = await _userRepository.GetAsync(u => u.BehalfOfLoginKey == behalfOfLoginKey);
+                var userDto = _customUserSvc.GetCustomUser(user);
+                long behalfOfLoginUserId = 0;
+                long.TryParse(behalfOfLoginUserIdstr, out behalfOfLoginUserId);
+                userDto.BehalfOfLoginUserId = behalfOfLoginUserId;
+                userDto.FailLoginCount = 0;
+                await LoginSuccessProcess(context, 0, Guid.NewGuid().ToString(), userDto);
+                return;
             }
 
 
@@ -98,7 +99,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             }
 
             //ldap user'ın uygulama Db'sinde varlığının kontrolü
-          
+
             var ldapUser = await _userRepository.GetAsync(u => u.UserName == context.UserName && !u.IsDeleted &&
                        u.Status && u.IsLdapUser);
 
@@ -107,9 +108,19 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 //Ldap bilgileriyle Giriş                
                 if (_ldapHelper.Login(context.UserName, context.Password).Result.Success)
                 {
-                    var user = await _customUserSvc.FindByUserName(context.UserName);
-                    await LoginSuccessProcess(context, 0, csrf_token, user);
-                    return;
+                    try
+                    {
+                        var user = await _customUserSvc.FindByUserName(context.UserName);
+                        await LoginSuccessProcess(context, 0, csrf_token, user);
+                        return;
+                    }
+                    catch (RuleException e)
+                    {
+                        context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
+                            e.Message);
+                        return;
+                    }
+                 
                 }
                 else
                 {
@@ -147,30 +158,39 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 }
             }
 
-            var result = await _customUserSvc.Validate(context.UserName, context.Password);
-
-            if (result)
+            try
             {
-                var user = await _customUserSvc.FindByUserName(context.UserName);
-
-                var isOldPass = await IsOldPassword(user);
-
-                if (isOldPass)
+                var result = await _customUserSvc.Validate(context.UserName, context.Password); 
+                if (result)
                 {
-                    var guid = await _customUserSvc.GenerateUserOldPassChange(user.Id);
-                    var responseObject = new Dictionary<string, object>
+                    var user = await _customUserSvc.FindByUserName(context.UserName);
+
+                    var isOldPass = await IsOldPassword(user);
+
+                    if (isOldPass)
                     {
-                        { IsPasswordOldResponseText, isOldPass },
-                        { "XId", Base64UrlEncoder.Encode(user.Id.ToString()) },
-                        { "PasswordChangeGuid", guid}
-                    };
-                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
-                        Messages.passwordIsOldMessage, responseObject);
+                        var guid = await _customUserSvc.GenerateUserOldPassChange(user.Id);
+                        var responseObject = new Dictionary<string, object>
+                        {
+                            { IsPasswordOldResponseText, isOldPass },
+                            { "XId", Base64UrlEncoder.Encode(user.Id.ToString()) },
+                            { "PasswordChangeGuid", guid}
+                        };
+                        context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
+                            Messages.passwordIsOldMessage, responseObject);
+                        return;
+                    }
+                    await LoginSuccessProcess(context, errorCount, csrf_token, user);
                     return;
                 }
-                await LoginSuccessProcess(context, errorCount, csrf_token, user);
+            }
+            catch (RuleException e)
+            {
+                context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
+                 e.Message);
                 return;
             }
+         
 
 
 
@@ -266,10 +286,10 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             }
 
             var addedSession = _userSessionRepository.AddUserSession(session);
-           
+
             var hasPackage = (await _customUserSvc.UserHasPackage(user.Id)).ToString();
 
-             
+
             var sessionInfo = await _sessionRedisSvc.GetAsync<UserSessionInfo>(user.Id.ToString());
             if (sessionInfo == null)
             {
@@ -278,14 +298,14 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
             if (addedSession.SessionType == SessionType.Mobile)
             {
-                if (addedSession.BehalfOfLoginUserId!=null)
+                if (addedSession.BehalfOfLoginUserId != null)
                 {
                     sessionInfo.BehalfOfLoginSessionIdMobil = addedSession.Id;
                 }
                 else
                 {
                     sessionInfo.SessionIdMobil = addedSession.Id;
-                } 
+                }
             }
             else if (addedSession.SessionType == SessionType.Web)
             {
@@ -296,7 +316,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 else
                 {
                     sessionInfo.SessionIdWeb = addedSession.Id;
-                } 
+                }
             }
 
             try
@@ -308,15 +328,15 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             {
                 Console.WriteLine(e);
                 throw;
-            }
-             
+            } 
+
             context.Result = new GrantValidationResult(user.Id.ToString(), OidcConstants.AuthenticationMethods.Password,
             new List<Claim>
                 {
                     new Claim(IdentityServerConst.IDENTITY_RESOURCE_SESSION_TYPE  , session.SessionType.ToString()),
                     new Claim(IdentityServerConst.IDENTITY_RESOURCE_SESSION_ID , addedSession.Id.ToString()),
                     new Claim(IdentityServerConst.IDENTITY_RESOURCE_USER_HAS_PACKAGE_ID  ,hasPackage )
-            },"local", customResponse);
+            }, "local");
         }
 
         private async Task<bool> IsOldPassword(CustomUserDto user)

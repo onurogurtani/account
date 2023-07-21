@@ -7,7 +7,7 @@ using TurkcellDigitalSchool.Core.Common;
 using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;
 using TurkcellDigitalSchool.Core.Entities;
 using TurkcellDigitalSchool.Core.Enums;
-using TurkcellDigitalSchool.Core.Services.SMS.Turkcell;
+using TurkcellDigitalSchool.Core.Services.SMS; 
 
 namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 {
@@ -15,7 +15,8 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
     {
         private readonly ConfigurationManager _configurationManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public SmsOtpRepository(AccountDbContext context, ConfigurationManager configurationManager, IHttpContextAccessor httpContextAccessor)
+        private readonly ISendSms _sendSms;
+        public SmsOtpRepository(AccountDbContext context, ConfigurationManager configurationManager, IHttpContextAccessor httpContextAccessor, ISendSms sendSms)
             : base(context)
         {
             _configurationManager = configurationManager;
@@ -40,7 +41,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
             bool.TryParse(forceVal, out parseVal);
             if (_configurationManager.Mode != ApplicationMode.DEV || parseVal)
             {
-                SendSms.Send(new List<string> { cellPhone }, message);
+                _sendSms.Send(new List<string> { cellPhone }, message);
             } 
             return Task<int>.FromResult<int>(1);
         }

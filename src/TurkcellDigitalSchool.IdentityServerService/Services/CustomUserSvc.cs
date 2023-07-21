@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
+using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Exceptions;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.IdentityServerService.Services.Contract;
@@ -15,11 +17,14 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
         private readonly IUserRepository _userRepository;
         private readonly IUserPackageRepository _userPackageRepository;
-
-        public CustomUserSvc(IUserRepository userRepository, IUserPackageRepository userPackageRepository)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IConfiguration _configuration;
+        public CustomUserSvc(IUserRepository userRepository, IUserPackageRepository userPackageRepository, IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
         {
             _userRepository = userRepository;
             _userPackageRepository = userPackageRepository;
+            _httpContextAccessor = httpContextAccessor;
+            _configuration = configuration;
         }
         public async Task<bool> Validate(string userName, string password)
         {
@@ -71,6 +76,39 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 return null;
             }
             var result = GetCustomUser(user);
+
+
+            var origin = (_httpContextAccessor.HttpContext.Request.Headers.Origin.ToString() ?? "");
+            var address = "";
+            var indexNumber = origin.IndexOf("http");
+            if (indexNumber > -1)
+            {
+                address = origin.Substring(indexNumber, origin.Length - indexNumber);
+            }
+
+            if (!string.IsNullOrEmpty(address))
+            {
+                var adminUIAdress = _configuration.GetSection("WebUIAddresses").GetSection("AdminPanel").Value;
+                var userUIAdress = _configuration.GetSection("WebUIAddresses").GetSection("UserPanel").Value;
+
+                if (  (result.UserType == UserType.Admin  ))
+                {
+                    if (adminUIAdress != address)
+                    {
+                        throw new RuleException("Adminlerin oturum açma izinleri bulunmamaktadır !");
+                    }
+                  
+                }
+
+                if ((result.UserType != UserType.Admin))
+                {
+                    if (userUIAdress != address)
+                    {
+                        throw new RuleException("Sadece adminler oturum açma izinleri bulunmaktatır !");
+                    }   
+                }
+            }
+
             return result;
         }
 
