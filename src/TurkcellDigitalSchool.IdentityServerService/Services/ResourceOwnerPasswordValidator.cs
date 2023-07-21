@@ -316,7 +316,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                     new Claim(IdentityServerConst.IDENTITY_RESOURCE_SESSION_TYPE  , session.SessionType.ToString()),
                     new Claim(IdentityServerConst.IDENTITY_RESOURCE_SESSION_ID , addedSession.Id.ToString()),
                     new Claim(IdentityServerConst.IDENTITY_RESOURCE_USER_HAS_PACKAGE_ID  ,hasPackage )
-            });
+            },"local", customResponse);
         }
 
         private async Task<bool> IsOldPassword(CustomUserDto user)
