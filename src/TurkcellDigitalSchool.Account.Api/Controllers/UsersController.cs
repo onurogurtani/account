@@ -206,6 +206,25 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         }
 
         /// <summary>
+        /// GetUserSessionTimeAvarage
+        /// </summary>
+        /// <returns></returns>
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SessionTimeAvarageserSessionAvarageTime))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("GetUserSessionTimeAvarage")]
+        public async Task<IActionResult> GetUserSessionTimeAvarage([FromBody] GetUserSessionTimeAvarageQuery getUserSessionTimeAvarageQuery, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(getUserSessionTimeAvarageQuery, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        
+        /// <summary>
         /// GetUserWeeklySession
         /// </summary>
         /// <returns></returns>

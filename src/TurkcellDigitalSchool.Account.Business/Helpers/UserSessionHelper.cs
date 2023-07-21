@@ -12,7 +12,7 @@ namespace TurkcellDigitalSchool.Account.Business.Helpers
             int diff = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
             return today.AddDays(-1 * diff).Date;
         }
-        public static string TotalTime(List<UserSession> list, DateTime time1, DateTime time2)
+        public static int TotalTime(List<UserSession> list, DateTime time1, DateTime time2)
         {
             int totalMinutes = 0;
             DateTime previousStartTime = DateTime.Now < time2 ? DateTime.Now : time2;
@@ -35,9 +35,25 @@ namespace TurkcellDigitalSchool.Account.Business.Helpers
                 totalMinutes += Math.Abs((int)(endTime - startTime).Value.TotalMinutes);
                 previousStartTime = startTime;
             }
+            return totalMinutes;
+        }
+
+        public static string TotalTimeToString(int totalMinutes)
+        {
             string hours = (totalMinutes / 60).ToString().PadLeft(2, '0');
             string minutes = (totalMinutes % 60).ToString().PadLeft(2, '0');
+
             return $"{hours} saat {minutes} dakika";
+        }
+
+        public static string TotalTimeToString2(int totalMinutes)
+        {
+            string hours = (totalMinutes / 60).ToString().PadLeft(2, '0');
+            string minutes = (totalMinutes % 60).ToString().PadLeft(2, '0');
+            if (totalMinutes > 59 || totalMinutes < -59)
+                return $"{hours} saat {minutes} dakika";
+            else
+                return $"{minutes} dakika";
         }
     }
 }
