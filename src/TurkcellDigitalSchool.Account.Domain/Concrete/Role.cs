@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using TurkcellDigitalSchool.Core.DataAccess;
 using TurkcellDigitalSchool.Core.Entities;
 using TurkcellDigitalSchool.Core.Enums;
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
-    public class Role : EntityDefinition
+    public class Role : EntityDefinition, IPublishEntity
     {
         public string Description { get; set; }
         public bool IsOrganisationView { get; set; }
