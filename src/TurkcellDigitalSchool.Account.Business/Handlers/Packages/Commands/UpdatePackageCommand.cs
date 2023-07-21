@@ -134,6 +134,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 var packageRoles = await _packageRoleRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageRoleRepository.DeleteRange(packageRoles);
 
+                foreach (var item in packageRoles)
+                {
+                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Deleted), item, cancellationToken: cancellationToken);
+                }
 
                 var packageTestExams = await _packageTestExamRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageTestExamRepository.DeleteRange(packageTestExams);
