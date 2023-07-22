@@ -88,12 +88,12 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
             if (!string.IsNullOrEmpty(address))
             {
-                var adminUIAdress = _configuration.GetSection("WebUIAddresses").GetSection("AdminPanel").Value;
-                var userUIAdress = _configuration.GetSection("WebUIAddresses").GetSection("UserPanel").Value;
+                var adminUIAdress = (_configuration.GetSection("WebUIAddresses").GetSection("AdminPanel").Value??"").Split(",") ;
+                var userUIAdress = (_configuration.GetSection("WebUIAddresses").GetSection("UserPanel").Value??"").Split(",") ;
 
                 if (  (result.UserType == UserType.Admin  ))
                 {
-                    if (adminUIAdress != address)
+                    if (!adminUIAdress.Contains(address) )
                     {
                         throw new RuleException("Adminlerin oturum açma izinleri bulunmamaktadır !");
                     }
@@ -102,7 +102,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
                 if ((result.UserType != UserType.Admin))
                 {
-                    if (userUIAdress != address)
+                    if (!userUIAdress.Contains(address))
                     {
                         throw new RuleException("Sadece adminler oturum açma izinleri bulunmaktatır !");
                     }   
