@@ -12,7 +12,9 @@ pipeline {
 	environment {
 
 		// App Variables
-        mainBranch = "master"
+
+        deployEnv = " "
+        mainBranch = " "
         appServiceName = "dijital_dershane_app"
         softwareModuleName = "account"
         subsoftwareModuleName = "accountapi"
@@ -58,79 +60,43 @@ pipeline {
 	}
 
 
-    stages {
-        // stage('Build') {
+    stages {        
 
-        //     steps{
-        //         script {
-        //             printSectionBoundry ("Build stage starting...")
-        //             sh "dotnet restore"
-        //             sh "dotnet build"
+        stage('Configuration') {
+            
+            steps {
+                script {
+                    printDebugMessage ("Openshift Project: ${openshiftProjectName}")
 
-        //             printSectionBoundry("Build stage finished!")
-        //         }
-        //     }
-        // }
-		// stage('Sonar - Code Quality') {
-        //     when {
-        //         anyOf {
-        //             branch "stb"
-        //         }
-        //     }
-        //     steps {
-        //         script {
-        //             printSectionBoundry ("Code Quality/Static Code Analysis stage starting...")
+                    printDebugMessage ("Env Branch: ${env.GIT_BRANCH}")
+                    printDebugMessage ("mainBranch: ${mainBranch}")
+    
+                    if ("${env.GIT_BRANCH}" == "dev") {
+                        mainBranch = "dev"
+                        deployEnv = "DEVTURKCELL"                        
+                    } else if (env.GIT_BRANCH == "stb") {
+                        mainBranch = "stb"
+                        deployEnv = "STBTURKCEL"
+                    }
+    
+    
+                    appVersion = "${mainBranch}-${env.BUILD_NUMBER}"
+    
+                    newImageUrl = "${dockerRegistryBaseUrl}/${appServiceName}/${softwareModuleName}/${subsoftwareModuleName}:${appVersion}"
+    
+                    printDebugMessage ("mainBranch = " + mainBranch)
+                    printDebugMessage ("deployEnv = " + deployEnv)
+    
+                    printDebugMessage ("newImageUrl = " + newImageUrl)
+                    printSectionBoundry("Configuration stage finished!")
+                }
+            }
+        }
 
-        //             withSonarQubeEnv("SONARQUBE_URL") {
-                        
-        //             }
-
-        //             printSectionBoundry("Code Quality/Static Code Analysis stage finished!")
-        //         }
-        //     }
-        // }
-
-        // stage('Fortify-Code Security'){
-
-        // when { expression { "${env.BRANCH_NAME}" == "stb" } }
-        //     steps {
-        //         script {
-        //             sh "echo static application security testing SAST - Fortify"
-        //             fortifyScanner = tool 'fortify-scanner'
-        //             fortifyRemoteAnalysis remoteAnalysisProjectType: fortifyMaven(),
-        //             uploadSSC: [appName: "${fortifyProjectKey}", appVersion: "stb"]
-        //         }
-        //     }
-        // }
-        // stage('Publish Artifact') {
-        //     steps{
-        //         script {
-
-        //         }
-        //     }
-        // }
-        stage ('Continuous Integration'){
-
+        stage ('Continuous Integration'){    
             parallel {
                 stage('Openshift Build') {
                     stages  {
-                        stage('Configuration') {
-                            when {
-                                anyOf {
-                                    expression {  "${env.BRANCH_NAME}" == "${mainBranch}"    }
-                                }
-                            }
-                            steps {
-                                script {
-                                    printDebugMessage ("Openshift Project: ${openshiftProjectName}")
-
-                                    newImageUrl = "${dockerRegistryBaseUrl}/${appServiceName}/${softwareModuleName}/${subsoftwareModuleName}:${appVersion}"
-
-                                    printDebugMessage ("newImageUrl = " + newImageUrl)
-                                    printSectionBoundry("Configuration stage finished!")
-                                }
-                            }
-                        }
 
                         stage('Build Docker') {
                             when {
@@ -145,17 +111,19 @@ pipeline {
 
 							        openshiftClient {
 							        	openshift.apply(
-                                        openshift.process(readFile(file: buildConfigTemplate),
-                                        "-p", "APP_NAME=${subsoftwareModuleName}",
-                                        "-p", "APP_VERSION=${appVersion}",
-                                        "-p", "SOURCE_REPOSITORY_URL=${GIT_URL}",
-                                        "-p", "BRANCH_NAME=${env.BRANCH_NAME}",
-                                        "-p", "PUSH_SECRET=${imagePushSecret}",
-                                        "-p", "PULL_SECRET=${imagePullSecret}",
-                                        "-p", "REGISTRY_URL=${newImageUrl}",
-                                        "-p", "SOURCE_SECRET_NAME=${gitCredentialSecret}",
-                                        "-p", "DOCKERFILE_PATH=./Dockerfile"
-                                        )
+                                            openshift.process(
+                                                readFile(file: buildConfigTemplate),
+                                                "-p", "APP_NAME=${subsoftwareModuleName}",
+                                                "-p", "APP_VERSION=${appVersion}",
+                                                "-p", "SOURCE_REPOSITORY_URL=${GIT_URL}",
+                                                "-p", "BRANCH_NAME=${env.BRANCH_NAME}",
+                                                "-p", "PUSH_SECRET=${imagePushSecret}",
+                                                "-p", "PULL_SECRET=${imagePullSecret}",
+                                                "-p", "REGISTRY_URL=${newImageUrl}",
+                                                "-p", "SOURCE_SECRET_NAME=${gitCredentialSecret}",
+                                                "-p", "DOCKERFILE_PATH=./Dockerfile", 
+                                                "-p", "DEPLOYENV=${deployEnv}"
+                                            )
                                         )
 							        	openshift.startBuild("${subsoftwareModuleName}", "--wait", "--follow")
 							        }
@@ -189,7 +157,14 @@ pipeline {
 
 
                         openshiftClient {
-                            openshift.apply(openshift.process(readFile(file: deploymentConfigTemplate), "-p", "REGISTRY_URL=${newImageUrl}", "-p", "APP_NAME=${subsoftwareModuleName}","-p", "NAMESPACE=${openshiftProjectName}"))
+                            openshift.apply(
+                                openshift.process(
+                                    readFile(file: deploymentConfigTemplate), 
+                                    "-p", "REGISTRY_URL=${newImageUrl}", 
+                                    "-p", "APP_NAME=${subsoftwareModuleName}",
+                                    "-p", "NAMESPACE=${openshiftProjectName}"
+                                )
+                            )
                             def dc = openshift.selector('dc', "${subsoftwareModuleName}")
                             dc.rollout().status()
                         }
@@ -201,52 +176,6 @@ pipeline {
         }
     }
 
-    // post{
-    //     success {
-    //         script {
-    //             printDebugMessage ("Build success!")
-    //             if (artifactoryDeployInfo != " ") {
-    //             devopsLibrary.sendEmail(successMailReceivers, softwareModuleName + "#${BUILD_NUMBER} succeeded!", getFormattedIssueList(devopsLibrary.getCommitMessagesFromChangeSet()) + artifactoryDeployInfo)
-    //             }
-
-
-    //             /* Trex v3 geçişi ile sonrasında Jira entegrasyonu için açılacak.
-    //             if(env.BRANCH_NAME == "releasable"){
-    //                 print("Releseable build successi Jirada statuyu BUILD TAMAMLANDI'ya güncelliyorum")
-    //                 devopsLibrary.updateJiraStatus("Success", "Moving to BUILD TAMAMLANDI","361")
-    //             }
-    //             */
-    //         }
-    //     }
-
-    //     failure {
-    //         script {
-    //             printDebugMessage ("Build failure!")
-    //             devopsLibrary.sendEmail(failureMailReceivers, softwareModuleName + "#${BUILD_NUMBER} failed!", getFormattedIssueList(devopsLibrary.getCommitMessagesFromChangeSet()) + artifactoryDeployInfo)
-
-    //             /* Trex v3 geçişi ile sonrasında Jira entegrasyonu için açılacak.
-    //             if(env.BRANCH_NAME == "releasable"){
-    //                 print("Releseable build failed Jirada statuyu BUILD FAILED'a güncelliyorum")
-    //                 devopsLibrary.updateJiraStatus("Success", "Back to BUILD FAILED","411")
-    //             }
-    //             */
-    //         }
-    //     }
-
-    //     unstable {
-    //         script {
-    //             printDebugMessage ("Build unstable!")
-    //             devopsLibrary.sendEmail(failureMailReceivers, softwareModuleName + "#${BUILD_NUMBER} is unstable!", getFormattedIssueList(devopsLibrary.getCommitMessagesFromChangeSet()) + artifactoryDeployInfo)
-
-    //             /* Trex v3 geçişi ile sonrasında Jira entegrasyonu için açılacak.
-    //             if(env.BRANCH_NAME == "releasable"){
-    //                 print("Releseable build failed Jirada statuyu BUILD UNSTABLE'a güncelliyorum")
-    //                 devopsLibrary.updateJiraStatus("Success", "Back to BUILD UNSTABLE","411")
-    //             }
-    //             */
-    //         }
-    //     }
-    // }
 }
 
 def imageUrlParsing (artifactPath){
