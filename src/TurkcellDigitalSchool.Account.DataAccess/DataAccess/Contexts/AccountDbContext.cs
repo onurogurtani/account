@@ -90,6 +90,8 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         public DbSet<OneTimePassword> OneTimePasswords { get; set; }
         public DbSet<LdapUserInfo> LdapUserInfo { get; set; }
         public DbSet<GreetingMessage> GreetingMessages { get; set; }
+        public DbSet<StudentCoach> StudentCoaches { get; set; }
+        public DbSet<CoachLeaderCoach> CoachLeaderCoaches { get; set; }
 
         #endregion
 
