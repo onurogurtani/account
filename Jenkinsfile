@@ -18,6 +18,7 @@ pipeline {
         appServiceName = "dijital_dershane_app"
         softwareModuleName = "account"
         subsoftwareModuleName = "accountapi"
+        appName = " "
         serviceId = "471949"
 
         appVersion = "${mainBranch}-${env.BUILD_NUMBER}"
@@ -73,10 +74,12 @@ pipeline {
     
                     if ("${env.GIT_BRANCH}" == "dev") {
                         mainBranch = "dev"
-                        deployEnv = "DEVTURKCELL"                        
+                        deployEnv = "DEVTURKCELL"    
+                        appName = subsoftwareModuleName                    
                     } else if (env.GIT_BRANCH == "stb") {
                         mainBranch = "stb"
                         deployEnv = "STBTURKCEL"
+                        appName = subsoftwareModuleName + "-stb"
                     }
     
     
@@ -113,7 +116,7 @@ pipeline {
 							        	openshift.apply(
                                             openshift.process(
                                                 readFile(file: buildConfigTemplate),
-                                                "-p", "APP_NAME=${subsoftwareModuleName}",
+                                                "-p", "APP_NAME=${appName}",
                                                 "-p", "APP_VERSION=${appVersion}",
                                                 "-p", "SOURCE_REPOSITORY_URL=${GIT_URL}",
                                                 "-p", "BRANCH_NAME=${env.BRANCH_NAME}",
@@ -125,7 +128,7 @@ pipeline {
                                                 "-p", "DEPLOYENV=${deployEnv}"
                                             )
                                         )
-							        	openshift.startBuild("${subsoftwareModuleName}", "--wait", "--follow")
+							        	openshift.startBuild("${appName}", "--wait", "--follow")
 							        }
 
                                     printSectionBoundry("Build Docker stage finished!")
@@ -161,11 +164,11 @@ pipeline {
                                 openshift.process(
                                     readFile(file: deploymentConfigTemplate), 
                                     "-p", "REGISTRY_URL=${newImageUrl}", 
-                                    "-p", "APP_NAME=${subsoftwareModuleName}",
+                                    "-p", "APP_NAME=${appName}",
                                     "-p", "NAMESPACE=${openshiftProjectName}"
                                 )
                             )
-                            def dc = openshift.selector('dc', "${subsoftwareModuleName}")
+                            def dc = openshift.selector('dc', "${appName}")
                             dc.rollout().status()
                         }
 
