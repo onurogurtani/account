@@ -84,12 +84,13 @@ pipeline {
     
     
                     appVersion = "${mainBranch}-${env.BUILD_NUMBER}"
-    
-                    newImageUrl = "${dockerRegistryBaseUrl}/${appServiceName}/${softwareModuleName}/${subsoftwareModuleName}:${appVersion}"
-    
+
+                    newImageUrl = "${dockerRegistryBaseUrl}/${appServiceName}/${softwareModuleName}/${appName}:${appVersion}"
+
                     printDebugMessage ("mainBranch = " + mainBranch)
-                    printDebugMessage ("deployEnv = " + deployEnv)
-    
+                    printDebugMessage ("buildEnv = " + buildEnv)
+                    printDebugMessage ("appName = " + appName)
+
                     printDebugMessage ("newImageUrl = " + newImageUrl)
                     printSectionBoundry("Configuration stage finished!")
                 }
@@ -141,6 +142,11 @@ pipeline {
         }
 
         stage('Openshift Deployment') {
+            when {
+                anyOf {
+                    expression {  "${env.BRANCH_NAME}" == "${mainBranch}"    }
+                }
+            }
             steps {
                 script {
                     printSectionBoundry ("Deploy stage starting...")

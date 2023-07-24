@@ -145,6 +145,11 @@ pipeline {
         }
 
         stage('Openshift Deployment') {
+            when {
+                anyOf {
+                    expression {  "${env.BRANCH_NAME}" == "${mainBranch}"    }
+                }
+            }
             steps {
                 script {
                     printSectionBoundry ("Deploy stage starting...")
