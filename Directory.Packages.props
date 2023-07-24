@@ -90,7 +90,7 @@
     <PackageVersion Include="DotNetCore.CAP.Dashboard" Version="6.2.1" />
     <PackageVersion Include="DotNetCore.CAP.PostgreSql" Version="6.2.1" />
     <PackageVersion Include="DotNetCore.CAP.RabbitMQ" Version="6.2.1" />
-    <PackageVersion Include="TurkcellDigitalSchool.Core" Version="1.0.3.12" />
+    <PackageVersion Include="TurkcellDigitalSchool.Core" Version="1.0.3.14" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Update="StackExchange.Redis" Version="2.6.111" />

@@ -13,5 +13,6 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public byte[] PasswordHash { get; set; }
         public string ContactOption { get; set; }
         public bool NotificationStatus { get; set; }
+        public bool StudentAccessToChat { get; set; }
     }
 }
