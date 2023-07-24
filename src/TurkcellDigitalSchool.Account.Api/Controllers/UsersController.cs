@@ -389,7 +389,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<IEnumerable<UserChatDto>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("GetUsersForChat")]
-        public async Task<IActionResult> GetUsersForChatQuery(GetUsersForChatQuery request, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetUsersForChatQuery([FromQuery] GetUsersForChatQuery request, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(request, cancellationToken);
             if (result.Success)
