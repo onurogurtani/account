@@ -80,6 +80,10 @@ pipeline {
                         mainBranch = "stb"
                         deployEnv = "STBTURKCEL"
                         appName = subsoftwareModuleName + "-stb"
+                    } else if (env.GIT_BRANCH == "prp") {
+                        mainBranch = "prp"
+                        deployEnv = "PRPTURKCEL"
+                        appName = subsoftwareModuleName + "-prp"
                     }
     
     
@@ -88,7 +92,7 @@ pipeline {
                     newImageUrl = "${dockerRegistryBaseUrl}/${appServiceName}/${softwareModuleName}/${appName}:${appVersion}"
 
                     printDebugMessage ("mainBranch = " + mainBranch)
-                    printDebugMessage ("buildEnv = " + buildEnv)
+                    printDebugMessage ("buildEnv = " + deployEnv)
                     printDebugMessage ("appName = " + appName)
 
                     printDebugMessage ("newImageUrl = " + newImageUrl)

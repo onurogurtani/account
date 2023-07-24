@@ -91,7 +91,7 @@ pipeline {
                     newImageUrl = "${dockerRegistryBaseUrl}/${appServiceName}/${softwareModuleName}/${appName}:${appVersion}"
 
                     printDebugMessage ("mainBranch = " + mainBranch)
-                    printDebugMessage ("buildEnv = " + buildEnv)
+                    printDebugMessage ("buildEnv = " + deployEnv)
                     printDebugMessage ("appName = " + appName)
 
                     printDebugMessage ("newImageUrl = " + newImageUrl)
