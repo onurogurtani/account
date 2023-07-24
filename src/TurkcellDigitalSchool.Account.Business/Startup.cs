@@ -34,6 +34,8 @@ using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Redis.Contract;
 using TurkcellDigitalSchool.Core.Services.CustomMessgeHelperService;
 using TurkcellDigitalSchool.Core.Services.KpsService;
+using TurkcellDigitalSchool.Core.Services.SMS;
+using TurkcellDigitalSchool.Core.Services.SMS.Turkcell;
 using TurkcellDigitalSchool.Core.TransactionManager;
 using TurkcellDigitalSchool.Core.Utilities.ElasticSearch;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
@@ -89,6 +91,7 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddScoped<IOtpService, OtpService>();
             services.AddScoped<ITransactionManager, AccountDbTransactionManagerSvc>();
             services.AddScoped<IClaimDefinitionService, ClaimDefinitionService>();
+            services.AddScoped<ISendSms,SendSms>();
             services.AddAutoMapper( Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 

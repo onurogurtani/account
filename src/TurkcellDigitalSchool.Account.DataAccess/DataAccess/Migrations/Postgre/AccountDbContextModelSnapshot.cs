@@ -132,6 +132,55 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     b.ToTable("city", (string)null);
                 });
 
+            modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.CoachLeaderCoach", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("CoachId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("coachid");
+
+                    b.Property<DateTime>("InsertTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("inserttime");
+
+                    b.Property<long?>("InsertUserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("insertuserid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("isdeleted");
+
+                    b.Property<DateTime?>("UpdateTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updatetime");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("updateuserid");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("userid");
+
+                    b.HasKey("Id")
+                        .HasName("pk_coachleadercoach");
+
+                    b.HasIndex("CoachId")
+                        .HasDatabaseName("ix_coachleadercoach_coachid");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_coachleadercoach_userid");
+
+                    b.ToTable("coachleadercoach", (string)null);
+                });
+
             modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.ContractKind", b =>
                 {
                     b.Property<long>("Id")
@@ -2627,6 +2676,10 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasColumnType("text")
                         .HasColumnName("phone");
 
+                    b.Property<bool>("StudentAccessToChat")
+                        .HasColumnType("boolean")
+                        .HasColumnName("studentaccesstochat");
+
                     b.Property<long>("Tc")
                         .HasColumnType("bigint")
                         .HasColumnName("tc");
@@ -3351,6 +3404,55 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     b.ToTable("studentanswertargetrange", (string)null);
                 });
 
+            modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.StudentCoach", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("CoachId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("coachid");
+
+                    b.Property<DateTime>("InsertTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("inserttime");
+
+                    b.Property<long?>("InsertUserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("insertuserid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("isdeleted");
+
+                    b.Property<DateTime?>("UpdateTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updatetime");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("updateuserid");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("userid");
+
+                    b.HasKey("Id")
+                        .HasName("pk_studentcoach");
+
+                    b.HasIndex("CoachId")
+                        .HasDatabaseName("ix_studentcoach_coachid");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_studentcoach_userid");
+
+                    b.ToTable("studentcoach", (string)null);
+                });
+
             modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.StudentParentInformation", b =>
                 {
                     b.Property<long>("Id")
@@ -3706,6 +3808,10 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     b.Property<long?>("ResidenceCountyId")
                         .HasColumnType("bigint")
                         .HasColumnName("residencecountyid");
+
+                    b.Property<bool>("ShareCalendarWithParent")
+                        .HasColumnType("boolean")
+                        .HasColumnName("sharecalendarwithparent");
 
                     b.Property<bool>("Status")
                         .HasColumnType("boolean")
@@ -4173,6 +4279,27 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasDatabaseName("ix_usersupportteamviewmydata_userid");
 
                     b.ToTable("usersupportteamviewmydata", (string)null);
+                });
+
+            modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.CoachLeaderCoach", b =>
+                {
+                    b.HasOne("TurkcellDigitalSchool.Account.Domain.Concrete.User", "Coach")
+                        .WithMany()
+                        .HasForeignKey("CoachId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_coachleadercoach_users_coachid");
+
+                    b.HasOne("TurkcellDigitalSchool.Account.Domain.Concrete.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_coachleadercoach_users_userid");
+
+                    b.Navigation("Coach");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.ContractKind", b =>
@@ -4673,6 +4800,27 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasConstraintName("fk_studentanswertargetrange_package_packageid");
 
                     b.Navigation("Package");
+                });
+
+            modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.StudentCoach", b =>
+                {
+                    b.HasOne("TurkcellDigitalSchool.Account.Domain.Concrete.User", "Coach")
+                        .WithMany()
+                        .HasForeignKey("CoachId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_studentcoach_users_coachid");
+
+                    b.HasOne("TurkcellDigitalSchool.Account.Domain.Concrete.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_studentcoach_users_userid");
+
+                    b.Navigation("Coach");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.StudentParentInformation", b =>

@@ -27,14 +27,16 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
         public class GetByFilterPagedAdminsQueryHandler : IRequestHandler<GetByFilterPagedAdminsQuery, DataResult<PagedList<AdminDto>>>
         {
             private readonly IUserRepository _userRepository;
+            private readonly IUserRoleRepository _userRoleRepository;
             private readonly IOrganisationUserRepository _organisationUserRepository;
             private readonly ITokenHelper _tokenHelper;
 
-            public GetByFilterPagedAdminsQueryHandler(IUserRepository userRepository, IOrganisationUserRepository organisationUserRepository, ITokenHelper tokenHelper)
+            public GetByFilterPagedAdminsQueryHandler(IUserRepository userRepository, IUserRoleRepository userRoleRepository, IOrganisationUserRepository organisationUserRepository, ITokenHelper tokenHelper)
             {
                 _userRepository = userRepository;
                 _organisationUserRepository = organisationUserRepository;
                 _tokenHelper = tokenHelper;
+                _userRoleRepository = userRoleRepository;
             }
 
             public virtual async Task<DataResult<PagedList<AdminDto>>> Handle(GetByFilterPagedAdminsQuery request, CancellationToken cancellationToken)
@@ -51,6 +53,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Queries
                             .Include(cc => cc.UserRoles).ThenInclude(rol => rol.Role)
                             .Include(cc => cc.OrganisationUsers).ThenInclude(org => org.Organisation)
                             .AsQueryable();
+
+                if (request.AdminDetailSearch.RoleIds.Any())
+                {
+                    long[] userIds = _userRoleRepository.Query().Where(w => request.AdminDetailSearch.RoleIds.Contains(w.RoleId)).Select(s => s.UserId).ToArray();
+                    query = query.Where(w => userIds.Contains(w.Id));
+                }
 
                 if (currentUser.UserType == UserType.OrganisationAdmin )
                 {
