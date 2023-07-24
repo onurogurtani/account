@@ -1,10 +1,11 @@
 ﻿using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using TurkcellDigitalSchool.Core.DataAccess;
 using TurkcellDigitalSchool.Core.Entities; 
 
 namespace TurkcellDigitalSchool.Account.Domain.Concrete
 {
-    public class PackageRole : EntityDefault
+    public class PackageRole : EntityDefault, IPublishEntity
     {
         public long PackageId { get; set; }
         [JsonIgnore]

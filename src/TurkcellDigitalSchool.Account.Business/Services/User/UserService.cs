@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -146,10 +147,10 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         }
         public List<PackageInfoDto> GetByStudentPackageInformation(long userId)
         {
-            return  _userPackageRepository.Query()
+            return _userPackageRepository.Query()
                 .Include(w => w.Package.ImageOfPackages).ThenInclude(w => w.File)
                 .Where(w => w.UserId == userId)
-                .Select(s=> new PackageInfoDto
+                .Select(s => new PackageInfoDto
                 {
                     Id = s.Package.Id,
                     File = s.Package.ImageOfPackages.First().File,
@@ -159,16 +160,33 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 })
                 .ToList();
         }
-       
-        public SettingsInfoDto GetByUserSettingsInfoInformation(long userId)
+
+        public async Task<SettingsInfoDto> GetByUserSettingsInfoInformation(long userId)
         {
             var getUserContractList = _userContratRepository.Query()
                                    .Include(w => w.Document).ThenInclude(x => x.ContractKind)
                                    .Where(w => w.IsLastVersion && w.UserId == userId).ToList();
             var getUserCommunicationPreferences = _userCommunicationPreferencesRepository.Get(w => w.UserId == userId);
 
+            var beforeMonth = DateTime.Now.AddMonths(-1);
+            var before15Min = DateTime.Now.AddMinutes(-15);
 
-            var getUserSupportTeamViewMyData = _userSupportTeamViewMyDataRepository.Get(w => w.UserId == userId);
+            var getUserSupportTeamViewMyDataAsync = _userSupportTeamViewMyDataRepository.Query()
+                .Where(w => w.UserId == userId)
+                .Select(s => new UserSupportTeamViewMyDataDto
+                {
+                    Id = s.Id,
+                    IsOneMonth = s.IsOneMonth,
+                    IsAlways = s.IsAlways,
+                    IsViewMyData = ((s.IsAlways ?? false) ||
+                                    ((s.IsOneMonth ?? false) &&
+                                     (s.UpdateTime ?? s.InsertTime) >=
+                                     beforeMonth) ||
+                                    ((s.IsFifteenMinutes ?? false) &&
+                                     (s.UpdateTime ?? s.InsertTime) >= before15Min)
+                        ),
+                    IsFifteenMinutes = s.IsFifteenMinutes,
+                }).FirstOrDefaultAsync();
 
             var userContratsList = new List<UserContratDto>();
 
@@ -200,14 +218,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                     IsSms = getUserCommunicationPreferences?.IsSms
                 },
                 UserContrats = userContratsList,
-                UserSupportTeamViewMyData = new UserSupportTeamViewMyDataDto
-                {
-                    Id = getUserSupportTeamViewMyData?.Id,
-                    IsViewMyData = getUserSupportTeamViewMyData?.IsViewMyData,
-                    IsAlways = getUserSupportTeamViewMyData?.IsAlways,
-                    IsFifteenMinutes = getUserSupportTeamViewMyData?.IsFifteenMinutes,
-                    IsOneMonth = getUserSupportTeamViewMyData?.IsOneMonth
-                }
+                UserSupportTeamViewMyData = await getUserSupportTeamViewMyDataAsync
             };
         }
         public string StudentCommunicationPreferencesValidationRules(StudentCommunicationPreferencesDto studentCommunicationPreferencesDto)
@@ -246,7 +257,9 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 await _userCommunicationPreferencesRepository.CreateAndSaveAsync(newRecord);
             }
 
-            var existUserSupportTeamViewMyData = _userSupportTeamViewMyDataRepository.Get(w => w.UserId == UserId);
+            var existUserSupportTeamViewMyData = _userSupportTeamViewMyDataRepository.
+                Get(w => w.UserId == UserId);
+
             if (existUserSupportTeamViewMyData == null)
             {
                 var newRecord = new UserSupportTeamViewMyData
@@ -256,6 +269,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 };
                 await _userSupportTeamViewMyDataRepository.CreateAndSaveAsync(newRecord);
             }
+
         }
         public List<ParentInfoDto> GetStudentsByParentCitizenId(long? citizenId)
         {

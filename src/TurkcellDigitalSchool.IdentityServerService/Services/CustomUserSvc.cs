@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Constants.IdentityServer;
+using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Exceptions;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.IdentityServerService.Services.Contract;
@@ -15,11 +17,14 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
         private readonly IUserRepository _userRepository;
         private readonly IUserPackageRepository _userPackageRepository;
-
-        public CustomUserSvc(IUserRepository userRepository, IUserPackageRepository userPackageRepository)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IConfiguration _configuration;
+        public CustomUserSvc(IUserRepository userRepository, IUserPackageRepository userPackageRepository, IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
         {
             _userRepository = userRepository;
             _userPackageRepository = userPackageRepository;
+            _httpContextAccessor = httpContextAccessor;
+            _configuration = configuration;
         }
         public async Task<bool> Validate(string userName, string password)
         {
@@ -45,33 +50,23 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
         {
             var isMailAdres = userName.IndexOf("@", StringComparison.Ordinal) > -1;
 
-            Expression<Func<User, bool>> expression = null;
+            Expression<Func<User, bool>> expression = user1 => !user1.IsDeleted && user1.Status;
 
             if (isMailAdres)
             {
-                expression = user1 => user1.Email == userName;
+                expression = expression.And(user1 => user1.Email == userName);
             }
             else
             {
-                if (userName.Length == 11)
+                long citizenId = 0;
+                var isPars = long.TryParse(userName, out citizenId);
+                if (userName.Length == 11 && isPars && citizenId != 0)
                 {
-                    long citizenId = 0;
-
-                    var isPars = long.TryParse(userName, out citizenId);
-                    if (isPars && citizenId != 0)
-                    {
-                        expression = user1 => user1.CitizenId == citizenId;
-                    }
-                }
-
-                if (expression != null)
-                {
-
-                    expression = expression.Or(user1 => user1.UserName == userName);
+                    expression = expression.And(user1 => user1.CitizenId == citizenId);
                 }
                 else
                 {
-                    expression = user1 => user1.UserName == userName;
+                    expression = expression.And(user1 => user1.UserName == userName);
                 }
             }
 
@@ -81,6 +76,39 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 return null;
             }
             var result = GetCustomUser(user);
+
+
+            var origin = (_httpContextAccessor.HttpContext.Request.Headers.Origin.ToString() ?? "");
+            var address = "";
+            var indexNumber = origin.IndexOf("http");
+            if (indexNumber > -1)
+            {
+                address = origin.Substring(indexNumber, origin.Length - indexNumber);
+            }
+
+            if (!string.IsNullOrEmpty(address))
+            {
+                var adminUIAdress = (_configuration.GetSection("WebUIAddresses").GetSection("AdminPanel").Value??"").Split(",") ;
+                var userUIAdress = (_configuration.GetSection("WebUIAddresses").GetSection("UserPanel").Value??"").Split(",") ;
+
+                if (  (result.UserType == UserType.Admin  ))
+                {
+                    if (!adminUIAdress.Contains(address) )
+                    {
+                        throw new RuleException("Adminlerin oturum açma izinleri bulunmamaktadır !");
+                    }
+                  
+                }
+
+                if ((result.UserType != UserType.Admin))
+                {
+                    if (!userUIAdress.Contains(address))
+                    {
+                        throw new RuleException("Sadece adminler oturum açma izinleri bulunmaktatır !");
+                    }   
+                }
+            }
+
             return result;
         }
 
@@ -102,7 +130,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
                 EMailVerify = user.EmailVerify,
                 MobilPhone = user.MobilePhones,
                 MobilPhoneVerify = user.MobilePhonesVerify,
-                LastPasswordDate = user.LastPasswordDate 
+                LastPasswordDate = user.LastPasswordDate
             };
             return result;
         }
@@ -136,11 +164,11 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             var user = await _userRepository.GetAsync(w => w.Id == userId);
 
 
-            if (!string.IsNullOrEmpty(user.LastPasswordChangeGuid) && 
-                user.LastPasswordChangeExpTime != null && user.LastPasswordChangeExpTime.Value.ToUniversalTime() > DateTime.Now )
+            if (!string.IsNullOrEmpty(user.LastPasswordChangeGuid) &&
+                user.LastPasswordChangeExpTime != null && user.LastPasswordChangeExpTime.Value.ToUniversalTime() > DateTime.Now)
             {
                 return user.LastPasswordChangeGuid;
-            } 
+            }
 
             user.LastPasswordChangeGuid = Guid.NewGuid().ToString();
             user.LastPasswordChangeExpTime = DateTime.Now.AddSeconds(OtpConst.NewPassOtpExpHour);

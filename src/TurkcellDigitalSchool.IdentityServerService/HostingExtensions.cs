@@ -14,6 +14,8 @@ using TurkcellDigitalSchool.Core.Configure;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Redis.Contract;
+using TurkcellDigitalSchool.Core.Services.SMS;
+using TurkcellDigitalSchool.Core.Services.SMS.Turkcell;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
 using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
@@ -55,9 +57,10 @@ namespace TurkcellDigitalSchool.IdentityServerService
             builder.Services.AddTransient<ICaptchaManager, CaptchaManager>();
             builder.Services.AddTransient<ILoginFailForgetPassSendLinkRepository, LoginFailForgetPassSendLinkRepository>();
             builder.Services.AddTransient<IMailService, MailManager>();
+            builder.Services.AddScoped<ISendSms, SendSms>();
 
 
-            builder.Services.Configure<RedisConfig>(builder.Configuration.GetSection("RedisConfig"));
+            builder.Services.Configure<RedisConfig>(builder.Configuration.GetSection("RedisConfig")); 
             builder.Services.AddSingleton<IRedisConnectionFactory, RedisConnectionFactory>();
             builder.Services.AddSingleton<SessionRedisSvc>();
             builder.Services.AddSingleton<HandlerCacheRedisSvc>();

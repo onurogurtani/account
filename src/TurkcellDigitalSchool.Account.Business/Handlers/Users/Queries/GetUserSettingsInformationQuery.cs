@@ -6,7 +6,6 @@ using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Common.Helpers;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -40,7 +39,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                     return new ErrorDataResult<SettingsInfoDto>(RecordIsNotFound.PrepareRedisMessage());
                 }
                 await _userService.SetDefaultSettingValues(userId);
-                return new SuccessDataResult<SettingsInfoDto>(_userService.GetByUserSettingsInfoInformation(userId));
+                return new SuccessDataResult<SettingsInfoDto>(await _userService.GetByUserSettingsInfoInformation(userId));
             }
 
         }

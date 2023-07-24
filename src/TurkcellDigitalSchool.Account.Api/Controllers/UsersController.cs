@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -206,6 +207,25 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         }
 
         /// <summary>
+        /// GetUserSessionTimeAvarage
+        /// </summary>
+        /// <returns></returns>
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SessionTimeAvarageserSessionAvarageTime))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("GetUserSessionTimeAvarage")]
+        public async Task<IActionResult> GetUserSessionTimeAvarage([FromBody] GetUserSessionTimeAvarageQuery getUserSessionTimeAvarageQuery, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(getUserSessionTimeAvarageQuery, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        
+        /// <summary>
         /// GetUserWeeklySession
         /// </summary>
         /// <returns></returns>
@@ -360,5 +380,23 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
+        /// <summary>
+        /// Get Users For Chat
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>PersonalInfoDto</returns>
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<IEnumerable<UserChatDto>>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpGet("GetUsersForChat")]
+        public async Task<IActionResult> GetUsersForChatQuery([FromQuery] GetUsersForChatQuery request, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(request, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
     }
 }
