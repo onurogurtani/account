@@ -20,9 +20,12 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var asssebly = Assembly.GetExecutingAssembly();
-            modelBuilder.ApplyConfigurationsFromAssembly(asssebly);
+            base.OnModelCreating(modelBuilder);
 
+            modelBuilder.HasDefaultSchema("account");
+            var asssebly = Assembly.GetExecutingAssembly();
+
+            modelBuilder.ApplyConfigurationsFromAssembly(asssebly);
         }
 
         #region Owner Entities

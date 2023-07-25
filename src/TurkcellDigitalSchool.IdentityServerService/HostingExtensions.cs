@@ -9,7 +9,7 @@ using TurkcellDigitalSchool.Account.Business.Helpers;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Core.Common.Helpers; 
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Configure;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Redis;
@@ -60,7 +60,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
             builder.Services.AddScoped<ISendSms, SendSms>();
 
 
-            builder.Services.Configure<RedisConfig>(builder.Configuration.GetSection("RedisConfig")); 
+            builder.Services.Configure<RedisConfig>(builder.Configuration.GetSection("RedisConfig"));
             builder.Services.AddSingleton<IRedisConnectionFactory, RedisConnectionFactory>();
             builder.Services.AddSingleton<SessionRedisSvc>();
             builder.Services.AddSingleton<HandlerCacheRedisSvc>();
@@ -104,10 +104,16 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
                 .AddConfigurationStore(options =>
                 {
+                    options.DefaultSchema = "account";
                     options.ConfigureDbContext = b =>
+                    {
                         b.UseNpgsql(connectionString,
-                                dbOpts => dbOpts.MigrationsAssembly(typeof(Program).Assembly.FullName))
-                            .UseLowerCaseNamingConvention();
+                                    dbOpts =>
+                                    {
+                                        dbOpts.MigrationsAssembly(typeof(Program).Assembly.FullName);
+                                    })
+                                .UseLowerCaseNamingConvention();
+                    };
                 })
                 // this is something you will want in production to reduce load on and requests to the DB
                 //.AddConfigurationStoreCache()
@@ -115,6 +121,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 // this adds the operational data from DB (codes, tokens, consents)
                 .AddOperationalStore(options =>
                 {
+                    options.DefaultSchema = "account";
                     options.ConfigureDbContext = b =>
                         b.UseNpgsql(connectionString, dbOpts => dbOpts.MigrationsAssembly(typeof(Program).Assembly.FullName))
                             .UseLowerCaseNamingConvention();
@@ -137,7 +144,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
 
                 builder.Services.AddTransient<ClientRepository>();
                 builder.Services.AddTransient<IdentityScopeRepository>();
-                builder.Services.AddTransient<ApiScopeRepository>(); 
+                builder.Services.AddTransient<ApiScopeRepository>();
             }
 
             return builder.Build();
@@ -163,14 +170,14 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 app.UseDeveloperExceptionPage();
             }
 
- 
+
 
             app.UseStaticFiles();
             app.UseRouting();
             app.UseIdentityServer();
             app.UseAuthorization();
 
-            app.MapRazorPages().RequireAuthorization(); 
+            app.MapRazorPages().RequireAuthorization();
             return app;
         }
     }
