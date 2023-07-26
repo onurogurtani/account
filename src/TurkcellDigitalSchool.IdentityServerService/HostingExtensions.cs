@@ -73,7 +73,11 @@ namespace TurkcellDigitalSchool.IdentityServerService
             var capConfig = builder.Configuration.GetSection("CapConfig").Get<CapConfig>();
             builder.Services.AddCap(options =>
             {
-                options.UsePostgreSql(builder.Configuration.GetConnectionString("DArchPostgreContext"));
+                options.UsePostgreSql(sqlOptions =>
+                {
+                    sqlOptions.ConnectionString = builder.Configuration.GetConnectionString("DArchPostgreContext");
+                    sqlOptions.Schema = "account";
+                });
                 options.UseRabbitMQ(rabbitMqOptions =>
                 {
                     rabbitMqOptions.ConnectionFactoryOptions = connectionFactory =>
