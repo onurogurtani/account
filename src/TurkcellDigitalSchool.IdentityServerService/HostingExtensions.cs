@@ -72,7 +72,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
             {
                 options.UsePostgreSql(sqlOptions =>
                 {
-                    sqlOptions.ConnectionString = Configuration.GetConnectionString("DArchPostgreContext");
+                    sqlOptions.ConnectionString = builder.Configuration.GetConnectionString("DArchPostgreContext");
                     sqlOptions.Schema = "account";
                 });
                 options.UseRabbitMQ(rabbitMqOptions =>
