@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reflection;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -154,6 +154,22 @@ namespace TurkcellDigitalSchool.Account.Business
             ConfigureDEVServices(services);
         }
 
+
+
+        //TODO Neden t�m ortamlar i�in conf servise var.
+
+        /// <summary>
+        /// This method gets called by the Dev
+        /// </summary>
+        /// <param name="services"></param>
+        public void ConfigureSTBServices(IServiceCollection services)
+        {
+            ConfigureServices(services);
+
+            services.AddDbContext<AccountDbContext>();
+            services.AddDbContext<AccountSubscribeDbContext>();
+        }
+
         /// <summary>
         /// This method gets called by the Dev
         /// </summary>
@@ -166,6 +182,15 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddDbContext<AccountSubscribeDbContext>(); 
         }
 
+
+        /// <summary>
+        /// This method gets called by the Dev
+        /// </summary>
+        /// <param name="services"></param>
+        public void ConfigureSTBTURKCELLServices(IServiceCollection services)
+        {
+            ConfigureSTBServices(services);
+        }
 
 
         /// <summary>

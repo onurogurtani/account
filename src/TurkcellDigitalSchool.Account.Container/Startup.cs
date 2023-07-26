@@ -76,8 +76,8 @@ namespace TurkcellDigitalSchool.Account.Container
                 {
                     var identityConf = Configuration.GetSection("IdentityServerConfig").Get<IdentityServerConfig>();
                     options.Authority = identityConf.BaseUrl;  // IdentityServerUrl gateway or direct
-                    options.Audience = IdentityServerConst.API_RESOURCE_ACCOUNT; 
-                    options.RequireHttpsMetadata = false; 
+                    options.Audience = IdentityServerConst.API_RESOURCE_ACCOUNT;
+                    options.RequireHttpsMetadata = false;
                 });
 
 
@@ -122,7 +122,7 @@ namespace TurkcellDigitalSchool.Account.Container
                             var services = scope.ServiceProvider;
                             var context = services.GetRequiredService<AccountDbContext>();
                             context.Database.Migrate();
-                        } 
+                        }
                         break;
                     }
                 case ApplicationMode.STBTURKCELL:
@@ -132,7 +132,7 @@ namespace TurkcellDigitalSchool.Account.Container
                             var services = scope.ServiceProvider;
                             var context = services.GetRequiredService<AccountDbContext>();
                             context.Database.Migrate();
-                        } 
+                        }
                         break;
                     }
                 case ApplicationMode.ALPHATURKCELL:
@@ -152,11 +152,12 @@ namespace TurkcellDigitalSchool.Account.Container
             app.UseMiddleware<SessionCheckMiddleware>();
             app.UseDbOperationClaimCreator().GetResult();
 
-            if (!configurationManager.Mode.ToString().EnvIsSTB())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "Kg Teknoloji"); });
-            }
+            //TODO kod kapatıldı Yusuf. 
+            //if (!configurationManager.Mode.ToString().EnvIsSTB())
+            //{
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "Kg Teknoloji"); });
+            //}
 
 
             app.UseCors("AllowOrigin");

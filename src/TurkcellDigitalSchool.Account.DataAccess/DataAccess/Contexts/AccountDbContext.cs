@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using DotNetCore.CAP;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -26,6 +27,22 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
             var asssebly = Assembly.GetExecutingAssembly();
 
             modelBuilder.ApplyConfigurationsFromAssembly(asssebly);
+        }
+
+
+        //TODO Yusuf EF migration tablo. core taşınması gerek.
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                string machineName = Environment.MachineName;
+                base.OnConfiguring(optionsBuilder.UseNpgsql(_configuration.GetConnectionString("DArchPostgreContext")));
+            }
+            optionsBuilder.UseLowerCaseNamingConvention();
+            optionsBuilder.UseNpgsql(_configuration.GetConnectionString("DArchPostgreContext"), x => x.MigrationsHistoryTable("__EFMigrationsHistory", "account"));
+
+
+            _options = optionsBuilder.Options;
         }
 
         #region Owner Entities
