@@ -59,6 +59,8 @@ namespace TurkcellDigitalSchool.IdentityServerService
             builder.Services.AddTransient<ILoginFailForgetPassSendLinkRepository, LoginFailForgetPassSendLinkRepository>();
             builder.Services.AddTransient<IMailService, MailManager>();
             builder.Services.AddScoped<ISendSms, SendSms>();
+            builder.Services.AddScoped<CustomConfigurationDbContext>();
+            builder.Services.AddScoped<CustomPersistedGrantDbContext>();
 
 
             builder.Services.Configure<RedisConfig>(builder.Configuration.GetSection("RedisConfig"));
