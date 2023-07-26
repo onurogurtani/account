@@ -19,6 +19,7 @@ using TurkcellDigitalSchool.Core.Services.SMS.Turkcell;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
 using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
+using TurkcellDigitalSchool.IdentityServerService.Context;
 using TurkcellDigitalSchool.IdentityServerService.Pages.Admin.ApiScopes;
 using TurkcellDigitalSchool.IdentityServerService.Pages.Admin.Clients;
 using TurkcellDigitalSchool.IdentityServerService.Pages.Admin.IdentityScopes;
@@ -102,7 +103,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 })
                 .AddProfileService<CustomProfileService>()
                 .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
-                .AddConfigurationStore(options =>
+                .AddConfigurationStore<CustomConfigurationDbContext>(options =>
                 {
                     options.DefaultSchema = "account";
                     options.ConfigureDbContext = b =>
@@ -119,7 +120,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 //.AddConfigurationStoreCache()
                 //
                 // this adds the operational data from DB (codes, tokens, consents)
-                .AddOperationalStore(options =>
+                .AddOperationalStore<CustomPersistedGrantDbContext>(options =>
                 {
                     options.DefaultSchema = "account";
                     options.ConfigureDbContext = b =>
