@@ -21,6 +21,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
         {
             _configurationManager = configurationManager;
             _httpContextAccessor = httpContextAccessor;
+            _sendSms = sendSms;
         }
 
         public Task<int> ExecInsertSpForSms(string cellPhone, long userId, string otp)
