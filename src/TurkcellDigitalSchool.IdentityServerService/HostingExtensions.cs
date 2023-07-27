@@ -59,6 +59,8 @@ namespace TurkcellDigitalSchool.IdentityServerService
             builder.Services.AddTransient<ILoginFailForgetPassSendLinkRepository, LoginFailForgetPassSendLinkRepository>();
             builder.Services.AddTransient<IMailService, MailManager>();
             builder.Services.AddScoped<ISendSms, SendSms>();
+            builder.Services.AddScoped<CustomConfigurationDbContext>();
+            builder.Services.AddScoped<CustomPersistedGrantDbContext>();
 
 
             builder.Services.Configure<RedisConfig>(builder.Configuration.GetSection("RedisConfig"));
@@ -135,12 +137,6 @@ namespace TurkcellDigitalSchool.IdentityServerService
                     options.EnableTokenCleanup = true;
                     options.RemoveConsumedTokens = true;
                 });
-
-            builder.Services.AddDbContext<CustomConfigurationDbContext>(options => options.UseNpgsql(connectionString, dbOpts => dbOpts.MigrationsAssembly(typeof(Program).Assembly.FullName))
-            .UseLowerCaseNamingConvention());
-
-            builder.Services.AddDbContext<CustomPersistedGrantDbContext>(options => options.UseNpgsql(connectionString, dbOpts => dbOpts.MigrationsAssembly(typeof(Program).Assembly.FullName))
-            .UseLowerCaseNamingConvention());
 
 
             // this adds the necessary config for the simple admin/config pages
