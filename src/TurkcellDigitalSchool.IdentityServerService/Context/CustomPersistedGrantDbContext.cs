@@ -7,7 +7,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Context
     public class CustomPersistedGrantDbContext : PersistedGrantDbContext
     {
         protected readonly IConfiguration _configuration;
-        public CustomPersistedGrantDbContext(IConfiguration configuration) : base(null)
+        public CustomPersistedGrantDbContext(DbContextOptions<PersistedGrantDbContext> options, IConfiguration configuration) : base(options)
         {
             _configuration = configuration;
         }
