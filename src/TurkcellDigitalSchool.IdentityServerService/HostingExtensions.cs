@@ -9,9 +9,7 @@ using TurkcellDigitalSchool.Account.Business.Helpers;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Configure;
-using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Redis.Contract;
 using TurkcellDigitalSchool.Core.Services.SMS;
@@ -19,7 +17,6 @@ using TurkcellDigitalSchool.Core.Services.SMS.Turkcell;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
 using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.IdentityServerService.Context;
 using TurkcellDigitalSchool.IdentityServerService.Pages.Admin.ApiScopes;
 using TurkcellDigitalSchool.IdentityServerService.Pages.Admin.Clients;
 using TurkcellDigitalSchool.IdentityServerService.Pages.Admin.IdentityScopes;
@@ -59,8 +56,6 @@ namespace TurkcellDigitalSchool.IdentityServerService
             builder.Services.AddTransient<ILoginFailForgetPassSendLinkRepository, LoginFailForgetPassSendLinkRepository>();
             builder.Services.AddTransient<IMailService, MailManager>();
             builder.Services.AddScoped<ISendSms, SendSms>();
-            builder.Services.AddScoped<CustomConfigurationDbContext>();
-            builder.Services.AddScoped<CustomPersistedGrantDbContext>();
 
 
             builder.Services.Configure<RedisConfig>(builder.Configuration.GetSection("RedisConfig"));
@@ -109,7 +104,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 })
                 .AddProfileService<CustomProfileService>()
                 .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
-                .AddConfigurationStore<CustomConfigurationDbContext>(options =>
+                .AddConfigurationStore(options =>
                 {
                     options.DefaultSchema = "account";
                     options.ConfigureDbContext = b =>
@@ -118,6 +113,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
                                     dbOpts =>
                                     {
                                         dbOpts.MigrationsAssembly(typeof(Program).Assembly.FullName);
+                                        dbOpts.MigrationsHistoryTable("__EFMigrationsHistory", "account");
                                     })
                                 .UseLowerCaseNamingConvention();
                     };
@@ -126,12 +122,13 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 //.AddConfigurationStoreCache()
                 //
                 // this adds the operational data from DB (codes, tokens, consents)
-                .AddOperationalStore<CustomPersistedGrantDbContext>(options =>
+                .AddOperationalStore(options =>
                 {
                     options.DefaultSchema = "account";
                     options.ConfigureDbContext = b =>
-                        b.UseNpgsql(connectionString, dbOpts => dbOpts.MigrationsAssembly(typeof(Program).Assembly.FullName))
-                            .UseLowerCaseNamingConvention();
+                        b.UseNpgsql(connectionString, dbOpts => dbOpts.MigrationsAssembly(typeof(Program).Assembly.FullName)
+                        .MigrationsHistoryTable("__EFMigrationsHistory", "account"))
+                        .UseLowerCaseNamingConvention();
 
                     // this enables automatic token cleanup. this is optional.
                     options.EnableTokenCleanup = true;
