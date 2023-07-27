@@ -1,13 +1,16 @@
 ﻿using Duende.IdentityServer.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.Entities;
+using Duende.IdentityServer.EntityFramework.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace TurkcellDigitalSchool.IdentityServerService.Context
 {
-    public class CustomPersistedGrantDbContext : PersistedGrantDbContext
+    public class CustomPersistedGrantDbContext : DbContext, IPersistedGrantDbContext
     {
         protected readonly IConfiguration _configuration;
-        public CustomPersistedGrantDbContext(DbContextOptions<PersistedGrantDbContext> options, IConfiguration configuration) : base(options)
+
+        public CustomPersistedGrantDbContext(IConfiguration configuration) : base()
         {
             _configuration = configuration;
         }
@@ -33,5 +36,10 @@ namespace TurkcellDigitalSchool.IdentityServerService.Context
             optionsBuilder.UseNpgsql(_configuration.GetConnectionString("DArchPostgreContext"), x => x.MigrationsHistoryTable("__EFMigrationsHistory", "account"));
 
         }
+
+        public DbSet<PersistedGrant> PersistedGrants { get; set; }
+        public DbSet<DeviceFlowCodes> DeviceFlowCodes { get; set; }
+        public DbSet<Key> Keys { get; set; }
+        public DbSet<ServerSideSession> ServerSideSessions { get; set; }
     }
 }

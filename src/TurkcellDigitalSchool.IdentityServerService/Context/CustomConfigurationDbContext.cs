@@ -1,13 +1,15 @@
-﻿using Duende.IdentityServer.EntityFramework.DbContexts;
+﻿using Duende.IdentityServer.EntityFramework.Entities;
+using Duende.IdentityServer.EntityFramework.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace TurkcellDigitalSchool.IdentityServerService.Context
 {
-    public class CustomConfigurationDbContext : ConfigurationDbContext
+    public class CustomConfigurationDbContext : DbContext, IConfigurationDbContext
     {
         protected readonly IConfiguration _configuration;
-        public CustomConfigurationDbContext(DbContextOptions<ConfigurationDbContext> options, IConfiguration configuration) : base(options)
+
+        public CustomConfigurationDbContext(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -32,7 +34,13 @@ namespace TurkcellDigitalSchool.IdentityServerService.Context
             }
             optionsBuilder.UseLowerCaseNamingConvention();
             optionsBuilder.UseNpgsql(_configuration.GetConnectionString("DArchPostgreContext"), x => x.MigrationsHistoryTable("__EFMigrationsHistory", "account"));
-
         }
+
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<ClientCorsOrigin> ClientCorsOrigins { get; set; }
+        public DbSet<IdentityResource> IdentityResources { get; set; }
+        public DbSet<ApiResource> ApiResources { get; set; }
+        public DbSet<ApiScope> ApiScopes { get; set; }
+        public DbSet<IdentityProvider> IdentityProviders { get; set; }
     }
 }
