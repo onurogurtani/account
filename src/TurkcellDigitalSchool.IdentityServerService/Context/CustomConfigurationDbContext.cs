@@ -7,7 +7,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Context
     public class CustomConfigurationDbContext : ConfigurationDbContext
     {
         protected readonly IConfiguration _configuration;
-        public CustomConfigurationDbContext(DbContextOptions<ConfigurationDbContext> options, IConfiguration configuration) : base(options)
+        public CustomConfigurationDbContext(IConfiguration configuration) : base(null)
         {
             _configuration = configuration;
         }
