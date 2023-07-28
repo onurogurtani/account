@@ -62,6 +62,21 @@ namespace TurkcellDigitalSchool.Exam.Business.Handlers.ParticipantGroups.Queries
                             entity = await _greetingMessageRepository.Query().Where(w => !w.HasDateRange && w.StartDate == null && w.RecordStatus == Core.Enums.RecordStatus.Active && !w.IsDeleted).OrderBy(o => o.Order).FirstOrDefaultAsync();
                         }
 
+                        if (entity == null)
+                        {
+                            if (_appSettingRepository.Query().Any(x => x.Code == "GMS" && x.Value == "1"))
+                            {
+                                var query = _greetingMessageRepository.Query()
+                                    .Where(w => !w.HasDateRange && w.StartDate < today && w.RecordStatus == Core.Enums.RecordStatus.Active && !w.IsDeleted);
+                                int randomMessageNumber = new Random().Next(query.Count());
+                                entity = query.Skip(randomMessageNumber).Take(1).FirstOrDefault();
+                            }
+                            else
+                            {
+                                entity = await _greetingMessageRepository.Query().Where(w => !w.HasDateRange && w.StartDate < today && w.RecordStatus == Core.Enums.RecordStatus.Active && !w.IsDeleted).OrderBy(o => o.StartDate).FirstOrDefaultAsync();
+                            }
+                        }
+
                         if (entity != null)
                         {
                             entity.StartDate = today;
