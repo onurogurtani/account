@@ -92,6 +92,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         public DbSet<GreetingMessage> GreetingMessages { get; set; }
         public DbSet<StudentCoach> StudentCoaches { get; set; }
         public DbSet<CoachLeaderCoach> CoachLeaderCoaches { get; set; }
+        public DbSet<PackageMenuAccess> PackageMenuAccesses { get; set; }
 
         #endregion
 

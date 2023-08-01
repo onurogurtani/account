@@ -6,10 +6,10 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations
 {
     public class PackageMenuAccessEntityConfiguration : EntityDefaultConfigurationBase<PackageMenuAccess>
     {
-        public void Configure(EntityTypeBuilder<PackageMenuAccess> builder)
+        public override void Configure(EntityTypeBuilder<PackageMenuAccess> builder)
         { 
-            builder.Property(x => x.Claim).HasMaxLength(300).IsRequired();
-            builder.Property(x => x.Selected).IsRequired();  
+            base.Configure(builder);
+            builder.Property(x => x.Claim).HasMaxLength(300).IsRequired(); 
             builder.HasIndex(x => new { x.PackageId, x.Claim}).IsUnique(); 
             builder.HasIndex(x => x.PackageId); 
         }

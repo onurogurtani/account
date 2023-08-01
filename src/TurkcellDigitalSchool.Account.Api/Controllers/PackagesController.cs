@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TurkcellDigitalSchool.Account.Business.Handlers.PackageAccessMenues.Commands;
+using TurkcellDigitalSchool.Account.Business.Handlers.PackageAccessMenues.Queries;
 using TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands;
 using TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
@@ -198,28 +200,6 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             }
 
             return BadRequest(result);
-        }
-
-
-        /// <summary>
-        /// You can get the menu privileges that the package has
-        /// </summary>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [Consumes("application/json")]
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<Package>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpPost("getPackageAccessMenues")]
-        public async Task<IActionResult> GetPackageAccessMenues([FromBody] GetPackageAccessMenuesQuery request, CancellationToken cancellationToken)
-        {
-            var result = await Mediator.Send(request, cancellationToken);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-
-            return BadRequest(result);
-        }  
+        } 
     }
 }
