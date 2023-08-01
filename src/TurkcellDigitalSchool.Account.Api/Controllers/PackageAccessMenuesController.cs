@@ -22,7 +22,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// You can get the menu privileges that the package has
         /// </summary>
         /// <returns></returns>
-        [AllowAnonymous]
+     
         [Consumes("application/json")]
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<Package>))]
@@ -44,8 +44,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        [AllowAnonymous]
+        /// <returns></returns> 
         [Consumes("application/json")]
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<Package>))]

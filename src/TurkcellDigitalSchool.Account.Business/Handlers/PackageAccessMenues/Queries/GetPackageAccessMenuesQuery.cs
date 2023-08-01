@@ -18,8 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageAccessMenues.Qu
     /// <summary>
     /// Get Package Menu Access
     /// </summary>
-    [LogScope]
-
+    [LogScope] 
     public class GetPackageAccessMenuesQuery : IRequest<DataResult<List<PackageMenuAccessDto>>>
     {
         public long PackageId { get; set; }
