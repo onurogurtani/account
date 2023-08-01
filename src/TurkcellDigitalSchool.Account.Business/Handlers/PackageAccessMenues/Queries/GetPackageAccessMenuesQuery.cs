@@ -16,21 +16,21 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageAccessMenues.Queries
 {
     /// <summary>
-    /// Get Package
+    /// Get Package Menu Access
     /// </summary>
     [LogScope]
 
-    public class GetPackageAccessMenuesDefaultQuery : IRequest<DataResult<List<PackageMenuAccessDto>>>
+    public class GetPackageAccessMenuesQuery : IRequest<DataResult<List<PackageMenuAccessDto>>>
     {
         public long PackageId { get; set; }
 
         [MessageClassAttr("Paket Görüntüleme")]
-        public class GetPackageAccessMenuesDefaultQueryHandler : IRequestHandler<GetPackageAccessMenuesDefaultQuery, DataResult<List<PackageMenuAccessDto>>>
+        public class GetPackageAccessMenuesQueryHandler : IRequestHandler<GetPackageAccessMenuesQuery, DataResult<List<PackageMenuAccessDto>>>
         {  
             private readonly IPackageMenuAccessRepository _packageMenuAccessRepository;
             private readonly IMediator _mediator;
 
-            public GetPackageAccessMenuesDefaultQueryHandler(IClaimDefinitionService claimDefinitionService,  IMediator mediator, IPackageMenuAccessRepository packageMenuAccessRepository)
+            public GetPackageAccessMenuesQueryHandler(IClaimDefinitionService claimDefinitionService,  IMediator mediator, IPackageMenuAccessRepository packageMenuAccessRepository)
             {
                 _mediator = mediator;
                 _packageMenuAccessRepository = packageMenuAccessRepository;
@@ -40,7 +40,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageAccessMenues.Qu
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
-            public virtual async Task<DataResult<List<PackageMenuAccessDto>>> Handle(GetPackageAccessMenuesDefaultQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<List<PackageMenuAccessDto>>> Handle(GetPackageAccessMenuesQuery request, CancellationToken cancellationToken)
             {
                 var defaultValues = await GetDefaultValue();
                 var hasRecord = await _packageMenuAccessRepository.Query().AnyAsync(a => a.PackageId == request.PackageId && !a.IsDeleted, cancellationToken: cancellationToken);

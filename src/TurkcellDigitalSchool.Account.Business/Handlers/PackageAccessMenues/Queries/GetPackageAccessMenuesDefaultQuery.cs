@@ -2,12 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
-using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using MediatR; 
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.AuthorityManagement.Services.Abstract;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.Common.Constants;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute; 
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -15,25 +13,25 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageAccessMenues.Queries
 {
     /// <summary>
-    /// Get Package
+    /// Get Package Menu Access default values
     /// </summary>
     [LogScope]
 
-    public class GetPackageAccessMenuesQuery : IRequest<DataResult<List<PackageMenuAccessDto>>>
+    public class GetPackageAccessMenuesDefaultQuery : IRequest<DataResult<List<PackageMenuAccessDto>>>
     {
         public long PackageId { get; set; }
 
         [MessageClassAttr("Paket Menü Görüntüleme Default Yetkiler")]
-        public class GetPackageAccessMenuesQueryHandler : IRequestHandler<GetPackageAccessMenuesQuery, DataResult<List<PackageMenuAccessDto>>>
+        public class GetPackageAccessMenuesDefaultQueryHandler : IRequestHandler<GetPackageAccessMenuesDefaultQuery, DataResult<List<PackageMenuAccessDto>>>
         {
             private readonly IClaimDefinitionService _claimDefinitionService;
 
-            public GetPackageAccessMenuesQueryHandler(IClaimDefinitionService claimDefinitionService)
+            public GetPackageAccessMenuesDefaultQueryHandler(IClaimDefinitionService claimDefinitionService)
             {
                 _claimDefinitionService = claimDefinitionService;
             }
 
-            public virtual async Task<DataResult<List<PackageMenuAccessDto>>> Handle(GetPackageAccessMenuesQuery request, CancellationToken cancellationToken)
+            public virtual async Task<DataResult<List<PackageMenuAccessDto>>> Handle(GetPackageAccessMenuesDefaultQuery request, CancellationToken cancellationToken)
             {
                 return new DataResult<List<PackageMenuAccessDto>>(GetDefaultValue(), true);
             }
