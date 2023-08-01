@@ -10,7 +10,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
 {
     public interface IOtpService
     {
-        DataResult<int> GenerateOtp(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId, OTPExpiryDate oTPExpiryDate);
-        Result VerifyOtp(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId,int Code);
+        Result GenerateOtp(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId, OTPExpiryDate oTPExpiryDate);
+        Result VerifyOtp(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId, int Code);
     }
 }

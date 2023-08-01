@@ -28,13 +28,11 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Otp.Commands
         {
             private readonly IOtpService _otpService;
             private readonly ITokenHelper _tokenHelper;
-            private readonly ISmsOtpRepository _smsOtpRepository;
             private readonly IUserRepository _userRepository;
-            public GenerateOtpCommandHandler(IOtpService otpService, ITokenHelper tokenHelper, ISmsOtpRepository smsOtpRepository, IUserRepository userRepository)
+            public GenerateOtpCommandHandler(IOtpService otpService, ITokenHelper tokenHelper, IUserRepository userRepository)
             {
                 _otpService = otpService;
                 _tokenHelper = tokenHelper;
-                _smsOtpRepository = smsOtpRepository;
                 _userRepository = userRepository;
             }
             public async Task<IResult> Handle(GenerateOtpCommand request, CancellationToken cancellationToken)
@@ -44,10 +42,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Otp.Commands
                 var user = _userRepository.Get(x=>x.Id == userId);
                 if (user == null)
                 {
-                    new ErrorDataResult<int>(otpCode.Data, Messages.UserNotFound);
+                    new ErrorDataResult<string>(Messages.UserNotFound);
                 }
-                await _smsOtpRepository.Send(user.MobilePhones, $"Tek Kullanımlık Şifreniz : {otpCode.Data}");
-                return new SuccessDataResult<int>(otpCode.Data,otpCode.Message);
+                return new SuccessDataResult<string>(otpCode.Message);
             }
 
         }
