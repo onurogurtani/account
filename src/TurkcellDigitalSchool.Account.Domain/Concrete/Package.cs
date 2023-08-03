@@ -24,6 +24,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public string Content { get; set; }
 
         public bool IsActive { get; set; }
+        public bool IsMenuAccessSet { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime FinishDate { get; set; }
         public virtual ICollection<PackageLesson> PackageLessons { get; set; }

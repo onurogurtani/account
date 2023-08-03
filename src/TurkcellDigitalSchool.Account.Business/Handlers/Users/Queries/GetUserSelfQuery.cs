@@ -7,8 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute; 
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
@@ -48,7 +47,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                             Label = ss.Organisation.Name,
                             IsSingularOrganisation = ss.Organisation.OrganisationType.IsSingularOrganisation
                         })
-                    ).OrderBy(o=>o.IsSingularOrganisation).ThenBy(o=>o.Label).ToListAsync();
+                    ).OrderBy(o=>o.IsSingularOrganisation).ThenBy(o=>o.Label).ToListAsync(cancellationToken);
 
                  
                 userDto.Claims  =   _userRepository.GetClaims(userId).Select(s=>s.Name).ToList();
