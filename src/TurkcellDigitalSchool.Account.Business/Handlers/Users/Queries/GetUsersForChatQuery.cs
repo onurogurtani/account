@@ -52,6 +52,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                                                   Id = user.Id,
                                                   Name = user.Name,
                                                   SurName = user.SurName,
+                                                  AvatarId = user.AvatarId,
                                                   UserType = user.UserType
                                               })
                                         .ToList();
@@ -71,6 +72,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                                                       Id = user.Id,
                                                       Name = user.Name,
                                                       SurName = user.SurName,
+                                                      AvatarId = user.AvatarId,
                                                       UserType = user.UserType
                                                   })
                                             .ToList();
@@ -87,6 +89,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                                   Id = user.Id,
                                   Name = user.Name,
                                   SurName = user.SurName,
+                                  AvatarId = user.AvatarId,
                                   UserType = user.UserType
                               })
                         .ToList();
@@ -99,6 +102,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                                   Id = user.Id,
                                   Name = user.Name,
                                   SurName = user.SurName,
+                                  AvatarId = user.AvatarId,
                                   UserType = user.UserType
                               })
                         .ToList();
@@ -117,6 +121,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                                                   Id = user.Id,
                                                   Name = user.Name,
                                                   SurName = user.SurName,
+                                                  AvatarId = user.AvatarId,
                                                   UserType = user.UserType
                                               })
                                         .ToList();
@@ -130,6 +135,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                                                                   Id = p.Id,
                                                                   Name = p.Name,
                                                                   SurName = p.SurName,
+                                                                  AvatarId = _userRepository.Query().FirstOrDefault(w => w.Id == p.Id).AvatarId,
                                                                   UserType = UserType.Parent
                                                               }))
                                         .Distinct()

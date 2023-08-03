@@ -12,10 +12,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Abstract
 
         public User AddOrUpdateForExternalLogin(UserAddingType userAddingType, string relatedIdentity, string oauthAccessToken, string oauthOpenIdConnectToken, string name, string surname, string email, string phone);
 
-        List<OperationClaim> GetClaims(long userId);
-        bool HasClaim(long userId,string claims);
-
-
+        List<OperationClaim> GetClaims(long userId);  
 
         public Task ResetFailLoginOtpCount(long userId);
 
