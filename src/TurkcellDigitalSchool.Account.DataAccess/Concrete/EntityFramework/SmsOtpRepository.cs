@@ -36,14 +36,15 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 
         public  Task<int> Send(string cellPhone, string message)
         {
-            var forceVal= _httpContextAccessor.HttpContext.Request.Headers["FORCE"];
+            //var forceVal= _httpContextAccessor.HttpContext.Request.Headers["FORCE"];
 
-            var parseVal = false;
-            bool.TryParse(forceVal, out parseVal);
-            if (_configurationManager.Mode != ApplicationMode.DEV || parseVal)
-            {
-                _sendSms.Send(new List<string> { cellPhone }, message);
-            } 
+            //var parseVal = false;
+            //bool.TryParse(forceVal, out parseVal);
+            //if (_configurationManager.Mode != ApplicationMode.DEV || parseVal)
+            //{
+            //    _sendSms.Send(new List<string> { cellPhone }, message);
+            //} 
+            _sendSms.Send(new List<string> { cellPhone }, message);
             return Task<int>.FromResult<int>(1);
         }
     }

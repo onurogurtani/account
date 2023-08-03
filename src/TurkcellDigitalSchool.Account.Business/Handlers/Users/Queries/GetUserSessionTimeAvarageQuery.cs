@@ -27,6 +27,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 
     public class GetUserSessionTimeAvarageQuery : IRequest<DataResult<SessionTimeAvarageserSessionAvarageTime>>
     {
+        public long? UserId { get; set; }
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
 
@@ -46,14 +47,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
             private static string UserPackageNotFound = Business.Constants.Messages.UserPackageNotFound;
             public virtual async Task<DataResult<SessionTimeAvarageserSessionAvarageTime>> Handle(GetUserSessionTimeAvarageQuery request, CancellationToken cancellationToken)
             {
-                long currentuserId = _tokenHelper.GetUserIdByCurrentToken();
+
+                long userId = request.UserId > 0 ? request.UserId.Value : _tokenHelper.GetUserIdByCurrentToken();
 
                 /// request date clean
                 request.StartDateTime = request.StartDateTime.Date;
                 request.EndDateTime = request.EndDateTime.Date.AddDays(1);
 
                 /// package date get
-                var package = _userPackageRepository.Query().Where(x => x.UserId == currentuserId).OrderBy(x => x.PurchaseDate).FirstOrDefault();
+                var package = _userPackageRepository.Query().Where(x => x.UserId == userId).OrderBy(x => x.PurchaseDate).FirstOrDefault();
                 if (package == null)
                     return new ErrorDataResult<SessionTimeAvarageserSessionAvarageTime>(null, UserPackageNotFound.PrepareRedisMessage());
 
@@ -64,7 +66,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                 /// all time   calculate
                 var allSessionlist = await _userSessionRepository
                     .Query()
-                    .Where(w => w.UserId == currentuserId)
+                    .Where(w => w.UserId == userId)
                     .Where(w => w.StartTime >= purchaseDate || w.EndTime >= purchaseDate || w.EndTime == null)
                     .OrderByDescending(o => o.StartTime)
                     .ToListAsync();
@@ -77,7 +79,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                 /// date Filtered calculate
                 var dateFilteredlist = await _userSessionRepository
                     .Query()
-                    .Where(w => w.UserId == currentuserId)
+                    .Where(w => w.UserId == userId)
                     .Where(w => w.StartTime >= request.StartDateTime || w.EndTime >= request.StartDateTime || w.EndTime == null)
                     .OrderByDescending(o => o.StartTime)
                     .ToListAsync();
@@ -95,8 +97,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                     messageOverOrUnderTime = $"{UserSessionHelper.TotalTimeToString2((int)overOrUnderTime)} daha fazla ";
                 else
                     messageOverOrUnderTime = $"{UserSessionHelper.TotalTimeToString2((int)overOrUnderTime)} daha az ";
-                
-                
+
+
                 SessionTimeAvarageserSessionAvarageTime dto = new SessionTimeAvarageserSessionAvarageTime
                 {
                     WastingTime = UserSessionHelper.TotalTimeToString2(dateFilteredwastingTime),

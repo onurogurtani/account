@@ -13,6 +13,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Configurations
             builder.Property(x => x.Name).HasMaxLength(100);
             builder.Property(x => x.Content).HasMaxLength(2500);
             builder.Property(x => x.IsActive).HasDefaultValue(false).IsRequired();
+            builder.Property(x => x.IsMenuAccessSet).HasDefaultValue(false);
             builder.Property(x => x.InsertTime).HasDefaultValueSql("NOW()");
             builder.Property(x => x.StartDate);
             builder.Property(x => x.FinishDate);
