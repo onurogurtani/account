@@ -29,12 +29,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageAccessMenues.Co
         public class CreatePackageAccessMenuesCommandHandler : IRequestHandler<CreatePackageAccessMenuesCommand,Result>
         {
             private readonly IPackageMenuAccessRepository _packageMenuAccessRepository;
+            private readonly IPackageRepository _packageRepository;
             private readonly IClaimDefinitionService _claimDefinitionService; 
 
-            public CreatePackageAccessMenuesCommandHandler(  IClaimDefinitionService claimDefinitionService, IPackageMenuAccessRepository packageMenuAccessRepository)
+            public CreatePackageAccessMenuesCommandHandler(  IClaimDefinitionService claimDefinitionService, IPackageMenuAccessRepository packageMenuAccessRepository, IPackageRepository packageRepository)
             { 
                 _claimDefinitionService = claimDefinitionService;
                 _packageMenuAccessRepository = packageMenuAccessRepository;
+                _packageRepository = packageRepository;
             }
 
  
@@ -67,9 +69,16 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageAccessMenues.Co
                 if (addingClaims.Any())
                 {
                     await _packageMenuAccessRepository.AddRangeAsync(addingClaims);
-                } 
+                }
 
-                await _packageMenuAccessRepository.SaveChangesAsync(); 
+                var package=await _packageRepository.Query().FirstOrDefaultAsync(w => w.Id == request.PackageId, cancellationToken);
+
+                if (package!=null)
+                {
+                    package.IsMenuAccessSet = true;
+                } 
+                
+                await _packageMenuAccessRepository.SaveChangesAsync();  
 
                 return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }

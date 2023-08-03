@@ -27,12 +27,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageAccessMenues.Qu
         public class GetPackageAccessMenuesQueryHandler : IRequestHandler<GetPackageAccessMenuesQuery, DataResult<List<PackageMenuAccessDto>>>
         {  
             private readonly IPackageMenuAccessRepository _packageMenuAccessRepository;
+            private readonly IPackageRepository _packageRepository;
             private readonly IMediator _mediator;
 
-            public GetPackageAccessMenuesQueryHandler(IClaimDefinitionService claimDefinitionService,  IMediator mediator, IPackageMenuAccessRepository packageMenuAccessRepository)
+            public GetPackageAccessMenuesQueryHandler(IClaimDefinitionService claimDefinitionService,  IMediator mediator, IPackageMenuAccessRepository packageMenuAccessRepository, IPackageRepository packageRepository)
             {
                 _mediator = mediator;
                 _packageMenuAccessRepository = packageMenuAccessRepository;
+                _packageRepository = packageRepository;
             }
 
             [MessageConstAttr(MessageCodeType.Error)]
@@ -42,8 +44,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.PackageAccessMenues.Qu
             public virtual async Task<DataResult<List<PackageMenuAccessDto>>> Handle(GetPackageAccessMenuesQuery request, CancellationToken cancellationToken)
             {
                 var defaultValues = await GetDefaultValue();
-                var hasRecord = await _packageMenuAccessRepository.Query().AnyAsync(a => a.PackageId == request.PackageId && !a.IsDeleted, cancellationToken: cancellationToken);
-                if (!hasRecord)
+                 
+                var isDefaultValSending = ! _packageRepository.Query().Any(w => w.Id == request.PackageId && w.IsMenuAccessSet);
+
+                if (isDefaultValSending)
                 {
                     return new DataResult<List<PackageMenuAccessDto>>(defaultValues, true);
                 }
