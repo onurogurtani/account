@@ -105,8 +105,10 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 
             var platformClaims = _claimDefinitionService.GetClaimDefinitions().Where(w => w.ModuleType == ModuleType.Platform);
 
+
             var packageMenuAccessClaims = Context.PackageMenuAccesses.Where(w => Context.UserPackages.Include(i => i.Package).Any(ww => !ww.IsDeleted
-                  && ww.Package.IsActive && ww.Package.StartDate <= now && ww.Package.FinishDate >= now &&
+                && ww.Package.IsMenuAccessSet
+                && ww.Package.IsActive && ww.Package.StartDate <= now && ww.Package.FinishDate >= now &&
                  ww.PackageId == w.PackageId && ww.UserId == userId
              )).Select(s => new { ClaimName = s.Claim }).Distinct().ToList();
 
@@ -123,6 +125,15 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 
                 claims = claims.Where(w => unSelectedPlatformClaims.Any(a => a.claimName != w.ClaimName)).ToList();
             }
+            else
+            {
+                var unSelectedPlatformClaims = platformClaims.Select(s => new
+                {
+                    claimName = s.Name,
+                    selected = false
+                }).ToList().Where(w => !w.selected).ToList(); 
+                claims = claims.Where(w => unSelectedPlatformClaims.Any(a => a.claimName != w.ClaimName)).ToList();
+            } 
 
             var result = claims
                  .Select(s => new OperationClaim { Name = s.ClaimName }).ToList();
