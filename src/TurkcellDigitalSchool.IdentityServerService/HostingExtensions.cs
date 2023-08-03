@@ -9,9 +9,9 @@ using TurkcellDigitalSchool.Account.Business.Helpers;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Core.Common.Helpers; 
+using TurkcellDigitalSchool.Core.AuthorityManagement.Services;
+using TurkcellDigitalSchool.Core.AuthorityManagement.Services.Abstract;
 using TurkcellDigitalSchool.Core.Configure;
-using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Redis.Contract;
 using TurkcellDigitalSchool.Core.Services.SMS;
@@ -58,6 +58,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
             builder.Services.AddTransient<ILoginFailForgetPassSendLinkRepository, LoginFailForgetPassSendLinkRepository>();
             builder.Services.AddTransient<IMailService, MailManager>();
             builder.Services.AddScoped<ISendSms, SendSms>();
+            builder.Services.AddScoped<IClaimDefinitionService, ClaimDefinitionService>();
 
 
             builder.Services.Configure<RedisConfig>(builder.Configuration.GetSection("RedisConfig")); 

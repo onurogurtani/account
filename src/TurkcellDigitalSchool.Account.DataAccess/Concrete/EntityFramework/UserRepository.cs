@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
@@ -66,9 +64,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
             return userEntity;
         }
 
-
-
-
+         
         public List<OperationClaim> GetClaims(long userId)
         {
             var claims = (from user in Context.Users
@@ -138,66 +134,10 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
             var result = claims
                  .Select(s => new OperationClaim { Name = s.ClaimName }).ToList();
 
-            return result;
-
-
-            //                                      {
-            //                                          operationClaim.Name
-            //                                      }).            //var result = (from user in Context.Users // Admin Types
-            //              join adminTypeGroup in Context.AdminTypeGroups on  (long?)user.AdminTypeEnum equals adminTypeGroup.AdminTypeId
-            //              join userGroup in Context.Groups on adminTypeGroup.GroupId equals userGroup.Id
-            //              join groupClaim in Context.GroupClaims on userGroup.Id equals groupClaim.GroupId
-            //              join operationClaim in Context.OperationClaims on groupClaim.OperationClaimId equals operationClaim.Id
-            //              where user.Id == userId
-            //              select new
-            //              {
-            //                  operationClaim.Name
-            //              })
-            //                    .Union(from user in Context.Users // User Types
-            //                           join userTypeGroup in Context.UserTypeGroups on (long?)user.UserTypeEnum equals userTypeGroup.UserTypeId
-            //                           join userGroup in Context.Groups on userTypeGroup.GroupId equals userGroup.Id
-            //                           join groupClaim in Context.GroupClaims on userGroup.Id equals groupClaim.GroupId
-            //                           join operationClaim in Context.OperationClaims on groupClaim.OperationClaimId equals operationClaim.Id
-            //                           where user.Id == userId
-            //                           select new
-            //                           {
-            //                               operationClaim.Name
-            //                           }).
-            //                          Union(from user in Context.Users // UserGroups
-            //                                join userGroup in Context.UserGroups on user.Id equals userGroup.UserId
-            //                                join groupClaim in Context.GroupClaims on userGroup.GroupId equals groupClaim.GroupId
-            //                                join operationClaim in Context.OperationClaims on groupClaim.OperationClaimId equals operationClaim.Id
-            //                                where user.Id == userId
-            //                                select new
-            //                                {
-            //                                    operationClaim.Name
-            //                                }).
-            //                                Union(from user in Context.Users // UserPackages
-            //                                      join userPackage in Context.UserPackages on user.Id equals userPackage.UserId
-            //                                      join packageGroup in Context.PackageGroups on userPackage.PackageId equals packageGroup.PackageId
-            //                                      join groupClaim in Context.GroupClaims on packageGroup.GroupId equals groupClaim.GroupId
-            //                                      join operationClaim in Context.OperationClaims on groupClaim.OperationClaimId equals operationClaim.Id
-            //                                      where user.Id == userId
-            //                                      select new
-            //                                        Union(from user in Context.Users // UserClaims
-            //                                              join userClaim in Context.UserClaims on user.Id equals userClaim.UserId
-            //                                              join operationClaim in Context.OperationClaims on userClaim.OperationClaimId equals operationClaim.Id
-            //                                              where user.Id == userId
-            //                                              select new
-            //                                              {
-            //                                                  operationClaim.Name
-            //                                              });
-
-            //return result.Select(x => new OperationClaim { Name = x.Name }).Distinct().ToList();
-            return new();
+            return result; 
         }
 
-        public bool HasClaim(long userId, string claimName)
-        {
-            return Context.Users.Include(i => i.UserRoles).ThenInclude(i => i.Role).ThenInclude(i => i.RoleClaims)
-                  .Any(a => a.Id == userId &&
-                            a.UserRoles.Any(aa => aa.Role.RoleClaims.Any(aaa => aaa.ClaimName == claimName)));
-        }
+     
 
         public async Task ResetFailLoginOtpCount(long userId)
         {
