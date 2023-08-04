@@ -33,6 +33,7 @@ using TurkcellDigitalSchool.Core.Integration.Type;
 using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Redis.Contract;
 using TurkcellDigitalSchool.Core.Services.CustomMessgeHelperService;
+using TurkcellDigitalSchool.Core.Services.EuroMessageService;
 using TurkcellDigitalSchool.Core.Services.KpsService;
 using TurkcellDigitalSchool.Core.Services.SMS;
 using TurkcellDigitalSchool.Core.Services.SMS.Turkcell;
@@ -92,6 +93,7 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddScoped<ITransactionManager, AccountDbTransactionManagerSvc>();
             services.AddScoped<IClaimDefinitionService, ClaimDefinitionService>();
             services.AddScoped<ISendSms,SendSms>();
+            services.AddTransient<IEuroMessageServices, EuroMessageServices>();
             services.AddAutoMapper( Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
