@@ -10,8 +10,12 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "account");
+
             migrationBuilder.CreateTable(
                 name: "ApiResources",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -35,6 +39,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ApiScopes",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -58,6 +63,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "Clients",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -116,6 +122,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "IdentityProviders",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -137,6 +144,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "IdentityResources",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -159,6 +167,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ApiResourceClaims",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -172,6 +181,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "fk_apiresourceclaims_apiresources_apiresourceid",
                         column: x => x.apiresourceid,
+                        principalSchema: "account",
                         principalTable: "ApiResources",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -179,6 +189,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ApiResourceProperties",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -193,6 +204,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "fk_apiresourceproperties_apiresources_apiresourceid",
                         column: x => x.apiresourceid,
+                        principalSchema: "account",
                         principalTable: "ApiResources",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -200,6 +212,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ApiResourceScopes",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -213,6 +226,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "fk_apiresourcescopes_apiresources_apiresourceid",
                         column: x => x.apiresourceid,
+                        principalSchema: "account",
                         principalTable: "ApiResources",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -220,6 +234,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ApiResourceSecrets",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -237,6 +252,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "fk_apiresourcesecrets_apiresources_apiresourceid",
                         column: x => x.apiresourceid,
+                        principalSchema: "account",
                         principalTable: "ApiResources",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -244,6 +260,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ApiScopeClaims",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -257,6 +274,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "fk_apiscopeclaims_apiscopes_scopeid",
                         column: x => x.scopeid,
+                        principalSchema: "account",
                         principalTable: "ApiScopes",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -264,6 +282,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ApiScopeProperties",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -278,6 +297,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "fk_apiscopeproperties_apiscopes_scopeid",
                         column: x => x.scopeid,
+                        principalSchema: "account",
                         principalTable: "ApiScopes",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -285,6 +305,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ClientClaims",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -299,6 +320,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "fk_clientclaims_clients_clientid",
                         column: x => x.clientid,
+                        principalSchema: "account",
                         principalTable: "Clients",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -306,6 +328,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ClientCorsOrigins",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -319,6 +342,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "fk_clientcorsorigins_clients_clientid",
                         column: x => x.clientid,
+                        principalSchema: "account",
                         principalTable: "Clients",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -326,6 +350,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ClientGrantTypes",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -339,6 +364,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "fk_clientgranttypes_clients_clientid",
                         column: x => x.clientid,
+                        principalSchema: "account",
                         principalTable: "Clients",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -346,6 +372,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ClientIdPRestrictions",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -359,6 +386,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "fk_clientidprestrictions_clients_clientid",
                         column: x => x.clientid,
+                        principalSchema: "account",
                         principalTable: "Clients",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -366,6 +394,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ClientPostLogoutRedirectUris",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -379,6 +408,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "fk_clientpostlogoutredirecturis_clients_clientid",
                         column: x => x.clientid,
+                        principalSchema: "account",
                         principalTable: "Clients",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -386,6 +416,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ClientProperties",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -400,6 +431,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "fk_clientproperties_clients_clientid",
                         column: x => x.clientid,
+                        principalSchema: "account",
                         principalTable: "Clients",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -407,6 +439,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ClientRedirectUris",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -420,6 +453,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "fk_clientredirecturis_clients_clientid",
                         column: x => x.clientid,
+                        principalSchema: "account",
                         principalTable: "Clients",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -427,6 +461,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ClientScopes",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -440,6 +475,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "fk_clientscopes_clients_clientid",
                         column: x => x.clientid,
+                        principalSchema: "account",
                         principalTable: "Clients",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -447,6 +483,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ClientSecrets",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -464,6 +501,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "fk_clientsecrets_clients_clientid",
                         column: x => x.clientid,
+                        principalSchema: "account",
                         principalTable: "Clients",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -471,6 +509,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "IdentityResourceClaims",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -484,6 +523,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "fk_identityresourceclaims_identityresources_identityresourceid",
                         column: x => x.identityresourceid,
+                        principalSchema: "account",
                         principalTable: "IdentityResources",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -491,6 +531,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "IdentityResourceProperties",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -505,6 +546,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "fk_identityresourceproperties_identityresources_identityresour~",
                         column: x => x.identityresourceid,
+                        principalSchema: "account",
                         principalTable: "IdentityResources",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -512,130 +554,152 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
 
             migrationBuilder.CreateIndex(
                 name: "ix_apiresourceclaims_apiresourceid_type",
+                schema: "account",
                 table: "ApiResourceClaims",
                 columns: new[] { "apiresourceid", "type" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_apiresourceproperties_apiresourceid_key",
+                schema: "account",
                 table: "ApiResourceProperties",
                 columns: new[] { "apiresourceid", "key" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_apiresources_name",
+                schema: "account",
                 table: "ApiResources",
                 column: "name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_apiresourcescopes_apiresourceid_scope",
+                schema: "account",
                 table: "ApiResourceScopes",
                 columns: new[] { "apiresourceid", "scope" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_apiresourcesecrets_apiresourceid",
+                schema: "account",
                 table: "ApiResourceSecrets",
                 column: "apiresourceid");
 
             migrationBuilder.CreateIndex(
                 name: "ix_apiscopeclaims_scopeid_type",
+                schema: "account",
                 table: "ApiScopeClaims",
                 columns: new[] { "scopeid", "type" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_apiscopeproperties_scopeid_key",
+                schema: "account",
                 table: "ApiScopeProperties",
                 columns: new[] { "scopeid", "key" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_apiscopes_name",
+                schema: "account",
                 table: "ApiScopes",
                 column: "name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_clientclaims_clientid_type_value",
+                schema: "account",
                 table: "ClientClaims",
                 columns: new[] { "clientid", "type", "value" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_clientcorsorigins_clientid_origin",
+                schema: "account",
                 table: "ClientCorsOrigins",
                 columns: new[] { "clientid", "origin" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_clientgranttypes_clientid_granttype",
+                schema: "account",
                 table: "ClientGrantTypes",
                 columns: new[] { "clientid", "granttype" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_clientidprestrictions_clientid_provider",
+                schema: "account",
                 table: "ClientIdPRestrictions",
                 columns: new[] { "clientid", "provider" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_clientpostlogoutredirecturis_clientid_postlogoutredirecturi",
+                schema: "account",
                 table: "ClientPostLogoutRedirectUris",
                 columns: new[] { "clientid", "postlogoutredirecturi" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_clientproperties_clientid_key",
+                schema: "account",
                 table: "ClientProperties",
                 columns: new[] { "clientid", "key" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_clientredirecturis_clientid_redirecturi",
+                schema: "account",
                 table: "ClientRedirectUris",
                 columns: new[] { "clientid", "redirecturi" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_clients_clientid",
+                schema: "account",
                 table: "Clients",
                 column: "clientid",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_clientscopes_clientid_scope",
+                schema: "account",
                 table: "ClientScopes",
                 columns: new[] { "clientid", "scope" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_clientsecrets_clientid",
+                schema: "account",
                 table: "ClientSecrets",
                 column: "clientid");
 
             migrationBuilder.CreateIndex(
                 name: "ix_identityproviders_scheme",
+                schema: "account",
                 table: "IdentityProviders",
                 column: "scheme",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_identityresourceclaims_identityresourceid_type",
+                schema: "account",
                 table: "IdentityResourceClaims",
                 columns: new[] { "identityresourceid", "type" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_identityresourceproperties_identityresourceid_key",
+                schema: "account",
                 table: "IdentityResourceProperties",
                 columns: new[] { "identityresourceid", "key" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_identityresources_name",
+                schema: "account",
                 table: "IdentityResources",
                 column: "name",
                 unique: true);
@@ -644,70 +708,92 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ApiResourceClaims");
+                name: "ApiResourceClaims",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "ApiResourceProperties");
+                name: "ApiResourceProperties",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "ApiResourceScopes");
+                name: "ApiResourceScopes",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "ApiResourceSecrets");
+                name: "ApiResourceSecrets",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "ApiScopeClaims");
+                name: "ApiScopeClaims",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "ApiScopeProperties");
+                name: "ApiScopeProperties",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "ClientClaims");
+                name: "ClientClaims",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "ClientCorsOrigins");
+                name: "ClientCorsOrigins",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "ClientGrantTypes");
+                name: "ClientGrantTypes",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "ClientIdPRestrictions");
+                name: "ClientIdPRestrictions",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "ClientPostLogoutRedirectUris");
+                name: "ClientPostLogoutRedirectUris",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "ClientProperties");
+                name: "ClientProperties",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "ClientRedirectUris");
+                name: "ClientRedirectUris",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "ClientScopes");
+                name: "ClientScopes",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "ClientSecrets");
+                name: "ClientSecrets",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "IdentityProviders");
+                name: "IdentityProviders",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "IdentityResourceClaims");
+                name: "IdentityResourceClaims",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "IdentityResourceProperties");
+                name: "IdentityResourceProperties",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "ApiResources");
+                name: "ApiResources",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "ApiScopes");
+                name: "ApiScopes",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "Clients");
+                name: "Clients",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "IdentityResources");
+                name: "IdentityResources",
+                schema: "account");
         }
     }
 }

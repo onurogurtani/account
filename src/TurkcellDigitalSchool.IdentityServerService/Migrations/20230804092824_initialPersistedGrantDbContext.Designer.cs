@@ -12,13 +12,14 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace TurkcellDigitalSchool.IdentityServerService.Migrations
 {
     [DbContext(typeof(PersistedGrantDbContext))]
-    [Migration("20230510200258_initialPersistedGrantDbContext")]
+    [Migration("20230804092824_initialPersistedGrantDbContext")]
     partial class initialPersistedGrantDbContext
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("account")
                 .HasAnnotation("ProductVersion", "6.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -83,7 +84,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                     b.HasIndex("Expiration")
                         .HasDatabaseName("ix_devicecodes_expiration");
 
-                    b.ToTable("DeviceCodes", (string)null);
+                    b.ToTable("DeviceCodes", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.Key", b =>
@@ -129,7 +130,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                     b.HasIndex("Use")
                         .HasDatabaseName("ix_keys_use");
 
-                    b.ToTable("Keys", (string)null);
+                    b.ToTable("Keys", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.PersistedGrant", b =>
@@ -210,7 +211,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                     b.HasIndex("SubjectId", "SessionId", "Type")
                         .HasDatabaseName("ix_persistedgrants_subjectid_sessionid_type");
 
-                    b.ToTable("PersistedGrants", (string)null);
+                    b.ToTable("PersistedGrants", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ServerSideSession", b =>
@@ -286,7 +287,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
                     b.HasIndex("SubjectId")
                         .HasDatabaseName("ix_serversidesessions_subjectid");
 
-                    b.ToTable("ServerSideSessions", (string)null);
+                    b.ToTable("ServerSideSessions", "account");
                 });
 #pragma warning restore 612, 618
         }
