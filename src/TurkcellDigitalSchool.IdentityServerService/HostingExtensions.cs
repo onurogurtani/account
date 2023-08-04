@@ -14,6 +14,7 @@ using TurkcellDigitalSchool.Core.AuthorityManagement.Services.Abstract;
 using TurkcellDigitalSchool.Core.Configure;
 using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Redis.Contract;
+using TurkcellDigitalSchool.Core.Services.EuroMessageService;
 using TurkcellDigitalSchool.Core.Services.SMS;
 using TurkcellDigitalSchool.Core.Services.SMS.Turkcell;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
@@ -58,6 +59,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
             builder.Services.AddTransient<ILoginFailForgetPassSendLinkRepository, LoginFailForgetPassSendLinkRepository>();
             builder.Services.AddTransient<IMailService, MailManager>();
             builder.Services.AddScoped<ISendSms, SendSms>();
+            builder.Services.AddTransient<IEuroMessageServices, EuroMessageServices>();
             builder.Services.AddScoped<IClaimDefinitionService, ClaimDefinitionService>();
 
 
