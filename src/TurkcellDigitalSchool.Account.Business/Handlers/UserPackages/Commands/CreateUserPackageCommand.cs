@@ -44,7 +44,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Commands
                     var examKind = await _userPackageRepository.Query().Where(x => x.PackageId == record.PackageId).Select(x => x.Package.ExamKind).FirstOrDefaultAsync();
                     if (examKind == ExamKind.LGS)
                     {
-                        await _capPublisher.PublishAsync("addUserLgsNetGoalRequest", new AddUserLgsNetGoalDto { UserId = record.UserId }, cancellationToken: cancellationToken);
+                        await _capPublisher.PublishAsync(SubServiceConst.ADD_USERLGSNETGOAL_REQUEST, new AddUserLgsNetGoalDto { UserId = record.UserId }, cancellationToken: cancellationToken);
                     }
                     else if (examKind == ExamKind.TYT || examKind == ExamKind.AYT || examKind == ExamKind.YKS)
                     {
