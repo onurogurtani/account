@@ -20,7 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.ValidationRules
         private static string IsInEnumValue = Messages.IsInEnumValue;
         public CreateRoleValidator()
         {
-            RuleFor(x => x.Role.Name).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Ýsim" })).Length(2, 100).WithMessage(NumberMustBeCharacterLength.PrepareRedisMessage(messageParameters: new object[] { "2", "100" })).Matches("^[a-zA-Z0-9()ýðüþöçÝÐÜÞÖÇ ]*$").WithMessage(MustBeOnlyletter.PrepareRedisMessage(messageParameters: new object[] { "Ýsim" }));
+            RuleFor(x => x.Role.Name).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Ýsim" })).Length(2, 100).WithMessage(NumberMustBeCharacterLength.PrepareRedisMessage(messageParameters: new object[] { "2", "100" })).Matches("^[a-zA-Z0-9ýðüþöçÝÐÜÞÖÇ() ]*$").WithMessage(MustBeOnlyletter.PrepareRedisMessage(messageParameters: new object[] { "Ýsim" }));
             RuleFor(x => x.Role.UserType).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Kullanýcý Tipi" })).IsInEnum().WithMessage(IsInEnumValue);
             RuleFor(x => x.Role.RoleClaims).NotEmpty().Must(x => x.Count > 0).WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Rol Yetki" }));
         }
@@ -40,7 +40,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.ValidationRules
         public UpdateRoleValidator()
         {
             RuleFor(x => x.Role.Id).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Id" }));
-            RuleFor(x => x.Role.Name).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Ýsim" })).Length(2, 100).WithMessage(NumberMustBeCharacterLength.PrepareRedisMessage(messageParameters: new object[] { "2", "100" })).Matches("^[a-zA-Z0-9()ýðüþöçÝÐÜÞÖÇ ]*$").WithMessage(MustBeOnlyletter.PrepareRedisMessage(messageParameters: new object[] { "Ýsim" }));
+            RuleFor(x => x.Role.Name).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Ýsim" })).Length(2, 100).WithMessage(NumberMustBeCharacterLength.PrepareRedisMessage(messageParameters: new object[] { "2", "100" })).Matches("^[a-zA-Z0-9ýðüþöçÝÐÜÞÖÇ() ]*$").WithMessage(MustBeOnlyletter.PrepareRedisMessage(messageParameters: new object[] { "Ýsim" }));
             RuleFor(x => x.Role.UserType).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Kullanýcý Tipi" })).IsInEnum().WithMessage(IsInEnumValue);
             RuleFor(x => x.Role.RoleClaims).NotEmpty().Must(x => x.Count > 0).WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Rol Yetki" }));
         }
@@ -58,7 +58,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Roles.ValidationRules
         public RoleCopyValidator()
         {
             RuleFor(x => x.RoleId).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Id" }));
-            RuleFor(x => x.RoleName).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Ýsim" })).Length(2, 100).WithMessage(NumberMustBeCharacterLength.PrepareRedisMessage(messageParameters: new object[] { "2", "100" })).Matches("^[a-zA-Z0-9()ýðüþöçÝÐÜÞÖÇ ]*$").WithMessage(MustBeOnlyletter.PrepareRedisMessage(messageParameters: new object[] { "Ýsim" }));
+            RuleFor(x => x.RoleName).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Ýsim" })).Length(2, 100).WithMessage(NumberMustBeCharacterLength.PrepareRedisMessage(messageParameters: new object[] { "2", "100" })).Matches("^[a-zA-Z0-9ýðüþöçÝÐÜÞÖÇ() ]*$").WithMessage(MustBeOnlyletter.PrepareRedisMessage(messageParameters: new object[] { "Ýsim" }));
         }
     }
 }
