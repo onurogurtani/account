@@ -117,32 +117,32 @@ namespace TurkcellDigitalSchool.Account.Container
                     break;
                 case ApplicationMode.DEVTURKCELL:
                     {
-                        using (var scope = app.ApplicationServices.CreateScope())
-                        {
-                            var services = scope.ServiceProvider;
-                            var context = services.GetRequiredService<AccountDbContext>();
-                            context.Database.Migrate();
-                        } 
+                        //using (var scope = app.ApplicationServices.CreateScope())
+                        //{
+                        //    var services = scope.ServiceProvider;
+                        //    var context = services.GetRequiredService<AccountDbContext>();
+                        //    context.Database.Migrate();
+                        //} 
                         break;
                     }
                 case ApplicationMode.STBTURKCELL:
                     {
-                        using (var scope = app.ApplicationServices.CreateScope())
-                        {
-                            var services = scope.ServiceProvider;
-                            var context = services.GetRequiredService<AccountDbContext>();
-                            context.Database.Migrate();
-                        } 
+                        //using (var scope = app.ApplicationServices.CreateScope())
+                        //{
+                        //    var services = scope.ServiceProvider;
+                        //    var context = services.GetRequiredService<AccountDbContext>();
+                        //    context.Database.Migrate();
+                        //} 
                         break;
                     }
                 case ApplicationMode.ALPHATURKCELL:
                     {
-                        using (var scope = app.ApplicationServices.CreateScope())
-                        {
-                            var services = scope.ServiceProvider;
-                            var context = services.GetRequiredService<AccountDbContext>();
-                            context.Database.Migrate();
-                        }
+                        //using (var scope = app.ApplicationServices.CreateScope())
+                        //{
+                        //    var services = scope.ServiceProvider;
+                        //    var context = services.GetRequiredService<AccountDbContext>();
+                        //    context.Database.Migrate();
+                        //}
                         break;
                     }
             }
