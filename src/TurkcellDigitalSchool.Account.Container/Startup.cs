@@ -146,12 +146,12 @@ namespace TurkcellDigitalSchool.Account.Container
                 }
                 case ApplicationMode.ALPHATURKCELL:
                     {
-                        using (var scope = app.ApplicationServices.CreateScope())
-                        {
-                            var services = scope.ServiceProvider;
-                            var context = services.GetRequiredService<AccountDbContext>();
-                            context.Database.Migrate();
-                        }
+                        //using (var scope = app.ApplicationServices.CreateScope())
+                        //{
+                        //    var services = scope.ServiceProvider;
+                        //    var context = services.GetRequiredService<AccountDbContext>();
+                        //    context.Database.Migrate();
+                        //}
                         break;
                     }
             }
