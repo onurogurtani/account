@@ -104,8 +104,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                 _userRepository.Add(user);
                 await _userRepository.SaveChangesAsync();
 
-                var link = _configuration.GetSection("PathSetting").GetSection("UserLink").Value;
-                var messageContent = string.Format(UserInformations, request.Name, request.SurName, randomPassword, link);
+                var messageContent = string.Format(UserInformations, request.Email, randomPassword);
 
                 await _mailService.Send(new EmailMessage
                 {

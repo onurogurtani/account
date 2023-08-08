@@ -55,7 +55,7 @@ namespace TurkcellDigitalSchool.Account.Business.Constants
         public static string SuccessfulOperation = "İşleminiz Başarıyla Gerçekleştirildi.";
         public static string ParameterIsNotValid = "Gönderilen parametre gecerli değil";
         public static string UserInformations = "Kullanıcı adınız: {0} {1} \nŞifreniz: {2} şeklinde belirlenmiştir. {3} linki üzerinden sisteme giriş yapabilirsiniz.";
-        public static string NewUserMessage = "Giriş Bilgileriniz:\ne-posta: {0} \nŞifreniz: {2} \nşeklinde belirlenmiştir.";
+        public static string NewUserMessage = "Giriş Bilgileriniz:\ne-posta: {0} \nŞifreniz: {1} \nşeklinde belirlenmiştir.";
         public static string NewUserSubject = "Yeni Üyelik";
         public static string LogoPathIsNotDefined = "Logonun kayıt edileceği path bilgisi uygulama ayarlarında tanımlı değil";
         public static string NumberMustBe10Digit = "10 karakter uzunluğunda olmalıdır !";
