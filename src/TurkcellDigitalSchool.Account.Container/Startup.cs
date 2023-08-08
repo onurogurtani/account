@@ -29,6 +29,7 @@ using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.Exam.Business.Handlers.TestExams.Commands; 
 using TurkcellDigitalSchool.Account.Business.SeedData;
+using TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands;
 
 namespace TurkcellDigitalSchool.Account.Container
 {
@@ -212,6 +213,9 @@ namespace TurkcellDigitalSchool.Account.Container
 
             RecurringJob.AddOrUpdate<HangfireJobSender>("BirthDayn_Notification_Routine",
             job => job.Send(new BirthDayNotificationCommand()), Cron.DayInterval(1));
+
+            RecurringJob.AddOrUpdate<HangfireJobSender>("SetPassive_ExpiredDocument_Routine",
+            job => job.Send(new SetPassiveExpiredDocumentCommand()), Cron.Hourly());
 
         }
     }
