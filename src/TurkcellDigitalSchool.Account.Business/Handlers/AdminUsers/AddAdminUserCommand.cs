@@ -34,7 +34,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
         public string SurName { get; set; }
         public string UserName { get; set; }
 
-        [MessageClassAttr("Kullanıcı Ekleme")]
+        [MessageClassAttr("Kullanıcİ Ekleme")]
         public class AddAdminUserCommandHandler : IRequestHandler<AddAdminUserCommand, IDataResult<SelectionItem>>
         {
             private readonly IUserRepository _userRepository;

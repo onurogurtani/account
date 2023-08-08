@@ -50,7 +50,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 {
                     return new ErrorResult(Messages.InvalidOtp);
                 }
-                if (unverifiedUser.VerificationKeyLastTime < DateTime.Now)
+                if (unverifiedUser.VerificationKeyLastTime < DateTime.UtcNow)
                 {
                     return new ErrorResult(Messages.OtpTimeOut);
                 }
