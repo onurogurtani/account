@@ -30,6 +30,16 @@
       "applicationUrl": "https://localhost:6001",
       "dotnetRunMessages": true
     },
+    "TurkcellDigitalSchool.Api.PRPTURKCELL": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "PRPTURKCELL"
+      },
+      "applicationUrl": "https://localhost:6001",
+      "dotnetRunMessages": true
+    },
     "TurkcellDigitalSchool.Api.ALPHATURKCELL": {
       "commandName": "Project",
       "launchBrowser": true,

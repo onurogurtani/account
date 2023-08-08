@@ -17,6 +17,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("account")
                 .HasAnnotation("ProductVersion", "6.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -87,7 +88,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_apiresources_name");
 
-                    b.ToTable("ApiResources", (string)null);
+                    b.ToTable("ApiResources", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiResourceClaim", b =>
@@ -116,7 +117,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_apiresourceclaims_apiresourceid_type");
 
-                    b.ToTable("ApiResourceClaims", (string)null);
+                    b.ToTable("ApiResourceClaims", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiResourceProperty", b =>
@@ -151,7 +152,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_apiresourceproperties_apiresourceid_key");
 
-                    b.ToTable("ApiResourceProperties", (string)null);
+                    b.ToTable("ApiResourceProperties", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiResourceScope", b =>
@@ -180,7 +181,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_apiresourcescopes_apiresourceid_scope");
 
-                    b.ToTable("ApiResourceScopes", (string)null);
+                    b.ToTable("ApiResourceScopes", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiResourceSecret", b =>
@@ -227,7 +228,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                     b.HasIndex("ApiResourceId")
                         .HasDatabaseName("ix_apiresourcesecrets_apiresourceid");
 
-                    b.ToTable("ApiResourceSecrets", (string)null);
+                    b.ToTable("ApiResourceSecrets", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiScope", b =>
@@ -294,7 +295,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_apiscopes_name");
 
-                    b.ToTable("ApiScopes", (string)null);
+                    b.ToTable("ApiScopes", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiScopeClaim", b =>
@@ -323,7 +324,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_apiscopeclaims_scopeid_type");
 
-                    b.ToTable("ApiScopeClaims", (string)null);
+                    b.ToTable("ApiScopeClaims", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiScopeProperty", b =>
@@ -358,7 +359,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_apiscopeproperties_scopeid_key");
 
-                    b.ToTable("ApiScopeProperties", (string)null);
+                    b.ToTable("ApiScopeProperties", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.Client", b =>
@@ -575,7 +576,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_clients_clientid");
 
-                    b.ToTable("Clients", (string)null);
+                    b.ToTable("Clients", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ClientClaim", b =>
@@ -610,7 +611,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_clientclaims_clientid_type_value");
 
-                    b.ToTable("ClientClaims", (string)null);
+                    b.ToTable("ClientClaims", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ClientCorsOrigin", b =>
@@ -639,7 +640,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_clientcorsorigins_clientid_origin");
 
-                    b.ToTable("ClientCorsOrigins", (string)null);
+                    b.ToTable("ClientCorsOrigins", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ClientGrantType", b =>
@@ -668,7 +669,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_clientgranttypes_clientid_granttype");
 
-                    b.ToTable("ClientGrantTypes", (string)null);
+                    b.ToTable("ClientGrantTypes", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ClientIdPRestriction", b =>
@@ -697,7 +698,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_clientidprestrictions_clientid_provider");
 
-                    b.ToTable("ClientIdPRestrictions", (string)null);
+                    b.ToTable("ClientIdPRestrictions", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ClientPostLogoutRedirectUri", b =>
@@ -726,7 +727,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_clientpostlogoutredirecturis_clientid_postlogoutredirecturi");
 
-                    b.ToTable("ClientPostLogoutRedirectUris", (string)null);
+                    b.ToTable("ClientPostLogoutRedirectUris", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ClientProperty", b =>
@@ -761,7 +762,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_clientproperties_clientid_key");
 
-                    b.ToTable("ClientProperties", (string)null);
+                    b.ToTable("ClientProperties", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ClientRedirectUri", b =>
@@ -790,7 +791,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_clientredirecturis_clientid_redirecturi");
 
-                    b.ToTable("ClientRedirectUris", (string)null);
+                    b.ToTable("ClientRedirectUris", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ClientScope", b =>
@@ -819,7 +820,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_clientscopes_clientid_scope");
 
-                    b.ToTable("ClientScopes", (string)null);
+                    b.ToTable("ClientScopes", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ClientSecret", b =>
@@ -866,7 +867,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                     b.HasIndex("ClientId")
                         .HasDatabaseName("ix_clientsecrets_clientid");
 
-                    b.ToTable("ClientSecrets", (string)null);
+                    b.ToTable("ClientSecrets", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.IdentityProvider", b =>
@@ -926,7 +927,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_identityproviders_scheme");
 
-                    b.ToTable("IdentityProviders", (string)null);
+                    b.ToTable("IdentityProviders", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.IdentityResource", b =>
@@ -989,7 +990,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_identityresources_name");
 
-                    b.ToTable("IdentityResources", (string)null);
+                    b.ToTable("IdentityResources", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.IdentityResourceClaim", b =>
@@ -1018,7 +1019,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_identityresourceclaims_identityresourceid_type");
 
-                    b.ToTable("IdentityResourceClaims", (string)null);
+                    b.ToTable("IdentityResourceClaims", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.IdentityResourceProperty", b =>
@@ -1053,7 +1054,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations.ConfigurationDb
                         .IsUnique()
                         .HasDatabaseName("ix_identityresourceproperties_identityresourceid_key");
 
-                    b.ToTable("IdentityResourceProperties", (string)null);
+                    b.ToTable("IdentityResourceProperties", "account");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiResourceClaim", b =>

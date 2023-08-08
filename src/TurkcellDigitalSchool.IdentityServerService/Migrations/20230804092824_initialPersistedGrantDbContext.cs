@@ -10,8 +10,12 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "account");
+
             migrationBuilder.CreateTable(
                 name: "DeviceCodes",
+                schema: "account",
                 columns: table => new
                 {
                     usercode = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
@@ -31,6 +35,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Keys",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<string>(type: "text", nullable: false),
@@ -49,6 +54,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
 
             migrationBuilder.CreateTable(
                 name: "PersistedGrants",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
@@ -71,6 +77,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
 
             migrationBuilder.CreateTable(
                 name: "ServerSideSessions",
+                schema: "account",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -92,69 +99,82 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "ix_devicecodes_devicecode",
+                schema: "account",
                 table: "DeviceCodes",
                 column: "devicecode",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_devicecodes_expiration",
+                schema: "account",
                 table: "DeviceCodes",
                 column: "expiration");
 
             migrationBuilder.CreateIndex(
                 name: "ix_keys_use",
+                schema: "account",
                 table: "Keys",
                 column: "use");
 
             migrationBuilder.CreateIndex(
                 name: "ix_persistedgrants_consumedtime",
+                schema: "account",
                 table: "PersistedGrants",
                 column: "consumedtime");
 
             migrationBuilder.CreateIndex(
                 name: "ix_persistedgrants_expiration",
+                schema: "account",
                 table: "PersistedGrants",
                 column: "expiration");
 
             migrationBuilder.CreateIndex(
                 name: "ix_persistedgrants_key",
+                schema: "account",
                 table: "PersistedGrants",
                 column: "key",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_persistedgrants_subjectid_clientid_type",
+                schema: "account",
                 table: "PersistedGrants",
                 columns: new[] { "subjectid", "clientid", "type" });
 
             migrationBuilder.CreateIndex(
                 name: "ix_persistedgrants_subjectid_sessionid_type",
+                schema: "account",
                 table: "PersistedGrants",
                 columns: new[] { "subjectid", "sessionid", "type" });
 
             migrationBuilder.CreateIndex(
                 name: "ix_serversidesessions_displayname",
+                schema: "account",
                 table: "ServerSideSessions",
                 column: "displayname");
 
             migrationBuilder.CreateIndex(
                 name: "ix_serversidesessions_expires",
+                schema: "account",
                 table: "ServerSideSessions",
                 column: "expires");
 
             migrationBuilder.CreateIndex(
                 name: "ix_serversidesessions_key",
+                schema: "account",
                 table: "ServerSideSessions",
                 column: "key",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_serversidesessions_sessionid",
+                schema: "account",
                 table: "ServerSideSessions",
                 column: "sessionid");
 
             migrationBuilder.CreateIndex(
                 name: "ix_serversidesessions_subjectid",
+                schema: "account",
                 table: "ServerSideSessions",
                 column: "subjectid");
         }
@@ -162,16 +182,20 @@ namespace TurkcellDigitalSchool.IdentityServerService.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DeviceCodes");
+                name: "DeviceCodes",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "Keys");
+                name: "Keys",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "PersistedGrants");
+                name: "PersistedGrants",
+                schema: "account");
 
             migrationBuilder.DropTable(
-                name: "ServerSideSessions");
+                name: "ServerSideSessions",
+                schema: "account");
         }
     }
 }
