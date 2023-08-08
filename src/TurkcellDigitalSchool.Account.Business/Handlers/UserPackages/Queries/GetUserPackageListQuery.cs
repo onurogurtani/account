@@ -39,17 +39,17 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
                 using (var connection = new NpgsqlConnection(connectionString))
                 {
                     connection.Open();
-                    var CommandText = $"with recursive cte as ( select  st.*, 1 lvl from  (select p.id packageid , 0 parentid, p.packagetypeenum from public.package  p where p.finishdate > '" + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "' "
-                   + " union all  select pt.testexampackageid packageid, pt.packageid parentid, 0 from  public.packagetestexampackage pt"
-                   + " union all  select ptm.motivationactivitypackageid packageid , ptm.packageid parentid, 0 from  public.packagemotivationactivitypackage ptm"
-                   + " union all  select ptc.coachservicepackageid packageid   , ptc.packageid parentid, 0 from  public.packagecoachservicepackages ptc ) st where exists"
-                   + " (select* from userpackage up where up.packageid = st.packageid and up.userid =" + userId + ")"
-                   + " union all  select stt.*, c.lvl +1  from  (select p.id packageid, 0 parentid, p.packagetypeenum from public.package p"
-                   + " union all  select pt.testexampackageid packageid , pt.packageid parentid, 0 from  public.packagetestexampackage pt"
-                   + " union all  select ptm.motivationactivitypackageid packageid , ptm.packageid parentid, 0 from  public.packagemotivationactivitypackage ptm"
-                   + " union all  select ptc.coachservicepackageid packageid   , ptc.packageid parentid, 0 from  public.packagecoachservicepackages ptc ) stt"
+                    var CommandText = $"with recursive cte as ( select  st.*, 1 lvl from  (select p.id packageid , 0 parentid, p.packagetypeenum from account.package  p where p.finishdate > '" + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "' "
+                   + " union all  select pt.testexampackageid packageid, pt.packageid parentid, 0 from  account.packagetestexampackage pt"
+                   + " union all  select ptm.motivationactivitypackageid packageid , ptm.packageid parentid, 0 from  account.packagemotivationactivitypackage ptm"
+                   + " union all  select ptc.coachservicepackageid packageid   , ptc.packageid parentid, 0 from  account.packagecoachservicepackages ptc ) st where exists"
+                   + " (select* from account.userpackage up where up.packageid = st.packageid and up.userid =" + userId + ")"
+                   + " union all  select stt.*, c.lvl +1  from  (select p.id packageid, 0 parentid, p.packagetypeenum from account.package p"
+                   + " union all  select pt.testexampackageid packageid , pt.packageid parentid, 0 from  account.packagetestexampackage pt"
+                   + " union all  select ptm.motivationactivitypackageid packageid , ptm.packageid parentid, 0 from  account.packagemotivationactivitypackage ptm"
+                   + " union all  select ptc.coachservicepackageid packageid   , ptc.packageid parentid, 0 from  account.packagecoachservicepackages ptc ) stt"
                    + " inner join cte c on c.packageid = stt.parentid ) select cte.* ,p2.testexamid from cte"
-                   + " join public.packagetestexam p2 on p2.packageid = cte.packageid";
+                   + " join account.packagetestexam p2 on p2.packageid = cte.packageid";
 
                     var userPackageList = new List<GetUserTestExamPackageDto>();
 
