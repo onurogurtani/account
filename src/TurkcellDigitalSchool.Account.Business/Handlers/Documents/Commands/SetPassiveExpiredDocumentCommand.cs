@@ -36,7 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands
             public async Task<IResult> Handle(SetPassiveExpiredDocumentCommand request, CancellationToken cancellationToken)
             {
                 var entitys = await _documentRepository.Query()
-                    .Where(x => x.ValidEndDate < DateTime.Now)
+                    .Where(x => x.ValidEndDate < DateTime.UtcNow)
                     .Where(x => x.RecordStatus == RecordStatus.Active)
                     .ToListAsync();
 
