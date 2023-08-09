@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -21,13 +22,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
             private readonly IUserRepository _userRepository;
             private readonly ITokenHelper _tokenHelper;
             private readonly IStudentCoachRepository _studentCoachRepository;
+            private readonly IStudentParentInformationRepository _studentParentInformationRepository;
             private readonly ICoachLeaderCoachRepository _coachLeaderCoachRepository;
             private readonly IUserService _userService;
 
-            public GetUsersForChatQueryHandler(IUserRepository userRepository, IStudentCoachRepository studentCoachRepository, ICoachLeaderCoachRepository coachLeaderCoachRepository, ITokenHelper tokenHelper, IUserService userService)
+            public GetUsersForChatQueryHandler(IUserRepository userRepository, IStudentCoachRepository studentCoachRepository, IStudentParentInformationRepository studentParentInformationRepository, ICoachLeaderCoachRepository coachLeaderCoachRepository, ITokenHelper tokenHelper, IUserService userService)
             {
                 _userRepository = userRepository;
                 _studentCoachRepository = studentCoachRepository;
+                _studentParentInformationRepository = studentParentInformationRepository;
                 _coachLeaderCoachRepository = coachLeaderCoachRepository;
                 _tokenHelper = tokenHelper;
                 _userService = userService;
@@ -127,20 +130,24 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                                         .ToList();
                     userChats.AddRange(coachList);
 
+
+
                     var parentList = _studentCoachRepository.Query()
-                                        .Where(w => coachList.Select(s=>s.Id).Contains(w.CoachId))
-                                        .SelectMany(s => _userService.GetByStudentParentsInformation(s.UserId)
-                                                              .Select(p => new UserChatDto
-                                                              {
-                                                                  Id = p.Id,
-                                                                  Name = p.Name,
-                                                                  SurName = p.SurName,
-                                                                  AvatarId = _userRepository.Query().FirstOrDefault(w => w.Id == p.Id).AvatarId,
-                                                                  UserType = UserType.Parent
-                                                              }))
+                                         .Where(w => coachList.Select(s => s.Id).Contains(w.CoachId))
+                                         .SelectMany(s =>
+                                             _studentParentInformationRepository.Query().Include(w => w.Parent).Where(w => w.UserId == s.UserId))
+                                         .Select(p => new UserChatDto
+                                         {
+                                             Id = p.Parent.Id,
+                                             Name = p.Parent.Name,
+                                             SurName = p.Parent.SurName,
+                                             AvatarId = _userRepository.Query().FirstOrDefault(w => w.Id == p.Id) != null ? _userRepository.Query().FirstOrDefault(w => w.Id == p.Id).AvatarId : 0,
+                                             UserType = UserType.Parent
+                                         })
                                         .Distinct()
-                                        .ToList();
-                    userChats.AddRange(parentList);
+                                        .ToList(); 
+
+                   userChats.AddRange(parentList);
                 }
 
                 return new SuccessDataResult<IEnumerable<UserChatDto>>(userChats);
