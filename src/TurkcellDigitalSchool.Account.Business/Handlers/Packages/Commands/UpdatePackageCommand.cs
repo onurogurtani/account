@@ -151,6 +151,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 var packageEvents = await _packageEventRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageEventRepository.DeleteRange(packageEvents);
 
+                foreach (var item in packageEvents)
+                {
+                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Deleted), item, cancellationToken: cancellationToken);
+                }
 
 
                 entity.Name = request.Package.Name;
@@ -190,6 +194,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                     await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Added), item, cancellationToken: cancellationToken);
                 }
                 foreach (var item in record.PackageLessons)
+                {
+                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Added), item, cancellationToken: cancellationToken);
+                }
+                foreach (var item in record.PackageRoles)
+                {
+                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Added), item, cancellationToken: cancellationToken);
+                }
+                foreach (var item in record.PackageEvents)
                 {
                     await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Added), item, cancellationToken: cancellationToken);
                 }
