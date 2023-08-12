@@ -67,7 +67,10 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
          
         public List<OperationClaim> GetClaims(long userId)
         {
-            var claims = (from user in Context.Users
+
+            var userType = Context.Users.Where(w => w.Id == userId).Select(s => s.UserType).FirstOrDefault();
+            // Kullanýcýnýn sahip olduðu rollerin claimleri  
+            var claims  = (from user in Context.Users
                           join userRole in Context.UserRoles on user.Id equals userRole.UserId
                           join roleClaim in Context.RoleClaims on userRole.RoleId equals roleClaim.RoleId
                           where user.Id == userId
@@ -76,13 +79,16 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
                           {
                               roleClaim.ClaimName
                           }).Distinct().ToList();
+            //////////////////////////////////////////////////
+            
 
-
+            // Kullanýcýnýn Sahip olduðu paketlerden gelen rollerin yetkileri
             var now = DateTime.Now.Date;
-            var packageRoleIds = (from up in Context.UserPackages
-                                  join p in Context.Packages on up.Id equals p.Id
+            var packageRoleIds  =   (from up in Context.UserPackages.Where(w=>!w.IsDeleted)
+                                  join p in Context.Packages.Where(w => !w.IsDeleted && w.IsActive) on up.PackageId equals p.Id
                                   join pr in Context.PackageRoles.Where(w => !w.IsDeleted) on up.PackageId equals pr.PackageId
-                                  where p.IsActive && !up.IsDeleted && !pr.IsDeleted && p.StartDate <= now && p.FinishDate >= now
+                                  where 
+                                  up.UserId == userId &&  p.StartDate <= now && p.FinishDate >= now
                                   select pr.RoleId
                 ).ToList();
 
@@ -95,40 +101,60 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
                 .Distinct()
                 .ToList());
 
+            //////////////////////////////////////////////////
+            
+
+            claims = claims.Union(packageClaims).Distinct().ToList();
 
 
-            claims = claims.Union(packageClaims).ToList();
+            if (userType!=UserType.Student)
+            {
+                return claims
+                .Select(s => new OperationClaim { Name = s.ClaimName }).ToList();
+            }
 
-            var platformClaims = _claimDefinitionService.GetClaimDefinitions().Where(w => w.ModuleType == ModuleType.Platform);
+
+
+            var platformClaims = _claimDefinitionService.GetClaimDefinitions().Where(w => w.ModuleType == ModuleType.Platform)
+                 .Select(s => new
+                 {
+                     claimName = s.Name,
+                     selected = false
+                 }).ToList();
 
 
             var packageMenuAccessClaims = Context.PackageMenuAccesses.Where(w => Context.UserPackages.Include(i => i.Package).Any(ww => !ww.IsDeleted
                 && ww.Package.IsMenuAccessSet
                 && ww.Package.IsActive && ww.Package.StartDate <= now && ww.Package.FinishDate >= now &&
                  ww.PackageId == w.PackageId && ww.UserId == userId
-             )).Select(s => new { ClaimName = s.Claim }).Distinct().ToList();
+             )).Select(s => new {PackageId = s.PackageId , ClaimName = s.Claim }).Distinct().ToList();
+
+          
 
             if (packageMenuAccessClaims.Any())
             {
-                claims = claims.Union(packageMenuAccessClaims).ToList();
+                var packageIds = packageMenuAccessClaims.Select(s => s.PackageId).Distinct().ToList();
 
-                var unSelectedPlatformClaims = platformClaims.Select(s => new
+                foreach (var itemPackageId in packageIds)
                 {
-                    claimName = s.Name,
-                    selected = packageMenuAccessClaims.Any(a => a.ClaimName == s.Name)
-                }).ToList().Where(w => !w.selected).ToList();
+                    platformClaims = (from x in platformClaims
+                                     join y in packageMenuAccessClaims.Where(w => w.PackageId == itemPackageId) on x.claimName equals y.ClaimName into yy
+                                     from y in yy.DefaultIfEmpty()
+                                     select new
+                                     {
+                                         claimName = x.claimName,
+                                         selected = x.selected || y != null
+                                      }).ToList();
+
+                }
 
 
-                claims = claims.Where(w => unSelectedPlatformClaims.Any(a => a.claimName != w.ClaimName)).ToList();
-            }
-            else
-            {
-                var unSelectedPlatformClaims = platformClaims.Select(s => new
-                {
-                    claimName = s.Name,
-                    selected = false
-                }).ToList().Where(w => !w.selected).ToList(); 
-                claims = claims.Where(w => unSelectedPlatformClaims.Any(a => a.claimName != w.ClaimName)).ToList();
+                claims = claims.Where(w => !platformClaims.Where(ww => !ww.selected).Select(s => s.claimName).ToList().Contains(w.ClaimName)).ToList();
+
+
+                claims.AddRange(platformClaims.Where(ww => ww.selected).Select(s => new { ClaimName = s.claimName }).ToList());
+
+                claims = claims.Distinct().ToList();
             } 
 
             var result = claims
