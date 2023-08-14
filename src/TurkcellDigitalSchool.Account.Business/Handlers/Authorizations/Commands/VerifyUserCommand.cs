@@ -84,7 +84,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 {
                     _userRepository.Add(user);
                     await _userRepository.SaveChangesAsync();
-                    await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Added), user, cancellationToken: cancellationToken);
                     await _capPublisher.PublishAsync(SubServiceConst.VERIFY_USER_REQUEST, new { userId = user.Id }, cancellationToken: cancellationToken);
 
                     _unverifiedUserRepository.Delete(unverifiedUser);

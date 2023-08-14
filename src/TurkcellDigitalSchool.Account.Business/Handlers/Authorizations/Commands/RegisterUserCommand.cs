@@ -37,14 +37,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
         public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, DataResult<AccessToken>>
         {
             private readonly IUserRepository _userRepository;
-            private readonly ISendOtpSmsHelper _sendOtpSmsHelper;
-            private readonly ICapPublisher _capPublisher;
+            private readonly ISendOtpSmsHelper _sendOtpSmsHelper; 
 
-            public RegisterUserCommandHandler(IUserRepository userRepository, ISendOtpSmsHelper sendOtpSmsHelper, ICapPublisher capPublisher)
+            public RegisterUserCommandHandler(IUserRepository userRepository, ISendOtpSmsHelper sendOtpSmsHelper )
             {
                 _userRepository = userRepository;
-                _sendOtpSmsHelper = sendOtpSmsHelper;
-                _capPublisher = capPublisher;
+                _sendOtpSmsHelper = sendOtpSmsHelper; 
             }
 
             /// <summary>
@@ -81,11 +79,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 };
 
                 _userRepository.Add(user);
-                await _userRepository.SaveChangesAsync();
-
-                await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Added),
-                    user, cancellationToken: cancellationToken);
-
+                await _userRepository.SaveChangesAsync(); 
                 MobileLogin mobileLogin;
 
                 try

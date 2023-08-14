@@ -33,16 +33,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             private readonly IUserRepository _userRepository;
             private readonly IMobileLoginRepository _mobileLoginRepository;
             private readonly ILoginFailCounterRepository _loginFailCounterRepository;
-            private readonly IMediator _mediator;
-            private readonly ICapPublisher _capPublisher;
+            private readonly IMediator _mediator; 
 
-            public LoginFailOtpNewPasswordCommandHandler(IUserRepository userRepository, IMobileLoginRepository mobileLoginRepository, ILoginFailCounterRepository loginFailCounterRepository, IMediator mediator, ICapPublisher capPublisher)
+            public LoginFailOtpNewPasswordCommandHandler(IUserRepository userRepository, IMobileLoginRepository mobileLoginRepository, ILoginFailCounterRepository loginFailCounterRepository, IMediator mediator )
             {
                 _userRepository = userRepository;
                 _mobileLoginRepository = mobileLoginRepository;
                 _loginFailCounterRepository = loginFailCounterRepository;
-                _mediator = mediator;
-                _capPublisher = capPublisher;
+                _mediator = mediator; 
             }
 
             public async Task<IDataResult<TokenIntegraitonResponse>> Handle(LoginFailOtpNewPasswordCommand request, CancellationToken cancellationToken)
@@ -74,7 +72,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 user.FailOtpCount = 0;
                 user.LastPasswordDate = DateTime.Now;
                 await _userRepository.UpdateAndSaveAsync(user);
-                await _capPublisher.PublishAsync(user.GeneratePublishName(Microsoft.EntityFrameworkCore.EntityState.Modified), user, cancellationToken: cancellationToken);
+               
 
                 mobileLogin.NewPassStatus = UsedStatus.Used;
                 await _mobileLoginRepository.UpdateAndSaveAsync(mobileLogin);

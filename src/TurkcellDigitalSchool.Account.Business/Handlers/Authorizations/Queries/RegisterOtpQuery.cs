@@ -38,9 +38,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             private readonly IMobileLoginRepository _mobileLoginRepository;
             private readonly ISmsOtpRepository _smsOtpRepository;
             private readonly IUserSessionRepository _userSessionRepository;
-            private readonly IHttpContextAccessor _httpContextAccessor;
-            private readonly ICapPublisher _capPublisher;
-            public RegisterOtpQueryHandler(IUserRepository userRepository, ITokenHelper tokenHelper, ICacheManager cacheManager, IMobileLoginRepository mobileLoginRepository, ISmsOtpRepository smsOtpRepository, ConfigurationManager configurationManager, IUserSessionRepository userSessionRepository, IHttpContextAccessor httpContextAccessor, ICapPublisher capPublisher)
+            private readonly IHttpContextAccessor _httpContextAccessor; 
+            public RegisterOtpQueryHandler(IUserRepository userRepository, ITokenHelper tokenHelper, ICacheManager cacheManager,
+                IMobileLoginRepository mobileLoginRepository, ISmsOtpRepository smsOtpRepository, ConfigurationManager configurationManager, IUserSessionRepository userSessionRepository, IHttpContextAccessor httpContextAccessor )
             {
                 _userRepository = userRepository;
                 _tokenHelper = tokenHelper;
@@ -49,8 +49,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                 _smsOtpRepository = smsOtpRepository;
                 _configurationManager = configurationManager;
                 _userSessionRepository = userSessionRepository;
-                _httpContextAccessor = httpContextAccessor;
-                _capPublisher = capPublisher;
+                _httpContextAccessor = httpContextAccessor; 
             } 
             public async Task<DataResult<AccessToken>> Handle(RegisterOtpQuery request, CancellationToken cancellationToken)
             {
@@ -112,11 +111,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                     user.Status = true;
                     _userRepository.Update(user);
                     await _userRepository.SaveChangesAsync();
-
-                    await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Added),
-                        user, cancellationToken: cancellationToken);
-
-
+                     
                     return new SuccessDataResult<AccessToken>(accessToken, Messages.SuccessfulLogin);
                 }
                 catch (Exception e)

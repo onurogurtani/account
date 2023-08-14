@@ -31,16 +31,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
             private readonly IUserRepository _userRepository;
             private readonly IUserRoleRepository _userRoleRepository;
             private readonly IMapper _mapper;
-            private readonly ITokenHelper _tokenHelper;
-            private readonly ICapPublisher _capPublisher;
+            private readonly ITokenHelper _tokenHelper; 
 
-            public UpdateAdminCommandHandler(IUserRoleRepository userRoleRepository, IUserRepository userRepository, IMapper mapper, ITokenHelper tokenHelper, ICapPublisher capPublisher)
+            public UpdateAdminCommandHandler(IUserRoleRepository userRoleRepository, IUserRepository userRepository, IMapper mapper, ITokenHelper tokenHelper )
             {
                 _userRepository = userRepository;
                 _userRoleRepository = userRoleRepository;
                 _mapper = mapper;
-                _tokenHelper = tokenHelper;
-                _capPublisher = capPublisher;
+                _tokenHelper = tokenHelper; 
             }
 
             public async Task<IResult> Handle(UpdateAdminCommand request, CancellationToken cancellationToken)
@@ -60,7 +58,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
 
                 var record = _userRepository.Update(entity);
                 await _userRepository.SaveChangesAsync();
-                await _capPublisher.PublishAsync(entity.GeneratePublishName(EntityState.Modified), entity, cancellationToken: cancellationToken);
+                
 
                 var userGroups = await _userRoleRepository.GetListAsync(x => x.UserId == request.Admin.Id);
                 _userRoleRepository.DeleteRange(userGroups);

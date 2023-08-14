@@ -44,11 +44,17 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
             private readonly IPackageMotivationActivityPackageRepository _packageMotivationActivityPackageRepository;
             private readonly IPackageTestExamPackageRepository _packageTestExamPackageRepository;
             private readonly IPackageTestExamRepository _packageTestExamRepository;
-            private readonly IPackageEventRepository _packageEventRepository;
-            private readonly ICapPublisher _capPublisher;
+            private readonly IPackageEventRepository _packageEventRepository; 
             private readonly IMediator _mediator;
             public UpdatePackageCommandHandler(
-                IPackageCoachServicePackageRepository packageCoachServicePackageRepository, IPackageEventRepository packageEventRepository, IPackageMotivationActivityPackageRepository packageMotivationActivityPackageRepository, IPackageTestExamPackageRepository packageTestExamPackageRepository, IPackagePackageTypeEnumRepository packagePackageTypeEnumRepository, IPackageFieldTypeRepository packageFieldTypeRepository, IPackageRepository packageRepository, IImageOfPackageRepository imageOfPackageRepository, IPackageLessonRepository packageLessonRepository, IPackagePublisherRepository packagePublisherRepository, IPackageDocumentRepository packageDocumentRepository, IPackageContractTypeRepository packageContractTypeRepository, IPackageTestExamRepository packageTestExamRepository, ICapPublisher capPublisher, IPackageRoleRepository packageRoleRepository, IMediator mediator)
+                IPackageCoachServicePackageRepository packageCoachServicePackageRepository, IPackageEventRepository packageEventRepository, 
+                IPackageMotivationActivityPackageRepository packageMotivationActivityPackageRepository, 
+                IPackageTestExamPackageRepository packageTestExamPackageRepository, 
+                IPackagePackageTypeEnumRepository packagePackageTypeEnumRepository, IPackageFieldTypeRepository packageFieldTypeRepository, 
+                IPackageRepository packageRepository, IImageOfPackageRepository imageOfPackageRepository, 
+                IPackageLessonRepository packageLessonRepository, IPackagePublisherRepository packagePublisherRepository,
+                IPackageDocumentRepository packageDocumentRepository, IPackageContractTypeRepository packageContractTypeRepository, 
+                IPackageTestExamRepository packageTestExamRepository, IPackageRoleRepository packageRoleRepository, IMediator mediator)
             {
                 _packageRepository = packageRepository;
                 _imageOfPackageRepository = imageOfPackageRepository;
@@ -62,8 +68,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 _packagePackageTypeEnumRepository = packagePackageTypeEnumRepository;
                 _packageFieldTypeRepository = packageFieldTypeRepository;
                 _packageEventRepository = packageEventRepository;
-                _packageTestExamRepository = packageTestExamRepository;
-                _capPublisher = capPublisher;
+                _packageTestExamRepository = packageTestExamRepository; 
                 _packageRoleRepository = packageRoleRepository;
                 _mediator = mediator;
             }
@@ -95,11 +100,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
 
                 var packageLessons = await _packageLessonRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageLessonRepository.DeleteRange(packageLessons);
-
-                foreach (var item in packageLessons)
-                {
-                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Deleted), item, cancellationToken: cancellationToken);
-                }
+ 
 
                 var packagePublishers = await _packagePublisherRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packagePublisherRepository.DeleteRange(packagePublishers);
@@ -134,27 +135,18 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 var packageRoles = await _packageRoleRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageRoleRepository.DeleteRange(packageRoles);
 
-                foreach (var item in packageRoles)
-                {
-                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Deleted), item, cancellationToken: cancellationToken);
-                }
+         
 
                 var packageTestExams = await _packageTestExamRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageTestExamRepository.DeleteRange(packageTestExams);
 
-                foreach (var item in packageTestExams)
-                {
-                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Deleted), item, cancellationToken: cancellationToken);
-                }
+             
 
 
                 var packageEvents = await _packageEventRepository.GetListAsync(x => x.PackageId == request.Package.Id);
                 _packageEventRepository.DeleteRange(packageEvents);
 
-                foreach (var item in packageEvents)
-                {
-                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Deleted), item, cancellationToken: cancellationToken);
-                }
+            
 
 
                 entity.Name = request.Package.Name;
@@ -189,26 +181,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
                 var record = _packageRepository.Update(entity);
                 await _packageRepository.SaveChangesAsync();
 
-                foreach (var item in record.PackageTestExams)
-                {
-                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Added), item, cancellationToken: cancellationToken);
-                }
-                foreach (var item in record.PackageLessons)
-                {
-                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Added), item, cancellationToken: cancellationToken);
-                }
-                foreach (var item in record.PackageRoles)
-                {
-                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Added), item, cancellationToken: cancellationToken);
-                }
-                foreach (var item in record.PackageEvents)
-                {
-                    await _capPublisher.PublishAsync(item.GeneratePublishName(EntityState.Added), item, cancellationToken: cancellationToken);
-                }
-
-                await _capPublisher.PublishAsync(record.GeneratePublishName(EntityState.Modified), record, cancellationToken: cancellationToken);
-
-
+                
                 var imageOfPackageAddList = request.Package.ImageOfPackages.Select(s => new ImageOfPackage
                 {
                     FileId = s.FileId,
@@ -217,8 +190,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Commands
 
                 await _imageOfPackageRepository.AddRangeAsync(imageOfPackageAddList);
                 await _imageOfPackageRepository.SaveChangesAsync();
-
-
+                 
                 var packagePublishersAddList = request.Package.PackagePublishers.Select(s =>
                     new PackagePublisher
                     {

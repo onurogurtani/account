@@ -32,14 +32,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
         public class DeleteTeacherCommandHandler : IRequestHandler<DeleteTeacherCommand, IResult>
         {
             private readonly IUserRepository _userRepository;
-            private readonly IOrganisationUserRepository _organisationUserRepository;
-            private readonly ICapPublisher _capPublisher;
+            private readonly IOrganisationUserRepository _organisationUserRepository; 
 
-            public DeleteTeacherCommandHandler(IUserRepository userRepository, IOrganisationUserRepository organisationUserRepository, ICapPublisher capPublisher)
+            public DeleteTeacherCommandHandler(IUserRepository userRepository, IOrganisationUserRepository organisationUserRepository )
             {
                 _userRepository = userRepository;
-                _organisationUserRepository = organisationUserRepository;
-                _capPublisher = capPublisher;
+                _organisationUserRepository = organisationUserRepository; 
             }
 
             [MessageConstAttr(MessageCodeType.Error)]
@@ -67,7 +65,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
                     userEntity.Status = false;
                     _userRepository.Update(userEntity);
                     await _userRepository.SaveChangesAsync();
-                    await _capPublisher.PublishAsync(userEntity.GeneratePublishName(EntityState.Modified), userEntity, cancellationToken: cancellationToken);
                 }
                 return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }
