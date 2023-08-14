@@ -222,7 +222,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                 "    sum(logincount) as loginCount\n" +
                 "from account.userpackage up\n" +
                 "inner join account.userrole ur on up.userid  = ur.userid \n" +
-                "inner join account.package p on up.packageid = p.id \n" +
+                $"inner join account.package p on up.packageid = p.id {((request.PackageId > 0) ? $"and p.id = {request.PackageId}" : "")}\n" +
                 "inner join account.role r on ur.roleid  = r.id \n" +
                 "inner join (\n" +
                 "    select  \n" +
@@ -244,7 +244,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                 "        )  as d on us.starttime <= d.enddate and coalesce(us.endtime, now()) >= d.startdate\n" +
                 $"        where us.starttime < make_date({request.EndDate.Year}, {request.EndDate.Month}, {request.EndDate.Day}) and coalesce(us.endtime, now()) >= make_date({request.StartDate.Year}, {request.StartDate.Month}, {request.StartDate.Day}) \n" +
                 "    ) x\n" +
-                ((request.PackageId > 0) ? $"p.id = {request.PackageId}\n" : "") +
                 "    group by userid, startdate, enddate\n" +
                 ") y on y.userid = ur.userid \n" +
                 "group  by p.name, r.name, y.startdate, y.enddate\n";
