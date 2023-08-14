@@ -1,7 +1,5 @@
 using AutoMapper;
-using DotNetCore.CAP;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +9,6 @@ using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
-using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
@@ -34,16 +31,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
             private readonly IMapper _mapper;
             private readonly IUserRepository _userRepository;
             private readonly IUserRoleRepository _userRoleRepository;
-            private readonly ITokenHelper _tokenHelper;
-            private readonly ICapPublisher _capPublisher;
+            private readonly ITokenHelper _tokenHelper; 
 
-            public CreateAdminCommandHandler(IUserRoleRepository userRoleRepository, IUserRepository userRepository, ITokenHelper tokenHelper, IMapper mapper, ICapPublisher capPublisher)
+            public CreateAdminCommandHandler(IUserRoleRepository userRoleRepository, IUserRepository userRepository, ITokenHelper tokenHelper, IMapper mapper )
             {
                 _userRepository = userRepository;
                 _userRoleRepository = userRoleRepository;
                 _mapper = mapper;
-                _tokenHelper = tokenHelper;
-                _capPublisher = capPublisher;
+                _tokenHelper = tokenHelper; 
             }
 
             public async Task<IResult> Handle(CreateAdminCommand request, CancellationToken cancellationToken)
@@ -90,7 +85,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
 
                 var record = _userRepository.Add(user);
                 await _userRepository.SaveChangesAsync();
-                await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Added), user, cancellationToken: cancellationToken);
+                
 
                 foreach (var roleId in request.Admin.RoleIds)
                     _userRoleRepository.Add(new UserRole { RoleId = roleId, UserId = record.Id });

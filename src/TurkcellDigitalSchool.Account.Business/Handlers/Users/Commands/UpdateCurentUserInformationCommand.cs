@@ -18,8 +18,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 {
     [TransactionScope]
-    [LogScope]
-     
+    [LogScope] 
     public class UpdateCurentUserInformationCommand : IRequest<IResult>
     {
         public string NameSurname { get; set; }
@@ -35,16 +34,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
             private readonly IUserRepository _userRepository;
             private readonly IEducationRepository _educationRepository;
             private readonly IMapper _mapper;
-            private readonly ITokenHelper _tokenHelper;
-            private readonly ICapPublisher _capPublisher;
+            private readonly ITokenHelper _tokenHelper; 
 
-            public UpdateCurentUserInformationCommandHandler(IUserRepository userRepository, IEducationRepository educationRepository, IMapper mapper, ITokenHelper tokenHelper, ICapPublisher capPublisher)
+            public UpdateCurentUserInformationCommandHandler(IUserRepository userRepository, IEducationRepository educationRepository, IMapper mapper, ITokenHelper tokenHelper )
             {
                 _userRepository = userRepository;
                 _educationRepository = educationRepository;
                 _mapper = mapper;
-                _tokenHelper = tokenHelper;
-                _capPublisher = capPublisher;
+                _tokenHelper = tokenHelper; 
             }
 
             [MessageConstAttr(MessageCodeType.Information)]
@@ -81,9 +78,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                 }
 
                 _userRepository.Update(userEntity);
-                await _userRepository.SaveChangesAsync();
-                await _capPublisher.PublishAsync(userEntity.GeneratePublishName(EntityState.Modified),
-                    userEntity, cancellationToken: cancellationToken);
+                await _userRepository.SaveChangesAsync(); 
                 return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }
         }

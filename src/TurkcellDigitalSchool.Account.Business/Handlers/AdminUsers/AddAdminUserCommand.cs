@@ -41,18 +41,16 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
             private readonly IUserRoleRepository _userRoleRepository;
             private readonly Microsoft.Extensions.Configuration.IConfiguration _configuration;
             private readonly ConfigurationManager _configurationManager;
-            private readonly IMediator _mediator;
-            private readonly ICapPublisher _capPublisher;
+            private readonly IMediator _mediator; 
 
             public AddAdminUserCommandHandler(IUserRepository userRepository, Microsoft.Extensions.Configuration.IConfiguration configuration,
-                ConfigurationManager configurationManager, IMediator mediator, IUserRoleRepository userRoleRepository, ICapPublisher capPublisher)
+                ConfigurationManager configurationManager, IMediator mediator, IUserRoleRepository userRoleRepository )
             {
                 _userRepository = userRepository;
                 _configuration = configuration;
                 _configurationManager = configurationManager;
                 _mediator = mediator;
-                _userRoleRepository = userRoleRepository;
-                _capPublisher = capPublisher;
+                _userRoleRepository = userRoleRepository; 
             }
 
             [MessageConstAttr(MessageCodeType.Information)]
@@ -105,8 +103,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
                     user.UserName = request.CitizenId.ToString();
                 }
                 _userRepository.Add(user);
-                await _userRepository.SaveChangesAsync();
-                await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Added), user, cancellationToken: cancellationToken);
+                await _userRepository.SaveChangesAsync(); 
 
                 var userRole = new UserRole { UserId = user.Id, RoleId = roleId };
                 _userRoleRepository.Add(userRole);
