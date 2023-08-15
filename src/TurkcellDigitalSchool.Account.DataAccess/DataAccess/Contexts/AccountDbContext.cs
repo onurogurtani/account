@@ -7,14 +7,15 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
 using TurkcellDigitalSchool.Core.DataAccess;
 using TurkcellDigitalSchool.Core.DataAccess.Contexts;
+using TurkcellDigitalSchool.Core.Services.EntityChangeServices;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt; 
 
 namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
 {
     public class AccountDbContext : ProjectDbContext, IMsContext
     {
-        public AccountDbContext(ITokenHelper tokenHelper, IConfiguration configuration, ICapPublisher capPublisher) : base(tokenHelper,
-            configuration, capPublisher)
+        public AccountDbContext(ITokenHelper tokenHelper, IConfiguration configuration, ICapPublisher capPublisher, IEntityChangeServices entityChangeServices) : base(tokenHelper,
+            configuration, capPublisher, entityChangeServices)
         {
 
         }

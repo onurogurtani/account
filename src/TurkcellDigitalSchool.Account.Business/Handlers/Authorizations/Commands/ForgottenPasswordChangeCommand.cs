@@ -1,5 +1,4 @@
-﻿using DotNetCore.CAP;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,6 @@ using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Core.Common;
 using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
@@ -17,8 +15,7 @@ using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.Core.Utilities.Toolkit;
-using Microsoft.AspNetCore.Http;
+using TurkcellDigitalSchool.Core.Utilities.Toolkit; 
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
@@ -37,18 +34,16 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             private readonly IMediator _mediator;
             private readonly IMobileLoginRepository _mobileLoginRepository;
             private readonly ISmsOtpRepository _smsOtpRepository;
-            private readonly IUserSessionRepository _userSessionRepository;
-            private readonly ICapPublisher _capPublisher;
+            private readonly IUserSessionRepository _userSessionRepository; 
 
 
-            public ForgottenPasswordChangeCommandHandler(IUserRepository userRepository, IMediator mediator, IMobileLoginRepository mobileLoginRepository, ISmsOtpRepository smsOtpRepository, IUserSessionRepository userSessionRepository, ICapPublisher capPublisher)
+            public ForgottenPasswordChangeCommandHandler(IUserRepository userRepository, IMediator mediator, IMobileLoginRepository mobileLoginRepository, ISmsOtpRepository smsOtpRepository, IUserSessionRepository userSessionRepository )
             {
                 _userRepository = userRepository;
                 _mediator = mediator;
                 _mobileLoginRepository = mobileLoginRepository;
                 _smsOtpRepository = smsOtpRepository;
-                _userSessionRepository = userSessionRepository;
-                _capPublisher = capPublisher;
+                _userSessionRepository = userSessionRepository; 
             }
 
             /// <summary>
@@ -77,7 +72,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 
                 _userRepository.Update(user);
                 await _userRepository.SaveChangesAsync();
-                await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Modified), user, cancellationToken: cancellationToken);
                 MobileLogin mobileLogin;
 
                 try

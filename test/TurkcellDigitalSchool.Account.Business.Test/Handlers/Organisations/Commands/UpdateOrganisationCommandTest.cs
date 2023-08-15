@@ -51,7 +51,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Organisations.Com
             _packageRepository = new Mock<IPackageRepository>();
 
             _UpdateOrganisationCommand = new UpdateOrganisationCommand();
-            _UpdateOrganisationCommandHandler = new(_organisationRepository.Object, _organisationTypeRepository.Object, _mapper.Object, _packageRoleRepository.Object, _userRepository.Object, _mediator.Object, _capPublisher.Object, _packageRepository.Object);
+            _UpdateOrganisationCommandHandler = new(_organisationRepository.Object, _organisationTypeRepository.Object, _mapper.Object, _packageRoleRepository.Object, _userRepository.Object, _mediator.Object , _packageRepository.Object);
         }
 
         [Test]

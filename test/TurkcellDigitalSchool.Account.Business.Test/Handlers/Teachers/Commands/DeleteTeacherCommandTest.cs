@@ -37,7 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Teachers.Commands
             _capPublisher = new Mock<ICapPublisher>();
 
             _deleteTeacherCommand = new DeleteTeacherCommand();
-            _deleteTeacherCommandHandler = new(_userRepository.Object, _organisationUserRepository.Object, _capPublisher.Object);
+            _deleteTeacherCommandHandler = new(_userRepository.Object, _organisationUserRepository.Object );
 
             _fakeOrganisationUsers = new List<OrganisationUser>
             {

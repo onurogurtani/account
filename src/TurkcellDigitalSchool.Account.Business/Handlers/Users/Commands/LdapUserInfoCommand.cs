@@ -31,15 +31,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
             private SearchResponse _ldapSearchResponse;
             private readonly IUserRepository _userRepository;
             private readonly ILdapUserInfoRepository _ldapUserInfoRepository;
-            private readonly IConfiguration _configuration;
-            private readonly ICapPublisher _capPublisher;
+            private readonly IConfiguration _configuration; 
             LdapConfig ldapConfig;
-            public LdapUserInfoCommandHandler(IUserRepository userRepository, ILdapUserInfoRepository ldapUserInfoRepository, IConfiguration configuration, ICapPublisher capPublisher)
+            public LdapUserInfoCommandHandler(IUserRepository userRepository, ILdapUserInfoRepository ldapUserInfoRepository, IConfiguration configuration )
             {
                 _userRepository = userRepository;
                 _ldapUserInfoRepository = ldapUserInfoRepository;
-                _configuration = configuration;
-                _capPublisher = capPublisher;
+                _configuration = configuration; 
                 ldapConfig = _configuration.GetSection("LdapConfig").Get<LdapConfig>();
             }
 
@@ -118,9 +116,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                                     };
 
                                     _ldapUserInfoRepository.Add(ldapUserInfo);
-                                    await _ldapUserInfoRepository.SaveChangesAsync();
-                                    await _capPublisher.PublishAsync(ldapUserInfo.GeneratePublishName(EntityState.Added),
-                                        ldapUserInfo, cancellationToken: cancellationToken);
+                                    await _ldapUserInfoRepository.SaveChangesAsync(); 
 
                                     var userExist = await _userRepository.GetAsync(
                                         w => w.Status && (
@@ -146,9 +142,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                                         Status = true
                                     };
                                     _userRepository.Add(user);
-                                    await _userRepository.SaveChangesAsync();
-                                    await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Added),
-                                        user, cancellationToken: cancellationToken);
+                                    await _userRepository.SaveChangesAsync(); 
                                 }
                             }
                         }
