@@ -45,109 +45,101 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 
                 if (currentUser.UserType == UserType.Student)
                 {
-                    var coachList = _studentCoachRepository.Query()
-                                        .Where(x => x.UserId == currentUserId)
-                                        .Join(_userRepository.Query(),
-                                              studentCoach => studentCoach.CoachId,
-                                              user => user.Id,
-                                              (studentCoach, user) => new UserChatDto
-                                              {
-                                                  Id = user.Id,
-                                                  Name = user.Name,
-                                                  SurName = user.SurName,
-                                                  AvatarId = user.AvatarId,
-                                                  UserType = user.UserType
-                                              })
-                                        .ToList();
-                    userChats.AddRange(coachList);
+                    var result = (from studentCoach in _studentCoachRepository.Query()
+                                  join user in _userRepository.Query() on studentCoach.CoachId equals user.Id
+                                  where studentCoach.UserId == currentUserId
+                                  select user) // Coach List
+                                .Union(from studentCoach in _studentCoachRepository.Query()
+                                       join coachLeader in _coachLeaderCoachRepository.Query() on studentCoach.CoachId equals coachLeader.CoachId
+                                       join user in _userRepository.Query() on coachLeader.UserId equals user.Id
+                                       where studentCoach.UserId == currentUserId
+                                       select user) // Coach Leader List
+                                .Distinct()
+                                .Select(user => new UserChatDto
+                                {
+                                     Id = user.Id,
+                                     Name = user.Name,
+                                     SurName = user.SurName,
+                                     AvatarId = user.AvatarId,
+                                     UserType = user.UserType
+                                })
+                                .ToList();
+                    userChats.AddRange(result);
                 }
 
                 if (currentUser.UserType == UserType.Parent)
                 {
-                    var coachLeaderList = _userService.GetStudentsOfParentByParentId(currentUserId)
-                                            .Join(_studentCoachRepository.Query(), student => student.Id, sc => sc.UserId,
-                                                  (student, studentCoach) => studentCoach.CoachId)
-                                            .Join(_coachLeaderCoachRepository.Query(), coachId => coachId, clc => clc.CoachId,
-                                                  (coachId, coachLeader) => coachLeader.Id)
-                                            .Join(_userRepository.Query(), coachLeaderId => coachLeaderId, user => user.Id,
-                                                  (coachLeaderId, user) => new UserChatDto
-                                                  {
-                                                      Id = user.Id,
-                                                      Name = user.Name,
-                                                      SurName = user.SurName,
-                                                      AvatarId = user.AvatarId,
-                                                      UserType = user.UserType
-                                                  })
-                                            .ToList();
-                    userChats.AddRange(coachLeaderList);
+                    var studentList = _userService.GetStudentsOfParentByParentId(currentUserId);
+                    var result = (from students in studentList
+                                  join coach in _studentCoachRepository.Query() on students.Id equals coach.UserId
+                                  join user in _userRepository.Query() on coach.CoachId equals user.Id
+                                  select user) // Coach List
+                                .Union(from students in studentList
+                                       join coach in _studentCoachRepository.Query() on students.Id equals coach.UserId
+                                       join coachLeader in _coachLeaderCoachRepository.Query() on coach.CoachId equals coachLeader.CoachId
+                                       join user in _userRepository.Query() on coachLeader.UserId equals user.Id
+                                       select user) // Coach Leader List
+                                .Distinct()
+                                .Select(user => new UserChatDto
+                                {
+                                    Id = user.Id,
+                                    Name = user.Name,
+                                    SurName = user.SurName,
+                                    AvatarId = user.AvatarId,
+                                    UserType = user.UserType
+                                })
+                                .ToList();
+                    userChats.AddRange(result);
                 }
 
                 if (currentUser.UserType == UserType.Coach)
                 {
-                    var studentList = _studentCoachRepository.Query()
-                        .Where(w => w.CoachId == currentUserId)
-                        .Join(_userRepository.Query(), studentCoach => studentCoach.UserId, user => user.Id,
-                              (studentCoach, user) => new UserChatDto
-                              {
-                                  Id = user.Id,
-                                  Name = user.Name,
-                                  SurName = user.SurName,
-                                  AvatarId = user.AvatarId,
-                                  UserType = user.UserType
-                              })
-                        .ToList();
-
-                    var coachLeaderList = _coachLeaderCoachRepository.Query()
-                        .Where(w => w.CoachId == currentUserId)
-                        .Join(_userRepository.Query(), clc => clc.UserId, user => user.Id,
-                              (clc, user) => new UserChatDto
-                              {
-                                  Id = user.Id,
-                                  Name = user.Name,
-                                  SurName = user.SurName,
-                                  AvatarId = user.AvatarId,
-                                  UserType = user.UserType
-                              })
-                        .ToList();
-
-                    userChats.AddRange(studentList);
-                    userChats.AddRange(coachLeaderList);
+                    var result = (from studentCoach in _studentCoachRepository.Query()
+                                  join user in _userRepository.Query() on studentCoach.UserId equals user.Id
+                                  where studentCoach.CoachId == currentUserId
+                                  select user) // Student List
+                                .Union(from studentCoach in _studentCoachRepository.Query()
+                                       join studentParent in _studentParentInformationRepository.Query() on studentCoach.UserId equals studentParent.UserId
+                                       join user in _userRepository.Query() on studentParent.ParentId equals user.Id
+                                       where studentCoach.CoachId == currentUserId
+                                       select user) // Parent List
+                                .Distinct()
+                                .Select(user => new UserChatDto
+                                {
+                                    Id = user.Id,
+                                    Name = user.Name,
+                                    SurName = user.SurName,
+                                    AvatarId = user.AvatarId,
+                                    UserType = user.UserType
+                                })
+                                .ToList();
+                    userChats.AddRange(result);
                 }
 
                 if (currentUser.UserType == UserType.CoachLeader)
                 {
-                    var coachList = _coachLeaderCoachRepository.Query()
-                                        .Where(w => w.UserId == currentUserId)
-                                        .Join(_userRepository.Query(), clc => clc.CoachId, user => user.Id,
-                                              (clc, user) => new UserChatDto
-                                              {
-                                                  Id = user.Id,
-                                                  Name = user.Name,
-                                                  SurName = user.SurName,
-                                                  AvatarId = user.AvatarId,
-                                                  UserType = user.UserType
-                                              })
-                                        .ToList();
-                    userChats.AddRange(coachList);
-
-
-
-                    var parentList = _studentCoachRepository.Query()
-                                         .Where(w => coachList.Select(s => s.Id).Contains(w.CoachId))
-                                         .SelectMany(s =>
-                                             _studentParentInformationRepository.Query().Include(w => w.Parent).Where(w => w.UserId == s.UserId))
-                                         .Select(p => new UserChatDto
-                                         {
-                                             Id = p.Parent.Id,
-                                             Name = p.Parent.Name,
-                                             SurName = p.Parent.SurName,
-                                             AvatarId = _userRepository.Query().FirstOrDefault(w => w.Id == p.Id) != null ? _userRepository.Query().FirstOrDefault(w => w.Id == p.Id).AvatarId : 0,
-                                             UserType = UserType.Parent
-                                         })
-                                        .Distinct()
-                                        .ToList(); 
-
-                   userChats.AddRange(parentList);
+                    var result = (from coachLeader in _coachLeaderCoachRepository.Query()
+                                  join studentCoach in _studentCoachRepository.Query() on coachLeader.CoachId equals studentCoach.CoachId
+                                  join user in _userRepository.Query() on studentCoach.UserId equals user.Id
+                                  where coachLeader.UserId == currentUserId
+                                  select user) // Student List
+                                .Union(from coachLeader in _coachLeaderCoachRepository.Query()
+                                       join studentCoach in _studentCoachRepository.Query() on coachLeader.CoachId equals studentCoach.CoachId
+                                       join studentParent in _studentParentInformationRepository.Query() on studentCoach.UserId equals studentParent.UserId
+                                       join user in _userRepository.Query() on studentParent.ParentId equals user.Id
+                                       where coachLeader.UserId == currentUserId
+                                       select user) // Parent List
+                                .Distinct()
+                                .Select(user => new UserChatDto
+                                {
+                                    Id = user.Id,
+                                    Name = user.Name,
+                                    SurName = user.SurName,
+                                    AvatarId = user.AvatarId,
+                                    UserType = user.UserType
+                                })
+                                .ToList();
+                    userChats.AddRange(result);
                 }
 
                 return new SuccessDataResult<IEnumerable<UserChatDto>>(userChats);
