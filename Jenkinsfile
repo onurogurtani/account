@@ -152,7 +152,7 @@ pipeline {
                     fortifyRemoteAnalysis remoteAnalysisProjectType: fortifyOther(), uploadSSC: [appName: "${fortifyProjectKey}", appVersion: "releasable"]
                 }
             }
-        }
+        
         stage('BlackDuck Scan') {
             // when{
             //         branch "releasable"
@@ -195,6 +195,7 @@ pipeline {
         //     }
         // }
     }
+
 
     // post{
     //     success {
