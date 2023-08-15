@@ -47,6 +47,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public long? CitizenId { get; set; }
         public string Email { get; set; }
         public string MobilPhones { get; set; }
+        public bool StudentAccessToChat { get; set; }
 
     }
     public class PackageInfoDto

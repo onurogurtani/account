@@ -319,6 +319,27 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 .ToList();
             return getParents;
         }
+
+        public List<ParentInfoDto> GetParentInformation(long userId)
+        {
+            var getParents = _studentParentInformationRepository.Query()
+                .Include(x => x.Parent)
+                .Where(w => w.ParentId == userId)
+                .Select(s => new ParentInfoDto
+                {
+                    Id = s.Parent.Id,
+                    CitizenId = s.Parent.CitizenId,
+                    Name = s.Parent.Name,
+                    SurName = s.Parent.SurName,
+                    Email = s.Parent.Email,
+                    MobilPhones = s.Parent.MobilePhones,
+                    StudentAccessToChat = s.StudentAccessToChat
+                })
+                .Distinct()
+                .ToList();
+            return getParents;
+        }
+                
         public async Task<IResult> UpdateAvatarAsync(long userId, long avatarId)
         {
 
@@ -344,7 +365,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                .Where(w => w.ParentId == parentId)
                .Select(student => new StudentsOfParentDto
                {
-                   Id = student.Id,
+                   Id = student.User.Id,
                    CitizenId = student.User.CitizenId,
                    Name = student.User.Name,
                    SurName = student.User.SurName,

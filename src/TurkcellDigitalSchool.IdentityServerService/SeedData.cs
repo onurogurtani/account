@@ -24,7 +24,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 {
                     using (var data =scope.ServiceProvider.GetService<PersistedGrantDbContext>())
                     {
-                        //data.Database.Migrate();
+                        data.Database.Migrate();
                     } 
                 }
 
@@ -32,7 +32,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 {
                     if (app.Environment.EnvironmentName.EnvIsUseAutoMigration())
                     {
-                        //context.Database.Migrate();
+                         context.Database.Migrate();
                     }
                     EnsureSeedData(context);
                 } 
