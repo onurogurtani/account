@@ -344,7 +344,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                .Where(w => w.ParentId == parentId)
                .Select(student => new StudentsOfParentDto
                {
-                   Id = student.Id,
+                   Id = student.User.Id,
                    CitizenId = student.User.CitizenId,
                    Name = student.User.Name,
                    SurName = student.User.SurName,
