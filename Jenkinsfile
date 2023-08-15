@@ -148,8 +148,12 @@ pipeline {
                 branch "${env.BRANCH_NAME}"
             }
             steps{
-                    fortifyScanner = tool 'fortify-scanner'
-                    fortifyRemoteAnalysis remoteAnalysisProjectType: fortifyOther(), uploadSSC: [appName: "${fortifyProjectKey}", appVersion: "releasable"]
+                    script {
+                        sh "echo static application security testing SAST"
+                        fortifyScanner = tool 'fortify-scanner'
+                        fortifyRemoteAnalysis remoteAnalysisProjectType: fortifyOther(),
+                                uploadSSC: [appName: "${fortifyProjectKey}", appVersion: env.BRANCH_NAME]
+                    }
                 }
             }
         
