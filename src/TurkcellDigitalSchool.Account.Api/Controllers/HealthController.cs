@@ -21,9 +21,13 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [HttpGet("ping")]
         [AllowAnonymous]
         public string Ping()
-        { 
+        {
             var address = _conf.GetValue<string>("SecretTest:TestText");
-            return address;
+
+            var envDeger = Environment.GetEnvironmentVariable("TestText"); 
+            var result = "Config Değer : " + (address ?? "") + "  Env Değer : " + (envDeger ?? "");
+             
+            return result;
         }
 
 
