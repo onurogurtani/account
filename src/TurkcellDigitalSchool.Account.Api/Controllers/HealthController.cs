@@ -27,7 +27,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
 
             var envDeger = Environment.GetEnvironmentVariable("TestText"); 
             var result = "Config Değer 1 : " + (address1 ?? "") +
-                "Config Değer 2 : " + (address2 ?? "") +
+                " Config Değer 2 : " + (address2 ?? "") +
                 "  Env Değer : " + (envDeger ?? "");
              
             return result;
