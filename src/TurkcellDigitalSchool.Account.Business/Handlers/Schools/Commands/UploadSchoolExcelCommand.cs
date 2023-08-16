@@ -17,6 +17,8 @@ using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Excel;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Account.Business.Handlers.Institutions.Queries;
+using TurkcellDigitalSchool.Account.Business.Handlers.InstitutionTypes.Queries;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
 {
@@ -29,17 +31,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
         [MessageClassAttr("Okul Excel Yükleme")]
         public class UploadSchoolExcelCommandHandler : IRequestHandler<UploadSchoolExcelCommand, DataResult<List<School>>>
         {
+            private readonly IMediator _mediator;
             private readonly IExcelService _excelService;
             private readonly ISchoolRepository _schoolRepository;
-            private readonly IInstitutionTypeRepository _institutionTypeRepository;
-            private readonly IInstitutionRepository _institutionRepository;
 
-            public UploadSchoolExcelCommandHandler(IExcelService excelService, ISchoolRepository schoolRepository, IInstitutionTypeRepository institutionTypeRepository, IInstitutionRepository institutionRepository)
+            public UploadSchoolExcelCommandHandler(IMediator mediator, IExcelService excelService, ISchoolRepository schoolRepository)
             {
+                _mediator = mediator;
                 _excelService = excelService;
                 _schoolRepository = schoolRepository;
-                _institutionRepository = institutionRepository;
-                _institutionTypeRepository = institutionTypeRepository;
             }
 
             [MessageConstAttr(MessageCodeType.Error)]
@@ -75,12 +75,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
 
                 try
                 {
+                    var institutions = _mediator.Send(new GetInstitutionsQuery(), cancellationToken).Result.Data.Items;
+                    var institutionTypes = _mediator.Send(new GetInstitutionTypesQuery(), cancellationToken).Result.Data.Items;
+
                     schoolList = schoolExcelDtos.Data.Where(w => w.KURUMLAR != "KURUMLAR").Select(x => new School
                     {
-                        CityId = _institutionRepository.Get(w => w.Name == x.KURUMLAR).Code == _institutionRepository.Get(w => w.Code == "OpenEducationInstitutions").Code && string.IsNullOrEmpty(x.IL_ADI) ? 0 : long.Parse(x.IL_ADI.Split("-")[0]),
-                        CountyId = _institutionRepository.Get(w => w.Name == x.KURUMLAR).Code == _institutionRepository.Get(w => w.Code == "OpenEducationInstitutions").Code && string.IsNullOrEmpty(x.ILCE_ADI) ? 0 : long.Parse(x.ILCE_ADI.Split("-")[0]),
-                        InstitutionId = _institutionRepository.GetAsync(w => w.Name == x.KURUMLAR).Result.Id,
-                        InstitutionTypeId = _institutionTypeRepository.GetAsync(w => w.Name == x.KURUM_TURU).Result.Id,
+                        CityId = institutions.FirstOrDefault(w => w.Name == x.KURUMLAR).Name == institutions.FirstOrDefault(w => w.Name == "Açık Öğretim Kurumları").Name && string.IsNullOrEmpty(x.IL_ADI) ? 0 : long.Parse(x.IL_ADI.Split("-")[0]),
+                        CountyId = institutions.FirstOrDefault(w => w.Name == x.KURUMLAR).Name == institutions.FirstOrDefault(w => w.Name == "Açık Öğretim Kurumları").Name && string.IsNullOrEmpty(x.ILCE_ADI) ? 0 : long.Parse(x.ILCE_ADI.Split("-")[0]),
+                        InstitutionId = (InstitutionEnum)institutions.FirstOrDefault(w => w.Name == x.KURUMLAR).Id,
+                        InstitutionTypeId = (InstitutionTypeEnum)institutionTypes.FirstOrDefault(w => w.Name == x.KURUM_TURU).Id,
                         Name = x.KURUM_ADI != "" ? x.KURUM_ADI : throw new ArgumentException(TryAgain.PrepareRedisMessage())
                     }).ToList();
                 }
