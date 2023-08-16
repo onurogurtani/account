@@ -22,10 +22,13 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [AllowAnonymous]
         public string Ping()
         {
-            var address = _conf.GetValue<string>("SecretTest:TestText");
+            var address1 = _conf.GetValue<string>("SecretTest:TestText");
+            var address2 = _conf.GetValue<string>("TestText");
 
             var envDeger = Environment.GetEnvironmentVariable("TestText"); 
-            var result = "Config Değer : " + (address ?? "") + "  Env Değer : " + (envDeger ?? "");
+            var result = "Config Değer 1 : " + (address1 ?? "") +
+                "Config Değer 2 : " + (address2 ?? "") +
+                "  Env Değer : " + (envDeger ?? "");
              
             return result;
         }
