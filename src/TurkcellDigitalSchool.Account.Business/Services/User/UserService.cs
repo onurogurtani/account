@@ -105,7 +105,8 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                     Name = parent.Parent.Name,
                     SurName = parent.Parent.SurName,
                     Email = parent.Parent.Email,
-                    MobilPhones = parent.Parent.MobilePhones
+                    MobilPhones = parent.Parent.MobilePhones,
+                    StudentAccessToChat = parent.StudentAccessToChat
                 })
                 .ToList();
 
@@ -292,12 +293,13 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             var getParents = _studentParentInformationRepository.Query().Include(w => w.Parent).Where(w => w.UserId == userId)
                 .Select(s => new ParentInfoDto
                 {
-                    Id = s.Id,
+                    Id = s.Parent.Id,
                     CitizenId = s.Parent.CitizenId,
                     Name = s.Parent.Name,
                     SurName = s.Parent.SurName,
                     Email = s.Parent.Email,
-                    MobilPhones = s.Parent.MobilePhones
+                    MobilPhones = s.Parent.MobilePhones,
+                    StudentAccessToChat = s.StudentAccessToChat
                 })
                 .ToList();
             return getParents;
