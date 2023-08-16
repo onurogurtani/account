@@ -11,9 +11,10 @@ using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
-using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
+using MediatR;
+using TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries;
 
 namespace TurkcellDigitalSchool.Account.Business.Services.User
 {
@@ -30,8 +31,15 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         private readonly IFileRepository _fileRepository;
         private readonly IClassroomRepository _classroomRepository;
         private readonly ITokenHelper _tokenHelper;
+        private readonly IMediator _mediator;
 
-        public UserService(IUserRepository userRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository, IUserContratRepository userContratRepository, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository, IFileRepository fileRepository, IClassroomRepository classroomRepository, ITokenHelper tokenHelper)
+        public UserService(IUserRepository userRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository,
+            ICountyRepository countyRepository, ISchoolRepository schoolRepository,
+            IUserPackageRepository userPackageRepository,
+            IUserContratRepository userContratRepository,
+            IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository,
+            IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository, IFileRepository fileRepository,
+            IClassroomRepository classroomRepository, ITokenHelper tokenHelper, IMediator mediator)
         {
             _userRepository = userRepository;
             _studentParentInformationRepository = studentParentInformationRepository;
@@ -44,6 +52,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             _fileRepository = fileRepository;
             _classroomRepository = classroomRepository;
             _tokenHelper = tokenHelper;
+            _mediator = mediator;
         }
         public PersonalInfoDto GetByPersonalInformation(long userId)
         {
@@ -319,6 +328,26 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                     MobilPhones = s.User.MobilePhones
                 })
                 .ToList();
+
+            foreach (var item in getParents)
+            {
+                var userPackage =_mediator.Send(new GetUserPackageListQuery
+                {
+                    UserId = item.Id
+                }).Result;
+
+
+                item.PackageStatus = new PackageStatusDto
+                {
+                    IsLesson = userPackage.Data.Any(a => a.PackageTypeEnum == PackageTypeEnum.Lesson.GetHashCode()),
+                    IsCoachService = userPackage.Data.Any(a => a.PackageTypeEnum == PackageTypeEnum.CoachService.GetHashCode()),
+                    IsTestExam = userPackage.Data.Any(a => a.PackageTypeEnum == PackageTypeEnum.TestExam.GetHashCode()),
+                    IsMotivationEvent = userPackage.Data.Any(a => a.PackageTypeEnum == PackageTypeEnum.MotivationEvent.GetHashCode()),
+                    IsFree = userPackage.Data.Any(a => a.PackageTypeEnum == PackageTypeEnum.Free.GetHashCode()),
+                    IsPrivateLesson = userPackage.Data.Any(a => a.PackageTypeEnum == PackageTypeEnum.PrivateLesson.GetHashCode()),
+                    IsDemo = userPackage.Data.Any(a => a.PackageTypeEnum == PackageTypeEnum.Demo.GetHashCode())
+                }; 
+            };
             return getParents;
         }
 
@@ -341,7 +370,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 .ToList();
             return getParents;
         }
-                
+
         public async Task<IResult> UpdateAvatarAsync(long userId, long avatarId)
         {
 
