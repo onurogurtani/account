@@ -3,7 +3,6 @@ using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System.Configuration;
 using System.Threading;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
@@ -22,8 +21,9 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [HttpGet("ping")]
         [AllowAnonymous]
         public string Ping()
-        {
-            return "OK";
+        { 
+            var address = _conf.GetValue<string>("SecretTest:TestText");
+            return address;
         }
 
 

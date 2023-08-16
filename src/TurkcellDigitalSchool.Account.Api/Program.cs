@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -28,12 +29,12 @@ namespace TurkcellDigitalSchool.Account.Api
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
+
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory()) 
                 .ConfigureWebHostDefaults(webBuilder =>
-                {
-
+                { 
                     webBuilder
                         .UseStartup<Startup>()
                         .ConfigureLogging(builder =>
@@ -50,12 +51,12 @@ namespace TurkcellDigitalSchool.Account.Api
                         })
                         .ConfigureKestrel((context, options) =>
                         {
-                             
+
                             options.AddServerHeader = false;
                             options.Listen(IPAddress.Any, 6021, listenOptions =>
-                            { 
+                            {
                             });
-                        });
+                        }); 
                 });
     }
 }
