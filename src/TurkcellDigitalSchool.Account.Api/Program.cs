@@ -31,7 +31,10 @@ namespace TurkcellDigitalSchool.Account.Api
         /// <returns></returns>
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+            Host.CreateDefaultBuilder(args).ConfigureAppConfiguration(x =>
+            {
+                x.AddEnvironmentVariables();
+            })
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory()) 
                 .ConfigureWebHostDefaults(webBuilder =>
                 { 
