@@ -53,7 +53,7 @@ objects:
               terminationMessagePolicy: File
               image: '${REGISTRY_URL}'
               env:
-                - name: TestText
+                - name: SecretTest__TestText
                   valueFrom:
                     secretKeyRef:
                         name: secret-test-secrets
