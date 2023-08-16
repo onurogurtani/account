@@ -17,6 +17,8 @@ using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Excel.Model;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Account.Business.Handlers.Institutions.Queries;
+using TurkcellDigitalSchool.Account.Business.Handlers.InstitutionTypes.Queries;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
 {
@@ -27,15 +29,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
         [MessageClassAttr("Okul Excel İndirme")]
         public class DownloadSchoolExcelCommandHandler : IRequestHandler<DownloadSchoolExcelCommand, DataResult<ExcelResponse>>
         {
-            private readonly IInstitutionTypeRepository _institutionTypeRepository;
-            private readonly IInstitutionRepository _institutionRepository;
+            private readonly IMediator _mediator;
             private readonly ICityRepository _cityRepository;
             private readonly ICountyRepository _countyRepository;
-
-            public DownloadSchoolExcelCommandHandler(IInstitutionTypeRepository institutionTypeRepository, IInstitutionRepository institutionRepository, ICityRepository cityRepository, ICountyRepository countyRepository)
+            public DownloadSchoolExcelCommandHandler(IMediator mediator, ICityRepository cityRepository, ICountyRepository countyRepository)
             {
-                _institutionTypeRepository = institutionTypeRepository;
-                _institutionRepository = institutionRepository;
+                _mediator = mediator;
                 _cityRepository = cityRepository;
                 _countyRepository = countyRepository;
             }
@@ -54,6 +53,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
               
             public async Task<DataResult<ExcelResponse>> Handle(DownloadSchoolExcelCommand request, CancellationToken cancellationToken)
             {
+                var institutions = _mediator.Send(new GetInstitutionsQuery(), cancellationToken).Result.Data.Items;
+                var institutionTypes = _mediator.Send(new GetInstitutionTypesQuery(), cancellationToken).Result.Data.Items;
+
                 byte[] workbookBytes;
 
                 using (var workbook = new XLWorkbook())
@@ -63,8 +65,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Commands
 
                     var cityList = _cityRepository.Query().OrderBy(s => s.Name).ToList();
                     var countyList = _countyRepository.Query().OrderBy(s => s.Name).ToList();
-                    var institutionList = _institutionRepository.Query().OrderBy(s => s.Name).ToList();
-                    var institutionTypeList = _institutionTypeRepository.Query().OrderBy(s => s.Name).ToList();
+                    var institutionList = institutions.OrderBy(s => s.Name).ToList();
+                    var institutionTypeList = institutionTypes.OrderBy(s => s.Name).ToList();
 
                     if (!cityList.Any() || !countyList.Any() || !institutionList.Any() || !institutionTypeList.Any())
                     {
