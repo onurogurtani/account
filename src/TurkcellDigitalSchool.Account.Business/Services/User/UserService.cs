@@ -319,6 +319,27 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 .ToList();
             return getParents;
         }
+
+        public List<ParentInfoDto> GetParentInformation(long userId)
+        {
+            var getParents = _studentParentInformationRepository.Query()
+                .Include(x => x.Parent)
+                .Where(w => w.ParentId == userId)
+                .Select(s => new ParentInfoDto
+                {
+                    Id = s.Parent.Id,
+                    CitizenId = s.Parent.CitizenId,
+                    Name = s.Parent.Name,
+                    SurName = s.Parent.SurName,
+                    Email = s.Parent.Email,
+                    MobilPhones = s.Parent.MobilePhones,
+                    StudentAccessToChat = s.StudentAccessToChat
+                })
+                .Distinct()
+                .ToList();
+            return getParents;
+        }
+                
         public async Task<IResult> UpdateAvatarAsync(long userId, long avatarId)
         {
 
