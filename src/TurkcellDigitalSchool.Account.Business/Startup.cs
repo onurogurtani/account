@@ -127,7 +127,8 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddMsIntegrationServicesWithName(Configuration, MsType.Reporting);
             services.AddMsIntegrationServicesWithName(Configuration, MsType.IdentityServer);
 
-          
+
+            
             var capConfig = Configuration.GetSection("CapConfig").Get<CapConfig>();
             services.AddCap(options =>
             {

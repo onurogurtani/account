@@ -105,8 +105,8 @@ namespace TurkcellDigitalSchool.Account.Container
             // By the way, we can construct with DI by taking type to avoid calling static methods in aspects.
             ServiceTool.ServiceProvider = app.ApplicationServices;
 
-
-            SeedDataHelper.AppSettingDefaultData(app).GetResult();
+            
+     
 
 
             var configurationManager = app.ApplicationServices.GetService<Core.Common.ConfigurationManager>();
@@ -114,6 +114,12 @@ namespace TurkcellDigitalSchool.Account.Container
             {
 
                 case ApplicationMode.DEV:
+                    using (var scope = app.ApplicationServices.CreateScope())
+                    {
+                        var services = scope.ServiceProvider;
+                        var context = services.GetRequiredService<AccountDbContext>();
+                        context.Database.Migrate();
+                    }
                     break;
                 case ApplicationMode.DEVTURKCELL:
                     {
@@ -156,6 +162,9 @@ namespace TurkcellDigitalSchool.Account.Container
                         break;
                     }
             }
+
+            SeedDataHelper.AppSettingDefaultData(app).GetResult();
+
             app.UseDeveloperExceptionPage();
 
             app.ConfigureCustomExceptionMiddleware();

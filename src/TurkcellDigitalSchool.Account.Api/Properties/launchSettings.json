@@ -5,7 +5,8 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "DEV"
+        "ASPNETCORE_ENVIRONMENT": "DEV",
+        "SecretTest:TestText": "SECRET_DEV_TEST"
       },
       "applicationUrl": "http://localhost:6021",
       "dotnetRunMessages": true
@@ -64,10 +65,10 @@
       "commandName": "Docker",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
-      "publishAllPorts": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "DEV"
-      }
+      },
+      "publishAllPorts": true
     }
   },
   "$schema": "http://json.schemastore.org/launchsettings.json",

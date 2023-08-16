@@ -159,7 +159,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 
             var result = claims
                  .Select(s => new OperationClaim { Name = s.ClaimName }).ToList();
-
+             
             return result; 
         }
 

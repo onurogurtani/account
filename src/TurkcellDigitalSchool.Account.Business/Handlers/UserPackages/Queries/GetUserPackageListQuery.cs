@@ -6,10 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Npgsql;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.Common.Constants;
- 
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Common.Constants;  
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
@@ -19,6 +16,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
      
     public class GetUserPackageListQuery : IRequest<DataResult<List<GetUserTestExamPackageDto>>>
     {
+        public long  UserId { get; set; }
         public class GetUserPackageListQueryHandler : IRequestHandler<GetUserPackageListQuery, DataResult<List<GetUserTestExamPackageDto>>>
         {
             private readonly IConfiguration _configuration;
@@ -33,7 +31,16 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
 
             public async Task<DataResult<List<GetUserTestExamPackageDto>>> Handle(GetUserPackageListQuery request, CancellationToken cancellationToken)
             {
-                var userId = _tokenHelper.GetUserIdByCurrentToken();
+                long userId = 0;
+                if (request.UserId ==0 )
+                {
+                  userId= _tokenHelper.GetUserIdByCurrentToken();
+                }
+                else
+                {
+                    userId = request.UserId;
+
+                } 
 
                 var connectionString = _configuration.GetConnectionString("DArchPostgreContext");
                 using (var connection = new NpgsqlConnection(connectionString))

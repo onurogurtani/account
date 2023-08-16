@@ -49,7 +49,22 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public string MobilPhones { get; set; }
         public bool StudentAccessToChat { get; set; }
 
+        public PackageStatusDto PackageStatus { get; set; }
+        
+
     }
+
+    public  class PackageStatusDto
+    { 
+        public bool IsLesson { get; set; }
+        public bool IsCoachService { get; set; }
+        public bool IsTestExam { get; set; }
+        public bool IsMotivationEvent { get; set; }
+        public bool IsFree { get; set; }
+        public bool IsPrivateLesson { get; set; }
+        public bool IsDemo { get; set; }  
+    }
+
     public class PackageInfoDto
     {
         public long Id { get; set; }
