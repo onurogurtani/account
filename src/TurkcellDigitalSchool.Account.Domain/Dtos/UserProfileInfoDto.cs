@@ -48,10 +48,8 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public string Email { get; set; }
         public string MobilPhones { get; set; }
         public bool StudentAccessToChat { get; set; }
-
-        public PackageStatusDto PackageStatus { get; set; }
-        
-
+        public bool ShareCalendarWithParent { get; set; }
+        public PackageStatusDto PackageStatus { get; set; }       
     }
 
     public  class PackageStatusDto

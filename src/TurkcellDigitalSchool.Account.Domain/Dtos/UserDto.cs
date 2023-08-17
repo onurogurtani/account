@@ -30,5 +30,6 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public bool ContactByCall { get; set; }
         public UserType UserTypeId { get; set; }
         public long? AvatarId { get; set; }
+        public bool ShareCalendarWithParent { get; set; }
     }
 }
