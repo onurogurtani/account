@@ -126,7 +126,8 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
                 dictoryString.Add(EmailVerifyParameters.NameSurname, $"{userInfo.Name} {userInfo.SurName}");
                 dictoryString.Add(EmailVerifyParameters.OtpCode, otpCode.ToString());
                 dictoryString.Add(EmailVerifyParameters.RecipientAddress, userInfo.Email);
-                _capPublisher.Publish(SubServiceConst.SENDING_EMAIL_ADDRESS_VERIFY_REQUEST, dictoryString);
+                await _capPublisher.PublishAsync(SubServiceConst.SENDING_EMAIL_ADDRESS_VERIFY_REQUEST, dictoryString);
+
             }
             else
             {
