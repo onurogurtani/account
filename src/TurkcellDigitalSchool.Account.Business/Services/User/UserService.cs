@@ -401,6 +401,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                {
                    Id = package.Id,
                    UserId = package.UserId,
+                   UserName = package.User.Name,
                    File = package.Package.ImageOfPackages.First().File,
                    PackageName = package.Package.Name,
                    PurchaseDate = package.PurchaseDate,
