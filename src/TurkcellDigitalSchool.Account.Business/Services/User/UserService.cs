@@ -416,6 +416,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                .Select(package => new PackageInfoDto
                {
                    Id = package.Id,
+                   UserId = package.UserId,
                    File = package.Package.ImageOfPackages.First().File,
                    PackageName = package.Package.Name,
                    PurchaseDate = package.PurchaseDate,
