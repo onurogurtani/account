@@ -40,8 +40,9 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
                 ? u => u.BehalfOfLoginUserId == null
                 : u => u.BehalfOfLoginUserId != null;
              
-            var openSessions = GetList(expression.And(w =>
-                w.User.Id == entity.UserId && w.SessionType == entity.SessionType && w.EndTime == null));
+           
+            var openSessions =  Query().Where(expression.And(w =>
+                w.User.Id == entity.UserId && w.SessionType == entity.SessionType && w.EndTime == null)).ToList();
 
 
             foreach (var itemSession in openSessions)
