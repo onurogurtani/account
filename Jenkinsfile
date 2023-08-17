@@ -16,7 +16,7 @@ pipeline {
         appServiceName = "dijital_dershane_app"
         softwareModuleName = "account"
         subsoftwareModuleName = "accountapi"
-        serviceId = "471949"
+        appServiceId = "471949"
 
         appVersion = "${mainBranch}-${env.BUILD_NUMBER}"
 
@@ -50,98 +50,118 @@ pipeline {
         artifactDeployVersion = " "
         artifactoryPathFileJar = " "
         sonarPluginVersion = "3.7.0.1746"
-        sonarProjectKey = "${serviceId}_${appServiceName.toUpperCase()}.${softwareModuleName}.${subsoftwareModuleName}"
-        fortifyProjectKey = "${serviceId}_${appServiceName.toUpperCase()}.${softwareModuleName}-${subsoftwareModuleName}"
+        sonarProjectKey = "${appServiceId}_${appServiceName.toUpperCase()}.${softwareModuleName}"
+        fortifyProjectKey = "${appServiceId}_${appServiceName.toUpperCase()}.${softwareModuleName}"
         sonarHostAddress = "https://sonar-ccs.apps.gocpp2.tcs.turkcell.tgc"
         sonarToken = "a17f8d7b41a6f1676e9095759575293d541086d3"
-        projectkeysonar = "${serviceId}_${appServiceName.toUpperCase()}.${softwareModuleName}.${subsoftwareModuleName}"
+        projectkeysonar = "${appServiceId}_${appServiceName.toUpperCase()}.${softwareModuleName}"
         nugetRegistryAddress = "https://artifactory.turkcell.com.tr/artifactory/api/nuget/virtual-nuget/"
+
         exclusionsTYPE = "NPM"
 	}
 
 
     stages {
-        // stage ('Continuous Integration'){
+        // stage('Build') {
 
-        //     parallel {
-        //         stage('Openshift Build') {
-        //             stages  {
-        //                 stage('Configuration') {
-        //                     when {
-        //                         anyOf {
-        //                             expression {  "${env.BRANCH_NAME}" == "${mainBranch}"    }
-        //                         }
-        //                     }
-        //                     steps {
-        //                         script {
-        //                             printDebugMessage ("Openshift Project: ${openshiftProjectName}")
+        //     steps{
+        //         script {
+        //             printSectionBoundry ("Build stage starting...")
+        //             sh "dotnet restore"
+        //             sh "dotnet build"
 
-        //                             newImageUrl = "${dockerRegistryBaseUrl}/${appServiceName}/${softwareModuleName}/${subsoftwareModuleName}:${appVersion}"
-
-        //                             printDebugMessage ("newImageUrl = " + newImageUrl)
-        //                             printSectionBoundry("Configuration stage finished!")
-        //                         }
-        //                     }
-        //                 }
-
-        //                 stage('Build Docker') {
-        //                     when {
-        //                         anyOf {
-        //                             expression {  "${env.BRANCH_NAME}" == "${mainBranch}"    }
-        //                         }
-        //                     }
-        //                     steps {
-        //                         script {
-        //                             printSectionBoundry ("Build Docker stage starting...")
-        //                             printDebugMessage ("newImageUrl2 = " + newImageUrl)
-
-		// 					        openshiftClient {
-		// 					        	openshift.apply(
-        //                                 openshift.process(readFile(file: buildConfigTemplate),
-        //                                 "-p", "APP_NAME=${subsoftwareModuleName}",
-        //                                 "-p", "APP_VERSION=${appVersion}",
-        //                                 "-p", "SOURCE_REPOSITORY_URL=${GIT_URL}",
-        //                                 "-p", "BRANCH_NAME=${env.BRANCH_NAME}",
-        //                                 "-p", "PUSH_SECRET=${imagePushSecret}",
-        //                                 "-p", "PULL_SECRET=${imagePullSecret}",
-        //                                 "-p", "REGISTRY_URL=${newImageUrl}",
-        //                                 "-p", "SOURCE_SECRET_NAME=${gitCredentialSecret}",
-        //                                 "-p", "DOCKERFILE_PATH=./Dockerfile"
-        //                                 )
-        //                                 )
-		// 					        	openshift.startBuild("${subsoftwareModuleName}", "--wait", "--follow")
-		// 					        }
-
-        //                             printSectionBoundry("Build Docker stage finished!")
-        //                         }
-        //                     }
-        //                 }
-        //             }
+        //             printSectionBoundry("Build stage finished!")
         //         }
         //     }
         // }
+        stage ('Continuous Integration'){
+
+            parallel {
+                stage('Openshift Build') {
+                    stages  {
+                        stage('Configuration') {
+                            when {
+                                anyOf {
+                                    expression {  "${env.BRANCH_NAME}" == "${mainBranch}"    }
+                                }
+                            }
+                            steps {
+                                script {
+                                    printDebugMessage ("Openshift Project: ${openshiftProjectName}")
+
+                                    newImageUrl = "${dockerRegistryBaseUrl}/${appServiceName}/${softwareModuleName}/${subsoftwareModuleName}:${appVersion}"
+
+                                    printDebugMessage ("newImageUrl = " + newImageUrl)
+                                    printSectionBoundry("Configuration stage finished!")
+                                }
+                            }
+                        }
+
+                        stage('Build Docker') {
+                            when {
+                                anyOf {
+                                    expression {  "${env.BRANCH_NAME}" == "${mainBranch}"    }
+                                }
+                            }
+                            steps {
+                                script {
+                                    printSectionBoundry ("Build Docker stage starting...")
+                                    printDebugMessage ("newImageUrl2 = " + newImageUrl)
+
+							        openshiftClient {
+							        	openshift.apply(
+                                        openshift.process(readFile(file: buildConfigTemplate),
+                                        "-p", "APP_NAME=${subsoftwareModuleName}",
+                                        "-p", "APP_VERSION=${appVersion}",
+                                        "-p", "SOURCE_REPOSITORY_URL=${GIT_URL}",
+                                        "-p", "BRANCH_NAME=${env.BRANCH_NAME}",
+                                        "-p", "PUSH_SECRET=${imagePushSecret}",
+                                        "-p", "PULL_SECRET=${imagePullSecret}",
+                                        "-p", "REGISTRY_URL=${newImageUrl}",
+                                        "-p", "SOURCE_SECRET_NAME=${gitCredentialSecret}",
+                                        "-p", "DOCKERFILE_PATH=./Dockerfile"
+                                        )
+                                        )
+							        	openshift.startBuild("${subsoftwareModuleName}", "--wait", "--follow")
+							        }
+
+                                    printSectionBoundry("Build Docker stage finished!")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         stage('Sonar - Code Quality') {
-            environment {				
-                PATH="$PATH:/tmp/tools/oc/4.4:/home/jenkins/.dotnet/tools"
-				sonarScannerHome = tool 'sonar-scanner-dotnet'
-    		}
-            when {
-                anyOf {
-                    branch "stb"
-                }
-            }
-            steps {
-                script {
-                    printSectionBoundry ("Code Quality/Static Code Analysis stage starting...")
+			steps {
+				script {
+					sh "echo you are on the Code Quality step.. "
 
-                        sh "dotnet ${sonarScannerHome}/SonarScanner.MSBuild.dll begin /d:sonar.host.url=${sonarHostAddress} /d:sonar.login=${sonarToken} /k:${softwareModuleName} /d:sonar.verbose=true /v:${appVersion}"
-                        sh "dotnet restore src/TurkcellDigitalSchool.Account.Api/TurkcellDigitalSchool.Account.Api.csproj -s  ${nugetRegistryAddress}"
-                        sh "dotnet build src/TurkcellDigitalSchool.Account.Api/TurkcellDigitalSchool.Account.Api.csproj -c Release"
-                        sh "dotnet ${sonarScannerHome}/SonarScanner.MSBuild.dll end /d:sonar.login=${sonarToken}"
+                    exclusions = ""
+                    withSonarQubeEnv(credentialsId: 'ccs-sonar-token', installationName: 'ccs-sonar') {
+                    sh """
+                    set +x
+                    curl -LO https://artifactory.turkcell.com.tr/artifactory/turkcell-tools/sonar-scanner/sonar-scanner-cli-4.4.0.2170-linux-cert.zip
+                    unzip sonar-scanner-cli-4.4.0.2170-linux-cert.zip
+                    export JAVA_TOOL_OPTIONS=''
+                    sonar-scanner-4.4.0.2170-linux/bin/sonar-scanner -X \
+                    -Dsonar.javascript.node.maxspace=4096\
+                    -Dsonar.projectName=${sonarProjectKey} \
+                    -Dsonar.projectKey=${sonarProjectKey} \
+                    -Dsonar.host.url=${SONAR_URL} \
+                    -Dsonar.login=${SONAR_LOGIN_KEY} \
+                    -Dsonar.sources=src/TurkcellDigitalSchool.Account.Api    \
+                    -Dsonar.exclusions=${exclusions} \
+                    -Dsonar.coverage.exclusions=${exclusions} \
+                    -Dsonar.test.exclusions=${exclusions}
+                    """ 
+                        
+                    }
 
-                    printSectionBoundry("Code Quality/Static Code Analysis stage finished!")
-                }
-            }
+                    echo "Code Quality/Static Code Analysis stage finished!"
+				}
+			}
         }
         stage('code security') {
             when{
@@ -150,6 +170,7 @@ pipeline {
             steps{
                     script {
                         sh "echo static application security testing SAST"
+
                         fortifyScanner = tool 'fortify-scanner'
                         fortifyRemoteAnalysis remoteAnalysisProjectType: fortifyOther(),
                                 uploadSSC: [appName: "${fortifyProjectKey}", appVersion: env.BRANCH_NAME]
@@ -158,48 +179,44 @@ pipeline {
             }
         
         stage('BlackDuck Scan') {
-            // when{
-            //         branch "releasable"
-            // }
             steps{
                 script {
-                    devopsLibrary.blackduckWithMSBuild(exclusionsTYPE)
+                    devopsLibrary.blackduckWithLinuxMSBuild(exclusionsTYPE)
                 }
             }
         }
 
-        // stage('Openshift Deployment') {
-        //     steps {
-        //         script {
-        //             printSectionBoundry ("Deploy stage starting...")
-		// 			if (params.jobAction == 'Promotion & Deploy') {
+        stage('Openshift Deployment') {
+            steps {
+                script {
+                    printSectionBoundry ("Deploy stage starting...")
+					if (params.jobAction == 'Promotion & Deploy') {
 
-		// 			imageUrlParsing (params.artifactPath)
-        //         	printDebugMessage ( "image`s name: "   + imageName )
-        //         	printDebugMessage ( "image`s tag: "    + imageTag  )
-        //             newImageUrl= "${imageName}:${imageTag}"
+					imageUrlParsing (params.artifactPath)
+                	printDebugMessage ( "image`s name: "   + imageName )
+                	printDebugMessage ( "image`s tag: "    + imageTag  )
+                    newImageUrl= "${imageName}:${imageTag}"
 
-		// 			// below part must be added for local-docker-dist-prod deployment.yaml
-      	// 			//imagePullSecrets:
-      	// 			//  - name: artifactory-ifts
-        //             // or oc secrets link default artifactory-ifts --for=pull
-		// 			}
-        //             artifactoryDeployInfo = artifactoryDeployInfo + "<br /><br />An Docker Image with URL below has been used in this build:<br />" + "https://artifactory.turkcell.com.tr/artifactory/" + newImageUrl
-
-
-        //                 openshiftClient {
-        //                     openshift.apply(openshift.process(readFile(file: deploymentConfigTemplate), "-p", "REGISTRY_URL=${newImageUrl}", "-p", "APP_NAME=${subsoftwareModuleName}","-p", "NAMESPACE=${openshiftProjectName}"))
-        //                     def dc = openshift.selector('dc', "${subsoftwareModuleName}")
-        //                     dc.rollout().status()
-        //                 }
+					// below part must be added for local-docker-dist-prod deployment.yaml
+      				//imagePullSecrets:
+      				//  - name: artifactory-ifts
+                    // or oc secrets link default artifactory-ifts --for=pull
+					}
+                    artifactoryDeployInfo = artifactoryDeployInfo + "<br /><br />An Docker Image with URL below has been used in this build:<br />" + "https://artifactory.turkcell.com.tr/artifactory/" + newImageUrl
 
 
-        //             printSectionBoundry("Deploy stage finished!")
-        //         }
-        //     }
-        // }
+                        openshiftClient {
+                            openshift.apply(openshift.process(readFile(file: deploymentConfigTemplate), "-p", "REGISTRY_URL=${newImageUrl}", "-p", "APP_NAME=${subsoftwareModuleName}","-p", "NAMESPACE=${openshiftProjectName}"))
+                            def dc = openshift.selector('dc', "${subsoftwareModuleName}")
+                            dc.rollout().status()
+                        }
+
+
+                    printSectionBoundry("Deploy stage finished!")
+                }
+            }
+        }
     }
-
 
     // post{
     //     success {
