@@ -321,7 +321,8 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                     Name = s.User.Name,
                     SurName = s.User.SurName,
                     Email = s.User.Email,
-                    MobilPhones = s.User.MobilePhones
+                    MobilPhones = s.User.MobilePhones,
+                    ShareCalendarWithParent = s.User.ShareCalendarWithParent
                 })
                 .ToList();
 
