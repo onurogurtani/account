@@ -141,8 +141,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         private static string FieldIsNotNullOrEmpty = Messages.FieldIsNotNullOrEmpty;
 
         [MessageConstAttr(MessageCodeType.Error)]
-        private static string CommunicationChannelOneOpen = Constants.Messages.CommunicationChannelOneOpen;
-        [MessageConstAttr(MessageCodeType.Error)]
         private static string CommunicationChannelRequiredPhone = Constants.Messages.CommunicationChannelRequiredPhone;
 
         [MessageConstAttr(MessageCodeType.Error)]
@@ -239,11 +237,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         {
             var userId = _tokenHelper.GetUserIdByCurrentToken();
             var getUser = GetUserById(userId);
-
-            if (!studentCommunicationPreferencesDto.IsCall && !studentCommunicationPreferencesDto.IsSms && !studentCommunicationPreferencesDto.IsEMail && !studentCommunicationPreferencesDto.IsNotification)
-            {
-                return string.Format(CommunicationChannelOneOpen.PrepareRedisMessage());
-            }
 
             if ((studentCommunicationPreferencesDto.IsCall || studentCommunicationPreferencesDto.IsSms) && string.IsNullOrWhiteSpace(getUser.MobilePhones))
             {
