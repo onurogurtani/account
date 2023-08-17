@@ -84,7 +84,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 
 
             // Kullanýcýnýn Sahip olduðu paketlerden gelen rollerin yetkileri
-            var now = DateTime.Now.Date;
+            var now = DateTime.Now;
             var packageRoleIds = new List<long>();
 
             if (userType == UserType.Parent)
@@ -92,7 +92,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 
                 packageRoleIds = (from up in Context.UserPackages.Where(w => !w.IsDeleted)
                                   join p in Context.Packages.Where(w => !w.IsDeleted && w.IsActive) on up.PackageId equals p.Id
-                                  join pr in Context.PackageRoles.Where(w => !w.IsDeleted &&  Context.Roles.Any(aa=>!aa.IsDeleted && aa.Id == w.RoleId && aa.UserType==UserType.Parent)) on up.PackageId equals pr.PackageId
+                                  join pr in Context.PackageRoles.Where(w => !w.IsDeleted &&  Context.Roles.Any(aa=>!aa.IsDeleted && aa.Id == w.RoleId && aa.UserType== userType)) on up.PackageId equals pr.PackageId
                                   where Context.StudentParentInformations.Any(w => w.ParentId == userId && w.UserId == up.UserId && !w.IsDeleted)
                                   && p.StartDate <= now && p.FinishDate >= now
                                   select pr.RoleId).ToList();
@@ -101,7 +101,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
             {
                 packageRoleIds = (from up in Context.UserPackages.Where(w => !w.IsDeleted)
                                   join p in Context.Packages.Where(w => !w.IsDeleted && w.IsActive) on up.PackageId equals p.Id
-                                  join pr in Context.PackageRoles.Where(w => !w.IsDeleted) on up.PackageId equals pr.PackageId
+                                  join pr in Context.PackageRoles.Where(w => !w.IsDeleted && Context.Roles.Any(aa => !aa.IsDeleted && aa.Id == w.RoleId && aa.UserType == userType)) on up.PackageId equals pr.PackageId
                                   where
                                   up.UserId == userId && p.StartDate <= now && p.FinishDate >= now
                                   select pr.RoleId

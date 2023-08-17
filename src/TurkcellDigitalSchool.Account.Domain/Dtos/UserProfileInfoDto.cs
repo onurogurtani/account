@@ -68,6 +68,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
     public class PackageInfoDto
     {
         public long Id { get; set; }
+        public long UserId { get; set; }
         public string PackageName { get; set; }
         public File File { get; set; }
         public DateTime PurchaseDate { get; set; }
