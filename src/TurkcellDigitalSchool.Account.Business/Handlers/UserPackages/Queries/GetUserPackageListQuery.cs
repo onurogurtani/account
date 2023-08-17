@@ -69,6 +69,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
                             {
                                 var a = new GetUserTestExamPackageDto();
                                 a.Id = (long)reader["packageid"];
+                                a.ParentId = (long)reader["parentid"];
                                 a.TestExamId = (long)reader["testexamid"];
                                 a.PackageTypeEnum = (int)reader["packagetypeenum"];
                                 userPackageList.Add(a);
