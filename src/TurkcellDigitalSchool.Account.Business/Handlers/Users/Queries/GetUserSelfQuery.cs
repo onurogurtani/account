@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute; 
@@ -24,12 +25,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
             private readonly IUserRepository _userRepository;
             private readonly IMapper _mapper; 
             private readonly ITokenHelper _tokenHelper;
+            private readonly IMediator _mediator;
 
-            public GetUserSelfQueryHandler(IUserRepository userRepository, IMapper mapper, ITokenHelper tokenHelper)
+            public GetUserSelfQueryHandler(IUserRepository userRepository, IMapper mapper, ITokenHelper tokenHelper, IMediator mediator)
             {
                 _userRepository = userRepository;
                 _mapper = mapper; 
                 _tokenHelper = tokenHelper;
+                _mediator = mediator;
             }
 
             public async Task<DataResult<CurrentUserDto>> Handle(GetUserSelfQuery request, CancellationToken cancellationToken)
@@ -37,6 +40,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                 long userId = _tokenHelper.GetUserIdByCurrentToken();
                 var user = await _userRepository.GetAsync(p => p.Id == userId);
                 var userDto = _mapper.Map<CurrentUserDto>(user);
+
+
+                userDto.PackageStatus= await _mediator.Send(new GetPackageInformationForUserQuery { UserId = userId });
 
                 var  organisation = await _userRepository.Query().Include(i => i.OrganisationUsers.Where(w=>w.IsActive && !w.IsDeleted)).ThenInclude(i => i.Organisation)
                     .ThenInclude(i=>i.OrganisationType)

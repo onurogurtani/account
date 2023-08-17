@@ -78,8 +78,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
                     connection.Close();
                     return new SuccessDataResult<List<GetUserTestExamPackageDto>>(userPackageList, Messages.SuccessfulOperation);
                 }
-            }
-
+            } 
         }
     }
 }

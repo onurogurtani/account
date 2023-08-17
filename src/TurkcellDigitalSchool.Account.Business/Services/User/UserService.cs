@@ -15,6 +15,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using MediatR;
 using TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries;
+using TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries;
 
 namespace TurkcellDigitalSchool.Account.Business.Services.User
 {
@@ -334,28 +335,11 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
 
             foreach (var item in getParents)
             {
-                var userPackages = _mediator.Send(new GetUserPackageListQuery
+                var userPackageInformaiton = _mediator.Send(new GetPackageInformationForUserQuery
                 {
                     UserId = item.Id
                 }).Result;
-                 
-                var packageIds = userPackages.Data.Select(s => s.Id).ToList();
-
-                packageIds.AddRange(userPackages.Data.Select(s => s.ParentId).ToList());
-
-                var now = DateTime.Now;
-                var userPackageTypes = _packageRepository.Query().Where(w => packageIds.Contains(w.Id) && w.StartDate <= now && w.FinishDate >= now).Select(s => s.PackageTypeEnum).ToList();
-
-                item.PackageStatus = new PackageStatusDto
-                {
-                    IsLesson = userPackageTypes.Any(a => a == PackageTypeEnum.Lesson),
-                    IsCoachService = userPackageTypes.Any(a => a == PackageTypeEnum.CoachService),
-                    IsTestExam = userPackageTypes.Any(a => a == PackageTypeEnum.TestExam),
-                    IsMotivationEvent = userPackageTypes.Any(a => a == PackageTypeEnum.MotivationEvent),
-                    IsFree = userPackageTypes.Any(a => a == PackageTypeEnum.Free),
-                    IsPrivateLesson = userPackageTypes.Any(a => a == PackageTypeEnum.PrivateLesson),
-                    IsDemo = userPackageTypes.Any(a => a == PackageTypeEnum.Demo)
-                };
+                item.PackageStatus = userPackageInformaiton;
             };
             return getParents;
         }
