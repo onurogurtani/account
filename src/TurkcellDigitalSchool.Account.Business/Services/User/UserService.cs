@@ -32,6 +32,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         private readonly IClassroomRepository _classroomRepository;
         private readonly ITokenHelper _tokenHelper;
         private readonly IMediator _mediator;
+        private readonly IPackageRepository _packageRepository;
 
         public UserService(IUserRepository userRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository,
             ICountyRepository countyRepository, ISchoolRepository schoolRepository,
@@ -39,7 +40,8 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             IUserContratRepository userContratRepository,
             IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository,
             IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository, IFileRepository fileRepository,
-            IClassroomRepository classroomRepository, ITokenHelper tokenHelper, IMediator mediator)
+            IClassroomRepository classroomRepository, ITokenHelper tokenHelper, IMediator mediator,
+            IPackageRepository packageRepository)
         {
             _userRepository = userRepository;
             _studentParentInformationRepository = studentParentInformationRepository;
@@ -53,6 +55,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             _classroomRepository = classroomRepository;
             _tokenHelper = tokenHelper;
             _mediator = mediator;
+            _packageRepository = packageRepository;
         }
         public PersonalInfoDto GetByPersonalInformation(long userId)
         {
@@ -331,22 +334,28 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
 
             foreach (var item in getParents)
             {
-                var userPackage =_mediator.Send(new GetUserPackageListQuery
+                var userPackages = _mediator.Send(new GetUserPackageListQuery
                 {
                     UserId = item.Id
                 }).Result;
+                 
+                var packageIds = userPackages.Data.Select(s => s.Id).ToList();
 
+                packageIds.AddRange(userPackages.Data.Select(s => s.ParentId).ToList());
+
+                var now = DateTime.Now;
+                var userPackageTypes = _packageRepository.Query().Where(w => packageIds.Contains(w.Id) && w.StartDate <= now && w.FinishDate >= now).Select(s => s.PackageTypeEnum).ToList();
 
                 item.PackageStatus = new PackageStatusDto
                 {
-                    IsLesson = userPackage.Data.Any(a => a.PackageTypeEnum == PackageTypeEnum.Lesson.GetHashCode()),
-                    IsCoachService = userPackage.Data.Any(a => a.PackageTypeEnum == PackageTypeEnum.CoachService.GetHashCode()),
-                    IsTestExam = userPackage.Data.Any(a => a.PackageTypeEnum == PackageTypeEnum.TestExam.GetHashCode()),
-                    IsMotivationEvent = userPackage.Data.Any(a => a.PackageTypeEnum == PackageTypeEnum.MotivationEvent.GetHashCode()),
-                    IsFree = userPackage.Data.Any(a => a.PackageTypeEnum == PackageTypeEnum.Free.GetHashCode()),
-                    IsPrivateLesson = userPackage.Data.Any(a => a.PackageTypeEnum == PackageTypeEnum.PrivateLesson.GetHashCode()),
-                    IsDemo = userPackage.Data.Any(a => a.PackageTypeEnum == PackageTypeEnum.Demo.GetHashCode())
-                }; 
+                    IsLesson = userPackageTypes.Any(a => a == PackageTypeEnum.Lesson),
+                    IsCoachService = userPackageTypes.Any(a => a == PackageTypeEnum.CoachService),
+                    IsTestExam = userPackageTypes.Any(a => a == PackageTypeEnum.TestExam),
+                    IsMotivationEvent = userPackageTypes.Any(a => a == PackageTypeEnum.MotivationEvent),
+                    IsFree = userPackageTypes.Any(a => a == PackageTypeEnum.Free),
+                    IsPrivateLesson = userPackageTypes.Any(a => a == PackageTypeEnum.PrivateLesson),
+                    IsDemo = userPackageTypes.Any(a => a == PackageTypeEnum.Demo)
+                };
             };
             return getParents;
         }

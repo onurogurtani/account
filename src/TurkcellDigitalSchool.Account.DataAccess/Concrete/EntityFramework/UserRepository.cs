@@ -66,9 +66,10 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 
          
         public List<OperationClaim> GetClaims(long userId)
-        {
-
+        { 
             var userType = Context.Users.Where(w => w.Id == userId).Select(s => s.UserType).FirstOrDefault();
+           
+
             // Kullanýcýnýn sahip olduðu rollerin claimleri  
             var claims  = (from user in Context.Users
                           join userRole in Context.UserRoles on user.Id equals userRole.UserId
@@ -80,19 +81,33 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
                               roleClaim.ClaimName
                           }).Distinct().ToList();
             //////////////////////////////////////////////////
-            
+
 
             // Kullanýcýnýn Sahip olduðu paketlerden gelen rollerin yetkileri
             var now = DateTime.Now.Date;
-            var packageRoleIds  =   (from up in Context.UserPackages.Where(w=>!w.IsDeleted)
+            var packageRoleIds = new List<long>();
+
+            if (userType == UserType.Parent)
+            {
+
+                packageRoleIds = (from up in Context.UserPackages.Where(w => !w.IsDeleted)
+                                  join p in Context.Packages.Where(w => !w.IsDeleted && w.IsActive) on up.PackageId equals p.Id
+                                  join pr in Context.PackageRoles.Where(w => !w.IsDeleted &&  Context.Roles.Any(aa=>!aa.IsDeleted && aa.Id == w.RoleId && aa.UserType==UserType.Parent)) on up.PackageId equals pr.PackageId
+                                  where Context.StudentParentInformations.Any(w => w.ParentId == userId && w.UserId == up.UserId && !w.IsDeleted)
+                                  && p.StartDate <= now && p.FinishDate >= now
+                                  select pr.RoleId).ToList();
+            }
+            else
+            {
+                packageRoleIds = (from up in Context.UserPackages.Where(w => !w.IsDeleted)
                                   join p in Context.Packages.Where(w => !w.IsDeleted && w.IsActive) on up.PackageId equals p.Id
                                   join pr in Context.PackageRoles.Where(w => !w.IsDeleted) on up.PackageId equals pr.PackageId
-                                  where 
-                                  up.UserId == userId &&  p.StartDate <= now && p.FinishDate >= now
+                                  where
+                                  up.UserId == userId && p.StartDate <= now && p.FinishDate >= now
                                   select pr.RoleId
-                ).ToList();
-
-
+                            ).ToList();
+            }
+             
             var packageClaims = (Context.RoleClaims.Where(w => packageRoleIds.Contains(w.RoleId) && !w.IsDeleted)
                 .Select(s => new
                 {
