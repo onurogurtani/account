@@ -265,6 +265,42 @@ pipeline {
 
   
 
+    post {
+        always {
+			script{
+                mailBody += ''
+               
+            }
+            echo "this step executing ALWAYS"
+        }
+        success {		
+			script{		
+                print("build success")
+                mailBody+="<p style='color:green;'>Everything is done. Version: </p>"
+
+            }            
+            mail    to: configuration.successMailReceivers,
+                    mimeType: 'text/html',
+                    subject: "Pipeline Finished Successfully: ",
+                    body: mailBody
+            echo "this step executing SUCCESS"
+        }
+        failure {
+			script{
+                mailBody+="<p style='color:red;'>Something is wrong with </p>"
+            }
+            mail    to: configuration.failureMailReceivers,
+                    mimeType: 'text/html',
+                    subject: "Failed Pipeline:",
+                    body: mailBody
+            echo "this step executing FAILURE"
+        }
+        cleanup {
+            echo "this step executing CLEANUP"
+        }
+    }
+
+
 
 
 }
