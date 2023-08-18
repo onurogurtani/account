@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Services.User;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.DataAccess.ReadOnly.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Enums;
@@ -25,8 +26,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
             private readonly IStudentParentInformationRepository _studentParentInformationRepository;
             private readonly ICoachLeaderCoachRepository _coachLeaderCoachRepository;
             private readonly IUserService _userService;
+            private readonly IFileRepository _fileRepository;
 
-            public GetUsersForChatQueryHandler(IUserRepository userRepository, IStudentCoachRepository studentCoachRepository, IStudentParentInformationRepository studentParentInformationRepository, ICoachLeaderCoachRepository coachLeaderCoachRepository, ITokenHelper tokenHelper, IUserService userService)
+            public GetUsersForChatQueryHandler(IUserRepository userRepository, IStudentCoachRepository studentCoachRepository, IStudentParentInformationRepository studentParentInformationRepository, ICoachLeaderCoachRepository coachLeaderCoachRepository, ITokenHelper tokenHelper, IUserService userService, IFileRepository fileRepository)
             {
                 _userRepository = userRepository;
                 _studentCoachRepository = studentCoachRepository;
@@ -34,6 +36,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                 _coachLeaderCoachRepository = coachLeaderCoachRepository;
                 _tokenHelper = tokenHelper;
                 _userService = userService;
+                _fileRepository = fileRepository;
             }
 
             public async Task<DataResult<IEnumerable<UserChatDto>>> Handle(GetUsersForChatQuery request, CancellationToken cancellationToken)
@@ -55,15 +58,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                                        where studentCoach.UserId == currentUserId
                                        select user) // Coach Leader List
                                 .Distinct()
-                                .Select(user => new UserChatDto
-                                {
-                                     Id = user.Id,
-                                     Name = user.Name,
-                                     SurName = user.SurName,
-                                     AvatarId = user.AvatarId,
-                                     UserType = user.UserType
-                                })
-                                .ToList();
+                               .Select(user => new UserChatDto
+                               {
+                                   Id = user.Id,
+                                   Name = user.Name,
+                                   SurName = user.SurName,
+                                   AvatarPath = user.AvatarId > 0 ? _fileRepository.Query().FirstOrDefault(g => g.Id == user.AvatarId).FilePath : "",
+                                   UserType = user.UserType
+                               }).ToList();
                     userChats.AddRange(result);
                 }
 
@@ -85,7 +87,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                                     Id = user.Id,
                                     Name = user.Name,
                                     SurName = user.SurName,
-                                    AvatarId = user.AvatarId,
+                                    AvatarPath = user.AvatarId > 0 ? _fileRepository.Query().FirstOrDefault(g => g.Id == user.AvatarId).FilePath : "",
                                     UserType = user.UserType
                                 })
                                 .ToList();
@@ -109,7 +111,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                                     Id = user.Id,
                                     Name = user.Name,
                                     SurName = user.SurName,
-                                    AvatarId = user.AvatarId,
+                                    AvatarPath = user.AvatarId > 0 ? _fileRepository.Query().FirstOrDefault(g => g.Id == user.AvatarId).FilePath : "",
                                     UserType = user.UserType
                                 })
                                 .ToList();
@@ -135,7 +137,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                                     Id = user.Id,
                                     Name = user.Name,
                                     SurName = user.SurName,
-                                    AvatarId = user.AvatarId,
+                                    AvatarPath = user.AvatarId > 0 ? _fileRepository.Query().FirstOrDefault(g => g.Id == user.AvatarId).FilePath : "",
                                     UserType = user.UserType
                                 })
                                 .ToList();
