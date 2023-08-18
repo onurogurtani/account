@@ -22,6 +22,8 @@ pipeline {
         appServiceId = "471949"
 
         appVersion = "${mainBranch}-${env.BUILD_NUMBER}"
+        
+        zipName="${softwareModuleName}.zip"
 
         artifactoryHostAddress = "artifactory.turkcell.com.tr"
 
@@ -48,7 +50,7 @@ pipeline {
         defaultMailReceivers = "yusuf.daskin@turkcell.com.tr"
         successMailReceivers = "${defaultMailReceivers}"
         failureMailReceivers = "${defaultMailReceivers}"
-
+    
         artifactoryDeployInfo = " "
         artifactDeployVersion = " "
         artifactoryPathFileJar = " "
@@ -217,52 +219,54 @@ pipeline {
             }
         }
 
- /*
-        stage('Openshift Deployment') {
-            when {
-                anyOf {
-                    expression {  "${env.BRANCH_NAME}" == "${mainBranch}"    }
-                }
-            }
-            steps {
-                script {
-                    printSectionBoundry ("Deploy stage starting...")
-					if (params.jobAction == 'Promotion & Deploy') {
-
-					imageUrlParsing (params.artifactPath)
-                	printDebugMessage ( "image`s name: "   + imageName )
-                	printDebugMessage ( "image`s tag: "    + imageTag  )
-                    newImageUrl= "${imageName}:${imageTag}"
-
-					// below part must be added for local-docker-dist-prod deployment.yaml
-      				//imagePullSecrets:
-      				//  - name: artifactory-ifts
-                    // or oc secrets link default artifactory-ifts --for=pull
-					}
-                    artifactoryDeployInfo = artifactoryDeployInfo + "<br /><br />An Docker Image with URL below has been used in this build:<br />" + "https://artifactory.turkcell.com.tr/artifactory/" + newImageUrl
-
-
-                        openshiftClient {
-                            openshift.apply(
-                                openshift.process(
-                                    readFile(file: deploymentConfigTemplate), 
-                                    "-p", "REGISTRY_URL=${newImageUrl}", 
-                                    "-p", "APP_NAME=${appName}",
-                                    "-p", "NAMESPACE=${openshiftProjectName}"
-                                )
-                            )
-                            def dc = openshift.selector('dc', "${appName}")
-                            dc.rollout().status()
-                        }
-
-
-                    printSectionBoundry("Deploy stage finished!")
-                }
-            }
-        }
-
-        */
+ 
     }
+
+    post {
+    always {
+      echo "this step executing ALWAYS"
+      script{
+          mailBody = ""
+      }
+    }
+    success {
+      script{        
+        print("build success")
+        mailBody+="<p style='color:green;'>Everything is done. Version: <a href='${env.BUILD_URL}/console'>${appVersion}</a> </p>"
+      }            
+      mail    to: successMailReceivers,
+              mimeType: 'text/html',
+              subject: "Pipeline Finished Successfully: ${currentBuild.fullDisplayName}",
+              body: mailBody
+      echo "this step executing SUCCESS"
+    }
+    failure {
+      echo "this step executing FAILURE"
+        echo "this step executing FAILURE"
+        script{
+          dir("${solutionFolder}"){
+            powershell "Remove-Item ${zipName} -Force"
+            powershell "Remove-Item ${softwareModuleName} -Force -Recurse"
+          }
+          mailBody+="<p style='color:red;'>Something is wrong with <a href='${env.BUILD_URL}/console'>${appVersion}</a> </p>"
+        }
+        mail    to: failureMailReceivers,
+                mimeType: 'text/html',
+                subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+                body: mailBody
+    }
+    cleanup {
+      echo "this step executing CLEANUP"
+      script{
+        dir("${solutionFolder}"){
+          powershell "Remove-Item ${zipName} -Force"
+          powershell "Remove-Item ${softwareModuleName} -Force -Recurse"
+        }
+      }
+    }
+  }
+
+
 
 }
 
