@@ -268,8 +268,7 @@ pipeline {
     post {
         always {
 			script{
-                mailBody += ''
-               
+                mailBody= ''
             }
             echo "this step executing ALWAYS"
         }
