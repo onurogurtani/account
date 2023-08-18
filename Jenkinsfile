@@ -217,7 +217,7 @@ pipeline {
             }
         }
 
-
+ /*
         stage('Openshift Deployment') {
             when {
                 anyOf {
@@ -260,6 +260,8 @@ pipeline {
                 }
             }
         }
+
+        */
     }
 
 }
