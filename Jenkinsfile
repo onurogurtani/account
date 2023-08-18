@@ -217,9 +217,8 @@ pipeline {
                 }
             }
         }
-
-/*
-        stage('Openshift Deployment') {
+        
+     /*   stage('Openshift Deployment') {
             when {
                 anyOf {
                     expression {  "${env.BRANCH_NAME}" == "${mainBranch}"    }
@@ -261,63 +260,10 @@ pipeline {
                 }
             }
         }
-*/
+   */
     }
 
-  post {
-    always {
-      echo "this step executing ALWAYS"
-      script{
-          mailBody = ""
-      }
-    }
-    success {
-      script{        
-        print("build success")
-        mailBody+="<p style='color:green;'>Everything is done. Version: 
-      
-        </p>"
-         /*mailBody+="<p style='color:green;'>Everything is done. Version: 
-        <a href='${env.BUILD_URL}/console'>${appVersion}</a> 
-        </p>"*/
-      }            
-      mail    to: successMailReceivers,
-              mimeType: 'text/html',
-              //subject: "Pipeline Finished Successfully: ${currentBuild.fullDisplayName}",
-              subject: "Pipeline Finished Successfully: ${currentBuild.fullDisplayName}",
-
-              body: mailBody
-      echo "this step executing SUCCESS"
-    }
-    failure {
-      echo "this step executing FAILURE"
-        echo "this step executing FAILURE"
-        script{
-        //   dir("${solutionFolder}"){
-        //     powershell "Remove-Item ${zipName} -Force"
-        //     powershell "Remove-Item ${softwareModuleName} -Force -Recurse"
-        //   }
-          //mailBody+="<p style='color:red;'>Something is wrong with <a href='${env.BUILD_URL}/console'>${appVersion}</a> </p>"
-          mailBody+="<p style='color:red;'>Something is wrong with w</p>"
-        
-        }
-        mail    to: failureMailReceivers,
-                mimeType: 'text/html',
-                //subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-                subject: "Failed Pipeline: ",
-                
-                body: mailBody
-    }
-    cleanup {
-      echo "this step executing CLEANUP"
-      script{
-        // dir("${solutionFolder}"){
-        //   powershell "Remove-Item ${zipName} -Force"
-        //   powershell "Remove-Item ${softwareModuleName} -Force -Recurse"
-        // }
-      }
-    }
-  }
+  
 
 
 
