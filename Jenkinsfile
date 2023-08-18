@@ -19,7 +19,7 @@ pipeline {
         softwareModuleName = "account"
         subsoftwareModuleName = "accountapi"
         appName = " "
-        serviceId = "471949"
+        appServiceId = "471949"
 
         appVersion = "${mainBranch}-${env.BUILD_NUMBER}"
 
@@ -45,7 +45,7 @@ pipeline {
         buildConfigTemplate = "openshift/build/buildconfig-template.yaml"			// openshift build config template yaml file
         deploymentConfigTemplate = "openshift/deploy/deployment.yaml"
 
-        defaultMailReceivers = ""
+        defaultMailReceivers = "TEAM-LEARNUP-DEVELOPMENT@turkcell.entp.tgc"
         successMailReceivers = "${defaultMailReceivers}"
         failureMailReceivers = "${defaultMailReceivers}"
 
@@ -53,11 +53,14 @@ pipeline {
         artifactDeployVersion = " "
         artifactoryPathFileJar = " "
         sonarPluginVersion = "3.7.0.1746"
-        sonarProjectKey = "${serviceId}_${appServiceName.toUpperCase()}.${softwareModuleName}.${subsoftwareModuleName}"
-        fortifyProjectKey = "${serviceId}_${appServiceName.toUpperCase()}.${softwareModuleName}-${subsoftwareModuleName}"
-		SONARQUBE_URL = "https://sonar-ccs.turkcell.com.tr/"
-		SONAR_URL = 'https://sonar-ccs.turkcell.com.tr/'
-		SONAR_LOGIN_KEY = ''
+        sonarProjectKey = "${appServiceId}_${appServiceName.toUpperCase()}.${softwareModuleName}"
+        fortifyProjectKey = "${appServiceId}_${appServiceName.toUpperCase()}.${softwareModuleName}"
+        sonarHostAddress = "https://sonar-ccs.apps.gocpp2.tcs.turkcell.tgc"
+        sonarToken = "a17f8d7b41a6f1676e9095759575293d541086d3"
+        projectkeysonar = "${appServiceId}_${appServiceName.toUpperCase()}.${softwareModuleName}"
+        nugetRegistryAddress = "https://artifactory.turkcell.com.tr/artifactory/api/nuget/virtual-nuget/"
+
+        exclusionsTYPE = "NPM"
 	}
 
 
@@ -144,6 +147,76 @@ pipeline {
                 }
             }
         }
+
+        stage('Sonar - Code Quality') {
+            
+            when{
+                anyOf{
+                    branch "feature/DevOpsSonar"
+                    //branch "dev"
+                    }
+                }
+			steps {
+				script {
+					sh "echo you are on the Code Quality step.. "
+
+                    exclusions = ""
+                    withSonarQubeEnv(credentialsId: 'ccs-sonar-token', installationName: 'ccs-sonar') {
+                    sh """
+                    set +x
+                    curl -LO https://artifactory.turkcell.com.tr/artifactory/turkcell-tools/sonar-scanner/sonar-scanner-cli-4.4.0.2170-linux-cert.zip
+                    unzip sonar-scanner-cli-4.4.0.2170-linux-cert.zip
+                    export JAVA_TOOL_OPTIONS=''
+                    sonar-scanner-4.4.0.2170-linux/bin/sonar-scanner -X \
+                    -Dsonar.javascript.node.maxspace=4096\
+                    -Dsonar.projectName=${sonarProjectKey} \
+                    -Dsonar.projectKey=${sonarProjectKey} \
+                    -Dsonar.host.url=${SONAR_URL} \
+                    -Dsonar.login=${SONAR_LOGIN_KEY} \
+                    -Dsonar.sources=src/TurkcellDigitalSchool.Account.Api    \
+                    -Dsonar.exclusions=${exclusions} \
+                    -Dsonar.coverage.exclusions=${exclusions} \
+                    -Dsonar.test.exclusions=${exclusions}
+                    """ 
+                        
+                    }
+
+                    echo "Code Quality/Static Code Analysis stage finished!"
+				}
+			}
+
+
+
+        }
+
+        stage('Fortify Security Scan') {
+            when{
+                branch "feature/DevOpsSonar"
+                //branch "stb"
+            }
+            steps{
+                    script {
+                        sh "echo static application security testing SAST"
+
+                        fortifyScanner = tool 'fortify-scanner'
+                        fortifyRemoteAnalysis remoteAnalysisProjectType: fortifyOther(),
+                                uploadSSC: [appName: "${fortifyProjectKey}", appVersion: env.BRANCH_NAME]
+                    }
+                }
+        }
+        
+        stage('BlackDuck Scan') {
+             when{
+                branch "feature/DevOpsSonar"
+                //branch "stb"
+            }
+            steps{
+                script {
+                    devopsLibrary.blackduckWithLinuxMSBuild(exclusionsTYPE)
+                }
+            }
+        }
+
 
         stage('Openshift Deployment') {
             when {
