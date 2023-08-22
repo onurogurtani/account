@@ -22,14 +22,26 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [AllowAnonymous]
         public string Ping()
         {
-            var address1 = _conf.GetValue<string>("SecretTest:TestText");
-            var address2 = _conf.GetValue<string>("TestText");
+            var constring1 = _conf.GetValue<string>("ConnectionStrings1:DArchPostgreLocalContext");
+            var constring2 = _conf.GetValue<string>("ConnectionStrings1:DArchPostgreContext");
+            var EuroMessageUserName = _conf.GetValue<string>("EuroMessageConfiguration1:UserName");
+            var EuroMessagePass = _conf.GetValue<string>("EuroMessageConfiguration1:Password");
 
-            var envDeger = Environment.GetEnvironmentVariable("SecretTest:TestText"); 
-            var result = "Config Değer 1 : " + (address1 ?? "") +
-                " Config Değer 2 : " + (address2 ?? "") +
-                "  Env Değer : " + (envDeger ?? "");
-             
+            var SmsConfigurationUser = _conf.GetValue<string>("SmsConfiguration1:User");
+            var SmsConfigurationPass = _conf.GetValue<string>("SmsConfiguration1:Password");
+            var SmsConfigurationContentId = _conf.GetValue<string>("SmsConfiguration1:ContentId");
+
+
+            var envDeger = Environment.GetEnvironmentVariable("SecretTest:TestText");
+            var result = " constring1 : " + (constring1 ?? "") + Environment.NewLine +
+           " constring2 : " + (constring2 ?? "") + Environment.NewLine +
+           " EuroMessageUserName : " + (EuroMessageUserName ?? "") + Environment.NewLine +
+           " EuroMessagePass : " + (EuroMessagePass ?? "") + Environment.NewLine +
+           " SmsConfigurationUser : " + (SmsConfigurationUser ?? "") + Environment.NewLine +
+           " SmsConfigurationPass : " + (SmsConfigurationPass ?? "") + Environment.NewLine +
+           " SmsConfigurationContentId : " + (SmsConfigurationContentId ?? "") + Environment.NewLine;
+
+
             return result;
         }
 
