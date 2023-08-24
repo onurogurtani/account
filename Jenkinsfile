@@ -45,7 +45,7 @@ pipeline {
         buildConfigTemplate = "openshift/build/buildconfig-template.yaml"			// openshift build config template yaml file
         deploymentConfigTemplate = "openshift/deploy/deployment.yaml"
 
-        defaultMailReceivers = "yusuf.daskin@turkcell.com.tr"
+        defaultMailReceivers = "TEAM-LEARNUP-DEVELOPMENT@turkcell.com.tr"
         successMailReceivers = "${defaultMailReceivers}"
         failureMailReceivers = "${defaultMailReceivers}"
 
