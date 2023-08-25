@@ -52,6 +52,72 @@ objects:
               imagePullPolicy: IfNotPresent
               terminationMessagePolicy: File
               image: '${REGISTRY_URL}'
+              env:
+                - name: ConnectionStrings__DArchPostgreContext
+                  valueFrom:
+                    secretKeyRef:
+                        name: '${SECRETPREFIXENV}'-connectionstrings-secrets
+                        key: DArchPostgreContext
+                - name: EuroMessageConfiguration__UserName
+                  valueFrom:
+                    secretKeyRef:
+                        name: '${SECRETPREFIXENV}'-euromessage-configuration-secrets
+                        key: UserName
+                - name: EuroMessageConfiguration__Password
+                  valueFrom:
+                    secretKeyRef:
+                        name: '${SECRETPREFIXENV}'-euromessage-configuration-secrets
+                        key: Password
+                - name: EmailConfiguration__UserName
+                  valueFrom:
+                    secretKeyRef:
+                        name: '${SECRETPREFIXENV}'-email-configuration-secrets
+                        key: UserName
+                - name: EmailConfiguration__Password
+                  valueFrom:
+                    secretKeyRef:
+                        name: '${SECRETPREFIXENV}'-email-configuration-secrets
+                        key: Password	
+                - name: CaptchaOptions__SecretKey
+                  valueFrom:
+                    secretKeyRef:
+                        name: '${SECRETPREFIXENV}'-captcha-options-secrets
+                        key: SecretKey		
+                - name: LdapConfig__adminUser
+                  valueFrom:
+                    secretKeyRef:
+                        name: '${SECRETPREFIXENV}'-ldap-config-secrets
+                        key: adminUser
+                - name: LdapConfig__adminPass
+                  valueFrom:
+                    secretKeyRef:
+                        name: '${SECRETPREFIXENV}'-ldap-config-secrets
+                        key: adminPass	
+                - name: CapConfig__UserName
+                  valueFrom:
+                    secretKeyRef:
+                        name: '${SECRETPREFIXENV}'-cap-config-secrets
+                        key: UserName
+                - name: CapConfig__Password
+                  valueFrom:
+                    secretKeyRef:
+                        name: '${SECRETPREFIXENV}'-cap-config-secrets
+                        key: Password	
+                - name: RedisConfig__Password
+                  valueFrom:
+                    secretKeyRef:
+                        name: '${SECRETPREFIXENV}'-redis-config-secrets
+                        key: Password						
+                - name: SmsConfiguration__User
+                  valueFrom:
+                    secretKeyRef:
+                        name: '${SECRETPREFIXENV}'-smsconfiguration-secrets
+                        key: User
+                - name: SmsConfiguration__Password
+                  valueFrom:
+                    secretKeyRef:
+                        name: '${SECRETPREFIXENV}'-smsconfiguration-secrets
+                        key: Password               
           restartPolicy: Always
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
@@ -66,6 +132,10 @@ parameters:
     displayName: Application Name
     description: Unique application name
     required: true
+  - name: SECRETPREFIXENV
+    displayName: Secret Prefix
+    description: Secret Prefix
+    required: true      
   - name: NAMESPACE
     displayName: Service Name
     description: Unique service name

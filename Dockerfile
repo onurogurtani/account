@@ -21,8 +21,10 @@ RUN dotnet publish "TurkcellDigitalSchool.Account.Api.csproj" -c Release -o /app
 
 FROM base AS final
 ARG deployEnv
+ARG secretPrefixEnv
 
 RUN echo "deployEnv = ${deployEnv}"
+RUN echo "secretPrefixEnv = ${secretPrefixEnv}"
 WORKDIR /app
 
 

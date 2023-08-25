@@ -53,60 +53,65 @@ objects:
               terminationMessagePolicy: File
               image: '${REGISTRY_URL}'
               env:
-                - name: ConnectionStrings1__DArchPostgreContext
+                - name: ConnectionStrings__DArchPostgreContext
                   valueFrom:
                     secretKeyRef:
-                        name: account-devturkcell-connectionstrings-secrets
+                        name: '${SECRETPREFIXENV}'-connectionstrings-secrets
                         key: DArchPostgreContext
-                - name: EuroMessageConfiguration1__UserName
+                - name: EuroMessageConfiguration__UserName
                   valueFrom:
                     secretKeyRef:
-                        name: devturkcell-euromessage-configuration-secrets
+                        name: '${SECRETPREFIXENV}'-euromessage-configuration-secrets
                         key: UserName
-                - name: EuroMessageConfiguration1__Password
+                - name: EuroMessageConfiguration__Password
                   valueFrom:
                     secretKeyRef:
-                        name: devturkcell-euromessage-configuration-secrets
+                        name: '${SECRETPREFIXENV}'-euromessage-configuration-secrets
                         key: Password
-                - name: SmsConfiguration1__User
+                - name: SmsConfiguration__User
                   valueFrom:
                     secretKeyRef:
-                        name: devturkcell-smsconfiguration-secrets
+                        name: '${SECRETPREFIXENV}'-smsconfiguration-secrets
                         key: User
-                - name: SmsConfiguration1__Password
+                - name: SmsConfiguration__Password
                   valueFrom:
                     secretKeyRef:
-                        name: devturkcell-smsconfiguration-secrets
+                        name: '${SECRETPREFIXENV}'-smsconfiguration-secrets
                         key: Password
-                - name: Kaltura1__Secret
+                - name: Kaltura__Secret
                   valueFrom:
                     secretKeyRef:
-                        name: devturkcell-kaltura-secrets
+                        name: '${SECRETPREFIXENV}'-kaltura-secrets
                         key: Secret
-                - name: LdapConfig1__adminUser
+                - name: CaptchaOptions__SecretKey
                   valueFrom:
                     secretKeyRef:
-                        name: devturkcell-ldap-config-secrets
+                        name: '${SECRETPREFIXENV}'-captcha-options-secrets
+                        key: SecretKey                        
+                - name: LdapConfig__adminUser
+                  valueFrom:
+                    secretKeyRef:
+                        name: '${SECRETPREFIXENV}'-ldap-config-secrets
                         key: adminUser
-                - name: LdapConfig1__adminPass
+                - name: LdapConfig__adminPass
                   valueFrom:
                     secretKeyRef:
-                        name: devturkcell-ldap-config-secrets
+                        name: '${SECRETPREFIXENV}'-ldap-config-secrets
                         key: adminPass
-                - name: CapConfig1__UserName
+                - name: CapConfig__UserName
                   valueFrom:
                     secretKeyRef:
-                        name: devturkcell-cap-config-secrets
+                        name: '${SECRETPREFIXENV}'-cap-config-secrets
                         key: UserName
-                - name: CapConfig1__Password
+                - name: CapConfig__Password
                   valueFrom:
                     secretKeyRef:
-                        name: devturkcell-cap-config-secrets
+                        name: '${SECRETPREFIXENV}'-cap-config-secrets
                         key: Password
-                - name: RedisConfig1__Password
+                - name: RedisConfig__Password
                   valueFrom:
                     secretKeyRef:
-                        name: devturkcell-redis-config-secrets
+                        name: '${SECRETPREFIXENV}'-redis-config-secrets
                         key: Password
           restartPolicy: Always
           terminationGracePeriodSeconds: 30
@@ -122,6 +127,10 @@ parameters:
     displayName: Application Name
     description: Unique application name
     required: true
+  - name: SECRETPREFIXENV
+    displayName: Secret Prefix
+    description: Secret Prefix
+    required: true    
   - name: NAMESPACE
     displayName: Service Name
     description: Unique service name
