@@ -33,6 +33,8 @@ objects:
           buildArgs: 
             - name: "deployEnv"
               value: ${DEPLOYENV}
+            - name: "secretPrefixEnv"
+              value: ${SECRETPREFIXENV}
       resources:
         requests:
           cpu: 250m
@@ -84,4 +86,8 @@ parameters:
   - name: DEPLOYENV
     displayName: Dockerfile deployEnv arg
     description: Dockerfile deployEnv arg
+    required: true
+  - name: SECRETPREFIXENV
+    displayName: Dockerfile secretPrefixEnv arg
+    description: Dockerfile secretPrefixEnv arg
     required: true

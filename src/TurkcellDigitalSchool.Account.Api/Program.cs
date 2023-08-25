@@ -1,11 +1,15 @@
 using System;
 using System.Net;
 using Autofac.Extensions.DependencyInjection;
+using Consul;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Extensions;
+using Winton.Extensions.Configuration.Consul; 
 
 namespace TurkcellDigitalSchool.Account.Api
 {
@@ -21,7 +25,10 @@ namespace TurkcellDigitalSchool.Account.Api
         public static void Main(string[] args)
         {
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            CreateHostBuilder(args).Build().Run();
+
+            var builder = CreateHostBuilder(args); 
+            builder.ConfigureAppConfigurationExtension(); 
+            builder.Build().Run();
         }
 
         /// <summary>
@@ -31,10 +38,10 @@ namespace TurkcellDigitalSchool.Account.Api
         /// <returns></returns>
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args) 
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory()) 
+            Host.CreateDefaultBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder =>
-                { 
+                {
                     webBuilder
                         .UseStartup<Startup>()
                         .ConfigureLogging(builder =>
@@ -56,7 +63,7 @@ namespace TurkcellDigitalSchool.Account.Api
                             options.Listen(IPAddress.Any, 6021, listenOptions =>
                             {
                             });
-                        }); 
+                        });
                 });
     }
 }
