@@ -13,7 +13,7 @@ pipeline {
 
 		// App Variables
         deployEnv = " "
-		secretPrefixEnv = " "
+		// secretPrefixEnv = " "
         mainBranch = " "
         appServiceName = "dijital_dershane_app"
         softwareModuleName = "account"
@@ -78,17 +78,17 @@ pipeline {
                     if ("${env.GIT_BRANCH}" == "dev") {
                         mainBranch = "dev"
                         deployEnv = "DEVTURKCELL"   
-						secretPrefixEnv= "devturkcell"
+						// secretPrefixEnv= "devturkcell"
                         appName = subsoftwareModuleName                    
                     } else if (env.GIT_BRANCH == "stb") {
                         mainBranch = "stb"
                         deployEnv = "STBTURKCELL"
-						secretPrefixEnv= "stbturkcell"
+						// secretPrefixEnv= "stbturkcell"
                         appName = subsoftwareModuleName + "-stb"
                     } else if (env.GIT_BRANCH == "prp") {
                         mainBranch = "prp"
                         deployEnv = "PRPTURKCELL"
-						secretPrefixEnv= "prpturkcell"
+						// secretPrefixEnv= "prpturkcell"
                         appName = subsoftwareModuleName + "-prp"
                     }
     
@@ -99,7 +99,7 @@ pipeline {
 
                     printDebugMessage ("mainBranch = " + mainBranch)
                     printDebugMessage ("deployEnv = " + deployEnv)
-                    printDebugMessage ("secretPrefixEnv = " + secretPrefixEnv)
+                    // printDebugMessage ("secretPrefixEnv = " + secretPrefixEnv)
                     printDebugMessage ("appName = " + appName)
 
                     printDebugMessage ("newImageUrl = " + newImageUrl)
