@@ -138,7 +138,7 @@ pipeline {
                                                 "-p", "SOURCE_SECRET_NAME=${gitCredentialSecret}",
                                                 "-p", "DOCKERFILE_PATH=./Dockerfile", 
                                                 "-p", "DEPLOYENV=${deployEnv}",
-                                                "-p", "SECRETPREFIXENV=${secretPrefixEnv}"
+                                                //"-p", "SECRETPREFIXENV=${secretPrefixEnv}"
                                             )
                                         )
 							        	openshift.startBuild("${appName}", "--wait", "--follow")
