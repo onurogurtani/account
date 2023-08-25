@@ -53,11 +53,61 @@ objects:
               terminationMessagePolicy: File
               image: '${REGISTRY_URL}'
               env:
-                - name: SecretTest__TestText
+                - name: ConnectionStrings1__DArchPostgreContext
                   valueFrom:
                     secretKeyRef:
-                        name: secret-test-secrets
-                        key: TestText
+                        name: account-devturkcell-connectionstrings-secrets
+                        key: DArchPostgreContext
+                - name: EuroMessageConfiguration1__UserName
+                  valueFrom:
+                    secretKeyRef:
+                        name: devturkcell-euromessage-configuration-secrets
+                        key: UserName
+                - name: EuroMessageConfiguration1__Password
+                  valueFrom:
+                    secretKeyRef:
+                        name: devturkcell-euromessage-configuration-secrets
+                        key: Password
+                - name: SmsConfiguration1__User
+                  valueFrom:
+                    secretKeyRef:
+                        name: devturkcell-smsconfiguration-secrets
+                        key: User
+                - name: SmsConfiguration1__Password
+                  valueFrom:
+                    secretKeyRef:
+                        name: devturkcell-smsconfiguration-secrets
+                        key: Password
+                - name: Kaltura1__Secret
+                  valueFrom:
+                    secretKeyRef:
+                        name: devturkcell-kaltura-secrets
+                        key: Secret
+                - name: LdapConfig1__adminUser
+                  valueFrom:
+                    secretKeyRef:
+                        name: devturkcell-ldap-config-secrets
+                        key: adminUser
+                - name: LdapConfig1__adminPass
+                  valueFrom:
+                    secretKeyRef:
+                        name: devturkcell-ldap-config-secrets
+                        key: adminPass
+                - name: CapConfig1__UserName
+                  valueFrom:
+                    secretKeyRef:
+                        name: devturkcell-cap-config-secrets
+                        key: UserName
+                - name: CapConfig1__Password
+                  valueFrom:
+                    secretKeyRef:
+                        name: devturkcell-cap-config-secrets
+                        key: Password
+                - name: RedisConfig1__Password
+                  valueFrom:
+                    secretKeyRef:
+                        name: devturkcell-redis-config-secrets
+                        key: Password
           restartPolicy: Always
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
