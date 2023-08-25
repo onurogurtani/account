@@ -12,7 +12,6 @@ pipeline {
 	environment {
 
 		// App Variables
-
         deployEnv = " "
         mainBranch = " "
         appServiceName = "dijital_dershane_app"
@@ -148,7 +147,7 @@ pipeline {
             }
         }
 
-        stage('Sonar - Code Quality') {
+        stage('Sonar-Code Quality') {
 
             when{
               anyOf{
@@ -185,7 +184,7 @@ pipeline {
 				}
 			}
         }
-        stage('code security') {
+        stage('Fortify-Code Security') {
              when{
               anyOf{
                 branch "stb"
@@ -214,7 +213,6 @@ pipeline {
                 }
             }
         }
-
 
         stage('Openshift Deployment') {
             when {
@@ -259,7 +257,6 @@ pipeline {
             }
         }
     }
-
 
     post{
         success {
