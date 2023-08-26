@@ -32,7 +32,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 {
                     if (app.Environment.EnvironmentName.EnvIsUseAutoMigration())
                     {
-                        context.Database.Migrate();
+                         context.Database.Migrate();
                     }
                     EnsureSeedData(context);
                 } 

@@ -67,9 +67,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                     getUser.ResidenceCityId = request.ResidenceCityId;
                     getUser.ResidenceCountyId = request.ResidenceCountyId;
                 }
-
+                getUser.MobilePhonesVerify = getUser.MobilePhonesVerify == true && getUser.MobilePhones == request.MobilPhone ? true : false;
                 getUser.MobilePhones = request.MobilPhone;
-                getUser.MobilePhonesVerify = getUser.MobilePhones == request.MobilPhone ? true : false;
 
                 if (getUser.Email != request.Email)
                 {

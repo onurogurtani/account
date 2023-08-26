@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using DotNetCore.CAP;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -6,23 +7,43 @@ using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
 using TurkcellDigitalSchool.Core.DataAccess;
 using TurkcellDigitalSchool.Core.DataAccess.Contexts;
+using TurkcellDigitalSchool.Core.Services.EntityChangeServices;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt; 
 
 namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
 {
     public class AccountDbContext : ProjectDbContext, IMsContext
     {
-        public AccountDbContext(ITokenHelper tokenHelper, IConfiguration configuration, ICapPublisher capPublisher) : base(tokenHelper,
-            configuration, capPublisher)
+        public AccountDbContext(ITokenHelper tokenHelper, IConfiguration configuration, ICapPublisher capPublisher, IEntityChangeServices entityChangeServices) : base(tokenHelper,
+            configuration, capPublisher, entityChangeServices)
         {
 
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var asssebly = Assembly.GetExecutingAssembly();
-            modelBuilder.ApplyConfigurationsFromAssembly(asssebly);
+            base.OnModelCreating(modelBuilder);
 
+            modelBuilder.HasDefaultSchema("account");
+            var asssebly = Assembly.GetExecutingAssembly();
+
+            modelBuilder.ApplyConfigurationsFromAssembly(asssebly);
+        }
+
+
+        //TODO Yusuf EF migration tablo. core taşınması gerek.
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                string machineName = Environment.MachineName;
+                base.OnConfiguring(optionsBuilder.UseNpgsql(_configuration.GetConnectionString("DArchPostgreContext")));
+            }
+            optionsBuilder.UseLowerCaseNamingConvention();
+            optionsBuilder.UseNpgsql(_configuration.GetConnectionString("DArchPostgreContext"), x => x.MigrationsHistoryTable("__EFMigrationsHistory", "account"));
+
+
+            _options = optionsBuilder.Options;
         }
 
         #region Owner Entities
@@ -39,8 +60,6 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
 
         public DbSet<ForgetPasswordFailCounter> ForgetPasswordFailCounters { get; set; }
         public DbSet<ImageOfPackage> ImageOfPackages { get; set; }
-        public DbSet<Institution> Institutions { get; set; }
-        public DbSet<InstitutionType> InstitutionTypes { get; set; }
         public DbSet<LoginFailCounter> LoginFailCounters { get; set; }
         public DbSet<LoginFailForgetPassSendLink> LoginFailForgetPassSendLinks { get; set; }
         public DbSet<Message> Messages { get; set; }
@@ -92,6 +111,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         public DbSet<GreetingMessage> GreetingMessages { get; set; }
         public DbSet<StudentCoach> StudentCoaches { get; set; }
         public DbSet<CoachLeaderCoach> CoachLeaderCoaches { get; set; }
+        public DbSet<PackageMenuAccess> PackageMenuAccesses { get; set; }
 
         #endregion
 

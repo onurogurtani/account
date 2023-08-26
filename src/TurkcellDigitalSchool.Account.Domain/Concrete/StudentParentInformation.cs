@@ -8,5 +8,6 @@ namespace TurkcellDigitalSchool.Account.Domain.Concrete
         public long ParentId { get; set; }
         public User User { get; set; }
         public User Parent { get; set; }
+        public bool StudentAccessToChat { get; set; }
     }
 }

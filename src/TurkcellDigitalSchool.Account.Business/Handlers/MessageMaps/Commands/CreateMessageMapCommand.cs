@@ -16,6 +16,7 @@ using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Services.CustomMessgeHelperService.Model;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Common.Helpers;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
 {
@@ -45,15 +46,17 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
             private static readonly string SuccessfulOperation = Messages.SuccessfulOperation;
             [MessageConstAttr(MessageCodeType.Error)]
             private static string RecordIsNotFound = Messages.RecordIsNotFound;
+            [MessageConstAttr(MessageCodeType.Error)]
+            private static string UnableToProccess = Messages.UnableToProccess;
             public async Task<IResult> Handle(CreateMessageMapCommand request, CancellationToken cancellationToken)
             {
                 var createMessage = await _mediator.Send(new CreateMessageCommand { ConstantMessageDtos = request.ConstantMessageDtos }, cancellationToken);
                 if (createMessage.Success == false)
-                    return new ErrorResult(Messages.UnableToProccess);
+                    return new ErrorResult(UnableToProccess.PrepareRedisMessage());
 
                 if (request.ConstantMessageDtos.Count == 0)
                 {
-                    return new ErrorResult(Messages.RecordIsNotFound);
+                    return new ErrorResult(RecordIsNotFound.PrepareRedisMessage());
                 }
 
                 foreach (var item in request.ConstantMessageDtos)
@@ -95,7 +98,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
                         }
                     }
                 }
-                return new SuccessResult(Messages.SuccessfulOperation);
+                return new SuccessResult(SuccessfulOperation.PrepareRedisMessage());
             }
 
             private async Task<string> GenerateCodeAsync(string messageKey, string usedClass)

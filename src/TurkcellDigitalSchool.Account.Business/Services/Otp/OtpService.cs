@@ -2,10 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Enums.OTP;
 using TurkcellDigitalSchool.Core.Common;
+using TurkcellDigitalSchool.Core.Common.Helpers;
+using TurkcellDigitalSchool.Core.CustomAttribute;
+using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.SubServiceConst;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Toolkit;
@@ -16,23 +21,28 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
     {
         private readonly IOneTimePasswordRepository _oneTimePasswordRepository;
         private readonly IUserRepository _userRepository;
+        private readonly ISmsOtpRepository _smsOtpRepository;
 
         private readonly ConfigurationManager _configurationManager;
         private readonly ICapPublisher _capPublisher;
-        public OtpService(IOneTimePasswordRepository oneTimePasswordRepository, ConfigurationManager configurationManager, IUserRepository userRepository, ICapPublisher capPublisher)
+        public OtpService(IOneTimePasswordRepository oneTimePasswordRepository, ConfigurationManager configurationManager, IUserRepository userRepository, ICapPublisher capPublisher, ISmsOtpRepository smsOtpRepository)
         {
             _oneTimePasswordRepository = oneTimePasswordRepository;
             _configurationManager = configurationManager;
             _userRepository = userRepository;
             _capPublisher = capPublisher;
+            _smsOtpRepository = smsOtpRepository;
         }
-        public DataResult<int> GenerateOtp(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId, OTPExpiryDate oTPExpiryDate)
+
+        [MessageConstAttr(MessageCodeType.Information)]
+        private static string SuccessfulOperation = Messages.SuccessfulOperation;
+        public Result GenerateOtp(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId, OTPExpiryDate oTPExpiryDate)
         {
             var existOtpCodes = _oneTimePasswordRepository.Query().Any(w => w.OtpStatusId == OtpStatus.NotUsed && w.UserId == UserId && w.ChannelTypeId == ChanellTypeId && w.ServiceId == ServiceId && w.ExpiryDate > DateTime.Now);
 
             if (existOtpCodes)
             {
-                return new DataResult<int>(0, false, $"Yeni kod oluşturmak için {(int)oTPExpiryDate} sn dolmalıdır.");
+                return new Result(false, $"Yeni kod oluşturmak için {(int)oTPExpiryDate} sn dolmalıdır.");
             }
 
             int otp = RandomPassword.RandomNumberGenerator();
@@ -51,8 +61,8 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
             _oneTimePasswordRepository.CreateAndSave(newRecord);
 
             SendOtp(otp, ChanellTypeId, ServiceId, UserId);
+            return new Result(true, SuccessfulOperation.PrepareRedisMessage());
 
-            return new DataResult<int>(data: otp, true, "Başarılı");
         }
         public Result VerifyOtp(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId, int Code)
         {
@@ -107,9 +117,8 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
                 _userRepository.UpdateAndSave(getUserInfo);
             }
         }
-        private void SendOtp(int otpCode, ChannelType chanellTypeId, OtpServices serviceId, long userId)
+        private async void SendOtp(int otpCode, ChannelType chanellTypeId, OtpServices serviceId, long userId)
         {
-
             var userInfo = _userRepository.Get(w => w.Id == userId);
             if (serviceId == OtpServices.Mail_UserProfileMailVerify)
             {
@@ -117,10 +126,14 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
                 dictoryString.Add(EmailVerifyParameters.NameSurname, $"{userInfo.Name} {userInfo.SurName}");
                 dictoryString.Add(EmailVerifyParameters.OtpCode, otpCode.ToString());
                 dictoryString.Add(EmailVerifyParameters.RecipientAddress, userInfo.Email);
-                _capPublisher.Publish(SubServiceConst.SENDING_EMAIL_ADDRESS_VERIFY_REQUEST, dictoryString);
+                await _capPublisher.PublishAsync(SubServiceConst.SENDING_EMAIL_ADDRESS_VERIFY_REQUEST, dictoryString);
+
+            }
+            else
+            {
+                await _smsOtpRepository.Send(userInfo.MobilePhones, $"Tek Kullanımlık Şifreniz : {otpCode}");
             }
 
-            //todo sms için servis bağlanacak.
         }
 
     }

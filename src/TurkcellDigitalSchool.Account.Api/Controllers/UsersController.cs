@@ -244,6 +244,24 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
+        /// <summary>
+        /// GetUserSessionPackageRole
+        /// </summary>
+        /// <returns></returns>
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("GetUserSessionPackageRole")]
+        public async Task<IActionResult> GetUserSessionPackageRole([FromBody] GetUserSessionPackageRoleQuery getUserSessionPackageRoleQuery, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(getUserSessionPackageRoleQuery, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
 
         /// <summary>
         /// User avatar update
@@ -274,6 +292,25 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut("UpdateSupportTeamViewMyData")]
         public async Task<IActionResult> UpdateSupportTeamViewMyData([FromBody] UpdateSupportTeamViewMyDataCommand request, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(request, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        /// <summary>
+        /// User ShareCalendarWithParent  information update
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPut("UpdateShareCalendarWithParent")]
+        public async Task<IActionResult> UpdateShareCalendarWithParent([FromBody] UpdateShareCalendarWithParentCommand request, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(request, cancellationToken);
             if (result.Success)

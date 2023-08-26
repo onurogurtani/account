@@ -3,7 +3,6 @@ using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System.Configuration;
 using System.Threading;
 
 namespace TurkcellDigitalSchool.Account.Api.Controllers
@@ -23,7 +22,15 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [AllowAnonymous]
         public string Ping()
         {
-            return "OK";
+            var address1 = _conf.GetValue<string>("SecretTest:TestText");
+            var address2 = _conf.GetValue<string>("TestText");
+
+            var envDeger = Environment.GetEnvironmentVariable("SecretTest:TestText"); 
+            var result = "Config Değer 1 : " + (address1 ?? "") +
+                " Config Değer 2 : " + (address2 ?? "") +
+                "  Env Değer : " + (envDeger ?? "");
+             
+            return result;
         }
 
 

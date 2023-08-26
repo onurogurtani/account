@@ -11,9 +11,11 @@ using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
-using TurkcellDigitalSchool.Core.Utilities.File;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
+using MediatR;
+using TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries;
+using TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries;
 
 namespace TurkcellDigitalSchool.Account.Business.Services.User
 {
@@ -30,8 +32,17 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         private readonly IFileRepository _fileRepository;
         private readonly IClassroomRepository _classroomRepository;
         private readonly ITokenHelper _tokenHelper;
+        private readonly IMediator _mediator;
+        private readonly IPackageRepository _packageRepository;
 
-        public UserService(IUserRepository userRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository, ICountyRepository countyRepository, ISchoolRepository schoolRepository, IUserPackageRepository userPackageRepository, IUserContratRepository userContratRepository, IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository, IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository, IFileRepository fileRepository, IClassroomRepository classroomRepository, ITokenHelper tokenHelper)
+        public UserService(IUserRepository userRepository, IStudentParentInformationRepository studentParentInformationRepository, ICityRepository cityRepository,
+            ICountyRepository countyRepository, ISchoolRepository schoolRepository,
+            IUserPackageRepository userPackageRepository,
+            IUserContratRepository userContratRepository,
+            IUserCommunicationPreferencesRepository userCommunicationPreferencesRepository,
+            IUserSupportTeamViewMyDataRepository userSupportTeamViewMyDataRepository, IFileRepository fileRepository,
+            IClassroomRepository classroomRepository, ITokenHelper tokenHelper, IMediator mediator,
+            IPackageRepository packageRepository)
         {
             _userRepository = userRepository;
             _studentParentInformationRepository = studentParentInformationRepository;
@@ -44,6 +55,8 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             _fileRepository = fileRepository;
             _classroomRepository = classroomRepository;
             _tokenHelper = tokenHelper;
+            _mediator = mediator;
+            _packageRepository = packageRepository;
         }
         public PersonalInfoDto GetByPersonalInformation(long userId)
         {
@@ -105,7 +118,8 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                     Name = parent.Parent.Name,
                     SurName = parent.Parent.SurName,
                     Email = parent.Parent.Email,
-                    MobilPhones = parent.Parent.MobilePhones
+                    MobilPhones = parent.Parent.MobilePhones,
+                    StudentAccessToChat = parent.StudentAccessToChat
                 })
                 .ToList();
 
@@ -126,8 +140,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         [MessageConstAttr(MessageCodeType.Error, "İl,İlçe,Okul Kurum Türü ile eşleşmiyor,Okul İl/İlçe/Kurum Türü ile eşleşmiyor,Sınıf Bulunamadı,Sınıf,Öğrenim Durumu,YKS Deneyimi,Mezuniyet Yılı,Diploma Notu,Alan,Puan Türü")]
         private static string FieldIsNotNullOrEmpty = Messages.FieldIsNotNullOrEmpty;
 
-        [MessageConstAttr(MessageCodeType.Error)]
-        private static string CommunicationChannelOneOpen = Constants.Messages.CommunicationChannelOneOpen;
         [MessageConstAttr(MessageCodeType.Error)]
         private static string CommunicationChannelRequiredPhone = Constants.Messages.CommunicationChannelRequiredPhone;
 
@@ -226,11 +238,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             var userId = _tokenHelper.GetUserIdByCurrentToken();
             var getUser = GetUserById(userId);
 
-            if (!studentCommunicationPreferencesDto.IsCall && !studentCommunicationPreferencesDto.IsSms && !studentCommunicationPreferencesDto.IsEMail && !studentCommunicationPreferencesDto.IsNotification)
-            {
-                return string.Format(CommunicationChannelOneOpen.PrepareRedisMessage());
-            }
-
             if ((studentCommunicationPreferencesDto.IsCall || studentCommunicationPreferencesDto.IsSms) && string.IsNullOrWhiteSpace(getUser.MobilePhones))
             {
                 return string.Format(CommunicationChannelRequiredPhone.PrepareRedisMessage());
@@ -292,12 +299,13 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
             var getParents = _studentParentInformationRepository.Query().Include(w => w.Parent).Where(w => w.UserId == userId)
                 .Select(s => new ParentInfoDto
                 {
-                    Id = s.Id,
+                    Id = s.Parent.Id,
                     CitizenId = s.Parent.CitizenId,
                     Name = s.Parent.Name,
                     SurName = s.Parent.SurName,
                     Email = s.Parent.Email,
-                    MobilPhones = s.Parent.MobilePhones
+                    MobilPhones = s.Parent.MobilePhones,
+                    StudentAccessToChat = s.StudentAccessToChat
                 })
                 .ToList();
             return getParents;
@@ -314,11 +322,42 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                     Name = s.User.Name,
                     SurName = s.User.SurName,
                     Email = s.User.Email,
-                    MobilPhones = s.User.MobilePhones
+                    MobilPhones = s.User.MobilePhones,
+                    ShareCalendarWithParent = s.User.ShareCalendarWithParent
                 })
+                .ToList();
+
+            foreach (var item in getParents)
+            {
+                var userPackageInformaiton = _mediator.Send(new GetPackageInformationForUserQuery
+                {
+                    UserId = item.Id
+                }).Result;
+                item.PackageStatus = userPackageInformaiton;
+            };
+            return getParents;
+        }
+
+        public List<ParentInfoDto> GetParentInformation(long userId)
+        {
+            var getParents = _studentParentInformationRepository.Query()
+                .Include(x => x.Parent)
+                .Where(w => w.ParentId == userId)
+                .Select(s => new ParentInfoDto
+                {
+                    Id = s.Parent.Id,
+                    CitizenId = s.Parent.CitizenId,
+                    Name = s.Parent.Name,
+                    SurName = s.Parent.SurName,
+                    Email = s.Parent.Email,
+                    MobilPhones = s.Parent.MobilePhones,
+                    StudentAccessToChat = s.StudentAccessToChat
+                })
+                .Distinct()
                 .ToList();
             return getParents;
         }
+
         public async Task<IResult> UpdateAvatarAsync(long userId, long avatarId)
         {
 
@@ -344,7 +383,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                .Where(w => w.ParentId == parentId)
                .Select(student => new StudentsOfParentDto
                {
-                   Id = student.Id,
+                   Id = student.User.Id,
                    CitizenId = student.User.CitizenId,
                    Name = student.User.Name,
                    SurName = student.User.SurName,
@@ -362,6 +401,8 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                .Select(package => new PackageInfoDto
                {
                    Id = package.Id,
+                   UserId = package.UserId,
+                   UserName = package.User.Name,
                    File = package.Package.ImageOfPackages.First().File,
                    PackageName = package.Package.Name,
                    PurchaseDate = package.PurchaseDate,

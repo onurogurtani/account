@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reflection;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -26,6 +26,7 @@ using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.Configure;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
 using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Microsoft;
+using TurkcellDigitalSchool.Core.DataAccess.Contexts;
 using TurkcellDigitalSchool.Core.DependencyResolvers;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Integration.Helper;
@@ -33,6 +34,8 @@ using TurkcellDigitalSchool.Core.Integration.Type;
 using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Redis.Contract;
 using TurkcellDigitalSchool.Core.Services.CustomMessgeHelperService;
+using TurkcellDigitalSchool.Core.Services.EntityChangeServices;
+using TurkcellDigitalSchool.Core.Services.EuroMessageService;
 using TurkcellDigitalSchool.Core.Services.KpsService;
 using TurkcellDigitalSchool.Core.Services.SMS;
 using TurkcellDigitalSchool.Core.Services.SMS.Turkcell;
@@ -89,9 +92,13 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddScoped<IKpsService, KpsService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOtpService, OtpService>();
+
+            services.AddScoped<IEntityChangeServices, EntityChangeServices>();
             services.AddScoped<ITransactionManager, AccountDbTransactionManagerSvc>();
+
             services.AddScoped<IClaimDefinitionService, ClaimDefinitionService>();
             services.AddScoped<ISendSms,SendSms>();
+            services.AddTransient<IEuroMessageServices, EuroMessageServices>();
             services.AddAutoMapper( Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
@@ -99,7 +106,8 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LogBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CacheBehavior<,>)); 
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CacheBehavior<,>));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(PublishBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
 
             services.AddMediatR(typeof(BusinessStartup).GetTypeInfo().Assembly);
@@ -119,11 +127,16 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddMsIntegrationServicesWithName(Configuration, MsType.Reporting);
             services.AddMsIntegrationServicesWithName(Configuration, MsType.IdentityServer);
 
-          
+
+            
             var capConfig = Configuration.GetSection("CapConfig").Get<CapConfig>();
             services.AddCap(options =>
             {
-                options.UsePostgreSql(Configuration.GetConnectionString("DArchPostgreContext"));
+                options.UsePostgreSql(sqlOptions =>
+                {
+                    sqlOptions.ConnectionString = Configuration.GetConnectionString("DArchPostgreContext");
+                    sqlOptions.Schema = "account";
+                });
                 options.UseRabbitMQ(rabbitMqOptions =>
                 {
                     rabbitMqOptions.ConnectionFactoryOptions = connectionFactory =>
@@ -150,6 +163,22 @@ namespace TurkcellDigitalSchool.Account.Business
             ConfigureDEVServices(services);
         }
 
+
+
+        //TODO Neden t�m ortamlar i�in conf servise var.
+
+        /// <summary>
+        /// This method gets called by the Dev
+        /// </summary>
+        /// <param name="services"></param>
+        public void ConfigureSTBServices(IServiceCollection services)
+        {
+            ConfigureServices(services);
+
+            services.AddDbContext<IProjectContext,AccountDbContext>();
+            services.AddDbContext<AccountSubscribeDbContext>();
+        }
+
         /// <summary>
         /// This method gets called by the Dev
         /// </summary>
@@ -158,10 +187,19 @@ namespace TurkcellDigitalSchool.Account.Business
         {
             ConfigureServices(services);
 
-            services.AddDbContext<AccountDbContext>();
+            services.AddDbContext<IProjectContext,AccountDbContext>();
             services.AddDbContext<AccountSubscribeDbContext>(); 
         }
 
+
+        /// <summary>
+        /// This method gets called by the Dev
+        /// </summary>
+        /// <param name="services"></param>
+        public void ConfigureSTBTURKCELLServices(IServiceCollection services)
+        {
+            ConfigureSTBServices(services);
+        }
 
 
         /// <summary>

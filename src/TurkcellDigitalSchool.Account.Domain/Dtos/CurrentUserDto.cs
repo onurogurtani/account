@@ -8,6 +8,8 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public List<string> Claims { get; set; }
 
         public List<UserOrganisation> UserOrganisation { get; set; }
+
+        public PackageStatusDto PackageStatus { get;set;}
     }
 
     public class UserOrganisation : SelectionItem

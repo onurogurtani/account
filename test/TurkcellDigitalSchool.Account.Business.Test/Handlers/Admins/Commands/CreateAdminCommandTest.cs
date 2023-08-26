@@ -41,7 +41,7 @@ namespace TurkcellDigitalSchool.Account.Business.Test.Handlers.Admins.Commands
             _capPublisher = new Mock<ICapPublisher>();
 
             _createAdminCommand = new CreateAdminCommand();
-            _createAdminCommandHandler = new CreateAdminCommand.CreateAdminCommandHandler(_userRoleRepository.Object, _userRepository.Object, _tokenHelper.Object, _mapper.Object, _capPublisher.Object);
+            _createAdminCommandHandler = new CreateAdminCommand.CreateAdminCommandHandler(_userRoleRepository.Object, _userRepository.Object, _tokenHelper.Object, _mapper.Object );
         }
 
         [Test]

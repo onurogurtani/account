@@ -34,17 +34,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             private readonly IUserRepository _userRepository;
             private readonly ILoginFailCounterRepository _loginFailCounterRepository;
             private readonly ILoginFailForgetPassSendLinkRepository _loginFailForgetPassSendLinkRepository;
-            private readonly IMediator _mediator;
-            private readonly ICapPublisher _capPublisher;
+            private readonly IMediator _mediator; 
 
             public ForgotPasswordSendLinkCheckCommandHandler(IUserRepository userRepository,
-                ILoginFailCounterRepository loginFailCounterRepository, ILoginFailForgetPassSendLinkRepository loginFailForgetPassSendLinkRepository, IMediator mediator, ICapPublisher capPublisher)
+                ILoginFailCounterRepository loginFailCounterRepository, ILoginFailForgetPassSendLinkRepository loginFailForgetPassSendLinkRepository, IMediator mediator )
             {
                 _userRepository = userRepository;
                 _loginFailCounterRepository = loginFailCounterRepository;
                 _loginFailForgetPassSendLinkRepository = loginFailForgetPassSendLinkRepository;
-                _mediator = mediator;
-                _capPublisher = capPublisher;
+                _mediator = mediator; 
             }
 
 
@@ -94,8 +92,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 user.PasswordSalt = passwordSalt;
                 user.FailOtpCount = 0;
                 user.LastPasswordDate = DateTime.Now;
-                await _userRepository.UpdateAndSaveAsync(user);
-                await _capPublisher.PublishAsync(user.GeneratePublishName(EntityState.Modified), user, cancellationToken: cancellationToken);
+                await _userRepository.UpdateAndSaveAsync(user); 
                 await _loginFailCounterRepository.ResetCsrfTokenFailLoginCount(request.CsrfToken);
                 var tokenResponse = await _mediator.Send(new GetTokenQuery
                 {

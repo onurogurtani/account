@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Core.AuthorityManagement.Services.Abstract;
 using TurkcellDigitalSchool.Core.DataAccess.EntityFramework;
 using TurkcellDigitalSchool.Core.Enums;
 
@@ -13,9 +15,11 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
 {
     public class UserRepository : EfEntityRepositoryBase<User, AccountDbContext>, IUserRepository
     {
-        public UserRepository(AccountDbContext context)
+        private readonly IClaimDefinitionService _claimDefinitionService;
+        public UserRepository(AccountDbContext context, IClaimDefinitionService claimDefinitionService)
             : base(context)
         {
+            _claimDefinitionService = claimDefinitionService;
         }
 
         public bool IsExistForExternalLogin(UserAddingType userAddingType, string relatedIdentity)
@@ -60,81 +64,121 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
             return userEntity;
         }
 
-
-
-
+         
         public List<OperationClaim> GetClaims(long userId)
-        {
-            return (from user in Context.Users
-                    join userRole in Context.UserRoles on user.Id equals userRole.UserId
-                    join roleClaim in Context.RoleClaims on userRole.RoleId equals roleClaim.RoleId
-                    where user.Id == userId
-                    select new
-                    {
-                        roleClaim.ClaimName
-                    }).Distinct().ToList().Select(s => new OperationClaim { Name = s.ClaimName }).ToList();
+        { 
+            var userType = Context.Users.Where(w => w.Id == userId).Select(s => s.UserType).FirstOrDefault();
+           
 
-            //todo: Rol Yetki GEt Claims  sorgusu kullanýcýnýn sahip olduðu paketlerlede iliþkilenirilip detaylandýrýlacak.;
+            // Kullanýcýnýn sahip olduðu rollerin claimleri  
+            var claims  = (from user in Context.Users
+                          join userRole in Context.UserRoles on user.Id equals userRole.UserId
+                          join roleClaim in Context.RoleClaims on userRole.RoleId equals roleClaim.RoleId
+                          where user.Id == userId
+                          && !userRole.IsDeleted && !roleClaim.IsDeleted
+                          select new
+                          {
+                              roleClaim.ClaimName
+                          }).Distinct().ToList();
+            //////////////////////////////////////////////////
 
 
-            //var result = (from user in Context.Users // Admin Types
-            //              join adminTypeGroup in Context.AdminTypeGroups on  (long?)user.AdminTypeEnum equals adminTypeGroup.AdminTypeId
-            //              join userGroup in Context.Groups on adminTypeGroup.GroupId equals userGroup.Id
-            //              join groupClaim in Context.GroupClaims on userGroup.Id equals groupClaim.GroupId
-            //              join operationClaim in Context.OperationClaims on groupClaim.OperationClaimId equals operationClaim.Id
-            //              where user.Id == userId
-            //              select new
-            //              {
-            //                  operationClaim.Name
-            //              })
-            //                    .Union(from user in Context.Users // User Types
-            //                           join userTypeGroup in Context.UserTypeGroups on (long?)user.UserTypeEnum equals userTypeGroup.UserTypeId
-            //                           join userGroup in Context.Groups on userTypeGroup.GroupId equals userGroup.Id
-            //                           join groupClaim in Context.GroupClaims on userGroup.Id equals groupClaim.GroupId
-            //                           join operationClaim in Context.OperationClaims on groupClaim.OperationClaimId equals operationClaim.Id
-            //                           where user.Id == userId
-            //                           select new
-            //                           {
-            //                               operationClaim.Name
-            //                           }).
-            //                          Union(from user in Context.Users // UserGroups
-            //                                join userGroup in Context.UserGroups on user.Id equals userGroup.UserId
-            //                                join groupClaim in Context.GroupClaims on userGroup.GroupId equals groupClaim.GroupId
-            //                                join operationClaim in Context.OperationClaims on groupClaim.OperationClaimId equals operationClaim.Id
-            //                                where user.Id == userId
-            //                                select new
-            //                                {
-            //                                    operationClaim.Name
-            //                                }).
-            //                                Union(from user in Context.Users // UserPackages
-            //                                      join userPackage in Context.UserPackages on user.Id equals userPackage.UserId
-            //                                      join packageGroup in Context.PackageGroups on userPackage.PackageId equals packageGroup.PackageId
-            //                                      join groupClaim in Context.GroupClaims on packageGroup.GroupId equals groupClaim.GroupId
-            //                                      join operationClaim in Context.OperationClaims on groupClaim.OperationClaimId equals operationClaim.Id
-            //                                      where user.Id == userId
-            //                                      select new
-            //                                      {
-            //                                          operationClaim.Name
-            //                                      }).
-            //                                        Union(from user in Context.Users // UserClaims
-            //                                              join userClaim in Context.UserClaims on user.Id equals userClaim.UserId
-            //                                              join operationClaim in Context.OperationClaims on userClaim.OperationClaimId equals operationClaim.Id
-            //                                              where user.Id == userId
-            //                                              select new
-            //                                              {
-            //                                                  operationClaim.Name
-            //                                              });
+            // Kullanýcýnýn Sahip olduðu paketlerden gelen rollerin yetkileri
+            var now = DateTime.Now;
+            var packageRoleIds = new List<long>();
 
-            //return result.Select(x => new OperationClaim { Name = x.Name }).Distinct().ToList();
-            return new();
+            if (userType == UserType.Parent)
+            {
+
+                packageRoleIds = (from up in Context.UserPackages.Where(w => !w.IsDeleted)
+                                  join p in Context.Packages.Where(w => !w.IsDeleted && w.IsActive) on up.PackageId equals p.Id
+                                  join pr in Context.PackageRoles.Where(w => !w.IsDeleted &&  Context.Roles.Any(aa=>!aa.IsDeleted && aa.Id == w.RoleId && aa.UserType== userType)) on up.PackageId equals pr.PackageId
+                                  where Context.StudentParentInformations.Any(w => w.ParentId == userId && w.UserId == up.UserId && !w.IsDeleted)
+                                  && p.StartDate <= now && p.FinishDate >= now
+                                  select pr.RoleId).ToList();
+            }
+            else
+            {
+                packageRoleIds = (from up in Context.UserPackages.Where(w => !w.IsDeleted)
+                                  join p in Context.Packages.Where(w => !w.IsDeleted && w.IsActive) on up.PackageId equals p.Id
+                                  join pr in Context.PackageRoles.Where(w => !w.IsDeleted && Context.Roles.Any(aa => !aa.IsDeleted && aa.Id == w.RoleId && aa.UserType == userType)) on up.PackageId equals pr.PackageId
+                                  where
+                                  up.UserId == userId && p.StartDate <= now && p.FinishDate >= now
+                                  select pr.RoleId
+                            ).ToList();
+            }
+             
+            var packageClaims = (Context.RoleClaims.Where(w => packageRoleIds.Contains(w.RoleId) && !w.IsDeleted)
+                .Select(s => new
+                {
+                    s.ClaimName
+                })
+                .Distinct()
+                .ToList());
+
+            //////////////////////////////////////////////////
+            
+
+            claims = claims.Union(packageClaims).Distinct().ToList();
+
+
+            if (userType!=UserType.Student)
+            {
+                return claims
+                .Select(s => new OperationClaim { Name = s.ClaimName }).ToList();
+            }
+
+
+
+            var platformClaims = _claimDefinitionService.GetClaimDefinitions().Where(w => w.ModuleType == ModuleType.Platform)
+                 .Select(s => new
+                 {
+                     claimName = s.Name,
+                     selected = false
+                 }).ToList();
+
+
+            var packageMenuAccessClaims = Context.PackageMenuAccesses.Where(w => Context.UserPackages.Include(i => i.Package).Any(ww => !ww.IsDeleted
+                && ww.Package.IsMenuAccessSet
+                && ww.Package.IsActive && ww.Package.StartDate <= now && ww.Package.FinishDate >= now &&
+                 ww.PackageId == w.PackageId && ww.UserId == userId
+             )).Select(s => new {PackageId = s.PackageId , ClaimName = s.Claim }).Distinct().ToList();
+
+          
+
+            if (packageMenuAccessClaims.Any())
+            {
+                var packageIds = packageMenuAccessClaims.Select(s => s.PackageId).Distinct().ToList();
+
+                foreach (var itemPackageId in packageIds)
+                {
+                    platformClaims = (from x in platformClaims
+                                     join y in packageMenuAccessClaims.Where(w => w.PackageId == itemPackageId) on x.claimName equals y.ClaimName into yy
+                                     from y in yy.DefaultIfEmpty()
+                                     select new
+                                     {
+                                         claimName = x.claimName,
+                                         selected = x.selected || y != null
+                                      }).ToList();
+
+                }
+
+
+                claims = claims.Where(w => !platformClaims.Where(ww => !ww.selected).Select(s => s.claimName).ToList().Contains(w.ClaimName)).ToList();
+
+
+                claims.AddRange(platformClaims.Where(ww => ww.selected).Select(s => new { ClaimName = s.claimName }).ToList());
+
+                claims = claims.Distinct().ToList();
+            } 
+
+            var result = claims
+                 .Select(s => new OperationClaim { Name = s.ClaimName }).ToList();
+             
+            return result; 
         }
 
-        public bool HasClaim(long userId, string claimName)
-        {
-            return Context.Users.Include(i => i.UserRoles).ThenInclude(i => i.Role).ThenInclude(i => i.RoleClaims)
-                  .Any(a => a.Id == userId &&
-                            a.UserRoles.Any(aa => aa.Role.RoleClaims.Any(aaa => aaa.ClaimName == claimName)));
-        }
+     
 
         public async Task ResetFailLoginOtpCount(long userId)
         {

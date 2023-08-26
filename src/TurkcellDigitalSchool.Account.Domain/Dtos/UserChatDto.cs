@@ -8,6 +8,7 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public long? Id { get; set; }
         public string Name { get; set; }
         public string SurName { get; set; }
+        public string AvatarPath { get; set; }
         public UserType UserType { get; set; }
     }
 }

@@ -26,6 +26,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             _httpContextAccessor = httpContextAccessor;
             _configuration = configuration;
         }
+        
         public async Task<bool> Validate(string userName, string password)
         {
             var user = await FindByUserName(userName);

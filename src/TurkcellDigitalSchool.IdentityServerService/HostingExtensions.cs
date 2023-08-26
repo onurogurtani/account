@@ -6,16 +6,21 @@ using Serilog;
 using System.Globalization;
 using System.Text.Json.Serialization;
 using TurkcellDigitalSchool.Account.Business.Helpers;
+using TurkcellDigitalSchool.Account.Business.Services.TransactionManager;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
-using TurkcellDigitalSchool.Core.Common.Helpers; 
+using TurkcellDigitalSchool.Core.AuthorityManagement.Services;
+using TurkcellDigitalSchool.Core.AuthorityManagement.Services.Abstract;
 using TurkcellDigitalSchool.Core.Configure;
-using TurkcellDigitalSchool.Core.Extensions;
+using TurkcellDigitalSchool.Core.DataAccess.Contexts;
 using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Redis.Contract;
+using TurkcellDigitalSchool.Core.Services.EntityChangeServices;
+using TurkcellDigitalSchool.Core.Services.EuroMessageService;
 using TurkcellDigitalSchool.Core.Services.SMS;
 using TurkcellDigitalSchool.Core.Services.SMS.Turkcell;
+using TurkcellDigitalSchool.Core.TransactionManager;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
 using TurkcellDigitalSchool.Core.Utilities.Security.Captcha;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
@@ -37,7 +42,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
             var connectionString = builder.Configuration.GetConnectionString("DArchPostgreContext");
 
 
-            builder.Services.AddDbContext<AccountDbContext>();
+            builder.Services.AddDbContext<IProjectContext,AccountDbContext>();
             builder.Services.AddSingleton<Core.Common.ConfigurationManager>();
             builder.Services.AddScoped<ICustomUserSvc, CustomUserSvc>();
             builder.Services.AddScoped<IAppSettingRepository, AppSettingRepository>();
@@ -58,9 +63,15 @@ namespace TurkcellDigitalSchool.IdentityServerService
             builder.Services.AddTransient<ILoginFailForgetPassSendLinkRepository, LoginFailForgetPassSendLinkRepository>();
             builder.Services.AddTransient<IMailService, MailManager>();
             builder.Services.AddScoped<ISendSms, SendSms>();
+            builder.Services.AddTransient<IEuroMessageServices, EuroMessageServices>();
+            builder.Services.AddScoped<IClaimDefinitionService, ClaimDefinitionService>();
 
 
-            builder.Services.Configure<RedisConfig>(builder.Configuration.GetSection("RedisConfig")); 
+            builder.Services.AddScoped<IEntityChangeServices, EntityChangeServices>();
+            builder.Services.AddScoped<ITransactionManager, AccountDbTransactionManagerSvc>();
+
+
+            builder.Services.Configure<RedisConfig>(builder.Configuration.GetSection("RedisConfig"));
             builder.Services.AddSingleton<IRedisConnectionFactory, RedisConnectionFactory>();
             builder.Services.AddSingleton<SessionRedisSvc>();
             builder.Services.AddSingleton<HandlerCacheRedisSvc>();
@@ -70,7 +81,11 @@ namespace TurkcellDigitalSchool.IdentityServerService
             var capConfig = builder.Configuration.GetSection("CapConfig").Get<CapConfig>();
             builder.Services.AddCap(options =>
             {
-                options.UsePostgreSql(builder.Configuration.GetConnectionString("DArchPostgreContext"));
+                options.UsePostgreSql(sqlOptions =>
+                {
+                    sqlOptions.ConnectionString = builder.Configuration.GetConnectionString("DArchPostgreContext");
+                    sqlOptions.Schema = "account";
+                });
                 options.UseRabbitMQ(rabbitMqOptions =>
                 {
                     rabbitMqOptions.ConnectionFactoryOptions = connectionFactory =>
@@ -104,10 +119,17 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
                 .AddConfigurationStore(options =>
                 {
+                    options.DefaultSchema = "account";
                     options.ConfigureDbContext = b =>
+                    {
                         b.UseNpgsql(connectionString,
-                                dbOpts => dbOpts.MigrationsAssembly(typeof(Program).Assembly.FullName))
-                            .UseLowerCaseNamingConvention();
+                                    dbOpts =>
+                                    {
+                                        dbOpts.MigrationsAssembly(typeof(Program).Assembly.FullName);
+                                        dbOpts.MigrationsHistoryTable("__EFMigrationsHistory", "account");
+                                    })
+                                .UseLowerCaseNamingConvention();
+                    };
                 })
                 // this is something you will want in production to reduce load on and requests to the DB
                 //.AddConfigurationStoreCache()
@@ -115,9 +137,11 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 // this adds the operational data from DB (codes, tokens, consents)
                 .AddOperationalStore(options =>
                 {
+                    options.DefaultSchema = "account";
                     options.ConfigureDbContext = b =>
-                        b.UseNpgsql(connectionString, dbOpts => dbOpts.MigrationsAssembly(typeof(Program).Assembly.FullName))
-                            .UseLowerCaseNamingConvention();
+                        b.UseNpgsql(connectionString, dbOpts => dbOpts.MigrationsAssembly(typeof(Program).Assembly.FullName)
+                        .MigrationsHistoryTable("__EFMigrationsHistory", "account"))
+                        .UseLowerCaseNamingConvention();
 
                     // this enables automatic token cleanup. this is optional.
                     options.EnableTokenCleanup = true;
@@ -137,7 +161,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
 
                 builder.Services.AddTransient<ClientRepository>();
                 builder.Services.AddTransient<IdentityScopeRepository>();
-                builder.Services.AddTransient<ApiScopeRepository>(); 
+                builder.Services.AddTransient<ApiScopeRepository>();
             }
 
             return builder.Build();
@@ -163,14 +187,14 @@ namespace TurkcellDigitalSchool.IdentityServerService
                 app.UseDeveloperExceptionPage();
             }
 
- 
+
 
             app.UseStaticFiles();
             app.UseRouting();
             app.UseIdentityServer();
             app.UseAuthorization();
 
-            app.MapRazorPages().RequireAuthorization(); 
+            app.MapRazorPages().RequireAuthorization();
             return app;
         }
     }

@@ -8,13 +8,14 @@ using TurkcellDigitalSchool.Core.AuthorityManagement;
 using TurkcellDigitalSchool.Core.Common;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
-using TurkcellDigitalSchool.Core.Common.Helpers; 
+using TurkcellDigitalSchool.Core.Common.Helpers;
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Utilities.Toolkit;
+using TurkcellDigitalSchool.Core.Utilities.Mail;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 {
@@ -46,18 +47,20 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
             private readonly IUserRepository _userRepository;
             private readonly Microsoft.Extensions.Configuration.IConfiguration _configuration;
             private readonly ConfigurationManager _configurationManager;
+            private readonly IMailService _mailService;
 
-            public AddUserCommandHandler(IUserRepository userRepository, Microsoft.Extensions.Configuration.IConfiguration configuration, ConfigurationManager configurationManager)
+            public AddUserCommandHandler(IMailService mailService, IUserRepository userRepository, Microsoft.Extensions.Configuration.IConfiguration configuration, ConfigurationManager configurationManager)
             {
                 _userRepository = userRepository;
                 _configuration = configuration;
                 _configurationManager = configurationManager;
+                _mailService = mailService;
             }
 
             [MessageConstAttr(MessageCodeType.Information)]
             private static string Added = Messages.Added;
             [MessageConstAttr(MessageCodeType.Information)]
-            private static string UserInformations = Constants.Messages.UserInformations;
+            private static string UserInformations = Constants.Messages.NewUserMessage;
 
             public async Task<DataResult<SelectionItem>> Handle(AddUserCommand request, CancellationToken cancellationToken)
             {
@@ -101,8 +104,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                 _userRepository.Add(user);
                 await _userRepository.SaveChangesAsync();
 
-                var link = _configuration.GetSection("PathSetting").GetSection("UserLink").Value;
-                var messageContent = string.Format(UserInformations, request.Name, request.SurName, randomPassword, link);
+                var messageContent = string.Format(UserInformations, request.Email, randomPassword);
+
+                await _mailService.Send(new EmailMessage
+                {
+                    Subject = Constants.Messages.NewUserSubject,
+                    ToAddresses = new System.Collections.Generic.List<EmailAddress> { new EmailAddress { Address = user.Email } },
+                    Content = messageContent
+                });
 
                 return new SuccessDataResult<SelectionItem>(new SelectionItem { Label = messageContent }, Added.PrepareRedisMessage());
             }

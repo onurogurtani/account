@@ -37,19 +37,17 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
             private readonly IMapper _mapper;
             private readonly IPackageRoleRepository _packageRoleRepository;
             private readonly IUserRepository _userRepository;
-            private readonly IMediator _mediator;
-            private readonly ICapPublisher _capPublisher;
+            private readonly IMediator _mediator; 
             private readonly IPackageRepository _packageRepository;
 
-            public UpdateOrganisationCommandHandler(IOrganisationRepository organisationRepository, IOrganisationTypeRepository organisationTypeRepository, IMapper mapper, IPackageRoleRepository packageRoleRepository, IUserRepository userRepository, IMediator mediator, ICapPublisher capPublisher, IPackageRepository packageRepository)
+            public UpdateOrganisationCommandHandler(IOrganisationRepository organisationRepository, IOrganisationTypeRepository organisationTypeRepository, IMapper mapper, IPackageRoleRepository packageRoleRepository, IUserRepository userRepository, IMediator mediator, IPackageRepository packageRepository)
             {
                 _organisationRepository = organisationRepository;
                 _organisationTypeRepository = organisationTypeRepository;
                 _mapper = mapper;
                 _packageRoleRepository = packageRoleRepository;
                 _userRepository = userRepository;
-                _mediator = mediator;
-                _capPublisher = capPublisher;
+                _mediator = mediator; 
                 _packageRepository = packageRepository;
             }
 
@@ -111,9 +109,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Organisations.Commands
                 _mapper.Map(request.Organisation, entity);
                 entity.PackageName = package.Name;
                 var record = _organisationRepository.Update(entity);
-                await _organisationRepository.SaveChangesAsync();
-                await _capPublisher.PublishAsync(entity.GeneratePublishName(EntityState.Modified),
-                    entity, cancellationToken: cancellationToken);
+                await _organisationRepository.SaveChangesAsync(); 
                 return new SuccessDataResult<Organisation>(record, SuccessfulOperation.PrepareRedisMessage());
             }
         }

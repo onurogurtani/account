@@ -27,9 +27,9 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
-using TurkcellDigitalSchool.Exam.Business.Handlers.TestExams.Commands;
-using TurkcellDigitalSchool.Account.Business.Handlers.AppSettings.Commands;
+using TurkcellDigitalSchool.Exam.Business.Handlers.TestExams.Commands; 
 using TurkcellDigitalSchool.Account.Business.SeedData;
+using TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands;
 
 namespace TurkcellDigitalSchool.Account.Container
 {
@@ -76,8 +76,8 @@ namespace TurkcellDigitalSchool.Account.Container
                 {
                     var identityConf = Configuration.GetSection("IdentityServerConfig").Get<IdentityServerConfig>();
                     options.Authority = identityConf.BaseUrl;  // IdentityServerUrl gateway or direct
-                    options.Audience = IdentityServerConst.API_RESOURCE_ACCOUNT; 
-                    options.RequireHttpsMetadata = false; 
+                    options.Audience = IdentityServerConst.API_RESOURCE_ACCOUNT;
+                    options.RequireHttpsMetadata = false;
                 });
 
 
@@ -105,8 +105,8 @@ namespace TurkcellDigitalSchool.Account.Container
             // By the way, we can construct with DI by taking type to avoid calling static methods in aspects.
             ServiceTool.ServiceProvider = app.ApplicationServices;
 
-
-            SeedDataHelper.AppSettingDefaultData(app).GetResult();
+            
+     
 
 
             var configurationManager = app.ApplicationServices.GetService<Core.Common.ConfigurationManager>();
@@ -114,6 +114,12 @@ namespace TurkcellDigitalSchool.Account.Container
             {
 
                 case ApplicationMode.DEV:
+                    using (var scope = app.ApplicationServices.CreateScope())
+                    {
+                        var services = scope.ServiceProvider;
+                        var context = services.GetRequiredService<AccountDbContext>();
+                        context.Database.Migrate();
+                    }
                     break;
                 case ApplicationMode.DEVTURKCELL:
                     {
@@ -122,7 +128,7 @@ namespace TurkcellDigitalSchool.Account.Container
                             var services = scope.ServiceProvider;
                             var context = services.GetRequiredService<AccountDbContext>();
                             context.Database.Migrate();
-                        } 
+                        }
                         break;
                     }
                 case ApplicationMode.STBTURKCELL:
@@ -132,9 +138,19 @@ namespace TurkcellDigitalSchool.Account.Container
                             var services = scope.ServiceProvider;
                             var context = services.GetRequiredService<AccountDbContext>();
                             context.Database.Migrate();
-                        } 
+                        }
                         break;
                     }
+                case ApplicationMode.PRPTURKCELL:
+                {
+                    using (var scope = app.ApplicationServices.CreateScope())
+                    {
+                        var services = scope.ServiceProvider;
+                        var context = services.GetRequiredService<AccountDbContext>();
+                        context.Database.Migrate();
+                    }
+                    break;
+                }
                 case ApplicationMode.ALPHATURKCELL:
                     {
                         using (var scope = app.ApplicationServices.CreateScope())
@@ -146,17 +162,21 @@ namespace TurkcellDigitalSchool.Account.Container
                         break;
                     }
             }
+
+            SeedDataHelper.AppSettingDefaultData(app).GetResult();
+
             app.UseDeveloperExceptionPage();
 
             app.ConfigureCustomExceptionMiddleware();
             app.UseMiddleware<SessionCheckMiddleware>();
             app.UseDbOperationClaimCreator().GetResult();
 
-            if (!configurationManager.Mode.ToString().EnvIsSTB())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "Kg Teknoloji"); });
-            }
+            //TODO kod kapatıldı Yusuf. 
+            //if (!configurationManager.Mode.ToString().EnvIsSTB())
+            //{
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "Kg Teknoloji"); });
+            //}
 
 
             app.UseCors("AllowOrigin");
@@ -202,6 +222,9 @@ namespace TurkcellDigitalSchool.Account.Container
 
             RecurringJob.AddOrUpdate<HangfireJobSender>("BirthDayn_Notification_Routine",
             job => job.Send(new BirthDayNotificationCommand()), Cron.DayInterval(1));
+
+            RecurringJob.AddOrUpdate<HangfireJobSender>("SetPassive_ExpiredDocument_Routine",
+            job => job.Send(new SetPassiveExpiredDocumentCommand()), Cron.Hourly());
 
         }
     }

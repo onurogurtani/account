@@ -45,6 +45,7 @@
   <ItemGroup>
     <Folder Include="Handlers\Otp\ValidationRules\" />
     <Folder Include="Handlers\Otp\Queries\" />
+    <Folder Include="Handlers\PackageAccessMenues\ValidationRules\" />
     <Folder Include="Handlers\Student\ValidationRules\" />
   </ItemGroup>
   

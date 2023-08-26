@@ -22,6 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
         List<ParentInfoDto> GetStudentsByParentCitizenId(long? citizenId);
         List<ParentInfoDto> GetByStudentParentsInformation(long userId);
         List<ParentInfoDto> GetStudentsByParentId(long? parentId);
+        List<ParentInfoDto> GetParentInformation(long userId);
         Task<IResult> UpdateAvatarAsync(long userId, long avatarId);
         List<StudentsOfParentDto> GetStudentsOfParentByParentId(long parentId);
         List<PackageInfoDto> GetParentPackagesByParentId(long parentId);

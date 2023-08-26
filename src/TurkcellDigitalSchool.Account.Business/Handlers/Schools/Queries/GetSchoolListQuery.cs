@@ -1,14 +1,11 @@
+using AutoMapper;
+using MediatR;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
-using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
- 
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
@@ -27,7 +24,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Schools.Queries
         {
             public bool AllRecords { get; set; }
             public bool RecordStatus { get; set; }
-            public long? InstitutionId { get; set; }
+            public InstitutionEnum? InstitutionId { get; set; }
             public long? CityId { get; set; }
             public long? CountyId { get; set; }
         }
