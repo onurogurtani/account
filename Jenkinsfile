@@ -64,18 +64,47 @@ pipeline {
     stages {
         // stage('Build') {
 
-        //     steps{
-        //         script {
-        //             printSectionBoundry ("Build stage starting...")
-        //             sh "dotnet restore"
-        //             sh "dotnet build"
+        stage('Configuration') {
+            
+            steps {
+                script {
+                    
+                    printDebugMessage ("Env Branch: ${env.GIT_BRANCH}")
+                    printDebugMessage ("mainBranch: ${mainBranch}")
+    
+                    if ("${env.GIT_BRANCH}" == "dev") {
+                        mainBranch = "dev"
+                        deployEnv = "DEVTURKCELL"    
+                        appName = subsoftwareModuleName                    
+                    } else if (env.GIT_BRANCH == "stb") {
+                        mainBranch = "stb"
+                        deployEnv = "STBTURKCELL"
+                        appName = subsoftwareModuleName + "-stb"
+                    } else if (env.GIT_BRANCH == "master" || env.GIT_BRANCH == "devops" || env.GIT_BRANCH == "prp" ) {
+                        mainBranch = "prp"
+                        deployEnv = "PRPTURKCELL"
+                        appName = subsoftwareModuleName + "-prp"
+                        openshiftProjectName = "learnupprp"
+                    }
+    
+    
+                    appVersion = "${mainBranch}-${env.BUILD_NUMBER}"
 
-        //             printSectionBoundry("Build stage finished!")
-        //         }
-        //     }
-        // }
-        stage ('Continuous Integration'){
+                    newImageUrl = "${dockerRegistryBaseUrl}/${appServiceName}/${softwareModuleName}/${appName}:${appVersion}"
 
+                    printDebugMessage ("Openshift Project: ${openshiftProjectName}")
+
+                    printDebugMessage ("mainBranch = " + mainBranch)
+                    printDebugMessage ("deployEnv = " + deployEnv)
+                    printDebugMessage ("appName = " + appName)
+
+                    printDebugMessage ("newImageUrl = " + newImageUrl)
+                    printSectionBoundry("Configuration stage finished!")
+                }
+            }
+        }
+
+        stage ('Continuous Integration'){    
             parallel {
                 stage('Openshift Build') {
                     stages  {
