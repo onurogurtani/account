@@ -79,7 +79,7 @@ pipeline {
                         mainBranch = "stb"
                         deployEnv = "STBTURKCELL"
                         appName = subsoftwareModuleName + "-stb"
-                    } else if (env.GIT_BRANCH == "prp") {
+                    } else if (env.GIT_BRANCH == "master" || env.GIT_BRANCH == "devops" || env.GIT_BRANCH == "prp" ) {
                         mainBranch = "prp"
                         deployEnv = "PRPTURKCELL"
                         appName = subsoftwareModuleName + "-prp"
