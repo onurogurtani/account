@@ -67,8 +67,7 @@ pipeline {
             
             steps {
                 script {
-                    printDebugMessage ("Openshift Project: ${openshiftProjectName}")
-
+                    
                     printDebugMessage ("Env Branch: ${env.GIT_BRANCH}")
                     printDebugMessage ("mainBranch: ${mainBranch}")
     
@@ -84,12 +83,15 @@ pipeline {
                         mainBranch = "prp"
                         deployEnv = "PRPTURKCELL"
                         appName = subsoftwareModuleName + "-prp"
+                        openshiftProjectName = "learnupprp"
                     }
     
     
                     appVersion = "${mainBranch}-${env.BUILD_NUMBER}"
 
                     newImageUrl = "${dockerRegistryBaseUrl}/${appServiceName}/${softwareModuleName}/${appName}:${appVersion}"
+
+                    printDebugMessage ("Openshift Project: ${openshiftProjectName}")
 
                     printDebugMessage ("mainBranch = " + mainBranch)
                     printDebugMessage ("deployEnv = " + deployEnv)
