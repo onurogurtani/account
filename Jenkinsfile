@@ -67,8 +67,7 @@ pipeline {
             
             steps {
                 script {
-                    printDebugMessage ("Openshift Project: ${openshiftProjectName}")
-
+                    
                     printDebugMessage ("Env Branch: ${env.GIT_BRANCH}")
                     printDebugMessage ("mainBranch: ${mainBranch}")
     
@@ -78,12 +77,13 @@ pipeline {
                         appName = subsoftwareModuleName                    
                     } else if (env.GIT_BRANCH == "stb") {
                         mainBranch = "stb"
-                        deployEnv = "STBTURKCEL"
+                        deployEnv = "STBTURKCELL"
                         appName = subsoftwareModuleName + "-stb"
                     } else if (env.GIT_BRANCH == "prp") {
                         mainBranch = "prp"
-                        deployEnv = "PRPTURKCEL"
+                        deployEnv = "PRPTURKCELL"
                         appName = subsoftwareModuleName + "-prp"
+                        openshiftProjectName = "learnupprp"
                     }
     
     
@@ -91,8 +91,10 @@ pipeline {
 
                     newImageUrl = "${dockerRegistryBaseUrl}/${appServiceName}/${softwareModuleName}/${appName}:${appVersion}"
 
+                    printDebugMessage ("Openshift Project: ${openshiftProjectName}")
+
                     printDebugMessage ("mainBranch = " + mainBranch)
-                    printDebugMessage ("buildEnv = " + deployEnv)
+                    printDebugMessage ("deployEnv = " + deployEnv)
                     printDebugMessage ("appName = " + appName)
 
                     printDebugMessage ("newImageUrl = " + newImageUrl)
