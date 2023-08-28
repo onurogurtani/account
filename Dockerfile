@@ -30,6 +30,7 @@ WORKDIR /app
 
 COPY --from=publish /app/publish .
 EXPOSE 6021
+ENV SECRETPREFIXENV=${secretPrefixEnv}
 ENV ASPNETCORE_ENVIRONMENT=${deployEnv}
 ENV ASPNETCORE_URLS="http://+:6021"
 ENV TZ=Europe/Istanbul
