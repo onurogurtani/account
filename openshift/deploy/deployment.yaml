@@ -108,11 +108,6 @@ objects:
                     secretKeyRef:
                         name: '${SECRETPREFIXENV}-cap-config-secrets'
                         key: Password
-                - name: RedisConfig__Password
-                  valueFrom:
-                    secretKeyRef:
-                        name: '${SECRETPREFIXENV}-redis-config-secrets'
-                        key: Password
           restartPolicy: Always
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
