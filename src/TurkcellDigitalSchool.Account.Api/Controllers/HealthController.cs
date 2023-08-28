@@ -34,22 +34,22 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
            // var Kaltura = _conf.GetValue<string>("Kaltura:Secret"); 
            // var CaptchaOptions = _conf.GetValue<string>("CaptchaOptions:SecretKey");
             
-         var CapConfigPass = _conf.GetValue<string>("RedisConfig:Password"); 
+         var CapConfigPass = _conf.GetValue<string>("RedisConfig:Password");
 
 
-           // var envDeger = Environment.GetEnvironmentVariable("SecretTest:TestText");
-           // var result = " constring2 : " + (constring2 ?? "") + Environment.NewLine +
-           //" EuroMessageUserName : " + (EuroMessageUserName ?? "") + Environment.NewLine +
-           //" EuroMessagePass : " + (EuroMessagePass ?? "") + Environment.NewLine +
-           //" SmsConfigurationUser : " + (SmsConfigurationUser ?? "") + Environment.NewLine +
-           //" SmsConfigurationPass : " + (SmsConfigurationPass ?? "") + Environment.NewLine +
-           //" SmsConfigurationContentId : " + (SmsConfigurationContentId ?? "") + Environment.NewLine +
-           //" KalturaSecret : " + (Kaltura ?? "") + Environment.NewLine +
-           //" CaptchaOptionsSecretKey : " + (CaptchaOptions ?? "") + Environment.NewLine +
-           //" CapConfigPass : " + (CapConfigPass ?? "") + Environment.NewLine ;
+            // var envDeger = Environment.GetEnvironmentVariable("SecretTest:TestText");
+            // var result = " constring2 : " + (constring2 ?? "") + Environment.NewLine +
+            //" EuroMessageUserName : " + (EuroMessageUserName ?? "") + Environment.NewLine +
+            //" EuroMessagePass : " + (EuroMessagePass ?? "") + Environment.NewLine +
+            //" SmsConfigurationUser : " + (SmsConfigurationUser ?? "") + Environment.NewLine +
+            //" SmsConfigurationPass : " + (SmsConfigurationPass ?? "") + Environment.NewLine +
+            //" SmsConfigurationContentId : " + (SmsConfigurationContentId ?? "") + Environment.NewLine +
+            //" KalturaSecret : " + (Kaltura ?? "") + Environment.NewLine +
+            //" CaptchaOptionsSecretKey : " + (CaptchaOptions ?? "") + Environment.NewLine +
+            //" CapConfigPass : " + (CapConfigPass ?? "") + Environment.NewLine ;
 
 
-            return CapConfigPass
+            return CapConfigPass;
         }
 
 
