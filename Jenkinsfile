@@ -178,7 +178,7 @@ pipeline {
                     -Dsonar.projectKey=${sonarProjectKey} \
                     -Dsonar.host.url=${SONAR_URL} \
                     -Dsonar.login=${SONAR_LOGIN_KEY} \
-                    -Dsonar.sources=src/    \
+                    -Dsonar.sources=src/\
                     -Dsonar.exclusions=${exclusions} \
                     -Dsonar.coverage.exclusions=${exclusions} \
                     -Dsonar.test.exclusions=${exclusions}
