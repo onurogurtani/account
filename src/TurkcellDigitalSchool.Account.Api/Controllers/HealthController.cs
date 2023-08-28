@@ -34,7 +34,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
            // var Kaltura = _conf.GetValue<string>("Kaltura:Secret"); 
            // var CaptchaOptions = _conf.GetValue<string>("CaptchaOptions:SecretKey");
             
-           // var CapConfigPass = _conf.GetValue<string>("CapConfig:Password"); 
+         var CapConfigPass = _conf.GetValue<string>("RedisConfig:Password"); 
 
 
            // var envDeger = Environment.GetEnvironmentVariable("SecretTest:TestText");
@@ -49,7 +49,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
            //" CapConfigPass : " + (CapConfigPass ?? "") + Environment.NewLine ;
 
 
-            return "OK";
+            return CapConfigPass
         }
 
 
