@@ -56,67 +56,67 @@ objects:
                 - name: ConnectionStrings__DArchPostgreContext
                   valueFrom:
                     secretKeyRef:
-                        name: '${SECRETPREFIXENV}'-connectionstrings-secrets
+                        name: '${SECRETPREFIXENV}-connectionstrings-secrets'
                         key: DArchPostgreContext
                 - name: EuroMessageConfiguration__UserName
                   valueFrom:
                     secretKeyRef:
-                        name: '${SECRETPREFIXENV}'-euromessage-configuration-secrets
+                        name: '${SECRETPREFIXENV}-euromessage-configuration-secrets'
                         key: UserName
                 - name: EuroMessageConfiguration__Password
                   valueFrom:
                     secretKeyRef:
-                        name: '${SECRETPREFIXENV}'-euromessage-configuration-secrets
+                        name: '${SECRETPREFIXENV}-euromessage-configuration-secrets'
                         key: Password
                 - name: EmailConfiguration__UserName
                   valueFrom:
                     secretKeyRef:
-                        name: '${SECRETPREFIXENV}'-email-configuration-secrets
+                        name: '${SECRETPREFIXENV}-email-configuration-secrets'
                         key: UserName
                 - name: EmailConfiguration__Password
                   valueFrom:
                     secretKeyRef:
-                        name: '${SECRETPREFIXENV}'-email-configuration-secrets
+                        name: '${SECRETPREFIXENV}-email-configuration-secrets'
                         key: Password	
                 - name: CaptchaOptions__SecretKey
                   valueFrom:
                     secretKeyRef:
-                        name: '${SECRETPREFIXENV}'-captcha-options-secrets
+                        name: '${SECRETPREFIXENV}-captcha-options-secrets'
                         key: SecretKey		
                 - name: LdapConfig__adminUser
                   valueFrom:
                     secretKeyRef:
-                        name: '${SECRETPREFIXENV}'-ldap-config-secrets
+                        name: '${SECRETPREFIXENV}-ldap-config-secrets'
                         key: adminUser
                 - name: LdapConfig__adminPass
                   valueFrom:
                     secretKeyRef:
-                        name: '${SECRETPREFIXENV}'-ldap-config-secrets
+                        name: '${SECRETPREFIXENV}-ldap-config-secrets'
                         key: adminPass	
                 - name: CapConfig__UserName
                   valueFrom:
                     secretKeyRef:
-                        name: '${SECRETPREFIXENV}'-cap-config-secrets
+                        name: '${SECRETPREFIXENV}-cap-config-secrets'
                         key: UserName
                 - name: CapConfig__Password
                   valueFrom:
                     secretKeyRef:
-                        name: '${SECRETPREFIXENV}'-cap-config-secrets
+                        name: '${SECRETPREFIXENV}-cap-config-secrets'
                         key: Password	
                 - name: RedisConfig__Password
                   valueFrom:
                     secretKeyRef:
-                        name: '${SECRETPREFIXENV}'-redis-config-secrets
+                        name: '${SECRETPREFIXENV}-redis-config-secrets'
                         key: Password						
                 - name: SmsConfiguration__User
                   valueFrom:
                     secretKeyRef:
-                        name: '${SECRETPREFIXENV}'-smsconfiguration-secrets
+                        name: '${SECRETPREFIXENV}-smsconfiguration-secrets'
                         key: User
                 - name: SmsConfiguration__Password
                   valueFrom:
                     secretKeyRef:
-                        name: '${SECRETPREFIXENV}'-smsconfiguration-secrets
+                        name: '${SECRETPREFIXENV}-smsconfiguration-secrets'
                         key: Password               
           restartPolicy: Always
           terminationGracePeriodSeconds: 30
