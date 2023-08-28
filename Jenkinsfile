@@ -250,7 +250,8 @@ pipeline {
                                     readFile(file: deploymentConfigTemplate), 
                                     "-p", "REGISTRY_URL=${newImageUrl}", 
                                     "-p", "APP_NAME=${appName}",
-                                    "-p", "NAMESPACE=${openshiftProjectName}"
+                                    "-p", "NAMESPACE=${openshiftProjectName}",
+									"-p", "SECRETPREFIXENV=${secretPrefixEnv}"
                                 )
                             )
                             def dc = openshift.selector('dc', "${appName}")
