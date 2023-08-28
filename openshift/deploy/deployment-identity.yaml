@@ -131,12 +131,12 @@ parameters:
   - name: APP_NAME
     displayName: Application Name
     description: Unique application name
-    required: true
-  - name: SECRETPREFIXENV
-    displayName: Secret Prefix
-    description: Secret Prefix
-    required: true      
+    required: true       
   - name: NAMESPACE
     displayName: Service Name
     description: Unique service name
     required: true
+  - name: SECRETPREFIXENV
+    displayName: Secret Prefix
+    description: Secret Prefix
+    required: true    
