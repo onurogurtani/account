@@ -2,9 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
-using System.ComponentModel;
+using Microsoft.Extensions.Logging;  
 
 namespace TurkcellDigitalSchool.Account.Business.Jobs
 {

@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
-using FluentValidation;
+using System.Threading.Tasks; 
 using MediatR;
-using TurkcellDigitalSchool.Account.Business.Constants;
-using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.ValidationRules;
+using TurkcellDigitalSchool.Account.Business.Constants; 
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Validation;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute; 
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;

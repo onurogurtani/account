@@ -21,8 +21,7 @@ using TurkcellDigitalSchool.Account.Business.Jobs;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 using TurkcellDigitalSchool.Core.Common.Middleware;
 using TurkcellDigitalSchool.Core.ApiDoc;
-using TurkcellDigitalSchool.Core.Constants.IdentityServer;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
+using TurkcellDigitalSchool.Core.Constants.IdentityServer; 
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.IoC;
@@ -84,10 +83,7 @@ namespace TurkcellDigitalSchool.Account.Container
             services.AddSwaggerGen(c =>
             {
                 c.IncludeXmlComments(Path.ChangeExtension(Assembly.GetEntryAssembly().Location, ".xml"));
-            });
-
-
-            services.AddSingleton<RedisService>();
+            }); 
 
             base.ConfigureServices(services);
             services.AddApplicationInsightsTelemetry();
