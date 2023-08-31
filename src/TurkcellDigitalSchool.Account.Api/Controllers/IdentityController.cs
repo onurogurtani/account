@@ -561,26 +561,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
-        /// <summary>
-        /// Token decode test
-        /// </summary>
-        /// <returns></returns>
-        //[Consumes("application/json")]
-        //[Produces("application/json", "text/plain")]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        //[HttpPost("test")]
-        //public IActionResult LoginTest()
-        //{
-        //    var auth = Request.Headers["Authorization"];
-        //    var token = _jwtHelper.DecodeToken(auth);
-
-        //    return Ok(token);
-        //}
-
-        /// <summary>
-        /// Make it UserName Suggest operations
-        /// </summary>
-        /// <returns></returns>
+     
         [AllowAnonymous]
         [Consumes("application/json")]
         [Produces("application/json", "text/plain")]

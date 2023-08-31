@@ -15,6 +15,7 @@ using TurkcellDigitalSchool.Core.Utilities.Mail;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Utilities.Toolkit;
+using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
