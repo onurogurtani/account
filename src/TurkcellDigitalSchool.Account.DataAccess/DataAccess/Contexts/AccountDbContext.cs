@@ -8,7 +8,7 @@ using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
 using TurkcellDigitalSchool.Core.DataAccess;
 using TurkcellDigitalSchool.Core.DataAccess.Contexts;
 using TurkcellDigitalSchool.Core.Services.EntityChangeServices;
-using TurkcellDigitalSchool.Core.Utilities.Security.Jwt; 
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 
 namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
 {
@@ -112,6 +112,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         public DbSet<StudentCoach> StudentCoaches { get; set; }
         public DbSet<CoachLeaderCoach> CoachLeaderCoaches { get; set; }
         public DbSet<PackageMenuAccess> PackageMenuAccesses { get; set; }
+        public DbSet<UserSearchHistory> UserSearchHistories { get; set; }
 
         #endregion
 
