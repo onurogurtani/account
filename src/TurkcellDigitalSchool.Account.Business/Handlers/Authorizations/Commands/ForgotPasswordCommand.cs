@@ -9,7 +9,7 @@ using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
- 
+using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
@@ -22,7 +22,7 @@ using IResult = TurkcellDigitalSchool.Core.Utilities.Results.IResult;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
     [LogScope]
-    public class ForgotPasswordCommand : IRequest<IResult>
+    public class ForgotPasswordCommand : IRequest<IResult> , IUnLogable
     {
         public string Email { get; set; }
         public string CaptchaKey { get; set; }

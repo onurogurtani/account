@@ -183,29 +183,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         }
 
 
-        /// <summary>
-        /// Login Servisleri Sonrası Dönen Otp İle Token Alınır 
-        /// </summary>
-        /// <param name="loginModel"></param>
-        /// <returns></returns>
-        //[AllowAnonymous]
-        //[Consumes("application/json")]
-        //[Produces("application/json", "text/plain")]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<AccessToken>))]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        //[HttpPost("loginOtp")]
-        //public async Task<IActionResult> LoginOtp([FromBody] LoginOtpQuery loginModel, CancellationToken cancellationToken)
-        //{
-        //    var result = await Mediator.Send(loginModel, cancellationToken);
-
-        //    if (result.Success)
-        //    {
-        //        return Ok(result);
-        //    }
-
-        //    return BadRequest(result);
-        //}
-
+       
 
         #region New Login Endpoinds
 

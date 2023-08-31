@@ -20,7 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 {
     [LogScope]
     [TransactionScope]
-    public class UnverifiedUserCommand : IRequest<IDataResult<UnverifiedUserDto>>
+    public class UnverifiedUserCommand : IRequest<IDataResult<UnverifiedUserDto>> , IUnLogable
     {
         public UserType UserTypeId { get; set; }
         public string Name { get; set; }

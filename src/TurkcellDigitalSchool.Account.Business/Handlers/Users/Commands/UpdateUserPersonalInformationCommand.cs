@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Handlers.Student.Commands;
 using TurkcellDigitalSchool.Account.Business.Services.User;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Common.Helpers;
@@ -16,7 +17,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 {
     [LogScope]
 
-    public class UpdateUserPersonalInformationCommand : IRequest<IResult>
+    public class UpdateUserPersonalInformationCommand : IRequest<IResult> , IUnLogable
     {
         public string UserName { get; set; }
         public string Email { get; set; }

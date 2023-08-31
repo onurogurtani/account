@@ -10,11 +10,12 @@ using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Integration.IntegrationServices.IdentityServerServices.Model.Response;
+using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
     [LogScope]
-    public class OldPasswordToNewPasswordCommand : IRequest<DataResult<TokenIntegraitonResponse>>
+    public class OldPasswordToNewPasswordCommand : IRequest<DataResult<TokenIntegraitonResponse>> , IUnLogable
     {
         public string XId { get; set; }
         public string Guid { get; set; } 
