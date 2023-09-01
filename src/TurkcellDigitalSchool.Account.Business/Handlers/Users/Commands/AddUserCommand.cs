@@ -114,7 +114,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                     Content = messageContent
                 });
 
-                return new SuccessDataResult<SelectionItem>(new SelectionItem { Label = messageContent }, Added.PrepareRedisMessage());
+                return new SuccessDataResult<SelectionItem>(new SelectionItem {}, Added.PrepareRedisMessage());
             }
 
         }
