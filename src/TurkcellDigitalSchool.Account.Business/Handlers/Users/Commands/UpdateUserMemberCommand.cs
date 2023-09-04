@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.AuthorityManagement;
+using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Common.Helpers; 
@@ -19,7 +20,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
     /// </summary>
     [LogScope]
     [SecuredOperationScope(ClaimNames = new[] { ClaimConst.IndividualMemberListEditUser })]
-    public class UpdateUserMemberCommand : IRequest<IResult>
+    public class UpdateUserMemberCommand : IRequest<IResult> , IUnLogable
     {
         public long Id { get; set; }
         public UserType UserType { get; set; }

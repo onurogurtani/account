@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
-using DotNetCore.CAP;
+using System.Threading.Tasks; 
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http; 
 using TurkcellDigitalSchool.Account.Business.Services.Authentication;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Common;
 using TurkcellDigitalSchool.Core.Common.Constants;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute; 
 using TurkcellDigitalSchool.Core.Entities.Dtos;
-using TurkcellDigitalSchool.Core.Enums;
-using TurkcellDigitalSchool.Core.Extensions;
+using TurkcellDigitalSchool.Core.Enums; 
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt; 
 
@@ -33,18 +29,16 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
         {
             private readonly ConfigurationManager _configurationManager;
             private readonly IUserRepository _userRepository;
-            private readonly ITokenHelper _tokenHelper;
-            private readonly ICacheManager _cacheManager;
+            private readonly ITokenHelper _tokenHelper; 
             private readonly IMobileLoginRepository _mobileLoginRepository;
             private readonly ISmsOtpRepository _smsOtpRepository;
             private readonly IUserSessionRepository _userSessionRepository;
             private readonly IHttpContextAccessor _httpContextAccessor; 
-            public RegisterOtpQueryHandler(IUserRepository userRepository, ITokenHelper tokenHelper, ICacheManager cacheManager,
+            public RegisterOtpQueryHandler(IUserRepository userRepository, ITokenHelper tokenHelper,
                 IMobileLoginRepository mobileLoginRepository, ISmsOtpRepository smsOtpRepository, ConfigurationManager configurationManager, IUserSessionRepository userSessionRepository, IHttpContextAccessor httpContextAccessor )
             {
                 _userRepository = userRepository;
-                _tokenHelper = tokenHelper;
-                _cacheManager = cacheManager;
+                _tokenHelper = tokenHelper; 
                 _mobileLoginRepository = mobileLoginRepository;
                 _smsOtpRepository = smsOtpRepository;
                 _configurationManager = configurationManager;

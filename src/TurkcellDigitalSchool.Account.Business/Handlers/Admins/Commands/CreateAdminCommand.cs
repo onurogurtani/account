@@ -12,6 +12,7 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
+using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
 {
@@ -21,7 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Admins.Commands
     [TransactionScope]
     [LogScope]
     // 
-    public class CreateAdminCommand : IRequest<IResult>
+    public class CreateAdminCommand : IRequest<IResult>, IUnLogable
     {
         public CreateUpdateAdminDto Admin { get; set; }
 

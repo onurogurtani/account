@@ -12,19 +12,19 @@ using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Common.Helpers;
  
  
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute; 
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
-using TurkcellDigitalSchool.Core.Utilities.Security.Jwt; 
+using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
+using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
     [TransactionScope]
     [LogScope]
-    public class RegisterUserCommand : IRequest<DataResult<AccessToken>>
+    public class RegisterUserCommand : IRequest<DataResult<AccessToken>>, IUnLogable
     {
         public UserType UserTypeId { get; set; }
         public long CitizenId { get; set; }

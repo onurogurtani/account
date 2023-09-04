@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Common.Helpers;
@@ -21,7 +22,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.StudentCoaches.Command
     [TransactionScope]
     [LogScope]
     // 
-    public class CreateStudentCoachCommand : IRequest<IResult>
+    public class CreateStudentCoachCommand : IRequest<IResult> , IUnLogable
     {
         public StudentCoach StudentCoach { get; set; }
 

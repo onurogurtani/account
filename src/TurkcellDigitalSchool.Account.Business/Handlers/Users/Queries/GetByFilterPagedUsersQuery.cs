@@ -14,6 +14,7 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 {
@@ -22,7 +23,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
     /// </summary>
     [LogScope]
      
-    public class GetByFilterPagedUsersQuery : IRequest<DataResult<PagedList<UserDto>>>
+    public class GetByFilterPagedUsersQuery : IRequest<DataResult<PagedList<UserDto>>> , IUnLogable
     {
         public UserDetailSearch UserDetailSearch { get; set; } = new UserDetailSearch();
 
