@@ -30,6 +30,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
 using TurkcellDigitalSchool.Exam.Business.Handlers.TestExams.Commands; 
 using TurkcellDigitalSchool.Account.Business.SeedData;
 using TurkcellDigitalSchool.Account.Business.Handlers.Documents.Commands;
+using TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands;
 
 namespace TurkcellDigitalSchool.Account.Container
 {
@@ -217,11 +218,9 @@ namespace TurkcellDigitalSchool.Account.Container
             RecurringJob.AddOrUpdate<HangfireJobSender>("Get_Ldap_Learnup_Users_Routine",
             job => job.Send(new LdapUserInfoCommand()), Cron.Daily());
 
-            RecurringJob.AddOrUpdate<HangfireJobSender>(" LongTimeNotLogin_Notification_Routine",
-                job => job.Send(new LongTimeNotLoginNotificationCommand()), Cron.DayInterval(10));
+            RecurringJob.AddOrUpdate<HangfireJobSender>(" NeverLogged_Notification_Routine",
+                job => job.Send(new CheckForNeverLoggedCommand()), Cron.Daily(11));
 
-            RecurringJob.AddOrUpdate<HangfireJobSender>("BirthDayn_Notification_Routine",
-            job => job.Send(new BirthDayNotificationCommand()), Cron.DayInterval(1));
 
             RecurringJob.AddOrUpdate<HangfireJobSender>("SetPassive_ExpiredDocument_Routine",
             job => job.Send(new SetPassiveExpiredDocumentCommand()), Cron.Hourly());
