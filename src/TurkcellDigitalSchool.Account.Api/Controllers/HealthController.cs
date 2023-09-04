@@ -22,15 +22,34 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [AllowAnonymous]
         public string Ping()
         {
-            var address1 = _conf.GetValue<string>("SecretTest:TestText");
-            var address2 = _conf.GetValue<string>("TestText");
-
-            var envDeger = Environment.GetEnvironmentVariable("SecretTest:TestText"); 
-            var result = "Config Değer 1 : " + (address1 ?? "") +
-                " Config Değer 2 : " + (address2 ?? "") +
-                "  Env Değer : " + (envDeger ?? "");
              
-            return result;
+           // var constring2 = _conf.GetValue<string>("ConnectionStrings:DArchPostgreContext");
+           // var EuroMessageUserName = _conf.GetValue<string>("EuroMessageConfiguration:UserName");
+           // var EuroMessagePass = _conf.GetValue<string>("EuroMessageConfiguration:Password");
+
+           // var SmsConfigurationUser = _conf.GetValue<string>("SmsConfiguration:User");
+           // var SmsConfigurationPass = _conf.GetValue<string>("SmsConfiguration:Password"); 
+           // var SmsConfigurationContentId = _conf.GetValue<string>("SmsConfiguration:ContentId"); 
+
+           // var Kaltura = _conf.GetValue<string>("Kaltura:Secret"); 
+           // var CaptchaOptions = _conf.GetValue<string>("CaptchaOptions:SecretKey");
+            
+         var CapConfigPass = _conf.GetValue<string>("RedisConfig:Password");
+
+
+            // var envDeger = Environment.GetEnvironmentVariable("SecretTest:TestText");
+            // var result = " constring2 : " + (constring2 ?? "") + Environment.NewLine +
+            //" EuroMessageUserName : " + (EuroMessageUserName ?? "") + Environment.NewLine +
+            //" EuroMessagePass : " + (EuroMessagePass ?? "") + Environment.NewLine +
+            //" SmsConfigurationUser : " + (SmsConfigurationUser ?? "") + Environment.NewLine +
+            //" SmsConfigurationPass : " + (SmsConfigurationPass ?? "") + Environment.NewLine +
+            //" SmsConfigurationContentId : " + (SmsConfigurationContentId ?? "") + Environment.NewLine +
+            //" KalturaSecret : " + (Kaltura ?? "") + Environment.NewLine +
+            //" CaptchaOptionsSecretKey : " + (CaptchaOptions ?? "") + Environment.NewLine +
+            //" CapConfigPass : " + (CapConfigPass ?? "") + Environment.NewLine ;
+
+
+            return CapConfigPass;
         }
 
 

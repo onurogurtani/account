@@ -1,8 +1,7 @@
 ﻿using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using Microsoft.Extensions.Logging; 
 
 namespace TurkcellDigitalSchool.Account.Business.Jobs
 {

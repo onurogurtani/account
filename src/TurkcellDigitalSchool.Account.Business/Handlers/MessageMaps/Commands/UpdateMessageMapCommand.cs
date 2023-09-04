@@ -7,8 +7,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.AuthorityManagement;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
+using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
@@ -21,21 +20,16 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
         public string Message { get; set; }
         public class UpdateMessageMapCommandHandler : IRequestHandler<UpdateMessageMapCommand, IResult>
         {
-            private readonly IMessageMapRepository _messageMapRepository;
-            private readonly RedisService _redisService;
+            private readonly IMessageMapRepository _messageMapRepository; 
+            private readonly DbMessageRedisSvc _dbMessageRedisSvc; 
 
-            public UpdateMessageMapCommandHandler(IMessageMapRepository messageMapRepository, RedisService redisService)
+            public UpdateMessageMapCommandHandler(IMessageMapRepository messageMapRepository, DbMessageRedisSvc dbMessageRedisSvc)
             {
                 _messageMapRepository = messageMapRepository;
-                _redisService = redisService;
+                _dbMessageRedisSvc = dbMessageRedisSvc;
             }
             public async Task<IResult> Handle(UpdateMessageMapCommand request, CancellationToken cancellationToken)
-            {/*
-                if (!_redisService.IsConnect())
-                {
-                    return new ErrorResult(Messages.UnableToConnectToRedis);
-                }*/
-
+            {  
                 var entity = _messageMapRepository.Get(x => x.Id == request.Id);
                 if (entity != null)
                 {
@@ -48,7 +42,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
                             s.MessageKey + s.UsedClass,
                             s.UserFriendlyNameOfMessage ?? s.Message))
                         .ToArray();
-                    await _redisService.GetDb(CachingConstants.MessagesDb).HashSetAsync("message", hashArray);
+                    await _dbMessageRedisSvc.SetKeyFieldValues("message", hashArray); 
 
                     return new SuccessResult(Messages.Updated);
                 }

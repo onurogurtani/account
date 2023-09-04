@@ -39,6 +39,13 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
             public virtual async Task<DataResult<UserSessionWeeklyDto>> Handle(GetUserWeeklySessionQuery request, CancellationToken cancellationToken)
             {
                 long currentuserId = request.UserId > 0 ? request.UserId.Value : _tokenHelper.GetUserIdByCurrentToken();
+ 
+                var forUserTimeWastring = "";
+                if (request.UserId > 0)
+                    forUserTimeWastring = "geçirdi";
+                else
+                    forUserTimeWastring = "geçirdin";
+
                 var startOfWeek = UserSessionHelper.StartOfWeek();
                 var list = await _userSessionRepository
                     .Query()
@@ -51,7 +58,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
 
                 UserSessionWeeklyDto dto = new UserSessionWeeklyDto
                 {
-                    TotalSessionTimeText = $"Bu hafta LearnUp' ta {totalTimeString} zaman geçirdin"
+                    TotalSessionTimeText = $"Bu hafta LearnUp' ta {totalTimeString} zaman {forUserTimeWastring}."
                 };
                 return new SuccessDataResult<UserSessionWeeklyDto>(dto);
             }

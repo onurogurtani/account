@@ -12,6 +12,8 @@ using TurkcellDigitalSchool.Core.Integration.IntegrationServices.EventServices;
 using TurkcellDigitalSchool.Core.Integration.IntegrationServices.ExamServices;
 using TurkcellDigitalSchool.Core.Integration.IntegrationServices.FileServices;
 using TurkcellDigitalSchool.Core.Integration.IntegrationServices.ReportingServices;
+using DotNetCore.CAP;
+using TurkcellDigitalSchool.Core.SubServiceConst;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
 {
@@ -20,16 +22,22 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
         public class MessagesToDatabaseCommandHandler : IRequestHandler<MessagesToDatabaseCommand, IResult>
         {
             private readonly IMediator _mediator;
+            private readonly ICapPublisher _capPublisher;
             private readonly IEducationServices _educationServices;
             private readonly IEventServices _eventServices;
             private readonly IExamServices _examServices;
             private readonly IFileServices _fileServices;
             private readonly IReportingServices _reportingServices;
 
-            public MessagesToDatabaseCommandHandler(IMediator mediator, IEducationServices educationServices)
+            public MessagesToDatabaseCommandHandler(IMediator mediator, ICapPublisher capPublisher, IEducationServices educationServices, IEventServices eventServices, IExamServices examServices, IFileServices fileServices, IReportingServices reportingServices)
             {
                 _mediator = mediator;
+                _capPublisher = capPublisher;
                 _educationServices = educationServices;
+                _eventServices = eventServices;
+                _examServices = examServices;
+                _fileServices = fileServices;
+                _reportingServices = reportingServices;
             }
 
             public async Task<IResult> Handle(MessagesToDatabaseCommand request, CancellationToken cancellationToken)
@@ -75,13 +83,9 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
                         items.AddRange(messages.Data);
                 }
 
-                var result = await _mediator.Send(new CreateMessageMapCommand { ConstantMessageDtos = items }, cancellationToken);
-                if (result.Success)
-                {
-                    return new SuccessResult(Messages.SuccessfulOperation);
-                }
+                await _capPublisher.PublishAsync(SubServiceConst.MESSAGE_MAP_CREATE_REQUEST, items);
 
-                return new ErrorResult(Messages.UnableToProccess);
+                return new SuccessResult(Messages.SuccessfulOperation);
             }
 
         }

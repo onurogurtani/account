@@ -4088,6 +4088,49 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                     b.ToTable("userrole", "account");
                 });
 
+            modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.UserSearchHistory", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("InsertTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("inserttime");
+
+                    b.Property<long?>("InsertUserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("insertuserid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("isdeleted");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("text")
+                        .HasColumnName("text");
+
+                    b.Property<DateTime?>("UpdateTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updatetime");
+
+                    b.Property<long?>("UpdateUserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("updateuserid");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("userid");
+
+                    b.HasKey("Id")
+                        .HasName("pk_usersearchhistory");
+
+                    b.ToTable("usersearchhistory", "account");
+                });
+
             modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.UserSession", b =>
                 {
                     b.Property<long>("Id")
