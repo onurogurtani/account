@@ -169,6 +169,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                     PackageName = s.Package.Name,
                     PurchaseDate = s.PurchaseDate,
                     PackageContent = s.Package.Content,
+                    ExamKind=s.Package.ExamKind,
                 })
                 .ToList();
         }
