@@ -258,8 +258,11 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 var newRecord = new UserCommunicationPreferences
                 {
                     UserId = UserId,
-                    IsEMail = user.MobilePhonesVerify == true ? true : false,
+                    IsEMail = user.EmailVerify == true ? true : false,
                     IsCall = user.MobilePhonesVerify == true ? true : false,
+                    IsSms = user.MobilePhonesVerify == true ? true : false,
+                    IsNotification=true,
+
                 };
                 await _userCommunicationPreferencesRepository.CreateAndSaveAsync(newRecord);
             }
@@ -272,7 +275,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 var newRecord = new UserSupportTeamViewMyData
                 {
                     UserId = UserId,
-                    IsViewMyData = false
+                    IsViewMyData = true
                 };
                 await _userSupportTeamViewMyDataRepository.CreateAndSaveAsync(newRecord);
             }
