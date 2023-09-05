@@ -258,7 +258,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 var newRecord = new UserCommunicationPreferences
                 {
                     UserId = UserId,
-                    IsEMail = user.MobilePhonesVerify == true ? true : false,
+                    IsEMail = user.EmailVerify == true ? true : false,
                     IsCall = user.MobilePhonesVerify == true ? true : false,
                 };
                 await _userCommunicationPreferencesRepository.CreateAndSaveAsync(newRecord);
