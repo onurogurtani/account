@@ -95,7 +95,7 @@ pipeline {
 
                     printDebugMessage ("mainBranch = " + mainBranch)
                     printDebugMessage ("deployEnv = " + deployEnv)
-                    printDebugMessage ("appName = " + appName)
+                    printDebugMessage ("appName = " + appName) 
 
                     printDebugMessage ("newImageUrl = " + newImageUrl)
                     printSectionBoundry("Configuration stage finished!")
