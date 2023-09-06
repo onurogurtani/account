@@ -53,8 +53,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                 var list = await _userSessionRepository
                     .Query()
                     .Where(w => w.UserId == currentuserId)
-                    .Where(w => w.StartTime >= startOfWeek || w.EndTime >= startOfWeek ||  w.EndTime == null) 
-                     
+                    .Where(w => w.StartTime >= startOfWeek || w.EndTime >= startOfWeek ||  w.EndTime == null)  
                     .OrderByDescending(o => o.StartTime)
                     .ToListAsync();
 
