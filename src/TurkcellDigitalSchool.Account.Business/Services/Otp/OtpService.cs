@@ -139,11 +139,6 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
 
         }
 
-        public Result VerifyVisitorRegister(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId, OTPExpiryDate oTPExpiryDate)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<DataResult<GenerateOtpVisitorRegisterDto>>  GenerateOtpVisitorRegister(string name, string surName, string email, string mobilPhone, OTPExpiryDate oTPExpiryDate)
         {
             var existOtpCodes = _visitorRegisterRepository.Query().Any(w => w.IsCompleted == false && w.Name == name && w.SurName == surName && w.Email == email && w.MobilePhones == mobilPhone && w.ExpiryDate > DateTime.Now);

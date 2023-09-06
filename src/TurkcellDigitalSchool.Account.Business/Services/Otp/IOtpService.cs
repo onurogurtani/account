@@ -15,8 +15,5 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
         Result VerifyOtp(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId, int Code);
 
         Task<DataResult<GenerateOtpVisitorRegisterDto>> GenerateOtpVisitorRegister(string name, string surName, string email, string mobilPhone, OTPExpiryDate oTPExpiryDate);
-
-        Result VerifyVisitorRegister(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId, OTPExpiryDate oTPExpiryDate);
-
     }
 }
