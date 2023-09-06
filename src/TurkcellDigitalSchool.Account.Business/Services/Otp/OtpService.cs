@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Account.Domain.Enums.OTP;
 using TurkcellDigitalSchool.Core.Common;
 using TurkcellDigitalSchool.Core.Common.Helpers;
@@ -22,16 +24,17 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
         private readonly IOneTimePasswordRepository _oneTimePasswordRepository;
         private readonly IUserRepository _userRepository;
         private readonly ISmsOtpRepository _smsOtpRepository;
-
+        private readonly IVisitorRegisterRepository _visitorRegisterRepository;
         private readonly ConfigurationManager _configurationManager;
         private readonly ICapPublisher _capPublisher;
-        public OtpService(IOneTimePasswordRepository oneTimePasswordRepository, ConfigurationManager configurationManager, IUserRepository userRepository, ICapPublisher capPublisher, ISmsOtpRepository smsOtpRepository)
+        public OtpService(IOneTimePasswordRepository oneTimePasswordRepository, ConfigurationManager configurationManager, IUserRepository userRepository, ICapPublisher capPublisher, ISmsOtpRepository smsOtpRepository, IVisitorRegisterRepository visitorRegisterRepository)
         {
             _oneTimePasswordRepository = oneTimePasswordRepository;
             _configurationManager = configurationManager;
             _userRepository = userRepository;
             _capPublisher = capPublisher;
             _smsOtpRepository = smsOtpRepository;
+            _visitorRegisterRepository = visitorRegisterRepository;
         }
 
         [MessageConstAttr(MessageCodeType.Information)]
@@ -136,5 +139,39 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
 
         }
 
+        public Result VerifyVisitorRegister(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId, OTPExpiryDate oTPExpiryDate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<DataResult<GenerateOtpVisitorRegisterDto>>  GenerateOtpVisitorRegister(string name, string surName, string email, string mobilPhone, OTPExpiryDate oTPExpiryDate)
+        {
+            var existOtpCodes = _visitorRegisterRepository.Query().Any(w => w.IsCompleted == false && w.Name == name && w.SurName == surName && w.Email == email && w.MobilePhones == mobilPhone && w.ExpiryDate > DateTime.Now);
+
+            if (existOtpCodes)
+            {
+                return new ErrorDataResult<GenerateOtpVisitorRegisterDto>($"Yeni kod oluşturmak için {(int)oTPExpiryDate} sn dolmalıdır.");
+            }
+
+            int smsOtpCode = RandomPassword.RandomNumberGenerator();
+            int mailOtpCode = RandomPassword.RandomNumberGenerator();
+
+
+            await _smsOtpRepository.Send(mobilPhone, $"Tek Kullanımlık Şifreniz : {smsOtpCode}");
+
+            var dictoryString = new Dictionary<string, string>();
+            dictoryString.Add(EmailVerifyParameters.NameSurname, $"{name} {surName}");
+            dictoryString.Add(EmailVerifyParameters.OtpCode, mailOtpCode.ToString());
+            dictoryString.Add(EmailVerifyParameters.RecipientAddress, email);
+            await _capPublisher.PublishAsync(SubServiceConst.SENDING_EMAIL_ADDRESS_VERIFY_REQUEST, dictoryString);
+
+
+
+            return new SuccessDataResult<GenerateOtpVisitorRegisterDto>(new GenerateOtpVisitorRegisterDto
+            {
+                MailOtpCode=mailOtpCode,
+                SmsOtpCode=smsOtpCode,
+            });
+        }
     }
 }

@@ -29,4 +29,18 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Validat
 
         }
     }
+
+    [MessageClassAttr("Visitor Otp Kodları Doğrulama")]
+    public class VerifyVisitorRegisterValidator : AbstractValidator<VerifyVisitorRegisterCommand>
+    {
+        [MessageConstAttr(MessageCodeType.Error, "Session kod, Sms Otp Kod, Email Otp kod")]
+        private static string FieldIsNotNullOrEmpty = Messages.FieldIsNotNullOrEmpty;
+        public VerifyVisitorRegisterValidator()
+        {
+            RuleFor(x => x.SessionCode).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Session kod" }));
+            RuleFor(x => x.SmsOtpCode).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Sms Otp Kod" }));
+            RuleFor(x => x.EmailOtpCode).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Email Otp kod" }));
+
+        }
+    }
 }
