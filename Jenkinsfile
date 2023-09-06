@@ -84,6 +84,7 @@ pipeline {
                         deployEnv = "PRPTURKCELL"
                         appName = subsoftwareModuleName + "-prp"
                         openshiftProjectName = "learnupprp"
+                        openshiftClientToken = "tocpt4-learnupprp-token"
                     }
     
     
