@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
@@ -92,15 +93,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     SessionId = addedSessionRecord.Id
                 });
                 addedSessionRecord.LastTokenDate = accessToken.LastTokenDate;
-                
-                _userSessionRepository.UpdateAndSave(addedSessionRecord);
+
+                await  _userSessionRepository.SaveChangesAsync(); 
 
                 var link = ((request.IsAdmin == 0) ?
                           _configuration.GetSection("ResetPasswordSetting").GetSection("ResetPasswordUserLink").Value :
                           _configuration.GetSection("ResetPasswordSetting").GetSection("ResetPasswordAdminLink").Value) + accessToken.Token;
                 var content = " Şifrenizi yenilemek için  <a href=\"" + link + "\"> tıklayınız </a>. ";
 
-                _mailService.Send(new EmailMessage
+                await _mailService.Send(new EmailMessage
                 {
                     Subject = "Şifre Yenileme",
                     ToAddresses = new System.Collections.Generic.List<EmailAddress> { new EmailAddress { Address = user.Email } },

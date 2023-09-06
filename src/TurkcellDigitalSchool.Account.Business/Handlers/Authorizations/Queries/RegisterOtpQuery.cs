@@ -86,12 +86,12 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
                     });
 
                     addedSessionRecord.NotBefore = accessToken.NotBefore;
-                    _userSessionRepository.UpdateAndSave(addedSessionRecord);
+
+                    await _userSessionRepository.SaveChangesAsync(); 
 
                     mobileLogin.Status = UsedStatus.Used;
                     mobileLogin.UsedDate = date;
-                    _mobileLoginRepository.Update(mobileLogin);
-                    await _mobileLoginRepository.SaveChangesAsync();
+                    await _mobileLoginRepository.SaveChangesAsync();  
 
                     if ( _configurationManager.Mode != ApplicationMode.DEV)
                     {
@@ -103,7 +103,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 
                     user.RegisterStatus = RegisterStatus.Registered;
                     user.Status = true;
-                    _userRepository.Update(user);
+  
                     await _userRepository.SaveChangesAsync();
                      
                     return new SuccessDataResult<AccessToken>(accessToken, Messages.SuccessfulLogin);
