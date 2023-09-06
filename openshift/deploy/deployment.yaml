@@ -52,12 +52,6 @@ objects:
               imagePullPolicy: IfNotPresent
               terminationMessagePolicy: File
               image: '${REGISTRY_URL}'
-              env:
-                - name: SecretTest__TestText
-                  valueFrom:
-                    secretKeyRef:
-                        name: secret-test-secrets
-                        key: TestText
           restartPolicy: Always
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
