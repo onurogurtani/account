@@ -37,7 +37,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
             public async Task<IDataResult<VisitorRegisterDto>> Handle(VisitorRegisterCommand request, CancellationToken cancellationToken)
             {
 
-                var otpServiceResult = await _otpService.GenerateOtpVisitorRegister(request.Name, request.SurName, request.Email, request.MobilePhones, OTPExpiryDate.OneHundredTwentySeconds);
+                var otpServiceResult = await _otpService.GenerateOtpVisitorRegister(request.Name.Trim(), request.SurName.Trim(), request.Email.Trim(), request.MobilePhones.Trim(), OTPExpiryDate.OneHundredTwentySeconds);
 
                 if (!otpServiceResult.Success)
                 {
@@ -49,10 +49,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 
                 var visitorRegisterRecord = new VisitorRegister
                 {
-                    Name = request.Name,
-                    SurName = request.SurName,
-                    Email = request.Email,
-                    MobilePhones = request.MobilePhones,
+                    Name = request.Name.Trim(),
+                    SurName = request.SurName.Trim(),
+                    Email = request.Email.Trim(),
+                    MobilePhones = request.MobilePhones.Trim(),
                     SessionCode = Guid.NewGuid(),
                     ExpiryDate = DateTime.Now.AddSeconds((int)120),
                     SmsOtpCode = otpServiceResult.Data.SmsOtpCode,

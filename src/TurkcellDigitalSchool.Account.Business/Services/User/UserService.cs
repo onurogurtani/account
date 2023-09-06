@@ -191,13 +191,7 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                     Id = s.Id,
                     IsOneMonth = s.IsOneMonth,
                     IsAlways = s.IsAlways,
-                    IsViewMyData = ((s.IsAlways ?? false) ||
-                                    ((s.IsOneMonth ?? false) &&
-                                     (s.UpdateTime ?? s.InsertTime) >=
-                                     beforeMonth) ||
-                                    ((s.IsFifteenMinutes ?? false) &&
-                                     (s.UpdateTime ?? s.InsertTime) >= before15Min)
-                        ),
+                    IsViewMyData = s.IsViewMyData,
                     IsFifteenMinutes = s.IsFifteenMinutes,
                 }).FirstOrDefaultAsync();
 
@@ -276,7 +270,10 @@ namespace TurkcellDigitalSchool.Account.Business.Services.User
                 var newRecord = new UserSupportTeamViewMyData
                 {
                     UserId = UserId,
-                    IsViewMyData = true
+                    IsViewMyData = true,
+                    IsAlways=true,
+                    IsFifteenMinutes=false,
+                    IsOneMonth=false,
                 };
                 await _userSupportTeamViewMyDataRepository.CreateAndSaveAsync(newRecord);
             }
