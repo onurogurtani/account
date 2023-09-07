@@ -56,7 +56,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
                    + " union all  select ptm.motivationactivitypackageid packageid , ptm.packageid parentid, 0 from  account.packagemotivationactivitypackage ptm"
                    + " union all  select ptc.coachservicepackageid packageid   , ptc.packageid parentid, 0 from  account.packagecoachservicepackages ptc ) stt"
                    + " inner join cte c on c.packageid = stt.parentid ) select cte.* ,p2.testexamid from cte"
-                   + " join account.packagetestexam p2 on p2.packageid = cte.packageid";
+                   + " left join account.packagetestexam p2 on p2.packageid = cte.packageid";
+                    //   left join account.packagetestexam p2 on p2.packageid   left join olarak değiştirildi çünkü kullanıca ait tüm paketlerin listelenmesi gerek.
 
                     var userPackageList = new List<GetUserTestExamPackageDto>();
 
