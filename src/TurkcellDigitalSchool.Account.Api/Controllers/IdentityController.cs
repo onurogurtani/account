@@ -183,29 +183,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         }
 
 
-        /// <summary>
-        /// Login Servisleri Sonrası Dönen Otp İle Token Alınır 
-        /// </summary>
-        /// <param name="loginModel"></param>
-        /// <returns></returns>
-        //[AllowAnonymous]
-        //[Consumes("application/json")]
-        //[Produces("application/json", "text/plain")]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<AccessToken>))]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        //[HttpPost("loginOtp")]
-        //public async Task<IActionResult> LoginOtp([FromBody] LoginOtpQuery loginModel, CancellationToken cancellationToken)
-        //{
-        //    var result = await Mediator.Send(loginModel, cancellationToken);
-
-        //    if (result.Success)
-        //    {
-        //        return Ok(result);
-        //    }
-
-        //    return BadRequest(result);
-        //}
-
+       
 
         #region New Login Endpoinds
 
@@ -583,26 +561,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
-        /// <summary>
-        /// Token decode test
-        /// </summary>
-        /// <returns></returns>
-        //[Consumes("application/json")]
-        //[Produces("application/json", "text/plain")]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        //[HttpPost("test")]
-        //public IActionResult LoginTest()
-        //{
-        //    var auth = Request.Headers["Authorization"];
-        //    var token = _jwtHelper.DecodeToken(auth);
-
-        //    return Ok(token);
-        //}
-
-        /// <summary>
-        /// Make it UserName Suggest operations
-        /// </summary>
-        /// <returns></returns>
+     
         [AllowAnonymous]
         [Consumes("application/json")]
         [Produces("application/json", "text/plain")]
@@ -638,6 +597,29 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(command, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        /// <summary>
+        ///  Make it Visitor Register operations
+        /// </summary>
+        /// <param name="VisitorRegister"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [Consumes("application/json")]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("VisitorRegister")]
+        public async Task<IActionResult> VisitorRegister([FromBody] VisitorRegisterCommand command, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(command, cancellationToken);
+
             if (result.Success)
             {
                 return Ok(result);

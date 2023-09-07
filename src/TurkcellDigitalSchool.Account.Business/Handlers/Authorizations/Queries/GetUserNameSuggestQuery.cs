@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Entities.Dtos;
 using TurkcellDigitalSchool.Core.Enums;
@@ -14,7 +15,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
 {
     [LogScope]
-    public class GetUserNameSuggestQuery : IRequest<DataResult<List<SelectionItem>>>
+    public class GetUserNameSuggestQuery : IRequest<DataResult<List<SelectionItem>>> , IUnLogable
     {
         public string UserName { get; set; }
         public class GetUserNameSuggestQueryHandler : IRequestHandler<GetUserNameSuggestQuery, DataResult<List<SelectionItem>>>

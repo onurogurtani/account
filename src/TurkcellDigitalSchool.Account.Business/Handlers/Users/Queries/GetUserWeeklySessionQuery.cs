@@ -47,14 +47,18 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Queries
                     forUserTimeWastring = "geçirdin";
 
                 var startOfWeek = UserSessionHelper.StartOfWeek();
+
+ 
+
                 var list = await _userSessionRepository
                     .Query()
                     .Where(w => w.UserId == currentuserId)
-                    .Where(w => w.StartTime >= startOfWeek || w.EndTime >= startOfWeek || w.EndTime == null)
+                    .Where(w => w.StartTime >= startOfWeek || w.EndTime >= startOfWeek ||  w.EndTime == null) 
+                     
                     .OrderByDescending(o => o.StartTime)
                     .ToListAsync();
 
-                var totalTimeString = UserSessionHelper.TotalTimeToString(UserSessionHelper.TotalTime(list, startOfWeek, startOfWeek.AddDays(7)));
+                var totalTimeString = UserSessionHelper.TotalTimeToString(UserSessionHelper.TotalTime(list, startOfWeek, startOfWeek.AddDays(7).AddTicks(-1)));
 
                 UserSessionWeeklyDto dto = new UserSessionWeeklyDto
                 {

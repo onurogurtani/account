@@ -14,12 +14,13 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
+using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 {
     [TransactionScope]
     [LogScope] 
-    public class UpdateCurentUserInformationCommand : IRequest<IResult>
+    public class UpdateCurentUserInformationCommand : IRequest<IResult> , IUnLogable
     {
         public string NameSurname { get; set; }
         public string MobilePhones { get; set; }

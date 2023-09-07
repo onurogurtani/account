@@ -5,6 +5,7 @@ using MediatR;
 using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.Business.Services.Authentication;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
+using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
@@ -12,7 +13,7 @@ using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
     [LogScope]
-    public class ChangePasswordCommand : IRequest<IResult>
+    public class ChangePasswordCommand : IRequest<IResult> , IUnLogable
     {
         public long CitizenId { get; set; }
         public string CurrentPassword { get; set; }

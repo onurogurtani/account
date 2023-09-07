@@ -23,9 +23,7 @@ using TurkcellDigitalSchool.Core.AuthorityManagement.Services.Abstract;
 using TurkcellDigitalSchool.Core.Behaviors;
 using TurkcellDigitalSchool.Core.Common.DependencyResolvers;
 using TurkcellDigitalSchool.Core.Common.Helpers;
-using TurkcellDigitalSchool.Core.Configure;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Microsoft;
+using TurkcellDigitalSchool.Core.Configure; 
 using TurkcellDigitalSchool.Core.DataAccess.Contexts;
 using TurkcellDigitalSchool.Core.DependencyResolvers;
 using TurkcellDigitalSchool.Core.Extensions;
@@ -84,8 +82,7 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddTransient<IElasticSearch, ElasticSearchManager>();
             services.AddTransient<ICaptchaManager, CaptchaManager>();
             services.AddTransient<IMessageBrokerHelper, MqQueueHelper>();
-            services.AddTransient<IMessageConsumer, MqConsumerHelper>();
-            services.AddSingleton<ICacheManager, MemoryCacheManager>();
+            services.AddTransient<IMessageConsumer, MqConsumerHelper>(); 
             services.AddScoped<IPathHelper, PathHelper>();
             services.AddScoped<ILdapLoginService, LdapLoginService>();
             services.AddScoped<ITurkcellFastLoginService, TurkcellFastLoginService>();
@@ -117,6 +114,7 @@ namespace TurkcellDigitalSchool.Account.Business
             services.AddSingleton<IRedisConnectionFactory, RedisConnectionFactory>();
             services.AddSingleton<SessionRedisSvc>();
             services.AddSingleton<HandlerCacheRedisSvc>();
+            services.AddSingleton<DbMessageRedisSvc>();
 
             services.AddTransient<ICustomMessgeHelperService, CustomMessgeHelperService>();
             services.AddSubServices();

@@ -13,6 +13,7 @@ pipeline {
 
 		// App Variables
         deployEnv = " "
+		secretPrefixEnv = " "
         mainBranch = " "
         appServiceName = "dijital_dershane_app"
         softwareModuleName = "account"
@@ -76,15 +77,18 @@ pipeline {
     
                     if ("${env.GIT_BRANCH}" == "dev") {
                         mainBranch = "dev"
-                        deployEnv = "DEVTURKCELL"    
+                        deployEnv = "DEVTURKCELL"   
+						secretPrefixEnv= "devturkcell"
                         appName = subsoftwareModuleName                    
                     } else if (env.GIT_BRANCH == "stb") {
                         mainBranch = "stb"
                         deployEnv = "STBTURKCELL"
+						secretPrefixEnv= "stbturkcell"
                         appName = subsoftwareModuleName + "-stb"
                     } else if (env.GIT_BRANCH == "prp") {
                         mainBranch = "prp"
                         deployEnv = "PRPTURKCELL"
+						secretPrefixEnv= "prpturkcell"
                         appName = subsoftwareModuleName + "-prp"
                     }
     
@@ -95,6 +99,7 @@ pipeline {
 
                     printDebugMessage ("mainBranch = " + mainBranch)
                     printDebugMessage ("deployEnv = " + deployEnv)
+                    printDebugMessage ("secretPrefixEnv = " + secretPrefixEnv)
                     printDebugMessage ("appName = " + appName)
 
                     printDebugMessage ("newImageUrl = " + newImageUrl)
@@ -132,7 +137,8 @@ pipeline {
                                                 "-p", "REGISTRY_URL=${newImageUrl}",
                                                 "-p", "SOURCE_SECRET_NAME=${gitCredentialSecret}",
                                                 "-p", "DOCKERFILE_PATH=./Dockerfile", 
-                                                "-p", "DEPLOYENV=${deployEnv}"
+                                                "-p", "DEPLOYENV=${deployEnv}",
+                                                "-p", "SECRETPREFIXENV=${secretPrefixEnv}"
                                             )
                                         )
 							        	openshift.startBuild("${appName}", "--wait", "--follow")
@@ -172,7 +178,7 @@ pipeline {
                     -Dsonar.projectKey=${sonarProjectKey} \
                     -Dsonar.host.url=${SONAR_URL} \
                     -Dsonar.login=${SONAR_LOGIN_KEY} \
-                    -Dsonar.sources=src/TurkcellDigitalSchool.Account.Api    \
+                    -Dsonar.sources=src/\
                     -Dsonar.exclusions=${exclusions} \
                     -Dsonar.coverage.exclusions=${exclusions} \
                     -Dsonar.test.exclusions=${exclusions}
@@ -244,7 +250,8 @@ pipeline {
                                     readFile(file: deploymentConfigTemplate), 
                                     "-p", "REGISTRY_URL=${newImageUrl}", 
                                     "-p", "APP_NAME=${appName}",
-                                    "-p", "NAMESPACE=${openshiftProjectName}"
+                                    "-p", "NAMESPACE=${openshiftProjectName}",
+									"-p", "SECRETPREFIXENV=${secretPrefixEnv}"
                                 )
                             )
                             def dc = openshift.selector('dc', "${appName}")
@@ -265,14 +272,6 @@ pipeline {
                 if (artifactoryDeployInfo != " ") {
                 devopsLibrary.sendEmail(successMailReceivers, softwareModuleName + "#${BUILD_NUMBER} succeeded!", getFormattedIssueList(devopsLibrary.getCommitMessagesFromChangeSet()) + artifactoryDeployInfo)
                 }
-
-
-                /* Trex v3 geçişi ile sonrasında Jira entegrasyonu için açılacak.
-                if(env.BRANCH_NAME == "releasable"){
-                    print("Releseable build successi Jirada statuyu BUILD TAMAMLANDI'ya güncelliyorum")
-                    devopsLibrary.updateJiraStatus("Success", "Moving to BUILD TAMAMLANDI","361")
-                }
-                */
             }
         }
 
@@ -281,12 +280,6 @@ pipeline {
                 printDebugMessage ("Build failure!")
                 devopsLibrary.sendEmail(failureMailReceivers, softwareModuleName + "#${BUILD_NUMBER} failed!", getFormattedIssueList(devopsLibrary.getCommitMessagesFromChangeSet()) + artifactoryDeployInfo)
 
-                /* Trex v3 geçişi ile sonrasında Jira entegrasyonu için açılacak.
-                if(env.BRANCH_NAME == "releasable"){
-                    print("Releseable build failed Jirada statuyu BUILD FAILED'a güncelliyorum")
-                    devopsLibrary.updateJiraStatus("Success", "Back to BUILD FAILED","411")
-                }
-                */
             }
         }
 
@@ -294,19 +287,10 @@ pipeline {
             script {
                 printDebugMessage ("Build unstable!")
                 devopsLibrary.sendEmail(failureMailReceivers, softwareModuleName + "#${BUILD_NUMBER} is unstable!", getFormattedIssueList(devopsLibrary.getCommitMessagesFromChangeSet()) + artifactoryDeployInfo)
-
-                /* Trex v3 geçişi ile sonrasında Jira entegrasyonu için açılacak.
-                if(env.BRANCH_NAME == "releasable"){
-                    print("Releseable build failed Jirada statuyu BUILD UNSTABLE'a güncelliyorum")
-                    devopsLibrary.updateJiraStatus("Success", "Back to BUILD UNSTABLE","411")
-                }
-                */
+                
             }
         }
     }
-
-
-
 
 
 }

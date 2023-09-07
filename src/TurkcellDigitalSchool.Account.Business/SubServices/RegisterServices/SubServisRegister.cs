@@ -18,6 +18,7 @@ namespace TurkcellDigitalSchool.Account.Business.SubServices.RegisterServices
             services.AddTransient<TestExamTypeEntitySubServices>();
             services.AddTransient<EYDataTransferMapEntitySubServices>();
             services.AddTransient<CreateMessageMapRequestServices>();
+            services.AddTransient<UserSearchHistorySubService>();
         }
     }
 }

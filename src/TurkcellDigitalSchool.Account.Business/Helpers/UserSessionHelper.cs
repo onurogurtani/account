@@ -14,26 +14,36 @@ namespace TurkcellDigitalSchool.Account.Business.Helpers
         }
         public static int TotalTime(List<UserSession> list, DateTime time1, DateTime time2)
         {
-            int totalMinutes = 0;
-            DateTime previousStartTime = DateTime.Now < time2 ? DateTime.Now : time2;
+            int totalMinutes = 0;  
             foreach (var item in list)
             {
                 DateTime startTime = item.StartTime;
                 DateTime? endTime = item.EndTime;
+                
                 if (item.StartTime < time1)
                 {
                     startTime = time1;
                 }
+
+
                 if (item.EndTime == null)
-                {
-                    endTime = previousStartTime;
+                { 
+                    if ((DateTime.Now - startTime).TotalMinutes > (12 * 60))
+                    {
+                        endTime = startTime.AddMinutes(60);
+                    }
+                    else
+                    {
+                        endTime = DateTime.Now;
+                    }
+                    
                 }
                 else if (item.EndTime > time2)
                 {
                     endTime = time2;
                 }
-                totalMinutes += Math.Abs((int)(endTime - startTime).Value.TotalMinutes);
-                previousStartTime = startTime;
+
+                totalMinutes += Math.Abs((int)(endTime - startTime).Value.TotalMinutes);  
             }
             return totalMinutes;
         }
@@ -55,5 +65,6 @@ namespace TurkcellDigitalSchool.Account.Business.Helpers
             else
                 return $"{minutes} dakika";
         }
+         
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
+using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.Common.Handlers;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.Common.Handlers; 
 using TurkcellDigitalSchool.Core.Utilities.Requests;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
@@ -12,7 +12,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
      
     [LogScope]
 
-    public class CreateUserCommand : CreateRequestBase<User>
+    public class CreateUserCommand : CreateRequestBase<User> , IUnLogable
     {
         public class CreateRequestUserCommandHandler : CreateRequestHandlerBase<User, CreateUserCommand>
         {

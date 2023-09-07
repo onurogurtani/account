@@ -13,6 +13,7 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.SubServiceConst;
+using TurkcellDigitalSchool.Account.Domain.Dtos;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
@@ -84,7 +85,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 {
                     _userRepository.Add(user);
                     await _userRepository.SaveChangesAsync();
-                    await _capPublisher.PublishAsync(SubServiceConst.VERIFY_USER_REQUEST, new { userId = user.Id }, cancellationToken: cancellationToken);
+                    await _capPublisher.PublishAsync(SubServiceConst.VERIFY_USER_REQUEST, new UserAddNotificationDto { Id = user.Id }, cancellationToken: cancellationToken);
 
                     _unverifiedUserRepository.Delete(unverifiedUser);
                     await _unverifiedUserRepository.SaveChangesAsync();

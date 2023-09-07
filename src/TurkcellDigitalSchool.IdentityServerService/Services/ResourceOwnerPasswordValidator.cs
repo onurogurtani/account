@@ -38,10 +38,11 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
         private readonly SessionRedisSvc _sessionRedisSvc;
         private readonly string _environment;
         private readonly ILdapHelper _ldapHelper;
+        private readonly ILogger<ResourceOwnerPasswordValidator> _logger;
         public ResourceOwnerPasswordValidator(ICustomUserSvc customUserSvc, IHttpContextAccessor httpContextAccessor,
             IUserSessionRepository userSessionRepository, IMobileLoginRepository mobileLoginRepository, ISmsOtpRepository smsOtpRepository,
             ILoginFailCounterRepository loginFailCounterRepository, ICaptchaManager captchaManager, IMailService mailService, IUserRepository userRepository,
-            IConfiguration configuration, ILoginFailForgetPassSendLinkRepository loginFailForgetPassSendLinkRepository, IAppSettingRepository appSettingRepository, SessionRedisSvc sessionRedisSvc, ILdapHelper ldapHelper)
+            IConfiguration configuration, ILoginFailForgetPassSendLinkRepository loginFailForgetPassSendLinkRepository, IAppSettingRepository appSettingRepository, SessionRedisSvc sessionRedisSvc, ILdapHelper ldapHelper, ILogger<ResourceOwnerPasswordValidator> logger)
         {
             _customUserSvc = customUserSvc;
             _httpContextAccessor = httpContextAccessor;
@@ -58,6 +59,7 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
             _appSettingRepository = appSettingRepository;
             _sessionRedisSvc = sessionRedisSvc;
             _ldapHelper = ldapHelper;
+            _logger= logger;
         }
 
         private const string CapthcaShowRequestText = "IsCapthcaShow";
@@ -134,27 +136,42 @@ namespace TurkcellDigitalSchool.IdentityServerService.Services
 
             if (errorCount >= 3 && errorCount < 5)
             {
+                _logger.LogInformation("captchaKey kontrol edilecek.1");
                 var captchaKey = _httpContextAccessor.HttpContext.Request.Headers[CaptchaKeyHeaderText].ToString();
-
+                _logger.LogInformation("captchaKey kontrol edilecek.2");
                 if (string.IsNullOrEmpty(captchaKey))
                 {
+                    _logger.LogInformation("captchaKey kontrol edilecek.2.1"); 
                     var responseObject = new Dictionary<string, object> { { FailLoginCountRequestText, errorCount } };
                     responseObject.Add(CapthcaShowRequestText, true);
                     context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
                         Messages.captchaKeyIsNotValid, responseObject);
                     return;
                 }
+                _logger.LogInformation("captchaKey kontrol edilecek.3");
 
                 if (!((_environment == ApplicationMode.DEV.ToString() || _environment == ApplicationMode.DEV.ToString()) && captchaKey == "kg"))
                 {
-                    if (!_captchaManager.Validate(captchaKey))
+                    _logger.LogInformation("captchaKey kontrol edilecek.4");
+
+                    try
                     {
-                        var responseObject = new Dictionary<string, object> { { FailLoginCountRequestText, errorCount } };
-                        responseObject.Add(CapthcaShowRequestText, true);
-                        context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
-                           Messages.captchaKeyIsNotValid, responseObject);
-                        return;
+                        if (!_captchaManager.Validate(captchaKey))
+                        {
+                            var responseObject = new Dictionary<string, object> { { FailLoginCountRequestText, errorCount } };
+                            responseObject.Add(CapthcaShowRequestText, true);
+                            context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
+                               Messages.captchaKeyIsNotValid, responseObject);
+                            return;
+                        }
                     }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e, "istisna oluştu");
+                        _logger.LogInformation("captchaKey kontrol edilecek.5"  );
+                        throw e;
+                    }
+                   
                 }
             }
 
