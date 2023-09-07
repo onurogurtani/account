@@ -14,6 +14,7 @@ using TurkcellDigitalSchool.Core.AuthorityManagement.Services;
 using TurkcellDigitalSchool.Core.AuthorityManagement.Services.Abstract;
 using TurkcellDigitalSchool.Core.Configure;
 using TurkcellDigitalSchool.Core.DataAccess.Contexts;
+using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Redis.Contract;
 using TurkcellDigitalSchool.Core.Services.EntityChangeServices;
@@ -75,7 +76,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
             builder.Services.AddSingleton<IRedisConnectionFactory, RedisConnectionFactory>();
             builder.Services.AddSingleton<SessionRedisSvc>();
             builder.Services.AddSingleton<HandlerCacheRedisSvc>();
-
+            builder.Services.AddSingleton<DbMessageRedisSvc>();
 
 
             var capConfig = builder.Configuration.GetSection("CapConfig").Get<CapConfig>();
@@ -180,6 +181,8 @@ namespace TurkcellDigitalSchool.IdentityServerService
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
+
+            app.ConfigureCustomExceptionMiddleware();
             app.UseSerilogRequestLogging();
 
             if (app.Environment.IsDevelopment())

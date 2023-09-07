@@ -5,6 +5,7 @@ using MediatR;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.AuthorityManagement;
+using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
 using TurkcellDigitalSchool.Core.Common.Helpers; 
@@ -20,7 +21,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
     /// </summary>
     [LogScope]
     [SecuredOperationScope(ClaimNames = new[] { ClaimConst.TeachersAdd })]
-    public class AddTeacherCommand : IRequest<DataResult<long>>
+    public class AddTeacherCommand : IRequest<DataResult<long>> , IUnLogable
     {
         public long CitizenId { get; set; }
         public string Name { get; set; }

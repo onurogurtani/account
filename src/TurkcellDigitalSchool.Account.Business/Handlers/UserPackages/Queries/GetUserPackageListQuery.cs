@@ -56,7 +56,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
                    + " union all  select ptm.motivationactivitypackageid packageid , ptm.packageid parentid, 0 from  account.packagemotivationactivitypackage ptm"
                    + " union all  select ptc.coachservicepackageid packageid   , ptc.packageid parentid, 0 from  account.packagecoachservicepackages ptc ) stt"
                    + " inner join cte c on c.packageid = stt.parentid ) select cte.* ,p2.testexamid from cte"
-                   + " join account.packagetestexam p2 on p2.packageid = cte.packageid";
+                   + " left join account.packagetestexam p2 on p2.packageid = cte.packageid";
+                    //   left join account.packagetestexam p2 on p2.packageid   left join olarak değiştirildi çünkü kullanıca ait tüm paketlerin listelenmesi gerek.
 
                     var userPackageList = new List<GetUserTestExamPackageDto>();
 
@@ -70,7 +71,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.UserPackages.Queries
                                 var a = new GetUserTestExamPackageDto();
                                 a.Id = (long)reader["packageid"];
                                 a.ParentId = (long)reader["parentid"];
-                                a.TestExamId = (long)reader["testexamid"];
+                                a.TestExamId = reader["testexamid"].GetType() == typeof(System.DBNull) ? (long?)null: (long?)reader["testexamid"];
                                 a.PackageTypeEnum = (int)reader["packagetypeenum"];
                                 userPackageList.Add(a);
                             }
