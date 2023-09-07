@@ -28,16 +28,42 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
         {
             private readonly IVisitorRegisterRepository _visitorRegisterRepository;
             private readonly IOtpService _otpService;
-            public VisitorRegisterCommandHandler(IVisitorRegisterRepository visitorRegisterRepository, IOtpService otpService)
+            private readonly IUserRepository _userRepository;
+            public VisitorRegisterCommandHandler(IVisitorRegisterRepository visitorRegisterRepository, IOtpService otpService, IUserRepository userRepository)
             {
                 _visitorRegisterRepository = visitorRegisterRepository;
                 _otpService = otpService;
+                _userRepository = userRepository;
             }
 
             public async Task<IDataResult<VisitorRegisterDto>> Handle(VisitorRegisterCommand request, CancellationToken cancellationToken)
             {
 
-                var otpServiceResult = await _otpService.GenerateOtpVisitorRegister(request.Name.Trim(), request.SurName.Trim(), request.Email.Trim(), request.MobilePhones.Trim(), OTPExpiryDate.OneHundredTwentySeconds);
+                var name = request.Name.Trim();
+                var surName = request.SurName.Trim();
+                var email = request.Email.Trim();
+                var mobilPhone = request.MobilePhones.Trim();
+
+                var userQuery = _userRepository.Query();
+
+                if (userQuery.Any(w => w.Email == email))
+                {
+                    return new ErrorDataResult<VisitorRegisterDto>
+                    {
+                        Message = "Sistemde bu Mail adresi kayıtlıdır."
+                    };
+                }
+
+                if (userQuery.Any(w => w.MobilePhones == mobilPhone))
+                {
+                    return new ErrorDataResult<VisitorRegisterDto>
+                    {
+                        Message = "Sistemde bu Telefon kayıtlıdır."
+                    };
+                }
+
+
+                var otpServiceResult = await _otpService.GenerateOtpVisitorRegister(name, surName, email, mobilPhone, OTPExpiryDate.OneHundredTwentySeconds);
 
                 if (!otpServiceResult.Success)
                 {
@@ -54,7 +80,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     Email = request.Email.Trim(),
                     MobilePhones = request.MobilePhones.Trim(),
                     SessionCode = Guid.NewGuid(),
-                    ExpiryDate = DateTime.Now.AddSeconds((int)120),
+                    ExpiryDate = DateTime.Now.AddSeconds((int)OTPExpiryDate.OneHundredTwentySeconds),
                     SmsOtpCode = otpServiceResult.Data.SmsOtpCode,
                     MailOtpCode = otpServiceResult.Data.MailOtpCode,
                     IsCompleted = false,
