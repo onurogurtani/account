@@ -224,9 +224,10 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         }
 
 
-        
-        ///<remarks>TEntity</remarks>
-        ///<return>TEntity</return>
+
+        ///<summary>
+        ///Get Public Packages with files data 
+        ///</summary>
         ///<response code="200"></response>
         [AllowAnonymous]
         [Produces("application/json", "text/plain")]
