@@ -16,6 +16,7 @@ using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
+using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
 {
@@ -24,7 +25,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.AdminUsers
     /// </summary>
     [TransactionScope]
     [LogScope] 
-    public class AddAdminUserCommand : IRequest<IDataResult<SelectionItem>>
+    public class AddAdminUserCommand : IRequest<IDataResult<SelectionItem>>, IUnLogable
     {
         public UserType UserTypeId { get; set; }
         public long CitizenId { get; set; }

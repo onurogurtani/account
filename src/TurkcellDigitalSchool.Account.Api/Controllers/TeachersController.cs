@@ -184,8 +184,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             if (result.Success)
             {
                 return Ok(result);
-            }
-
+            } 
             return BadRequest(result);
         }
 

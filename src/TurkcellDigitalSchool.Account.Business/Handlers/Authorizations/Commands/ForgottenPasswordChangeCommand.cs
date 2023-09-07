@@ -84,8 +84,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 }
 
                 userSessionRepository.LastTokenDate = DateTime.UtcNow;
-                _userSessionRepository.Update(userSessionRepository);
-                await _userSessionRepository.SaveChangesAsync();
+                await _userSessionRepository.SaveChangesAsync(); 
+
 
                 return new SuccessDataResult<AccessToken>(
                     new AccessToken

@@ -14,12 +14,13 @@ using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Integration.IntegrationServices.IdentityServerServices.Model.Response;
+using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
     [LogScope]
     [TransactionScope]
-    public class LoginFailOtpNewPasswordCommand : IRequest<IDataResult<TokenIntegraitonResponse>>
+    public class LoginFailOtpNewPasswordCommand : IRequest<IDataResult<TokenIntegraitonResponse>> , IUnLogable
     {
         public long MobileLoginId { get; set; }
         public string Guid { get; set; }

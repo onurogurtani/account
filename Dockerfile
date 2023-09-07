@@ -21,13 +21,16 @@ RUN dotnet publish "TurkcellDigitalSchool.Account.Api.csproj" -c Release -o /app
 
 FROM base AS final
 ARG deployEnv
+ARG secretPrefixEnv
 
 RUN echo "deployEnv = ${deployEnv}"
+RUN echo "secretPrefixEnv = ${secretPrefixEnv}"
 WORKDIR /app
 
 
 COPY --from=publish /app/publish .
 EXPOSE 6021
+ENV SECRETPREFIXENV=${secretPrefixEnv}
 ENV ASPNETCORE_ENVIRONMENT=${deployEnv}
 ENV ASPNETCORE_URLS="http://+:6021"
 ENV TZ=Europe/Istanbul

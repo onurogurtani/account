@@ -17,10 +17,8 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Host.ConfigureAppConfiguration(configurationBuilder =>
-    {
-        configurationBuilder.AddUserSecrets<Program>();
-    });
+    builder.Host.ConfigureAppConfigurationExtension();
+     
 
     builder.Services.AddControllers()
         .AddJsonOptions(options =>

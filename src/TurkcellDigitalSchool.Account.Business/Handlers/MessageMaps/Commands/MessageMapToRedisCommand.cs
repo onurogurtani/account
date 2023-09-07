@@ -7,11 +7,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Core.Common.Constants;
-using TurkcellDigitalSchool.Core.Common.Helpers;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching.Redis;
+using TurkcellDigitalSchool.Core.Common.Helpers; 
 using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
+using TurkcellDigitalSchool.Core.Redis;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
@@ -23,19 +22,19 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
         public class MessageMapToRedisCommandHandler : IRequestHandler<MessageMapToRedisCommand, IResult>
         {
             private readonly IMessageMapRepository _messageMapRepository;
-            private readonly RedisService _redisService;
+            private readonly DbMessageRedisSvc _dbMessageRedisSvc; 
 
-            public MessageMapToRedisCommandHandler(IMessageMapRepository messageMapRepository, RedisService redisService)
+            public MessageMapToRedisCommandHandler(IMessageMapRepository messageMapRepository, DbMessageRedisSvc dbMessageRedisSvc)
             {
                 _messageMapRepository = messageMapRepository;
-                _redisService = redisService;
+                _dbMessageRedisSvc = dbMessageRedisSvc; 
             }
 
             [MessageConstAttr(MessageCodeType.Information)]
             private static string SuccessfulOperation = Messages.SuccessfulOperation;
             public async Task<IResult> Handle(MessageMapToRedisCommand request, CancellationToken cancellationToken)
             {
-                if (!_redisService.IsConnect())
+                if (!_dbMessageRedisSvc.IsConnect())
                 {
                     return new ErrorResult(Messages.UnableToConnectToRedis);
                 }
@@ -44,7 +43,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.MessageMaps.Commands
                             s.MessageKey + s.UsedClass,
                             s.UserFriendlyNameOfMessage ?? s.Message))
                         .ToArray();
-                await _redisService.GetDb(CachingConstants.MessagesDb).HashSetAsync("message", hashArray);
+                await _dbMessageRedisSvc.SetKeyFieldValues("message", hashArray);
                
                 return new SuccessResult(Messages.SuccessfulOperation.PrepareRedisMessage());
             }

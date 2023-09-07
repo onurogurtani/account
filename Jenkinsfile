@@ -14,12 +14,13 @@ pipeline {
         // App Variables
 
         deployEnv = " "
+		secretPrefixEnv = " "
         mainBranch = " "
         appServiceName = "dijital_dershane_app"
         softwareModuleName = "account"
         subsoftwareModuleName = "accountapi"
         appName = " "
-        serviceId = "471949"
+        appServiceId = "471949"
 
         appVersion = "${mainBranch}-${env.BUILD_NUMBER}"
 
@@ -45,7 +46,7 @@ pipeline {
         buildConfigTemplate = "openshift/build/buildconfig-template.yaml"           // openshift build config template yaml file
         deploymentConfigTemplate = "openshift/deploy/deployment.yaml"
 
-        defaultMailReceivers = ""
+        defaultMailReceivers = "TEAM-LEARNUP-DEVELOPMENT@turkcell.com.tr"
         successMailReceivers = "${defaultMailReceivers}"
         failureMailReceivers = "${defaultMailReceivers}"
 
@@ -53,12 +54,15 @@ pipeline {
         artifactDeployVersion = " "
         artifactoryPathFileJar = " "
         sonarPluginVersion = "3.7.0.1746"
-        sonarProjectKey = "${serviceId}_${appServiceName.toUpperCase()}.${softwareModuleName}.${subsoftwareModuleName}"
-        fortifyProjectKey = "${serviceId}_${appServiceName.toUpperCase()}.${softwareModuleName}-${subsoftwareModuleName}"
-        SONARQUBE_URL = "https://sonar-ccs.turkcell.com.tr/"
-        SONAR_URL = 'https://sonar-ccs.turkcell.com.tr/'
-        SONAR_LOGIN_KEY = ''
-    }
+        sonarProjectKey = "${appServiceId}_${appServiceName.toUpperCase()}.${softwareModuleName}"
+        fortifyProjectKey = "${appServiceId}_${appServiceName.toUpperCase()}.${softwareModuleName}"
+        sonarHostAddress = "https://sonar-ccs.apps.gocpp2.tcs.turkcell.tgc"
+        sonarToken = "a17f8d7b41a6f1676e9095759575293d541086d3"
+        projectkeysonar = "${appServiceId}_${appServiceName.toUpperCase()}.${softwareModuleName}"
+        nugetRegistryAddress = "https://artifactory.turkcell.com.tr/artifactory/api/nuget/virtual-nuget/"
+
+        exclusionsTYPE = "NPM"
+	}
 
 
     stages {        
@@ -73,15 +77,18 @@ pipeline {
     
                     if ("${env.GIT_BRANCH}" == "dev") {
                         mainBranch = "dev"
-                        deployEnv = "DEVTURKCELL"    
+                        deployEnv = "DEVTURKCELL"   
+						secretPrefixEnv= "devturkcell"
                         appName = subsoftwareModuleName                    
                     } else if (env.GIT_BRANCH == "stb") {
                         mainBranch = "stb"
                         deployEnv = "STBTURKCELL"
+						secretPrefixEnv= "stbturkcell"
                         appName = subsoftwareModuleName + "-stb"
                     } else if (env.GIT_BRANCH == "master" || env.GIT_BRANCH == "devops" || env.GIT_BRANCH == "prp" ) {
                         mainBranch = "devops"
                         deployEnv = "PRPTURKCELL"
+						secretPrefixEnv= "prpturkcell"
                         appName = subsoftwareModuleName + "-prp"
                         openshiftProjectName = "learnupprp"
                         openshiftClientToken = "tocpt4-learnupprp-token"
@@ -96,7 +103,8 @@ pipeline {
 
                     printDebugMessage ("mainBranch = " + mainBranch)
                     printDebugMessage ("deployEnv = " + deployEnv)
-                    printDebugMessage ("appName = " + appName) 
+                    printDebugMessage ("secretPrefixEnv = " + secretPrefixEnv)
+                    printDebugMessage ("appName = " + appName)
 
                     printDebugMessage ("newImageUrl = " + newImageUrl)
                     printSectionBoundry("Configuration stage finished!")
@@ -133,7 +141,8 @@ pipeline {
                                                 "-p", "REGISTRY_URL=${newImageUrl}",
                                                 "-p", "SOURCE_SECRET_NAME=${gitCredentialSecret}",
                                                 "-p", "DOCKERFILE_PATH=./Dockerfile", 
-                                                "-p", "DEPLOYENV=${deployEnv}"
+                                                "-p", "DEPLOYENV=${deployEnv}",
+                                                "-p", "SECRETPREFIXENV=${secretPrefixEnv}"
                                             )
                                         )
                                         openshift.startBuild("${appName}", "--wait", "--follow")
@@ -144,6 +153,73 @@ pipeline {
                             }
                         }
                     }
+                }
+            }
+        }
+
+        stage('Sonar-Code Quality') {
+
+            when{
+              anyOf{
+                branch "dev"
+              }
+            }
+
+			steps {
+				script {
+					sh "echo you are on the Code Quality step.. "
+
+                    exclusions = ""
+                    withSonarQubeEnv(credentialsId: 'ccs-sonar-token', installationName: 'ccs-sonar') {
+                    sh """
+                    set +x
+                    curl -LO https://artifactory.turkcell.com.tr/artifactory/turkcell-tools/sonar-scanner/sonar-scanner-cli-4.4.0.2170-linux-cert.zip
+                    unzip sonar-scanner-cli-4.4.0.2170-linux-cert.zip
+                    export JAVA_TOOL_OPTIONS=''
+                    sonar-scanner-4.4.0.2170-linux/bin/sonar-scanner -X \
+                    -Dsonar.javascript.node.maxspace=4096\
+                    -Dsonar.projectName=${sonarProjectKey} \
+                    -Dsonar.projectKey=${sonarProjectKey} \
+                    -Dsonar.host.url=${SONAR_URL} \
+                    -Dsonar.login=${SONAR_LOGIN_KEY} \
+                    -Dsonar.sources=src/\
+                    -Dsonar.exclusions=${exclusions} \
+                    -Dsonar.coverage.exclusions=${exclusions} \
+                    -Dsonar.test.exclusions=${exclusions}
+                    """ 
+                        
+                    }
+
+                    echo "Code Quality/Static Code Analysis stage finished!"
+				}
+			}
+        }
+        stage('Fortify-Code Security') {
+             when{
+              anyOf{
+                branch "stb"
+              }
+            }
+            steps{
+                    script {
+                        sh "echo static application security testing SAST"
+
+                        fortifyScanner = tool 'fortify-scanner'
+                        fortifyRemoteAnalysis remoteAnalysisProjectType: fortifyOther(),
+                                uploadSSC: [appName: "${fortifyProjectKey}", appVersion: env.BRANCH_NAME]
+                    }
+                }
+            }
+        
+        stage('BlackDuck Scan') {
+             when{
+              anyOf{
+                branch "stb"
+              }
+            }
+            steps{
+                script {
+                    devopsLibrary.blackduckWithLinuxMSBuild(exclusionsTYPE)
                 }
             }
         }
@@ -178,7 +254,8 @@ pipeline {
                                     readFile(file: deploymentConfigTemplate), 
                                     "-p", "REGISTRY_URL=${newImageUrl}", 
                                     "-p", "APP_NAME=${appName}",
-                                    "-p", "NAMESPACE=${openshiftProjectName}"
+                                    "-p", "NAMESPACE=${openshiftProjectName}",
+									"-p", "SECRETPREFIXENV=${secretPrefixEnv}"
                                 )
                             )
                             def dc = openshift.selector('dc', "${appName}")
@@ -191,6 +268,34 @@ pipeline {
             }
         }
     }
+
+    post{
+        success {
+            script {
+                printDebugMessage ("Build success!")
+                if (artifactoryDeployInfo != " ") {
+                devopsLibrary.sendEmail(successMailReceivers, softwareModuleName + "#${BUILD_NUMBER} succeeded!", getFormattedIssueList(devopsLibrary.getCommitMessagesFromChangeSet()) + artifactoryDeployInfo)
+                }
+            }
+        }
+
+        failure {
+            script {
+                printDebugMessage ("Build failure!")
+                devopsLibrary.sendEmail(failureMailReceivers, softwareModuleName + "#${BUILD_NUMBER} failed!", getFormattedIssueList(devopsLibrary.getCommitMessagesFromChangeSet()) + artifactoryDeployInfo)
+
+            }
+        }
+
+        unstable {
+            script {
+                printDebugMessage ("Build unstable!")
+                devopsLibrary.sendEmail(failureMailReceivers, softwareModuleName + "#${BUILD_NUMBER} is unstable!", getFormattedIssueList(devopsLibrary.getCommitMessagesFromChangeSet()) + artifactoryDeployInfo)
+                
+            }
+        }
+    }
+
 
 }
 

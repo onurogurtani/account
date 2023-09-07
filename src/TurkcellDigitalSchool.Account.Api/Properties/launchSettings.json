@@ -50,25 +50,6 @@
       },
       "applicationUrl": "http://localhost:6021",
       "dotnetRunMessages": true
-    },
-    "TurkcellDigitalSchool.Api.STAGING": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "STAGING"
-      },
-      "applicationUrl": "http://localhost:6021",
-      "dotnetRunMessages": true
-    },
-    "Docker": {
-      "commandName": "Docker",
-      "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "DEV"
-      },
-      "publishAllPorts": true
     }
   },
   "$schema": "http://json.schemastore.org/launchsettings.json",

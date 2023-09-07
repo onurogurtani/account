@@ -15,12 +15,13 @@ using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Excel.Model;
 using TurkcellDigitalSchool.Core.Utilities.Results;
+using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Teachers.Commands
 {
     [LogScope]
     [SecuredOperationScope(ClaimNames = new[] { ClaimConst.TeachersImportFromExcel })]
-    public class UploadTeacherExcelCommand : IRequest<DataResult<ExcelResponse>>
+    public class UploadTeacherExcelCommand : IRequest<DataResult<ExcelResponse>> , IUnLogable
     {
         public IFormFile FormFile { get; set; }
 

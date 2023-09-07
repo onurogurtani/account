@@ -8,8 +8,7 @@ using TurkcellDigitalSchool.Account.Business.Constants;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Core.Common;
-using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
-using TurkcellDigitalSchool.Core.CrossCuttingConcerns.Caching;
+using TurkcellDigitalSchool.Core.Behaviors.Atrribute; 
 using TurkcellDigitalSchool.Core.Enums;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Jwt;
@@ -28,17 +27,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Queries
             private readonly ConfigurationManager _configurationManager;
             private readonly IUserRepository _userRepository;
             private readonly ITokenHelper _tokenHelper;
-            private readonly IMediator _mediator;
-            private readonly ICacheManager _cacheManager;
+            private readonly IMediator _mediator; 
             private readonly IMobileLoginRepository _mobileLoginRepository;
             private readonly ISmsOtpRepository _smsOtpRepository;
 
-            public ReSendSmsQueryHandler(IUserRepository userRepository, ITokenHelper tokenHelper, IMediator mediator, ICacheManager cacheManager, IMobileLoginRepository mobileLoginRepository, ISmsOtpRepository smsOtpRepository, ConfigurationManager configurationManager)
+            public ReSendSmsQueryHandler(IUserRepository userRepository, ITokenHelper tokenHelper, IMediator mediator,  IMobileLoginRepository mobileLoginRepository, ISmsOtpRepository smsOtpRepository, ConfigurationManager configurationManager)
             {
                 _userRepository = userRepository;
                 _tokenHelper = tokenHelper;
-                _mediator = mediator;
-                _cacheManager = cacheManager;
+                _mediator = mediator; 
                 _mobileLoginRepository = mobileLoginRepository;
                 _smsOtpRepository = smsOtpRepository;
                 _configurationManager = configurationManager;

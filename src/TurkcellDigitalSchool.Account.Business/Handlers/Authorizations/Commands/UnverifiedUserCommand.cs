@@ -15,12 +15,13 @@ using TurkcellDigitalSchool.Core.Utilities.Mail;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Utilities.Toolkit;
+using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
     [LogScope]
     [TransactionScope]
-    public class UnverifiedUserCommand : IRequest<IDataResult<UnverifiedUserDto>>
+    public class UnverifiedUserCommand : IRequest<IDataResult<UnverifiedUserDto>> , IUnLogable
     {
         public UserType UserTypeId { get; set; }
         public string Name { get; set; }

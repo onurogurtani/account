@@ -16,6 +16,7 @@ using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.Utilities.Security.Hashing;
 using TurkcellDigitalSchool.Core.Utilities.Toolkit;
 using TurkcellDigitalSchool.Core.Utilities.Mail;
+using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
 {
@@ -24,7 +25,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
     /// </summary>
     [LogScope]
     [SecuredOperationScope(ClaimNames = new[] { ClaimConst.IndividualMemberListAdd })]
-    public class AddUserCommand : IRequest<DataResult<SelectionItem>>
+    public class AddUserCommand : IRequest<DataResult<SelectionItem>> , IUnLogable
     {
         public UserType UserTypeId { get; set; }
         public long? CitizenId { get; set; }
@@ -113,7 +114,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Users.Commands
                     Content = messageContent
                 });
 
-                return new SuccessDataResult<SelectionItem>(new SelectionItem { Label = messageContent }, Added.PrepareRedisMessage());
+                return new SuccessDataResult<SelectionItem>(new SelectionItem {}, Added.PrepareRedisMessage());
             }
 
         }

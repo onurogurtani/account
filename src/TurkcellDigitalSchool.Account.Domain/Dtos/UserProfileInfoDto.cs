@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Concrete.ReadOnly;
+using TurkcellDigitalSchool.Core.Enums;
 
 namespace TurkcellDigitalSchool.Account.Domain.Dtos
 {
@@ -72,6 +73,8 @@ namespace TurkcellDigitalSchool.Account.Domain.Dtos
         public File File { get; set; }
         public DateTime PurchaseDate { get; set; }
         public string PackageContent { get; set; }
+        public ExamKind ExamKind { get; set; }
+        
 
 
     }
