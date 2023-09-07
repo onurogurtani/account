@@ -75,10 +75,10 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
 
                 var visitorRegisterRecord = new VisitorRegister
                 {
-                    Name = request.Name.Trim(),
-                    SurName = request.SurName.Trim(),
-                    Email = request.Email.Trim(),
-                    MobilePhones = request.MobilePhones.Trim(),
+                    Name = name,
+                    SurName = surName,
+                    Email = email,
+                    MobilePhones = mobilPhone,
                     SessionCode = Guid.NewGuid(),
                     ExpiryDate = DateTime.Now.AddSeconds((int)OTPExpiryDate.OneHundredTwentySeconds),
                     SmsOtpCode = otpServiceResult.Data.SmsOtpCode,
