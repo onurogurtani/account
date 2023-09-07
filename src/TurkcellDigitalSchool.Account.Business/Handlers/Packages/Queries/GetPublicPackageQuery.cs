@@ -28,7 +28,6 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
             private readonly IPackageRepository _packageRepository;
 
             public GetPublicPackageQueryHandler(IPackageRepository packageRepository)
-
             {
                 _packageRepository = packageRepository;
             }
