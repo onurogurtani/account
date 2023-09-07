@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 
 namespace TurkcellDigitalSchool.Account.Domain.Dtos
 {
-    public class VisitorRegisterDto
+    public class GenerateOtpVisitorRegisterDto
     {
-        public Guid SessionCode { get; set; }
-    }
+        public int SmsOtpCode { get; set; }
+        public int MailOtpCode { get; set; }
 
-    public class VerifyVisitorRegisterDto
-    {
-        public long UserId { get; set; }
     }
 }
