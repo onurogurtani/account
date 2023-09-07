@@ -7,6 +7,7 @@ using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
+using TurkcellDigitalSchool.Core.CustomAttribute;
 using TurkcellDigitalSchool.Core.Utilities.Paging;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 
@@ -18,6 +19,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.Queries
     {
         public PublicPackageDetailSearch PublicPackageDetailSearch { get; set; } = new PublicPackageDetailSearch();
 
+        [MessageClassAttr("Microsite Paket Listeleme")]
         public class GetByFilterPagedPublicPackagesQueryHandler : IRequestHandler<GetByFilterPagedPublicPackagesQuery, DataResult<PagedList<PublicPackageDetailResponse>>>
         {
             private readonly IPackageRepository _packageRepository;
