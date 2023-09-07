@@ -200,6 +200,47 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             }
 
             return BadRequest(result);
-        } 
+        }
+
+
+        ///<summary>
+        ///Get Filtered Paged Public Packages with relation data 
+        ///</summary>
+        ///<remarks>OrderBy default "UpdateTimeDESC" also can be "NameASC","NameDESC","IdASC","IdDESC","InsertTimeASC","InsertTimeDESC","UpdateTimeASC","UpdateTimeDESC"  </remarks>
+        ///<response code="200"></response>
+        [AllowAnonymous]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<PagedList<PublicPackageDetailResponse>>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("GetByFilterPagedPublicPackages")]
+        public async Task<IActionResult> GetByFilterPagedPublicPackages([FromBody] GetByFilterPagedPublicPackagesQuery query, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(query, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+
+        
+        ///<remarks>TEntity</remarks>
+        ///<return>TEntity</return>
+        ///<response code="200"></response>
+        [AllowAnonymous]
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<PublicPackageDetailResponse>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpGet("PublicPackageGetById")]
+        public async Task<IActionResult> PublicPackageGetById([FromQuery] GetPublicPackageQuery query, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(query, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
     }
 }
