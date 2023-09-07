@@ -59,7 +59,7 @@ namespace TurkcellDigitalSchool.Account.DataAccess.Concrete.EntityFramework
         public async Task Logout(long id)
         {
             var userSession = await Context.UserSessions.Where(w => w.Id == id).FirstOrDefaultAsync();
-            if (userSession != null) { return; }
+            if (userSession == null) { return; }
             userSession.EndTime = DateTime.Now;
             await Context.SaveChangesAsync();
             var sessionInfo = await _sessinRedisSvc.GetAsync<UserSessionInfo>(userSession.UserId.ToString());
