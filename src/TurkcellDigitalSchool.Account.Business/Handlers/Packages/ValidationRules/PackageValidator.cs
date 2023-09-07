@@ -193,8 +193,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Packages.ValidationRul
         public UpdatePackageValidator()
         {
             RuleFor(x => x.Package.Name).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Paket Adı" }));
-            RuleFor(x => x.Package.StartDate).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Başlangıç Tarihi" }))
-                .GreaterThan(x => DateTime.Now).WithMessage(CheckDates.PrepareRedisMessage());
+            //RuleFor(x => x.Package.StartDate).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Başlangıç Tarihi" }))
+            //    .GreaterThan(x => DateTime.Now).WithMessage(CheckDates.PrepareRedisMessage());
             RuleFor(x => x.Package.FinishDate).NotEmpty().WithMessage(FieldIsNotNullOrEmpty.PrepareRedisMessage(messageParameters: new object[] { "Bitiş Tarihi" }))
                 .GreaterThan(x => x.Package.StartDate).WithMessage(CheckDates.PrepareRedisMessage());
 
