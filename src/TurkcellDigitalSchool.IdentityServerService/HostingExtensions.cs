@@ -42,6 +42,12 @@ namespace TurkcellDigitalSchool.IdentityServerService
             builder.Services.AddRazorPages();
             var connectionString = builder.Configuration.GetConnectionString("DArchPostgreContext");
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    "AllowOrigin",
+                    builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            });
 
             builder.Services.AddDbContext<IProjectContext,AccountDbContext>();
             builder.Services.AddSingleton<Core.Common.ConfigurationManager>();
@@ -191,7 +197,7 @@ namespace TurkcellDigitalSchool.IdentityServerService
             }
 
 
-
+            app.UseCors("AllowOrigin");
             app.UseStaticFiles();
             app.UseRouting();
             app.UseIdentityServer();
