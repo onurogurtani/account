@@ -75,6 +75,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     SurName = request.SurName,
                     Email = request.Email,
                     MobilePhones = request.MobilePhones,
+                    BirthDate=request.BirtDate,
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt
                 };

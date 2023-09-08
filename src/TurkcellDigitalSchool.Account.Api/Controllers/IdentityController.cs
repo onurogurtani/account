@@ -657,7 +657,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         /// <summary>
         ///  Make it User Register operations
         /// </summary>
-        /// <param name="register"></param>
+        /// <param name="MikcoSiteRegister"></param>
         /// <returns></returns>
         [AllowAnonymous]
         [Consumes("application/json")]
@@ -665,7 +665,7 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost("MikcoSiteRegister")]
-        public async Task<IActionResult> MikcoSiteRegister([FromBody] RegisterUserCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> MikcoSiteRegister([FromBody] MikcroSiteRegisterUserCommand command, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(command, cancellationToken);
 
