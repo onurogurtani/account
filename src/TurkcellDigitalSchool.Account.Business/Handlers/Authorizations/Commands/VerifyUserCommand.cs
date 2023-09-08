@@ -14,6 +14,7 @@ using TurkcellDigitalSchool.Core.Extensions;
 using TurkcellDigitalSchool.Core.Utilities.Results;
 using TurkcellDigitalSchool.Core.SubServiceConst;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Commands
 {
@@ -85,7 +86,7 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                 {
                     _userRepository.Add(user);
                     await _userRepository.SaveChangesAsync();
-                    await _capPublisher.PublishAsync(SubServiceConst.VERIFY_USER_REQUEST, new UserAddNotificationDto { Id = user.Id }, cancellationToken: cancellationToken);
+                    await _capPublisher.PublishAsync(SubServiceConst.VERIFY_USER_REQUEST, new UserAddNotificationDto { Id = user.Id , Name = user.Name, UserType = user.UserType, MobilePhones = user.MobilePhones, Email = user.Email }, cancellationToken: cancellationToken);
 
                     _unverifiedUserRepository.Delete(unverifiedUser);
                     await _unverifiedUserRepository.SaveChangesAsync();
