@@ -115,6 +115,8 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
         public DbSet<UserSearchHistory> UserSearchHistories { get; set; }
 
         public DbSet<VisitorRegister> VisitorRegisters { get; set; }
+        public DbSet<UsersWaitingVerification> UsersWaitingVerifications { get; set; }
+
 
 
         #endregion

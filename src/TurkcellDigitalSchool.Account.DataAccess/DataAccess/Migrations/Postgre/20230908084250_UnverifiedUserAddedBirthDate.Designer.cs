@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
@@ -11,9 +12,10 @@ using TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts;
 namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
 {
     [DbContext(typeof(AccountDbContext))]
-    partial class AccountDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230908084250_UnverifiedUserAddedBirthDate")]
+    partial class UnverifiedUserAddedBirthDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3510,6 +3512,10 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("birthdate");
+
                     b.Property<long>("CitizenId")
                         .HasColumnType("bigint")
                         .HasColumnName("citizenid");
@@ -4274,105 +4280,6 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Migrations.Postgre
                         .HasDatabaseName("ix_usersupportteamviewmydata_userid");
 
                     b.ToTable("usersupportteamviewmydata", "account");
-                });
-
-            modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.UsersWaitingVerification", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("ActivationCode")
-                        .HasColumnType("text")
-                        .HasColumnName("activationcode");
-
-                    b.Property<DateTime>("BirthDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("birthdate");
-
-                    b.Property<long>("CitizenId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("citizenid");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text")
-                        .HasColumnName("email");
-
-                    b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("expirydate");
-
-                    b.Property<DateTime>("InsertTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("inserttime");
-
-                    b.Property<long?>("InsertUserId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("insertuserid");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("iscompleted");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("isdeleted");
-
-                    b.Property<int>("MailOtpCode")
-                        .HasColumnType("integer")
-                        .HasColumnName("mailotpcode");
-
-                    b.Property<string>("MobilePhones")
-                        .HasColumnType("text")
-                        .HasColumnName("mobilephones");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<byte[]>("PasswordHash")
-                        .HasColumnType("bytea")
-                        .HasColumnName("passwordhash");
-
-                    b.Property<byte[]>("PasswordSalt")
-                        .HasColumnType("bytea")
-                        .HasColumnName("passwordsalt");
-
-                    b.Property<DateTime?>("ProcessDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("processdate");
-
-                    b.Property<Guid>("SessionCode")
-                        .HasColumnType("uuid")
-                        .HasColumnName("sessioncode");
-
-                    b.Property<int>("SmsOtpCode")
-                        .HasColumnType("integer")
-                        .HasColumnName("smsotpcode");
-
-                    b.Property<string>("SurName")
-                        .HasColumnType("text")
-                        .HasColumnName("surname");
-
-                    b.Property<DateTime?>("UpdateTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updatetime");
-
-                    b.Property<long?>("UpdateUserId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("updateuserid");
-
-                    b.Property<int>("UserTypeId")
-                        .HasColumnType("integer")
-                        .HasColumnName("usertypeid");
-
-                    b.HasKey("Id")
-                        .HasName("pk_userswaitingverifications");
-
-                    b.ToTable("userswaitingverifications", "account");
                 });
 
             modelBuilder.Entity("TurkcellDigitalSchool.Account.Domain.Concrete.VisitorRegister", b =>
