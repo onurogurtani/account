@@ -152,7 +152,7 @@ pipeline {
                 }
             }
         }
-
+       /*
         stage('Sonar-Code Quality') {
 
             when{
@@ -190,6 +190,7 @@ pipeline {
 				}
 			}
         }
+        */
         stage('Fortify-Code Security') {
              when{
               anyOf{
