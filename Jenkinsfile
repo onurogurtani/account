@@ -157,72 +157,73 @@ pipeline {
             }
         }
 
-        stage('Sonar-Code Quality') {
+        // stage('Sonar-Code Quality') {
 
-            when{
-              anyOf{
-                branch "dev"
-              }
-            }
+        //     when{
+        //       anyOf{
+        //         branch "dev"
+        //       }
+        //     }
 
-			steps {
-				script {
-					sh "echo you are on the Code Quality step.. "
+		// 	steps {
+		// 		script {
+		// 			sh "echo you are on the Code Quality step.. "
 
-                    exclusions = ""
-                    withSonarQubeEnv(credentialsId: 'ccs-sonar-token', installationName: 'ccs-sonar') {
-                    sh """
-                    set +x
-                    curl -LO https://artifactory.turkcell.com.tr/artifactory/turkcell-tools/sonar-scanner/sonar-scanner-cli-4.4.0.2170-linux-cert.zip
-                    unzip sonar-scanner-cli-4.4.0.2170-linux-cert.zip
-                    export JAVA_TOOL_OPTIONS=''
-                    sonar-scanner-4.4.0.2170-linux/bin/sonar-scanner -X \
-                    -Dsonar.javascript.node.maxspace=4096\
-                    -Dsonar.projectName=${sonarProjectKey} \
-                    -Dsonar.projectKey=${sonarProjectKey} \
-                    -Dsonar.host.url=${SONAR_URL} \
-                    -Dsonar.login=${SONAR_LOGIN_KEY} \
-                    -Dsonar.sources=src/\
-                    -Dsonar.exclusions=${exclusions} \
-                    -Dsonar.coverage.exclusions=${exclusions} \
-                    -Dsonar.test.exclusions=${exclusions}
-                    """ 
+        //             exclusions = ""
+        //             withSonarQubeEnv(credentialsId: 'ccs-sonar-token', installationName: 'ccs-sonar') {
+        //             sh """
+        //             set +x
+        //             curl -LO https://artifactory.turkcell.com.tr/artifactory/turkcell-tools/sonar-scanner/sonar-scanner-cli-4.4.0.2170-linux-cert.zip
+        //             unzip sonar-scanner-cli-4.4.0.2170-linux-cert.zip
+        //             export JAVA_TOOL_OPTIONS=''
+        //             sonar-scanner-4.4.0.2170-linux/bin/sonar-scanner -X \
+        //             -Dsonar.javascript.node.maxspace=4096\
+        //             -Dsonar.projectName=${sonarProjectKey} \
+        //             -Dsonar.projectKey=${sonarProjectKey} \
+        //             -Dsonar.host.url=${SONAR_URL} \
+        //             -Dsonar.login=${SONAR_LOGIN_KEY} \
+        //             -Dsonar.sources=src/\
+        //             -Dsonar.exclusions=${exclusions} \
+        //             -Dsonar.coverage.exclusions=${exclusions} \
+        //             -Dsonar.test.exclusions=${exclusions}
+        //             """ 
                         
-                    }
+        //             }
 
-                    echo "Code Quality/Static Code Analysis stage finished!"
-				}
-			}
-        }
-        stage('Fortify-Code Security') {
-             when{
-              anyOf{
-                branch "stb"
-              }
-            }
-            steps{
-                    script {
-                        sh "echo static application security testing SAST"
-
-                        fortifyScanner = tool 'fortify-scanner'
-                        fortifyRemoteAnalysis remoteAnalysisProjectType: fortifyOther(),
-                                uploadSSC: [appName: "${fortifyProjectKey}", appVersion: env.BRANCH_NAME]
-                    }
-                }
-            }
+        //             echo "Code Quality/Static Code Analysis stage finished!"
+		// 		}
+		// 	}
+        // }
         
-        stage('BlackDuck Scan') {
-             when{
-              anyOf{
-                branch "stb"
-              }
-            }
-            steps{
-                script {
-                    devopsLibrary.blackduckWithLinuxMSBuild(exclusionsTYPE)
-                }
-            }
-        }
+        // stage('Fortify-Code Security') {
+        //      when{
+        //       anyOf{
+        //         branch "stb"
+        //       }
+        //     }
+        //     steps{
+        //             script {
+        //                 sh "echo static application security testing SAST"
+
+        //                 fortifyScanner = tool 'fortify-scanner'
+        //                 fortifyRemoteAnalysis remoteAnalysisProjectType: fortifyOther(),
+        //                         uploadSSC: [appName: "${fortifyProjectKey}", appVersion: env.BRANCH_NAME]
+        //             }
+        //         }
+        //     }
+        
+        // stage('BlackDuck Scan') {
+        //      when{
+        //       anyOf{
+        //         branch "stb"
+        //       }
+        //     }
+        //     steps{
+        //         script {
+        //             devopsLibrary.blackduckWithLinuxMSBuild(exclusionsTYPE)
+        //         }
+        //     }
+        // }
 
         stage('Openshift Deployment') {
             when {
