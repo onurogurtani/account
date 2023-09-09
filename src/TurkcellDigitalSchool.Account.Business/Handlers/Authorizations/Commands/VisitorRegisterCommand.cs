@@ -62,16 +62,15 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     };
                 }
 
+                //var otpServiceResult = await _otpService.GenerateOtpVisitorRegister(name, surName, email, mobilPhone, OTPExpiryDate.OneHundredTwentySeconds);
 
-                var otpServiceResult = await _otpService.GenerateOtpVisitorRegister(name, surName, email, mobilPhone, OTPExpiryDate.OneHundredTwentySeconds);
-
-                if (!otpServiceResult.Success)
-                {
-                    return new ErrorDataResult<VisitorRegisterDto>
-                    {
-                        Message = otpServiceResult.Message
-                    };
-                }
+                //if (!otpServiceResult.Success)
+                //{
+                //    return new ErrorDataResult<VisitorRegisterDto>
+                //    {
+                //        Message = otpServiceResult.Message
+                //    };
+                //}
 
                 var visitorRegisterRecord = new VisitorRegister
                 {
@@ -81,8 +80,8 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     MobilePhones = mobilPhone,
                     SessionCode = Guid.NewGuid(),
                     ExpiryDate = DateTime.Now.AddSeconds((int)OTPExpiryDate.OneHundredTwentySeconds),
-                    SmsOtpCode = otpServiceResult.Data.SmsOtpCode,
-                    MailOtpCode = otpServiceResult.Data.MailOtpCode,
+                    SmsOtpCode =1,
+                    MailOtpCode = 1,
                     IsCompleted = false,
                 };
 

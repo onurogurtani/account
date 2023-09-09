@@ -10,7 +10,12 @@ namespace TurkcellDigitalSchool.Account.Domain.Enums.OTP
     {
         Sms_Login=1,
         Sms_UserProfilePhoneVerify=2,
-        Mail_UserProfileMailVerify = 3
+        Mail_UserProfileMailVerify = 3,
+        
+        Sms_Public_Microsite_Visitor_Register=4,
+        Mail_Public_Microsite_Visitor=5,
 
+        Sms_Public_Microsite_Parent_Student_Register = 6,
+        Mail_Public_Microsite_Parent_Student_Register = 7,
     }
 }

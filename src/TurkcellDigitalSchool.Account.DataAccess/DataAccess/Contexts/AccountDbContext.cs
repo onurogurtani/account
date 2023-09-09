@@ -116,6 +116,8 @@ namespace TurkcellDigitalSchool.Account.DataAccess.DataAccess.Contexts
 
         public DbSet<VisitorRegister> VisitorRegisters { get; set; }
         public DbSet<UsersWaitingVerification> UsersWaitingVerifications { get; set; }
+        public DbSet<PublicOneTimePassword> PublicOneTimePasswords { get; set; }
+
 
 
 

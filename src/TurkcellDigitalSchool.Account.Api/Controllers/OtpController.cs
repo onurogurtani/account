@@ -47,5 +47,34 @@ namespace TurkcellDigitalSchool.Account.Api.Controllers
             return BadRequest(result);
         }
 
+
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DataResult<int>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(DataResult<string>))]
+        [HttpPost("PublicVerifyOtp")]
+        public async Task<IActionResult> PublicVerifyOtp([FromBody] PublicVerifyOtpCommand request, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(request, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [HttpPost("PublicGenerateOtp")]
+        public async Task<IActionResult> PublicGenerateOtp([FromBody] PublicGenerateOtpCommand request, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(request, cancellationToken);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
     }
 }

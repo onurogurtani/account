@@ -13,7 +13,8 @@ namespace TurkcellDigitalSchool.Account.Business.Services.Otp
     {
         Result GenerateOtp(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId, OTPExpiryDate oTPExpiryDate);
         Result VerifyOtp(long UserId, ChannelType ChanellTypeId, OtpServices ServiceId, int Code);
+        Task<IDataResult<PublicOtpResponseDto>> PublicGenerateOtp(Guid sessionCode, ChannelType ChanellTypeId, OtpServices ServiceId, OTPExpiryDate oTPExpiryDate);
+        Task<IResult> PublicVerifyOtp(Guid SessionCode, ChannelType ChanellTypeId, OtpServices ServiceId, int Code);
 
-        Task<DataResult<GenerateOtpVisitorRegisterDto>> GenerateOtpVisitorRegister(string name, string surName, string email, string mobilPhone, OTPExpiryDate oTPExpiryDate);
     }
 }

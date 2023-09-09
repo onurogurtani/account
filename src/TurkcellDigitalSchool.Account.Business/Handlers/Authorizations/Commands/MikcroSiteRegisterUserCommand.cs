@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TurkcellDigitalSchool.Account.DataAccess.Abstract;
 using TurkcellDigitalSchool.Account.Domain.Concrete;
 using TurkcellDigitalSchool.Account.Domain.Dtos;
+using TurkcellDigitalSchool.Account.Domain.Enums.OTP;
 using TurkcellDigitalSchool.Core.Behaviors.Abstraction;
 using TurkcellDigitalSchool.Core.Behaviors.Atrribute;
 using TurkcellDigitalSchool.Core.Common.Constants;
@@ -34,14 +35,14 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
         {
 
 
-            private readonly IUnverifiedUserRepository _unverifiedUserRepository;
+            private readonly IUsersWaitingVerificationRepository _usersWaitingVerificationRepository;
             private readonly IUserRepository _userRepository;
             private readonly ISmsOtpRepository _smsOtpRepository;
             private readonly IMailService _mailService;
 
-            public MikcroSiteRegisterUserCommandHandler(IUnverifiedUserRepository unverifiedUserRepository, IUserRepository userRepository, IMailService mailService, ISmsOtpRepository smsOtpRepository)
+            public MikcroSiteRegisterUserCommandHandler(IUsersWaitingVerificationRepository usersWaitingVerificationRepository, IUserRepository userRepository, IMailService mailService, ISmsOtpRepository smsOtpRepository)
             {
-                _unverifiedUserRepository = unverifiedUserRepository;
+                _usersWaitingVerificationRepository = usersWaitingVerificationRepository;
                 _userRepository = userRepository;
                 _mailService = mailService;
                 _smsOtpRepository = smsOtpRepository;
@@ -65,23 +66,23 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                         return new ErrorDataResult<UnverifiedUserDto>(Messages.MobilePhoneAlreadyExist);
                 }
 
-                var unverifiedExistEmail = await _unverifiedUserRepository.Query().AnyAsync(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
-                if (unverifiedExistEmail)
-                {
-                    var entity = _unverifiedUserRepository.Get(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
-                    if (entity != null)
-                        _unverifiedUserRepository.Delete(entity);
-                }
+                //var unverifiedExistEmail = await _unverifiedUserRepository.Query().AnyAsync(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
+                //if (unverifiedExistEmail)
+                //{
+                //    var entity = _unverifiedUserRepository.Get(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
+                //    if (entity != null)
+                //        _unverifiedUserRepository.Delete(entity);
+                //}
 
-                var unverifiedExistMobilePhone = await _unverifiedUserRepository.Query().AnyAsync(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
-                if (unverifiedExistMobilePhone)
-                {
-                    var entity = _unverifiedUserRepository.Get(x => x.MobilePhones.Trim() == request.Email.Trim());
-                    if (entity != null)
-                        _unverifiedUserRepository.Delete(entity);
-                }
+                //var unverifiedExistMobilePhone = await _unverifiedUserRepository.Query().AnyAsync(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower());
+                //if (unverifiedExistMobilePhone)
+                //{
+                //    var entity = _unverifiedUserRepository.Get(x => x.MobilePhones.Trim() == request.Email.Trim());
+                //    if (entity != null)
+                //        _unverifiedUserRepository.Delete(entity);
+                //}
 
-                var unverifiedUser = new UnverifiedUser
+                var unverifiedUser = new UsersWaitingVerification
                 {
                     UserTypeId = request.UserTypeId,
                     Name = request.Name,
@@ -91,42 +92,45 @@ namespace TurkcellDigitalSchool.Account.Business.Handlers.Authorizations.Command
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt,
                     CitizenId = request.CitizenId,
-                   // BirthDate = request.BirtDate,
-                    VerificationKeyLastTime = DateTime.UtcNow.AddSeconds(90),
-                    VerificationKey = RandomPassword.RandomNumberGenerator().ToString(),
+                    BirthDate = request.BirtDate,
+                    SessionCode = Guid.NewGuid(),
+                    ExpiryDate = DateTime.Now.AddSeconds((int)OTPExpiryDate.OneHundredTwentySeconds),
+                    SmsOtpCode = 1,
+                    MailOtpCode = 1,
+                    IsCompleted = false,
                 };
 
-                if (unverifiedUser.UserTypeId == UserType.Student)
-                {
-                    var content = $" Üyelik doğrulama kodu: {unverifiedUser.VerificationKey} ";
+                //if (unverifiedUser.UserTypeId == UserType.Student)
+                //{
+                //    var content = $" Üyelik doğrulama kodu: {unverifiedUser.VerificationKey} ";
 
-                    _mailService.Send(new EmailMessage
-                    {
-                        Subject = "Üyelik Doğrulama",
-                        ToAddresses = new System.Collections.Generic.List<EmailAddress> { new EmailAddress { Address = unverifiedUser.Email } },
-                        Content = content
-                    });
-                }
-                else
-                {
-                    MobileLogin mobileLogin;
-                    try
-                    {
-                        var content = $" Üyelik doğrulama kodu: {unverifiedUser.VerificationKey} ";
-                        await _smsOtpRepository.Send(unverifiedUser.MobilePhones, content);
-                    }
-                    catch (Exception e)
-                    {
-                        return new ErrorDataResult<UnverifiedUserDto>(e.Message);
-                    }
-                }
+                //    _mailService.Send(new EmailMessage
+                //    {
+                //        Subject = "Üyelik Doğrulama",
+                //        ToAddresses = new System.Collections.Generic.List<EmailAddress> { new EmailAddress { Address = unverifiedUser.Email } },
+                //        Content = content
+                //    });
+                //}
+                //else
+                //{
+                //    MobileLogin mobileLogin;
+                //    try
+                //    {
+                //        var content = $" Üyelik doğrulama kodu: {unverifiedUser.VerificationKey} ";
+                //        await _smsOtpRepository.Send(unverifiedUser.MobilePhones, content);
+                //    }
+                //    catch (Exception e)
+                //    {
+                //        return new ErrorDataResult<UnverifiedUserDto>(e.Message);
+                //    }
+                //}
 
-                _unverifiedUserRepository.Add(unverifiedUser);
-                await _unverifiedUserRepository.SaveChangesAsync();
+                _usersWaitingVerificationRepository.Add(unverifiedUser);
+                await _usersWaitingVerificationRepository.SaveChangesAsync();
                 UnverifiedUserDto unverifiedUserDto = new UnverifiedUserDto
                 {
                     Id = unverifiedUser.Id,
-                    VerificationKey = unverifiedUser.VerificationKey,
+                    VerificationKey = "",
                 };
                 return new SuccessDataResult<UnverifiedUserDto>(unverifiedUserDto);
             }
